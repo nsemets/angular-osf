@@ -1,7 +1,10 @@
 @use "fonts";
-@use "variables";
-@use "mixins";
+@use "variables" as var;
+@use "mixins" as mix;
 @use "./overrides/button";
+@use "./overrides/input";
+@use "./overrides/checkbox";
+@use "./overrides/divider";
 
 @layer base, primeng, reset;
 
@@ -16,7 +19,7 @@
 @layer reset {
   html,
   body {
-    font-family: variables.$openSans;
+    font-family: var.$openSans;
     font-weight: 400;
     font-size: 14px;
   }
@@ -38,7 +41,7 @@
   h3 {
     font-weight: 700;
     text-transform: capitalize;
-    color: variables.$dark-blue-1;
+    color: var.$dark-blue-1;
   }
 
   li {
@@ -48,11 +51,15 @@
   a,
   a:visited {
     text-decoration: none;
-    color: variables.$pr-blue-1;
+    color: var.$pr-blue-1;
   }
 
   a:hover {
     text-decoration: underline;
+  }
+
+  i {
+    @include mix.flex-center;
   }
 
   button {
