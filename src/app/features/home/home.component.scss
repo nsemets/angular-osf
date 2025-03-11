@@ -1,0 +1,212 @@
+@use "assets/styles/variables" as var;
+
+@mixin flex-container($direction: row, $justify: flex-start, $align: center) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+:host {
+  @include flex-container(column);
+
+  .dashboard-header {
+    @include flex-container(row, start);
+    width: 100%;
+    padding: 7.14rem 1.71rem 3.43rem 1.71rem;
+    background: var.$gradient-1;
+
+    .dashboard-title {
+      font-size: 1.71rem;
+      color: var.$dark-blue-1;
+      font-weight: 700;
+      margin-left: 0.86rem;
+    }
+
+    p-button {
+      margin-left: auto;
+    }
+  }
+
+  .quick-search-container {
+    background: white;
+    padding: 1.71rem;
+    width: 100%;
+
+    .text-center {
+      font-size: 1rem;
+      font-weight: 400;
+      color: var.$dark-blue-1;
+      text-align: center;
+      margin-bottom: 3.43rem;
+
+      a {
+        color: var.$pr-blue-1;
+      }
+    }
+
+    .search-container {
+      @include flex-container(row, flex-start, center);
+      position: relative;
+
+      i {
+        position: absolute;
+        left: 0.86rem;
+        color: var.$dark-blue-1;
+        font-size: 1.1rem;
+      }
+
+      .search-input {
+        width: 100%;
+        background: white;
+        border: 1px solid var.$grey-2;
+        border-radius: 0.57rem;
+        font-size: 1.1rem;
+        font-weight: 400;
+        padding-left: 2.86rem;
+        color: var.$dark-blue-1;
+        height: 3.29rem;
+      }
+    }
+  }
+
+  .public-projects-container {
+    width: 100%;
+    background: var.$gradient-1;
+    height: 14.57rem;
+    padding: 8.57rem 0 3.43rem 1.71rem;
+    display: flex;
+    flex-direction: row;
+
+    h1 {
+      color: var.$dark-blue-1;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    i {
+      color: var.$dark-blue-1;
+      font-size: 2.3rem;
+      margin-right: 0.86rem;
+    }
+  }
+
+  .noteworthy-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    background: white;
+    padding: 1.71rem;
+    column-gap: 1.71rem;
+
+    .news-section {
+      display: flex;
+      flex-direction: column;
+      row-gap: 0.86rem;
+      width: 50%;
+
+      h2 {
+        color: var.$dark-blue-1;
+        font-weight: 700;
+        margin: 0;
+      }
+
+      .news-block {
+        border: 1px solid var.$grey-2;
+        border-radius: 0.86rem;
+        padding: 1.71rem;
+
+        p {
+          margin: 0 0 0 0;
+        }
+
+        .title {
+          font-size: 1.29rem;
+          color: var.$dark-blue-1;
+          font-weight: 700;
+        }
+
+        .authors {
+          font-size: 1rem;
+          color: var.$dark-blue-1;
+          font-weight: 400;
+          margin-top: 1.71rem;
+        }
+      }
+    }
+  }
+
+  .latest-research-container {
+    width: 100%;
+    background: var.$gradient-2;
+    height: 11.14rem;
+    padding: 3.43rem 3.43rem 3.43rem 1.71rem;
+
+    .content {
+      display: flex;
+      flex-direction: row;
+
+      .text-container {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+
+    h1 {
+      color: var.$dark-blue-1;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    h2 {
+      color: var.$dark-blue-1;
+      font-weight: 400;
+      margin: 0;
+    }
+
+    p-button {
+      margin-left: auto;
+
+      button {
+        width: 10.29rem;
+        height: 3.14rem;
+      }
+    }
+  }
+
+  .hosting-container {
+    width: 100%;
+    height: 11.14rem;
+    padding: 3.43rem 3.43rem 3.43rem 1.71rem;
+    background: url("/assets/images/hosting-background.svg") no-repeat center
+      center;
+    background-size: cover;
+
+    .content {
+      display: flex;
+      flex-direction: row;
+
+      .text-container {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+
+    h1 {
+      color: var.$dark-blue-1;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    h2 {
+      color: var.$dark-blue-1;
+      font-weight: 400;
+      margin: 0;
+    }
+
+    p-button {
+      margin-left: auto;
+      align-self: center;
+    }
+  }
+}
