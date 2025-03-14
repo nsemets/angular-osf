@@ -57,6 +57,13 @@ export const routes: Routes = [
             (mod) => mod.PrivacyPolicyComponent,
           ),
       },
+      {
+        path: 'settings',
+        loadChildren: () =>
+          import('./features/settings/settings.routes').then(
+            (mod) => mod.settingsRoutes,
+          ),
+      },
     ],
   },
 ];
