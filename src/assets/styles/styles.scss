@@ -8,6 +8,7 @@
 @use "./overrides/table";
 @use "./overrides/message";
 @use "./overrides/drawer";
+@use "./overrides/card";
 
 @layer base, primeng, reset;
 

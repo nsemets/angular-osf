@@ -1,0 +1,13 @@
+@use "assets/styles/mixins" as mix;
+@use "assets/styles/variables" as var;
+
+.p-card {
+  color: var.$dark-blue-1;
+  box-shadow: none;
+  border-radius: 8px;
+  border: 1px solid var.$grey-2;
+
+  .p-card-body {
+    padding: 1.7rem;
+  }
+}
