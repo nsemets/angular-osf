@@ -5,9 +5,7 @@
   color: var.$dark-blue-1;
   box-shadow: none;
   border-radius: 8px;
-  border-width: 1px;
-  border-color: var.$grey-2;
-  border-style: solid;
+  border: 1px solid var.$grey-2;
 
   .p-card-body {
     padding: 1.7rem;
