@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
@@ -7,6 +7,8 @@ import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Button } from 'primeng/button';
 import { SubHeaderComponent } from '@shared/components/sub-header/sub-header.component';
+import { IS_PORTRAIT, IS_XSMALL } from '@shared/utils/breakpoints.tokens';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'osf-home',
@@ -24,6 +26,10 @@ import { SubHeaderComponent } from '@shared/components/sub-header/sub-header.com
   styleUrl: './home.component.scss',
 })
 export class HomeComponent {
+  #isPortrait$ = inject(IS_PORTRAIT);
+  #isXSmall$ = inject(IS_XSMALL);
+  isPortrait = toSignal(this.#isPortrait$);
+  isXSmall = toSignal(this.#isXSmall$);
   projects: Project[] = [
     {
       id: '1',

@@ -14,12 +14,11 @@
       flex: 1;
       overflow-y: auto;
       margin: 6px;
-      background-color: white;
+      background-color: var.$bg-blue-3;
       border-radius: 1rem;
 
       .content {
         @include mix.flex-column;
-        background: var.$bg-blue-3;
         min-height: 100%;
         position: relative;
       }
@@ -35,8 +34,8 @@
       width: 100%;
       height: 100%;
       flex: 1;
-      background-color: white;
       overflow-y: auto;
+      background-color: var.$bg-blue-3;
 
       .content {
         position: relative;

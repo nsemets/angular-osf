@@ -9,7 +9,10 @@
 
 :host {
   @include flex-container(column);
-  margin-top: 4.5rem;
+
+  .home-container {
+    margin-top: 4.5rem;
+  }
 
   .quick-search-container {
     background: white;
@@ -189,5 +192,9 @@
       margin-left: auto;
       align-self: center;
     }
+  }
+
+  .portrait {
+    margin-top: 0;
   }
 }
