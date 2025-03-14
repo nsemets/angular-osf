@@ -1,0 +1,8 @@
+<div class="breadcrumbs">
+  @for (url of parsedUrl(); track url; let l = $last) {
+    {{ url }}
+    @if (!l) {
+      /
+    }
+  }
+</div>
