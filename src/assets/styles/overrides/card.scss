@@ -1,5 +1,5 @@
-@use "../variables" as var;
-@use "../mixins" as mix;
+@use "assets/styles/mixins" as mix;
+@use "assets/styles/variables" as var;
 
 .p-card {
   color: var.$dark-blue-1;
