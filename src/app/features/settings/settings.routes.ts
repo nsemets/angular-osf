@@ -20,6 +20,13 @@ export const settingsRoutes: Routes = [
             (c) => c.AccountSettingsComponent,
           ),
       },
+      {
+        path: 'developer-apps',
+        loadComponent: () =>
+          import('./developer-apps/developer-apps.component').then(
+            (mod) => mod.DeveloperAppsComponent,
+          ),
+      },
     ],
   },
 ];
