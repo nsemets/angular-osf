@@ -3,9 +3,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { Project } from '@osf/features/home/models/project.entity';
-import { DatePipe, NgOptimizedImage } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Button } from 'primeng/button';
+import { SubHeaderComponent } from '@shared/components/sub-header/sub-header.component';
 
 @Component({
   selector: 'osf-home',
@@ -15,9 +16,9 @@ import { Button } from 'primeng/button';
     FormsModule,
     TableModule,
     DatePipe,
-    NgOptimizedImage,
     RouterLink,
     Button,
+    SubHeaderComponent,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',

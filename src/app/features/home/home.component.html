@@ -8,16 +8,13 @@
 <!--<p-button label="Default" severity="info"/>-->
 <!--<p-button label="Default" class="btn-icon-text"/>-->
 <!--<p-button label="Default" class="btn-icon-text-success"/>-->
-<div class="dashboard-header">
-  <img
-    ngSrc="assets/icons/system/home.svg"
-    alt="dashboard"
-    width="36"
-    height="36"
-  />
-  <span class="dashboard-title">Dashboard</span>
-  <p-button>Create New Project</p-button>
-</div>
+
+<osf-sub-header
+  [showButton]="true"
+  [title]="'Dashboard'"
+  [icon]="'home'"
+  [buttonLabel]="'Create New Project'"
+/>
 
 <div class="quick-search-container">
   <p class="text-center">
@@ -47,10 +44,14 @@
   >
     <ng-template #header>
       <tr>
-        <th pSortableColumn="title">Title <p-sortIcon field="title" /></th>
+        <th pSortableColumn="title">
+          Title
+          <p-sortIcon field="title" />
+        </th>
         <th>Contributors</th>
         <th pSortableColumn="modified">
-          Modified <p-sortIcon field="modified" />
+          Modified
+          <p-sortIcon field="modified" />
         </th>
       </tr>
     </ng-template>

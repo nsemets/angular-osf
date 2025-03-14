@@ -19,6 +19,7 @@
 
       .content {
         @include mix.flex-column;
+        background: var.$bg-blue-3;
         min-height: 100%;
         position: relative;
       }
