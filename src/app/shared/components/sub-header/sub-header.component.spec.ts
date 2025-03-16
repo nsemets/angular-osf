@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SettingsHeaderComponent } from './settings-header.component';
+import { SubHeaderComponent } from './sub-header.component';
 
-describe('SettingsHeaderComponent', () => {
-  let component: SettingsHeaderComponent;
-  let fixture: ComponentFixture<SettingsHeaderComponent>;
+describe('SubHeaderComponent', () => {
+  let component: SubHeaderComponent;
+  let fixture: ComponentFixture<SubHeaderComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SettingsHeaderComponent],
+      imports: [SubHeaderComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SettingsHeaderComponent);
+    fixture = TestBed.createComponent(SubHeaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
