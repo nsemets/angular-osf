@@ -7,7 +7,7 @@ import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Button } from 'primeng/button';
 import { SubHeaderComponent } from '@shared/components/sub-header/sub-header.component';
-import { IS_PORTRAIT, IS_XSMALL } from '@shared/utils/breakpoints.tokens';
+import { IS_TABLET, IS_XSMALL } from '@shared/utils/breakpoints.tokens';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -26,10 +26,10 @@ import { toSignal } from '@angular/core/rxjs-interop';
   styleUrl: './home.component.scss',
 })
 export class HomeComponent {
-  #isPortrait$ = inject(IS_PORTRAIT);
-  #isXSmall$ = inject(IS_XSMALL);
-  isPortrait = toSignal(this.#isPortrait$);
-  isXSmall = toSignal(this.#isXSmall$);
+  #isTablet$ = inject(IS_TABLET);
+  #isMobile$ = inject(IS_XSMALL);
+  isTablet = toSignal(this.#isTablet$);
+  isMobile = toSignal(this.#isMobile$);
   projects: Project[] = [
     {
       id: '1',

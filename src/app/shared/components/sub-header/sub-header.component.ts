@@ -1,11 +1,14 @@
-import { Component, input, output } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { Button } from 'primeng/button';
+import { IS_XSMALL } from '@shared/utils/breakpoints.tokens';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'osf-sub-header',
   imports: [Button],
   templateUrl: './sub-header.component.html',
   styleUrl: './sub-header.component.scss',
+  standalone: true,
 })
 export class SubHeaderComponent {
   showButton = input<boolean>(false);
@@ -13,4 +16,6 @@ export class SubHeaderComponent {
   title = input<string>('');
   icon = input<string>('');
   buttonClick = output<void>();
+  #isMobile$ = inject(IS_XSMALL);
+  isMobile = toSignal(this.#isMobile$);
 }

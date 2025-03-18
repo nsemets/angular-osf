@@ -16,9 +16,7 @@ function createBreakpointToken(
   });
 }
 
-export const IS_XSMALL = createBreakpointToken(Breakpoints.XSmall);
-export const IS_SMALL = createBreakpointToken(Breakpoints.Small);
-export const IS_MEDIUM = createBreakpointToken(Breakpoints.Medium);
-export const IS_LARGE = createBreakpointToken(Breakpoints.Large);
-export const IS_XLARGE = createBreakpointToken(Breakpoints.XLarge);
 export const IS_PORTRAIT = createBreakpointToken('(orientation: portrait)');
+export const IS_WEB = createBreakpointToken(Breakpoints.Web);
+export const IS_TABLET = createBreakpointToken(Breakpoints.Tablet);
+export const IS_XSMALL = createBreakpointToken(Breakpoints.XSmall);
