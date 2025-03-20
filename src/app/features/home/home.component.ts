@@ -3,13 +3,12 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { Project } from '@osf/features/home/models/project.entity';
-import { DatePipe, NgOptimizedImage } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Button } from 'primeng/button';
 import { SubHeaderComponent } from '@shared/components/sub-header/sub-header.component';
-import { IS_TABLET, IS_XSMALL } from '@shared/utils/breakpoints.tokens';
+import { IS_MEDIUM, IS_XSMALL } from '@shared/utils/breakpoints.tokens';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Carousel } from 'primeng/carousel';
 import { noteworthy, mostPopular, projects } from '@osf/features/home/data';
 
 @Component({
@@ -23,17 +22,13 @@ import { noteworthy, mostPopular, projects } from '@osf/features/home/data';
     RouterLink,
     Button,
     SubHeaderComponent,
-    Carousel,
-    NgOptimizedImage,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
 export class HomeComponent {
-  #isTablet$ = inject(IS_TABLET);
-  #isMobile$ = inject(IS_XSMALL);
-  isTablet = toSignal(this.#isTablet$);
-  isMobile = toSignal(this.#isMobile$);
+  isMedium = toSignal(inject(IS_MEDIUM));
+  isMobile = toSignal(inject(IS_XSMALL));
   projects: Project[] = projects;
   noteworthy = noteworthy;
   mostPopular = mostPopular;
