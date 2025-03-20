@@ -10,6 +10,7 @@
 @use "./overrides/drawer";
 @use "./overrides/card";
 @use "./overrides/carousel";
+@use "./overrides/confirmation-dialog";
 
 @layer base, primeng, reset;
 
