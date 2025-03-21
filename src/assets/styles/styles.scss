@@ -17,6 +17,7 @@
 @use "./overrides/radio";
 @use "./overrides/dropdown";
 @use "./overrides/confirmation-dialog";
+@use "./overrides/tabs";
 
 @layer base, primeng, reset;
 
