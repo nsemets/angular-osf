@@ -184,8 +184,21 @@
   }
 }
 
+.high-m-button {
+  button {
+    height: 3.125rem;
+  }
+}
+
 .learn-more {
   button {
     padding: 0.71rem 1.39rem;
+  }
+}
+
+.remove-button {
+  .p-button {
+    background: var.$white;
+    color: var.$red-1;
   }
 }

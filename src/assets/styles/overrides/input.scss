@@ -56,3 +56,19 @@ p-password.ng-touched.ng-invalid {
     padding-left: 2.86rem;
   }
 }
+
+.addon-input {
+  .p-inputtext {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    border-left-style: none;
+  }
+
+  .p-inputtext.ng-touched.ng-invalid,
+  .p-inputtext.ng-dirty.ng-invalid {
+    border-color: var.$grey-2;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    border-left-style: none;
+  }
+}
