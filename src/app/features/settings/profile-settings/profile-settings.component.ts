@@ -13,7 +13,6 @@ import { UserSocialLink } from '@osf/features/settings/profile-settings/entities
 import {
   FormArray,
   FormBuilder,
-  FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -47,12 +46,12 @@ export class ProfileSettingsComponent implements OnInit {
   socials = socials;
 
   userSocialLinks: UserSocialLink[] = [];
-  socialLinksForm: FormGroup = this.#fb.group({
+  socialLinksForm = this.#fb.group({
     links: this.#fb.array([]),
   });
 
   ngOnInit(): void {
-    if (this.userSocialLinks.length === 0) {
+    if (this.userSocialLinks.length) {
       this.addLink();
     }
   }
