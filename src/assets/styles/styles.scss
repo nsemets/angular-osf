@@ -18,6 +18,8 @@
 @use "./overrides/dropdown";
 @use "./overrides/confirmation-dialog";
 @use "./overrides/input-group-addon";
+@use "./overrides/iconfield";
+
 
 @layer base, primeng, reset;
 
