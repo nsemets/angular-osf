@@ -1,0 +1,86 @@
+@use "assets/styles/variables" as var;
+@use "assets/styles/mixins" as mix;
+
+.content-container {
+  padding: 1.7rem;
+  color: var.$dark-blue-1;
+  background-color: var.$white;
+
+  &.mobile {
+    padding: 1rem;
+  }
+
+  .navigation-bar-container {
+    margin-bottom: 1.7rem;
+  }
+
+  .tittle-container {
+    @include mix.flex-center-between;
+    margin-bottom: 3.4rem;
+
+    &.mobile {
+      @include mix.flex-column;
+      align-items: inherit;
+      gap: 1.7rem;
+    }
+  }
+
+  .cards-container {
+    @include mix.flex-column;
+    gap: 1.7rem;
+
+    .card-body {
+      h2 {
+        margin-bottom: 1.7rem;
+      }
+
+      p {
+        margin-bottom: 0.85rem;
+      }
+
+      .client-secret-container {
+        @include mix.flex-align-center;
+        gap: 0.85rem;
+        margin-bottom: 1.7rem;
+
+        &.mobile {
+          @include mix.flex-column;
+          align-items: start;
+        }
+      }
+
+      .card-actions {
+        @include mix.flex-center-right;
+      }
+
+      .copy-notification {
+        position: absolute;
+        top: -45px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 10px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        white-space: nowrap;
+        border-radius: 8px;
+        box-shadow: 0px 0px 4px 0px #00000029;
+        background: var.$white;
+
+        &.visible {
+          opacity: 1;
+        }
+
+        &:after {
+          content: "";
+          position: absolute;
+          bottom: -5px;
+          left: 50%;
+          transform: translateX(-50%);
+          border-width: 5px 5px 0;
+          border-style: solid;
+          border-color: var.$grey-1 transparent transparent;
+        }
+      }
+    }
+  }
+}

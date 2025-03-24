@@ -148,6 +148,13 @@
   }
 }
 
+.btn-half-width {
+  width: 50%;
+  .p-button {
+    width: 100%;
+  }
+}
+
 .form-btn {
   .p-button {
     @include mix.flex-center;
