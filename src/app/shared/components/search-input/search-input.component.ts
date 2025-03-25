@@ -16,8 +16,8 @@ import { FormsModule } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchInputComponent {
-  protected readonly placeholder = input<string>('');
-  protected readonly searchValue = model.required<string>();
+  placeholder = input<string>('');
+  searchValue = model.required<string>();
 
   onSearchChange(value: string): void {
     this.searchValue.set(value);

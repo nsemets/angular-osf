@@ -1,6 +1,10 @@
 @use "assets/styles/variables" as var;
+@use "assets/styles/mixins" as mix;
 
 :host {
+  @include mix.flex-column;
+  flex: 1;
+
   .name-container {
     border: 1px solid var.$grey-2;
     border-radius: 8px;
@@ -16,7 +20,6 @@
 
     .name-input {
       width: 100%;
-      height: 2.77rem;
       border: 1px solid var.$grey-2;
       border-radius: 8px;
     }
