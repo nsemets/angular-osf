@@ -8,19 +8,14 @@ import Aura from '@primeng/themes/aura';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideHttpClient } from '@angular/common/http';
 import { ConfirmationService } from 'primeng/api';
-import { AuthState } from '@core/store/auth';
-import { HomeState } from '@core/store/home';
-import { ResourceFiltersState } from '@shared/components/resources/resource-filters/store/resource-filters.state';
+import { STATES } from '@core/helpers/ngxs-states.constant';
 import { provideServiceWorker } from '@angular/service-worker';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideStore(
-      [AuthState, HomeState, ResourceFiltersState],
-      withNgxsReduxDevtoolsPlugin({ disabled: false }),
-    ),
+    provideStore(STATES, withNgxsReduxDevtoolsPlugin({ disabled: false })),
     providePrimeNG({
       theme: {
         preset: Aura,
