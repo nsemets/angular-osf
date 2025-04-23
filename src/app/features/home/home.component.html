@@ -73,31 +73,6 @@
     </div>
   </div>
 
-  <div class="noteworthy-container">
-    <div class="news-section">
-      <h2>New And Noteworthy</h2>
-      @for (project of noteworthy(); track project.id) {
-        <div class="news-block">
-          <p class="title">{{ project.title }}</p>
-          <br />
-          <p class="authors">by {{ getNoteworthyContributorsList(project) }}</p>
-        </div>
-      }
-    </div>
-    <div class="news-section">
-      <h2>Most Popular</h2>
-      @for (project of mostPopular(); track project.id) {
-        <div class="news-block">
-          <p class="title">{{ project.title }}</p>
-          <br />
-          <p class="authors">
-            by {{ getMostPopularContributorsList(project) }}
-          </p>
-        </div>
-      }
-    </div>
-  </div>
-
   <div class="latest-research-container">
     <div class="content">
       <div class="text-container">

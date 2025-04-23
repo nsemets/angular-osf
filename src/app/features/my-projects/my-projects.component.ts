@@ -20,7 +20,7 @@ import { DatePipe, NgClass } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { DialogService } from 'primeng/dynamicdialog';
 import { AddProjectFormComponent } from './add-project-form/add-project-form.component';
-import { GetProjects, HomeSelectors } from '@core/store/home';
+import { GetProjects, HomeSelectors } from 'src/app/features/home/store';
 import { Store } from '@ngxs/store';
 
 @Component({
