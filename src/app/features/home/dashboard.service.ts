@@ -31,7 +31,7 @@ export class DashboardService {
   getNoteworthy(): Observable<Project[]> {
     const projectId = 'pf5z9';
     const params = {
-      embed: 'bibliographic_contributors',
+      'embed[]': 'bibliographic_contributors',
       'page[size]': 5,
     };
 
@@ -45,7 +45,7 @@ export class DashboardService {
   getMostPopular(): Observable<Project[]> {
     const projectId = 'kvw3y';
     const params = {
-      embed: 'bibliographic_contributors',
+      'embed[]': 'bibliographic_contributors',
       'page[size]': 5,
     };
 
