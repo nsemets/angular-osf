@@ -1,12 +1,15 @@
-import { Component, inject, signal } from '@angular/core';
-import { InputText } from 'primeng/inputtext';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Button } from 'primeng/button';
-import { MessageInfo } from './message-info.model';
+import { InputText } from 'primeng/inputtext';
 import { Message } from 'primeng/message';
+
+import { Component, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+
 import { ForgotPasswordFormGroupType } from '@osf/features/auth/forgot-password/forgot-password-form-group.type';
 import { IS_XSMALL } from '@shared/utils/breakpoints.tokens';
-import { toSignal } from '@angular/core/rxjs-interop';
+
+import { MessageInfo } from './message-info.model';
 
 @Component({
   selector: 'osf-forgot-password',

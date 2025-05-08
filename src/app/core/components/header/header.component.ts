@@ -1,16 +1,20 @@
+import { Store } from '@ngxs/store';
+
+import { ButtonModule } from 'primeng/button';
+import { MenuModule } from 'primeng/menu';
+
+import { map } from 'rxjs';
+
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
   inject,
 } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs';
+import { Router, RouterLink } from '@angular/router';
+
 import { BreadcrumbComponent } from '@core/components/breadcrumb/breadcrumb.component';
-import { MenuModule } from 'primeng/menu';
-import { ButtonModule } from 'primeng/button';
-import { Store } from '@ngxs/store';
 import { UserSelectors } from '@core/store/user/user.selectors';
 
 @Component({

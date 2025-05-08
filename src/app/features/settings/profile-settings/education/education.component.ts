@@ -1,3 +1,8 @@
+import { Button } from 'primeng/button';
+import { Checkbox } from 'primeng/checkbox';
+import { DatePicker } from 'primeng/datepicker';
+import { InputText } from 'primeng/inputtext';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -10,10 +15,6 @@ import {
   FormControl,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { Button } from 'primeng/button';
-import { InputText } from 'primeng/inputtext';
-import { DatePicker } from 'primeng/datepicker';
-import { Checkbox } from 'primeng/checkbox';
 
 enum EducationFormControls {
   Institution = 'institution',

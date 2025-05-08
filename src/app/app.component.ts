@@ -1,3 +1,5 @@
+import { Store } from '@ngxs/store';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -5,7 +7,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Store } from '@ngxs/store';
+
 import { GetCurrentUser } from '@core/store/user';
 
 @Component({

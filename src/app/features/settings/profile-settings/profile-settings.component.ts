@@ -1,15 +1,20 @@
+import { Button } from 'primeng/button';
+import { Checkbox } from 'primeng/checkbox';
+import { DatePicker } from 'primeng/datepicker';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputGroup } from 'primeng/inputgroup';
+import { InputGroupAddon } from 'primeng/inputgroupaddon';
+import { InputText } from 'primeng/inputtext';
+import { Select } from 'primeng/select';
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
+
 import {
   ChangeDetectionStrategy,
   Component,
   inject,
   OnInit,
 } from '@angular/core';
-import { SubHeaderComponent } from '@shared/components/sub-header/sub-header.component';
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
-import { Button } from 'primeng/button';
-import { DropdownModule } from 'primeng/dropdown';
-import { InputText } from 'primeng/inputtext';
-import { UserSocialLink } from '@osf/features/settings/profile-settings/entities/user-social-link.entity';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
   FormArray,
   FormBuilder,
@@ -17,17 +22,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { InputGroup } from 'primeng/inputgroup';
-import { InputGroupAddon } from 'primeng/inputgroupaddon';
+
 import { socials } from '@osf/features/settings/profile-settings/data';
-import { Checkbox } from 'primeng/checkbox';
-import { DatePicker } from 'primeng/datepicker';
-import { UserPosition } from '@osf/features/settings/profile-settings/entities/user-position.entity';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { IS_XSMALL } from '@osf/shared/utils/breakpoints.tokens';
-import { TabOption } from '@osf/shared/entities/tab-option.interface';
-import { Select } from 'primeng/select';
 import { EducationComponent } from '@osf/features/settings/profile-settings/education/education.component';
+import { UserPosition } from '@osf/features/settings/profile-settings/entities/user-position.entity';
+import { UserSocialLink } from '@osf/features/settings/profile-settings/entities/user-social-link.entity';
+import { TabOption } from '@osf/shared/entities/tab-option.interface';
+import { IS_XSMALL } from '@osf/shared/utils/breakpoints.tokens';
+import { SubHeaderComponent } from '@shared/components/sub-header/sub-header.component';
 
 @Component({
   selector: 'osf-profile-settings',

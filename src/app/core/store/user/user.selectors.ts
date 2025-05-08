@@ -1,6 +1,7 @@
 import { Selector } from '@ngxs/store';
-import { UserStateModel } from '@core/store/user/user.models';
+
 import { User } from '@core/services/user/user.entity';
+import { UserStateModel } from '@core/store/user/user.models';
 import { UserState } from '@core/store/user/user.state';
 
 export class UserSelectors {
