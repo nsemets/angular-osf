@@ -24,14 +24,14 @@ import { SubHeaderComponent } from '@shared/components/sub-header/sub-header.com
 @Component({
   selector: 'osf-project-files',
   imports: [
-    SubHeaderComponent,
     TableModule,
-    Select,
-    FloatLabel,
-    SearchInputComponent,
     DropdownModule,
     Button,
     DatePipe,
+    Select,
+    FloatLabel,
+    SubHeaderComponent,
+    SearchInputComponent,
   ],
   templateUrl: './project-files.component.html',
   styleUrl: './project-files.component.scss',

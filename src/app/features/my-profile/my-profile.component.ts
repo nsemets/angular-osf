@@ -47,6 +47,7 @@ export class MyProfileComponent implements OnDestroy {
   readonly #store = inject(Store);
   readonly #router = inject(Router);
   readonly currentUser = this.#store.selectSignal(UserSelectors.getCurrentUser);
+
   readonly isMobile = toSignal(inject(IS_XSMALL));
 
   protected searchValue = signal('');

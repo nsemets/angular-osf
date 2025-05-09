@@ -1,5 +1,7 @@
 import { Store } from '@ngxs/store';
 
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+
 import type { SortEvent } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -59,6 +61,7 @@ import { SortOrder } from '@shared/utils/sort-order.enum';
     TabPanels,
     Tabs,
     MyProjectsTableComponent,
+    TranslateModule,
   ],
   templateUrl: './my-projects.component.html',
   styleUrl: './my-projects.component.scss',
@@ -71,6 +74,7 @@ export class MyProjectsComponent implements OnInit {
   readonly #store = inject(Store);
   readonly #router = inject(Router);
   readonly #route = inject(ActivatedRoute);
+  readonly #translateService = inject(TranslateService);
   readonly #searchSubject = new Subject<string>();
 
   protected readonly defaultTabValue = 0;
@@ -79,10 +83,22 @@ export class MyProjectsComponent implements OnInit {
   protected readonly isTablet = toSignal(inject(IS_MEDIUM));
   protected readonly isMobile = toSignal(inject(IS_XSMALL));
   protected readonly tabOptions: TabOption[] = [
-    { label: 'My Projects', value: 0 },
-    { label: 'My Registrations', value: 1 },
-    { label: 'My Preprints', value: 2 },
-    { label: 'Bookmarks', value: 3 },
+    {
+      label: 'myProjects.tabs.myProjects',
+      value: 0,
+    },
+    {
+      label: 'myProjects.tabs.myRegistrations',
+      value: 1,
+    },
+    {
+      label: 'myProjects.tabs.myPreprints',
+      value: 2,
+    },
+    {
+      label: 'myProjects.tabs.bookmarks',
+      value: 3,
+    },
   ];
 
   protected readonly queryParams = toSignal(this.#route.queryParams);
@@ -373,7 +389,7 @@ export class MyProjectsComponent implements OnInit {
     this.#dialogService.open(AddProjectFormComponent, {
       width: dialogWidth,
       focusOnShow: false,
-      header: 'Create Project',
+      header: this.#translateService.instant('myProjects.header.createProject'),
       closeOnEscape: true,
       modal: true,
       closable: true,

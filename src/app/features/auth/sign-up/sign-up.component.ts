@@ -1,3 +1,5 @@
+import { TranslateModule } from '@ngx-translate/core';
+
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DividerModule } from 'primeng/divider';
@@ -34,6 +36,7 @@ import { PASSWORD_REGEX, passwordMatchValidator } from './sign-up.helper';
     NgOptimizedImage,
     RouterLink,
     PasswordInputHintComponent,
+    TranslateModule,
   ],
   templateUrl: './sign-up.component.html',
   styleUrl: './sign-up.component.scss',

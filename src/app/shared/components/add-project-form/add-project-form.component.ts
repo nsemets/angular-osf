@@ -1,5 +1,7 @@
 import { Store } from '@ngxs/store';
 
+import { TranslatePipe } from '@ngx-translate/core';
+
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DropdownModule } from 'primeng/dropdown';
@@ -50,6 +52,7 @@ import { IS_XSMALL } from '@shared/utils/breakpoints.tokens';
     Select,
     Textarea,
     NgOptimizedImage,
+    TranslatePipe,
   ],
   templateUrl: './add-project-form.component.html',
   styleUrl: './add-project-form.component.scss',

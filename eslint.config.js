@@ -22,6 +22,7 @@ module.exports = tseslint.config(
       "unused-imports": pluginUnusedImports,
     },
     rules: {
+      "@typescript-eslint/no-unused-vars": "warn",
       "@angular-eslint/directive-selector": [
         "error",
         {

@@ -1,3 +1,5 @@
+import { TranslateModule } from '@ngx-translate/core';
+
 import { Button } from 'primeng/button';
 import { Password } from 'primeng/password';
 
@@ -25,6 +27,7 @@ import { ResetPasswordFormGroupType } from './reset-password-form-group.type';
     ReactiveFormsModule,
     RouterLink,
     PasswordInputHintComponent,
+    TranslateModule,
   ],
   templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.scss',

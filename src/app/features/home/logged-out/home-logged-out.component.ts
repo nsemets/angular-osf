@@ -1,3 +1,5 @@
+import { TranslatePipe } from '@ngx-translate/core';
+
 import { Button } from 'primeng/button';
 import { CarouselModule } from 'primeng/carousel';
 import { InputText } from 'primeng/inputtext';
@@ -19,7 +21,14 @@ import { integrationIcons, slides } from './data';
 @Component({
   selector: 'osf-home-logged-out',
   standalone: true,
-  imports: [CarouselModule, FormsModule, Button, InputText, NgOptimizedImage],
+  imports: [
+    CarouselModule,
+    FormsModule,
+    Button,
+    InputText,
+    NgOptimizedImage,
+    TranslatePipe,
+  ],
   templateUrl: './home-logged-out.component.html',
   styleUrl: './home-logged-out.component.scss',
 })

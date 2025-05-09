@@ -1,5 +1,7 @@
 import { Store } from '@ngxs/store';
 
+import { TranslatePipe } from '@ngx-translate/core';
+
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { InputText } from 'primeng/inputtext';
@@ -61,10 +63,10 @@ import { ADDON_TERMS as addonTerms } from '../utils/addon-terms.const';
     ReactiveFormsModule,
     InputText,
     Password,
+    TranslatePipe,
   ],
   templateUrl: './connect-addon.component.html',
   styleUrl: './connect-addon.component.scss',
-  standalone: true,
 })
 export class ConnectAddonComponent {
   protected readonly stepper = viewChild(Stepper);

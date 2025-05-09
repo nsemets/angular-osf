@@ -1,5 +1,7 @@
 import { Store } from '@ngxs/store';
 
+import { TranslatePipe } from '@ngx-translate/core';
+
 import { Button } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 
@@ -17,7 +19,7 @@ import { IS_XSMALL } from '@shared/utils/breakpoints.tokens';
 
 @Component({
   selector: 'osf-addon-card',
-  imports: [Button, NgClass, DialogModule],
+  imports: [Button, NgClass, DialogModule, TranslatePipe],
   templateUrl: './addon-card.component.html',
   styleUrl: './addon-card.component.scss',
   standalone: true,

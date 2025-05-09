@@ -1,5 +1,7 @@
 import { Store } from '@ngxs/store';
 
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+
 import { ConfirmationService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
@@ -26,7 +28,7 @@ import { IS_XSMALL } from '@shared/utils/breakpoints.tokens';
 
 @Component({
   selector: 'osf-tokens-list',
-  imports: [Button, Card, RouterLink, Skeleton],
+  imports: [Button, Card, RouterLink, Skeleton, TranslateModule],
   templateUrl: './tokens-list.component.html',
   styleUrl: './tokens-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,22 +36,29 @@ import { IS_XSMALL } from '@shared/utils/breakpoints.tokens';
 export class TokensListComponent implements OnInit {
   #store = inject(Store);
   #confirmationService = inject(ConfirmationService);
-  #isXSmall$ = inject(IS_XSMALL);
+  #translateService = inject(TranslateService);
+
   protected readonly isLoading = signal(false);
-  protected readonly isXSmall = toSignal(this.#isXSmall$);
+  protected readonly isXSmall = toSignal(inject(IS_XSMALL));
 
   tokens = this.#store.selectSignal(TokensSelectors.getTokens);
 
   deleteToken(token: Token) {
     this.#confirmationService.confirm({
       ...defaultConfirmationConfig,
-      message:
-        'Are you sure you want to delete this token? This action cannot be reversed.',
-      header: `Delete Token ${token.name}?`,
+      message: this.#translateService.instant(
+        'settings.tokens.confirmation.delete.message',
+      ),
+      header: this.#translateService.instant(
+        'settings.tokens.confirmation.delete.title',
+        { name: token.name },
+      ),
       acceptButtonProps: {
         ...defaultConfirmationConfig.acceptButtonProps,
         severity: 'danger',
-        label: 'Delete',
+        label: this.#translateService.instant(
+          'settings.tokens.list.deleteButton',
+        ),
       },
       accept: () => {
         this.#store.dispatch(new DeleteToken(token.id));

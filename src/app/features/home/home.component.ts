@@ -1,5 +1,7 @@
 import { Store } from '@ngxs/store';
 
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+
 import { SortEvent } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -38,7 +40,13 @@ import { SortOrder } from '@shared/utils/sort-order.enum';
 @Component({
   selector: 'osf-home',
   standalone: true,
-  imports: [RouterLink, Button, SubHeaderComponent, MyProjectsTableComponent],
+  imports: [
+    RouterLink,
+    Button,
+    SubHeaderComponent,
+    MyProjectsTableComponent,
+    TranslatePipe,
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   providers: [DialogService],
@@ -48,6 +56,7 @@ export class HomeComponent implements OnInit {
   readonly #store = inject(Store);
   readonly #router = inject(Router);
   readonly #route = inject(ActivatedRoute);
+  readonly #translateService = inject(TranslateService);
   readonly #dialogService = inject(DialogService);
   readonly #isXSmall$ = inject(IS_XSMALL);
   readonly #isMedium$ = inject(IS_MEDIUM);
@@ -235,7 +244,7 @@ export class HomeComponent implements OnInit {
     const dialogRef = this.#dialogService.open(AddProjectFormComponent, {
       width: dialogWidth,
       focusOnShow: false,
-      header: 'Create Project',
+      header: this.#translateService.instant('myProjects.header.createProject'),
       closeOnEscape: true,
       modal: true,
       closable: true,

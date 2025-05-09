@@ -1,3 +1,5 @@
+import { TranslatePipe } from '@ngx-translate/core';
+
 import { Button } from 'primeng/button';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { IconField } from 'primeng/iconfield';
@@ -18,7 +20,15 @@ import {
 
 @Component({
   selector: 'osf-token-created-dialog',
-  imports: [Button, InputText, IconField, InputIcon, ClipboardModule],
+  standalone: true,
+  imports: [
+    Button,
+    InputText,
+    IconField,
+    InputIcon,
+    ClipboardModule,
+    TranslatePipe,
+  ],
   templateUrl: './token-created-dialog.component.html',
   styleUrl: './token-created-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

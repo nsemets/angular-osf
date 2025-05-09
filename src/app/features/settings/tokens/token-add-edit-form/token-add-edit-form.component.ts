@@ -1,5 +1,7 @@
 import { Store } from '@ngxs/store';
 
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+
 import { Button } from 'primeng/button';
 import { Checkbox } from 'primeng/checkbox';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -40,7 +42,14 @@ import { IS_XSMALL } from '@shared/utils/breakpoints.tokens';
 
 @Component({
   selector: 'osf-token-add-edit-form',
-  imports: [Button, InputText, ReactiveFormsModule, CommonModule, Checkbox],
+  imports: [
+    Button,
+    InputText,
+    ReactiveFormsModule,
+    CommonModule,
+    Checkbox,
+    TranslatePipe,
+  ],
   templateUrl: './token-add-edit-form.component.html',
   styleUrl: './token-add-edit-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,6 +59,8 @@ export class TokenAddEditFormComponent implements OnInit {
   #route = inject(ActivatedRoute);
   #router = inject(Router);
   #dialogService = inject(DialogService);
+  #translateService = inject(TranslateService);
+
   isEditMode = input(false);
   initialValues = input<Token | null>(null);
   protected readonly tokenId = toSignal(
@@ -123,7 +134,9 @@ export class TokenAddEditFormComponent implements OnInit {
 
     this.#dialogService.open(TokenCreatedDialogComponent, {
       width: dialogWidth,
-      header: 'Token Successfully Created',
+      header: this.#translateService.instant(
+        'settings.tokens.created-dialog.title',
+      ),
       closeOnEscape: true,
       modal: true,
       closable: true,

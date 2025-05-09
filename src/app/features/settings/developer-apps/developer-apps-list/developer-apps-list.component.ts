@@ -1,5 +1,7 @@
 import { Store } from '@ngxs/store';
 
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+
 import { ConfirmationService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
@@ -26,7 +28,7 @@ import { IS_XSMALL } from '@shared/utils/breakpoints.tokens';
 
 @Component({
   selector: 'osf-developer-applications-list',
-  imports: [Button, Card, RouterLink, Skeleton],
+  imports: [Button, Card, RouterLink, Skeleton, TranslateModule],
   templateUrl: './developer-apps-list.component.html',
   styleUrl: './developer-apps-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,6 +36,7 @@ import { IS_XSMALL } from '@shared/utils/breakpoints.tokens';
 export class DeveloperAppsListComponent implements OnInit {
   #store = inject(Store);
   #confirmationService = inject(ConfirmationService);
+  #translateService = inject(TranslateService);
 
   protected readonly isLoading = signal(false);
   protected readonly isXSmall = toSignal(inject(IS_XSMALL));
@@ -44,13 +47,19 @@ export class DeveloperAppsListComponent implements OnInit {
   deleteApp(developerApp: DeveloperApp): void {
     this.#confirmationService.confirm({
       ...defaultConfirmationConfig,
-      message:
-        "Are you sure you want to delete this developer app? All users' access tokens will be revoked. This cannot be reversed.",
-      header: `Delete App ${developerApp.name}?`,
+      message: this.#translateService.instant(
+        'settings.developerApps.confirmation.delete.message',
+      ),
+      header: this.#translateService.instant(
+        'settings.developerApps.confirmation.delete.title',
+        { name: developerApp.name },
+      ),
       acceptButtonProps: {
         ...defaultConfirmationConfig.acceptButtonProps,
         severity: 'danger',
-        label: 'Delete',
+        label: this.#translateService.instant(
+          'settings.developerApps.list.deleteButton',
+        ),
       },
       accept: () => {
         this.#store.dispatch(new DeleteDeveloperApp(developerApp.clientId));

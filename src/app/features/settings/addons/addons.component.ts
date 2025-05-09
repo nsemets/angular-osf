@@ -1,5 +1,7 @@
 import { Store } from '@ngxs/store';
 
+import { TranslatePipe } from '@ngx-translate/core';
+
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { SelectModule } from 'primeng/select';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
@@ -45,6 +47,7 @@ import { IS_XSMALL } from '@shared/utils/breakpoints.tokens';
     AddonCardListComponent,
     SelectModule,
     FormsModule,
+    TranslatePipe,
   ],
   templateUrl: './addons.component.html',
   styleUrl: './addons.component.scss',
@@ -113,12 +116,25 @@ export class AddonsComponent {
   });
 
   protected readonly tabOptions: SelectOption[] = [
-    { label: 'All Add-ons', value: 0 },
-    { label: 'Connected Add-ons', value: 1 },
+    {
+      label: 'settings.addons.tabs.allAddons',
+      value: 0,
+    },
+    {
+      label: 'settings.addons.tabs.connectedAddons',
+      value: 1,
+    },
   ];
+
   protected readonly categoryOptions: SelectOption[] = [
-    { label: 'Additional Storage', value: 'external-storage-services' },
-    { label: 'Citation Manager', value: 'external-citation-services' },
+    {
+      label: 'settings.addons.categories.additionalService',
+      value: 'external-storage-services',
+    },
+    {
+      label: 'settings.addons.categories.citationManager',
+      value: 'external-citation-services',
+    },
   ];
 
   protected onCategoryChange(value: string): void {

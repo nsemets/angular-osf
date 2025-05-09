@@ -5,6 +5,7 @@ import { tap } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { UserService } from '@core/services/user/user.service';
+import { SetupProfileSettings } from '@osf/features/settings/profile-settings/profile-settings.actions';
 
 import { GetCurrentUser, SetCurrentUser } from './user.actions';
 import { UserStateModel } from './user.models';
@@ -24,6 +25,7 @@ export class UserState {
     return this.userService.getCurrentUser().pipe(
       tap((user) => {
         ctx.dispatch(new SetCurrentUser(user));
+        ctx.dispatch(new SetupProfileSettings());
       }),
     );
   }

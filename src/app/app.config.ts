@@ -1,16 +1,23 @@
 import { withNgxsReduxDevtoolsPlugin } from '@ngxs/devtools-plugin';
 import { provideStore } from '@ngxs/store';
 
+import { TranslateModule } from '@ngx-translate/core';
+
 import { ConfirmationService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 
 import { provideHttpClient } from '@angular/common/http';
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  importProvidersFrom,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 
 import { STATES } from '@core/constants/ngxs-states.constant';
+import { provideTranslation } from '@core/helpers/i18n.helper';
 
 import { routes } from './app.routes';
 
@@ -40,5 +47,6 @@ export const appConfig: ApplicationConfig = {
       registrationStrategy: 'registerWhenStable:30000',
     }),
     ConfirmationService,
+    importProvidersFrom(TranslateModule.forRoot(provideTranslation())),
   ],
 };

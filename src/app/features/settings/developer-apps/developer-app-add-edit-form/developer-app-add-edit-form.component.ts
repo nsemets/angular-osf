@@ -1,5 +1,7 @@
 import { Store } from '@ngxs/store';
 
+import { TranslatePipe } from '@ngx-translate/core';
+
 import { Button } from 'primeng/button';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputText } from 'primeng/inputtext';
@@ -38,7 +40,7 @@ import { IS_XSMALL } from '@shared/utils/breakpoints.tokens';
 
 @Component({
   selector: 'osf-developer-app-add-edit-form',
-  imports: [Button, InputText, ReactiveFormsModule, NgClass],
+  imports: [Button, InputText, ReactiveFormsModule, NgClass, TranslatePipe],
   templateUrl: './developer-app-add-edit-form.component.html',
   styleUrl: './developer-app-add-edit-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,3 +1,5 @@
+import { TranslatePipe } from '@ngx-translate/core';
+
 import { SortEvent } from 'primeng/api';
 import { Skeleton } from 'primeng/skeleton';
 import { TableModule, TablePageEvent } from 'primeng/table';
@@ -18,7 +20,13 @@ import { SortOrder } from '@shared/utils/sort-order.enum';
 @Component({
   selector: 'osf-my-projects-table',
   standalone: true,
-  imports: [CommonModule, TableModule, SearchInputComponent, Skeleton],
+  imports: [
+    CommonModule,
+    TableModule,
+    SearchInputComponent,
+    Skeleton,
+    TranslatePipe,
+  ],
   templateUrl: './my-projects-table.component.html',
   styleUrl: './my-projects-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,7 +38,7 @@ export class MyProjectsTableComponent {
   sortColumn = input<string | undefined>(undefined);
   sortOrder = input<SortOrder>(SortOrder.Asc);
   isLoading = input<boolean>(false);
-  searchPlaceholder = input<string>('Filter by title, description, and tags');
+  searchPlaceholder = input<string>('myProjects.table.searchPlaceholder');
 
   searchValueChange = output<string>();
   pageChange = output<TablePageEvent>();
