@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
+
 import { JsonApiService } from '@core/services/json-api/json-api.service';
-import { JsonApiResponse } from '@osf/core/services/json-api/json-api.entity';
 import { UserUS } from '@core/services/json-api/underscore-entites/user/user-us.entity';
+import { JsonApiResponse } from '@osf/core/services/json-api/json-api.entity';
 import {
   ProfileSettingsStateModel,
   ProfileSettingsUpdate,

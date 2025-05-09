@@ -1,10 +1,14 @@
-import { Injectable, inject } from '@angular/core';
-import { State, Action, StateContext } from '@ngxs/store';
-import { UserStateModel } from './user.models';
-import { GetCurrentUser, SetCurrentUser } from './user.actions';
-import { UserService } from '@core/services/user/user.service';
+import { Action, State, StateContext } from '@ngxs/store';
+
 import { tap } from 'rxjs';
+
+import { inject, Injectable } from '@angular/core';
+
+import { UserService } from '@core/services/user/user.service';
 import { SetupProfileSettings } from '@osf/features/settings/profile-settings/profile-settings.actions';
+
+import { GetCurrentUser, SetCurrentUser } from './user.actions';
+import { UserStateModel } from './user.models';
 
 @State<UserStateModel>({
   name: 'user',
