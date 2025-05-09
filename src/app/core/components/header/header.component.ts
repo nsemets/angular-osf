@@ -4,7 +4,7 @@ import {
   computed,
   inject,
 } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 import { BreadcrumbComponent } from '@core/components/breadcrumb/breadcrumb.component';
@@ -16,7 +16,7 @@ import { UserSelectors } from '@core/store/user/user.selectors';
 @Component({
   standalone: true,
   selector: 'osf-header',
-  imports: [RouterLink, BreadcrumbComponent, MenuModule, ButtonModule],
+  imports: [BreadcrumbComponent, MenuModule, ButtonModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
