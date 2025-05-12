@@ -21,15 +21,7 @@ import { IS_XSMALL } from '@shared/utils/breakpoints.tokens';
 
 @Component({
   selector: 'osf-account-settings',
-  imports: [
-    Button,
-    Select,
-    RadioButton,
-    ReactiveFormsModule,
-    InputText,
-    Message,
-    SubHeaderComponent,
-  ],
+  imports: [Button, Select, RadioButton, ReactiveFormsModule, InputText, Message, SubHeaderComponent],
   providers: [DialogService],
   templateUrl: './account-settings.component.html',
   styleUrl: './account-settings.component.scss',
@@ -50,8 +42,7 @@ export class AccountSettingsComponent {
   });
   protected readonly optControl = new FormControl(false);
   protected readonly MOCK_COUNTRIES = MOCK_COUNTRIES;
-  protected readonly AccountSettingsPasswordFormControls =
-    AccountSettingsPasswordFormControls;
+  protected readonly AccountSettingsPasswordFormControls = AccountSettingsPasswordFormControls;
   private readonly dialogService = inject(DialogService);
   private dialogRef: DynamicDialogRef | null = null;
 
