@@ -18,10 +18,7 @@ describe('DeveloperAppDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        DeveloperAppDetailsComponent,
-        NgxsModule.forRoot([DeveloperAppsState]),
-      ],
+      imports: [DeveloperAppDetailsComponent, NgxsModule.forRoot([DeveloperAppsState])],
       providers: [
         ConfirmationService,
         provideHttpClient(withFetch()),

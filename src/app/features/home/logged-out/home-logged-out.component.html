@@ -1,9 +1,4 @@
-<section
-  class="home-container"
-  [class.tablet]="isMedium()"
-  [class.small]="isSmall()"
-  [class.mobile]="isXSmall()"
->
+<section class="home-container" [class.tablet]="isMedium()" [class.small]="isSmall()" [class.mobile]="isXSmall()">
   <div class="better-way-container">
     <div class="text-container">
       <h1 [innerHTML]="'home.loggedOut.hero.title' | translate"></h1>
@@ -18,19 +13,14 @@
       </div>
     </div>
     <div class="image-container">
-      <img
-        ngSrc="assets/images/better-research-background.svg"
-        alt="better-research"
-        height="377"
-        width="585"
-      />
+      <img ngSrc="assets/images/better-research-background.svg" alt="better-research" height="377" width="585" />
     </div>
   </div>
 
   <div class="discover-research-container">
     <div class="text-container">
       <h1 [innerHTML]="'home.loggedOut.discover.title' | translate"></h1>
-      <h3>{{ "home.loggedOut.discover.subtitle" | translate }}</h3>
+      <h3>{{ 'home.loggedOut.discover.subtitle' | translate }}</h3>
     </div>
 
     <div class="input-search">
@@ -50,104 +40,59 @@
       <div class="left-bar">
         <div class="info-section">
           <div class="icons-wrapper">
-            <img
-              ngSrc="assets/icons/colored/search.svg"
-              alt="search icon"
-              width="48"
-              height="48"
-            />
-            <img
-              ngSrc="assets/icons/source/arrow-down.svg"
-              alt="search icon"
-              width="16"
-              height="16"
-            />
+            <img ngSrc="assets/icons/colored/search.svg" alt="search icon" width="48" height="48" />
+            <img ngSrc="assets/icons/source/arrow-down.svg" alt="search icon" width="16" height="16" />
           </div>
           <div class="text-wrapper">
             <h2>
-              {{ "home.loggedOut.support.sections.search.title" | translate }}
+              {{ 'home.loggedOut.support.sections.search.title' | translate }}
             </h2>
             <h3>
-              {{
-                "home.loggedOut.support.sections.search.description" | translate
-              }}
+              {{ 'home.loggedOut.support.sections.search.description' | translate }}
             </h3>
           </div>
         </div>
 
         <div class="info-section">
           <div class="icons-wrapper">
-            <img
-              ngSrc="assets/icons/colored/design.svg"
-              alt="search icon"
-              width="48"
-              height="48"
-            />
-            <img
-              ngSrc="assets/icons/source/arrow-down.svg"
-              alt="search icon"
-              width="16"
-              height="16"
-            />
+            <img ngSrc="assets/icons/colored/design.svg" alt="search icon" width="48" height="48" />
+            <img ngSrc="assets/icons/source/arrow-down.svg" alt="search icon" width="16" height="16" />
           </div>
           <div class="text-wrapper">
             <h2>
-              {{ "home.loggedOut.support.sections.design.title" | translate }}
+              {{ 'home.loggedOut.support.sections.design.title' | translate }}
             </h2>
             <h3>
-              {{
-                "home.loggedOut.support.sections.design.description" | translate
-              }}
+              {{ 'home.loggedOut.support.sections.design.description' | translate }}
             </h3>
           </div>
         </div>
 
         <div class="info-section">
           <div class="icons-wrapper">
-            <img
-              ngSrc="assets/icons/colored/collect.svg"
-              alt="search icon"
-              width="48"
-              height="48"
-            />
-            <img
-              ngSrc="assets/icons/source/arrow-down.svg"
-              alt="search icon"
-              width="16"
-              height="16"
-            />
+            <img ngSrc="assets/icons/colored/collect.svg" alt="search icon" width="48" height="48" />
+            <img ngSrc="assets/icons/source/arrow-down.svg" alt="search icon" width="16" height="16" />
           </div>
           <div class="text-wrapper">
             <h2>
-              {{ "home.loggedOut.support.sections.collect.title" | translate }}
+              {{ 'home.loggedOut.support.sections.collect.title' | translate }}
             </h2>
             <h3>
-              {{
-                "home.loggedOut.support.sections.collect.description"
-                  | translate
-              }}
+              {{ 'home.loggedOut.support.sections.collect.description' | translate }}
             </h3>
           </div>
         </div>
 
         <div class="info-section">
           <div class="icons-wrapper">
-            <img
-              ngSrc="assets/icons/source/arrow-down.svg"
-              alt="search icon"
-              width="48"
-              height="48"
-            />
+            <img ngSrc="assets/icons/source/arrow-down.svg" alt="search icon" width="48" height="48" />
           </div>
           <div class="text-wrapper">
             <h2>
-              {{ "home.loggedOut.support.sections.publish.title" | translate }}
+              {{ 'home.loggedOut.support.sections.publish.title' | translate }}
             </h2>
             <h3>
-              {{
-                "home.loggedOut.support.sections.publish.description"
-                  | translate
-              }}
+              {{ 'home.loggedOut.support.sections.publish.description' | translate }}
             </h3>
           </div>
         </div>
@@ -164,10 +109,7 @@
     </div>
 
     <div class="learn-more-container">
-      <p-button
-        [label]="'home.loggedOut.support.learnMore' | translate"
-        class="learn-more"
-      />
+      <p-button [label]="'home.loggedOut.support.learnMore' | translate" class="learn-more" />
     </div>
   </div>
 
@@ -176,13 +118,7 @@
   </div>
 
   <div class="carousel-container">
-    <p-carousel
-      [value]="slides"
-      [numVisible]="1"
-      [numScroll]="1"
-      [circular]="true"
-      [autoplayInterval]="5000"
-    >
+    <p-carousel [value]="slides" [numVisible]="1" [numScroll]="1" [circular]="true" [autoplayInterval]="5000">
       <ng-template let-slide #item>
         <div class="slide">
           <div class="content-container">
@@ -201,55 +137,37 @@
     </p-carousel>
   </div>
 
-  <h1
-    class="integrations-title"
-    [innerHTML]="'home.loggedOut.integrations.title' | translate"
-  ></h1>
+  <h1 class="integrations-title" [innerHTML]="'home.loggedOut.integrations.title' | translate"></h1>
 
   @if (isMedium() || isWeb()) {
     <div class="integrations-main">
       <div class="integrations-container">
         <div class="integrations-bundle">
           <h3>
-            {{
-              "home.loggedOut.integrations.categories.authentication"
-                | translate
-            }}
+            {{ 'home.loggedOut.integrations.categories.authentication' | translate }}
           </h3>
         </div>
         <div class="integrations-bundle">
           <h3>
-            {{ "home.loggedOut.integrations.categories.discovery" | translate }}
+            {{ 'home.loggedOut.integrations.categories.discovery' | translate }}
           </h3>
         </div>
         <div class="integrations-bundle">
           <h3>
-            {{
-              "home.loggedOut.integrations.categories.references" | translate
-            }}
+            {{ 'home.loggedOut.integrations.categories.references' | translate }}
           </h3>
         </div>
         <div class="integrations-bundle">
           <h3>
-            {{ "home.loggedOut.integrations.categories.storage" | translate }}
+            {{ 'home.loggedOut.integrations.categories.storage' | translate }}
           </h3>
         </div>
       </div>
 
       <div class="integrations-container">
         <div class="integrations-bundle-border">
-          <img
-            ngSrc="assets/icons/socials/integrations/incommon.png"
-            alt="incommon"
-            height="36"
-            width="200"
-          />
-          <img
-            ngSrc="assets/icons/socials/integrations/sso.png"
-            alt="sso"
-            height="59"
-            width="135"
-          />
+          <img ngSrc="assets/icons/socials/integrations/incommon.png" alt="incommon" height="36" width="200" />
+          <img ngSrc="assets/icons/socials/integrations/sso.png" alt="sso" height="59" width="135" />
         </div>
 
         <div class="integrations-bundle-border">
@@ -259,42 +177,17 @@
             height="36"
             width="215"
           />
-          <img
-            ngSrc="assets/icons/socials/integrations/orcid.png"
-            alt="orcid"
-            height="34"
-            width="111"
-          />
+          <img ngSrc="assets/icons/socials/integrations/orcid.png" alt="orcid" height="34" width="111" />
         </div>
 
         <div class="integrations-bundle-border">
-          <img
-            ngSrc="assets/icons/socials/integrations/mendeley.png"
-            alt="mendeley"
-            height="42"
-            width="214"
-          />
-          <img
-            ngSrc="assets/icons/socials/integrations/zotero.png"
-            alt="zotero"
-            height="36"
-            width="152"
-          />
+          <img ngSrc="assets/icons/socials/integrations/mendeley.png" alt="mendeley" height="42" width="214" />
+          <img ngSrc="assets/icons/socials/integrations/zotero.png" alt="zotero" height="36" width="152" />
         </div>
 
         <div class="integrations-bundle">
-          <img
-            ngSrc="assets/icons/socials/integrations/dropbox.png"
-            alt="dropbox"
-            height="34"
-            width="175"
-          />
-          <img
-            ngSrc="assets/icons/socials/integrations/google-drive.png"
-            alt="google-drive"
-            height="35"
-            width="207"
-          />
+          <img ngSrc="assets/icons/socials/integrations/dropbox.png" alt="dropbox" height="34" width="175" />
+          <img ngSrc="assets/icons/socials/integrations/google-drive.png" alt="google-drive" height="35" width="207" />
         </div>
       </div>
     </div>
@@ -302,27 +195,15 @@
     <div class="integrations-main-small">
       <div class="integrations-bundle">
         <h3>
-          {{
-            "home.loggedOut.integrations.categories.authentication" | translate
-          }}
+          {{ 'home.loggedOut.integrations.categories.authentication' | translate }}
         </h3>
-        <img
-          ngSrc="assets/icons/socials/integrations/incommon.png"
-          alt="incommon"
-          height="36"
-          width="200"
-        />
-        <img
-          ngSrc="assets/icons/socials/integrations/sso.png"
-          alt="sso"
-          height="59"
-          width="135"
-        />
+        <img ngSrc="assets/icons/socials/integrations/incommon.png" alt="incommon" height="36" width="200" />
+        <img ngSrc="assets/icons/socials/integrations/sso.png" alt="sso" height="59" width="135" />
       </div>
 
       <div class="integrations-bundle">
         <h3>
-          {{ "home.loggedOut.integrations.categories.discovery" | translate }}
+          {{ 'home.loggedOut.integrations.categories.discovery' | translate }}
         </h3>
         <img
           ngSrc="assets/icons/socials/integrations/google-scholar.png"
@@ -330,59 +211,28 @@
           height="36"
           width="215"
         />
-        <img
-          ngSrc="assets/icons/socials/integrations/orcid.png"
-          alt="orcid"
-          height="34"
-          width="111"
-        />
+        <img ngSrc="assets/icons/socials/integrations/orcid.png" alt="orcid" height="34" width="111" />
       </div>
 
       <div class="integrations-bundle">
         <h3>
-          {{ "home.loggedOut.integrations.categories.references" | translate }}
+          {{ 'home.loggedOut.integrations.categories.references' | translate }}
         </h3>
-        <img
-          ngSrc="assets/icons/socials/integrations/mendeley.png"
-          alt="mendeley"
-          height="42"
-          width="214"
-        />
-        <img
-          ngSrc="assets/icons/socials/integrations/zotero.png"
-          alt="zotero"
-          height="36"
-          width="152"
-        />
+        <img ngSrc="assets/icons/socials/integrations/mendeley.png" alt="mendeley" height="42" width="214" />
+        <img ngSrc="assets/icons/socials/integrations/zotero.png" alt="zotero" height="36" width="152" />
       </div>
 
       <div class="integrations-bundle">
         <h3>
-          {{ "home.loggedOut.integrations.categories.storage" | translate }}
+          {{ 'home.loggedOut.integrations.categories.storage' | translate }}
         </h3>
-        <img
-          ngSrc="assets/icons/socials/integrations/dropbox.png"
-          alt="dropbox"
-          height="34"
-          width="175"
-        />
-        <img
-          ngSrc="assets/icons/socials/integrations/google-drive.png"
-          alt="google-drive"
-          height="35"
-          width="207"
-        />
+        <img ngSrc="assets/icons/socials/integrations/dropbox.png" alt="dropbox" height="34" width="175" />
+        <img ngSrc="assets/icons/socials/integrations/google-drive.png" alt="google-drive" height="35" width="207" />
       </div>
     </div>
   } @else {
     <div class="integrations-main-mobile">
-      <p-carousel
-        [value]="icons"
-        [numVisible]="1"
-        [numScroll]="1"
-        [circular]="true"
-        [autoplayInterval]="5000"
-      >
+      <p-carousel [value]="icons" [numVisible]="1" [numScroll]="1" [circular]="true" [autoplayInterval]="5000">
         <ng-template let-icon #item>
           <div class="slide">
             <h3>{{ icon.title | translate }}</h3>

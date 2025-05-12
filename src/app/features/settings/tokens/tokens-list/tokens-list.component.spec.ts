@@ -39,9 +39,7 @@ describe('TokensListComponent', () => {
 
   beforeEach(async () => {
     store = jasmine.createSpyObj('Store', ['dispatch', 'selectSignal']);
-    confirmationService = jasmine.createSpyObj('ConfirmationService', [
-      'confirm',
-    ]);
+    confirmationService = jasmine.createSpyObj('ConfirmationService', ['confirm']);
     isXSmall$ = new BehaviorSubject<boolean>(false);
 
     store.selectSignal.and.returnValue(signal(mockTokens));

@@ -17,17 +17,8 @@ describe('HomeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        HomeComponent,
-        NgxsModule.forRoot([MyProjectsState]),
-        TranslateModule.forRoot(),
-      ],
-      providers: [
-        provideRouter([]),
-        provideHttpClient(withFetch()),
-        provideHttpClientTesting(),
-        TranslateStore,
-      ],
+      imports: [HomeComponent, NgxsModule.forRoot([MyProjectsState]), TranslateModule.forRoot()],
+      providers: [provideRouter([]), provideHttpClient(withFetch()), provideHttpClientTesting(), TranslateStore],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HomeComponent);

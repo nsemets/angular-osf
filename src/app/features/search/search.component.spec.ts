@@ -24,10 +24,7 @@ describe('SearchComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        SearchComponent,
-        NgxsModule.forRoot([SearchState, ResourceFiltersState]),
-      ],
+      imports: [SearchComponent, NgxsModule.forRoot([SearchState, ResourceFiltersState])],
       providers: [
         provideHttpClient(withFetch()),
         provideHttpClientTesting(),
@@ -39,10 +36,7 @@ describe('SearchComponent', () => {
           imports: [SearchInputComponent, ResourcesWrapperComponent],
         },
         add: {
-          imports: [
-            MockComponent(SearchInputComponent),
-            MockComponent(ResourcesWrapperComponent),
-          ],
+          imports: [MockComponent(SearchInputComponent), MockComponent(ResourcesWrapperComponent)],
         },
       })
       .compileComponents();

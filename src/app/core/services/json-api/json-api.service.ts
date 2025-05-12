@@ -10,8 +10,7 @@ import { JsonApiResponse } from '@core/services/json-api/json-api.entity';
 })
 export class JsonApiService {
   http: HttpClient = inject(HttpClient);
-  readonly #token =
-    'Bearer 2rjFZwmdDG4rtKj7hGkEMO6XyHBM2lN7XBbsA1e8OqcFhOWu6Z7fQZiheu9RXtzSeVrgOt';
+  readonly #token = 'Bearer 2rjFZwmdDG4rtKj7hGkEMO6XyHBM2lN7XBbsA1e8OqcFhOWu6Z7fQZiheu9RXtzSeVrgOt';
   readonly #headers = new HttpHeaders({
     Authorization: this.#token,
     Accept: 'application/vnd.api+json',
@@ -45,11 +44,7 @@ export class JsonApiService {
     return httpParams;
   }
 
-  post<T>(
-    url: string,
-    body: unknown,
-    params?: Record<string, unknown>,
-  ): Observable<T> {
+  post<T>(url: string, body: unknown, params?: Record<string, unknown>): Observable<T> {
     return this.http
       .post<JsonApiResponse<T, null>>(url, body, {
         headers: this.#headers,
