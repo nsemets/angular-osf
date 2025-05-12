@@ -15,8 +15,5 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 export class AddEmailComponent {
   readonly dialogRef = inject(DynamicDialogRef);
 
-  protected readonly emailControl = new FormControl('', [
-    Validators.email,
-    Validators.required,
-  ]);
+  protected readonly emailControl = new FormControl('', [Validators.email, Validators.required]);
 }

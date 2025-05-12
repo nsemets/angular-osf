@@ -6,10 +6,7 @@ import { inject, Injectable } from '@angular/core';
 import { JsonApiResponse } from '@core/services/json-api/json-api.entity';
 import { JsonApiService } from '@core/services/json-api/json-api.service';
 
-import {
-  Institution,
-  UserInstitutionGetResponse,
-} from './entities/institutions.models';
+import { Institution, UserInstitutionGetResponse } from './entities/institutions.models';
 import { InstitutionsMapper } from './mappers/institutions.mapper';
 
 @Injectable({
@@ -24,10 +21,6 @@ export class InstitutionsService {
     // const url = this.#baseUrl + 'users/26c59/institutions/';
     return this.#jsonApiService
       .get<JsonApiResponse<UserInstitutionGetResponse[], null>>(url)
-      .pipe(
-        map((response) =>
-          response.data.map((item) => InstitutionsMapper.fromResponse(item)),
-        ),
-      );
+      .pipe(map((response) => response.data.map((item) => InstitutionsMapper.fromResponse(item))));
   }
 }
