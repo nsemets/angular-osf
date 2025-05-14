@@ -1,3 +1,7 @@
+import { MockProvider } from 'ng-mocks';
+
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AddEmailComponent } from './add-email.component';
@@ -9,6 +13,7 @@ describe('AddEmailComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AddEmailComponent],
+      providers: [MockProvider(DynamicDialogRef)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AddEmailComponent);
