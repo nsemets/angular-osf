@@ -1,0 +1,48 @@
+<osf-sub-header [title]="'navigation.project.analytics'"></osf-sub-header>
+
+<section class="flex flex-column bg-white flex-1 h-full p-5 gap-4">
+  <div class="flex justify-content-between gap-4" [ngClass]="{ 'flex-column gap-3': isMobile() }">
+    <osf-analytics-kpi
+      [title]="'project.analytics.kpi.forks'"
+      [value]="'6'"
+      [showButton]="true"
+      [buttonLabel]="'project.analytics.kpi.viewForks'"
+    ></osf-analytics-kpi>
+
+    <osf-analytics-kpi
+      [title]="'project.analytics.kpi.linksToThisProject'"
+      [value]="'4'"
+      [showButton]="true"
+      [buttonLabel]="'project.analytics.kpi.viewLinks'"
+    ></osf-analytics-kpi>
+
+    <osf-analytics-kpi [title]="'project.analytics.kpi.templateCopies'" [value]="'7'"></osf-analytics-kpi>
+  </div>
+
+  <div class="flex align-items-center justify-content-end mt-6">
+    <label class="date-range-label" for="date-range">{{ 'project.analytics.charts.showAnalytics' | translate }}</label>
+
+    <p-select
+      class="ml-3"
+      inputId="date-range"
+      [options]="rangeOptions"
+      optionLabel="dateRange"
+      [ngModel]="selectedRange()"
+      (ngModelChange)="selectedRange.set($event)"
+    >
+      <ng-template #selectedItem let-selectedOption>
+        {{ selectedOption.label | translate }}
+      </ng-template>
+
+      <ng-template #item let-item>
+        {{ item.label | translate }}
+      </ng-template>
+    </p-select>
+  </div>
+
+  <osf-line-chart
+    [title]="'project.analytics.charts.uniqueVisits'"
+    [labels]="chartLabels"
+    [datasets]="chartDatasets"
+  ></osf-line-chart>
+</section>

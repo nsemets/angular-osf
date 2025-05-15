@@ -29,6 +29,7 @@
                 [routerLinkActive]="item.routerLink ? 'active' : ''"
                 [routerLinkActiveOptions]="{ exact: true }"
                 class="nav-link flex"
+                (click)="goToLink()"
               >
                 @if (item.icon) {
                   <i [class]="item.icon" class="nav-icon"></i>

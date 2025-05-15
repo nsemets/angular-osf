@@ -1,0 +1,12 @@
+.date-range-label {
+  color: var(--dark-blue-1);
+}
+
+osf-line-chart {
+  display: block;
+  width: 100%;
+  margin-top: 2rem;
+  border: 1px solid var(--p-content-border-color);
+  border-radius: 8px;
+  padding: 1rem;
+}
