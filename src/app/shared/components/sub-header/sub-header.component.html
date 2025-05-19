@@ -3,7 +3,7 @@
     @if (icon()) {
       <i [class]="'osf-icon-' + icon()"></i>
     }
-    <h1>{{ title() | translate }}</h1>
+    <h1>{{ title() }}</h1>
   </div>
   @if (showButton()) {
     <div class="btn-container" [class.btn-full-width]="isXSmall()">

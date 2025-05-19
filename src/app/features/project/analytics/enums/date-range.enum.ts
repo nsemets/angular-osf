@@ -1,5 +1,5 @@
 export enum DateRange {
-  PastWeek = 1,
-  PastTwoWeeks = 2,
-  PastMonth = 3,
+  PastWeek = 'week',
+  PastTwoWeeks = 'fortnight',
+  PastMonth = 'month',
 }

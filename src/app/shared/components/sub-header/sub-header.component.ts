@@ -1,5 +1,3 @@
-import { TranslatePipe } from '@ngx-translate/core';
-
 import { Button } from 'primeng/button';
 
 import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
@@ -9,7 +7,7 @@ import { IS_XSMALL } from '@shared/utils/breakpoints.tokens';
 
 @Component({
   selector: 'osf-sub-header',
-  imports: [Button, TranslatePipe],
+  imports: [Button],
   templateUrl: './sub-header.component.html',
   styleUrl: './sub-header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

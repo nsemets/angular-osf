@@ -21,19 +21,20 @@ import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.comp
 import { ChartData, ChartOptions } from 'chart.js';
 
 @Component({
-  selector: 'osf-line-chart',
+  selector: 'osf-bar-chart',
   imports: [ChartModule, TranslatePipe, LoadingSpinnerComponent],
-  templateUrl: './line-chart.component.html',
-  styleUrl: './line-chart.component.scss',
+  templateUrl: './bar-chart.component.html',
+  styleUrl: './bar-chart.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LineChartComponent implements OnInit {
+export class BarChartComponent implements OnInit {
   isLoading = input<boolean>(false);
   title = input<string>('');
   labels = input<string[]>([]);
   datasets = input<DatasetInput[]>([]);
   showLegend = input<boolean>(false);
   showGrid = input<boolean>(false);
+  orientation = input<'horizontal' | 'vertical'>('horizontal');
 
   protected options = signal<ChartOptions>({});
   protected data = signal<ChartData>({} as ChartData);
@@ -76,6 +77,7 @@ export class LineChartComponent implements OnInit {
 
   private setChartOptions(textColorSecondary: string, surfaceBorder: string) {
     this.options.set({
+      indexAxis: this.orientation() === 'horizontal' ? 'y' : 'x',
       maintainAspectRatio: false,
       aspectRatio: 0.8,
       plugins: {
@@ -88,7 +90,6 @@ export class LineChartComponent implements OnInit {
         x: {
           ticks: {
             color: textColorSecondary,
-            maxTicksLimit: 10,
           },
           grid: {
             display: this.showGrid(),

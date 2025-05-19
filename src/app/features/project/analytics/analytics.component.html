@@ -1,22 +1,28 @@
-<osf-sub-header [title]="'navigation.project.analytics'"></osf-sub-header>
+<osf-sub-header [title]="'navigation.project.analytics' | translate"></osf-sub-header>
 
 <section class="flex flex-column bg-white flex-1 h-full p-5 gap-4">
-  <div class="flex justify-content-between gap-4" [ngClass]="{ 'flex-column gap-3': isMobile() }">
+  <div class="flex flex-column sm:flex-row sm:justify-content-between gap-3 sm:gap-4">
     <osf-analytics-kpi
+      [isLoading]="isRelatedCountsLoading()"
       [title]="'project.analytics.kpi.forks'"
-      [value]="'6'"
+      [value]="relatedCounts()?.forksCount"
       [showButton]="true"
       [buttonLabel]="'project.analytics.kpi.viewForks'"
     ></osf-analytics-kpi>
 
     <osf-analytics-kpi
+      [isLoading]="isRelatedCountsLoading()"
       [title]="'project.analytics.kpi.linksToThisProject'"
-      [value]="'4'"
+      [value]="relatedCounts()?.linksToCount"
       [showButton]="true"
       [buttonLabel]="'project.analytics.kpi.viewLinks'"
     ></osf-analytics-kpi>
 
-    <osf-analytics-kpi [title]="'project.analytics.kpi.templateCopies'" [value]="'7'"></osf-analytics-kpi>
+    <osf-analytics-kpi
+      [isLoading]="isRelatedCountsLoading()"
+      [title]="'project.analytics.kpi.templateCopies'"
+      [value]="relatedCounts()?.templateCount"
+    ></osf-analytics-kpi>
   </div>
 
   <div class="flex align-items-center justify-content-end mt-6">
@@ -28,7 +34,8 @@
       [options]="rangeOptions"
       optionLabel="dateRange"
       [ngModel]="selectedRange()"
-      (ngModelChange)="selectedRange.set($event)"
+      (ngModelChange)="onRangeChange($event)"
+      [disabled]="isMetricsError() || isMetricsLoading()"
     >
       <ng-template #selectedItem let-selectedOption>
         {{ selectedOption.label | translate }}
@@ -40,9 +47,39 @@
     </p-select>
   </div>
 
-  <osf-line-chart
-    [title]="'project.analytics.charts.uniqueVisits'"
-    [labels]="chartLabels"
-    [datasets]="chartDatasets"
-  ></osf-line-chart>
+  <div class="flex flex-column xl:flex-row flex-wrap gap-4" [class]="{ disabled: isMetricsError() }">
+    <osf-line-chart
+      class="chart xl-half-width"
+      [isLoading]="isMetricsLoading()"
+      [title]="'project.analytics.charts.uniqueVisits'"
+      [labels]="visitsLabels"
+      [datasets]="visitsDataset"
+    ></osf-line-chart>
+
+    <osf-bar-chart
+      class="chart xl-half-width"
+      [isLoading]="isMetricsLoading()"
+      [title]="'project.analytics.charts.timeOfDayOfVisits'"
+      [labels]="totalVisitsLabels"
+      [datasets]="totalVisitsDataset"
+      [orientation]="'vertical'"
+    ></osf-bar-chart>
+
+    <osf-pie-chart
+      class="chart xl-half-width"
+      [isLoading]="isMetricsLoading()"
+      [title]="'project.analytics.charts.topReferrers'"
+      [labels]="topReferrersLabels"
+      [datasets]="topReferrersDataset"
+      [showLegend]="true"
+    ></osf-pie-chart>
+
+    <osf-bar-chart
+      class="chart xl-half-width"
+      [isLoading]="isMetricsLoading()"
+      [title]="'project.analytics.charts.popularPages'"
+      [labels]="popularPagesLabels"
+      [datasets]="popularPagesDataset"
+    ></osf-bar-chart>
+  </div>
 </section>

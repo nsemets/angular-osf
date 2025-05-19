@@ -236,7 +236,8 @@
         "uniqueVisits": "Unique visits",
         "timeOfDayOfVisits": "Time of day of visits",
         "topReferrers": "Top referrers",
-        "popularPages": "Popular pages"
+        "popularPages": "Popular pages",
+        "visits": "Visits"
       }
     }
   },
