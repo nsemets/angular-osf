@@ -103,6 +103,11 @@ export const routes: Routes = [
                 (mod) => mod.RegistrationsComponent
               ),
           },
+          {
+            path: 'settings',
+            loadComponent: () =>
+              import('./features/project/settings/settings.component').then((mod) => mod.SettingsComponent),
+          },
         ],
       },
       {

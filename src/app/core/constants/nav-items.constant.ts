@@ -87,6 +87,10 @@ export const PROJECT_MENU_ITEMS: MenuItem[] = [
         label: 'navigation.project.registrations',
         routerLink: 'registrations',
       },
+      {
+        label: 'navigation.project.settings',
+        routerLink: 'settings',
+      },
     ],
   },
 ];
