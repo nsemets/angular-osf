@@ -35,7 +35,7 @@
             ></textarea>
           </div>
 
-          <div class="flex sm:justify-content-end flex-0 gap-2 justify-content-between">
+          <div class="flex flex-0 gap-2 justify-content-between sm:justify-content-end">
             <p-button
               type="button"
               [label]="'settings.accountSettings.common.buttons.cancel' | translate"
@@ -54,7 +54,7 @@
             <p-button
               severity="danger"
               [label]="'myProjects.settings.deleteProject' | translate"
-              class="md:ml-auto sm:w-10rem btn-full-width"
+              class="btn-full-width md:ml-auto sm:w-10rem"
             ></p-button>
           </div>
         </form>
@@ -118,18 +118,7 @@
 
         <p class="pb-4">{{ 'myProjects.settings.wikiConfigureText' | translate }}</p>
 
-        <osf-project-detail-setting-accordion
-          [title]="'Project name example'"
-          [rightControls]="[
-            {
-              type: 'dropdown',
-              label: 'Who can edit:',
-              value: access,
-              options: accessOptions,
-              onChange: onAccessChange,
-            },
-          ]"
-        >
+        <osf-project-detail-setting-accordion [title]="'Project name example'" [rightControls]="rightControls['wiki']">
           <div class="flex align-items-baseline gap-2">
             <i class="pi pi-minus text-sm icon-space"></i>
             <span>Sub text</span>
@@ -172,20 +161,7 @@
 
         <osf-project-detail-setting-accordion
           [title]="'Project name example'"
-          [rightControls]="[
-            {
-              type: 'dropdown',
-              label: 'Comments added:',
-              value: commentSetting,
-              options: dropdownOptions,
-            },
-            {
-              type: 'dropdown',
-              label: 'Files updated:',
-              value: fileSetting,
-              options: dropdownOptions,
-            },
-          ]"
+          [rightControls]="rightControls['notifications']"
         >
           <div class="flex align-items-baseline gap-2">
             <i class="pi pi-minus text-sm icon-space"></i>
@@ -228,7 +204,7 @@
         <div class="flex flex-column gap-3 w-full mt-5">
           @for (affiliation of affiliations; track $index) {
             <div
-              class="flex justify-content-between align-items-center w-full pb-2 sm:pr-4 pr-2 border-bottom-1 border-gray-300"
+              class="flex justify-content-between align-items-center w-full border-bottom-1 border-gray-300 pb-2 pr-2 sm:pr-4"
             >
               <div class="flex align-items-center gap-3">
                 <img ngSrc="assets/images/cos-shield.svg" alt="cos-shield" width="44" height="44" />

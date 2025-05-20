@@ -14,11 +14,11 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
-import { ProjectDetailSettingAccordionComponent } from '@osf/features/project/settings/components';
+import { ProjectDetailSettingAccordionComponent, RightControl } from '@osf/features/project/settings/components';
 import { mockSettingsData } from '@osf/features/project/settings/mock-data';
 import { LinkTableModel } from '@osf/features/project/settings/models';
 import { ShareIndexingEnum } from '@osf/features/settings/account-settings/components/share-indexing/enums/share-indexing.enum';
-import { ViewOnlyTableComponent } from '@osf/shared';
+import { ViewOnlyTableComponent } from '@shared/components';
 import { SubHeaderComponent } from '@shared/components/sub-header/sub-header.component';
 import { ProjectForm } from '@shared/entities/create-project-form.interface';
 import { ProjectFormControls } from '@shared/entities/create-project-form-controls.enum';
@@ -73,6 +73,7 @@ export class SettingsComponent {
   fileSetting: string;
   dropdownOptions: { label: string; value: string }[];
   affiliations: { name: string; canDelete: boolean }[];
+  rightControls: { wiki: RightControl[]; notifications: RightControl[] };
 
   constructor() {
     [
@@ -83,6 +84,7 @@ export class SettingsComponent {
       this.fileSetting,
       this.dropdownOptions,
       this.affiliations,
+      this.rightControls,
     ] = [
       mockSettingsData.tableData,
       mockSettingsData.access,
@@ -91,6 +93,7 @@ export class SettingsComponent {
       mockSettingsData.fileSetting,
       mockSettingsData.dropdownOptions,
       mockSettingsData.affiliations,
+      mockSettingsData.rightControls as { wiki: RightControl[]; notifications: RightControl[] },
     ];
   }
 

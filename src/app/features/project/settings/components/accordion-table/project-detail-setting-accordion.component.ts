@@ -5,7 +5,7 @@ import { LowerCasePipe, NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-type RightControl =
+export type RightControl =
   | {
       type: 'dropdown';
       label?: string;

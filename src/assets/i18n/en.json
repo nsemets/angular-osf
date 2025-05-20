@@ -249,7 +249,7 @@
       "institutionalLogos": "institutional logos to be displayed on public projects",
       "publicProjectsToBeDiscoverable": "public projects to be discoverable on specific institutional landing pages",
       "singleSignInToTHeOSF": "single sign-in to the OSF with institutional credentials",
-      "faq": "FAQ",
+      "faq": "FAQ"
     }
   },
   "settings": {

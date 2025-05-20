@@ -1,5 +1,5 @@
 <div
-  class="flex justify-between align-items-center mb-2 gap-2 sm:gap-4 w-full border-bottom-1 border-gray-300 flex-column sm:flex-row"
+  class="flex justify-between align-items-center mb-2 w-full border-bottom-1 border-gray-300 gap-2 flex-column sm:flex-row sm:gap-4"
 >
   <div class="flex align-items-center gap-2 cursor-pointer w-full sm:w-5">
     <p-button
@@ -15,7 +15,7 @@
   </div>
 
   @if (rightControls().length > 0) {
-    <div class="flex flex-wrap gap-2 sm:gap-4 align-items-center w-full sm:w-7">
+    <div class="flex flex-wrap gap-2 align-items-center w-full sm:gap-4 sm:w-7">
       @for (control of rightControls(); track control.value) {
         <div class="flex align-items-center gap-2">
           @if (control.label) {

@@ -235,7 +235,7 @@
   }
 }
 
-.bg-primary-blue-second {
+.bg-primary-blue-second.p-button {
   background-color: var.$pr-blue-2;
 }
 
@@ -243,7 +243,7 @@
   .p-button {
     box-shadow: none;
 
-    @media (max-width: 600px) {
+    @media (max-width: 575px) {
       padding: 0;
     }
   }
