@@ -17,6 +17,7 @@ import { LinkTableModel } from '@osf/features/project/settings/models';
   templateUrl: './view-only-table.component.html',
   styleUrl: './view-only-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class ViewOnlyTableComponent {
   tableData = input.required<LinkTableModel[]>();

@@ -3,156 +3,29 @@
 
   <div class="flex-column flex flex-1 w-full">
     <p-tabpanels role="tablist" class="flex flex-column gap-4 flex-1 w-full bg-white" [class.mobile]="!isDesktop()">
-      <p-card>
-        <h3 class="text-xl pb-4">{{ 'myProjects.settings.project' | translate }}</h3>
+      <osf-settings-project-form-card
+        [formGroup]="projectForm"
+        (submitForm)="submitForm()"
+        (resetForm)="resetForm()"
+      ></osf-settings-project-form-card>
 
-        <form [formGroup]="projectForm" (ngSubmit)="submitForm()" class="flex flex-column gap-4">
-          <!-- Title -->
-          <div class="flex flex-column">
-            <label class="input-label" for="project-title">
-              {{ 'myProjects.createProject.title' | translate }}
-            </label>
-            <input
-              pInputText
-              id="project-title"
-              type="text"
-              aria-required="true"
-              aria-describedby="project-title"
-              [formControlName]="ProjectFormControls.Title"
-            />
-          </div>
+      <osf-settings-storage-location-card
+        [location]="'United States'"
+        [locationText]="'Storage location cannot be changed after project is created.'"
+      ></osf-settings-storage-location-card>
 
-          <!-- Description -->
-          <div class="flex flex-column">
-            <label class="input-label" for="description">
-              {{ 'myProjects.createProject.description.label' | translate }}
-            </label>
-            <textarea
-              pTextarea
-              id="description"
-              [formControlName]="ProjectFormControls.Description"
-              [rows]="5"
-            ></textarea>
-          </div>
+      <osf-settings-view-only-links-card [tableData]="tableData"></osf-settings-view-only-links-card>
 
-          <div class="flex flex-0 gap-2 justify-content-between sm:justify-content-end">
-            <p-button
-              type="button"
-              [label]="'settings.accountSettings.common.buttons.cancel' | translate"
-              (onClick)="resetForm()"
-              severity="info"
-              class="w-10rem btn-full-width"
-            ></p-button>
-            <p-button
-              type="submit"
-              class="w-10rem btn-full-width bg-primary-blue-second"
-              [label]="'myProjects.settings.saveChanges' | translate"
-            ></p-button>
-          </div>
+      <osf-settings-access-requests-card [formControl]="accessRequest"></osf-settings-access-requests-card>
 
-          <div class="flex justify-content-end w-full flex-0 border-top-1 pt-4 border-gray-300">
-            <p-button
-              severity="danger"
-              [label]="'myProjects.settings.deleteProject' | translate"
-              class="btn-full-width sm:w-10rem md:ml-auto"
-            ></p-button>
-          </div>
-        </form>
-      </p-card>
+      <osf-settings-wiki-card
+        [formControl]="wiki"
+        [rightControls]="rightControls['wiki']"
+        [accessOptions]="accessOptions"
+        (accessChange)="onAccessChange($event)"
+      ></osf-settings-wiki-card>
 
-      <p-card>
-        <h3 class="text-xl pb-4">{{ 'myProjects.createProject.storageLocation' | translate }}</h3>
-
-        <div class="flex gap-2 pb-2">
-          <p>{{ 'myProjects.createProject.storageLocation' | translate }}:</p>
-
-          <p>United States</p>
-        </div>
-
-        <p class="font-italic">Storage location cannot be changed after project is created.</p>
-      </p-card>
-
-      <p-card>
-        <h3 class="text-xl pb-2">{{ 'myProjects.settings.viewOnlyLinks' | translate }}</h3>
-
-        <p>{{ 'myProjects.settings.viewOnlySubtitle' | translate }}</p>
-
-        <osf-view-only-table [tableData]="tableData"></osf-view-only-table>
-      </p-card>
-
-      <p-card>
-        <h3 class="text-xl pb-4">{{ 'myProjects.settings.accessRequests' | translate }}</h3>
-
-        <div class="flex align-items-center w-full">
-          <p-checkbox
-            ariaLabel="Checkbox for access request"
-            [binary]="true"
-            [formControl]="accessRequest"
-            id="accessRequest"
-            name="ongoing"
-          ></p-checkbox>
-          <label class="input-label" for="accessRequest" class="ml-2">
-            {{ 'myProjects.settings.accessRequestsText' | translate }}
-          </label>
-        </div>
-      </p-card>
-
-      <p-card>
-        <h3 class="text-xl pb-4">{{ 'myProjects.settings.wiki' | translate }}</h3>
-
-        <div class="flex align-items-center w-full">
-          <p-checkbox
-            ariaLabel="Checkbox for wiki"
-            [binary]="true"
-            [formControl]="wiki"
-            id="wiki"
-            name="ongoing"
-          ></p-checkbox>
-
-          <label class="input-label" for="wiki" class="ml-2">
-            {{ 'myProjects.settings.wikiText' | translate }}
-          </label>
-        </div>
-
-        <h3 class="text-xl py-4">{{ 'myProjects.settings.wikiConfigureTitle' | translate }}</h3>
-
-        <p class="pb-4">{{ 'myProjects.settings.wikiConfigureText' | translate }}</p>
-
-        <osf-project-detail-setting-accordion [title]="'Project name example'" [rightControls]="rightControls['wiki']">
-          <div class="flex align-items-baseline gap-2">
-            <i class="pi pi-minus text-sm icon-space"></i>
-            <span>Sub text</span>
-          </div>
-        </osf-project-detail-setting-accordion>
-      </p-card>
-
-      <p-card>
-        <h3 class="text-xl pb-4">{{ 'myProjects.settings.commenting' | translate }}</h3>
-
-        <div class="flex flex-column gap-3">
-          <div class="flex gap-3">
-            <p-radio-button
-              [ariaLabel]="'Select ' + 'myProjects.settings.contributorsCanPost' | translate"
-              name="contributorsCanPost"
-              value="0"
-              [(ngModel)]="commenting"
-            ></p-radio-button>
-            <p>{{ 'myProjects.settings.contributorsCanPost' | translate }}</p>
-          </div>
-
-          <div class="flex gap-3">
-            <p-radio-button
-              [ariaLabel]="'Select ' + 'myProjects.settings.osfUserCanPost' | translate"
-              name="osfUserCanPost"
-              value="1"
-              [(ngModel)]="commenting"
-            >
-            </p-radio-button>
-
-            <p>{{ 'myProjects.settings.osfUserCanPost' | translate }}</p>
-          </div>
-        </div>
-      </p-card>
+      <osf-settings-commenting-card [(commenting)]="commenting"></osf-settings-commenting-card>
 
       <p-card>
         <h3 class="text-xl pb-4">{{ 'myProjects.settings.emailNotifications' | translate }}</h3>
@@ -181,7 +54,7 @@
             id="redirectLink"
             name="ongoing"
           ></p-checkbox>
-          <label for="redirectLink" class="ml-2">
+          <label for="redirectLink" class="input-label ml-2">
             {{ 'myProjects.settings.redirectLinkText' | translate }}
           </label>
         </div>

@@ -12,6 +12,7 @@ import { RightControl } from '@osf/features/project/settings/models/right-contro
   imports: [NgClass, DropdownModule, FormsModule, Button, LowerCasePipe],
   templateUrl: './project-detail-setting-accordion.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class ProjectDetailSettingAccordionComponent {
   title = input.required<string>();
