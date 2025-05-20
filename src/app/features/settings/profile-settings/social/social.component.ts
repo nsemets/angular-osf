@@ -3,10 +3,10 @@ import { Store } from '@ngxs/store';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
-import { DropdownModule } from 'primeng/dropdown';
 import { InputGroup } from 'primeng/inputgroup';
 import { InputGroupAddon } from 'primeng/inputgroupaddon';
 import { InputText } from 'primeng/inputtext';
+import { SelectModule } from 'primeng/select';
 
 import { ChangeDetectionStrategy, Component, effect, HostBinding, inject } from '@angular/core';
 import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -24,7 +24,7 @@ import {
 
 @Component({
   selector: 'osf-social',
-  imports: [Button, DropdownModule, InputGroup, InputGroupAddon, InputText, ReactiveFormsModule, TranslatePipe],
+  imports: [Button, SelectModule, InputGroup, InputGroupAddon, InputText, ReactiveFormsModule, TranslatePipe],
   templateUrl: './social.component.html',
   styleUrl: './social.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -45,9 +45,7 @@ export class SocialComponent {
       const socialLinks = this.socialLinks();
 
       for (const socialLinksKey in socialLinks) {
-        console.log(socialLinksKey);
         const socialLink = socialLinks[socialLinksKey as SocialLinksKeys];
-        console.log(socialLink);
 
         const socialLinkGroup = this.#fb.group({
           socialOutput: [this.socials.find((social) => social.key === socialLinksKey), Validators.required],
