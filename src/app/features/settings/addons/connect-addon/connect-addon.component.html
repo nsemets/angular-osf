@@ -25,10 +25,10 @@
                 <ng-template pTemplate="body" let-term>
                   <tr
                     [ngClass]="{
-                    'background-warning': term.type === 'warning',
-                    'background-success': term.type === 'info',
-                    'background-danger': term.type === 'danger',
-                  }"
+                      'background-warning': term.type === 'warning',
+                      'background-success': term.type === 'info',
+                      'background-danger': term.type === 'danger',
+                    }"
                   >
                     <td>{{ term.function }}</td>
                     <td>{{ term.status }}</td>

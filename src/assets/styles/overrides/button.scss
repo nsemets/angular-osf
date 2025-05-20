@@ -235,12 +235,16 @@
   }
 }
 
-.bg-primary-blue-second {
+.bg-primary-blue-second.p-button {
   background-color: var.$pr-blue-2;
 }
 
 .button-shadow-none {
   .p-button {
     box-shadow: none;
+
+    @media (max-width: 575px) {
+      padding: 0;
+    }
   }
 }

@@ -8,9 +8,8 @@ describe('AddContributorDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AddContributorDialogComponent]
-    })
-    .compileComponents();
+      imports: [AddContributorDialogComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(AddContributorDialogComponent);
     component = fixture.componentInstance;

@@ -8,9 +8,8 @@ describe('CreateViewLinkDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CreateViewLinkDialogComponent]
-    })
-    .compileComponents();
+      imports: [CreateViewLinkDialogComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CreateViewLinkDialogComponent);
     component = fixture.componentInstance;

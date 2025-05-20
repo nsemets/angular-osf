@@ -47,7 +47,6 @@
         </p-select>
       </div>
     </div>
-
   </div>
 
   <p-table
@@ -68,10 +67,10 @@
   >
     <ng-template #header>
       <tr>
-        <th>{{'project.contributors.table.headers.name' | translate }}</th>
+        <th>{{ 'project.contributors.table.headers.name' | translate }}</th>
         <th>
           <div class="flex align-items-center">
-            <span>{{'project.contributors.table.headers.permissions' | translate }}</span>
+            <span>{{ 'project.contributors.table.headers.permissions' | translate }}</span>
             <i class="osf-icon-information blue-icon ml-1" [pTooltip]="permissionsTooltip" tooltipPosition="right"></i>
             <ng-template #permissionsTooltip>
               <div class="flex flex-column row-gap-3">
@@ -80,7 +79,7 @@
                 <div class="inside-list">
                   <p class="font-bold">Read</p>
                   <ul class="font-normal ml-4">
-                      <li>View project content and comment</li>
+                    <li>View project content and comment</li>
                   </ul>
                 </div>
 
@@ -102,27 +101,29 @@
                     <li>Public private settings</li>
                   </ul>
                 </div>
-
               </div>
             </ng-template>
           </div>
         </th>
         <th>
           <div class="flex align-items-center justify-content-center">
-            <span>{{'project.contributors.table.headers.contributor' | translate }}</span>
+            <span>{{ 'project.contributors.table.headers.contributor' | translate }}</span>
             <i class="osf-icon-information blue-icon ml-1" [pTooltip]="contributorTooltip" tooltipPosition="right"></i>
             <ng-template #contributorTooltip>
               <div class="flex flex-column row-gap-3">
                 <h2>Bibliographic Contributor Information</h2>
 
-                <span>Only bibliographic contributors will be displayed in the Contributors list and in project citations. Non-bibliographic contributors can read and modify the project as normal.</span>
+                <span
+                  >Only bibliographic contributors will be displayed in the Contributors list and in project citations.
+                  Non-bibliographic contributors can read and modify the project as normal.</span
+                >
               </div>
             </ng-template>
           </div>
         </th>
         <th>
           <div class="flex align-items-center justify-content-center">
-            <span>{{'project.contributors.table.headers.curator' | translate }}</span>
+            <span>{{ 'project.contributors.table.headers.curator' | translate }}</span>
             <i class="osf-icon-information blue-icon ml-1" [pTooltip]="curatorTooltip" tooltipPosition="right"></i>
             <ng-template #curatorTooltip>
               <div class="flex flex-column row-gap-3">
@@ -133,8 +134,8 @@
             </ng-template>
           </div>
         </th>
-        <th>{{'project.contributors.table.headers.employment' | translate }}</th>
-        <th>{{'project.contributors.table.headers.education' | translate }}</th>
+        <th>{{ 'project.contributors.table.headers.employment' | translate }}</th>
+        <th>{{ 'project.contributors.table.headers.education' | translate }}</th>
         <th></th>
       </tr>
     </ng-template>
@@ -146,7 +147,7 @@
           </p>
         </td>
         <td class="select-font-normal" style="width: 2.5rem">
-          <div class=" no-border-dropdown">
+          <div class="no-border-dropdown">
             <p-select
               [placeholder]="'project.contributors.permissionFilter' | translate"
               [options]="permissionsOptions"
@@ -156,10 +157,10 @@
               (ngModelChange)="onItemPermissionChange($event)"
             >
               <ng-template #selectedItem let-selectedOption>
-                  <p>{{ selectedOption.label | translate }}</p>
+                <p>{{ selectedOption.label | translate }}</p>
               </ng-template>
               <ng-template #item let-item>
-                  <p>{{ item.label | translate }}</p>
+                <p>{{ item.label | translate }}</p>
               </ng-template>
             </p-select>
           </div>
@@ -171,26 +172,23 @@
         </td>
         <td>
           <div class="flex align-items-center justify-content-center">
-            <p-checkbox variant="filled" binary="true"  [(ngModel)]="item.curator"></p-checkbox>
+            <p-checkbox variant="filled" binary="true" [(ngModel)]="item.curator"></p-checkbox>
           </div>
         </td>
         <td>
-          @if(item.employmentHistory){
+          @if (item.employmentHistory) {
             <a [href]="item.employmentHistory">Show employment history</a>
-          }
-          @else {
+          } @else {
             <span>No employment history</span>
           }
         </td>
         <td>
           <div class="flex column-gap-2">
-            @if(item.educationHistory){
+            @if (item.educationHistory) {
               <a [href]="item.educationHistory">Show education history</a>
-            }
-            @else {
+            } @else {
               <span>No education history</span>
             }
-
           </div>
         </td>
         <td><i class="osf-icon-trash red-icon"></i></td>
@@ -199,12 +197,13 @@
   </p-table>
 
   <div class="flex flex-column row-gap-4 mt-6">
-      <h2>{{'project.contributors.viewOnly' | translate}}</h2>
-      <p>{{'project.contributors.createLink' | translate}}</p>
-      <p-button class="w-10rem" [label]="'project.contributors.createButton' | translate" (click)="createViewLink()"></p-button>
-      <osf-view-only-table [tableData]="tableData"></osf-view-only-table>
+    <h2>{{ 'project.contributors.viewOnly' | translate }}</h2>
+    <p>{{ 'project.contributors.createLink' | translate }}</p>
+    <p-button
+      class="w-10rem"
+      [label]="'project.contributors.createButton' | translate"
+      (click)="createViewLink()"
+    ></p-button>
+    <osf-view-only-table [tableData]="tableData"></osf-view-only-table>
   </div>
-
-
-
 </section>

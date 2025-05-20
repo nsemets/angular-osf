@@ -1,26 +1,21 @@
-import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
-import {Button} from "primeng/button";
-import {SearchInputComponent} from "@osf/shared";
-import {TranslatePipe} from "@ngx-translate/core";
-import {DynamicDialogRef} from 'primeng/dynamicdialog';
-import {InputText} from 'primeng/inputtext';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {Checkbox} from 'primeng/checkbox';
+import { TranslatePipe } from '@ngx-translate/core';
+
+import { Button } from 'primeng/button';
+import { Checkbox } from 'primeng/checkbox';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { InputText } from 'primeng/inputtext';
+
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+import { SearchInputComponent } from '@osf/shared';
 
 @Component({
   selector: 'osf-create-view-link-dialog',
-  imports: [
-    Button,
-    SearchInputComponent,
-    TranslatePipe,
-    InputText,
-    ReactiveFormsModule,
-    FormsModule,
-    Checkbox
-  ],
+  imports: [Button, SearchInputComponent, TranslatePipe, InputText, ReactiveFormsModule, FormsModule, Checkbox],
   templateUrl: './create-view-link-dialog.component.html',
   styleUrl: './create-view-link-dialog.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateViewLinkDialogComponent {
   dialogRef = inject(DynamicDialogRef);

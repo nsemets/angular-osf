@@ -9,7 +9,7 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { LinkTableModel } from '@osf/features/project/settings';
+import { LinkTableModel } from '@osf/features/project/settings/models';
 
 @Component({
   selector: 'osf-view-only-table',
@@ -22,6 +22,7 @@ export class ViewOnlyTableComponent {
   tableData = input.required<LinkTableModel[]>();
 
   readonly #clipboard = inject(Clipboard);
+
   copy(link: string): void {
     this.#clipboard.copy(link);
   }

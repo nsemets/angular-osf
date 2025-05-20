@@ -12,30 +12,39 @@
     />
   </div>
 
-  <hr class="break-line"/>
+  <hr class="break-line" />
 
   <div class="flex column-gap-2">
     <p-checkbox variant="filled" binary="true" [(ngModel)]="anonymous"></p-checkbox>
-    <p>Anonymize contributor list for this link (e.g., for blind peer review).
-      <span class="font-italic">Ensure the wiki pages, files, registration forms and add-ons do not contain identifying information.</span>
+    <p>
+      Anonymize contributor list for this link (e.g., for blind peer review).
+      <span class="font-italic"
+        >Ensure the wiki pages, files, registration forms and add-ons do not contain identifying information.</span
+      >
     </p>
   </div>
 
-  <hr class="break-line"/>
+  <hr class="break-line" />
 
-  <p>Which components would you like to associate with this link?
-    <span class="font-italic">Anyone with the private link can view—but not edit—the components associated with the link.</span>
+  <p>
+    Which components would you like to associate with this link?
+    <span class="font-italic"
+      >Anyone with the private link can view—but not edit—the components associated with the link.</span
+    >
   </p>
 
   <div class="flex flex-column gap-2">
     <div class="flex gap-1">
-      <p-checkbox variant="filled" binary="true" [(ngModel)]="componentExample1"></p-checkbox><p>Component Name Example</p>
+      <p-checkbox variant="filled" binary="true" [(ngModel)]="componentExample1"></p-checkbox>
+      <p>Component Name Example</p>
     </div>
     <div class="flex gap-1">
-      <p-checkbox variant="filled" binary="true" [(ngModel)]="componentExample2"></p-checkbox><p>Component Name Example</p>
+      <p-checkbox variant="filled" binary="true" [(ngModel)]="componentExample2"></p-checkbox>
+      <p>Component Name Example</p>
     </div>
     <div class="flex gap-1">
-      <p-checkbox variant="filled" binary="true" [(ngModel)]="componentExample3"></p-checkbox><p>Component Name Example</p>
+      <p-checkbox variant="filled" binary="true" [(ngModel)]="componentExample3"></p-checkbox>
+      <p>Component Name Example</p>
     </div>
   </div>
 

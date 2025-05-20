@@ -14,15 +14,13 @@ import { FormsModule } from '@angular/forms';
 
 import { MY_PROJECTS_TABLE_PARAMS } from '@core/constants/my-projects-table.constants';
 import { AddContributorDialogComponent } from '@osf/features/project/contributors/components/add-contributor-dialog/add-contributor-dialog.component';
+import { CreateViewLinkDialogComponent } from '@osf/features/project/contributors/components/create-view-link-dialog/create-view-link-dialog.component';
 import { LinkTableModel } from '@osf/features/project/settings';
 import { ViewOnlyTableComponent } from '@osf/shared';
 import { SearchInputComponent } from '@shared/components/search-input/search-input.component';
 import { SelectOption } from '@shared/entities/select-option.interface';
 import { TableParameters } from '@shared/entities/table-parameters.interface';
 import { IS_WEB, IS_XSMALL } from '@shared/utils/breakpoints.tokens';
-import {
-  CreateViewLinkDialogComponent
-} from "@osf/features/project/contributors/components/create-view-link-dialog/create-view-link-dialog.component";
 
 @Component({
   selector: 'osf-contributors',
@@ -158,7 +156,9 @@ export class ContributorsComponent {
     this.pageChange.emit(event);
   }
 
-  protected onItemPermissionChange(event: TablePageEvent): void {}
+  protected onItemPermissionChange(event: TablePageEvent): void {
+    console.log(event);
+  }
 
   addContributor() {
     this.dialogRef = this.#dialogService.open(AddContributorDialogComponent, {
