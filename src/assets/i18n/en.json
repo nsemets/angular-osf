@@ -22,6 +22,7 @@
       "metadata": "Metadata",
       "files": "Files",
       "registrations": "Registrations",
+      "analytics": "Analytics",
       "settings": "Settings"
     }
   },
@@ -250,6 +251,28 @@
       "publicProjectsToBeDiscoverable": "public projects to be discoverable on specific institutional landing pages",
       "singleSignInToTHeOSF": "single sign-in to the OSF with institutional credentials",
       "faq": "FAQ"
+    }
+  },
+  "project": {
+    "analytics": {
+      "kpi": {
+        "forks": "Forks",
+        "linksToThisProject": "Links to this project",
+        "templateCopies": "Template copies",
+        "viewForks": "View forks",
+        "viewLinks": "View links"
+      },
+      "charts": {
+        "showAnalytics": "Show analytics for date range:",
+        "pastWeek": "Past week",
+        "pastMonth": "Past month",
+        "pastTwoWeeks": "Past two weeks",
+        "uniqueVisits": "Unique visits",
+        "timeOfDayOfVisits": "Time of day of visits",
+        "topReferrers": "Top referrers",
+        "popularPages": "Popular pages",
+        "visits": "Visits"
+      }
     }
   },
   "settings": {
