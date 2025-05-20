@@ -14,7 +14,6 @@ import { RightControl } from '@osf/features/project/settings/models/right-contro
   imports: [Card, Checkbox, TranslatePipe, ProjectDetailSettingAccordionComponent],
   templateUrl: './settings-wiki-card.component.html',
   styleUrl: '../../settings.component.scss',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsWikiCardComponent {

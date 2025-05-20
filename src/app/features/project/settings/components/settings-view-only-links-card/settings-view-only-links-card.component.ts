@@ -12,7 +12,6 @@ import { ViewOnlyTableComponent } from '@shared/components';
   imports: [Card, TranslatePipe, ViewOnlyTableComponent],
   templateUrl: './settings-view-only-links-card.component.html',
   styleUrl: '../../settings.component.scss',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsViewOnlyLinksCardComponent {

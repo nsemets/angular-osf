@@ -16,7 +16,6 @@ import { ProjectFormControls } from '@shared/entities/create-project-form-contro
   templateUrl: './settings-project-form-card.component.html',
   styleUrl: '../../settings.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class SettingsProjectFormCardComponent {
   formGroup = input.required<FormGroup>();

@@ -11,7 +11,6 @@ import { FormControl } from '@angular/forms';
   imports: [Checkbox, TranslatePipe, Card],
   templateUrl: './settings-access-requests-card.component.html',
   styleUrl: '../../settings.component.scss',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsAccessRequestsCardComponent {

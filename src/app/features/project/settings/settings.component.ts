@@ -53,7 +53,6 @@ import { IS_WEB } from '@shared/utils/breakpoints.tokens';
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class SettingsComponent {
   protected readonly isDesktop = toSignal(inject(IS_WEB));

@@ -13,7 +13,6 @@ import { ShareIndexingEnum } from '@osf/features/settings/account-settings/compo
   imports: [Card, RadioButton, TranslatePipe, FormsModule],
   templateUrl: './settings-commenting-card.component.html',
   styleUrl: '../../settings.component.scss',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsCommentingCardComponent {
