@@ -75,11 +75,11 @@ export class SocialComponent {
   }
 
   getDomain(index: number): string {
-    return this.links.at(index).get('socialOutput')?.value.address;
+    return this.links.at(index).get('socialOutput')?.value?.address;
   }
 
   getPlaceholder(index: number): string {
-    return this.links.at(index).get('socialOutput')?.value.placeholder;
+    return this.links.at(index).get('socialOutput')?.value?.placeholder;
   }
 
   saveSocialLinks(): void {
