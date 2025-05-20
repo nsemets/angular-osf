@@ -5,19 +5,7 @@ import { LowerCasePipe, NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-export type RightControl =
-  | {
-      type: 'dropdown';
-      label?: string;
-      value: string;
-      options: { label: string; value: string }[];
-      onChange?: (value: string) => void;
-    }
-  | {
-      type: 'text';
-      label?: string;
-      value: string;
-    };
+import { RightControl } from '@osf/features/project/settings/models/right-control.model';
 
 @Component({
   selector: 'osf-project-detail-setting-accordion',

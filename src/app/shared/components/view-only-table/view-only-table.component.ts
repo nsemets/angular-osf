@@ -22,6 +22,7 @@ export class ViewOnlyTableComponent {
   tableData = input.required<LinkTableModel[]>();
 
   readonly #clipboard = inject(Clipboard);
+
   copy(link: string): void {
     this.#clipboard.copy(link);
   }

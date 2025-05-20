@@ -14,9 +14,10 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
-import { ProjectDetailSettingAccordionComponent, RightControl } from '@osf/features/project/settings/components';
+import { ProjectDetailSettingAccordionComponent } from '@osf/features/project/settings/components';
 import { mockSettingsData } from '@osf/features/project/settings/mock-data';
 import { LinkTableModel } from '@osf/features/project/settings/models';
+import { RightControl } from '@osf/features/project/settings/models/right-control.model';
 import { ShareIndexingEnum } from '@osf/features/settings/account-settings/components/share-indexing/enums/share-indexing.enum';
 import { ViewOnlyTableComponent } from '@shared/components';
 import { SubHeaderComponent } from '@shared/components/sub-header/sub-header.component';
@@ -98,14 +99,10 @@ export class SettingsComponent {
   }
 
   submitForm(): void {
-    // TODO: implement form submission
+    // [VY] TODO: Implement form submission
   }
 
   resetForm(): void {
     this.projectForm.reset();
-  }
-
-  onAccessChange(value: string): void {
-    console.log('Access changed to', value);
   }
 }

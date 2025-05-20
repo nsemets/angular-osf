@@ -9,7 +9,7 @@
         <form [formGroup]="projectForm" (ngSubmit)="submitForm()" class="flex flex-column gap-4">
           <!-- Title -->
           <div class="flex flex-column">
-            <label for="project-title">
+            <label class="input-label" for="project-title">
               {{ 'myProjects.createProject.title' | translate }}
             </label>
             <input
@@ -24,7 +24,7 @@
 
           <!-- Description -->
           <div class="flex flex-column">
-            <label for="description">
+            <label class="input-label" for="description">
               {{ 'myProjects.createProject.description.label' | translate }}
             </label>
             <textarea
@@ -91,7 +91,7 @@
             id="accessRequest"
             name="ongoing"
           ></p-checkbox>
-          <label for="accessRequest" class="ml-2">
+          <label class="input-label" for="accessRequest" class="ml-2">
             {{ 'myProjects.settings.accessRequestsText' | translate }}
           </label>
         </div>
@@ -109,7 +109,7 @@
             name="ongoing"
           ></p-checkbox>
 
-          <label for="wiki" class="ml-2">
+          <label class="input-label" for="wiki" class="ml-2">
             {{ 'myProjects.settings.wikiText' | translate }}
           </label>
         </div>
