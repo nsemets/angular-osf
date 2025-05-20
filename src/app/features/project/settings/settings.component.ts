@@ -8,12 +8,14 @@ import { RadioButton } from 'primeng/radiobutton';
 import { TabPanels } from 'primeng/tabs';
 import { Textarea } from 'primeng/textarea';
 
+import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
-import { AccordionTableComponent } from '@osf/features/project/settings/components';
+import { ProjectDetailSettingAccordionComponent } from '@osf/features/project/settings/components';
+import { mockSettingsData } from '@osf/features/project/settings/mock-data';
 import { LinkTableModel } from '@osf/features/project/settings/models';
 import { ShareIndexingEnum } from '@osf/features/settings/account-settings/components/share-indexing/enums/share-indexing.enum';
 import { ViewOnlyTableComponent } from '@osf/shared';
@@ -36,9 +38,10 @@ import { IS_WEB } from '@shared/utils/breakpoints.tokens';
     Button,
     ViewOnlyTableComponent,
     Checkbox,
-    AccordionTableComponent,
+    ProjectDetailSettingAccordionComponent,
     RadioButton,
     RouterLink,
+    NgOptimizedImage,
   ],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss',
@@ -63,53 +66,34 @@ export class SettingsComponent {
   wiki = new FormControl<boolean>(false);
   redirectLink = new FormControl<boolean>(false);
 
-  tableData: LinkTableModel[] = [
-    {
-      linkName: 'name',
-      sharedComponents: 'Project name',
-      createdDate: new Date(),
-      createdBy: 'Igor',
-      anonymous: false,
-      link: 'www.facebook.com',
-    },
-    {
-      linkName: 'name',
-      sharedComponents: 'Project name',
-      createdDate: new Date(),
-      createdBy: 'Igor',
-      anonymous: false,
-      link: 'www.facebook.com',
-    },
-    {
-      linkName: 'name',
-      sharedComponents: 'Project name',
-      createdDate: new Date(),
-      createdBy: 'Igor',
-      anonymous: false,
-      link: 'www.facebook.com',
-    },
-    {
-      linkName: 'name',
-      sharedComponents: 'Project name',
-      createdDate: new Date(),
-      createdBy: 'Igor',
-      anonymous: false,
-      link: 'www.facebook.com',
-    },
-  ];
-  access = 'write';
-  accessOptions = [
-    { label: 'Contributors (with write access)', value: 'write' },
-    { label: 'Anyone with link', value: 'public' },
-  ];
-  commentSetting = 'instantly';
-  fileSetting = 'instantly';
+  tableData: LinkTableModel[];
+  access: string;
+  accessOptions: { label: string; value: string }[];
+  commentSetting: string;
+  fileSetting: string;
+  dropdownOptions: { label: string; value: string }[];
+  affiliations: { name: string; canDelete: boolean }[];
 
-  dropdownOptions = [
-    { label: 'Instantly', value: 'instantly' },
-    { label: 'Daily', value: 'daily' },
-    { label: 'Never', value: 'never' },
-  ];
+  constructor() {
+    [
+      this.tableData,
+      this.access,
+      this.accessOptions,
+      this.commentSetting,
+      this.fileSetting,
+      this.dropdownOptions,
+      this.affiliations,
+    ] = [
+      mockSettingsData.tableData,
+      mockSettingsData.access,
+      mockSettingsData.accessOptions,
+      mockSettingsData.commentSetting,
+      mockSettingsData.fileSetting,
+      mockSettingsData.dropdownOptions,
+      mockSettingsData.affiliations,
+    ];
+  }
+
   submitForm(): void {
     // TODO: implement form submission
   }

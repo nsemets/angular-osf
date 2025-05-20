@@ -2,7 +2,7 @@
   <osf-sub-header [title]="'navigation.project.settings' | translate" />
 
   <div class="flex-column flex flex-1 w-full">
-    <p-tabpanels class="flex flex-column gap-4 flex-1 w-full bg-white">
+    <p-tabpanels role="tablist" class="flex flex-column gap-4 flex-1 w-full bg-white" [class.mobile]="!isDesktop()">
       <p-card>
         <h3 class="text-xl pb-4">{{ 'myProjects.settings.project' | translate }}</h3>
 
@@ -12,7 +12,14 @@
             <label for="project-title">
               {{ 'myProjects.createProject.title' | translate }}
             </label>
-            <input pInputText id="project-title" type="text" [formControlName]="ProjectFormControls.Title" />
+            <input
+              pInputText
+              id="project-title"
+              type="text"
+              aria-required="true"
+              aria-describedby="project-title"
+              [formControlName]="ProjectFormControls.Title"
+            />
           </div>
 
           <!-- Description -->
@@ -77,10 +84,16 @@
         <h3 class="text-xl pb-4">{{ 'myProjects.settings.accessRequests' | translate }}</h3>
 
         <div class="flex align-items-center w-full">
-          <p-checkbox [binary]="true" [formControl]="accessRequest" id="accessRequest" name="ongoing"></p-checkbox>
-          <p class="ml-2">
+          <p-checkbox
+            ariaLabel="Checkbox for access request"
+            [binary]="true"
+            [formControl]="accessRequest"
+            id="accessRequest"
+            name="ongoing"
+          ></p-checkbox>
+          <label for="accessRequest" class="ml-2">
             {{ 'myProjects.settings.accessRequestsText' | translate }}
-          </p>
+          </label>
         </div>
       </p-card>
 
@@ -88,18 +101,24 @@
         <h3 class="text-xl pb-4">{{ 'myProjects.settings.wiki' | translate }}</h3>
 
         <div class="flex align-items-center w-full">
-          <p-checkbox [binary]="true" [formControl]="wiki" id="wiki" name="ongoing"></p-checkbox>
+          <p-checkbox
+            ariaLabel="Checkbox for wiki"
+            [binary]="true"
+            [formControl]="wiki"
+            id="wiki"
+            name="ongoing"
+          ></p-checkbox>
 
-          <p class="ml-2">
+          <label for="wiki" class="ml-2">
             {{ 'myProjects.settings.wikiText' | translate }}
-          </p>
+          </label>
         </div>
 
         <h3 class="text-xl py-4">{{ 'myProjects.settings.wikiConfigureTitle' | translate }}</h3>
 
         <p class="pb-4">{{ 'myProjects.settings.wikiConfigureText' | translate }}</p>
 
-        <osf-accordion-table
+        <osf-project-detail-setting-accordion
           [title]="'Project name example'"
           [rightControls]="[
             {
@@ -115,7 +134,7 @@
             <i class="pi pi-minus text-sm icon-space"></i>
             <span>Sub text</span>
           </div>
-        </osf-accordion-table>
+        </osf-project-detail-setting-accordion>
       </p-card>
 
       <p-card>
@@ -123,12 +142,24 @@
 
         <div class="flex flex-column gap-3">
           <div class="flex gap-3">
-            <p-radio-button name="contributorsCanPost" value="0" [(ngModel)]="commenting"></p-radio-button>
+            <p-radio-button
+              [ariaLabel]="'Select ' + 'myProjects.settings.contributorsCanPost' | translate"
+              name="contributorsCanPost"
+              value="0"
+              [(ngModel)]="commenting"
+            ></p-radio-button>
             <p>{{ 'myProjects.settings.contributorsCanPost' | translate }}</p>
           </div>
 
           <div class="flex gap-3">
-            <p-radio-button name="osfUserCanPost" value="1" [(ngModel)]="commenting"></p-radio-button>
+            <p-radio-button
+              [ariaLabel]="'Select ' + 'myProjects.settings.osfUserCanPost' | translate"
+              name="osfUserCanPost"
+              value="1"
+              [(ngModel)]="commenting"
+            >
+            </p-radio-button>
+
             <p>{{ 'myProjects.settings.osfUserCanPost' | translate }}</p>
           </div>
         </div>
@@ -139,7 +170,7 @@
 
         <p class="pb-4">{{ 'myProjects.settings.emailNotificationsText' | translate }}</p>
 
-        <osf-accordion-table
+        <osf-project-detail-setting-accordion
           [title]="'Project name example'"
           [rightControls]="[
             {
@@ -160,17 +191,23 @@
             <i class="pi pi-minus text-sm icon-space"></i>
             <span>Sub text</span>
           </div>
-        </osf-accordion-table>
+        </osf-project-detail-setting-accordion>
       </p-card>
 
       <p-card>
         <h3 class="text-xl pb-4">{{ 'myProjects.settings.redirectLink' | translate }}</h3>
 
         <div class="flex align-items-center w-full">
-          <p-checkbox [binary]="true" [formControl]="redirectLink" id="redirectLink" name="ongoing"></p-checkbox>
-          <p class="ml-2">
+          <p-checkbox
+            ariaLabel="Checkbox for redirect link"
+            [binary]="true"
+            [formControl]="redirectLink"
+            id="redirectLink"
+            name="ongoing"
+          ></p-checkbox>
+          <label for="redirectLink" class="ml-2">
             {{ 'myProjects.settings.redirectLinkText' | translate }}
-          </p>
+          </label>
         </div>
       </p-card>
 
@@ -179,14 +216,32 @@
 
         <p>{{ 'myProjects.settings.projectsCanBeAffiliated' | translate }}</p>
 
-        <ul>
-          <li>{{ 'myProjects.settings.institutionalLogos' | translate }}</li>
-          <li>{{ 'myProjects.settings.publicProjectsToBeDiscoverable' | translate }}</li>
-          <li>{{ 'myProjects.settings.singleSignInToTHeOSF' | translate }}</li>
-          <li>
+        <ol class="list-disc ml-5" role="list">
+          <li class="list-disc">{{ 'myProjects.settings.institutionalLogos' | translate }}</li>
+          <li class="list-disc">{{ 'myProjects.settings.publicProjectsToBeDiscoverable' | translate }}</li>
+          <li class="list-disc">{{ 'myProjects.settings.singleSignInToTHeOSF' | translate }}</li>
+          <li class="list-disc">
             <a routerLink="#">{{ 'myProjects.settings.faq' | translate }}</a>
           </li>
-        </ul>
+        </ol>
+
+        <div class="flex flex-column gap-3 w-full mt-5">
+          @for (affiliation of affiliations; track $index) {
+            <div
+              class="flex justify-content-between align-items-center w-full pb-2 sm:pr-4 pr-2 border-bottom-1 border-gray-300"
+            >
+              <div class="flex align-items-center gap-3">
+                <img ngSrc="assets/images/cos-shield.svg" alt="cos-shield" width="44" height="44" />
+
+                <p>{{ affiliation.name }}</p>
+              </div>
+
+              <p-button ariaLabel="Delete affiliation" class="btn-icon-text form-btn icon-copy-btn button-shadow-none">
+                <i class="osf-icon-trash delete-icon"></i>
+              </p-button>
+            </div>
+          }
+        </div>
       </p-card>
     </p-tabpanels>
   </div>

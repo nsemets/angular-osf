@@ -1,1 +1,1 @@
-export * from './accordion-table/accordion-table.component';
+export * from './accordion-table/project-detail-setting-accordion.component';

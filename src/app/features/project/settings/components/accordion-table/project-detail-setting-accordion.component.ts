@@ -1,7 +1,7 @@
 import { Button } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 
-import { NgClass } from '@angular/common';
+import { LowerCasePipe, NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
@@ -20,12 +20,12 @@ type RightControl =
     };
 
 @Component({
-  selector: 'osf-accordion-table',
-  imports: [NgClass, DropdownModule, FormsModule, Button],
-  templateUrl: './accordion-table.component.html',
+  selector: 'osf-project-detail-setting-accordion',
+  imports: [NgClass, DropdownModule, FormsModule, Button, LowerCasePipe],
+  templateUrl: './project-detail-setting-accordion.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccordionTableComponent {
+export class ProjectDetailSettingAccordionComponent {
   title = input.required<string>();
 
   rightControls = input.required<RightControl[]>();

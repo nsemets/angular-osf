@@ -242,5 +242,9 @@
 .button-shadow-none {
   .p-button {
     box-shadow: none;
+
+    @media (max-width: 600px) {
+      padding: 0;
+    }
   }
 }

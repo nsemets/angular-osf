@@ -23,9 +23,13 @@
   &.accordion-dropdown {
     border: none;
     box-shadow: none;
-    min-width: 170px;
+    min-width: 120px;
     width: max-content;
     max-width: 300px;
     font-size: 1rem;
+
+    @media (max-width: 600px) {
+      max-width: 240px;
+    }
   }
 }

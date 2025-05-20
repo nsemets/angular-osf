@@ -1,6 +1,13 @@
-<div class="flex justify-between align-items-center mb-2 gap-4 w-full border-bottom-1 border-gray-300">
-  <div class="flex align-items-center gap-2 cursor-pointer w-6">
-    <p-button class="btn-icon-text form-btn button-shadow-none" (click)="toggle()">
+<div
+  class="flex justify-between align-items-center mb-2 gap-2 sm:gap-4 w-full border-bottom-1 border-gray-300 flex-column sm:flex-row"
+>
+  <div class="flex align-items-center gap-2 cursor-pointer w-full sm:w-5">
+    <p-button
+      role="button"
+      [ariaLabel]="'Toggle ' + title()"
+      class="btn-icon-text form-btn button-shadow-none"
+      (click)="toggle()"
+    >
       <i class="pi" [ngClass]="{ 'pi-plus': !expanded(), 'pi-minus': expanded() }"></i>
     </p-button>
 
@@ -8,8 +15,8 @@
   </div>
 
   @if (rightControls().length > 0) {
-    <div class="flex flex-wrap gap-4 align-items-center w-6">
-      @for (control of rightControls(); track control) {
+    <div class="flex flex-wrap gap-2 sm:gap-4 align-items-center w-full sm:w-7">
+      @for (control of rightControls(); track control.value) {
         <div class="flex align-items-center gap-2">
           @if (control.label) {
             <span class="font-medium text-color">
@@ -39,7 +46,11 @@
 </div>
 
 @if (expanded()) {
-  <div class="mt-2 pl-5 border-bottom-1 border-gray-300">
+  <div
+    class="mt-2 pl-5 border-bottom-1 border-gray-300"
+    [attr.id]="'accordion-content-' + (title() | lowercase).replace(' ', '-')"
+    [attr.aria-labelledby]="'accordion-label-' + (title() | lowercase).replace(' ', '-')"
+  >
     <ng-content></ng-content>
   </div>
 }
