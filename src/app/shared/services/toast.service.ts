@@ -12,10 +12,6 @@ export class ToastService {
     this.messageService.add({ severity: 'success', summary });
   }
 
-  showInfo(summary: string) {
-    this.messageService.add({ severity: 'info', summary });
-  }
-
   showWarn(summary: string) {
     this.messageService.add({ severity: 'warn', summary });
   }

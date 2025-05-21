@@ -1,28 +1,9 @@
-@use "../variables" as var;
-@use "../mixins" as mix;
-
-.p-toast-message-success {
-  --p-toast-success-border-color: transparent;
-  --p-toast-success-color: var(--green-1);
-  --p-toast-success-background: var(--green-2);
+.p-toast-message-icon {
+  display: none;
 }
 
-.p-toast-message-info {
-  --p-toast-info-border-color: transparent;
-  --p-toast-info-color: var(--green-1);
-  --p-toast-info-background: var(--green-2);
-}
-
-.p-toast-message-warn {
-  --p-toast-warn-border-color: transparent;
-  --p-toast-warn-color: var(--yellow-1);
-  --p-toast-warn-background: var(--yellow-2);
-}
-
-.p-toast-message-error {
-  --p-toast-error-border-color: transparent;
-  --p-toast-error-color: var(--red-1);
-  --p-toast-error-background: var(--red-2);
+.p-toast-summary {
+  --p-toast-summary-font-weight: 700;
 }
 
 .p-toast-detail {
@@ -31,4 +12,25 @@
 
 .p-toast-close-button {
   margin: -10% 0 0 0;
+}
+
+.p-toast-message-success {
+  --p-toast-success-border-color: transparent;
+  --p-toast-success-color: var(--white);
+  --p-toast-success-background: var(--green-1);
+  --p-toast-success-close-button-hover-background: var(--green-2);
+}
+
+.p-toast-message-warn {
+  --p-toast-warn-border-color: transparent;
+  --p-toast-warn-color: var(--white);
+  --p-toast-warn-background: var(--yellow-1);
+  --p-toast-warn-close-button-hover-background: var(--yellow-2);
+}
+
+.p-toast-message-error {
+  --p-toast-error-border-color: transparent;
+  --p-toast-error-color: var(--white);
+  --p-toast-error-background: var(--red-1);
+  --p-toast-error-close-button-hover-background: var(--red-2);
 }
