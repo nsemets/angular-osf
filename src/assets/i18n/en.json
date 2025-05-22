@@ -253,7 +253,14 @@
       "institutionalLogos": "institutional logos to be displayed on public projects",
       "publicProjectsToBeDiscoverable": "public projects to be discoverable on specific institutional landing pages",
       "singleSignInToTHeOSF": "single sign-in to the OSF with institutional credentials",
-      "faq": "FAQ"
+      "faq": "FAQ",
+      "contributorsOption": "Contributors (with write access)",
+      "anyoneOption": "Anyone with link",
+      "whoCanEdit": "Who can edit:",
+      "url": "url",
+      "label": "label",
+      "redirectUrlPlaceholder": "Send people who visit your OSF project page to this link instead",
+      "redirectLabelPlaceholder": "Optional"
     }
   },
   "project": {

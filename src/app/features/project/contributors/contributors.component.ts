@@ -14,7 +14,6 @@ import { FormsModule } from '@angular/forms';
 import { MY_PROJECTS_TABLE_PARAMS } from '@core/constants/my-projects-table.constants';
 import { AddContributorDialogComponent } from '@osf/features/project/contributors/components/add-contributor-dialog/add-contributor-dialog.component';
 import { CreateViewLinkDialogComponent } from '@osf/features/project/contributors/components/create-view-link-dialog/create-view-link-dialog.component';
-import { LinkTableModel } from '@osf/features/project/settings';
 import { ViewOnlyTableComponent } from '@osf/shared';
 import { SearchInputComponent } from '@shared/components/search-input/search-input.component';
 import { SelectOption } from '@shared/entities/select-option.interface';
@@ -107,39 +106,39 @@ export class ContributorsComponent {
     },
   ];
 
-  tableData: LinkTableModel[] = [
-    {
-      linkName: 'name',
-      sharedComponents: 'Project name',
-      createdDate: new Date(),
-      createdBy: 'Igor',
-      anonymous: false,
-      link: 'www.facebook.com',
-    },
-    {
-      linkName: 'name',
-      sharedComponents: 'Project name',
-      createdDate: new Date(),
-      createdBy: 'Igor',
-      anonymous: false,
-      link: 'www.facebook.com',
-    },
-    {
-      linkName: 'name',
-      sharedComponents: 'Project name',
-      createdDate: new Date(),
-      createdBy: 'Igor',
-      anonymous: false,
-      link: 'www.facebook.com',
-    },
-    {
-      linkName: 'name',
-      sharedComponents: 'Project name',
-      createdDate: new Date(),
-      createdBy: 'Igor',
-      anonymous: false,
-      link: 'www.facebook.com',
-    },
+  tableData = [
+    // {
+    //   linkName: 'name',
+    //   sharedComponents: 'Project name',
+    //   createdDate: new Date(),
+    //   createdBy: 'Igor',
+    //   anonymous: false,
+    //   link: 'www.facebook.com',
+    // },
+    // {
+    //   linkName: 'name',
+    //   sharedComponents: 'Project name',
+    //   createdDate: new Date(),
+    //   createdBy: 'Igor',
+    //   anonymous: false,
+    //   link: 'www.facebook.com',
+    // },
+    // {
+    //   linkName: 'name',
+    //   sharedComponents: 'Project name',
+    //   createdDate: new Date(),
+    //   createdBy: 'Igor',
+    //   anonymous: false,
+    //   link: 'www.facebook.com',
+    // },
+    // {
+    //   linkName: 'name',
+    //   sharedComponents: 'Project name',
+    //   createdDate: new Date(),
+    //   createdBy: 'Igor',
+    //   anonymous: false,
+    //   link: 'www.facebook.com',
+    // },
   ];
 
   protected onPermissionChange(value: string): void {

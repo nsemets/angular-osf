@@ -6,7 +6,7 @@ import { TableModule } from 'primeng/table';
 
 import { Clipboard } from '@angular/cdk/clipboard';
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { LinkTableModel } from '@osf/features/project/settings/models';
@@ -19,6 +19,7 @@ import { LinkTableModel } from '@osf/features/project/settings/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewOnlyTableComponent {
+  deleteLink = output<LinkTableModel>();
   tableData = input.required<LinkTableModel[]>();
 
   readonly #clipboard = inject(Clipboard);

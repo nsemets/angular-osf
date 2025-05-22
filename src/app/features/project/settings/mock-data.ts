@@ -1,38 +1,40 @@
+import { LinkTableModel } from '@osf/features/project/settings/models';
+
 export const mockSettingsData = {
   tableData: [
-    {
-      linkName: 'name',
-      sharedComponents: 'Project name',
-      createdDate: new Date(),
-      createdBy: 'Igor',
-      anonymous: false,
-      link: 'www.facebook.com',
-    },
-    {
-      linkName: 'name',
-      sharedComponents: 'Project name',
-      createdDate: new Date(),
-      createdBy: 'Igor',
-      anonymous: false,
-      link: 'www.facebook.com',
-    },
-    {
-      linkName: 'name',
-      sharedComponents: 'Project name',
-      createdDate: new Date(),
-      createdBy: 'Igor',
-      anonymous: false,
-      link: 'www.facebook.com',
-    },
-    {
-      linkName: 'name',
-      sharedComponents: 'Project name',
-      createdDate: new Date(),
-      createdBy: 'Igor',
-      anonymous: false,
-      link: 'www.facebook.com',
-    },
-  ],
+    // {
+    //   linkName: 'name',
+    //   sharedComponents: 'Project name',
+    //   createdDate: new Date(),
+    //   createdBy: 'Igor',
+    //   anonymous: false,
+    //   link: 'www.facebook.com',
+    // },
+    // {
+    //   linkName: 'name',
+    //   sharedComponents: 'Project name',
+    //   createdDate: new Date(),
+    //   createdBy: 'Igor',
+    //   anonymous: false,
+    //   link: 'www.facebook.com',
+    // },
+    // {
+    //   linkName: 'name',
+    //   sharedComponents: 'Project name',
+    //   createdDate: new Date(),
+    //   createdBy: 'Igor',
+    //   anonymous: false,
+    //   link: 'www.facebook.com',
+    // },
+    // {
+    //   linkName: 'name',
+    //   sharedComponents: 'Project name',
+    //   createdDate: new Date(),
+    //   createdBy: 'Igor',
+    //   anonymous: false,
+    //   link: 'www.facebook.com',
+    // },
+  ] as LinkTableModel[],
   access: 'write',
   accessOptions: [
     { label: 'Contributors (with write access)', value: 'write' },
@@ -52,18 +54,6 @@ export const mockSettingsData = {
     },
   ],
   rightControls: {
-    wiki: [
-      {
-        type: 'dropdown',
-        label: 'Who can edit:',
-        value: 'write',
-        options: [
-          { label: 'Contributors (with write access)', value: 'write' },
-          { label: 'Anyone with link', value: 'public' },
-        ],
-        onChange: (value: string) => console.log('Access changed to', value),
-      },
-    ],
     notifications: [
       {
         type: 'dropdown',

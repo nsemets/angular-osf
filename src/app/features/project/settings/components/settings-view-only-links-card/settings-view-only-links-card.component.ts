@@ -2,7 +2,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { Card } from 'primeng/card';
 
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
 import { LinkTableModel } from '@osf/features/project/settings/models';
 import { ViewOnlyTableComponent } from '@shared/components';
@@ -15,5 +15,6 @@ import { ViewOnlyTableComponent } from '@shared/components';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsViewOnlyLinksCardComponent {
+  deleteTableItem = output<LinkTableModel>();
   tableData = input.required<LinkTableModel[]>();
 }

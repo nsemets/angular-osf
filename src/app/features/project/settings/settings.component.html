@@ -14,18 +14,24 @@
         [locationText]="'Storage location cannot be changed after project is created.'"
       ></osf-settings-storage-location-card>
 
-      <osf-settings-view-only-links-card [tableData]="tableData"></osf-settings-view-only-links-card>
+      <osf-settings-view-only-links-card (deleteTableItem)="deleteLinkItem($event)" [tableData]="tableData" />
 
-      <osf-settings-access-requests-card [formControl]="accessRequest"></osf-settings-access-requests-card>
+      <osf-settings-access-requests-card
+        (accessRequestChange)="onAccessRequestChange($event)"
+        [accessRequest]="accessRequest()"
+      />
 
       <osf-settings-wiki-card
-        [formControl]="wiki"
-        [rightControls]="rightControls['wiki']"
-        [accessOptions]="accessOptions"
-        (accessChange)="onAccessChange($event)"
-      ></osf-settings-wiki-card>
+        (wikiChangeEmit)="onWikiRequestChange($event)"
+        (anyoneCanEditWikiEmitValue)="onAnyoneCanEditWikiRequestChange($event)"
+        [wikiEnabled]="wikiEnabled()"
+        [anyoneCanEditWiki]="anyoneCanEditWiki()"
+      />
 
-      <osf-settings-commenting-card [(commenting)]="commenting"></osf-settings-commenting-card>
+      <osf-settings-commenting-card
+        (anyoneCanCommentChange)="onAnyoneCanCommentRequestChange($event)"
+        [anyoneCanComment]="anyoneCanComment()"
+      />
 
       <p-card>
         <h3 class="text-xl pb-4">{{ 'myProjects.settings.emailNotifications' | translate }}</h3>
@@ -43,22 +49,10 @@
         </osf-project-detail-setting-accordion>
       </p-card>
 
-      <p-card>
-        <h3 class="text-xl pb-4">{{ 'myProjects.settings.redirectLink' | translate }}</h3>
-
-        <div class="flex align-items-center w-full">
-          <p-checkbox
-            ariaLabel="Checkbox for redirect link"
-            [binary]="true"
-            [formControl]="redirectLink"
-            id="redirectLink"
-            name="ongoing"
-          ></p-checkbox>
-          <label for="redirectLink" class="input-label ml-2">
-            {{ 'myProjects.settings.redirectLinkText' | translate }}
-          </label>
-        </div>
-      </p-card>
+      <osf-settings-redirect-link
+        (redirectUrlDataChange)="onRedirectUrlDataRequestChange($event)"
+        [redirectUrlDataInput]="redirectUrlData()"
+      />
 
       <p-card>
         <h3 class="text-xl pb-4">{{ 'myProjects.settings.projectAffiliation' | translate }}</h3>
@@ -70,7 +64,9 @@
           <li class="list-disc">{{ 'myProjects.settings.publicProjectsToBeDiscoverable' | translate }}</li>
           <li class="list-disc">{{ 'myProjects.settings.singleSignInToTHeOSF' | translate }}</li>
           <li class="list-disc">
-            <a routerLink="#">{{ 'myProjects.settings.faq' | translate }}</a>
+            <a href="https://help.osf.io/article/406-faqs-home-page" target="_blank">{{
+              'myProjects.settings.faq' | translate
+            }}</a>
           </li>
         </ol>
 

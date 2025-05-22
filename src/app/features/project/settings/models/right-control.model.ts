@@ -1,13 +1,8 @@
-export type RightControl =
-  | {
-      type: 'dropdown';
-      label?: string;
-      value: string;
-      options: { label: string; value: string }[];
-      onChange?: (value: string) => void;
-    }
-  | {
-      type: 'text';
-      label?: string;
-      value: string;
-    };
+import { OptionModel } from '@osf/features/project/settings';
+
+export interface RightControl {
+  type: 'dropdown';
+  label?: string;
+  value: boolean | string;
+  options: OptionModel[];
+}
