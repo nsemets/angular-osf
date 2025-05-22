@@ -8,13 +8,14 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, ErrorHandler, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 
 import { STATES } from '@core/constants/ngxs-states.constant';
 import { provideTranslation } from '@core/helpers/i18n.helper';
 
+import { GlobalErrorHandler } from './core/handlers';
 import { authInterceptor, errorInterceptor } from './core/interceptors';
 import { routes } from './app.routes';
 
@@ -40,5 +41,6 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(TranslateModule.forRoot(provideTranslation())),
     ConfirmationService,
     MessageService,
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
   ],
 };
