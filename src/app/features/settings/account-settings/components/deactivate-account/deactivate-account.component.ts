@@ -6,7 +6,6 @@ import { Button } from 'primeng/button';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Message } from 'primeng/message';
 
-import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { CancelDeactivationComponent } from '@osf/features/settings/account-settings/components/deactivate-account/components/cancel-deactivation/cancel-deactivation.component';
@@ -15,7 +14,7 @@ import { AccountSettingsSelectors } from '@osf/features/settings/account-setting
 
 @Component({
   selector: 'osf-deactivate-account',
-  imports: [Button, Message, NgOptimizedImage, TranslatePipe],
+  imports: [Button, Message, TranslatePipe],
   templateUrl: './deactivate-account.component.html',
   styleUrl: './deactivate-account.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
