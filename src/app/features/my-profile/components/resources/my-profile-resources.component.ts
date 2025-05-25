@@ -1,6 +1,5 @@
 import { Store } from '@ngxs/store';
 
-import { Button } from 'primeng/button';
 import { DataView } from 'primeng/dataview';
 import { Select } from 'primeng/select';
 
@@ -29,7 +28,6 @@ import { IS_WEB, IS_XSMALL } from '@shared/utils/breakpoints.tokens';
     MyProfileResourceFiltersComponent,
     Select,
     FormsModule,
-    Button,
   ],
   templateUrl: './my-profile-resources.component.html',
   styleUrl: './my-profile-resources.component.scss',

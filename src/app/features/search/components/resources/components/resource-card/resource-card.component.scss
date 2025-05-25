@@ -1,5 +1,1 @@
-@use "/app/shared/styles/resource-card/resource-card.scss" as resource-card;
-
-//:host {
-//  @extend .resource;
-//}
+@use "assets/styles/components/resource-card" as resource-card;
