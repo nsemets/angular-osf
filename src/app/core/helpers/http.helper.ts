@@ -1,6 +1,6 @@
 import { Params } from '@angular/router';
 
-import { SortOrder } from '@shared/utils/sort-order.enum';
+import { SortOrder } from '@osf/shared/enums/sort-order.enum';
 
 export const parseQueryFilterParams = (
   params: Params
