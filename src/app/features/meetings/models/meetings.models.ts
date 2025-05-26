@@ -1,5 +1,5 @@
 // domain models
-import { NumberOrNull, StringOrNull } from '@core/helpers/types.helper';
+import { NumberOrNull, StringOrNull } from '@core/helpers';
 
 export interface Meeting {
   id: string;

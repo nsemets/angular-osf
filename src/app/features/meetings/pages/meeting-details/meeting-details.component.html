@@ -57,7 +57,7 @@
       </tr>
     </ng-template>
     <ng-template #body let-item>
-      @if (item !== 1) {
+      @if (item?.id) {
         <tr class="cursor-pointer" [routerLink]="['/my-projects', item.id, 'overview']">
           <td>{{ item.title }}</td>
           <td>{{ item.authorName }}</td>

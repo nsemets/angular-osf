@@ -96,7 +96,7 @@ export class MeetingDetailsComponent {
   meetingSubmissions = select(MeetingsSelectors.getAllMeetingSubmissions);
   totalMeetingSubmissionsCount = select(MeetingsSelectors.getMeetingSubmissionsTotalCount);
   isMeetingSubmissionsLoading = select(MeetingsSelectors.isMeetingSubmissionsLoading);
-  skeletonData: number[] = Array.from({ length: 10 }, () => 1);
+  skeletonData: MeetingSubmission[] = Array.from({ length: 10 }, () => ({}) as MeetingSubmission);
 
   pageDescription = computed(() => {
     const meeting = this.meeting();

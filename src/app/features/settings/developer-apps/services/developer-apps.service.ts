@@ -8,12 +8,14 @@ import { JsonApiService } from '@osf/core/services';
 import { DeveloperAppMapper } from '../mappers';
 import { DeveloperApp, DeveloperAppCreateUpdate, DeveloperAppGetResponse } from '../models';
 
+import { environment } from 'src/environments/environment';
+
 @Injectable({
   providedIn: 'root',
 })
 export class DeveloperApplicationsService {
   jsonApiService = inject(JsonApiService);
-  baseUrl = 'https://api.staging4.osf.io/v2/applications/';
+  baseUrl = `${environment.apiUrl}/applications/`;
 
   getApplications(): Observable<DeveloperApp[]> {
     return this.jsonApiService.get<JsonApiResponse<DeveloperAppGetResponse[], null>>(this.baseUrl).pipe(

@@ -11,15 +11,18 @@ import {
   MeetingSubmissionsWithPaging,
   MeetingsWithPaging,
 } from '@osf/features/meetings/models';
-import { searchPreferencesToJsonApiQueryParams } from '@shared/helpers/search-pref-to-json-api-query-params.helper';
-import { SearchFilters } from '@shared/models/filters/search-filters.model';
+import { searchPreferencesToJsonApiQueryParams } from '@osf/shared/utils';
+import { SearchFilters } from '@shared/models/filters';
+
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MeetingsService {
   jsonApiService = inject(JsonApiService);
-  baseUrl = 'https://api.staging4.osf.io/_/meetings/';
+  baseUrl = `${environment.apiDomainUrl}/_/meetings/`;
+
   #meetingSubmissionSortFieldMap: Record<string, string> = {
     title: 'title',
     authorName: 'author_name',
