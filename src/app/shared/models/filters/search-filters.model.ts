@@ -1,9 +1,8 @@
 import { SortOrder } from '@shared/enums';
 
-export interface QueryParams {
-  page: number;
-  size: number;
-  search: string;
+export interface SearchFilters {
+  searchValue: string;
+  searchFields: string[];
   sortColumn: string;
   sortOrder: SortOrder;
 }
