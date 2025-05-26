@@ -13,19 +13,19 @@ import { Component, computed, DestroyRef, effect, inject, OnInit, signal } from 
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import { MY_PROJECTS_TABLE_PARAMS } from '@core/constants/my-projects-table.constants';
-import { ConfirmEmailComponent } from '@osf/features/home/components/confirm-email/confirm-email.component';
-import { GetUserInstitutions } from '@osf/features/institutions/store';
-import { MyProjectsItem } from '@osf/features/my-projects/models/my-projects.models';
-import { MyProjectsSearchFilters } from '@osf/features/my-projects/models/my-projects-search-filters.models';
-import { ClearMyProjects, GetMyProjects, MyProjectsSelectors } from '@osf/features/my-projects/store';
-import { AccountSettingsService } from '@osf/features/settings/account-settings/services/account-settings.service';
-import { AddProjectFormComponent } from '@shared/components/add-project-form/add-project-form.component';
-import { MyProjectsTableComponent } from '@shared/components/my-projects-table/my-projects-table.component';
-import { SubHeaderComponent } from '@shared/components/sub-header/sub-header.component';
-import { TableParameters } from '@shared/entities/table-parameters.interface';
-import { IS_MEDIUM, IS_WEB } from '@shared/utils/breakpoints.tokens';
-import { SortOrder } from '@shared/utils/sort-order.enum';
+import { MY_PROJECTS_TABLE_PARAMS } from '@osf/core/constants';
+import { AddProjectFormComponent, MyProjectsTableComponent, SubHeaderComponent } from '@osf/shared/components';
+import { SortOrder } from '@osf/shared/enums';
+import { TableParameters } from '@osf/shared/models';
+import { IS_MEDIUM, IS_WEB } from '@osf/shared/utils';
+
+import { GetUserInstitutions } from '../institutions/store';
+import { MyProjectsSearchFilters } from '../my-projects/models';
+import { MyProjectsItem } from '../my-projects/models/my-projects.models';
+import { ClearMyProjects, GetMyProjects, MyProjectsSelectors } from '../my-projects/store';
+import { AccountSettingsService } from '../settings/account-settings/services';
+
+import { ConfirmEmailComponent } from './components';
 
 @Component({
   selector: 'osf-home',

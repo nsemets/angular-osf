@@ -5,8 +5,8 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 
-import { SocialIcon } from '@osf/shared/entities/social-icon.interface';
-import { IS_WEB } from '@shared/utils/breakpoints.tokens';
+import { SocialIcon } from '@osf/shared/models';
+import { IS_WEB } from '@shared/utils';
 
 @Component({
   selector: 'osf-footer',

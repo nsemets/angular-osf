@@ -9,13 +9,13 @@ import { ChangeDetectionStrategy, Component, HostBinding, inject, signal } from 
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 
-import { MEETINGS_TABLE_PARAMS } from '@osf/features/meetings/constants';
-import { Meeting } from '@osf/features/meetings/models';
-import { testMeetings } from '@osf/features/meetings/test-data';
-import { SearchInputComponent } from '@shared/components/search-input/search-input.component';
-import { SubHeaderComponent } from '@shared/components/sub-header/sub-header.component';
-import { TableParameters } from '@shared/entities/table-parameters.interface';
-import { IS_XSMALL } from '@shared/utils/breakpoints.tokens';
+import { SearchInputComponent, SubHeaderComponent } from '@osf/shared/components';
+import { TableParameters } from '@osf/shared/models';
+import { IS_XSMALL } from '@osf/shared/utils';
+
+import { MEETINGS_TABLE_PARAMS } from '../../constants';
+import { Meeting } from '../../models';
+import { testMeetings } from '../../test-data';
 
 @Component({
   selector: 'osf-meetings-landing',

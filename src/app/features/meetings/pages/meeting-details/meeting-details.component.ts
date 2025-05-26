@@ -8,12 +8,12 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, HostBinding, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { MEETING_SUBMISSIONS_TABLE_PARAMS } from '@osf/features/meetings/constants';
-import { Meeting, MeetingSubmission } from '@osf/features/meetings/models';
-import { testMeeting, testSubmissions } from '@osf/features/meetings/test-data';
-import { SearchInputComponent } from '@shared/components/search-input/search-input.component';
-import { SubHeaderComponent } from '@shared/components/sub-header/sub-header.component';
-import { TableParameters } from '@shared/entities/table-parameters.interface';
+import { SearchInputComponent, SubHeaderComponent } from '@osf/shared/components';
+import { TableParameters } from '@osf/shared/models';
+
+import { MEETING_SUBMISSIONS_TABLE_PARAMS } from '../../constants';
+import { Meeting, MeetingSubmission } from '../../models';
+import { testMeeting, testSubmissions } from '../../test-data';
 
 @Component({
   selector: 'osf-meeting-details',
