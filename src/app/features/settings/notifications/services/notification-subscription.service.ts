@@ -9,12 +9,14 @@ import { SubscriptionFrequency } from '../enums';
 import { NotificationSubscriptionMapper } from '../mappers';
 import { NotificationSubscription, NotificationSubscriptionGetResponse } from '../models';
 
+import { environment } from 'src/environments/environment';
+
 @Injectable({
   providedIn: 'root',
 })
 export class NotificationSubscriptionService {
   jsonApiService = inject(JsonApiService);
-  baseUrl = 'https://api.staging4.osf.io/v2/subscriptions/';
+  baseUrl = `${environment.apiUrl}/subscriptions/`;
 
   getAllGlobalNotificationSubscriptions(): Observable<NotificationSubscription[]> {
     const params: Record<string, string> = {

@@ -64,7 +64,7 @@ export class MeetingsLandingComponent {
   meetings = select(MeetingsSelectors.getAllMeetings);
   totalMeetingsCount = select(MeetingsSelectors.getMeetingsTotalCount);
   isMeetingsLoading = select(MeetingsSelectors.isMeetingsLoading);
-  skeletonData: number[] = Array.from({ length: 10 }, () => 1);
+  skeletonData: Meeting[] = Array.from({ length: 10 }, () => ({}) as Meeting);
 
   constructor() {
     this.setupTotalRecordsEffect();

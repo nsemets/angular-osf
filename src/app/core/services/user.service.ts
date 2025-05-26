@@ -6,22 +6,23 @@ import { JsonApiResponse, User, UserGetResponse, UserMapper, UserSettings, UserS
 
 import { JsonApiService } from './json-api.service';
 
+import { environment } from 'src/environments/environment';
+
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  baseUrl = 'https://api.staging4.osf.io/v2/';
   jsonApiService = inject(JsonApiService);
 
   getCurrentUser(): Observable<User> {
     return this.jsonApiService
-      .get<JsonApiResponse<UserGetResponse, null>>(this.baseUrl + 'users/me/')
+      .get<JsonApiResponse<UserGetResponse, null>>(`${environment.apiUrl}/users/me/`)
       .pipe(map((user) => UserMapper.fromUserGetResponse(user.data)));
   }
 
   getCurrentUserSettings(): Observable<UserSettings> {
     return this.jsonApiService
-      .get<JsonApiResponse<UserSettingsGetResponse, null>>(this.baseUrl + 'users/me/settings/')
+      .get<JsonApiResponse<UserSettingsGetResponse, null>>(`${environment.apiUrl}/users/me/settings/`)
       .pipe(map((response) => UserMapper.fromUserSettingsGetResponse(response.data)));
   }
 
@@ -29,7 +30,7 @@ export class UserService {
     const request = UserMapper.toUpdateUserSettingsRequest(userId, userSettings);
 
     return this.jsonApiService
-      .patch<UserSettingsGetResponse>(this.baseUrl + `users/${userId}/settings/`, request)
+      .patch<UserSettingsGetResponse>(`${environment.apiUrl}/users/${userId}/settings/`, request)
       .pipe(map((response) => UserMapper.fromUserSettingsGetResponse(response)));
   }
 }

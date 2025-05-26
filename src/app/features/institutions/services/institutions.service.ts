@@ -15,12 +15,11 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class InstitutionsService {
-  #baseUrl = 'https://api.staging4.osf.io/v2/';
   #jsonApiService = inject(JsonApiService);
 
   getUserInstitutions(): Observable<Institution[]> {
-    const url = this.#baseUrl + 'users/me/institutions/';
-    // const url = this.#baseUrl + 'users/26c59/institutions/';
+    const url = `${environment.apiUrl}/users/me/institutions/`;
+
     return this.#jsonApiService
       .get<JsonApiResponse<UserInstitutionGetResponse[], null>>(url)
       .pipe(map((response) => response.data.map((item) => InstitutionsMapper.fromResponse(item))));
