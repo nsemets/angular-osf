@@ -1,20 +1,3 @@
-<!--<p-card>-->
-<!--  <h3 class="text-xl pb-4">{{ 'myProjects.settings.redirectLink' | translate }}</h3>-->
-
-<!--  <div class="flex align-items-center w-full">-->
-<!--    <p-checkbox-->
-<!--      ariaLabel="Checkbox for redirect link"-->
-<!--      [binary]="true"-->
-<!--      [(ngModel)]="redirectLink"-->
-<!--      id="redirectLink"-->
-<!--      name="ongoing"-->
-<!--    ></p-checkbox>-->
-<!--    <label for="redirectLink" class="input-label ml-2">-->
-<!--      {{ 'myProjects.settings.redirectLinkText' | translate }}-->
-<!--    </label>-->
-<!--  </div>-->
-<!--</p-card>-->
-
 <p-card>
   <h3 class="text-xl pb-4">{{ 'myProjects.settings.redirectLink' | translate }}</h3>
 
@@ -48,7 +31,15 @@
           class="mt-2 w-full"
           placeholder="{{ 'myProjects.settings.redirectUrlPlaceholder' | translate }}"
           [(ngModel)]="redirectUrlData().url"
+          #urlInput="ngModel"
+          pattern="https?://.+"
         />
+
+        @if (urlInput.invalid && urlInput.touched) {
+          <small class="text-red-500 mt-1">
+            {{ 'myProjects.settings.invalidUrl' | translate }}
+          </small>
+        }
       </div>
 
       <div class="flex flex-column">

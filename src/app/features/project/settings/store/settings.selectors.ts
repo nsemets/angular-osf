@@ -8,4 +8,9 @@ export class SettingsSelectors {
   static getSettings(state: SettingsStateModel) {
     return state.settings.data;
   }
+
+  @Selector([SettingsState])
+  static getProjectDetails(state: SettingsStateModel) {
+    return state.projectDetails.data;
+  }
 }

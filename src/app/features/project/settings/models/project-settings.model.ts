@@ -1,6 +1,7 @@
 import { LinkTableModel } from '@osf/features/project/settings';
 
 export interface ProjectSettingsModel {
+  id: string;
   attributes: {
     accessRequestsEnabled: boolean;
     anyoneCanComment: boolean;
@@ -11,4 +12,5 @@ export interface ProjectSettingsModel {
     wikiEnabled: boolean;
   };
   linkTable: LinkTableModel[];
+  lastFetched?: number;
 }

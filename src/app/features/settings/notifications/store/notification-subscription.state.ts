@@ -9,6 +9,7 @@ import { NotificationSubscription } from '@osf/features/settings/notifications/m
 import { NotificationSubscriptionService } from '@osf/features/settings/notifications/services';
 import {
   GetAllGlobalNotificationSubscriptions,
+  GetNotificationSubscriptionsByNodeId,
   UpdateNotificationSubscription,
 } from '@osf/features/settings/notifications/store/notification-subscription.actions';
 import { NotificationSubscriptionModel } from '@osf/features/settings/notifications/store/notification-subscription.model';
@@ -17,6 +18,11 @@ import { NotificationSubscriptionModel } from '@osf/features/settings/notificati
   name: 'notificationSubscriptions',
   defaults: {
     notificationSubscriptions: {
+      data: [],
+      isLoading: false,
+      error: '',
+    },
+    notificationSubscriptionsByNodeId: {
       data: [],
       isLoading: false,
       error: '',
@@ -36,6 +42,25 @@ export class NotificationSubscriptionState {
         ctx.setState(
           patch({
             notificationSubscriptions: patch({
+              data: notificationSubscriptions,
+              isLoading: false,
+            }),
+          })
+        );
+      })
+    );
+  }
+
+  @Action(GetNotificationSubscriptionsByNodeId)
+  getNotificationSubscriptionsByNodeId(
+    ctx: StateContext<NotificationSubscriptionModel>,
+    action: GetNotificationSubscriptionsByNodeId
+  ) {
+    return this.#notificationSubscriptionService.getAllGlobalNotificationSubscriptions(action.nodeId).pipe(
+      tap((notificationSubscriptions) => {
+        ctx.setState(
+          patch({
+            notificationSubscriptionsByNodeId: patch({
               data: notificationSubscriptions,
               isLoading: false,
             }),

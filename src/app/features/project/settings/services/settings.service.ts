@@ -3,7 +3,11 @@ import { map, Observable } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { JsonApiService } from '@core/services/json-api/json-api.service';
-import { ProjectSettingsModel, ProjectSettingsResponseModel } from '@osf/features/project/settings';
+import {
+  ProjectSettingsData,
+  ProjectSettingsModel,
+  ProjectSettingsResponseModel,
+} from '@osf/features/project/settings';
 import { SettingsMapper } from '@osf/features/project/settings/mappers/settings.mapper';
 
 import { environment } from '../../../../../environments/environment';
@@ -19,6 +23,12 @@ export class SettingsService {
   getProjectSettings(nodeId: string): Observable<ProjectSettingsModel> {
     return this.jsonApiService
       .get<ProjectSettingsResponseModel>(`${this.baseUrl}/nodes/${nodeId}/settings`)
+      .pipe(map((response) => SettingsMapper.fromResponse(response)));
+  }
+
+  updateProjectSettings(model: ProjectSettingsData): Observable<ProjectSettingsModel> {
+    return this.jsonApiService
+      .patch<ProjectSettingsResponseModel>(`${this.baseUrl}/nodes/${model.id}/settings`, { data: model })
       .pipe(map((response) => SettingsMapper.fromResponse(response)));
   }
 }

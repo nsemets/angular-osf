@@ -4,10 +4,11 @@
   <div class="flex-column flex flex-1 w-full">
     <p-tabpanels role="tablist" class="flex flex-column gap-4 flex-1 w-full bg-white" [class.mobile]="!isDesktop()">
       <osf-settings-project-form-card
+        (submitForm)="submitForm($event)"
+        (deleteProject)="deleteProject()"
         [formGroup]="projectForm"
-        (submitForm)="submitForm()"
-        (resetForm)="resetForm()"
-      ></osf-settings-project-form-card>
+        [projectDetails]="projectDetails()"
+      />
 
       <osf-settings-storage-location-card
         [location]="'United States'"

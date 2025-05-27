@@ -3,4 +3,5 @@ import { AsyncStateModel } from '@shared/models/store';
 
 export interface NotificationSubscriptionModel {
   notificationSubscriptions: AsyncStateModel<NotificationSubscription[]>;
+  notificationSubscriptionsByNodeId: AsyncStateModel<NotificationSubscription[]>;
 }

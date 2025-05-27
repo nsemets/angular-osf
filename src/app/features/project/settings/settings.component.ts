@@ -1,4 +1,4 @@
-import { createDispatchMap, select } from '@ngxs/store';
+import { createDispatchMap, select, Store } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -14,6 +14,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
+import { UpdateNodeRequestModel } from '@osf/features/my-projects/entities/update-node-request.model';
 import {
   ProjectDetailSettingAccordionComponent,
   SettingsAccessRequestsCardComponent,
@@ -25,9 +26,19 @@ import {
 } from '@osf/features/project/settings/components';
 import { SettingsRedirectLinkComponent } from '@osf/features/project/settings/components/settings-redirect-link/settings-redirect-link.component';
 import { mockSettingsData } from '@osf/features/project/settings/mock-data';
-import { LinkTableModel, ProjectSettingsAttributes } from '@osf/features/project/settings/models';
+import { LinkTableModel, ProjectSettingsAttributes, ProjectSettingsData } from '@osf/features/project/settings/models';
 import { RightControl } from '@osf/features/project/settings/models/right-control.model';
-import { GetProjectSettings, SettingsSelectors } from '@osf/features/project/settings/store';
+import {
+  GetProjectDetails,
+  GetProjectSettings,
+  SettingsSelectors,
+  UpdateProjectDetails,
+  UpdateProjectSettings,
+} from '@osf/features/project/settings/store';
+import {
+  GetNotificationSubscriptionsByNodeId,
+  NotificationSubscriptionSelectors,
+} from '@osf/features/settings/notifications/store';
 import { SubHeaderComponent } from '@shared/components/sub-header/sub-header.component';
 import { ProjectForm } from '@shared/entities/create-project-form.interface';
 import { ProjectFormControls } from '@shared/entities/create-project-form-controls.enum';
@@ -60,11 +71,19 @@ import { IS_WEB } from '@shared/utils/breakpoints.tokens';
 })
 export class SettingsComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
+  private readonly store = inject(Store);
 
   readonly projectId = toSignal(this.route.parent?.params.pipe(map((params) => params['id'])) ?? of(undefined));
 
   protected settings = select(SettingsSelectors.getSettings);
-  protected actions = createDispatchMap({ getSettings: GetProjectSettings });
+  protected notifications = select(NotificationSubscriptionSelectors.getNotificationSubscriptionsByNodeId);
+  protected projectDetails = select(SettingsSelectors.getProjectDetails);
+
+  protected actions = createDispatchMap({
+    getSettings: GetProjectSettings,
+    getNotifications: GetNotificationSubscriptionsByNodeId,
+    getProjectDetails: GetProjectDetails,
+  });
 
   protected readonly isDesktop = toSignal(inject(IS_WEB));
 
@@ -124,7 +143,21 @@ export class SettingsComponent implements OnInit {
           url: settings.attributes.redirectLinkUrl,
           label: settings.attributes.redirectLinkLabel,
         });
-        console.log(settings);
+      }
+    });
+
+    effect(() => {
+      const notifications = this.notifications();
+      console.log(notifications);
+    });
+
+    effect(() => {
+      const projectDetails = this.projectDetails();
+      if (Object.keys(projectDetails).length) {
+        this.projectForm.patchValue({
+          [ProjectFormControls.Title]: projectDetails.attributes.title,
+          [ProjectFormControls.Description]: projectDetails.attributes.description,
+        });
       }
     });
   }
@@ -132,7 +165,8 @@ export class SettingsComponent implements OnInit {
   ngOnInit(): void {
     if (this.projectId()) {
       this.actions.getSettings(this.projectId());
-      this.setData();
+      this.actions.getNotifications(this.projectId());
+      this.actions.getProjectDetails(this.projectId());
     }
   }
 
@@ -159,30 +193,39 @@ export class SettingsComponent implements OnInit {
   onRedirectUrlDataRequestChange(data: { url: string; label: string }): void {
     this.redirectUrlData.set(data);
     this.syncSettingsChanges('redirectUrl', data);
-    console.log(data);
   }
 
-  submitForm(): void {
-    // [VY] TODO: Implement form submission
+  submitForm(value: { title: string; description: string }): void {
+    const { title, description } = value;
+    const current = this.projectDetails().attributes;
+
+    const isTitleUnchanged = title === current.title;
+    const isDescriptionUnchanged = description === current.description;
+
+    if (isTitleUnchanged && isDescriptionUnchanged) {
+      return;
+    }
+
+    const model: UpdateNodeRequestModel = {
+      data: {
+        type: 'nodes',
+        id: this.projectId(),
+        attributes: {
+          title,
+          description,
+        },
+      },
+    } as UpdateNodeRequestModel;
+
+    this.store.dispatch(new UpdateProjectDetails(model)).subscribe();
   }
 
   deleteLinkItem(item: LinkTableModel): void {
     console.log(item);
   }
 
-  resetForm(): void {
+  deleteProject(): void {
     this.projectForm.reset();
-  }
-
-  onAccessChange(event: string): void {
-    console.log(event);
-  }
-
-  private setData(): void {
-    const settings = this.settings();
-    if (settings?.attributes?.accessRequestsEnabled !== undefined) {
-      this.accessRequest.set(settings.attributes.accessRequestsEnabled);
-    }
   }
 
   private syncSettingsChanges(changedField: string, value: boolean | { url: string; label: string }): void {
@@ -206,13 +249,19 @@ export class SettingsComponent implements OnInit {
         break;
       case 'redirectUrl':
         if (typeof value === 'object') {
-          payload['redirect_link_url'] = value.url;
-          payload['redirect_link_label'] = value.label;
+          payload['redirect_link_enabled'] = true;
+          payload['redirect_link_url'] = value.url ?? null;
+          payload['redirect_link_label'] = value.label ?? null;
         }
         break;
     }
 
-    console.log('Updated payload', payload);
-    // TODO: call update API here
+    const model = {
+      id: this.projectId(),
+      type: 'node-settings',
+      attributes: { ...payload },
+    } as ProjectSettingsData;
+
+    this.store.dispatch(new UpdateProjectSettings(model)).subscribe();
   }
 }

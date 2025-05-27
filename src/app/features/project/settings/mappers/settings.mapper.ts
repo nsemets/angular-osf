@@ -3,6 +3,7 @@ import { ProjectSettingsModel, ProjectSettingsResponseModel } from '@osf/feature
 export class SettingsMapper {
   static fromResponse(response: ProjectSettingsResponseModel): ProjectSettingsModel {
     return {
+      id: response.data.id,
       attributes: {
         accessRequestsEnabled: response.data.attributes.access_requests_enabled,
         anyoneCanComment: response.data.attributes.anyone_can_comment,

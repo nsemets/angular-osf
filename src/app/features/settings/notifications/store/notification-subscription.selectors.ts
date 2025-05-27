@@ -13,6 +13,11 @@ export class NotificationSubscriptionSelectors {
   }
 
   @Selector([NotificationSubscriptionState])
+  static getNotificationSubscriptionsByNodeId(state: NotificationSubscriptionModel): NotificationSubscription[] {
+    return state.notificationSubscriptionsByNodeId.data;
+  }
+
+  @Selector([NotificationSubscriptionState])
   static isLoading(state: NotificationSubscriptionModel): boolean {
     return state.notificationSubscriptions.isLoading;
   }

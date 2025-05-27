@@ -260,7 +260,8 @@
       "url": "url",
       "label": "label",
       "redirectUrlPlaceholder": "Send people who visit your OSF project page to this link instead",
-      "redirectLabelPlaceholder": "Optional"
+      "redirectLabelPlaceholder": "Optional",
+      "invalidUrl": "Please enter a valid URL, such as: https://example.com"
     }
   },
   "project": {
