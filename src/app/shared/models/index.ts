@@ -14,3 +14,4 @@ export * from './social-icon.model';
 export * from './store';
 export * from './tab-option.model';
 export * from './table-parameters.model';
+export * from './validation-params.model';

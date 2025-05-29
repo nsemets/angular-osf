@@ -77,7 +77,7 @@
 
   .p-select {
     border: none;
-    font-size: 1rem;
+    font-size: mix.rem(14px);
     box-shadow: none;
     height: 2rem;
 
@@ -95,7 +95,9 @@
 }
 
 .select-font-normal {
-  .no-border-dropdown {
+  &.no-border-dropdown {
+    --p-icon-size: 0.875rem;
+
     .p-select {
       .p-select-label {
         font-weight: 400;

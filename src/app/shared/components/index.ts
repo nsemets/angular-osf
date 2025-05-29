@@ -7,6 +7,7 @@ export { PasswordInputHintComponent } from './password-input-hint/password-input
 export { PieChartComponent } from './pie-chart/pie-chart.component';
 export { SearchInputComponent } from './search-input/search-input.component';
 export { SubHeaderComponent } from './sub-header/sub-header.component';
+export { TextInputComponent } from './text-input/text-input.component';
 export { ToastComponent } from './toast/toast.component';
 export { TruncatedTextComponent } from './truncated-text/truncated-text.component';
 export { ViewOnlyTableComponent } from './view-only-table/view-only-table.component';
