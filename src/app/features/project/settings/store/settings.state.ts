@@ -11,6 +11,7 @@ import { MyProjectsService } from '@osf/features/my-projects/my-projects.service
 import { PaginatedViewOnlyLinksModel, ProjectSettingsModel } from '@osf/features/project/settings';
 import { SettingsService, ViewOnlyLinksService } from '@osf/features/project/settings/services';
 import {
+  CreateViewOnlyLink,
   DeleteViewOnlyLink,
   GetProjectDetails,
   GetProjectSettings,
@@ -199,6 +200,22 @@ export class SettingsState {
         });
         return this.handleError(ctx, 'settings', error);
       })
+    );
+  }
+
+  @Action(CreateViewOnlyLink)
+  createViewOnlyLink(ctx: StateContext<SettingsStateModel>, action: CreateViewOnlyLink) {
+    return this.viewOnlyLinksService.createViewOnlyLink(action.projectId, action.payload).pipe(
+      tap((data: PaginatedViewOnlyLinksModel) => {
+        ctx.patchState({
+          viewOnlyLinks: {
+            data: { ...data },
+            isLoading: false,
+            error: null,
+          },
+        });
+      }),
+      catchError((error) => this.handleError(ctx, 'viewOnlyLinks', error))
     );
   }
 

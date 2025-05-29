@@ -8,6 +8,7 @@ export interface ViewOnlyLinkNodeModel {
   url: string;
   scale: string;
   category: string;
+  id?: string;
 }
 
 export interface ViewOnlyLinkModel {

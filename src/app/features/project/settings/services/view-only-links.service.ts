@@ -3,7 +3,7 @@ import { map, Observable } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { JsonApiService } from '@core/services/json-api/json-api.service';
-import { PaginatedViewOnlyLinksModel } from '@osf/features/project/settings';
+import { PaginatedViewOnlyLinksModel, ViewOnlyLink } from '@osf/features/project/settings';
 import { ViewOnlyLinksMapper } from '@osf/features/project/settings/mappers/view-only-links.mapper';
 import { ViewOnlyLinksResponseModel } from '@osf/features/project/settings/models/view-only-link-response.model';
 
@@ -18,6 +18,14 @@ export class ViewOnlyLinksService {
   getViewOnlyLinksData(projectId: string): Observable<PaginatedViewOnlyLinksModel> {
     return this.jsonApiService
       .get<ViewOnlyLinksResponseModel>(`${environment.apiUrl}/nodes/${projectId}/view_only_links`)
+      .pipe(map((response) => ViewOnlyLinksMapper.fromResponse(response, projectId)));
+  }
+
+  createViewOnlyLink(projectId: string, payload: ViewOnlyLink): Observable<PaginatedViewOnlyLinksModel> {
+    return this.jsonApiService
+      .post<ViewOnlyLinksResponseModel>(`${environment.apiUrl}/nodes/${projectId}/view_only_links`, {
+        data: { ...payload },
+      })
       .pipe(map((response) => ViewOnlyLinksMapper.fromResponse(response, projectId)));
   }
 

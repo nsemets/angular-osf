@@ -1,3 +1,5 @@
+import { createDispatchMap, select, Store } from '@ngxs/store';
+
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
@@ -7,13 +9,23 @@ import { Select } from 'primeng/select';
 import { TableModule, TablePageEvent } from 'primeng/table';
 import { Tooltip } from 'primeng/tooltip';
 
-import { ChangeDetectionStrategy, Component, inject, output, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { filter, map, of, switchMap } from 'rxjs';
+
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, output, signal } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 import { MY_PROJECTS_TABLE_PARAMS } from '@core/constants/my-projects-table.constants';
 import { AddContributorDialogComponent } from '@osf/features/project/contributors/components/add-contributor-dialog/add-contributor-dialog.component';
 import { CreateViewLinkDialogComponent } from '@osf/features/project/contributors/components/create-view-link-dialog/create-view-link-dialog.component';
+import { ViewOnlyLink } from '@osf/features/project/settings';
+import {
+  CreateViewOnlyLink,
+  GetProjectDetails,
+  GetViewOnlyLinksTable,
+  SettingsSelectors,
+} from '@osf/features/project/settings/store';
 import { ViewOnlyTableComponent } from '@osf/shared';
 import { SearchInputComponent } from '@shared/components/search-input/search-input.component';
 import { SelectOption } from '@shared/entities/select-option.interface';
@@ -38,9 +50,15 @@ import { IS_WEB, IS_XSMALL } from '@shared/utils/breakpoints.tokens';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DialogService],
 })
-export class ContributorsComponent {
-  protected searchValue = signal('');
+export class ContributorsComponent implements OnInit {
   readonly #translateService = inject(TranslateService);
+  readonly #dialogService = inject(DialogService);
+  readonly #route = inject(ActivatedRoute);
+  readonly #store = inject(Store);
+  readonly #destroyRef = inject(DestroyRef);
+
+  protected searchValue = signal('');
+
   readonly items = signal([
     {
       name: 'John Doe',
@@ -67,6 +85,8 @@ export class ContributorsComponent {
       educationHistory: 'https://some_link',
     },
   ]);
+  readonly projectId = toSignal(this.#route.parent?.params.pipe(map((params) => params['id'])) ?? of(undefined));
+
   protected readonly tableParams = signal<TableParameters>({
     ...MY_PROJECTS_TABLE_PARAMS,
   });
@@ -78,7 +98,9 @@ export class ContributorsComponent {
   protected readonly isMobile = toSignal(inject(IS_XSMALL));
 
   dialogRef: DynamicDialogRef | null = null;
-  readonly #dialogService = inject(DialogService);
+
+  protected viewOnlyLinks = select(SettingsSelectors.getViewOnlyLinks);
+  protected projectDetails = select(SettingsSelectors.getProjectDetails);
 
   protected readonly permissionsOptions: SelectOption[] = [
     {
@@ -106,40 +128,18 @@ export class ContributorsComponent {
     },
   ];
 
-  tableData = [
-    // {
-    //   linkName: 'name',
-    //   sharedComponents: 'Project name',
-    //   createdDate: new Date(),
-    //   createdBy: 'Igor',
-    //   anonymous: false,
-    //   link: 'www.facebook.com',
-    // },
-    // {
-    //   linkName: 'name',
-    //   sharedComponents: 'Project name',
-    //   createdDate: new Date(),
-    //   createdBy: 'Igor',
-    //   anonymous: false,
-    //   link: 'www.facebook.com',
-    // },
-    // {
-    //   linkName: 'name',
-    //   sharedComponents: 'Project name',
-    //   createdDate: new Date(),
-    //   createdBy: 'Igor',
-    //   anonymous: false,
-    //   link: 'www.facebook.com',
-    // },
-    // {
-    //   linkName: 'name',
-    //   sharedComponents: 'Project name',
-    //   createdDate: new Date(),
-    //   createdBy: 'Igor',
-    //   anonymous: false,
-    //   link: 'www.facebook.com',
-    // },
-  ];
+  protected actions = createDispatchMap({
+    getViewOnlyLinks: GetViewOnlyLinksTable,
+    getProjectDetails: GetProjectDetails,
+  });
+
+  ngOnInit(): void {
+    const id = this.projectId();
+    if (id) {
+      this.actions.getViewOnlyLinks(id);
+      this.actions.getProjectDetails(id);
+    }
+  }
 
   protected onPermissionChange(value: string): void {
     this.selectedPermission.set(value);
@@ -169,13 +169,29 @@ export class ContributorsComponent {
   }
 
   createViewLink() {
+    const sharedComponents = [
+      {
+        id: this.projectDetails().id,
+        title: this.projectDetails().attributes.title,
+        category: 'project',
+      },
+    ];
     this.dialogRef = this.#dialogService.open(CreateViewLinkDialogComponent, {
       width: '448px',
       focusOnShow: false,
       header: this.#translateService.instant('project.contributors.createLinkDialog.dialogTitle'),
+      data: { sharedComponents, projectId: this.projectId() },
       closeOnEscape: true,
       modal: true,
       closable: true,
     });
+
+    this.dialogRef.onClose
+      .pipe(
+        filter((res) => !!res),
+        switchMap((result) => this.#store.dispatch(new CreateViewOnlyLink(this.projectId(), result as ViewOnlyLink))),
+        takeUntilDestroyed(this.#destroyRef)
+      )
+      .subscribe();
   }
 }

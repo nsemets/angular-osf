@@ -204,6 +204,7 @@
       [label]="'project.contributors.createButton' | translate"
       (click)="createViewLink()"
     ></p-button>
-    <osf-view-only-table [tableData]="tableData"></osf-view-only-table>
+
+    <osf-view-only-table [tableData]="viewOnlyLinks()"></osf-view-only-table>
   </div>
 </section>

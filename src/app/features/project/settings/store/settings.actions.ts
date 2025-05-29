@@ -1,5 +1,5 @@
 import { UpdateNodeRequestModel } from '@osf/features/my-projects/entities/update-node-request.model';
-import { ProjectSettingsData } from '@osf/features/project/settings';
+import { ProjectSettingsData, ViewOnlyLink } from '@osf/features/project/settings';
 
 export class GetProjectSettings {
   static readonly type = '[Settings] Get';
@@ -29,6 +29,15 @@ export class UpdateProjectDetails {
   static readonly type = '[Project] Update';
 
   constructor(public payload: UpdateNodeRequestModel) {}
+}
+
+export class CreateViewOnlyLink {
+  static readonly type = '[Link] Create';
+
+  constructor(
+    public projectId: string,
+    public payload: ViewOnlyLink
+  ) {}
 }
 
 export class DeleteViewOnlyLink {
