@@ -1,7 +1,8 @@
 import { createDispatchMap, select, Store } from '@ngxs/store';
 
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
+import { ConfirmationService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { TabPanels } from 'primeng/tabs';
@@ -14,7 +15,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { UpdateNodeRequestModel } from '@osf/features/my-projects/entities/update-node-request.model';
+import { UpdateNodeRequestModel } from '@osf/features/my-projects/models/update-node-request.model';
 import {
   SettingsAccessRequestsCardComponent,
   SettingsCommentingCardComponent,
@@ -25,7 +26,11 @@ import {
 } from '@osf/features/project/settings/components';
 import { ProjectSettingNotificationsComponent } from '@osf/features/project/settings/components/project-setting-notifications/project-setting-notifications.component';
 import { SettingsRedirectLinkComponent } from '@osf/features/project/settings/components/settings-redirect-link/settings-redirect-link.component';
-import { ProjectSettingsAttributes, ProjectSettingsData } from '@osf/features/project/settings/models';
+import {
+  ProjectSettingsAttributes,
+  ProjectSettingsData,
+  ViewOnlyLinkModel,
+} from '@osf/features/project/settings/models';
 import {
   DeleteViewOnlyLink,
   GetProjectDetails,
@@ -42,7 +47,8 @@ import {
   UpdateNotificationSubscriptionForNodeId,
 } from '@osf/features/settings/notifications/store';
 import { SubHeaderComponent } from '@shared/components/sub-header/sub-header.component';
-import { ProjectFormControls } from '@shared/entities/create-project-form-controls.enum';
+import { ProjectFormControls } from '@shared/enums';
+import { defaultConfirmationConfig } from '@shared/helpers';
 
 @Component({
   selector: 'osf-settings',
@@ -71,6 +77,8 @@ import { ProjectFormControls } from '@shared/entities/create-project-form-contro
 export class SettingsComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly store = inject(Store);
+  private readonly translateService = inject(TranslateService);
+  private readonly confirmationService = inject(ConfirmationService);
 
   readonly projectId = toSignal(this.route.parent?.params.pipe(map((params) => params['id'])) ?? of(undefined));
 
@@ -160,8 +168,22 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new UpdateNotificationSubscriptionForNodeId({ id, frequency })).subscribe();
   }
 
-  deleteLinkItem(linkId: string): void {
-    this.store.dispatch(new DeleteViewOnlyLink(this.projectId(), linkId)).subscribe();
+  deleteLinkItem(link: ViewOnlyLinkModel): void {
+    this.confirmationService.confirm({
+      ...defaultConfirmationConfig,
+      message: this.translateService.instant('myProjects.settings.delete.message'),
+      header: this.translateService.instant('myProjects.settings.delete.title', {
+        name: link.name,
+      }),
+      acceptButtonProps: {
+        ...defaultConfirmationConfig.acceptButtonProps,
+        severity: 'danger',
+        label: this.translateService.instant('settings.developerApps.list.deleteButton'),
+      },
+      accept: () => {
+        this.store.dispatch(new DeleteViewOnlyLink(this.projectId(), link.id)).subscribe();
+      },
+    });
   }
 
   deleteProject(): void {
@@ -200,7 +222,7 @@ export class SettingsComponent implements OnInit {
   private setupEffects(): void {
     effect(() => {
       const settings = this.settings();
-      console.log(this.settings());
+
       if (settings?.attributes) {
         this.accessRequest.set(settings.attributes.accessRequestsEnabled);
         this.wikiEnabled.set(settings.attributes.wikiEnabled);

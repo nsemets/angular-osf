@@ -1,5 +1,8 @@
+import { createDispatchMap, select, Store } from '@ngxs/store';
+
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
+import { ConfirmationService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { Checkbox } from 'primeng/checkbox';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -17,17 +20,18 @@ import { ActivatedRoute } from '@angular/router';
 import { MY_PROJECTS_TABLE_PARAMS } from '@core/constants/my-projects-table.constants';
 import { AddContributorDialogComponent } from '@osf/features/project/contributors/components/add-contributor-dialog/add-contributor-dialog.component';
 import { CreateViewLinkDialogComponent } from '@osf/features/project/contributors/components/create-view-link-dialog/create-view-link-dialog.component';
-import { ViewOnlyLink } from '@osf/features/project/settings';
+import { ViewOnlyLink, ViewOnlyLinkModel } from '@osf/features/project/settings/models';
 import {
   CreateViewOnlyLink,
+  DeleteViewOnlyLink,
   GetProjectDetails,
   GetViewOnlyLinksTable,
   SettingsSelectors,
 } from '@osf/features/project/settings/store';
-import { ViewOnlyTableComponent } from '@osf/shared';
+import { ViewOnlyTableComponent } from '@shared/components';
 import { SearchInputComponent } from '@shared/components/search-input/search-input.component';
-import { SelectOption } from '@shared/entities/select-option.interface';
-import { TableParameters } from '@shared/entities/table-parameters.interface';
+import { defaultConfirmationConfig } from '@shared/helpers';
+import { SelectOption, TableParameters } from '@shared/models';
 import { IS_WEB, IS_XSMALL } from '@shared/utils/breakpoints.tokens';
 
 @Component({
@@ -54,6 +58,7 @@ export class ContributorsComponent implements OnInit {
   readonly #route = inject(ActivatedRoute);
   readonly #store = inject(Store);
   readonly #destroyRef = inject(DestroyRef);
+  readonly #confirmationService = inject(ConfirmationService);
 
   protected searchValue = signal('');
 
@@ -191,5 +196,23 @@ export class ContributorsComponent implements OnInit {
         takeUntilDestroyed(this.#destroyRef)
       )
       .subscribe();
+  }
+
+  deleteLinkItem(link: ViewOnlyLinkModel): void {
+    this.#confirmationService.confirm({
+      ...defaultConfirmationConfig,
+      message: this.#translateService.instant('myProjects.settings.delete.message'),
+      header: this.#translateService.instant('myProjects.settings.delete.title', {
+        name: link.name,
+      }),
+      acceptButtonProps: {
+        ...defaultConfirmationConfig.acceptButtonProps,
+        severity: 'danger',
+        label: this.#translateService.instant('settings.developerApps.list.deleteButton'),
+      },
+      accept: () => {
+        this.#store.dispatch(new DeleteViewOnlyLink(this.projectId(), link.id)).subscribe();
+      },
+    });
   }
 }

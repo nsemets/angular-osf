@@ -8,7 +8,7 @@ import { InputText } from 'primeng/inputtext';
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { ViewOnlyLinkNodeModel } from '@osf/features/project/settings';
+import { ViewOnlyLinkNodeModel } from '@osf/features/project/settings/models';
 
 @Component({
   selector: 'osf-create-view-link-dialog',
@@ -49,11 +49,17 @@ export class CreateViewLinkDialogComponent implements OnInit {
     if (!this.linkName()) return;
 
     const components = (this.config.data?.['sharedComponents'] as ViewOnlyLinkNodeModel[]) || [];
-    const selectedIds = Object.entries(this.selectedComponents()).filter(([_, checked]) => checked);
+    const selectedIds = Object.entries(this.selectedComponents()).filter(([component, checked]) => checked);
 
-    const selected = components.filter((comp: ViewOnlyLinkNodeModel) =>
-      selectedIds.find(([id, checked]: [string, boolean]) => id === comp.id)
-    );
+    const selected = components
+      .filter((comp: ViewOnlyLinkNodeModel) =>
+        selectedIds.find(([id, checked]: [string, boolean]) => id === comp.id && checked)
+      )
+      .map((comp) => ({
+        id: comp.id,
+        type: 'nodes',
+      }));
+
     const data = {
       attributes: {
         name: this.linkName(),

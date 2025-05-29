@@ -8,8 +8,8 @@ import { Textarea } from 'primeng/textarea';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { NodeData } from '@osf/features/my-projects/entities/node-response.model';
-import { ProjectFormControls } from '@shared/entities/create-project-form-controls.enum';
+import { NodeData } from '@osf/features/my-projects/models/node-response.model';
+import { ProjectFormControls } from '@shared/enums';
 
 @Component({
   selector: 'osf-settings-project-form-card',

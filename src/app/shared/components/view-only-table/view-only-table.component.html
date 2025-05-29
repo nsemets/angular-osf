@@ -27,27 +27,29 @@
 
     <ng-template #body let-item>
       <tr>
-        <td class="flex align-items-center gap-2">
-          <span class="w-3 min-w-max">{{ item.name }}</span>
+        <td>
+          <div class="flex align-items-center gap-2">
+            <span class="w-3 min-w-max">{{ item.name }}</span>
 
-          <div class="relative flex align-items-center">
-            <input
-              [id]="item.link"
-              [attr.aria-label]="'Link for ' + item.link"
-              pInputText
-              class="h-auto text-base w-max py-2 px-3"
-              type="text"
-              [value]="item.link"
-            />
+            <div class="relative flex align-items-center">
+              <input
+                [id]="item.link"
+                [attr.aria-label]="'Link for ' + item.link"
+                pInputText
+                class="h-auto text-base w-max py-2 px-3"
+                type="text"
+                [value]="item.link"
+              />
 
-            <p-button
-              [ariaLabel]="'Copy link'"
-              type="button"
-              class="absolute btn-icon-text form-btn icon-copy-btn button-shadow-none"
-              (click)="copy(item.link)"
-            >
-              <i class="osf-icon-copy"></i>
-            </p-button>
+              <p-button
+                [ariaLabel]="'Copy link'"
+                type="button"
+                class="absolute btn-icon-text form-btn icon-copy-btn button-shadow-none"
+                (click)="copy(item.link)"
+              >
+                <i class="osf-icon-copy"></i>
+              </p-button>
+            </div>
           </div>
         </td>
         <td>{{ item.sharedComponents }}</td>
@@ -58,7 +60,7 @@
           <p-button
             ariaLabel="Delete link"
             class="btn-icon-text form-btn icon-copy-btn button-shadow-none"
-            (click)="deleteLink.emit(item.id)"
+            (click)="deleteLink.emit(item)"
           >
             <i class="osf-icon-trash delete-icon"></i>
           </p-button>

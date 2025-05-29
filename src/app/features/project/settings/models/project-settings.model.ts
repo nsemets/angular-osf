@@ -1,4 +1,4 @@
-import { LinkTableModel } from '@osf/features/project/settings';
+import { LinkTableModel } from '@osf/features/project/settings/models/link-table.model';
 
 export interface ProjectSettingsModel {
   id: string;

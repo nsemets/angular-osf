@@ -2,7 +2,7 @@ import {
   ProjectSettingsData,
   ProjectSettingsModel,
   ProjectSettingsResponseModel,
-} from '@osf/features/project/settings';
+} from '@osf/features/project/settings/models';
 
 export class SettingsMapper {
   static fromResponse(

@@ -1,4 +1,7 @@
-import { ViewOnlyLinkCreatorModel, ViewOnlyLinkNodeModel } from '@osf/features/project/settings';
+import {
+  ViewOnlyLinkCreatorModel,
+  ViewOnlyLinkNodeModel,
+} from '@osf/features/project/settings/models/view-only-link.model';
 
 export interface LinkTableModel {
   id: string;

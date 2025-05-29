@@ -6,9 +6,9 @@ import { catchError, tap } from 'rxjs/operators';
 
 import { inject, Injectable } from '@angular/core';
 
-import { NodeData } from '@osf/features/my-projects/entities/node-response.model';
-import { MyProjectsService } from '@osf/features/my-projects/my-projects.service';
-import { PaginatedViewOnlyLinksModel, ProjectSettingsModel } from '@osf/features/project/settings';
+import { NodeData } from '@osf/features/my-projects/models/node-response.model';
+import { MyProjectsService } from '@osf/features/my-projects/services';
+import { PaginatedViewOnlyLinksModel, ProjectSettingsModel } from '@osf/features/project/settings/models';
 import { SettingsService, ViewOnlyLinksService } from '@osf/features/project/settings/services';
 import {
   CreateViewOnlyLink,
@@ -205,11 +205,15 @@ export class SettingsState {
 
   @Action(CreateViewOnlyLink)
   createViewOnlyLink(ctx: StateContext<SettingsStateModel>, action: CreateViewOnlyLink) {
+    const state = ctx.getState();
     return this.viewOnlyLinksService.createViewOnlyLink(action.projectId, action.payload).pipe(
       tap((data: PaginatedViewOnlyLinksModel) => {
         ctx.patchState({
           viewOnlyLinks: {
-            data: { ...data },
+            data: {
+              ...state.viewOnlyLinks.data,
+              items: [data.items[0], ...state.viewOnlyLinks.data.items],
+            },
             isLoading: false,
             error: null,
           },

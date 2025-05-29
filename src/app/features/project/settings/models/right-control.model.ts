@@ -1,4 +1,4 @@
-import { OptionModel } from '@osf/features/project/settings';
+import { OptionModel } from '@osf/features/project/settings/models/option.model';
 import { SubscriptionEvent } from '@osf/features/settings/notifications/enums';
 
 export interface RightControl {

@@ -7,14 +7,13 @@ import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { RightControl } from '../../models';
+import { RightControl } from '@osf/features/project/settings/models/right-control.model';
 
 @Component({
   selector: 'osf-project-detail-setting-accordion',
   imports: [NgClass, SelectModule, FormsModule, Button, TranslatePipe],
   templateUrl: './project-detail-setting-accordion.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class ProjectDetailSettingAccordionComponent {
   emitValueChange = output<{ index: number; value: boolean | string }>();

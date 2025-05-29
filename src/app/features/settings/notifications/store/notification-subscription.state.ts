@@ -12,6 +12,7 @@ import {
   GetAllGlobalNotificationSubscriptions,
   GetNotificationSubscriptionsByNodeId,
   UpdateNotificationSubscription,
+  UpdateNotificationSubscriptionForNodeId,
 } from './notification-subscription.actions';
 import { NotificationSubscriptionModel } from './notification-subscription.model';
 

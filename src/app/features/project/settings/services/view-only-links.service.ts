@@ -2,10 +2,13 @@ import { map, Observable } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { JsonApiService } from '@core/services/json-api/json-api.service';
-import { PaginatedViewOnlyLinksModel, ViewOnlyLink } from '@osf/features/project/settings';
+import { JsonApiService } from '@core/services';
 import { ViewOnlyLinksMapper } from '@osf/features/project/settings/mappers/view-only-links.mapper';
-import { ViewOnlyLinksResponseModel } from '@osf/features/project/settings/models/view-only-link-response.model';
+import { PaginatedViewOnlyLinksModel } from '@osf/features/project/settings/models';
+import {
+  ViewOnlyLink,
+  ViewOnlyLinksResponseModel,
+} from '@osf/features/project/settings/models/view-only-link-response.model';
 
 import { environment } from '../../../../../environments/environment';
 
@@ -23,10 +26,10 @@ export class ViewOnlyLinksService {
 
   createViewOnlyLink(projectId: string, payload: ViewOnlyLink): Observable<PaginatedViewOnlyLinksModel> {
     return this.jsonApiService
-      .post<ViewOnlyLinksResponseModel>(`${environment.apiUrl}/nodes/${projectId}/view_only_links`, {
+      .post<ViewOnlyLink>(`${environment.apiUrl}/nodes/${projectId}/view_only_links/`, {
         data: { ...payload },
       })
-      .pipe(map((response) => ViewOnlyLinksMapper.fromResponse(response, projectId)));
+      .pipe(map((response) => ViewOnlyLinksMapper.fromSingleResponse(response, projectId)));
   }
 
   deleteLink(projectId: string, linkId: string): Observable<void> {

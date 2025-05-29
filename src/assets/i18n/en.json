@@ -263,7 +263,11 @@
       "redirectLabelPlaceholder": "Optional",
       "invalidUrl": "Please enter a valid URL, such as: https://example.com",
       "disabledForWiki": "This feature is disabled for wikis of private projects.",
-      "enabledForWiki": "This feature is enabled for wikis of private projects."
+      "enabledForWiki": "This feature is enabled for wikis of private projects.",
+      "delete": {
+        "title": "Delete Link {{name}}?",
+        "message": "Are you sure you want to delete this view only link?"
+      }
     }
   },
   "project": {
