@@ -1,12 +1,12 @@
-import { Store } from '@ngxs/store';
+import { select, Store } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { UserSelectors } from '@core/store/user/user.selectors';
-import { DeleteUserInstitution } from '@osf/features/settings/account-settings/store/account-settings.actions';
-import { AccountSettingsSelectors } from '@osf/features/settings/account-settings/store/account-settings.selectors';
+import { UserSelectors } from '@osf/core/store/user';
+
+import { AccountSettingsSelectors, DeleteUserInstitution } from '../../store';
 
 @Component({
   selector: 'osf-affiliated-institutions',
@@ -16,13 +16,13 @@ import { AccountSettingsSelectors } from '@osf/features/settings/account-setting
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AffiliatedInstitutionsComponent {
-  readonly #store = inject(Store);
-  institutions = this.#store.selectSignal(AccountSettingsSelectors.getUserInstitutions);
-  currentUser = this.#store.selectSignal(UserSelectors.getCurrentUser);
+  private readonly store = inject(Store);
+  protected institutions = select(AccountSettingsSelectors.getUserInstitutions);
+  protected currentUser = select(UserSelectors.getCurrentUser);
 
   deleteInstitution(id: string) {
     if (this.currentUser()?.id) {
-      this.#store.dispatch(new DeleteUserInstitution(id, this.currentUser()!.id));
+      this.store.dispatch(new DeleteUserInstitution(id, this.currentUser()!.id));
     }
   }
 }

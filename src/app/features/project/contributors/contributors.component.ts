@@ -1,5 +1,3 @@
-import { createDispatchMap, select, Store } from '@ngxs/store';
-
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';

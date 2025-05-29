@@ -1,2 +1,2 @@
-export * from './meetings-details';
-export * from './meetings-landing';
+export { MeetingDetailsComponent } from './meeting-details/meeting-details.component';
+export { MeetingsLandingComponent } from './meetings-landing/meetings-landing.component';

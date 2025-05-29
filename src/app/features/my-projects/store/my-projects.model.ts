@@ -1,13 +1,14 @@
-import { MyProjectsItem } from '@osf/features/my-projects/entities/my-projects.entities';
+import { AsyncStateModel } from '@osf/shared/models';
+
+import { MyProjectsItem } from '../models';
 
 export interface MyProjectsStateModel {
-  projects: MyProjectsItem[];
-  registrations: MyProjectsItem[];
-  preprints: MyProjectsItem[];
-  bookmarks: MyProjectsItem[];
+  projects: AsyncStateModel<MyProjectsItem[]>;
+  registrations: AsyncStateModel<MyProjectsItem[]>;
+  preprints: AsyncStateModel<MyProjectsItem[]>;
+  bookmarks: AsyncStateModel<MyProjectsItem[]>;
   totalProjects: number;
   totalRegistrations: number;
   totalPreprints: number;
   totalBookmarks: number;
-  bookmarksId: string;
 }

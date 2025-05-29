@@ -5,15 +5,15 @@ import { tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { NotificationSubscription } from '@osf/features/settings/notifications/models';
-import { NotificationSubscriptionService } from '@osf/features/settings/notifications/services';
+import { NotificationSubscription } from '../models';
+import { NotificationSubscriptionService } from '../services';
+
 import {
   GetAllGlobalNotificationSubscriptions,
   GetNotificationSubscriptionsByNodeId,
   UpdateNotificationSubscription,
-  UpdateNotificationSubscriptionForNodeId,
-} from '@osf/features/settings/notifications/store/notification-subscription.actions';
-import { NotificationSubscriptionModel } from '@osf/features/settings/notifications/store/notification-subscription.model';
+} from './notification-subscription.actions';
+import { NotificationSubscriptionModel } from './notification-subscription.model';
 
 @State<NotificationSubscriptionModel>({
   name: 'notificationSubscriptions',

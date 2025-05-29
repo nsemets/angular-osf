@@ -2,8 +2,8 @@ import { map, Observable } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { JsonApiResponse } from '@osf/core/services/json-api/json-api.entity';
-import { JsonApiService } from '@osf/core/services/json-api/json-api.service';
+import { JsonApiResponse } from '@osf/core/models';
+import { JsonApiService } from '@osf/core/services';
 
 import { AnalyticsMetricsMapper, RelatedCountsMapper } from '../mappers';
 import { AnalyticsMetricsGetResponse, AnalyticsMetricsModel, RelatedCountsGetResponse } from '../models';
@@ -14,13 +14,13 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class AnalyticsService {
-  #baseUrl = 'https://api.staging4.osf.io/_/metrics/query/node_analytics';
-
   #jsonApiService = inject(JsonApiService);
 
   getMetrics(projectId: string, dateRange: string): Observable<AnalyticsMetricsModel> {
+    const baseUrl = `${environment.apiDomainUrl}/_/metrics/query/node_analytics`;
+
     return this.#jsonApiService
-      .get<JsonApiResponse<AnalyticsMetricsGetResponse, null>>(`${this.#baseUrl}/${projectId}/${dateRange}`)
+      .get<JsonApiResponse<AnalyticsMetricsGetResponse, null>>(`${baseUrl}/${projectId}/${dateRange}`)
       .pipe(map((response) => AnalyticsMetricsMapper.fromResponse(response.data)));
   }
 
