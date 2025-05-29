@@ -1,4 +1,4 @@
-import { map, Observable } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
@@ -23,12 +23,15 @@ export class SettingsService {
   getProjectSettings(nodeId: string): Observable<ProjectSettingsModel> {
     return this.jsonApiService
       .get<ProjectSettingsResponseModel>(`${this.baseUrl}/nodes/${nodeId}/settings`)
-      .pipe(map((response) => SettingsMapper.fromResponse(response)));
+      .pipe(map((response) => SettingsMapper.fromResponse(response, nodeId)));
   }
 
   updateProjectSettings(model: ProjectSettingsData): Observable<ProjectSettingsModel> {
     return this.jsonApiService
       .patch<ProjectSettingsResponseModel>(`${this.baseUrl}/nodes/${model.id}/settings`, { data: model })
-      .pipe(map((response) => SettingsMapper.fromResponse(response)));
+      .pipe(
+        tap((response) => console.log(response)),
+        map((response) => SettingsMapper.fromResponse(response, model.id))
+      );
   }
 }

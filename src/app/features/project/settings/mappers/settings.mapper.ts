@@ -1,30 +1,27 @@
-import { ProjectSettingsModel, ProjectSettingsResponseModel } from '@osf/features/project/settings';
+import {
+  ProjectSettingsData,
+  ProjectSettingsModel,
+  ProjectSettingsResponseModel,
+} from '@osf/features/project/settings';
 
 export class SettingsMapper {
-  static fromResponse(response: ProjectSettingsResponseModel): ProjectSettingsModel {
+  static fromResponse(
+    response: ProjectSettingsResponseModel | ProjectSettingsData,
+    nodeId: string
+  ): ProjectSettingsModel {
+    const result = 'data' in response ? response.data : response;
+
     return {
-      id: response.data.id,
+      id: nodeId,
       attributes: {
-        accessRequestsEnabled: response.data.attributes.access_requests_enabled,
-        anyoneCanComment: response.data.attributes.anyone_can_comment,
-        anyoneCanEditWiki: response.data.attributes.anyone_can_edit_wiki,
-        redirectLinkEnabled: response.data.attributes.redirect_link_enabled,
-        redirectLinkLabel: response.data.attributes.redirect_link_label,
-        redirectLinkUrl: response.data.attributes.redirect_link_url,
-        wikiEnabled: response.data.attributes.wiki_enabled,
+        accessRequestsEnabled: result.attributes.access_requests_enabled,
+        anyoneCanComment: result.attributes.anyone_can_comment,
+        anyoneCanEditWiki: result.attributes.anyone_can_edit_wiki,
+        redirectLinkEnabled: result.attributes.redirect_link_enabled,
+        redirectLinkLabel: result.attributes.redirect_link_label,
+        redirectLinkUrl: result.attributes.redirect_link_url,
+        wikiEnabled: result.attributes.wiki_enabled,
       },
-      linkTable: response.data.relationships.view_only_links.links.private_links?.length
-        ? response.data.relationships.view_only_links.links.private_links.map((links) => {
-            return {
-              anonymous: links.anonymous,
-              link: links.name,
-              createdDate: links.date_created,
-              createdBy: links.creator,
-              id: links.id,
-              nodes: links.nodes,
-            };
-          })
-        : [],
     } as ProjectSettingsModel;
   }
 }

@@ -261,7 +261,9 @@
       "label": "label",
       "redirectUrlPlaceholder": "Send people who visit your OSF project page to this link instead",
       "redirectLabelPlaceholder": "Optional",
-      "invalidUrl": "Please enter a valid URL, such as: https://example.com"
+      "invalidUrl": "Please enter a valid URL, such as: https://example.com",
+      "disabledForWiki": "This feature is disabled for wikis of private projects.",
+      "enabledForWiki": "This feature is enabled for wikis of private projects."
     }
   },
   "project": {

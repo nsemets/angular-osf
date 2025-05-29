@@ -1,4 +1,4 @@
 export interface OptionModel {
   label: string;
-  value: boolean;
+  value: boolean | string;
 }

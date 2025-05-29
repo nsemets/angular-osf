@@ -24,7 +24,6 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './settings-redirect-link.component.html',
   styleUrl: '../../settings.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class SettingsRedirectLinkComponent {
   redirectUrlDataChange = output<{ url: string; label: string }>();

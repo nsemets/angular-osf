@@ -15,3 +15,9 @@ export class UpdateNotificationSubscription {
 
   constructor(public payload: { id: string; frequency: SubscriptionFrequency }) {}
 }
+
+export class UpdateNotificationSubscriptionForNodeId {
+  static readonly type = '[Notification Subscriptions] Update For Node';
+
+  constructor(public payload: { id: string; frequency: SubscriptionFrequency }) {}
+}

@@ -9,7 +9,7 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { LinkTableModel } from '@osf/features/project/settings/models';
+import { PaginatedViewOnlyLinksModel } from '@osf/features/project/settings/models';
 
 @Component({
   selector: 'osf-view-only-table',
@@ -19,8 +19,8 @@ import { LinkTableModel } from '@osf/features/project/settings/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewOnlyTableComponent {
-  deleteLink = output<LinkTableModel>();
-  tableData = input.required<LinkTableModel[]>();
+  deleteLink = output<string>();
+  tableData = input.required<PaginatedViewOnlyLinksModel>();
 
   readonly #clipboard = inject(Clipboard);
 

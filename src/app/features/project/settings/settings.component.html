@@ -1,8 +1,8 @@
-<section [class.desktop]="isDesktop()" class="flex flex-column flex-1">
+<section class="flex flex-column flex-1">
   <osf-sub-header [title]="'navigation.project.settings' | translate" />
 
   <div class="flex-column flex flex-1 w-full">
-    <p-tabpanels role="tablist" class="flex flex-column gap-4 flex-1 w-full bg-white" [class.mobile]="!isDesktop()">
+    <p-tabpanels role="tablist" class="flex flex-column gap-4 flex-1 w-full bg-white">
       <osf-settings-project-form-card
         (submitForm)="submitForm($event)"
         (deleteProject)="deleteProject()"
@@ -15,7 +15,7 @@
         [locationText]="'Storage location cannot be changed after project is created.'"
       ></osf-settings-storage-location-card>
 
-      <osf-settings-view-only-links-card (deleteTableItem)="deleteLinkItem($event)" [tableData]="tableData" />
+      <osf-settings-view-only-links-card (deleteTableItem)="deleteLinkItem($event)" [tableData]="viewOnlyLinks()" />
 
       <osf-settings-access-requests-card
         (accessRequestChange)="onAccessRequestChange($event)"
@@ -27,6 +27,7 @@
         (anyoneCanEditWikiEmitValue)="onAnyoneCanEditWikiRequestChange($event)"
         [wikiEnabled]="wikiEnabled()"
         [anyoneCanEditWiki]="anyoneCanEditWiki()"
+        [title]="title()"
       />
 
       <osf-settings-commenting-card
@@ -34,21 +35,11 @@
         [anyoneCanComment]="anyoneCanComment()"
       />
 
-      <p-card>
-        <h3 class="text-xl pb-4">{{ 'myProjects.settings.emailNotifications' | translate }}</h3>
-
-        <p class="pb-4">{{ 'myProjects.settings.emailNotificationsText' | translate }}</p>
-
-        <osf-project-detail-setting-accordion
-          [title]="'Project name example'"
-          [rightControls]="rightControls['notifications']"
-        >
-          <div class="flex align-items-baseline gap-2">
-            <i class="pi pi-minus text-sm icon-space"></i>
-            <span>Sub text</span>
-          </div>
-        </osf-project-detail-setting-accordion>
-      </p-card>
+      <osf-project-setting-notifications
+        (notificationEmitValue)="onNotificationRequestChange($event)"
+        [title]="title()"
+        [notifications]="notifications()"
+      />
 
       <osf-settings-redirect-link
         (redirectUrlDataChange)="onRedirectUrlDataRequestChange($event)"
@@ -71,23 +62,28 @@
           </li>
         </ol>
 
-        <div class="flex flex-column gap-3 w-full mt-5">
-          @for (affiliation of affiliations; track $index) {
-            <div
-              class="flex justify-content-between align-items-center w-full border-bottom-1 border-gray-300 pb-2 pr-2 sm:pr-4"
-            >
-              <div class="flex align-items-center gap-3">
-                <img ngSrc="assets/images/cos-shield.svg" alt="cos-shield" width="44" height="44" />
+        @if (affiliations.length > 0) {
+          <div class="flex flex-column gap-3 w-full mt-5">
+            @for (affiliation of affiliations; track $index) {
+              <div
+                class="flex justify-content-between align-items-center w-full border-bottom-1 border-gray-300 pb-2 pr-2 sm:pr-4"
+              >
+                <div class="flex align-items-center gap-3">
+                  <img ngSrc="assets/images/cos-shield.svg" alt="cos-shield" width="44" height="44" />
 
-                <p>{{ affiliation.name }}</p>
+                  <p>{{ affiliation }}</p>
+                </div>
+
+                <p-button
+                  ariaLabel="Delete affiliation"
+                  class="btn-icon-text form-btn icon-copy-btn button-shadow-none"
+                >
+                  <i class="osf-icon-trash delete-icon"></i>
+                </p-button>
               </div>
-
-              <p-button ariaLabel="Delete affiliation" class="btn-icon-text form-btn icon-copy-btn button-shadow-none">
-                <i class="osf-icon-trash delete-icon"></i>
-              </p-button>
-            </div>
-          }
-        </div>
+            }
+          </div>
+        }
       </p-card>
     </p-tabpanels>
   </div>

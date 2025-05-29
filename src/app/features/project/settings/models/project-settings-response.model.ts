@@ -1,5 +1,3 @@
-import { ViewOnlyLinkModel } from '@osf/features/project/settings';
-
 export interface ProjectSettingsAttributes {
   access_requests_enabled: boolean;
   anyone_can_comment: boolean;
@@ -18,7 +16,6 @@ export interface RelatedLink {
 export interface ProjectSettingsRelationships {
   view_only_links: {
     links: {
-      private_links: ViewOnlyLinkModel[];
       related: RelatedLink;
     };
   };

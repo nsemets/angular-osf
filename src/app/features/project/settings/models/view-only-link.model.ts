@@ -1,5 +1,5 @@
 export interface ViewOnlyLinkCreatorModel {
-  fullname: string;
+  fullName: string;
   url: string;
 }
 
@@ -12,10 +12,19 @@ export interface ViewOnlyLinkNodeModel {
 
 export interface ViewOnlyLinkModel {
   id: string;
-  date_created: string;
+  dateCreated: string;
   key: string;
   name: string;
+  link: string;
   creator: ViewOnlyLinkCreatorModel;
   nodes: ViewOnlyLinkNodeModel[];
   anonymous: boolean;
+}
+
+export interface PaginatedViewOnlyLinksModel {
+  items: ViewOnlyLinkModel[];
+  total: number;
+  perPage: number;
+  next?: string | null;
+  prev?: string | null;
 }

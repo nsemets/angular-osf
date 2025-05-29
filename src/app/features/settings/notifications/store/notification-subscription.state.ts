@@ -11,6 +11,7 @@ import {
   GetAllGlobalNotificationSubscriptions,
   GetNotificationSubscriptionsByNodeId,
   UpdateNotificationSubscription,
+  UpdateNotificationSubscriptionForNodeId,
 } from '@osf/features/settings/notifications/store/notification-subscription.actions';
 import { NotificationSubscriptionModel } from '@osf/features/settings/notifications/store/notification-subscription.model';
 
@@ -86,5 +87,25 @@ export class NotificationSubscriptionState {
         );
       })
     );
+  }
+
+  @Action(UpdateNotificationSubscriptionForNodeId)
+  updateNotificationSubscriptionForNodeId(
+    ctx: StateContext<NotificationSubscriptionModel>,
+    action: UpdateNotificationSubscription
+  ) {
+    return this.#notificationSubscriptionService
+      .updateSubscription(action.payload.id, action.payload.frequency, true)
+      .pipe(
+        tap((updatedSubscription) => {
+          ctx.setState(
+            patch({
+              notificationSubscriptionsByNodeId: patch({
+                data: updateItem<NotificationSubscription>((app) => app.id === action.payload.id, updatedSubscription),
+              }),
+            })
+          );
+        })
+      );
   }
 }

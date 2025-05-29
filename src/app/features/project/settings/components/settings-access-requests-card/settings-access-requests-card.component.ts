@@ -12,7 +12,6 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './settings-access-requests-card.component.html',
   styleUrl: '../../settings.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class SettingsAccessRequestsCardComponent {
   accessRequestChange = output<boolean>();

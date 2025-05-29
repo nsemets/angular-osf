@@ -15,7 +15,6 @@ import { RightControl } from '@osf/features/project/settings/models/right-contro
   templateUrl: './settings-wiki-card.component.html',
   styleUrl: '../../settings.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class SettingsWikiCardComponent {
   anyoneCanEditWikiEmitValue = output<boolean>();
@@ -23,8 +22,10 @@ export class SettingsWikiCardComponent {
 
   wikiEnabled = input.required<boolean>();
   anyoneCanEditWiki = input.required<boolean>();
+  title = input.required<string>();
 
   allAccordionData: RightControl[] = [];
+
   constructor() {
     effect(() => {
       const anyoneCanEditWiki = this.anyoneCanEditWiki();

@@ -6,10 +6,11 @@
       <p-radio-button
         [ariaLabel]="'Select ' + 'myProjects.settings.contributorsCanPost' | translate"
         name="contributorsCanPost"
-        [value]="true"
+        [value]="false"
         [ngModel]="anyoneCanComment()"
-        (ngModelChange)="anyoneCanCommentChange.emit(anyoneCanComment())"
+        (ngModelChange)="anyoneCanCommentChange.emit(false)"
       ></p-radio-button>
+
       <p>{{ 'myProjects.settings.contributorsCanPost' | translate }}</p>
     </div>
 
@@ -17,9 +18,9 @@
       <p-radio-button
         [ariaLabel]="'Select ' + 'myProjects.settings.osfUserCanPost' | translate"
         name="osfUserCanPost"
-        [value]="false"
+        [value]="true"
         [ngModel]="anyoneCanComment()"
-        (ngModelChange)="anyoneCanCommentChange.emit(anyoneCanComment())"
+        (ngModelChange)="anyoneCanCommentChange.emit(true)"
       >
       </p-radio-button>
 

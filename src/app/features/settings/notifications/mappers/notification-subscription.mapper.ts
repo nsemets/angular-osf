@@ -14,14 +14,20 @@ export class NotificationSubscriptionMapper {
     };
   }
 
-  static toUpdateRequest(id: string, frequency: SubscriptionFrequency): NotificationSubscriptionUpdateRequest {
+  static toUpdateRequest(
+    id: string,
+    frequency: SubscriptionFrequency,
+    isNodeSubscription?: boolean
+  ): NotificationSubscriptionUpdateRequest {
+    const baseAttributes = {
+      frequency: frequency,
+    };
+
     return {
       data: {
-        id: id,
-        attributes: {
-          frequency: frequency,
-        },
-        type: 'subscription',
+        type: isNodeSubscription ? 'user-provider-subscription' : 'subscription',
+        attributes: baseAttributes,
+        ...(isNodeSubscription ? {} : { id }),
       },
     };
   }

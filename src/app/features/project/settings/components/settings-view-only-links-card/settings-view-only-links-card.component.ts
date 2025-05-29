@@ -4,7 +4,7 @@ import { Card } from 'primeng/card';
 
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
-import { LinkTableModel } from '@osf/features/project/settings/models';
+import { PaginatedViewOnlyLinksModel } from '@osf/features/project/settings/models';
 import { ViewOnlyTableComponent } from '@shared/components';
 
 @Component({
@@ -15,6 +15,6 @@ import { ViewOnlyTableComponent } from '@shared/components';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsViewOnlyLinksCardComponent {
-  deleteTableItem = output<LinkTableModel>();
-  tableData = input.required<LinkTableModel[]>();
+  deleteTableItem = output<string>();
+  tableData = input.required<PaginatedViewOnlyLinksModel>();
 }

@@ -22,12 +22,14 @@
 
   <osf-project-detail-setting-accordion
     (emitValueChange)="changeEmittedValue($event)"
-    [title]="'Project name example'"
+    [title]="title()"
     [rightControls]="allAccordionData"
   >
     <div class="flex align-items-baseline gap-2">
       <i class="pi pi-minus text-sm icon-space"></i>
-      <span>Sub text</span>
+      <span>{{
+        'myProjects.settings.' + (anyoneCanEditWiki() ? 'enabledForWiki' : 'disabledForWiki') | translate
+      }}</span>
     </div>
   </osf-project-detail-setting-accordion>
 </p-card>

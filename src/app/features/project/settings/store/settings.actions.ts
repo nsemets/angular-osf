@@ -13,6 +13,12 @@ export class GetProjectDetails {
   constructor(public projectId: string) {}
 }
 
+export class GetViewOnlyLinksTable {
+  static readonly type = '[Link] Table Get';
+
+  constructor(public projectId: string) {}
+}
+
 export class UpdateProjectSettings {
   static readonly type = '[Settings] Update';
 
@@ -23,4 +29,13 @@ export class UpdateProjectDetails {
   static readonly type = '[Project] Update';
 
   constructor(public payload: UpdateNodeRequestModel) {}
+}
+
+export class DeleteViewOnlyLink {
+  static readonly type = '[Link] Delete';
+
+  constructor(
+    public projectId: string,
+    public linkId: string
+  ) {}
 }

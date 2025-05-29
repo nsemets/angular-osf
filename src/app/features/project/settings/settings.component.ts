@@ -16,7 +16,6 @@ import { ActivatedRoute } from '@angular/router';
 
 import { UpdateNodeRequestModel } from '@osf/features/my-projects/entities/update-node-request.model';
 import {
-  ProjectDetailSettingAccordionComponent,
   SettingsAccessRequestsCardComponent,
   SettingsCommentingCardComponent,
   SettingsProjectFormCardComponent,
@@ -24,25 +23,26 @@ import {
   SettingsViewOnlyLinksCardComponent,
   SettingsWikiCardComponent,
 } from '@osf/features/project/settings/components';
+import { ProjectSettingNotificationsComponent } from '@osf/features/project/settings/components/project-setting-notifications/project-setting-notifications.component';
 import { SettingsRedirectLinkComponent } from '@osf/features/project/settings/components/settings-redirect-link/settings-redirect-link.component';
-import { mockSettingsData } from '@osf/features/project/settings/mock-data';
-import { LinkTableModel, ProjectSettingsAttributes, ProjectSettingsData } from '@osf/features/project/settings/models';
-import { RightControl } from '@osf/features/project/settings/models/right-control.model';
+import { ProjectSettingsAttributes, ProjectSettingsData } from '@osf/features/project/settings/models';
 import {
+  DeleteViewOnlyLink,
   GetProjectDetails,
   GetProjectSettings,
+  GetViewOnlyLinksTable,
   SettingsSelectors,
   UpdateProjectDetails,
   UpdateProjectSettings,
 } from '@osf/features/project/settings/store';
+import { SubscriptionEvent, SubscriptionFrequency } from '@osf/features/settings/notifications/enums';
 import {
   GetNotificationSubscriptionsByNodeId,
   NotificationSubscriptionSelectors,
+  UpdateNotificationSubscriptionForNodeId,
 } from '@osf/features/settings/notifications/store';
 import { SubHeaderComponent } from '@shared/components/sub-header/sub-header.component';
-import { ProjectForm } from '@shared/entities/create-project-form.interface';
 import { ProjectFormControls } from '@shared/entities/create-project-form-controls.enum';
-import { IS_WEB } from '@shared/utils/breakpoints.tokens';
 
 @Component({
   selector: 'osf-settings',
@@ -54,7 +54,6 @@ import { IS_WEB } from '@shared/utils/breakpoints.tokens';
     ReactiveFormsModule,
     Card,
     Button,
-    ProjectDetailSettingAccordionComponent,
     NgOptimizedImage,
     SettingsProjectFormCardComponent,
     SettingsStorageLocationCardComponent,
@@ -63,11 +62,11 @@ import { IS_WEB } from '@shared/utils/breakpoints.tokens';
     SettingsWikiCardComponent,
     SettingsCommentingCardComponent,
     SettingsRedirectLinkComponent,
+    ProjectSettingNotificationsComponent,
   ],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class SettingsComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
@@ -78,116 +77,75 @@ export class SettingsComponent implements OnInit {
   protected settings = select(SettingsSelectors.getSettings);
   protected notifications = select(NotificationSubscriptionSelectors.getNotificationSubscriptionsByNodeId);
   protected projectDetails = select(SettingsSelectors.getProjectDetails);
+  protected viewOnlyLinks = select(SettingsSelectors.getViewOnlyLinks);
 
   protected actions = createDispatchMap({
     getSettings: GetProjectSettings,
     getNotifications: GetNotificationSubscriptionsByNodeId,
     getProjectDetails: GetProjectDetails,
+    getViewOnlyLinks: GetViewOnlyLinksTable,
   });
 
-  protected readonly isDesktop = toSignal(inject(IS_WEB));
-
-  projectForm = new FormGroup<Partial<ProjectForm>>({
-    [ProjectFormControls.Title]: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-    [ProjectFormControls.Description]: new FormControl('', {
-      nonNullable: true,
-    }),
+  projectForm = new FormGroup({
+    [ProjectFormControls.Title]: new FormControl('', Validators.required),
+    [ProjectFormControls.Description]: new FormControl(''),
   });
 
   redirectUrlData = signal<{ url: string; label: string }>({ url: '', label: '' });
-  accessRequest = signal<boolean>(false);
-  wikiEnabled = signal<boolean>(false);
-  anyoneCanEditWiki = signal<boolean>(false);
-  redirectLink = signal<boolean>(false);
-  anyoneCanComment = signal<boolean>(false);
+  accessRequest = signal(false);
+  wikiEnabled = signal(false);
+  anyoneCanEditWiki = signal(false);
+  anyoneCanComment = signal(false);
+  title = signal('');
 
-  tableData: LinkTableModel[];
-  access: string;
-  accessOptions: { label: string; value: string }[];
-  commentSetting: string;
-  fileSetting: string;
-  dropdownOptions: { label: string; value: string }[];
-  affiliations: { name: string; canDelete: boolean }[];
-  rightControls: { notifications: RightControl[] } = { notifications: [] };
+  affiliations = [];
 
   constructor() {
-    [
-      this.tableData,
-      this.access,
-      this.accessOptions,
-      this.commentSetting,
-      this.fileSetting,
-      this.dropdownOptions,
-      this.affiliations,
-    ] = [
-      mockSettingsData.tableData,
-      mockSettingsData.access,
-      mockSettingsData.accessOptions,
-      mockSettingsData.commentSetting,
-      mockSettingsData.fileSetting,
-      mockSettingsData.dropdownOptions,
-      mockSettingsData.affiliations,
-    ];
-
-    effect(() => {
-      const settings = this.settings();
-      if (Object.keys(settings).length) {
-        this.accessRequest.set(settings.attributes.accessRequestsEnabled);
-        this.wikiEnabled.set(settings.attributes.wikiEnabled);
-        this.anyoneCanEditWiki.set(settings.attributes.anyoneCanEditWiki);
-        this.anyoneCanComment.set(settings.attributes.anyoneCanComment);
-        this.redirectUrlData.set({
-          url: settings.attributes.redirectLinkUrl,
-          label: settings.attributes.redirectLinkLabel,
-        });
-      }
-    });
-
-    effect(() => {
-      const notifications = this.notifications();
-      console.log(notifications);
-    });
-
-    effect(() => {
-      const projectDetails = this.projectDetails();
-      if (Object.keys(projectDetails).length) {
-        this.projectForm.patchValue({
-          [ProjectFormControls.Title]: projectDetails.attributes.title,
-          [ProjectFormControls.Description]: projectDetails.attributes.description,
-        });
-      }
-    });
+    this.setupEffects();
   }
 
   ngOnInit(): void {
-    if (this.projectId()) {
-      this.actions.getSettings(this.projectId());
-      this.actions.getNotifications(this.projectId());
-      this.actions.getProjectDetails(this.projectId());
+    const id = this.projectId();
+    if (id) {
+      this.actions.getSettings(id);
+      this.actions.getNotifications(id);
+      this.actions.getProjectDetails(id);
+      this.actions.getViewOnlyLinks(id);
     }
+  }
+
+  submitForm({ title, description }: { title: string; description: string }): void {
+    const current = this.projectDetails().attributes;
+    if (title === current.title && description === current.description) return;
+
+    const model: UpdateNodeRequestModel = {
+      data: {
+        type: 'nodes',
+        id: this.projectId(),
+        attributes: { title, description },
+      },
+    } as UpdateNodeRequestModel;
+    this.store.dispatch(new UpdateProjectDetails(model)).subscribe();
   }
 
   onAccessRequestChange(newValue: boolean): void {
     this.accessRequest.set(newValue);
-    this.syncSettingsChanges('accessRequest', newValue);
+    this.syncSettingsChanges('access_requests_enabled', newValue);
   }
 
   onWikiRequestChange(newValue: boolean): void {
     this.wikiEnabled.set(newValue);
-    this.syncSettingsChanges('wikiEnabled', newValue);
+    this.syncSettingsChanges('wiki_enabled', newValue);
   }
 
   onAnyoneCanEditWikiRequestChange(newValue: boolean): void {
     this.anyoneCanEditWiki.set(newValue);
-    this.syncSettingsChanges('anyoneCanEditWiki', newValue);
+    this.syncSettingsChanges('anyone_can_edit_wiki', newValue);
   }
 
   onAnyoneCanCommentRequestChange(newValue: boolean): void {
     this.anyoneCanComment.set(newValue);
-    this.syncSettingsChanges('anyoneCanComment', newValue);
+    this.syncSettingsChanges('anyone_can_comment', newValue);
   }
 
   onRedirectUrlDataRequestChange(data: { url: string; label: string }): void {
@@ -195,33 +153,15 @@ export class SettingsComponent implements OnInit {
     this.syncSettingsChanges('redirectUrl', data);
   }
 
-  submitForm(value: { title: string; description: string }): void {
-    const { title, description } = value;
-    const current = this.projectDetails().attributes;
+  onNotificationRequestChange(data: { event: SubscriptionEvent; frequency: SubscriptionFrequency }): void {
+    const id = `${'n5str'}_${data.event}`;
+    const frequency = data.frequency;
 
-    const isTitleUnchanged = title === current.title;
-    const isDescriptionUnchanged = description === current.description;
-
-    if (isTitleUnchanged && isDescriptionUnchanged) {
-      return;
-    }
-
-    const model: UpdateNodeRequestModel = {
-      data: {
-        type: 'nodes',
-        id: this.projectId(),
-        attributes: {
-          title,
-          description,
-        },
-      },
-    } as UpdateNodeRequestModel;
-
-    this.store.dispatch(new UpdateProjectDetails(model)).subscribe();
+    this.store.dispatch(new UpdateNotificationSubscriptionForNodeId({ id, frequency })).subscribe();
   }
 
-  deleteLinkItem(item: LinkTableModel): void {
-    console.log(item);
+  deleteLinkItem(linkId: string): void {
+    this.store.dispatch(new DeleteViewOnlyLink(this.projectId(), linkId)).subscribe();
   }
 
   deleteProject(): void {
@@ -232,20 +172,12 @@ export class SettingsComponent implements OnInit {
     const payload: Partial<ProjectSettingsAttributes> = {};
 
     switch (changedField) {
-      case 'accessRequest':
-        payload['access_requests_enabled'] = value as boolean;
-        break;
-      case 'wikiEnabled':
-        payload['wiki_enabled'] = value as boolean;
-        break;
-      case 'redirectLink':
-        payload['redirect_link_enabled'] = value as boolean;
-        break;
-      case 'anyoneCanEditWiki':
-        payload['anyone_can_edit_wiki'] = value as boolean;
-        break;
-      case 'anyoneCanComment':
-        payload['anyone_can_comment'] = value as boolean;
+      case 'access_requests_enabled':
+      case 'wiki_enabled':
+      case 'redirect_link_enabled':
+      case 'anyone_can_edit_wiki':
+      case 'anyone_can_comment':
+        payload[changedField] = value as boolean;
         break;
       case 'redirectUrl':
         if (typeof value === 'object') {
@@ -263,5 +195,33 @@ export class SettingsComponent implements OnInit {
     } as ProjectSettingsData;
 
     this.store.dispatch(new UpdateProjectSettings(model)).subscribe();
+  }
+
+  private setupEffects(): void {
+    effect(() => {
+      const settings = this.settings();
+      console.log(this.settings());
+      if (settings?.attributes) {
+        this.accessRequest.set(settings.attributes.accessRequestsEnabled);
+        this.wikiEnabled.set(settings.attributes.wikiEnabled);
+        this.anyoneCanEditWiki.set(settings.attributes.anyoneCanEditWiki);
+        this.anyoneCanComment.set(settings.attributes.anyoneCanComment);
+        this.redirectUrlData.set({
+          url: settings.attributes.redirectLinkUrl,
+          label: settings.attributes.redirectLinkLabel,
+        });
+      }
+    });
+
+    effect(() => {
+      const project = this.projectDetails();
+      if (project?.attributes) {
+        this.projectForm.patchValue({
+          [ProjectFormControls.Title]: project.attributes.title,
+          [ProjectFormControls.Description]: project.attributes.description,
+        });
+        this.title.set(project.attributes.title);
+      }
+    });
   }
 }
