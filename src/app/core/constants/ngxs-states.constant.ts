@@ -6,6 +6,7 @@ import { MeetingsState } from '@osf/features/meetings/store';
 import { MyProjectsState } from '@osf/features/my-projects/store';
 import { AnalyticsState } from '@osf/features/project/analytics/store';
 import { ProjectOverviewState } from '@osf/features/project/overview/store';
+import { RegistrationsState } from '@osf/features/project/registrations/store';
 import { WikiState } from '@osf/features/project/wiki/store/wiki.state';
 import { AccountSettingsState } from '@osf/features/settings/account-settings/store/account-settings.state';
 import { AddonsState } from '@osf/features/settings/addons/store';
@@ -30,4 +31,5 @@ export const STATES = [
   CollectionsState,
   WikiState,
   MeetingsState,
+  RegistrationsState,
 ];
