@@ -1,4 +1,9 @@
-<osf-sub-header [title]="'navigation.project.registrations' | translate"></osf-sub-header>
+<osf-sub-header
+  [showButton]="true"
+  [buttonLabel]="'project.registrations.addRegistration' | translate"
+  [title]="'navigation.project.registrations' | translate"
+  (buttonClick)="addRegistration()"
+/>
 @if (isRegistrationsLoading()) {
   <osf-loading-spinner />
 } @else {

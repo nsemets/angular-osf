@@ -2,21 +2,21 @@
   <p-card>
     <div class="flex gap-3 flex-column">
       <div class="flex flex-wrap gap-2 w-full">
-        @if (registrationData().status === 'withdrawn') {
+        @if (registrationData().status === RegistrationStatus.WITHDRAWN) {
           <i class="osf-icon-padlock"></i>
         }
 
-        @if (registrationData().status === 'in_progress') {
+        @if (registrationData().status === RegistrationStatus.IN_PROGRESS) {
           <i class="osf-icon-padlock-unlock"></i>
         }
 
         <h2 class="align-self-center">{{ registrationData().title }}</h2>
 
-        @if (registrationData().status === 'in_progress') {
+        @if (registrationData().status === RegistrationStatus.IN_PROGRESS) {
           <p-tag severity="warn" value="Update In Progress" />
         }
 
-        @if (registrationData().status === 'withdrawn') {
+        @if (registrationData().status === RegistrationStatus.WITHDRAWN) {
           <p-tag severity="secondary" value="Withdrawn" />
         }
       </div>
@@ -61,20 +61,20 @@
           </div>
 
           <div class="flex gap-2 mt-1">
-            @if (registrationData().status === 'draft') {
+            @if (registrationData().status === RegistrationStatus.DRAFT) {
               <p-button severity="primary" label="Review"></p-button>
               <p-button severity="secondary" label="Edit"></p-button>
               <p-button severity="danger" label="Delete" class="md:ml-auto"></p-button>
             } @else {
               <p-button severity="primary" label="View"></p-button>
-              @if (registrationData().status === 'in_progress') {
+              @if (registrationData().status === RegistrationStatus.IN_PROGRESS) {
                 <p-button severity="secondary" label="Update"></p-button>
               }
             }
           </div>
         </div>
 
-        @if (registrationData().status !== 'draft') {
+        @if (registrationData().status !== RegistrationStatus.DRAFT) {
           <div class="flex flex-column gap-3 w-auto">
             <h3 class="mb-2">{{ 'project.registrations.card.openResources' | translate }}</h3>
 

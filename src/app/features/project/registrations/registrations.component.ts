@@ -6,13 +6,12 @@ import { DialogService } from 'primeng/dynamicdialog';
 
 import { map, of } from 'rxjs';
 
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { LoadingSpinnerComponent, SubHeaderComponent } from '@osf/shared/components';
-import { TabOption } from '@osf/shared/models';
 
 import { RegistrationCardComponent } from './components';
 import { GetRegistrations, RegistrationsSelectors } from './store';
@@ -35,11 +34,12 @@ export class RegistrationsComponent implements OnInit {
 
   protected actions = createDispatchMap({ getRegistrations: GetRegistrations });
 
-  protected readonly defaultTabValue = 0;
-  protected readonly tabOptions: TabOption[] = [{ label: 'Submitted', value: 0 }];
-  protected readonly selectedTab = signal<number>(this.defaultTabValue);
-
   ngOnInit(): void {
     this.actions.getRegistrations(this.projectId());
+  }
+
+  addRegistration(): void {
+    //TODO: Implement the logic to add a new registration.
+    console.log('Add Registration clicked');
   }
 }

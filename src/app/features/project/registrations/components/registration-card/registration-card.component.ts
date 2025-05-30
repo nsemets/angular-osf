@@ -6,7 +6,7 @@ import { Tag } from 'primeng/tag';
 
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-import { RegistrationModel } from '../../models';
+import { RegistrationModel, RegistrationStatus } from '../../models';
 
 @Component({
   selector: 'osf-registration-card',
@@ -16,5 +16,6 @@ import { RegistrationModel } from '../../models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegistrationCardComponent {
-  registrationData = input.required<RegistrationModel>();
+  readonly RegistrationStatus = RegistrationStatus;
+  readonly registrationData = input.required<RegistrationModel>();
 }

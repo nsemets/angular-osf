@@ -19,9 +19,12 @@ export class RegistrationsService {
   #jsonApiService = inject(JsonApiService);
 
   getRegistrations(projectId: string): Observable<RegistrationModel[]> {
-    const url = `${environment.apiUrl}/nodes/${projectId}/registrations/`;
+    const params: Record<string, unknown> = {
+      embed: 'contributors',
+    };
+    const url = `${environment.apiUrl}/nodes/${projectId}/linked_by_registrations/`;
 
-    return this.#jsonApiService.get<JsonApiResponse<RegistrationsGetResponse[], null>>(url).pipe(
+    return this.#jsonApiService.get<JsonApiResponse<RegistrationsGetResponse[], null>>(url, params).pipe(
       map((response) => {
         return response.data.length
           ? response.data.map((registration) => RegistrationsMapper.fromResponse(registration))

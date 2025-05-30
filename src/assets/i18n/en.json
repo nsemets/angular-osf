@@ -459,6 +459,7 @@
       }
     },
     "registrations": {
+      "addRegistration": "Add a Registration",
       "emptyState": "There have been no completed registrations of this project.",
       "card": {
         "registrationTemplate": "Registration template:",
