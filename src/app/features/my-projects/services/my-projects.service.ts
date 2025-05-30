@@ -6,8 +6,7 @@ import { inject, Injectable } from '@angular/core';
 import { JsonApiService } from '@osf/core/services';
 import { SparseCollectionsResponse } from '@osf/features/collections/models';
 import { SortOrder } from '@osf/shared/enums';
-import { UpdateNodeRequestModel } from '@shared/models';
-import { NodeResponseModel } from '@shared/models/node-response.model';
+import { NodeResponseModel, UpdateNodeRequestModel } from '@shared/models';
 
 import { MyProjectsMapper } from '../mappers';
 import {
