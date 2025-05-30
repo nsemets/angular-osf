@@ -18,6 +18,8 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
+import { RedirectUrlDataModel } from '@osf/features/project/settings/models';
+
 @Component({
   selector: 'osf-settings-redirect-link',
   imports: [Card, Checkbox, TranslatePipe, FormsModule, InputText, TitleCasePipe, UpperCasePipe, Button],
@@ -26,11 +28,11 @@ import { FormsModule } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsRedirectLinkComponent {
-  redirectUrlDataChange = output<{ url: string; label: string }>();
-  redirectUrlDataInput = input.required<{ url: string; label: string }>();
+  redirectUrlDataChange = output<RedirectUrlDataModel>();
+  redirectUrlDataInput = input.required<RedirectUrlDataModel>();
   redirectLink = model<boolean>();
 
-  redirectUrlData: WritableSignal<{ url: string; label: string }> = signal({ url: '', label: '' });
+  redirectUrlData: WritableSignal<RedirectUrlDataModel> = signal({ url: '', label: '' });
 
   constructor() {
     effect(() => {

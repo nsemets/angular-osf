@@ -7,7 +7,7 @@ import { ChangeDetectionStrategy, Component, effect, input, output } from '@angu
 import { FormsModule } from '@angular/forms';
 
 import { ProjectDetailSettingAccordionComponent } from '@osf/features/project/settings/components';
-import { RightControl } from '@osf/features/project/settings/models/right-control.model';
+import { RightControl } from '@osf/features/project/settings/models';
 
 @Component({
   selector: 'osf-settings-wiki-card',

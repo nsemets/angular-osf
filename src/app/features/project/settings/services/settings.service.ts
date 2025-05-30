@@ -3,14 +3,11 @@ import { map, Observable } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { JsonApiService } from '@core/services';
-import { SettingsMapper } from '@osf/features/project/settings/mappers/settings.mapper';
-import {
-  ProjectSettingsData,
-  ProjectSettingsModel,
-  ProjectSettingsResponseModel,
-} from '@osf/features/project/settings/models';
 
-import { environment } from '../../../../../environments/environment';
+import { SettingsMapper } from '../mappers';
+import { ProjectSettingsData, ProjectSettingsModel, ProjectSettingsResponseModel } from '../models';
+
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',

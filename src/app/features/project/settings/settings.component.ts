@@ -15,18 +15,18 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { UpdateNodeRequestModel } from '@osf/features/my-projects/models/update-node-request.model';
 import {
+  ProjectSettingNotificationsComponent,
   SettingsAccessRequestsCardComponent,
   SettingsCommentingCardComponent,
   SettingsProjectFormCardComponent,
+  SettingsRedirectLinkComponent,
   SettingsStorageLocationCardComponent,
   SettingsViewOnlyLinksCardComponent,
   SettingsWikiCardComponent,
 } from '@osf/features/project/settings/components';
-import { ProjectSettingNotificationsComponent } from '@osf/features/project/settings/components/project-setting-notifications/project-setting-notifications.component';
-import { SettingsRedirectLinkComponent } from '@osf/features/project/settings/components/settings-redirect-link/settings-redirect-link.component';
 import {
+  ProjectDetailsModel,
   ProjectSettingsAttributes,
   ProjectSettingsData,
   ViewOnlyLinkModel,
@@ -40,15 +40,15 @@ import {
   UpdateProjectDetails,
   UpdateProjectSettings,
 } from '@osf/features/project/settings/store';
-import { SubscriptionEvent, SubscriptionFrequency } from '@osf/features/settings/notifications/enums';
 import {
   GetNotificationSubscriptionsByNodeId,
   NotificationSubscriptionSelectors,
   UpdateNotificationSubscriptionForNodeId,
 } from '@osf/features/settings/notifications/store';
-import { SubHeaderComponent } from '@shared/components/sub-header/sub-header.component';
-import { ProjectFormControls } from '@shared/enums';
+import { SubHeaderComponent } from '@shared/components';
+import { ProjectFormControls, SubscriptionEvent, SubscriptionFrequency } from '@shared/enums';
 import { defaultConfirmationConfig } from '@shared/helpers';
+import { UpdateNodeRequestModel } from '@shared/models';
 
 @Component({
   selector: 'osf-settings',
@@ -122,7 +122,7 @@ export class SettingsComponent implements OnInit {
     }
   }
 
-  submitForm({ title, description }: { title: string; description: string }): void {
+  submitForm({ title, description }: ProjectDetailsModel): void {
     const current = this.projectDetails().attributes;
     if (title === current.title && description === current.description) return;
 

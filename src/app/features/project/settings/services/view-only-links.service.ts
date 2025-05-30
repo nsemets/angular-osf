@@ -3,14 +3,11 @@ import { map, Observable } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { JsonApiService } from '@core/services';
-import { ViewOnlyLinksMapper } from '@osf/features/project/settings/mappers/view-only-links.mapper';
-import { PaginatedViewOnlyLinksModel } from '@osf/features/project/settings/models';
-import {
-  ViewOnlyLink,
-  ViewOnlyLinksResponseModel,
-} from '@osf/features/project/settings/models/view-only-link-response.model';
 
-import { environment } from '../../../../../environments/environment';
+import { ViewOnlyLinksMapper } from '../mappers';
+import { PaginatedViewOnlyLinksModel, ViewOnlyLink, ViewOnlyLinksResponseModel } from '../models';
+
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',

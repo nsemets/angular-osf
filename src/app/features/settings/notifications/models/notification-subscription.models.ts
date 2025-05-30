@@ -1,4 +1,4 @@
-import { SubscriptionEvent, SubscriptionFrequency } from '../enums';
+import { SubscriptionEvent, SubscriptionFrequency } from '@shared/enums';
 
 //domain models
 export interface NotificationSubscription {

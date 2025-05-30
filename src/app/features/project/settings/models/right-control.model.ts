@@ -1,10 +1,10 @@
-import { OptionModel } from '@osf/features/project/settings/models/option.model';
-import { SubscriptionEvent } from '@osf/features/settings/notifications/enums';
+import { SubscriptionEvent } from '@shared/enums';
+import { SelectOption } from '@shared/models';
 
 export interface RightControl {
   type: 'dropdown';
   label?: string;
   value: boolean | string;
-  options: OptionModel[];
+  options: SelectOption[];
   event?: SubscriptionEvent;
 }

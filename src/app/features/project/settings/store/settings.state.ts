@@ -6,7 +6,6 @@ import { catchError, tap } from 'rxjs/operators';
 
 import { inject, Injectable } from '@angular/core';
 
-import { NodeData } from '@osf/features/my-projects/models/node-response.model';
 import { MyProjectsService } from '@osf/features/my-projects/services';
 import { PaginatedViewOnlyLinksModel, ProjectSettingsModel } from '@osf/features/project/settings/models';
 import { SettingsService, ViewOnlyLinksService } from '@osf/features/project/settings/services';
@@ -20,6 +19,7 @@ import {
   UpdateProjectSettings,
 } from '@osf/features/project/settings/store/settings.actions';
 import { SettingsStateModel } from '@osf/features/project/settings/store/settings.model';
+import { NodeData } from '@shared/models';
 
 @State<SettingsStateModel>({
   name: 'settings',
@@ -239,7 +239,8 @@ export class SettingsState {
             },
           })
         );
-      })
+      }),
+      catchError((error) => this.handleError(ctx, 'viewOnlyLinks', error))
     );
   }
 }

@@ -1,7 +1,7 @@
 import { Selector } from '@ngxs/store';
 
-import { SettingsStateModel } from '@osf/features/project/settings/store/settings.model';
-import { SettingsState } from '@osf/features/project/settings/store/settings.state';
+import { SettingsStateModel } from './settings.model';
+import { SettingsState } from './settings.state';
 
 export class SettingsSelectors {
   @Selector([SettingsState])

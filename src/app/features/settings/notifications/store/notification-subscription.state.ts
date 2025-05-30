@@ -83,6 +83,8 @@ export class NotificationSubscriptionState {
           patch({
             notificationSubscriptions: patch({
               data: updateItem<NotificationSubscription>((app) => app.id === action.payload.id, updatedSubscription),
+              error: null,
+              isLoading: false,
             }),
           })
         );
@@ -103,6 +105,8 @@ export class NotificationSubscriptionState {
             patch({
               notificationSubscriptionsByNodeId: patch({
                 data: updateItem<NotificationSubscription>((app) => app.id === action.payload.id, updatedSubscription),
+                error: null,
+                isLoading: false,
               }),
             })
           );

@@ -8,8 +8,9 @@ import { Textarea } from 'primeng/textarea';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { NodeData } from '@osf/features/my-projects/models/node-response.model';
+import { ProjectDetailsModel } from '@osf/features/project/settings/models';
 import { ProjectFormControls } from '@shared/enums';
+import { NodeData } from '@shared/models';
 
 @Component({
   selector: 'osf-settings-project-form-card',
@@ -21,7 +22,7 @@ import { ProjectFormControls } from '@shared/enums';
 export class SettingsProjectFormCardComponent {
   projectDetails = input.required<NodeData>();
   formGroup = input.required<FormGroup>();
-  submitForm = output<{ title: string; description: string }>();
+  submitForm = output<ProjectDetailsModel>();
   deleteProject = output<void>();
 
   protected readonly ProjectFormControls = ProjectFormControls;

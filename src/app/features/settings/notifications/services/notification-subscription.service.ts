@@ -4,8 +4,8 @@ import { inject, Injectable } from '@angular/core';
 
 import { JsonApiResponse } from '@osf/core/models';
 import { JsonApiService } from '@osf/core/services';
+import { SubscriptionFrequency } from '@shared/enums';
 
-import { SubscriptionFrequency } from '../enums';
 import { NotificationSubscriptionMapper } from '../mappers';
 import { NotificationSubscription, NotificationSubscriptionGetResponse } from '../models';
 

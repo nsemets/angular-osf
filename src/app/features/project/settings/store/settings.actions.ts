@@ -1,5 +1,5 @@
-import { UpdateNodeRequestModel } from '@osf/features/my-projects/models/update-node-request.model';
 import { ProjectSettingsData, ViewOnlyLink } from '@osf/features/project/settings/models';
+import { UpdateNodeRequestModel } from '@shared/models';
 
 export class GetProjectSettings {
   static readonly type = '[Settings] Get';

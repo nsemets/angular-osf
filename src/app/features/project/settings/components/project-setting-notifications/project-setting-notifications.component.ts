@@ -5,13 +5,15 @@ import { Card } from 'primeng/card';
 import { ChangeDetectionStrategy, Component, effect, input, output } from '@angular/core';
 
 import { ProjectDetailSettingAccordionComponent } from '@osf/features/project/settings/components';
-import { RightControl } from '@osf/features/project/settings/models/right-control.model';
-import { SubscriptionEvent, SubscriptionFrequency } from '@osf/features/settings/notifications/enums';
+import { NotificationDescriptionPipe } from '@osf/features/project/settings/pipes';
 import { NotificationSubscription } from '@osf/features/settings/notifications/models';
+import { SubscriptionEvent, SubscriptionFrequency } from '@shared/enums';
+
+import { RightControl } from '../../models';
 
 @Component({
   selector: 'osf-project-setting-notifications',
-  imports: [Card, TranslatePipe, ProjectDetailSettingAccordionComponent],
+  imports: [Card, TranslatePipe, ProjectDetailSettingAccordionComponent, NotificationDescriptionPipe],
   templateUrl: './project-setting-notifications.component.html',
   styleUrl: '../../settings.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,6 +25,7 @@ export class ProjectSettingNotificationsComponent {
 
   allAccordionData: RightControl[] | undefined = [];
 
+  protected readonly subscriptionEvent = SubscriptionEvent;
   protected subscriptionFrequencyOptions = Object.entries(SubscriptionFrequency).map(([key, value]) => ({
     label: key,
     value,
