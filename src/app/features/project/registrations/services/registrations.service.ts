@@ -8,7 +8,7 @@ import { JsonApiService } from '@osf/core/services';
 import { submittedRegistrations } from '../mock-data';
 import { RegistrationModel, RegistrationsGetResponse } from '../models';
 
-import { RegistrationsMapper } from './../mappers/registrations.mapper';
+import { RegistrationsMapper } from './../mappers';
 
 import { environment } from 'src/environments/environment';
 
