@@ -1,5 +1,6 @@
 export { AddProjectFormComponent } from './add-project-form/add-project-form.component';
 export { BarChartComponent } from './bar-chart/bar-chart.component';
+export { CustomPaginatorComponent } from './custom-paginator/custom-paginator.component';
 export { LineChartComponent } from './line-chart/line-chart.component';
 export { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 export { MyProjectsTableComponent } from './my-projects-table/my-projects-table.component';
