@@ -1,0 +1,19 @@
+@use "assets/styles/variables" as var;
+@use "assets/styles/mixins" as mix;
+
+.red-icon {
+  color: var.$red-1;
+  cursor: pointer;
+}
+
+.blue-icon {
+  color: var.$pr-blue-1;
+  margin-top: mix.rem(2px);
+  cursor: pointer;
+}
+
+.inside-list {
+  li {
+    list-style: inside;
+  }
+}

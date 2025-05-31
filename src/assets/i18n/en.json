@@ -1,4 +1,16 @@
 {
+  "common": {
+    "buttons": {
+      "delete": "Delete",
+      "remove": "Remove",
+      "add": "Add",
+      "cancel": "Cancel",
+      "save": "Save"
+    },
+    "search": {
+      "noResultsFound": "No results found."
+    }
+  },
   "navigation": {
     "profile": "Profile",
     "myProfile": "My profile",
@@ -333,10 +345,52 @@
       "addDialog": {
         "placeholder": "Search by name or user information",
         "cancel": "Cancel",
-        "next": "Next"
+        "next": "Next",
+        "selectPermissions": "Please select which permissions you want to give to contributor",
+        "bibliographicCOntributor": "Bibliographic Contributor",
+        "addUnregisteredContributor": "Add Unregistered Contributor",
+        "addRegisteredContributor": "Add Registered Contributor",
+        "unregisteredContributorNotification": "We will notify the user that they have been added to your project"
+      },
+      "removeDialog": {
+        "title": "Remove contributor",
+        "message": "Are you sure you want to remove <b>{{name}}</b> contributor?",
+        "successMessage": "Contributor {{name}} successfully removed."
       },
       "createLinkDialog": {
         "dialogTitle": "Create a new link to share your project"
+      },
+      "permissionInfo": {
+        "title": "Permission Information",
+        "viewProjectContent": "View project content and comment",
+        "read": "Read privileges",
+        "addComponents": "Add and configure components",
+        "editContent": "Add and edit content",
+        "readWrite": "Read and write privileges",
+        "manageContributors": "Manage contributor",
+        "deleteRegister": "Delete and register project",
+        "publicPrivate": "Public private settings"
+      },
+      "bibliographicContributorInfo": {
+        "heading": "Bibliographic Contributor Information",
+        "description": "Only bibliographic contributors will be displayed in the Contributors list and in project citations. Non-bibliographic contributors can read and modify the project as normal."
+      },
+      "curatorInfo": {
+        "heading": "Curator Information",
+        "description": "An administrator designated by your affiliated institution to curate your project"
+      },
+      "employment": {
+        "show": "Show employment history",
+        "none": "No employment history"
+      },
+      "education": {
+        "show": "Show education history",
+        "none": "No education history"
+      },
+      "toastMessages": {
+        "addSuccessMessage": "Contributor {{name}} successfully added.",
+        "multipleAddSuccessMessage": "Contributors successfully added.",
+        "multipleUpdateSuccessMessage": "Contributors successfully updated."
       }
     },
     "overview": {
@@ -959,5 +1013,12 @@
       "github": "GitHub"
     },
     "copyright": "Copyright © 2011-2025"
+  },
+  "validation": {
+    "required": "The field is required.",
+    "email": "Please enter a valid email address.",
+    "maxLength": "The field must be at most {{length}} characters.",
+    "minLength": "The field must be at least {{length}} characters.",
+    "invalidInput": "Invalid input."
   }
 }

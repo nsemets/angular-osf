@@ -5,14 +5,13 @@
   [type]="type()"
   [formControl]="control()"
   [attr.aria-describedby]="helpText() ? helpId : null"
-  [attr.aria-invalid]="control().invalid && control().touched"
   [minLength]="minLength()"
   [maxLength]="maxLength()"
   [placeholder]="placeholder() | translate"
 />
 
-@if (control().invalid && control().touched) {
-  <p-message class="simple-variant" severity="error" variant="simple" size="small">
+@if (control().invalid && (control().touched || control().dirty)) {
+  <p-message class="simple-variant flex mt-1" severity="error" variant="simple" size="small">
     {{ getErrorMessage().key | translate: getErrorMessage().params }}
   </p-message>
 }
