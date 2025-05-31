@@ -1,4 +1,11 @@
 <div class="search-container flex align-items-center">
   <i class="osf-icon-search"></i>
-  <input class="search-input" type="text" [placeholder]="placeholder()" pInputText [formControl]="control()" />
+  <input
+    class="search-input"
+    type="text"
+    [placeholder]="placeholder()"
+    pInputText
+    [formControl]="control()"
+    (keydown.enter)="onEnterClicked()"
+  />
 </div>

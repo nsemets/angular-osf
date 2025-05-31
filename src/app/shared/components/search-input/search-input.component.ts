@@ -1,6 +1,6 @@
 import { InputText } from 'primeng/inputtext';
 
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -13,4 +13,15 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 export class SearchInputComponent {
   control = input<FormControl>(new FormControl<string>(''));
   placeholder = input<string>('');
+  triggerSearch = output<string>();
+
+  onEnterClicked() {
+    const searchValue = this.control().value;
+
+    if (!searchValue || !searchValue?.trim()?.length) {
+      return;
+    }
+
+    this.triggerSearch.emit(searchValue);
+  }
 }
