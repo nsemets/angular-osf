@@ -5,7 +5,8 @@
       "remove": "Remove",
       "add": "Add",
       "cancel": "Cancel",
-      "save": "Save"
+      "save": "Save",
+      "close": "Close"
     },
     "search": {
       "noResultsFound": "No results found."

@@ -14,6 +14,8 @@ export class ContributorsMapper {
       isCurator: contributor.attributes.is_curator,
       permission: contributor.attributes.permission,
       fullName: contributor.embeds.users.data.attributes.full_name,
+      education: contributor.embeds.users.data.attributes.education,
+      employment: contributor.embeds.users.data.attributes.employment,
     }));
   }
 
@@ -43,6 +45,8 @@ export class ContributorsMapper {
       isCurator: response.attributes.is_curator,
       permission: response.attributes.permission,
       fullName: response.embeds.users.data.attributes.full_name,
+      education: response.embeds.users.data.attributes.education,
+      employment: response.embeds.users.data.attributes.employment,
     };
   }
 

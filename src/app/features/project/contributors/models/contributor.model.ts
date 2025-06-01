@@ -1,3 +1,5 @@
+import { Education, Employment } from '@osf/shared/models';
+
 export interface ContributorModel {
   id: string;
   userId: string;
@@ -6,4 +8,6 @@ export interface ContributorModel {
   isCurator: boolean;
   permission: string;
   fullName: string;
+  employment: Employment[];
+  education: Education[];
 }

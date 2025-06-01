@@ -4,7 +4,7 @@ import { Button } from 'primeng/button';
 import { Checkbox } from 'primeng/checkbox';
 import { Select } from 'primeng/select';
 import { Skeleton } from 'primeng/skeleton';
-import { TableModule, TablePageEvent } from 'primeng/table';
+import { TableModule } from 'primeng/table';
 import { Tooltip } from 'primeng/tooltip';
 
 import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
@@ -27,8 +27,9 @@ export class ContributorsListComponent {
   contributors = input<ContributorModel[]>([]);
   isLoading = input(false);
 
-  pageChange = output<TablePageEvent>();
   remove = output<ContributorModel>();
+  showEducationHistory = output<ContributorModel>();
+  showEmploymentHistory = output<ContributorModel>();
 
   protected readonly tableParams = signal<TableParameters>({ ...MY_PROJECTS_TABLE_PARAMS });
   protected readonly permissionsOptions: SelectOption[] = PERMISSION_OPTIONS;
@@ -37,5 +38,13 @@ export class ContributorsListComponent {
 
   protected removeContributor(contributor: ContributorModel) {
     this.remove.emit(contributor);
+  }
+
+  protected openEducationHistory(contributor: ContributorModel) {
+    this.showEducationHistory.emit(contributor);
+  }
+
+  protected openEmploymentHistory(contributor: ContributorModel) {
+    this.showEmploymentHistory.emit(contributor);
   }
 }

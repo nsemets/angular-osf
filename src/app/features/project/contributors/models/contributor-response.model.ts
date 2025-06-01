@@ -1,4 +1,5 @@
 import { ApiData } from '@osf/core/models';
+import { Education, Employment } from '@osf/shared/models';
 
 export type ContributorResponse = ApiData<ContributorAttributes, ContributorEmbeds, ContributorRelationships>;
 
@@ -79,28 +80,6 @@ interface Social {
   linkedIn: string;
   impactStory: string;
   researcherId: string;
-}
-
-interface Employment {
-  title: string;
-  endYear: number;
-  ongoing: boolean;
-  endMonth: number;
-  startYear: number;
-  department: string;
-  startMonth: number;
-  institution: string;
-}
-
-interface Education {
-  degree: string;
-  endYear: number;
-  ongoing: boolean;
-  endMonth: number;
-  startYear: number;
-  department: string;
-  startMonth: number;
-  institution: string;
 }
 
 interface UserRelationships {

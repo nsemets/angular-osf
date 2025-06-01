@@ -127,16 +127,30 @@
           </div>
         </td>
         <td>
-          @if (contributor.employmentHistory) {
-            <a>{{ 'project.contributors.employment.show' | translate }}</a>
+          @if (contributor.employment) {
+            <a
+              class="cursor-pointer"
+              tabindex="1"
+              (click)="openEmploymentHistory(contributor)"
+              (keydown.enter)="openEmploymentHistory(contributor)"
+            >
+              {{ 'project.contributors.employment.show' | translate }}
+            </a>
           } @else {
             <span>{{ 'project.contributors.employment.none' | translate }}</span>
           }
         </td>
         <td>
           <div class="flex column-gap-2">
-            @if (contributor.educationHistory) {
-              <a>{{ 'project.contributors.education.show' | translate }}</a>
+            @if (contributor.education) {
+              <a
+                class="cursor-pointer"
+                tabindex="1"
+                (click)="openEducationHistory(contributor)"
+                (keydown.enter)="openEducationHistory(contributor)"
+              >
+                {{ 'project.contributors.education.show' | translate }}
+              </a>
             } @else {
               <span>{{ 'project.contributors.education.none' | translate }}</span>
             }

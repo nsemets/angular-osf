@@ -16,10 +16,9 @@ import { FormControl, FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { SearchInputComponent, ViewOnlyTableComponent } from '@osf/shared/components';
-import { defaultConfirmationConfig } from '@osf/shared/helpers';
 import { SelectOption } from '@osf/shared/models';
 import { ToastService } from '@osf/shared/services';
-import { findChangedItems } from '@osf/shared/utils';
+import { defaultConfirmationConfig, findChangedItems } from '@osf/shared/utils';
 
 import { ViewOnlyLink, ViewOnlyLinkModel } from '../settings/models';
 import {
@@ -33,6 +32,8 @@ import {
 import {
   AddContributorDialogComponent,
   AddUnregisteredContributorDialogComponent,
+  ContributorEducationHistoryComponent,
+  ContributorEmploymentHistoryComponent,
   ContributorsListComponent,
   CreateViewLinkDialogComponent,
 } from './components';
@@ -164,6 +165,30 @@ export class ContributorsComponent implements OnInit {
       );
 
       this.toastService.showSuccess(successMessage);
+    });
+  }
+
+  openEmploymentHistory(contributor: ContributorModel) {
+    this.dialogService.open(ContributorEmploymentHistoryComponent, {
+      width: '552px',
+      data: contributor.employment,
+      focusOnShow: false,
+      header: this.translateService.instant('project.contributors.table.headers.employment'),
+      closeOnEscape: true,
+      modal: true,
+      closable: true,
+    });
+  }
+
+  openEducationHistory(contributor: ContributorModel) {
+    this.dialogService.open(ContributorEducationHistoryComponent, {
+      width: '552px',
+      data: contributor.education,
+      focusOnShow: false,
+      header: this.translateService.instant('project.contributors.table.headers.education'),
+      closeOnEscape: true,
+      modal: true,
+      closable: true,
     });
   }
 

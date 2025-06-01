@@ -63,6 +63,8 @@
     [contributors]="contributors()"
     [isLoading]="isContributorsLoading()"
     (remove)="removeContributor($event)"
+    (showEducationHistory)="openEducationHistory($event)"
+    (showEmploymentHistory)="openEmploymentHistory($event)"
   ></osf-contributors-list>
 
   @if (hasChanges) {
