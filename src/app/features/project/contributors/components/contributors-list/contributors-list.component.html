@@ -129,8 +129,8 @@
         <td>
           @if (contributor.employment) {
             <a
-              class="cursor-pointer"
-              tabindex="1"
+              class="font-bold cursor-pointer"
+              tabindex="0"
               (click)="openEmploymentHistory(contributor)"
               (keydown.enter)="openEmploymentHistory(contributor)"
             >
@@ -144,8 +144,8 @@
           <div class="flex column-gap-2">
             @if (contributor.education) {
               <a
-                class="cursor-pointer"
-                tabindex="1"
+                class="font-bold cursor-pointer"
+                tabindex="0"
                 (click)="openEducationHistory(contributor)"
                 (keydown.enter)="openEducationHistory(contributor)"
               >
@@ -169,5 +169,11 @@
         </td>
       </tr>
     }
+  </ng-template>
+
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="7" class="text-center">{{ 'project.contributors.table.emptyMessage' | translate }}</td>
+    </tr>
   </ng-template>
 </p-table>

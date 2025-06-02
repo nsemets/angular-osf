@@ -5,7 +5,7 @@
       [placeholder]="'project.contributors.addDialog.placeholder' | translate"
     />
 
-    <div class="users-list flex flex-column gap-3 mt-4">
+    <div class="flex flex-column gap-3 mt-4" [class.users-list]="!isInitialState()">
       @if (isLoading()) {
         <osf-loading-spinner class="mt-3"></osf-loading-spinner>
       } @else {

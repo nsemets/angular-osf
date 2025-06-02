@@ -4,8 +4,8 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { ConfirmationService } from 'primeng/api';
 import { Button } from 'primeng/button';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { Select, SelectChangeEvent } from 'primeng/select';
+import { DialogService } from 'primeng/dynamicdialog';
+import { Select } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 
 import { debounceTime, distinctUntilChanged, filter, forkJoin, map, of, switchMap } from 'rxjs';
@@ -38,7 +38,7 @@ import {
   CreateViewLinkDialogComponent,
 } from './components';
 import { BIBLIOGRAPHY_OPTIONS, PERMISSION_OPTIONS } from './constants';
-import { AddContributorType } from './enums';
+import { AddContributorType, ContributorPermission } from './enums';
 import { ContributorDialogAddModel, ContributorModel } from './models';
 import {
   AddContributor,
@@ -80,11 +80,11 @@ export class ContributorsComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly projectId = toSignal(this.route.parent?.params.pipe(map((params) => params['id'])) ?? of(undefined));
 
-  dialogRef: DynamicDialogRef | null = null;
-
   protected viewOnlyLinks = select(SettingsSelectors.getViewOnlyLinks);
   protected projectDetails = select(SettingsSelectors.getProjectDetails);
 
+  protected readonly selectedPermission = signal<ContributorPermission | null>(null);
+  protected readonly selectedBibliography = signal<boolean | null>(null);
   protected readonly permissionsOptions: SelectOption[] = PERMISSION_OPTIONS;
   protected readonly bibliographyOptions: SelectOption[] = BIBLIOGRAPHY_OPTIONS;
 
@@ -140,12 +140,12 @@ export class ContributorsComponent implements OnInit {
       .subscribe((res) => this.actions.updateSearchValue(res ?? null));
   }
 
-  protected onPermissionChange(event: SelectChangeEvent): void {
-    this.actions.updatePermissionFilter(event.value);
+  protected onPermissionChange(value: ContributorPermission): void {
+    this.actions.updatePermissionFilter(value);
   }
 
-  protected onBibliographyChange(event: SelectChangeEvent): void {
-    this.actions.updateBibliographyFilter(event.value);
+  protected onBibliographyChange(value: boolean): void {
+    this.actions.updateBibliographyFilter(value);
   }
 
   cancel() {
@@ -197,7 +197,7 @@ export class ContributorsComponent implements OnInit {
 
     this.dialogService
       .open(AddContributorDialogComponent, {
-        width: '552px',
+        width: '448px',
         data: addedContributorIds,
         focusOnShow: false,
         header: this.translateService.instant('project.contributors.addDialog.addRegisteredContributor'),
@@ -229,7 +229,7 @@ export class ContributorsComponent implements OnInit {
   openAddUnregisteredContributorDialog() {
     this.dialogService
       .open(AddUnregisteredContributorDialogComponent, {
-        width: '552px',
+        width: '448px',
         focusOnShow: false,
         header: this.translateService.instant('project.contributors.addDialog.addUnregisteredContributor'),
         closeOnEscape: true,

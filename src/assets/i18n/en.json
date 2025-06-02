@@ -339,7 +339,8 @@
           "curator": "Curator",
           "employment": "Employment history",
           "education": "Education history"
-        }
+        },
+        "emptyMessage": "No contributors found."
       },
       "viewOnly": "View-only links",
       "createLink": "Create a link to share this project so those who have the link can view—but not edit—the project.",

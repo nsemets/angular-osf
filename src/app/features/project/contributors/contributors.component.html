@@ -22,7 +22,8 @@
           [placeholder]="'project.contributors.permissionFilter' | translate"
           [options]="permissionsOptions"
           optionValue="value"
-          (onChange)="onPermissionChange($event)"
+          [ngModel]="selectedPermission()"
+          (ngModelChange)="onPermissionChange($event)"
           showClear="true"
           [disabled]="isContributorsLoading()"
         >
@@ -42,7 +43,8 @@
           [placeholder]="'project.contributors.bibliographyFilter' | translate"
           [options]="bibliographyOptions"
           optionValue="value"
-          (onChange)="onBibliographyChange($event)"
+          [ngModel]="selectedBibliography()"
+          (ngModelChange)="onBibliographyChange($event)"
           showClear="true"
           [disabled]="isContributorsLoading()"
         >

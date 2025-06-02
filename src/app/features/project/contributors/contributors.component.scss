@@ -2,7 +2,7 @@
 @use "assets/styles/mixins" as mix;
 
 .contributors {
-  background: var.$white;
+  background-color: var.$white;
   padding: mix.rem(24px) mix.rem(16px) mix.rem(16px);
   row-gap: mix.rem(24px);
 
