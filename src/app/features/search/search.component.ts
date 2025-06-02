@@ -10,8 +10,8 @@ import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
 import { debounceTime, skip } from 'rxjs';
 
 import { NgOptimizedImage } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, inject, OnDestroy, untracked } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, OnDestroy, untracked } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SearchInputComponent } from '@osf/shared/components';
@@ -52,6 +52,8 @@ export class SearchComponent implements OnDestroy {
   protected searchControl = new FormControl('');
   protected readonly isMobile = toSignal(inject(IS_XSMALL));
 
+  private readonly destroyRef = inject(DestroyRef);
+
   protected readonly creatorsFilter = this.#store.selectSignal(ResourceFiltersSelectors.getCreator);
   protected readonly dateCreatedFilter = this.#store.selectSignal(ResourceFiltersSelectors.getDateCreated);
   protected readonly funderFilter = this.#store.selectSignal(ResourceFiltersSelectors.getFunder);
@@ -87,11 +89,12 @@ export class SearchComponent implements OnDestroy {
       this.#store.dispatch(GetResources);
     });
 
-    // put search value in store and update resources, filters
-    this.searchControl.valueChanges.pipe(skip(1), debounceTime(500)).subscribe((searchText) => {
-      this.#store.dispatch(new SetSearchText(searchText ?? ''));
-      this.#store.dispatch(GetAllOptions);
-    });
+    this.searchControl.valueChanges
+      .pipe(skip(1), debounceTime(500), takeUntilDestroyed(this.destroyRef))
+      .subscribe((searchText) => {
+        this.#store.dispatch(new SetSearchText(searchText ?? ''));
+        this.#store.dispatch(GetAllOptions);
+      });
 
     // sync search with query parameters if search is empty and parameters are not
     effect(() => {
