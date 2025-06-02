@@ -40,7 +40,6 @@ import { ContributorsStateModel } from './contributors.model';
 @Injectable()
 export class ContributorsState {
   private readonly contributorsService = inject(ContributorsService);
-  private readonly REFRESH_INTERVAL = 5 * 60 * 1000;
 
   @Action(GetAllContributors)
   getAllContributors(ctx: StateContext<ContributorsStateModel>, action: GetAllContributors) {
