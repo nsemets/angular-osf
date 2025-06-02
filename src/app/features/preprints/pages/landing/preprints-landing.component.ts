@@ -6,6 +6,7 @@ import { Button } from 'primeng/button';
 import { Skeleton } from 'primeng/skeleton';
 
 import { ChangeDetectionStrategy, Component, effect, HostBinding, inject, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
 import {
@@ -41,6 +42,9 @@ import { ResourceTab } from '@shared/enums';
 })
 export class PreprintsLandingComponent implements OnInit {
   @HostBinding('class') classes = 'flex-1 flex flex-column w-full h-full';
+
+  protected searchControl = new FormControl<string>('');
+
   private readonly router = inject(Router);
   private readonly OSF_PROVIDER_ID = 'osf';
   private readonly actions = createDispatchMap({
@@ -75,7 +79,9 @@ export class PreprintsLandingComponent implements OnInit {
     this.actions.getHighlightedSubjectsByProviderId(this.OSF_PROVIDER_ID);
   }
 
-  redirectToSearchPageWithValue(searchValue: string) {
+  redirectToSearchPageWithValue() {
+    const searchValue = this.searchControl.value;
+
     this.router.navigate(['/search'], {
       queryParams: { search: searchValue, resourceTab: ResourceTab.Preprints },
     });

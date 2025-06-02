@@ -1,32 +1,27 @@
 import { InputText } from 'primeng/inputtext';
 
-import { ChangeDetectionStrategy, Component, input, model, output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'osf-search-input',
-  imports: [InputText, FormsModule],
+  imports: [InputText, ReactiveFormsModule],
   templateUrl: './search-input.component.html',
   styleUrl: './search-input.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchInputComponent {
+  control = input<FormControl>(new FormControl<string>(''));
   placeholder = input<string>('');
-  searchValue = model<string>();
   triggerSearch = output<string>();
 
-  onSearchChange(value: string): void {
-    this.searchValue.set(value);
-  }
-
   onEnterClicked() {
-    const searchValue = this.searchValue();
-    if (!searchValue) {
+    const searchValue = this.control().value;
+
+    if (!searchValue || !searchValue?.trim()?.length) {
       return;
     }
 
-    if (searchValue.trim().length > 0) {
-      this.triggerSearch.emit(searchValue);
-    }
+    this.triggerSearch.emit(searchValue);
   }
 }

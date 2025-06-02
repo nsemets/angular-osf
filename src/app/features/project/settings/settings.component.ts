@@ -45,9 +45,9 @@ import {
   NotificationSubscriptionSelectors,
   UpdateNotificationSubscriptionForNodeId,
 } from '@osf/features/settings/notifications/store';
+import { defaultConfirmationConfig } from '@osf/shared/utils';
 import { SubHeaderComponent } from '@shared/components';
 import { ProjectFormControls, SubscriptionEvent, SubscriptionFrequency } from '@shared/enums';
-import { defaultConfirmationConfig } from '@shared/helpers';
 import { UpdateNodeRequestModel } from '@shared/models';
 
 @Component({
