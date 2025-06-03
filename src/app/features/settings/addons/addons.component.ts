@@ -14,8 +14,8 @@ import { UserSelectors } from '@osf/core/store/user';
 import { SearchInputComponent, SubHeaderComponent } from '@osf/shared/components';
 import { SelectOption } from '@osf/shared/models';
 import { IS_XSMALL } from '@osf/shared/utils';
+import { AddonCardListComponent } from '@shared/components/addons';
 
-import { AddonCardListComponent } from './components';
 import {
   AddonsSelectors,
   GetAddonsUserReference,
