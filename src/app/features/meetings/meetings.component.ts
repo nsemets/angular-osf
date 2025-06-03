@@ -9,5 +9,5 @@ import { RouterOutlet } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MeetingsComponent {
-  @HostBinding('class') classes = 'flex flex-1 flex-column w-full h-full';
+  @HostBinding('class') classes = 'flex flex-1 flex-column w-full';
 }
