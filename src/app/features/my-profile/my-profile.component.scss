@@ -54,8 +54,6 @@
 
 @media (max-width: 1000px) {
   .user-info {
-    padding: 4.5rem 2.5rem 2.5rem 2.5rem;
-
     .description-container {
       flex-direction: column;
       row-gap: 2.5rem;
@@ -75,8 +73,6 @@
 
 @media (max-width: var.$breakpoint-sm) {
   .user-info {
-    padding: 4.5rem 1.1rem 1.1rem 1.1rem;
-
     .data-wrapper {
       .user-fields-wrapper {
         flex-direction: column;

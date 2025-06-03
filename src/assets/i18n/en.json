@@ -305,6 +305,9 @@
       }
     }
   },
+  "myProfile": {
+    "editProfile": "Edit Profile"
+  },
   "project": {
     "analytics": {
       "kpi": {
