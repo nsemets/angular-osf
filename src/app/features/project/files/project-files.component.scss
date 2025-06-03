@@ -17,10 +17,9 @@
       color: var.$dark-blue-1;
       display: grid;
       align-items: center;
-      grid-template-columns: minmax(mix.rem(200px), 32rem) minmax(mix.rem(150px), 0.7fr) minmax(
-          mix.rem(100px),
-          100px
-        ) minmax(mix.rem(150px), 1fr) minmax(mix.rem(50px), 50px);
+      grid-template-columns:
+        minmax(mix.rem(200px), 32rem) minmax(mix.rem(150px), 0.7fr) minmax(mix.rem(100px), 100px)
+        minmax(mix.rem(150px), 1fr) minmax(mix.rem(50px), 50px);
       grid-template-rows: mix.rem(44px);
       border-bottom: 1px solid var.$grey-2;
       padding: 0 mix.rem(12px);
