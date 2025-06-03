@@ -185,7 +185,7 @@
           <div class="flex gap-2 table-cell" [class.pl-6]="currentFolder()?.relationships?.parentFolderLink">
             @if (file.kind !== 'folder') {
               <div class="flex gap-2 min-w-0">
-                <i style="color: #337ab7" class="osf-icon-doc icon-link"></i>
+                <i class="blue-icon" class="osf-icon-doc icon-link"></i>
                 <a class="flex min-w-0" [routerLink]="[file.guid]">
                   <div class="filename-link min-w-0">{{ file?.name ?? '' }}</div>
                 </a>
