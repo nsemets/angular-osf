@@ -1,6 +1,6 @@
 import { createDispatchMap, select, Store } from '@ngxs/store';
 
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -38,6 +38,7 @@ export class MoveFileDialogComponent {
   projectFilesService = inject(ProjectFilesService);
   config = inject(DynamicDialogConfig);
   destroyRef = inject(DestroyRef);
+  translateService = inject(TranslateService);
 
   protected readonly files = select(ProjectFilesSelectors.getMoveFileFiles);
   protected readonly currentFolder = select(ProjectFilesSelectors.getMoveFileCurrentFolder);
@@ -94,7 +95,7 @@ export class MoveFileDialogComponent {
     let path = this.currentFolder()?.path;
 
     if (!path) {
-      throw new Error('Path is not specified!.');
+      throw new Error(this.translateService.instant('project.files.dialogs.moveFile.pathError'));
     }
 
     if (!this.currentFolder()?.relationships.parentFolderLink) {
@@ -109,7 +110,7 @@ export class MoveFileDialogComponent {
         takeUntilDestroyed(this.destroyRef),
         finalize(() => {
           this.dispatch.setCurrentFolder(this.currentFolder());
-          this.dispatch.setMoveFileCurrentFolder(undefined);
+          this.dispatch.setMoveFileCurrentFolder(null);
           this.isFilesUpdating.set(false);
         })
       )

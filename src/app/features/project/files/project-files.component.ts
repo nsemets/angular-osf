@@ -1,19 +1,17 @@
 import { select, Store } from '@ngxs/store';
 
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
+import { TreeDragDropService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { Dialog } from 'primeng/dialog';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FloatLabel } from 'primeng/floatlabel';
-import { InputText } from 'primeng/inputtext';
-import { Menu } from 'primeng/menu';
 import { Select } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 
-import { debounceTime, filter, finalize, forkJoin, skip } from 'rxjs';
+import { debounceTime, filter, finalize, skip } from 'rxjs';
 
-import { DatePipe } from '@angular/common';
 import { HttpEventType } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
@@ -26,11 +24,10 @@ import {
   ViewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { MoveFileDialogComponent } from '@osf/features/project/files/components';
-import { FileMenuItems, OsfFile } from '@osf/features/project/files/models';
+import { FilesTreeComponent, CreateFolderDialogComponent } from '@osf/features/project/files/components';
 import { ProjectFilesService } from '@osf/features/project/files/services';
 import {
   CreateFolder,
@@ -40,39 +37,39 @@ import {
   ProjectFilesSelectors,
   RenameEntry,
   SetCurrentFolder,
+  SetFilesIsLoading,
   SetMoveFileCurrentFolder,
   SetSearch,
   SetSort,
 } from '@osf/features/project/files/store';
+import { FilesTreeActions } from '@osf/features/project/files/models';
 import { LoadingSpinnerComponent, SearchInputComponent, SubHeaderComponent } from '@shared/components';
-import { FileSizePipe } from '@shared/pipes';
+import { ToastService } from '@shared/services';
 
 import { FILE_MENU_ITEMS, FILE_SORT_OPTIONS } from './constants';
+
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'osf-project-files',
   imports: [
     TableModule,
     Button,
-    DatePipe,
     FloatLabel,
     SubHeaderComponent,
     SearchInputComponent,
     Select,
     LoadingSpinnerComponent,
     Dialog,
-    InputText,
     FormsModule,
     ReactiveFormsModule,
-    Menu,
     TranslatePipe,
-    RouterLink,
-    FileSizePipe,
+    FilesTreeComponent,
   ],
   templateUrl: './project-files.component.html',
   styleUrl: './project-files.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DialogService],
+  providers: [DialogService, TreeDragDropService],
 })
 export class ProjectFilesComponent {
   @HostBinding('class') classes = 'flex flex-column flex-1 w-full h-full';
@@ -82,7 +79,11 @@ export class ProjectFilesComponent {
   readonly projectFilesService = inject(ProjectFilesService);
   readonly router = inject(Router);
   readonly activeRoute = inject(ActivatedRoute);
-  destroyRef = inject(DestroyRef);
+  readonly destroyRef = inject(DestroyRef);
+  readonly toastService = inject(ToastService);
+  readonly route = inject(ActivatedRoute);
+  readonly #dialogService = inject(DialogService);
+  readonly #translateService = inject(TranslateService);
 
   protected readonly files = select(ProjectFilesSelectors.getFiles);
   protected readonly currentFolder = select(ProjectFilesSelectors.getCurrentFolder);
@@ -93,33 +94,27 @@ export class ProjectFilesComponent {
   protected readonly isFilesUpdating = signal<boolean>(false);
   protected readonly searchControl = new FormControl<string>('');
   protected readonly sortControl = new FormControl(FILE_SORT_OPTIONS[0].value);
-  protected readonly folderForm = new FormGroup<{
-    name: FormControl<string>;
-  }>({
-    name: new FormControl('', { nonNullable: true }),
-  });
-  protected readonly renameForm = new FormGroup<{
-    name: FormControl<string>;
-  }>({
-    name: new FormControl('', { nonNullable: true }),
-  });
 
   dialogRef: DynamicDialogRef | null = null;
-  readonly #dialogService = inject(DialogService);
 
-  fileIsUploading = false;
-  isFolderCreating = false;
-  selectedFileIndex = -1;
-
-  createFolderVisible = false;
-  renameFileVisible = false;
+  fileIsUploading = signal(false);
 
   items = FILE_MENU_ITEMS;
   sortOptions = FILE_SORT_OPTIONS;
 
   readonly isBatching = signal(false);
 
-  protected readonly FileMenuItems = FileMenuItems;
+  protected readonly filesTreeActions: FilesTreeActions = {
+    setCurrentFolder: (folder) => this.store.dispatch(new SetCurrentFolder(folder)),
+    setSearch: (search) => this.store.dispatch(new SetSearch(search)),
+    setSort: (sort) => this.store.dispatch(new SetSort(sort)),
+    setFilesIsLoading: (isLoading) => this.store.dispatch(new SetFilesIsLoading(isLoading)),
+    getFiles: (filesLink) => this.store.dispatch(new GetFiles(filesLink)),
+    getRootFolderFiles: (projectId) => this.store.dispatch(new GetRootFolderFiles(projectId)),
+    deleteEntry: (projectId, link) => this.store.dispatch(new DeleteEntry(projectId, link)),
+    renameEntry: (projectId, link, newName) => this.store.dispatch(new RenameEntry(projectId, link, newName)),
+    setMoveFileCurrentFolder: (folder) => this.store.dispatch(new SetMoveFileCurrentFolder(folder)),
+  };
 
   constructor() {
     this.activeRoute.parent?.params.subscribe((params) => {
@@ -159,13 +154,13 @@ export class ProjectFilesComponent {
     if (!file) return;
 
     this.fileName.set(file.name);
-    this.fileIsUploading = true;
+    this.fileIsUploading.set(true);
     this.projectFilesService
       .uploadFile(file, this.projectId(), this.currentFolder())
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         finalize(() => {
-          this.fileIsUploading = false;
+          this.fileIsUploading.set(false);
           this.fileName.set('');
           input.value = '';
           this.updateFilesList();
@@ -185,96 +180,30 @@ export class ProjectFilesComponent {
       });
   }
 
-  openFolder(file: OsfFile) {
-    if (file.kind !== 'folder') return;
-    this.isFilesUpdating.set(true);
-    this.isBatching.set(true);
-
-    forkJoin([
-      this.store.dispatch(new SetCurrentFolder(file)),
-      this.store.dispatch(new SetSearch('')),
-      this.store.dispatch(new SetSort(FILE_SORT_OPTIONS[0].value)),
-    ])
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.searchControl.setValue('');
-        this.sortControl.setValue(FILE_SORT_OPTIONS[0].value);
-        this.isBatching.set(false);
-        this.updateFilesList();
-      });
-  }
-
-  openParentFolder() {
-    const currentFolder = this.currentFolder();
-
-    if (!currentFolder) return;
-
-    this.isFilesUpdating.set(true);
-    this.isBatching.set(true);
-
-    this.projectFilesService.getFolder(currentFolder.relationships.parentFolderLink).subscribe((folder) => {
-      forkJoin([
-        this.store.dispatch(new SetCurrentFolder(folder)),
-        this.store.dispatch(new SetSearch('')),
-        this.store.dispatch(new SetSort(FILE_SORT_OPTIONS[0].value)),
-      ])
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe(() => {
-          this.searchControl.setValue('');
-          this.sortControl.setValue(FILE_SORT_OPTIONS[0].value);
-          this.isBatching.set(false);
-          this.updateFilesList();
-        });
-    });
-  }
-
   createFolder(): void {
-    this.isFolderCreating = true;
-    const folderName = this.folderForm.getRawValue().name;
-    if (folderName.trim()) {
-      this.store
-        .dispatch(new CreateFolder(this.projectId(), folderName, this.currentFolder()?.relationships?.parentFolderId))
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe(() => {
-          this.createFolderVisible = false;
-          this.isFolderCreating = false;
-          this.folderForm.reset();
-        });
-    }
-  }
+    const ref = this.#dialogService.open(CreateFolderDialogComponent, {
+      width: '448px',
+      focusOnShow: false,
+      header: this.#translateService.instant('project.files.dialogs.createFolder.title'),
+      closeOnEscape: true,
+      modal: true,
+      closable: true,
+    });
 
-  deleteEntry(link: string): void {
-    this.isFilesUpdating.set(true);
-    this.store
-      .dispatch(new DeleteEntry(this.projectId(), link))
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.isFilesUpdating.set(false);
-      });
-  }
-
-  renameEntry(): void {
-    this.renameFileVisible = false;
-    this.isFilesUpdating.set(true);
-    const link = this.files().data[this.selectedFileIndex].links.upload;
-    const newName = this.renameForm.getRawValue().name;
-    if (newName.trim()) {
-      this.store
-        .dispatch(new RenameEntry(this.projectId(), link, newName))
-        .pipe(
-          takeUntilDestroyed(this.destroyRef),
-          finalize(() => {
-            this.isFilesUpdating.set(false);
-            this.selectedFileIndex = -1;
-            this.renameForm.reset();
-          })
-        )
-        .subscribe();
-    }
-  }
-
-  downloadFile(link: string): void {
-    window.open(link, '_blank')?.focus();
+    ref.onClose.subscribe((result) => {
+      if (result) {
+        this.store.dispatch(new SetFilesIsLoading(true));
+        this.store
+          .dispatch(new CreateFolder(this.projectId(), result, this.currentFolder()?.relationships?.parentFolderId))
+          .pipe(
+            takeUntilDestroyed(this.destroyRef),
+            finalize(() => {
+              this.store.dispatch(new SetFilesIsLoading(false));
+            })
+          )
+          .subscribe();
+      }
+    });
   }
 
   downloadFolder(folderId: string, rootFolder: boolean): void {
@@ -292,7 +221,7 @@ export class ProjectFilesComponent {
 
   approveFile(fileId: string): void {
     const projectId = this.projectId();
-    const link = `https://staging4.osf.io/api/v1/${projectId}/files/${fileId}/`;
+    const link = `${environment.apiUrlV1}/${projectId}/files/${fileId}/`;
 
     const iframe = document.createElement('iframe');
     iframe.style.display = 'none';
@@ -306,28 +235,6 @@ export class ProjectFilesComponent {
     document.body.appendChild(iframe);
   }
 
-  moveFile(file: OsfFile, action: string): void {
-    this.store
-      .dispatch(new SetMoveFileCurrentFolder(this.currentFolder()))
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        const header = action === 'move' ? 'Move file' : 'Copy file';
-        this.dialogRef = this.#dialogService.open(MoveFileDialogComponent, {
-          width: '552px',
-          focusOnShow: false,
-          header: header,
-          closeOnEscape: true,
-          modal: true,
-          closable: true,
-          data: {
-            file: file,
-            projectId: this.projectId(),
-            action: action,
-          },
-        });
-      });
-  }
-
   updateFilesList(): void {
     const currentFolder = this.currentFolder();
     if (currentFolder?.relationships.filesLink) {
@@ -335,7 +242,7 @@ export class ProjectFilesComponent {
         .dispatch(new GetFiles(currentFolder?.relationships.filesLink))
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => {
-          this.isFilesUpdating.set(false);
+          this.store.dispatch(new SetFilesIsLoading(false));
         });
     } else {
       this.store.dispatch(new GetRootFolderFiles(this.projectId()));

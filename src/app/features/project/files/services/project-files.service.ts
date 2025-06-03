@@ -23,10 +23,12 @@ import {
   OsfFileCustomMetadata,
   OsfFileProjectContributor,
   PatchFileMetadata,
+  OsfFileRevision,
+  GetFileRevisionsResponse, FileResponse, FileRelationshipsResponse, FileLinks, FileTargetResponse,
 } from '@osf/features/project/files/models';
 import { ProjectFilesSelectors } from '@osf/features/project/files/store';
 
-import { MapFile, MapFileCustomMetadata, MapFiles } from '../mappers';
+import { MapFile, MapFileCustomMetadata, MapFiles, MapFileRevision } from '../mappers';
 
 import { environment } from 'src/environments/environment';
 
@@ -65,7 +67,7 @@ export class ProjectFilesService {
   uploadFile(
     file: File,
     projectId: string,
-    parentFolder?: OsfFile
+    parentFolder: OsfFile | null
   ): Observable<HttpEvent<JsonApiResponse<AddFileResponse, null>>> {
     const params = {
       kind: 'file',
@@ -189,6 +191,7 @@ export class ProjectFilesService {
         attributes: data,
       },
     };
+
     return this.#jsonApiService
       .patch<
         ApiData<FileCustomMetadata, null, null, null>
@@ -196,7 +199,30 @@ export class ProjectFilesService {
       .pipe(map((response) => MapFileCustomMetadata(response)));
   }
 
-  getCitationDownloadLink(fileGuid: string): string {
-    return `${environment.apiUrl}/custom_file_metadata_records/${fileGuid}/`;
+  getFileRevisions(projectId: string, fileId: string): Observable<OsfFileRevision[]> {
+    return this.#jsonApiService
+      .get<GetFileRevisionsResponse>(
+        `${environment.fileApiUrl}/resources/${projectId}/providers/${this.provider()}/${fileId}?revisions=`
+      )
+      .pipe(map((response) => MapFileRevision(response.data)));
+  }
+
+  updateTags(tags: string[], fileGuid: string): Observable<OsfFile> {
+    const payload = {
+      data: {
+        id: fileGuid,
+        type: 'files',
+        relationships: {},
+        attributes: {
+          tags: tags,
+        },
+      },
+    };
+
+    return this.#jsonApiService
+      .patch<
+        ApiData<FileResponse, FileTargetResponse, FileRelationshipsResponse, FileLinks>
+      >(`${environment.apiUrl}/files/${fileGuid}/`, payload)
+      .pipe(map((response) => MapFile(response)));
   }
 }

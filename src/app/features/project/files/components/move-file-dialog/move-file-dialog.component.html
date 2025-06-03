@@ -6,7 +6,7 @@
   <div class="flex flex-column gap-2">
     <div class="flex gap-2">
       <img [ngSrc]="'/assets/images/cos-shield.svg'" width="24" height="24" alt="cost-shield" />
-      <h2 class="font-normal">OSF Storage</h2>
+      <h2 class="font-normal">{{ 'project.files.dialogs.moveFile.storage' | translate }}</h2>
     </div>
 
     <div class="files-table">
@@ -35,7 +35,7 @@
               <div class="filename-link">{{ file?.name ?? '' }}</div>
             } @else if (config.data.file.id === file.id) {
               <i class="osf-icon-folder disabled-icon"></i>
-              <div [pTooltip]="'project.files.dialogs.moveFile' | translate" class="filename-link">
+              <div [pTooltip]="'project.files.dialogs.moveFile.cannotMove' | translate" class="filename-link">
                 {{ file?.name ?? '' }}
               </div>
             } @else {

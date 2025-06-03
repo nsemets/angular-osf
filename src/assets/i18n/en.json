@@ -11,6 +11,8 @@
       "copy": "Copy",
       "move": "Move",
       "rename": "Rename",
+      "share": "Share",
+      "embed": "Embed",
       "revert": "Revert",
       "next": "Next",
       "skip": "Skip",
@@ -614,90 +616,6 @@
         "lastUpdated": "Last Updated:",
         "description": "Description:",
         "openResources": "Open Resources"
-		}
-    },
-    "files": {
-      "title": "Files",
-      "storageLocation": "OSF Storage",
-      "searchPlaceholder": "Search your projects",
-      "sort": {
-        "placeholder": "Sort",
-        "nameAZ": "Name: A-Z",
-        "nameZA": "Name: Z-A",
-        "lastModifiedOldest": "Last modified: oldest to newest",
-        "lastModifiedNewest": "Last modified: newest to oldest"
-      },
-      "actions": {
-        "downloadAsZip": "Download As Zip",
-        "createFolder": "Create Folder",
-        "uploadFile": "Upload File"
-      },
-      "dialogs": {
-        "uploadFile": {
-          "title": "Upload file"
-        },
-        "createFolder": {
-          "title": "Create folder",
-          "folderName": "New folder name",
-          "folderNamePlaceholder": "Please enter a folder name",
-          "buttons": {
-            "cancel": "Cancel",
-            "save": "Save"
-          }
-        },
-        "renameFile": {
-          "title": "Rename file",
-          "renameLabel": "Please rename the file",
-          "buttons": {
-            "cancel": "Cancel",
-            "save": "Save"
-          }
-        }
-      },
-      "emptyState": "This folder is empty",
-      "menu": {
-        "download": "Download",
-        "copy": "Copy",
-        "move": "Move",
-        "rename": "Rename",
-        "delete": "Delete"
-      },
-      "detail": {
-        "backToList": "Back to list of files",
-        "fileMetadata": {
-          "title": "File Metadata",
-          "edit": "Edit",
-          "fields": {
-            "title": "Title",
-            "description": "Description",
-            "resourceType": "Resource Type",
-            "resourceLanguage": "Resource Language"
-          }
-        },
-        "projectMetadata": {
-          "title": "Project Metadata",
-          "edit": "Edit",
-          "fields": {
-            "funder": "Funder",
-            "awardTitle": "Award title",
-            "awardNumber": "Award number",
-            "awardUri": "Award URI",
-            "title": "Title",
-            "description": "Description",
-            "resourceType": "Resource type",
-            "resourceLanguage": "Resource language",
-            "dateCreated": "Date created",
-            "dateModified": "Date modified",
-            "contributors": "Contributors"
-          }
-        },
-        "editDialog": {
-          "title": "Edit File Metadata",
-          "buttons": {
-            "cancel": "Cancel",
-            "save": "Save"
-          }
-        }
       }
     },
     "files": {
@@ -729,11 +647,36 @@
           "title": "Rename file",
           "renameLabel": "Please rename the file"
         },
-        "moveFile": "Cannot move to the same folder"
+        "moveFile": {
+          "cannotMove": "Cannot move to the same folder",
+          "title": "Move file",
+          "message": "Are you sure you want to move <span class=\"font-bold\">{{dragNodeName}}</span> to <span class=\"font-bold\">{{dropNodeName}}</span> ?",
+          "storage": "OSF Storage",
+          "pathError": "Path is not specified!"
+        },
+        "deleteFile": {
+          "title": "Delete File",
+          "message": "Are you sure you want to delete <span class=\"font-bold\">{{name}}</span>?"
+        }
       },
       "emptyState": "This folder is empty",
       "detail": {
         "backToList": "Back to list of files",
+        "tabs": {
+          "details": "Details",
+          "revisions": "Revisions",
+          "keywords": "Keywords"
+        },
+        "actions": {
+          "addCommunityMetadata": "Add community Metadata",
+          "copyDynamicIframe": "Copy dynamic JS iFrame",
+          "copyStaticIframe": "Copy static HTML iFrame",
+          "share": {
+            "email": "Email",
+            "twitter": "Twitter",
+            "facebook": "Facebook"
+          }
+        },
         "fileMetadata": {
           "title": "File Metadata",
           "edit": "Edit",
@@ -759,6 +702,24 @@
             "dateCreated": "Date created",
             "dateModified": "Date modified",
             "contributors": "Contributors"
+          }
+        },
+        "toast": {
+          "copiedToClipboard": "Copied to clipboard"
+        },
+        "keywords": {
+          "title": "Keywords"
+        },
+        "revisions": {
+          "title": "Revisions",
+          "actions": {
+            "copyMd5": "Copy MD5",
+            "copySha2": "Copy SHA-2",
+            "download": "Download"
+          },
+          "tooltips": {
+            "md5": "MD5 is an algorithm used to verify data integrity",
+            "sha2": "SHA-2 is a cryptographic hash function designed by the NSA used to verify data integrity."
           }
         }
       }

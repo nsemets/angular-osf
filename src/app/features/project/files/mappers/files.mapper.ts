@@ -14,7 +14,7 @@ export function MapFile(
 ): OsfFile {
   return {
     id: file.id,
-    guid: file.attributes.guid,
+    guid: file.attributes?.guid,
     name: file.attributes.name,
     kind: file.attributes.kind,
     size: file.attributes.size,
@@ -25,6 +25,7 @@ export function MapFile(
     links: file.links,
     path: file.attributes.path,
     materializedPath: file.attributes.materialized_path,
+    tags: file.attributes.tags,
     relationships: {
       parentFolderLink: file?.relationships?.parent_folder?.links?.related?.href,
       parentFolderId: file?.relationships?.parent_folder?.data?.id,

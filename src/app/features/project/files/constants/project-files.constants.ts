@@ -2,10 +2,12 @@ import { FileMenuItems, FilesSorting } from '../models';
 
 export const FILE_MENU_ITEMS = [
   { label: FileMenuItems.Download },
-  { label: FileMenuItems.Copy },
-  { label: FileMenuItems.Move },
   { label: FileMenuItems.Delete },
+  { label: FileMenuItems.Embed },
+  { label: FileMenuItems.Share },
   { label: FileMenuItems.Rename },
+  { label: FileMenuItems.Move },
+  { label: FileMenuItems.Copy },
 ];
 
 export const FILE_SORT_OPTIONS = [

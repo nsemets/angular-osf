@@ -3,7 +3,7 @@
     <h2>{{ 'project.files.detail.fileMetadata.title' | translate }}</h2>
 
     <div class="flex gap-2">
-      <p-button severity="secondary"><i class="osf-icon-download p-1"></i></p-button>
+      <p-button severity="secondary" (click)="downloadFileMetadata()"><i class="osf-icon-download p-1"></i></p-button>
       <p-button
         severity="secondary"
         [label]="'project.files.detail.fileMetadata.edit' | translate"
@@ -66,12 +66,12 @@
 </div>
 
 <p-dialog
+  class="p-dialog-overflow-visible"
   [header]="'project.files.detail.fileMetadata.edit' | translate"
   [modal]="true"
   [(visible)]="editFileMetadataVisible"
-  [style]="{ width: '25rem' }"
 >
-  <form [formGroup]="fileMetadataForm" (ngSubmit)="setFileMetadata()" class="flex flex-column gap-3">
+  <form [formGroup]="fileMetadataForm" (ngSubmit)="setFileMetadata()" class="flex flex-column gap-3 select-option-wrap">
     <div class="flex flex-column gap-1">
       <p>{{ 'project.files.detail.fileMetadata.fields.title' | translate }}</p>
       <input pInputText id="title" [formControl]="titleControl" />
@@ -92,16 +92,19 @@
         [showClear]="true"
       ></p-select>
     </div>
-    <div class="flex flex-column gap-1">
+    <div class="flex flex-column gap-1 ">
       <p>{{ 'project.files.detail.fileMetadata.fields.resourceLanguage' | translate }}</p>
       <p-select
         class="w-full"
         [options]="languages"
-        optionValue="value"
-        optionLabel="label"
-        appendTo="body"
+        optionValue="code"
+        optionLabel="name"
         [formControl]="resourceLanguageControl"
+        [filter]="true"
+        filterBy="name"
         [showClear]="true"
+        [virtualScroll]="true"
+        [virtualScrollItemSize]="35"
       ></p-select>
     </div>
 

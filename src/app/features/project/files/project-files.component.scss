@@ -4,6 +4,7 @@
 :host {
   @include mix.flex-column;
   flex: 1;
+  overflow: hidden;
 
   .files-table {
     display: flex;
@@ -18,12 +19,20 @@
       display: grid;
       align-items: center;
       grid-template-columns:
-        minmax(mix.rem(200px), 32rem) minmax(mix.rem(150px), 0.7fr) minmax(mix.rem(100px), 100px)
-        minmax(mix.rem(150px), 1fr) minmax(mix.rem(50px), 50px);
+        minmax(mix.rem(200px), 32rem) minmax(mix.rem(150px), 0.7fr) minmax(mix.rem(100px), 100px) minmax(mix.rem(150px), 1fr) minmax(mix.rem(50px), 50px);
       grid-template-rows: mix.rem(44px);
       border-bottom: 1px solid var.$grey-2;
       padding: 0 mix.rem(12px);
       min-width: max-content;
+      cursor: pointer;
+
+      &:hover {
+        background: var.$bg-blue-3;
+      }
+
+      &:active {
+        background: var.$bg-blue-2;
+      }
 
       .table-cell {
         width: 100%;
@@ -38,35 +47,25 @@
       }
     }
 
-    &-row:last-child {
-      border-bottom: none;
-    }
+    //&-row:last-child {
+    //  border-bottom: none;
+    //}
   }
 
-  .filename-link {
-    cursor: pointer;
+  .entry-title {
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     min-width: 0;
     max-width: 100%;
-
-    &:hover {
-      text-decoration: underline;
-    }
   }
 
-  .icon-link {
-    cursor: pointer;
-
-    &:hover {
-      text-decoration: underline;
-    }
+  .blue-text {
+    color: var.$pr-blue-1;
   }
 
   .parent-folder-link {
-    cursor: pointer;
     display: flex;
     gap: 5px;
   }
@@ -115,4 +114,43 @@
   .action-dialog {
     width: mix.rem(72px);
   }
+
+  .tree-table {
+    .p-tree {
+      padding: 0;
+    }
+  }
+
 }
+
+
+//.share-menu {
+//  position: absolute;
+//  left: mix.rem(-48px);
+//  display: flex;
+//  flex-direction: column;
+//  gap: mix.rem(8px);
+//  padding: mix.rem(4px);
+//  background: white;
+//  border: 1px solid var.$grey-2;
+//  border-radius: 8px;
+//  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+//  z-index: 1000;
+//
+//  ul {
+//    list-style: none;
+//    padding: 0;
+//    margin: 0;
+//
+//    li {
+//      padding: mix.rem(8px) mix.rem(12px);
+//      cursor: pointer;
+//      white-space: nowrap;
+//      color: var.$dark-blue-1;
+//
+//      &:hover {
+//        background-color: var.$bg-blue-3;
+//      }
+//    }
+//  }
+//}

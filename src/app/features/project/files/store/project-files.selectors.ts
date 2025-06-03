@@ -1,6 +1,6 @@
 import { Selector } from '@ngxs/store';
 
-import { OsfFile } from '@osf/features/project/files/models';
+import { OsfFile, OsfFileRevision } from '@osf/features/project/files/models';
 import { OsfFileCustomMetadata } from '@osf/features/project/files/models/osf-models/file-custom-metadata.model';
 import { OsfFileProjectContributor } from '@osf/features/project/files/models/osf-models/file-project-contributor.model';
 import { OsfProjectMetadata } from '@osf/features/project/files/models/osf-models/project-custom-metadata.model';
@@ -21,12 +21,12 @@ export class ProjectFilesSelectors {
   }
 
   @Selector([ProjectFilesState])
-  static getCurrentFolder(state: ProjectFilesStateModel): OsfFile | undefined {
+  static getCurrentFolder(state: ProjectFilesStateModel): OsfFile | null {
     return state.currentFolder;
   }
 
   @Selector([ProjectFilesState])
-  static getMoveFileCurrentFolder(state: ProjectFilesStateModel): OsfFile | undefined {
+  static getMoveFileCurrentFolder(state: ProjectFilesStateModel): OsfFile | null {
     return state.moveFileCurrentFolder;
   }
 
@@ -58,5 +58,15 @@ export class ProjectFilesSelectors {
   @Selector([ProjectFilesState])
   static getProjectContributors(state: ProjectFilesStateModel): OsfFileProjectContributor[] | null {
     return state.contributors.data;
+  }
+
+  @Selector([ProjectFilesState])
+  static getFileRevisions(state: ProjectFilesStateModel): AsyncStateModel<OsfFileRevision[] | null> {
+    return state.fileRevisions;
+  }
+
+  @Selector([ProjectFilesState])
+  static getFileTags(state: ProjectFilesStateModel): AsyncStateModel<string[]> {
+    return state.tags;
   }
 }

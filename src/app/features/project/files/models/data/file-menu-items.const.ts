@@ -4,4 +4,6 @@ export const FileMenuItems = {
   Move: 'Move',
   Delete: 'Delete',
   Rename: 'Rename',
+  Share: 'Share',
+  Embed: 'Embed',
 };

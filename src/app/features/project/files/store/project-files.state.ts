@@ -5,16 +5,16 @@ import { catchError, forkJoin, switchMap, tap, throwError } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { MapProjectMetadata } from '@osf/features/project/files/mappers';
-import { FileProvider } from '@osf/features/project/files/models/data/file-provider.const';
 import { ProjectFilesService } from '@osf/features/project/files/services/project-files.service';
 import {
   CreateFolder,
   DeleteEntry,
+  GetFile,
   GetFileMetadata,
   GetFileProjectContributors,
   GetFileProjectMetadata,
+  GetFileRevisions,
   GetFiles,
-  GetFileTarget,
   GetMoveFileFiles,
   GetMoveFileRootFiles,
   GetRootFolderFiles,
@@ -24,48 +24,15 @@ import {
   SetFilesIsLoading,
   SetMoveFileCurrentFolder,
   SetSearch,
-  SetSort,
+  SetSort, UpdateTags,
 } from '@osf/features/project/files/store/project-files.actions';
 import { ProjectFilesStateModel } from '@osf/features/project/files/store/project-files.model';
+import { projectFilesStateDefaults } from '@osf/features/project/files/models/data/project-files-state-defaults.const';
 
 @Injectable()
 @State<ProjectFilesStateModel>({
   name: 'ProjectFilesState',
-  defaults: {
-    files: {
-      data: [],
-      isLoading: false,
-      error: null,
-    },
-    moveFileFiles: {
-      data: [],
-      isLoading: false,
-      error: null,
-    },
-    search: '',
-    sort: 'name',
-    provider: FileProvider.OsfStorage,
-    openedFile: {
-      data: null,
-      isLoading: false,
-      error: null,
-    },
-    fileMetadata: {
-      data: null,
-      isLoading: false,
-      error: null,
-    },
-    projectMetadata: {
-      data: null,
-      isLoading: false,
-      error: null,
-    },
-    contributors: {
-      data: null,
-      isLoading: false,
-      error: null,
-    },
-  },
+  defaults: projectFilesStateDefaults,
 })
 export class ProjectFilesState {
   projectFilesService = inject(ProjectFilesService);
@@ -80,6 +47,7 @@ export class ProjectFilesState {
         return this.projectFilesService.getFolder(files[0].relationships.parentFolderLink).pipe(
           tap({
             next: (parentFolder) => {
+              console.log('here');
               ctx.patchState({
                 files: {
                   data: [...files],
@@ -171,6 +139,7 @@ export class ProjectFilesState {
 
   @Action(SetCurrentFolder)
   setSelectedFolder(ctx: StateContext<ProjectFilesStateModel>, action: SetCurrentFolder) {
+    console.log('setting current folder');
     ctx.patchState({ currentFolder: action.folder });
   }
 
@@ -213,6 +182,9 @@ export class ProjectFilesState {
 
   @Action(RenameEntry)
   renameEntry(ctx: StateContext<ProjectFilesStateModel>, action: RenameEntry) {
+    const state = ctx.getState();
+    ctx.patchState({ files: { ...state.files, isLoading: true, error: null } });
+
     return this.projectFilesService.renameEntry(action.link, action.name).pipe(
       tap({
         next: () => {
@@ -237,15 +209,17 @@ export class ProjectFilesState {
     ctx.patchState({ sort: action.sort });
   }
 
-  @Action(GetFileTarget)
-  getFilesTarget(ctx: StateContext<ProjectFilesStateModel>, action: GetFileTarget) {
+  @Action(GetFile)
+  getFile(ctx: StateContext<ProjectFilesStateModel>, action: GetFile) {
     const state = ctx.getState();
     ctx.patchState({ openedFile: { ...state.openedFile, isLoading: true, error: null } });
+    ctx.patchState({ tags: { ...state.tags, isLoading: true, error: null } });
 
     return this.projectFilesService.getFileTarget(action.fileGuid).pipe(
       tap({
         next: (file) => {
           ctx.patchState({ openedFile: { data: file, isLoading: false, error: null } });
+          ctx.patchState({ tags: { data: file.tags, isLoading: false, error: null } });
         },
       }),
       catchError((error) => this.handleError(ctx, 'openedFile', error))
@@ -314,16 +288,54 @@ export class ProjectFilesState {
     return this.projectFilesService.getProjectContributors(action.projectId).pipe(
       tap({
         next: (contributors) => {
-          ctx.patchState({ contributors: { data: contributors, isLoading: true, error: null } });
+          ctx.patchState({ contributors: { data: contributors, isLoading: false, error: null } });
         },
       }),
       catchError((error) => this.handleError(ctx, 'contributors', error))
     );
   }
 
+  @Action(GetFileRevisions)
+  getFileRevisions(ctx: StateContext<ProjectFilesStateModel>, action: GetFileRevisions) {
+    const state = ctx.getState();
+    ctx.patchState({ fileRevisions: { ...state.fileRevisions, isLoading: true, error: null } });
+
+    return this.projectFilesService.getFileRevisions(action.projectId, action.fileId).pipe(
+      tap({
+        next: (revisions) => {
+          ctx.patchState({ fileRevisions: { data: revisions, isLoading: false, error: null } });
+        },
+      }),
+      catchError((error) => this.handleError(ctx, 'fileRevisions', error))
+    );
+  }
+
+  @Action(UpdateTags)
+  updateTags(ctx: StateContext<ProjectFilesStateModel>, action: UpdateTags) {
+    const state = ctx.getState();
+    ctx.patchState({ tags: { ...state.tags, isLoading: true, error: null } });
+
+    return this.projectFilesService.updateTags(action.tags, action.fileGuid).pipe(
+      tap({
+        next: (file) => {
+          ctx.patchState({ tags: { data: file.tags, isLoading: false, error: null } });
+        }
+      }),
+      catchError((error) => this.handleError(ctx, 'tags', error))
+    )
+  }
+
   private handleError(
     ctx: StateContext<ProjectFilesStateModel>,
-    section: 'files' | 'moveFileFiles' | 'openedFile' | 'fileMetadata' | 'projectMetadata' | 'contributors',
+    section:
+      | 'files'
+      | 'moveFileFiles'
+      | 'openedFile'
+      | 'fileMetadata'
+      | 'projectMetadata'
+      | 'contributors'
+      | 'fileRevisions'
+      | 'tags',
     error: Error
   ) {
     ctx.patchState({

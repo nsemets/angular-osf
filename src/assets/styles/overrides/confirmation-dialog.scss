@@ -55,3 +55,19 @@
     }
   }
 }
+
+.p-dialog-align-center {
+  .p-dialog {
+    .p-dialog-content {
+      align-items: center;
+    }
+  }
+}
+
+.p-dialog-overflow-visible {
+  .p-dialog {
+    .p-dialog-content {
+      overflow-y: visible;
+    }
+  }
+}

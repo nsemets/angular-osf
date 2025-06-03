@@ -18,8 +18,8 @@ export class SetFilesIsLoading {
   constructor(public isLoading: boolean) {}
 }
 
-export class GetFileTarget {
-  static readonly type = '[Project Files] Get File Target';
+export class GetFile {
+  static readonly type = '[Project Files] Get File';
 
   constructor(public fileGuid: string) {}
 }
@@ -51,13 +51,13 @@ export class GetMoveFileFiles {
 export class SetCurrentFolder {
   static readonly type = '[Project Files] Set Current Folder';
 
-  constructor(public folder?: OsfFile) {}
+  constructor(public folder: OsfFile | null) {}
 }
 
 export class SetMoveFileCurrentFolder {
   static readonly type = '[Project Files] Set Move File Files';
 
-  constructor(public folder?: OsfFile) {}
+  constructor(public folder: OsfFile | null) {}
 }
 
 export class CreateFolder {
@@ -111,6 +111,24 @@ export class SetFileMetadata {
 
   constructor(
     public payload: PatchFileMetadata,
+    public fileGuid: string
+  ) {}
+}
+
+export class GetFileRevisions {
+  static readonly type = '[Project Files] Get Revisions';
+
+  constructor(
+    public projectId: string,
+    public fileId: string
+  ) {}
+}
+
+export class UpdateTags {
+  static readonly type = '[Project Files] Update Tags';
+
+  constructor(
+    public tags: string[],
     public fileGuid: string
   ) {}
 }

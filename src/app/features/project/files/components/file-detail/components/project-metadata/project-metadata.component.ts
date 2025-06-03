@@ -14,7 +14,7 @@ import { ProjectFilesSelectors } from '@osf/features/project/files/store';
   styleUrl: './project-metadata.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProjectMetadataComponent {
+export class FileProjectMetadataComponent {
   readonly store = inject(Store);
   readonly destroyRef = inject(DestroyRef);
 

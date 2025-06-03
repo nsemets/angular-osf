@@ -8,13 +8,15 @@ import { InputText } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
 import { Skeleton } from 'primeng/skeleton';
 
-import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, Input } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ProjectFilesSelectors, SetFileMetadata } from '@osf/features/project/files/store';
 
 import { LANGUAGES, RESOURCE_TYPES } from '../../constants/files-details.constants';
+import { environment } from 'src/environments/environment';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'osf-file-metadata',
@@ -24,12 +26,14 @@ import { LANGUAGES, RESOURCE_TYPES } from '../../constants/files-details.constan
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileMetadataComponent {
+  @Input() containerRef?: HTMLElement;
+
   readonly store = inject(Store);
   readonly destroyRef = inject(DestroyRef);
   readonly fb = inject(FormBuilder);
+  readonly route = inject(ActivatedRoute);
 
   fileMetadata = select(ProjectFilesSelectors.getFileCustomMetadata);
-  isIframeLoading = true;
   editFileMetadataVisible = false;
 
   fileMetadataForm = new FormGroup({
@@ -38,6 +42,8 @@ export class FileMetadataComponent {
     resourceType: new FormControl<string | null>(null),
     resourceLanguage: new FormControl<string | null>(null),
   });
+
+  fileGuid = '';
 
   protected readonly resourceTypes = RESOURCE_TYPES;
   protected readonly languages = LANGUAGES;
@@ -59,6 +65,10 @@ export class FileMetadataComponent {
   }
 
   constructor() {
+    this.route.params.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+      this.fileGuid = params['fileGuid'];
+    });
+
     toObservable(this.fileMetadata)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((metadata) => {
@@ -88,6 +98,12 @@ export class FileMetadataComponent {
       }
 
       this.editFileMetadataVisible = false;
+    }
+  }
+
+  downloadFileMetadata(): void {
+    if (this.fileGuid) {
+      window.open(`${environment.webUrl}/${this.fileGuid}/metadata/?format=datacite-json`)?.focus();
     }
   }
 }

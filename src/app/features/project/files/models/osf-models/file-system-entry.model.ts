@@ -32,4 +32,5 @@ export interface OsfFile {
     filesLink: string;
   };
   target: OsfFileTarget;
+  previousFolder: boolean;
 }
