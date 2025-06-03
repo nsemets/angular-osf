@@ -1,6 +1,7 @@
 <div class="user-info xl:mt-6">
   <div class="name-container wide-button">
     <h1>{{ currentUser()?.fullName }}</h1>
+
     @if (!isMobile()) {
       <p-button label="Edit Profile" class="ml-auto" (click)="toProfileSettings()"></p-button>
     }
