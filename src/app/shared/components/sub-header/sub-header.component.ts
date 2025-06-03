@@ -1,9 +1,6 @@
 import { Button } from 'primeng/button';
 
-import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-
-import { IS_XSMALL } from '@shared/utils/breakpoints.tokens';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
 @Component({
   selector: 'osf-sub-header',
@@ -19,6 +16,4 @@ export class SubHeaderComponent {
   icon = input<string>('');
   description = input<string>('');
   buttonClick = output<void>();
-  #isXSmall$ = inject(IS_XSMALL);
-  isXSmall = toSignal(this.#isXSmall$);
 }
