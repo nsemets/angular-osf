@@ -37,6 +37,7 @@
       "overview": "Overview",
       "metadata": "Metadata",
       "files": "Files",
+      "wiki": "Wiki",
       "registrations": "Registrations",
       "settings": "Settings",
       "contributors": "Contributors",
@@ -540,6 +541,12 @@
         "duplicate": "Duplicate",
         "share": "Share"
       }
+    },
+    "wiki": {
+      "tooltip": "This page is currently connected to the collaborative wiki. All edits made will be visible to contributors with write permission in real time. Changes will be stored but not published until you click the \"Save\" button.",
+      "view": "View",
+      "edit": "Edit",
+      "compare": "Compare"
     },
     "registrations": {
       "addRegistration": "Add a Registration",

@@ -4,13 +4,20 @@
       @if (icon()) {
         <i [class]="'osf-icon-' + icon()"></i>
       }
-      <h1>{{ title() }}</h1>
     </div>
+    <h1 class="flex">
+      {{ title() }}
+      @if (tooltip()) {
+        <i class="osf-icon-information text-base ml-1 blue-icon" [pTooltip]="tooltip()" tooltipPosition="right"></i>
+      }
+    </h1>
+
     @if (showButton()) {
       <div class="btn-container" [class.btn-full-width]="isXSmall()">
         <p-button [label]="buttonLabel()" (onClick)="buttonClick.emit()"></p-button>
       </div>
     }
+    <ng-content #subContent></ng-content>
   </div>
   @if (description()) {
     <section>

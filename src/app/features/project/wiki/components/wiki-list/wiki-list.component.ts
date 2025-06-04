@@ -1,0 +1,81 @@
+import { MenuItem } from 'primeng/api';
+import { Button } from 'primeng/button';
+import { PanelModule } from 'primeng/panel';
+import { PanelMenuModule } from 'primeng/panelmenu';
+
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'osf-wiki-list',
+  imports: [PanelModule, Button, PanelMenuModule],
+  templateUrl: './wiki-list.component.html',
+  styleUrl: './wiki-list.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class WikiListComponent implements OnInit {
+  items: MenuItem[] = [];
+
+  ngOnInit() {
+    this.items = [
+      {
+        label: 'Files',
+        icon: 'pi pi-file',
+        items: [
+          {
+            label: 'Documents',
+            icon: 'pi pi-file',
+            items: [
+              {
+                label: 'Invoices',
+                icon: 'pi pi-file-pdf',
+                items: [
+                  {
+                    label: 'Pending',
+                    icon: 'pi pi-stop',
+                  },
+                  {
+                    label: 'Paid',
+                    icon: 'pi pi-check-circle',
+                  },
+                ],
+              },
+              {
+                label: 'Clients',
+                icon: 'pi pi-users',
+              },
+            ],
+          },
+          {
+            label: 'Images',
+            icon: 'pi pi-image',
+            items: [
+              {
+                label: 'Logos',
+                icon: 'pi pi-image',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        label: 'Cloud',
+        icon: 'pi pi-cloud',
+        items: [
+          {
+            label: 'Upload',
+            icon: 'pi pi-cloud-upload',
+            sd: 'Upload files to the cloud',
+          },
+          {
+            label: 'Download',
+            icon: 'pi pi-cloud-download',
+          },
+          {
+            label: 'Sync',
+            icon: 'pi pi-refresh',
+          },
+        ],
+      },
+    ];
+  }
+}

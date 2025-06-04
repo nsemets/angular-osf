@@ -105,6 +105,10 @@ export const PROJECT_MENU_ITEMS: MenuItem[] = [
       { label: 'navigation.project.metadata', routerLink: 'metadata' },
       { label: 'navigation.project.files', routerLink: 'files' },
       {
+        label: 'navigation.project.wiki',
+        routerLink: 'wiki',
+      },
+      {
         label: 'navigation.project.registrations',
         routerLink: 'registrations',
       },
