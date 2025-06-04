@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 
 import { WikiService } from '../services';
 
-import { ClearWiki, GetHomeWiki } from './wiki.actions';
+import { ClearWiki, GetHomeWiki, ToggleMode } from './wiki.actions';
 import { WikiStateModel } from './wiki.model';
 
 @State<WikiStateModel>({
@@ -16,6 +16,11 @@ import { WikiStateModel } from './wiki.model';
       data: '',
       isLoading: false,
       error: null,
+    },
+    wikiModes: {
+      view: true,
+      edit: false,
+      compare: false,
     },
   },
 })
@@ -68,5 +73,19 @@ export class WikiState {
       },
     });
     return throwError(() => error);
+  }
+
+  @Action(ToggleMode)
+  toggleMode(ctx: StateContext<WikiStateModel>, action: ToggleMode) {
+    const state = ctx.getState();
+
+    const trueModesCount = Object.values(state.wikiModes).filter(Boolean).length;
+
+    // Allow toggling if there are  2 modes true or if the mode being toggled is not currently active
+    if (trueModesCount >= 2 || !state.wikiModes[action.mode]) {
+      ctx.patchState({
+        wikiModes: { ...state.wikiModes, [`${action.mode}`]: !state.wikiModes[action.mode] },
+      });
+    }
   }
 }

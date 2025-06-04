@@ -1,14 +1,32 @@
 <osf-sub-header [title]="'navigation.project.wiki' | translate" [tooltip]="'project.wiki.tooltip' | translate">
   <p-buttongroup class="ml-auto">
-    <p-button [label]="'project.wiki.view' | translate" />
-    <p-button [label]="'project.wiki.edit' | translate" />
-    <p-button [label]="'project.wiki.compare' | translate" />
+    <p-button
+      [label]="'project.wiki.view' | translate"
+      [variant]="wikiModes().view ? undefined : 'outlined'"
+      (onClick)="toggleMode(WikiModes.View)"
+    />
+    <p-button
+      [label]="'project.wiki.edit' | translate"
+      [variant]="wikiModes().edit ? undefined : 'outlined'"
+      (onClick)="toggleMode(WikiModes.Edit)"
+    />
+    <p-button
+      [label]="'project.wiki.compare' | translate"
+      [variant]="wikiModes().compare ? undefined : 'outlined'"
+      (onClick)="toggleMode(WikiModes.Compare)"
+    />
   </p-buttongroup>
 </osf-sub-header>
 
 <section class="flex flex-column lg:flex-row bg-white flex-1 h-full p-5 gap-4 w-full overflow-auto">
   <osf-wiki-list></osf-wiki-list>
-  <osf-view-section></osf-view-section>
-  <osf-edit-section></osf-edit-section>
-  <osf-compare-section></osf-compare-section>
+  @if (wikiModes().view) {
+    <osf-view-section></osf-view-section>
+  }
+  @if (wikiModes().edit) {
+    <osf-edit-section></osf-edit-section>
+  }
+  @if (wikiModes().compare) {
+    <osf-compare-section></osf-compare-section>
+  }
 </section>

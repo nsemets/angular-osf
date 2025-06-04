@@ -1,5 +1,11 @@
 import { JsonApiResponse } from '@osf/core/models';
 
+export enum WikiModes {
+  View = 'view',
+  Edit = 'edit',
+  Compare = 'compare',
+}
+
 export interface HomeWiki {
   id: string;
   name: string;
