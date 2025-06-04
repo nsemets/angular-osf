@@ -11,7 +11,9 @@ import { BreadcrumbComponent } from '@core/components/breadcrumb/breadcrumb.comp
 import { FooterComponent } from '@core/components/footer/footer.component';
 import { HeaderComponent } from '@core/components/header/header.component';
 import { TopnavComponent } from '@core/components/topnav/topnav.component';
-import { IS_WEB, IS_XSMALL } from '@osf/shared/utils/breakpoints.tokens';
+import { IS_WEB, IS_XSMALL } from '@osf/shared/utils';
+
+import { SidenavComponent } from '../sidenav/sidenav.component';
 
 import { RootComponent } from './root.component';
 
@@ -28,7 +30,14 @@ describe('RootComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         RootComponent,
-        ...MockComponents(HeaderComponent, FooterComponent, TopnavComponent, ConfirmDialog, BreadcrumbComponent),
+        ...MockComponents(
+          HeaderComponent,
+          FooterComponent,
+          TopnavComponent,
+          ConfirmDialog,
+          BreadcrumbComponent,
+          SidenavComponent
+        ),
       ],
       providers: [
         MockProvider(IS_WEB, isWebSubject),

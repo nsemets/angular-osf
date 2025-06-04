@@ -5,7 +5,6 @@ import { PanelMenuModule } from 'primeng/panelmenu';
 
 import { filter, map } from 'rxjs';
 
-import { NgOptimizedImage } from '@angular/common';
 import { Component, computed, inject, output } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
@@ -16,7 +15,7 @@ import { NavItem } from '@osf/shared/models';
 
 @Component({
   selector: 'osf-nav-menu',
-  imports: [NgOptimizedImage, RouterLinkActive, RouterLink, PanelMenuModule, TranslatePipe, IconComponent],
+  imports: [RouterLinkActive, RouterLink, PanelMenuModule, TranslatePipe, IconComponent],
   templateUrl: './nav-menu.component.html',
   styleUrl: './nav-menu.component.scss',
 })
