@@ -10,8 +10,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BreadcrumbComponent } from '@core/components/breadcrumb/breadcrumb.component';
 import { FooterComponent } from '@core/components/footer/footer.component';
 import { HeaderComponent } from '@core/components/header/header.component';
-import { MainContentComponent } from '@core/components/main-content/main-content.component';
-import { SidenavComponent } from '@core/components/sidenav/sidenav.component';
 import { TopnavComponent } from '@core/components/topnav/topnav.component';
 import { IS_WEB, IS_XSMALL } from '@osf/shared/utils/breakpoints.tokens';
 
@@ -30,15 +28,7 @@ describe('RootComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         RootComponent,
-        ...MockComponents(
-          SidenavComponent,
-          HeaderComponent,
-          MainContentComponent,
-          FooterComponent,
-          TopnavComponent,
-          ConfirmDialog,
-          BreadcrumbComponent
-        ),
+        ...MockComponents(HeaderComponent, FooterComponent, TopnavComponent, ConfirmDialog, BreadcrumbComponent),
       ],
       providers: [
         MockProvider(IS_WEB, isWebSubject),
