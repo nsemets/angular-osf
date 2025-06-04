@@ -8,21 +8,22 @@ import { RouterOutlet } from '@angular/router';
 import { BreadcrumbComponent } from '@core/components/breadcrumb/breadcrumb.component';
 import { FooterComponent } from '@core/components/footer/footer.component';
 import { HeaderComponent } from '@core/components/header/header.component';
-import { SidenavComponent } from '@core/components/sidenav/sidenav.component';
 import { TopnavComponent } from '@core/components/topnav/topnav.component';
 import { IS_MEDIUM, IS_WEB } from '@shared/utils';
+
+import { NavMenuComponent } from '../nav-menu/nav-menu.component';
 
 @Component({
   selector: 'osf-root',
   imports: [
     CommonModule,
-    SidenavComponent,
     HeaderComponent,
     FooterComponent,
     TopnavComponent,
     ConfirmDialog,
     BreadcrumbComponent,
     RouterOutlet,
+    NavMenuComponent,
   ],
   templateUrl: './root.component.html',
   styleUrls: ['./root.component.scss'],
