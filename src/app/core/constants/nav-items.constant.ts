@@ -41,6 +41,12 @@ export const NAV_ITEMS: NavItem[] = [
     useExactMatch: true,
   },
   {
+    path: '/collections',
+    label: 'navigation.collections',
+    icon: 'collections',
+    useExactMatch: true,
+  },
+  {
     path: '/meetings',
     label: 'navigation.meetings',
     icon: 'meetings',
@@ -117,6 +123,10 @@ export const PROJECT_MENU_ITEMS: MenuItem[] = [
       {
         label: 'navigation.project.settings',
         routerLink: 'settings',
+      },
+      {
+        label: 'navigation.project.addons',
+        routerLink: 'addons',
       },
     ],
   },
