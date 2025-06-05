@@ -303,7 +303,9 @@
           "daily": "You'll receive a daily summary of file updates.",
           "none": "You won't receive file update notifications."
         }
-      }
+      },
+      "updateProjectDetailsMessage": "Successfully updated project details.",
+      "updateProjectSettingsMessage": "Successfully updated project settings."
     }
   },
   "myProfile": {
@@ -1275,7 +1277,10 @@
       "x": "X (formerly Twitter)",
       "facebook": "Facebook",
       "group": "Group",
-      "github": "GitHub"
+      "github": "GitHub",
+      "linkedin": "Linkedin",
+      "bluesky": "Bluesky",
+      "mastodon": "Mastodon"
     },
     "copyright": "Copyright © 2011-2025"
   },
