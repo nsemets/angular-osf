@@ -1290,6 +1290,17 @@
     "title": "Page not found",
     "message": "The page you were looking for is either doesn't exist, was deleted, or the URL may be incorrect. If this should not have occurred and the issue persists, please report it to"
   },
+  "forbiddenPage": {
+    "title": "You Don't Have Permission To Perform This Action",
+    "message": "If this should not have occurred and the issue persists, please report it to"
+  },
+  "requestAccess": {
+    "title": "You Need Permission",
+    "message": "Ask for access, or switch to an account with permission.",
+    "helpMessage": "If this should not have occurred, please contact",
+    "requestAccess": "Request Access",
+    "switchAccount": "Switch Account"
+  },
   "validation": {
     "required": "The field is required.",
     "email": "Please enter a valid email address.",

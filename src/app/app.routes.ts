@@ -195,11 +195,19 @@ export const routes: Routes = [
         loadComponent: () => import('./features/home/home.component').then((mod) => mod.HomeComponent),
       },
       {
+        path: 'forbidden',
+        loadComponent: () =>
+          import('./core/components/forbidden-page/forbidden-page.component').then((mod) => mod.ForbiddenPageComponent),
+      },
+      {
+        path: 'request-access',
+        loadComponent: () =>
+          import('./core/components/request-access/request-access.component').then((mod) => mod.RequestAccessComponent),
+      },
+      {
         path: '**',
         loadComponent: () =>
-          import('./shared/components/page-not-found/page-not-found.component').then(
-            (mod) => mod.PageNotFoundComponent
-          ),
+          import('./core/components/page-not-found/page-not-found.component').then((mod) => mod.PageNotFoundComponent),
       },
     ],
   },
