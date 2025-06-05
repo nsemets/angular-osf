@@ -1,4 +1,24 @@
 {
+  "common": {
+    "buttons": {
+      "delete": "Delete",
+      "remove": "Remove",
+      "add": "Add",
+      "cancel": "Cancel",
+      "save": "Save",
+      "close": "Close",
+      "download": "Download",
+      "copy": "Copy",
+      "move": "Move",
+      "rename": "Rename"
+    },
+    "search": {
+      "noResultsFound": "No results found."
+    },
+    "labels": {
+      "downloads": "Downloads"
+    }
+  },
   "navigation": {
     "profile": "Profile",
     "myProfile": "My profile",
@@ -12,6 +32,7 @@
     "meetings": "Meetings",
     "myProjects": "My Projects",
     "preprints": "Preprints",
+    "collections": "Collections",
     "donate": "Donate",
     "profileSettings": "Profile Settings",
     "accountSettings": "Account Settings",
@@ -27,7 +48,8 @@
       "registrations": "Registrations",
       "settings": "Settings",
       "contributors": "Contributors",
-      "analytics": "Analytics"
+      "analytics": "Analytics",
+      "addons": "Add-ons"
     }
   },
   "auth": {
@@ -283,6 +305,9 @@
       }
     }
   },
+  "myProfile": {
+    "editProfile": "Edit Profile"
+  },
   "project": {
     "analytics": {
       "kpi": {
@@ -326,7 +351,8 @@
           "curator": "Curator",
           "employment": "Employment history",
           "education": "Education history"
-        }
+        },
+        "emptyMessage": "No contributors found."
       },
       "viewOnly": "View-only links",
       "createLink": "Create a link to share this project so those who have the link can view—but not edit—the project.",
@@ -334,10 +360,52 @@
       "addDialog": {
         "placeholder": "Search by name or user information",
         "cancel": "Cancel",
-        "next": "Next"
+        "next": "Next",
+        "selectPermissions": "Please select which permissions you want to give to contributor",
+        "bibliographicCOntributor": "Bibliographic Contributor",
+        "addUnregisteredContributor": "Add Unregistered Contributor",
+        "addRegisteredContributor": "Add Registered Contributor",
+        "unregisteredContributorNotification": "We will notify the user that they have been added to your project"
+      },
+      "removeDialog": {
+        "title": "Remove contributor",
+        "message": "Are you sure you want to remove <b>{{name}}</b> contributor?",
+        "successMessage": "Contributor {{name}} successfully removed."
       },
       "createLinkDialog": {
         "dialogTitle": "Create a new link to share your project"
+      },
+      "permissionInfo": {
+        "title": "Permission Information",
+        "viewProjectContent": "View project content and comment",
+        "read": "Read privileges",
+        "addComponents": "Add and configure components",
+        "editContent": "Add and edit content",
+        "readWrite": "Read and write privileges",
+        "manageContributors": "Manage contributor",
+        "deleteRegister": "Delete and register project",
+        "publicPrivate": "Public private settings"
+      },
+      "bibliographicContributorInfo": {
+        "heading": "Bibliographic Contributor Information",
+        "description": "Only bibliographic contributors will be displayed in the Contributors list and in project citations. Non-bibliographic contributors can read and modify the project as normal."
+      },
+      "curatorInfo": {
+        "heading": "Curator Information",
+        "description": "An administrator designated by your affiliated institution to curate your project"
+      },
+      "employment": {
+        "show": "Show employment history",
+        "none": "No employment history"
+      },
+      "education": {
+        "show": "Show education history",
+        "none": "No education history"
+      },
+      "toastMessages": {
+        "addSuccessMessage": "Contributor {{name}} successfully added.",
+        "multipleAddSuccessMessage": "Contributors successfully added.",
+        "multipleUpdateSuccessMessage": "Contributors successfully updated."
       }
     },
     "overview": {
@@ -484,6 +552,226 @@
         "duplicate": "Duplicate",
         "share": "Share"
       }
+    },
+    "registrations": {
+      "addRegistration": "Add a Registration",
+      "emptyState": "There have been no completed registrations of this project.",
+      "card": {
+        "registrationTemplate": "Registration template:",
+        "registry": "Registry:",
+        "registered": "Registered:",
+        "lastUpdated": "Last Updated:",
+        "description": "Description:",
+        "openResources": "Open Resources"
+      }
+    },
+    "files": {
+      "title": "Files",
+      "storageLocation": "OSF Storage",
+      "searchPlaceholder": "Search your projects",
+      "sort": {
+        "placeholder": "Sort",
+        "nameAZ": "Name: A-Z",
+        "nameZA": "Name: Z-A",
+        "lastModifiedOldest": "Last modified: oldest to newest",
+        "lastModifiedNewest": "Last modified: newest to oldest"
+      },
+      "actions": {
+        "downloadAsZip": "Download As Zip",
+        "createFolder": "Create Folder",
+        "uploadFile": "Upload File"
+      },
+      "dialogs": {
+        "uploadFile": {
+          "title": "Upload file"
+        },
+        "createFolder": {
+          "title": "Create folder",
+          "folderName": "New folder name",
+          "folderNamePlaceholder": "Please enter a folder name"
+        },
+        "renameFile": {
+          "title": "Rename file",
+          "renameLabel": "Please rename the file"
+        },
+        "moveFile": "Cannot move to the same folder"
+      },
+      "emptyState": "This folder is empty",
+      "detail": {
+        "backToList": "Back to list of files",
+        "fileMetadata": {
+          "title": "File Metadata",
+          "edit": "Edit",
+          "fields": {
+            "title": "Title",
+            "description": "Description",
+            "resourceType": "Resource Type",
+            "resourceLanguage": "Resource Language"
+          }
+        },
+        "projectMetadata": {
+          "title": "Project Metadata",
+          "edit": "Edit",
+          "fields": {
+            "funder": "Funder",
+            "awardTitle": "Award title",
+            "awardNumber": "Award number",
+            "awardUri": "Award URI",
+            "title": "Title",
+            "description": "Description",
+            "resourceType": "Resource type",
+            "resourceLanguage": "Resource language",
+            "dateCreated": "Date created",
+            "dateModified": "Date modified",
+            "contributors": "Contributors"
+          }
+        }
+      }
+    },
+    "files": {
+      "title": "Files",
+      "storageLocation": "OSF Storage",
+      "searchPlaceholder": "Search your projects",
+      "sort": {
+        "placeholder": "Sort",
+        "nameAZ": "Name: A-Z",
+        "nameZA": "Name: Z-A",
+        "lastModifiedOldest": "Last modified: oldest to newest",
+        "lastModifiedNewest": "Last modified: newest to oldest"
+      },
+      "actions": {
+        "downloadAsZip": "Download As Zip",
+        "createFolder": "Create Folder",
+        "uploadFile": "Upload File"
+      },
+      "dialogs": {
+        "uploadFile": {
+          "title": "Upload file"
+        },
+        "createFolder": {
+          "title": "Create folder",
+          "folderName": "New folder name",
+          "folderNamePlaceholder": "Please enter a folder name"
+        },
+        "renameFile": {
+          "title": "Rename file",
+          "renameLabel": "Please rename the file"
+        },
+        "moveFile": "Cannot move to the same folder"
+      },
+      "emptyState": "This folder is empty",
+      "detail": {
+        "backToList": "Back to list of files",
+        "fileMetadata": {
+          "title": "File Metadata",
+          "edit": "Edit",
+          "fields": {
+            "title": "Title",
+            "description": "Description",
+            "resourceType": "Resource Type",
+            "resourceLanguage": "Resource Language"
+          }
+        },
+        "projectMetadata": {
+          "title": "Project Metadata",
+          "edit": "Edit",
+          "fields": {
+            "funder": "Funder",
+            "awardTitle": "Award title",
+            "awardNumber": "Award number",
+            "awardUri": "Award URI",
+            "title": "Title",
+            "description": "Description",
+            "resourceType": "Resource type",
+            "resourceLanguage": "Resource language",
+            "dateCreated": "Date created",
+            "dateModified": "Date modified",
+            "contributors": "Contributors"
+          }
+        }
+      }
+    }
+  },
+  "collections": {
+    "buttons": {
+      "addToCollection": "Add to Collection"
+    },
+    "helpDialog": {
+      "header": "Search help",
+      "message": "OSF Search provides a powerful discovery tool to help you find data, papers, analysis plans, and more content across the research lifecycle. OSF Collections have some specialized filters, which you can learn more about on our ",
+      "linkText": "help page"
+    },
+    "searchInput": {
+      "placeholder": "Enter search term(s) here"
+    },
+    "filters": {
+      "programArea": {
+        "label": "Program Area",
+        "placeholder": "Select program areas",
+        "description": "Please select the program area from the dropdown below or start typing to find it"
+      },
+      "status": {
+        "label": "Status",
+        "placeholder": "Select status",
+        "description": "Please select the status from the dropdown below or start typing to find it"
+      },
+      "collectedType": {
+        "label": "Collected Type",
+        "placeholder": "Select collected types",
+        "description": "Please select the collected type from the dropdown below or start typing to find it"
+      },
+      "dataType": {
+        "label": "Data Type",
+        "placeholder": "Select data types",
+        "description": "Please select the data type from the dropdown below or start typing to find it"
+      },
+      "disease": {
+        "label": "Disease",
+        "placeholder": "Select diseases",
+        "description": "Please select the disease from the dropdown below or start typing to find it"
+      },
+      "gradeLevels": {
+        "label": "Grade Levels",
+        "placeholder": "Select grade levels",
+        "description": "Please select the grade level from the dropdown below or start typing to find it"
+      },
+      "issue": {
+        "label": "Issue",
+        "placeholder": "Select issues",
+        "description": "Please select the issue from the dropdown below or start typing to find it"
+      },
+      "reviewsState": {
+        "label": "Reviews State",
+        "placeholder": "Select reviews states",
+        "description": "Please select the reviews state from the dropdown below or start typing to find it"
+      },
+      "schoolType": {
+        "label": "School Type",
+        "placeholder": "Select school types",
+        "description": "Please select the school type from the dropdown below or start typing to find it"
+      },
+      "studyDesign": {
+        "label": "Study Design",
+        "placeholder": "Select study designs",
+        "description": "Please select the study design from the dropdown below or start typing to find it"
+      },
+      "volume": {
+        "label": "Volume",
+        "placeholder": "Select volumes",
+        "description": "Please select the volume from the dropdown below or start typing to find it"
+      },
+      "sort": {
+        "label": "Sort by:"
+      }
+    },
+    "searchResults": {
+      "noResults": "0 results",
+      "10000Results": "10,000+ results",
+      "results": "results"
+    },
+    "common": {
+      "dateCreated": "Date Created:",
+      "dateModified": "Date Modified:"
     }
   },
   "settings": {
@@ -983,5 +1271,21 @@
       "github": "GitHub"
     },
     "copyright": "Copyright © 2011-2025"
+  },
+  "shared": {
+    "resources": {
+      "data": "Data",
+      "analyticCode": "Analytic Code",
+      "materials": "Materials",
+      "papers": "Papers",
+      "supplements": "Supplements"
+    }
+  },
+  "validation": {
+    "required": "The field is required.",
+    "email": "Please enter a valid email address.",
+    "maxLength": "The field must be at most {{length}} characters.",
+    "minLength": "The field must be at least {{length}} characters.",
+    "invalidInput": "Invalid input."
   }
 }

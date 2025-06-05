@@ -1,4 +1,4 @@
-<section class="home-container" [class.medium]="isMedium()" [class.web]="isWeb()">
+<section class="home-container xl:mt-6" [class.medium]="isMedium()">
   <osf-sub-header
     [showButton]="true"
     [title]="'home.loggedIn.dashboard.title' | translate"
@@ -23,12 +23,11 @@
     <osf-my-projects-table
       [items]="filteredProjects()"
       [tableParams]="tableParams()"
-      [searchValue]="searchValue()"
+      [searchControl]="searchControl"
       [sortColumn]="sortColumn()"
       [sortOrder]="sortOrder()"
       [isLoading]="isLoading()"
       [searchPlaceholder]="'home.loggedIn.dashboard.quickSearch.searchPlaceholder' | translate"
-      (searchValueChange)="onSearchChange($event)"
       (pageChange)="onPageChange($event)"
       (sort)="onSort($event)"
       (itemClick)="navigateToProject($event)"

@@ -1,38 +1,55 @@
-import { createDispatchMap, select, Store } from '@ngxs/store';
+import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { ConfirmationService } from 'primeng/api';
 import { Button } from 'primeng/button';
-import { Checkbox } from 'primeng/checkbox';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DialogService } from 'primeng/dynamicdialog';
 import { Select } from 'primeng/select';
-import { TableModule, TablePageEvent } from 'primeng/table';
-import { Tooltip } from 'primeng/tooltip';
+import { TableModule } from 'primeng/table';
 
-import { filter, map, of, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, forkJoin, map, of, switchMap } from 'rxjs';
 
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { MY_PROJECTS_TABLE_PARAMS } from '@core/constants/my-projects-table.constants';
-import { AddContributorDialogComponent } from '@osf/features/project/contributors/components/add-contributor-dialog/add-contributor-dialog.component';
-import { CreateViewLinkDialogComponent } from '@osf/features/project/contributors/components/create-view-link-dialog/create-view-link-dialog.component';
-import { ViewOnlyLink, ViewOnlyLinkModel } from '@osf/features/project/settings/models';
+import { SearchInputComponent, ViewOnlyTableComponent } from '@osf/shared/components';
+import { SelectOption } from '@osf/shared/models';
+import { ToastService } from '@osf/shared/services';
+import { defaultConfirmationConfig, findChangedItems } from '@osf/shared/utils';
+
+import { ViewOnlyLink, ViewOnlyLinkModel } from '../settings/models';
 import {
   CreateViewOnlyLink,
   DeleteViewOnlyLink,
   GetProjectDetails,
   GetViewOnlyLinksTable,
   SettingsSelectors,
-} from '@osf/features/project/settings/store';
-import { ViewOnlyTableComponent } from '@shared/components';
-import { SearchInputComponent } from '@shared/components/search-input/search-input.component';
-import { defaultConfirmationConfig } from '@shared/helpers';
-import { SelectOption, TableParameters } from '@shared/models';
-import { IS_WEB, IS_XSMALL } from '@shared/utils/breakpoints.tokens';
+} from '../settings/store';
+
+import {
+  AddContributorDialogComponent,
+  AddUnregisteredContributorDialogComponent,
+  ContributorEducationHistoryComponent,
+  ContributorEmploymentHistoryComponent,
+  ContributorsListComponent,
+  CreateViewLinkDialogComponent,
+} from './components';
+import { BIBLIOGRAPHY_OPTIONS, PERMISSION_OPTIONS } from './constants';
+import { AddContributorType, ContributorPermission } from './enums';
+import { ContributorDialogAddModel, ContributorModel } from './models';
+import {
+  AddContributor,
+  ContributorsSelectors,
+  DeleteContributor,
+  GetAllContributors,
+  UpdateBibliographyFilter,
+  UpdateContributor,
+  UpdatePermissionFilter,
+  UpdateSearchValue,
+} from './store';
 
 @Component({
   selector: 'osf-contributors',
@@ -43,9 +60,8 @@ import { IS_WEB, IS_XSMALL } from '@shared/utils/breakpoints.tokens';
     TranslatePipe,
     FormsModule,
     TableModule,
+    ContributorsListComponent,
     ViewOnlyTableComponent,
-    Tooltip,
-    Checkbox,
   ],
   templateUrl: './contributors.component.html',
   styleUrl: './contributors.component.scss',
@@ -53,121 +69,214 @@ import { IS_WEB, IS_XSMALL } from '@shared/utils/breakpoints.tokens';
   providers: [DialogService],
 })
 export class ContributorsComponent implements OnInit {
-  readonly #translateService = inject(TranslateService);
-  readonly #dialogService = inject(DialogService);
-  readonly #route = inject(ActivatedRoute);
-  readonly #store = inject(Store);
-  readonly #destroyRef = inject(DestroyRef);
-  readonly #confirmationService = inject(ConfirmationService);
+  protected searchControl = new FormControl<string>('');
 
-  protected searchValue = signal('');
+  readonly destroyRef = inject(DestroyRef);
+  readonly translateService = inject(TranslateService);
+  readonly confirmationService = inject(ConfirmationService);
+  readonly dialogService = inject(DialogService);
+  readonly toastService = inject(ToastService);
 
-  readonly items = signal([
-    {
-      name: 'John Doe',
-      permissions: 'Administrator',
-      bibliographicContributor: true,
-      curator: true,
-      employmentHistory: 'https://some_link',
-      educationHistory: null,
-    },
-    {
-      name: 'Jeremy Wolfe',
-      permissions: 'Read + Write',
-      bibliographicContributor: false,
-      curator: true,
-      employmentHistory: null,
-      educationHistory: 'https://some_link',
-    },
-    {
-      name: 'John Doe',
-      permissions: 'Administrator',
-      bibliographicContributor: true,
-      curator: true,
-      employmentHistory: 'https://some_link',
-      educationHistory: 'https://some_link',
-    },
-  ]);
-  readonly projectId = toSignal(this.#route.parent?.params.pipe(map((params) => params['id'])) ?? of(undefined));
-
-  protected readonly tableParams = signal<TableParameters>({
-    ...MY_PROJECTS_TABLE_PARAMS,
-  });
-
-  protected readonly selectedPermission = signal<string>('');
-  protected readonly selectedBibliography = signal<string>('');
-  pageChange = output<TablePageEvent>();
-  protected readonly isWeb = toSignal(inject(IS_WEB));
-  protected readonly isMobile = toSignal(inject(IS_XSMALL));
-
-  dialogRef: DynamicDialogRef | null = null;
+  private readonly route = inject(ActivatedRoute);
+  private readonly projectId = toSignal(this.route.parent?.params.pipe(map((params) => params['id'])) ?? of(undefined));
 
   protected viewOnlyLinks = select(SettingsSelectors.getViewOnlyLinks);
   protected projectDetails = select(SettingsSelectors.getProjectDetails);
 
-  protected readonly permissionsOptions: SelectOption[] = [
-    {
-      label: this.#translateService.instant('project.contributors.permissions.administrator'),
-      value: 'Administrator',
-    },
-    {
-      label: this.#translateService.instant('project.contributors.permissions.readAndWrite'),
-      value: 'Read + Write',
-    },
-    {
-      label: this.#translateService.instant('project.contributors.permissions.read'),
-      value: 'Read',
-    },
-  ];
+  protected readonly selectedPermission = signal<ContributorPermission | null>(null);
+  protected readonly selectedBibliography = signal<boolean | null>(null);
+  protected readonly permissionsOptions: SelectOption[] = PERMISSION_OPTIONS;
+  protected readonly bibliographyOptions: SelectOption[] = BIBLIOGRAPHY_OPTIONS;
 
-  protected readonly bibliographyOptions: SelectOption[] = [
-    {
-      label: this.#translateService.instant('project.contributors.bibliography.bibliographic'),
-      value: 'Bibliographic',
-    },
-    {
-      label: this.#translateService.instant('project.contributors.bibliography.nonBibliographic'),
-      value: 'Non-Bibliographic',
-    },
-  ];
+  protected initialContributors = select(ContributorsSelectors.getContributors);
+  protected contributors = signal([]);
+  protected readonly isContributorsLoading = select(ContributorsSelectors.isContributorsLoading);
 
   protected actions = createDispatchMap({
     getViewOnlyLinks: GetViewOnlyLinksTable,
     getProjectDetails: GetProjectDetails,
+    getContributors: GetAllContributors,
+    updateSearchValue: UpdateSearchValue,
+    updatePermissionFilter: UpdatePermissionFilter,
+    updateBibliographyFilter: UpdateBibliographyFilter,
+    deleteContributor: DeleteContributor,
+    updateContributor: UpdateContributor,
+    addContributor: AddContributor,
+    createViewOnlyLink: CreateViewOnlyLink,
+    deleteViewOnlyLink: DeleteViewOnlyLink,
   });
+
+  get hasChanges(): boolean {
+    return JSON.stringify(this.initialContributors()) !== JSON.stringify(this.contributors());
+  }
+
+  constructor() {
+    effect(() => {
+      this.contributors.set(JSON.parse(JSON.stringify(this.initialContributors())));
+
+      if (this.isContributorsLoading()) {
+        this.searchControl.disable();
+      } else {
+        this.searchControl.enable();
+      }
+    });
+  }
 
   ngOnInit(): void {
     const id = this.projectId();
+
     if (id) {
       this.actions.getViewOnlyLinks(id);
       this.actions.getProjectDetails(id);
+      this.actions.getContributors(this.projectId());
     }
+
+    this.setSearchSubscription();
   }
 
-  protected onPermissionChange(value: string): void {
-    this.selectedPermission.set(value);
+  private setSearchSubscription() {
+    this.searchControl.valueChanges
+      .pipe(debounceTime(500), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+      .subscribe((res) => this.actions.updateSearchValue(res ?? null));
   }
 
-  protected onBibliographyChange(value: string): void {
-    this.selectedBibliography.set(value);
+  protected onPermissionChange(value: ContributorPermission): void {
+    this.actions.updatePermissionFilter(value);
   }
 
-  protected onPageChange(event: TablePageEvent): void {
-    this.pageChange.emit(event);
+  protected onBibliographyChange(value: boolean): void {
+    this.actions.updateBibliographyFilter(value);
   }
 
-  protected onItemPermissionChange(event: TablePageEvent): void {
-    console.log(event);
+  cancel() {
+    this.contributors.set(JSON.parse(JSON.stringify(this.initialContributors())));
   }
 
-  addContributor() {
-    this.dialogRef = this.#dialogService.open(AddContributorDialogComponent, {
+  save() {
+    const updatedContributors = findChangedItems(this.initialContributors(), this.contributors(), 'id');
+
+    const updateRequests = updatedContributors.map((payload) =>
+      this.actions.updateContributor(this.projectId(), payload)
+    );
+
+    forkJoin(updateRequests).subscribe(() => {
+      const successMessage = this.translateService.instant(
+        'project.contributors.toastMessages.multipleUpdateSuccessMessage'
+      );
+
+      this.toastService.showSuccess(successMessage);
+    });
+  }
+
+  openEmploymentHistory(contributor: ContributorModel) {
+    this.dialogService.open(ContributorEmploymentHistoryComponent, {
       width: '552px',
+      data: contributor.employment,
       focusOnShow: false,
-      header: this.#translateService.instant('project.contributors.addContributor'),
+      header: this.translateService.instant('project.contributors.table.headers.employment'),
       closeOnEscape: true,
       modal: true,
       closable: true,
+    });
+  }
+
+  openEducationHistory(contributor: ContributorModel) {
+    this.dialogService.open(ContributorEducationHistoryComponent, {
+      width: '552px',
+      data: contributor.education,
+      focusOnShow: false,
+      header: this.translateService.instant('project.contributors.table.headers.education'),
+      closeOnEscape: true,
+      modal: true,
+      closable: true,
+    });
+  }
+
+  openAddContributorDialog() {
+    const addedContributorIds = this.initialContributors().map((x) => x.userId);
+
+    this.dialogService
+      .open(AddContributorDialogComponent, {
+        width: '448px',
+        data: addedContributorIds,
+        focusOnShow: false,
+        header: this.translateService.instant('project.contributors.addDialog.addRegisteredContributor'),
+        closeOnEscape: true,
+        modal: true,
+        closable: true,
+      })
+      .onClose.pipe(
+        filter((res: ContributorDialogAddModel) => !!res),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((res: ContributorDialogAddModel) => {
+        if (res.type === AddContributorType.Unregistered) {
+          this.openAddUnregisteredContributorDialog();
+        } else {
+          const addRequests = res.data.map((payload) => this.actions.addContributor(this.projectId(), payload));
+
+          forkJoin(addRequests).subscribe(() => {
+            const successMessage = this.translateService.instant(
+              'project.contributors.toastMessages.multipleAddSuccessMessage'
+            );
+
+            this.toastService.showSuccess(successMessage);
+          });
+        }
+      });
+  }
+
+  openAddUnregisteredContributorDialog() {
+    this.dialogService
+      .open(AddUnregisteredContributorDialogComponent, {
+        width: '448px',
+        focusOnShow: false,
+        header: this.translateService.instant('project.contributors.addDialog.addUnregisteredContributor'),
+        closeOnEscape: true,
+        modal: true,
+        closable: true,
+      })
+      .onClose.pipe(
+        filter((res: ContributorDialogAddModel) => !!res),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((res: ContributorDialogAddModel) => {
+        if (res.type === AddContributorType.Registered) {
+          this.openAddContributorDialog();
+        } else {
+          const successMessage = this.translateService.instant('project.contributors.toastMessages.addSuccessMessage', {
+            name: res.data[0].fullName,
+          });
+
+          this.actions
+            .addContributor(this.projectId(), res.data[0])
+            .subscribe({ next: () => this.toastService.showSuccess(successMessage) });
+        }
+      });
+  }
+
+  removeContributor(contributor: ContributorModel) {
+    this.confirmationService.confirm({
+      ...defaultConfirmationConfig,
+      header: this.translateService.instant('project.contributors.removeDialog.title'),
+      message: this.translateService.instant('project.contributors.removeDialog.message', {
+        name: contributor.fullName,
+      }),
+      acceptButtonProps: {
+        ...defaultConfirmationConfig.acceptButtonProps,
+        severity: 'danger',
+        label: this.translateService.instant('common.buttons.remove'),
+      },
+      accept: () => {
+        const successMessage = this.translateService.instant('project.contributors.removeDialog.successMessage', {
+          name: contributor.fullName,
+        });
+
+        this.actions
+          .deleteContributor(this.projectId(), contributor.userId)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe({ next: () => this.toastService.showSuccess(successMessage) });
+      },
     });
   }
 
@@ -179,39 +288,39 @@ export class ContributorsComponent implements OnInit {
         category: 'project',
       },
     ];
-    this.dialogRef = this.#dialogService.open(CreateViewLinkDialogComponent, {
-      width: '448px',
-      focusOnShow: false,
-      header: this.#translateService.instant('project.contributors.createLinkDialog.dialogTitle'),
-      data: { sharedComponents, projectId: this.projectId() },
-      closeOnEscape: true,
-      modal: true,
-      closable: true,
-    });
 
-    this.dialogRef.onClose
-      .pipe(
+    this.dialogService
+      .open(CreateViewLinkDialogComponent, {
+        width: '448px',
+        focusOnShow: false,
+        header: this.translateService.instant('project.contributors.createLinkDialog.dialogTitle'),
+        data: { sharedComponents, projectId: this.projectId() },
+        closeOnEscape: true,
+        modal: true,
+        closable: true,
+      })
+      .onClose.pipe(
         filter((res) => !!res),
-        switchMap((result) => this.#store.dispatch(new CreateViewOnlyLink(this.projectId(), result as ViewOnlyLink))),
-        takeUntilDestroyed(this.#destroyRef)
+        switchMap((result) => this.actions.createViewOnlyLink(this.projectId(), result as ViewOnlyLink)),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
   }
 
   deleteLinkItem(link: ViewOnlyLinkModel): void {
-    this.#confirmationService.confirm({
+    this.confirmationService.confirm({
       ...defaultConfirmationConfig,
-      message: this.#translateService.instant('myProjects.settings.delete.message'),
-      header: this.#translateService.instant('myProjects.settings.delete.title', {
+      message: this.translateService.instant('myProjects.settings.delete.message'),
+      header: this.translateService.instant('myProjects.settings.delete.title', {
         name: link.name,
       }),
       acceptButtonProps: {
         ...defaultConfirmationConfig.acceptButtonProps,
         severity: 'danger',
-        label: this.#translateService.instant('settings.developerApps.list.deleteButton'),
+        label: this.translateService.instant('settings.developerApps.list.deleteButton'),
       },
       accept: () => {
-        this.#store.dispatch(new DeleteViewOnlyLink(this.projectId(), link.id)).subscribe();
+        this.actions.deleteViewOnlyLink(this.projectId(), link.id);
       },
     });
   }

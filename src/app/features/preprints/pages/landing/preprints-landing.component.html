@@ -26,9 +26,9 @@
 
   <osf-search-input
     class="w-full"
-    [searchValue]="''"
+    [control]="searchControl"
     [placeholder]="'preprints.searchPlaceholder' | translate"
-    (triggerSearch)="redirectToSearchPageWithValue($event)"
+    (triggerSearch)="redirectToSearchPageWithValue()"
   />
 
   <!-- [Rni] TODO: add link to an example preprint -->
