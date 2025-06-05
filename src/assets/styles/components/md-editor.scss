@@ -1,0 +1,64 @@
+#md-editor,
+.editor-view-mode {
+  .md-editor-container {
+    .btn-group {
+      position: relative;
+      display: inline-flex;
+      vertical-align: middle;
+      .btn {
+        padding: 0.5rem 0.75rem;
+        font-size: 1rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.1s ease-in-out;
+        &:hover {
+          background-color: var(--grey-2);
+        }
+      }
+    }
+
+    &.md-editor-resizable {
+      margin-bottom: 0;
+      .md-footer {
+        z-index: 1;
+      }
+    }
+
+    h1,
+    h2 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+
+    blockquote {
+      padding: 10px 20px;
+      margin: 0 0 20px;
+      font-size: 17.5px;
+      border-left: 5px solid #eee;
+    }
+
+    hr {
+      margin-top: 20px;
+      margin-bottom: 20px;
+      border: 0;
+      border-top: 1px solid #eee;
+    }
+
+    ul,
+    ol {
+      margin-top: 0;
+      margin-bottom: 10px;
+      margin-block-start: 1em;
+      margin-block-end: 1em;
+      padding-inline-start: 40px;
+      li {
+        list-style: initial;
+      }
+    }
+    ol {
+      li {
+        list-style-type: decimal;
+      }
+    }
+  }
+}

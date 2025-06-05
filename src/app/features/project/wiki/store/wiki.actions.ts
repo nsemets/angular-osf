@@ -20,3 +20,15 @@ export class ToggleMode {
   static readonly type = '[Wiki] Toggle Mode';
   constructor(public mode: WikiModes) {}
 }
+
+export class GetWikiContent {
+  static readonly type = '[Wiki] Get Wiki Content';
+
+  constructor(public content: string) {}
+}
+
+export class UpdateWikiContent {
+  static readonly type = '[Wiki] Update Wiki Content';
+
+  constructor(public content: string) {}
+}

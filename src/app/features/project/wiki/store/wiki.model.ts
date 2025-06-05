@@ -9,4 +9,11 @@ export interface WikiModesStateModel {
 export interface WikiStateModel {
   homeWikiContent: AsyncStateModel<string>;
   wikiModes: WikiModesStateModel;
+  wikiData: {
+    list: string[];
+    version: string;
+    content: string;
+    isLoading: boolean;
+    error: string | null;
+  };
 }

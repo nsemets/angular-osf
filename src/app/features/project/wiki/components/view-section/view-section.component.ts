@@ -3,7 +3,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { PanelModule } from 'primeng/panel';
 import { Select } from 'primeng/select';
 
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -14,6 +14,8 @@ import { FormsModule } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewSectionComponent {
+  currentContent = input.required<string>();
+
   selectedVersion: string | null = null;
 
   versions: string[] = ['Version 1', 'Version 2', 'Version 3', 'Version 4', 'Version 5'];

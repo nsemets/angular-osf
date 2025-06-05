@@ -18,4 +18,9 @@ export class WikiSelectors {
   static getWikiModes(state: WikiStateModel): WikiModesStateModel {
     return state.wikiModes;
   }
+
+  @Selector([WikiState])
+  static getWikiContent(state: WikiStateModel): string {
+    return state.wikiData.content;
+  }
 }

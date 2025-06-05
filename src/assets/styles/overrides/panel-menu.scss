@@ -1,17 +1,19 @@
 @use "../variables" as var;
 @use "../mixins" as mix;
-.p-panelmenu {
-  gap: mix.rem(4px);
+.nav-menu {
+  .p-panelmenu {
+    gap: mix.rem(4px);
 
-  .nav-link {
-    color: var.$white;
-    gap: mix.rem(8px);
-    text-decoration: none;
-    padding: mix.rem(12px);
-    width: 100%;
+    .nav-link {
+      color: var.$white;
+      gap: mix.rem(8px);
+      text-decoration: none;
+      padding: mix.rem(12px);
+      width: 100%;
 
-    .nav-icon {
-      font-size: mix.rem(20px);
+      .nav-icon {
+        font-size: mix.rem(20px);
+      }
     }
 
     .p-panelmenu-panel {

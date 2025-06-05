@@ -19,7 +19,7 @@ import { ViewSectionComponent } from './components/view-section/view-section.com
 import { WikiListComponent } from './components/wiki-list/wiki-list.component';
 import { WikiSelectors } from './store/wiki.selectors';
 import { WikiModes } from './models';
-import { GetWikiModes, ToggleMode } from './store';
+import { GetWikiContent, GetWikiModes, ToggleMode, UpdateWikiContent } from './store';
 
 @Component({
   selector: 'osf-wiki',
@@ -44,16 +44,24 @@ export class WikiComponent {
 
   readonly projectId = toSignal(this.route.parent?.params.pipe(map((params) => params['id'])) ?? of(undefined));
   protected wikiModes = select(WikiSelectors.getWikiModes);
+  protected wikiContent = select(WikiSelectors.getWikiContent);
 
-  protected actions = createDispatchMap({ getWikiModes: GetWikiModes, toggleMode: ToggleMode });
+  protected actions = createDispatchMap({
+    getWikiModes: GetWikiModes,
+    toggleMode: ToggleMode,
+    getWikiContent: GetWikiContent,
+    updateWikiContent: UpdateWikiContent,
+  });
 
   constructor() {
-    // this.actions.getWikiModes(this.projectId());
-    // console.log(this.wikiModes());
+    this.actions.getWikiContent(this.projectId());
   }
 
   toggleMode(mode: WikiModes) {
-    console.log(`Toggling mode: ${mode}`);
     this.actions.toggleMode(mode);
+  }
+
+  updateWikiContent(content: string) {
+    this.actions.updateWikiContent(content);
   }
 }

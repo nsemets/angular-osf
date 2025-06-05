@@ -42,4 +42,8 @@ export class WikiService {
         map((content) => (content ? content.replace(/\n/g, '<br>') : ''))
       );
   }
+
+  getWikiContent(projectId: string, wikiId: string): Observable<string> {
+    return of('some wiki content'); // Placeholder for actual implementation
+  }
 }

@@ -21,10 +21,10 @@
 <section class="flex flex-column lg:flex-row bg-white flex-1 h-full p-5 gap-4 w-full overflow-auto">
   <osf-wiki-list></osf-wiki-list>
   @if (wikiModes().view) {
-    <osf-view-section></osf-view-section>
+    <osf-view-section [currentContent]="wikiContent()"></osf-view-section>
   }
   @if (wikiModes().edit) {
-    <osf-edit-section></osf-edit-section>
+    <osf-edit-section [initialContent]="wikiContent()" (contentChange)="updateWikiContent($event)"></osf-edit-section>
   }
   @if (wikiModes().compare) {
     <osf-compare-section></osf-compare-section>

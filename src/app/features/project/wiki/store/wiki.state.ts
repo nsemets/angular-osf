@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 
 import { WikiService } from '../services';
 
-import { ClearWiki, GetHomeWiki, ToggleMode } from './wiki.actions';
+import { ClearWiki, GetHomeWiki, GetWikiContent, ToggleMode, UpdateWikiContent } from './wiki.actions';
 import { WikiStateModel } from './wiki.model';
 
 @State<WikiStateModel>({
@@ -19,8 +19,15 @@ import { WikiStateModel } from './wiki.model';
     },
     wikiModes: {
       view: true,
-      edit: false,
+      edit: true,
       compare: false,
+    },
+    wikiData: {
+      list: [],
+      version: '',
+      content: '',
+      isLoading: false,
+      error: null,
     },
   },
 })
@@ -87,5 +94,43 @@ export class WikiState {
         wikiModes: { ...state.wikiModes, [`${action.mode}`]: !state.wikiModes[action.mode] },
       });
     }
+  }
+  @Action(GetWikiContent)
+  getWikiContent(ctx: StateContext<WikiStateModel>, action: GetWikiContent) {
+    const state = ctx.getState();
+    ctx.patchState({
+      wikiData: {
+        ...state.wikiData,
+        isLoading: true,
+        error: null,
+      },
+    });
+
+    return this.wikiService.getWikiContent(action.content, '1').pipe(
+      tap((content) => {
+        ctx.patchState({
+          wikiData: {
+            ...state.wikiData,
+            content: content,
+            isLoading: false,
+            error: null,
+          },
+        });
+      }),
+      catchError((error) => this.handleError(ctx, error))
+    );
+  }
+
+  @Action(UpdateWikiContent)
+  updateWikiContent(ctx: StateContext<WikiStateModel>, action: UpdateWikiContent) {
+    const state = ctx.getState();
+    ctx.patchState({
+      wikiData: {
+        ...state.wikiData,
+        content: action.content,
+        isLoading: false,
+        error: null,
+      },
+    });
   }
 }

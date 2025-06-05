@@ -3,17 +3,39 @@
     <div class="flex align-items-center justify-content-between w-full">
       <h2 class="mr-2">{{ 'project.wiki.edit' | translate }}</h2>
       <div class="ml-auto flex">
-        <p-button label="Save" severity="success" class="mr-2"></p-button>
-        <p-button label="Revert" severity="danger"></p-button>
+        <p-button label="Save" severity="success" class="mr-2" (click)="save()"></p-button>
+        <p-button label="Revert" severity="danger" (click)="revert()"></p-button>
       </div>
     </div>
   </ng-template>
   <div class="flex align-items-center mb-2"></div>
 
-  <p-panel showHeader="false">
-    <p class="mt-3">
-      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nesciunt aspernatur natus esse sit iste dolor animi,
-      maiores eius porro aliquid. Facere at voluptatem ducimus modi sed hic voluptatibus fuga magni?
-    </p>
-  </p-panel>
+  <p class="mt-3">
+    <md-editor
+      id="md-editor"
+      name="Content"
+      [ngModel]="content"
+      (ngModelChange)="onContentChanged($event)"
+      [options]="options"
+      (onEditorLoaded)="onEditorLoaded($event)"
+      (onPreviewDomChanged)="onPreviewDomChanged($event)"
+      required
+      maxlength="600"
+      height="500px"
+    >
+      <slot custom-btns>
+        <button class="btn btn-sm btn-default" (click)="undo()">
+          <i class="fas fa-rotate-left"></i>
+        </button>
+        <button class="btn btn-sm btn-default" (click)="redo()">
+          <i class="fas fa-rotate-right"></i>
+        </button>
+        <div class="btn-group">
+          <button class="btn btn-sm btn-default" (click)="doHorizontalRule()">
+            <i class="fas fa-grip-lines"></i>
+          </button>
+        </div>
+      </slot>
+    </md-editor>
+  </p>
 </p-panel>
