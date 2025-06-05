@@ -106,7 +106,6 @@
   },
   "cli": {
     "schematicCollections": ["angular-eslint"],
-    "packageManager": "bun",
     "analytics": false
   }
 }
