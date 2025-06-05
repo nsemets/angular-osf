@@ -11,7 +11,7 @@ import { HeaderComponent } from '@core/components/header/header.component';
 import { TopnavComponent } from '@core/components/topnav/topnav.component';
 import { IS_MEDIUM, IS_WEB } from '@shared/utils';
 
-import { NavMenuComponent } from '../nav-menu/nav-menu.component';
+import { SidenavComponent } from '../sidenav/sidenav.component';
 
 @Component({
   selector: 'osf-root',
@@ -23,7 +23,7 @@ import { NavMenuComponent } from '../nav-menu/nav-menu.component';
     ConfirmDialog,
     BreadcrumbComponent,
     RouterOutlet,
-    NavMenuComponent,
+    SidenavComponent,
   ],
   templateUrl: './root.component.html',
   styleUrls: ['./root.component.scss'],
