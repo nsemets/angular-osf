@@ -194,10 +194,13 @@ export const routes: Routes = [
         path: 'confirm/:userId/:emailId',
         loadComponent: () => import('./features/home/home.component').then((mod) => mod.HomeComponent),
       },
+      {
+        path: '**',
+        loadComponent: () =>
+          import('./shared/components/page-not-found/page-not-found.component').then(
+            (mod) => mod.PageNotFoundComponent
+          ),
+      },
     ],
-  },
-  {
-    path: '**',
-    redirectTo: 'home',
   },
 ];
