@@ -557,6 +557,8 @@
       }
     },
     "wiki": {
+      "addNewWiki": "Add new wiki page",
+      "addNewWikiPlaceholder": "New wiki name",
       "tooltip": "This page is currently connected to the collaborative wiki. All edits made will be visible to contributors with write permission in real time. Changes will be stored but not published until you click the \"Save\" button.",
       "view": "View",
       "edit": "Edit",

@@ -1,81 +1,88 @@
+import { TranslateService } from '@ngx-translate/core';
+
 import { MenuItem } from 'primeng/api';
 import { Button } from 'primeng/button';
+import { ButtonGroupModule } from 'primeng/buttongroup';
+import { DialogService } from 'primeng/dynamicdialog';
 import { PanelModule } from 'primeng/panel';
 import { PanelMenuModule } from 'primeng/panelmenu';
 
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+
+import { AddWikiDialogComponent } from '../add-wiki-dialog/add-wiki-dialog.component';
 
 @Component({
   selector: 'osf-wiki-list',
-  imports: [PanelModule, Button, PanelMenuModule],
+  imports: [PanelModule, Button, PanelMenuModule, ButtonGroupModule],
   templateUrl: './wiki-list.component.html',
   styleUrl: './wiki-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [DialogService],
 })
 export class WikiListComponent implements OnInit {
+  expanded = signal(false);
+  readonly #dialogService = inject(DialogService);
+  readonly #translateService = inject(TranslateService);
+
   items: MenuItem[] = [];
 
   ngOnInit() {
     this.items = [
       {
-        label: 'Files',
+        label: 'Project Wiki Pages',
         icon: 'pi pi-file',
+        expanded: true,
         items: [
           {
-            label: 'Documents',
+            label: 'Wiki 1',
             icon: 'pi pi-file',
-            items: [
-              {
-                label: 'Invoices',
-                icon: 'pi pi-file-pdf',
-                items: [
-                  {
-                    label: 'Pending',
-                    icon: 'pi pi-stop',
-                  },
-                  {
-                    label: 'Paid',
-                    icon: 'pi pi-check-circle',
-                  },
-                ],
-              },
-              {
-                label: 'Clients',
-                icon: 'pi pi-users',
-              },
-            ],
           },
           {
-            label: 'Images',
-            icon: 'pi pi-image',
-            items: [
-              {
-                label: 'Logos',
-                icon: 'pi pi-image',
-              },
-            ],
+            label: 'Wiki 2',
+            icon: 'pi pi-file',
           },
         ],
       },
       {
-        label: 'Cloud',
+        label: 'Component Wiki Pages',
         icon: 'pi pi-cloud',
         items: [
           {
-            label: 'Upload',
+            label: 'Test Component 1',
             icon: 'pi pi-cloud-upload',
-            sd: 'Upload files to the cloud',
+            items: [
+              {
+                label: 'Test Sub Component 1',
+                icon: 'pi pi-cloud-upload',
+              },
+              {
+                label: 'Test Sub Component 2',
+                icon: 'pi pi-cloud-upload',
+              },
+            ],
           },
           {
-            label: 'Download',
+            label: 'Test Component 2',
             icon: 'pi pi-cloud-download',
-          },
-          {
-            label: 'Sync',
-            icon: 'pi pi-refresh',
+            items: [
+              {
+                label: 'Test Sub Component 1',
+                icon: 'pi pi-cloud-download',
+              },
+            ],
           },
         ],
       },
     ];
+  }
+
+  openAddWikiDialog() {
+    this.#dialogService.open(AddWikiDialogComponent, {
+      header: this.#translateService.instant('project.wiki.addNewWiki'),
+    });
+  }
+
+  collapseNavigation() {
+    this.expanded.update((value) => !value);
   }
 }

@@ -1,16 +1,26 @@
-<p-panel showHeader="false">
-  <div class="flex aign-items-center justify-content-between mt-3 mb-2">
-    <p-button label="Add new Wiki page" icon="pi pi-plus" class="btn-icon-text-success" />
-    <p-button class="btn-icon">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M14.3594 2.23168C14.6563 1.98481 15.0719 1.92856 15.425 2.09418C15.7781 2.2598 16 2.61293 16 3.00043V13.0004C16 13.3879 15.775 13.7411 15.425 13.9067C15.075 14.0723 14.6594 14.0192 14.3594 13.7692L9 9.30356V8.00043V6.6973L14.3594 2.23168ZM8 5.00043V8.00043V12.0004V13.0004C8 13.3879 7.775 13.7411 7.425 13.9067C7.075 14.0723 6.65938 14.0192 6.35938 13.7692L0.359375 8.76918C0.13125 8.57856 0 8.29731 0 8.00043C0 7.70356 0.13125 7.42231 0.359375 7.23168L6.35938 2.23168C6.65625 1.98481 7.07188 1.92856 7.425 2.09418C7.77812 2.2598 8 2.61293 8 3.00043L8 5.00043Z"
-          fill="#24384A"
+<div [class.wiki-list-expanded]="expanded()" class="wiki-list">
+  @if (expanded()) {
+    <p-panel showHeader="false">
+      <div class="flex aign-items-center justify-content-between mt-3 mb-2">
+        <p-button
+          label="Add new Wiki page"
+          icon="pi pi-plus"
+          class="btn-icon-text-success"
+          (click)="openAddWikiDialog()"
         />
-      </svg>
-    </p-button>
-  </div>
-  <div class="flex justify-center">
-    <p-panelmenu [model]="items" [multiple]="true" class="w-full" />
-  </div>
-</p-panel>
+        <p-button class="btn-icon" icon="fas fa-backward" (click)="collapseNavigation()"> </p-button>
+      </div>
+      <div class="flex justify-center">
+        <p-panelmenu [model]="items" [multiple]="true" class="w-full" />
+      </div>
+    </p-panel>
+  } @else {
+    <div class="mb-2">
+      <p-button class="btn-icon" (click)="collapseNavigation()">
+        <i class="fas fa-list-ul"></i>
+        <i class="fas fa-forward"></i>
+      </p-button>
+    </div>
+    <p-button icon="pi pi-plus" class="btn-icon-text-success" (click)="openAddWikiDialog()" />
+  }
+</div>
