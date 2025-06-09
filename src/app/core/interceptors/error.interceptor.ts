@@ -29,7 +29,14 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       }
 
       if (error.status === 403) {
-        router.navigate(['/forbidden']);
+        if (error.url?.includes('v2/nodes/')) {
+          const match = error.url.match(/\/nodes\/([^/]+)/);
+          const id = match ? match[1] : null;
+
+          router.navigate([`/request-access/${id}`]);
+        } else {
+          router.navigate(['/forbidden']);
+        }
       }
 
       loaderService.hide();

@@ -3,13 +3,35 @@
 
   <p class="mt-4">{{ 'requestAccess.message' | translate }}</p>
 
+  <div class="flex flex-column text-left mt-4">
+    <label class="font-bold" for="comment">
+      {{ 'requestAccess.commentLabel' | translate }}
+    </label>
+
+    <textarea
+      class="comment-input"
+      pTextarea
+      id="comment"
+      [rows]="3"
+      [maxLength]="commentLimit"
+      [(ngModel)]="comment"
+    ></textarea>
+  </div>
+
   <div class="flex align-items-center gap-3 mt-6">
-    <p-button class="w-full" styleClass="w-full" [label]="'requestAccess.requestAccess' | translate"></p-button>
+    <p-button
+      class="w-full"
+      styleClass="w-full"
+      [label]="'requestAccess.requestAccess' | translate"
+      (click)="requestAccess()"
+    ></p-button>
+
     <p-button
       class="w-full"
       styleClass="w-full"
       severity="secondary"
       [label]="'requestAccess.switchAccount' | translate"
+      (click)="switchAccount()"
     ></p-button>
   </div>
 

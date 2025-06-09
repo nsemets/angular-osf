@@ -145,8 +145,7 @@ export class SettingsComponent implements OnInit {
     this.loaderService.show();
 
     this.actions.updateProjectDetails(model).subscribe(() => {
-      const message = this.translateService.instant('myProjects.settings.updateProjectDetailsMessage');
-      this.toastService.showSuccess(message);
+      this.toastService.showSuccess('myProjects.settings.updateProjectDetailsMessage');
       this.loaderService.hide();
     });
   }
@@ -234,8 +233,7 @@ export class SettingsComponent implements OnInit {
     this.loaderService.show();
 
     this.actions.updateProjectSettings(model).subscribe(() => {
-      const message = this.translateService.instant('myProjects.settings.updateProjectSettingsMessage');
-      this.toastService.showSuccess(message);
+      this.toastService.showSuccess('myProjects.settings.updateProjectSettingsMessage');
       this.loaderService.hide();
     });
   }

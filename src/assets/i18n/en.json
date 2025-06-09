@@ -1304,7 +1304,9 @@
     "message": "Ask for access, or switch to an account with permission.",
     "helpMessage": "If this should not have occurred, please contact",
     "requestAccess": "Request Access",
-    "switchAccount": "Switch Account"
+    "switchAccount": "Switch Account",
+    "commentLabel": "Comment (Optional)",
+    "requestedSuccessMessage": "Your request for access has been sent."
   },
   "validation": {
     "required": "The field is required.",
