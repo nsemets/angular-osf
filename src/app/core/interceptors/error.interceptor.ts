@@ -5,12 +5,13 @@ import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { ToastService } from '@osf/shared/services';
+import { LoaderService, ToastService } from '@osf/shared/services';
 
 import { ERROR_MESSAGES } from '../constants';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const toastService = inject(ToastService);
+  const loaderService = inject(LoaderService);
   const router = inject(Router);
 
   return next(req).pipe(
@@ -31,6 +32,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         router.navigate(['/forbidden']);
       }
 
+      loaderService.hide();
       toastService.showError(errorMessage);
 
       return throwError(() => error);
