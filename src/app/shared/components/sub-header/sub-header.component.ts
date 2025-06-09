@@ -11,6 +11,7 @@ import { IS_XSMALL } from '@shared/utils/breakpoints.tokens';
   templateUrl: './sub-header.component.html',
   styleUrl: './sub-header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class SubHeaderComponent {
   showButton = input<boolean>(false);

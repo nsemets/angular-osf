@@ -356,7 +356,11 @@
         "noTags": "No tags",
         "noSupplements": "No supplements",
         "noAffiliatedInstitutions": "No affiliated institutions",
-        "editButton": "Edit"
+        "editButton": "Edit",
+        "resourceInformation": "Resource Information",
+        "resourceType": "Resource type",
+        "resourceLanguage": "Resource language",
+        "fundingSupport": "Funding/Support Information"
       },
       "dialog": {
         "makePublic": {

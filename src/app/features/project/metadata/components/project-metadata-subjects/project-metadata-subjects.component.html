@@ -1,0 +1,129 @@
+<p-card>
+  <div class="flex flex-column gap-3">
+    <h3 class="text-lg m-0">{{ 'project.overview.metadata.subjects' | translate }}</h3>
+
+    <!-- Edit Mode -->
+    <div class="flex flex-column gap-3">
+      <!-- Chips Display Field (shows selected subjects) -->
+      <div class="subjects-chips">
+        <div
+          class="flex flex-wrap gap-2 p-3 border-1 border-round surface-border min-h-3rem align-items-center cursor-text"
+          tabindex="0"
+          role="button"
+          [attr.aria-label]="'Selected subjects'"
+          (click)="onInputFocus()"
+          (keydown)="$event.key === 'Enter' && onInputFocus()"
+        >
+          <!-- Current subjects as removable chips (unique only) -->
+          @for (subject of getUniqueSubjects(); track subject.id) {
+            <p-tag
+              [value]="subject.text"
+              severity="info"
+              class="cursor-pointer"
+              tabindex="0"
+              role="button"
+              [attr.aria-label]="'Remove ' + subject.text"
+              (click)="removeSubject(subject)"
+              (focus)="onInputFocus()"
+              (keydown)="$event.key === 'Enter' && removeSubject(subject)"
+              title="Click to remove"
+            />
+          }
+
+          <!-- Placeholder when no subjects selected -->
+          @if (getUniqueSubjects().length === 0) {
+            <span class="text-color-secondary">Add subjects...</span>
+          }
+        </div>
+      </div>
+
+      <!-- Search Input Field (for filtering options) -->
+      <osf-search-input
+        class="w-full mt-4"
+        [searchValue]="searchValue()"
+        (searchValueChange)="onSearchChange($event || '')"
+        [placeholder]="'meetings.details.searchPlaceholder' | translate"
+      />
+
+      <!-- Dropdown as part of card layout (not overlay) -->
+      @if (showDropdown() && filteredOptions().length > 0) {
+        <div class="bg-white max-h-15rem overflow-y-auto">
+          <div class="p-2">
+            @for (option of filteredOptions(); track option.id) {
+              <div class="flex flex-column">
+                <!-- Parent category -->
+                <div class="flex align-items-center gap-2 p-2 hover:bg-gray-50 border-round cursor-pointer">
+                  <!-- Expand/Collapse arrow for parent categories -->
+                  @if (option.children && option.children.length > 0) {
+                    <i
+                      class="pi text-sm cursor-pointer w-1rem"
+                      tabindex="0"
+                      role="button"
+                      [attr.aria-label]="'Expand or collapse ' + option.label"
+                      [ngClass]="option.expanded ? 'pi-chevron-down' : 'pi-chevron-right'"
+                      (click)="toggleExpand(option, $event)"
+                      (keydown)="$event.key === 'Enter' && toggleExpand(option, $event)"
+                    >
+                    </i>
+                  } @else {
+                    <span class="inline-block w-1rem"></span>
+                  }
+
+                  <!-- Checkbox -->
+                  <p-checkbox
+                    [ngModel]="option.selected"
+                    (ngModelChange)="toggleSelection(option)"
+                    [indeterminate]="option.indeterminate"
+                    [binary]="true"
+                  />
+
+                  <!-- Label -->
+                  <span
+                    class="flex-1 cursor-pointer text-sm font-medium"
+                    tabindex="0"
+                    role="button"
+                    [attr.aria-label]="'Select ' + option.label"
+                    (click)="toggleSelection(option)"
+                    (keydown)="$event.key === 'Enter' && toggleSelection(option)"
+                  >
+                    {{ option.label }}
+                  </span>
+                </div>
+
+                <!-- Children (when expanded) -->
+                @if (option.expanded && option.children) {
+                  @for (child of option.children; track child.id) {
+                    <div class="flex align-items-center gap-2 p-2 pl-4 hover:bg-gray-50 border-round cursor-pointer">
+                      <span class="inline-block w-1rem"></span>
+
+                      <!-- Child checkbox -->
+                      <p-checkbox [ngModel]="child.selected" (ngModelChange)="toggleSelection(child)" [binary]="true" />
+
+                      <!-- Child label -->
+                      <span
+                        class="flex-1 cursor-pointer text-sm pl-2"
+                        tabindex="0"
+                        role="button"
+                        [attr.aria-label]="'Select ' + child.label"
+                        (click)="toggleSelection(child)"
+                        (keydown)="$event.key === 'Enter' && toggleSelection(child)"
+                      >
+                        {{ child.label }}
+                      </span>
+                    </div>
+                  }
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Action buttons -->
+      <div class="flex gap-2 justify-content-end">
+        <p-button severity="secondary" size="small" label="Cancel" (click)="cancelEditing()" />
+        <p-button severity="success" size="small" label="Save" (click)="saveChanges()" />
+      </div>
+    </div>
+  </div>
+</p-card>

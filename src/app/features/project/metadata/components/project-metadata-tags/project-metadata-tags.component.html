@@ -1,0 +1,65 @@
+<p-card>
+  <div class="flex flex-column gap-3">
+    <h3 class="text-lg m-0">{{ 'project.overview.metadata.tags' | translate }}</h3>
+
+    @if (!isEditing()) {
+      <!-- Display Mode - Click to edit -->
+      <div
+        class="flex flex-wrap gap-2 cursor-pointer p-2 border-round hover:bg-gray-50 transition-colors"
+        tabindex="0"
+        role="button"
+        [attr.aria-label]="'Click to edit tags'"
+        (click)="startEditing()"
+        (keydown)="handleKeyboardEdit($event)"
+      >
+        @if (currentProject()?.tags?.length) {
+          @for (tag of currentProject()!.tags!; track tag) {
+            <p-tag [value]="tag" />
+          }
+        } @else {
+          <span class="text-color-secondary"
+            >{{ 'project.overview.metadata.noTags' | translate }} - Click to add tags</span
+          >
+        }
+      </div>
+    } @else {
+      <!-- Edit Mode -->
+      <div class="flex flex-column gap-2">
+        <!-- Current tags being edited -->
+        @if (editingTags().length > 0) {
+          <div class="flex flex-wrap gap-2">
+            @for (tag of editingTags(); track tag) {
+              <p-tag
+                [value]="tag"
+                severity="secondary"
+                class="cursor-pointer"
+                (click)="removeTag(tag)"
+                title="Click to remove"
+              />
+            }
+          </div>
+        }
+
+        <!-- Simple input for adding tags -->
+        <div class="flex flex-column gap-2">
+          <p-autoComplete
+            [ngModel]="searchValue()"
+            (ngModelChange)="searchValue.set($event)"
+            [suggestions]="suggestedTags()"
+            (completeMethod)="searchTags($event)"
+            (onSelect)="onTagSelect($event)"
+            placeholder="Type to search and add tags..."
+            [forceSelection]="false"
+            class="w-full"
+          />
+        </div>
+
+        <!-- Action buttons -->
+        <div class="flex gap-2 justify-content-end">
+          <p-button severity="secondary" size="small" label="Cancel" (click)="cancelEditing()" />
+          <p-button severity="success" size="small" label="Save" (click)="saveChanges()" />
+        </div>
+      </div>
+    }
+  </div>
+</p-card>
