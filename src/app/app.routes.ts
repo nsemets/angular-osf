@@ -2,9 +2,12 @@ import { provideStates } from '@ngxs/store';
 
 import { Routes } from '@angular/router';
 
+import { ProjectFilesState } from '@osf/features/project/files/store/project-files.state';
+
 import { MyProfileResourceFiltersOptionsState } from './features/my-profile/components/filters/store';
 import { MyProfileResourceFiltersState } from './features/my-profile/components/my-profile-resource-filters/store';
 import { MyProfileState } from './features/my-profile/store';
+import { ContributorsState } from './features/project/contributors/store';
 import { ResourceFiltersOptionsState } from './features/search/components/filters/store';
 import { ResourceFiltersState } from './features/search/components/resource-filters/store';
 import { SearchState } from './features/search/store';
@@ -64,6 +67,10 @@ export const routes: Routes = [
           import('./features/static/privacy-policy/privacy-policy.component').then((mod) => mod.PrivacyPolicyComponent),
       },
       {
+        path: 'collections',
+        loadChildren: () => import('./features/collections/collections.routes').then((mod) => mod.collectionsRoutes),
+      },
+      {
         path: 'meetings',
         loadComponent: () => import('./features/meetings/meetings.component').then((mod) => mod.MeetingsComponent),
         children: [
@@ -114,9 +121,10 @@ export const routes: Routes = [
             path: 'files',
             loadComponent: () =>
               import('@osf/features/project/files/project-files.component').then((mod) => mod.ProjectFilesComponent),
+            providers: [provideStates([ProjectFilesState])],
           },
           {
-            path: 'files/:fileId',
+            path: 'files/:fileGuid',
             loadComponent: () =>
               import('@osf/features/project/files/components/file-detail/file-detail.component').then(
                 (mod) => mod.FileDetailComponent
@@ -140,6 +148,7 @@ export const routes: Routes = [
               import('@osf/features/project/contributors/contributors.component').then(
                 (mod) => mod.ContributorsComponent
               ),
+            providers: [provideStates([ContributorsState])],
           },
           {
             path: 'analytics',
@@ -151,11 +160,21 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./features/project/settings/settings.component').then((mod) => mod.SettingsComponent),
           },
+          {
+            path: 'addons',
+            loadComponent: () =>
+              import('./features/project/addons/addons.component').then((mod) => mod.AddonsComponent),
+          },
         ],
       },
       {
         path: 'settings',
         loadChildren: () => import('./features/settings/settings.routes').then((mod) => mod.settingsRoutes),
+      },
+      {
+        path: 'preprints',
+        loadChildren: () =>
+          import('./features/preprints/constants/preprints.routes').then((mod) => mod.preprintsRoutes),
       },
       {
         path: 'search',

@@ -29,9 +29,21 @@ export const NAV_ITEMS: NavItem[] = [
     useExactMatch: true,
   },
   {
+    path: '/preprints',
+    label: 'navigation.preprints',
+    icon: 'preprints',
+    useExactMatch: true,
+  },
+  {
     path: '/my-profile',
     label: 'navigation.profile',
     icon: 'profile',
+    useExactMatch: true,
+  },
+  {
+    path: '/collections',
+    label: 'navigation.collections',
+    icon: 'collections',
     useExactMatch: true,
   },
   {
@@ -107,6 +119,10 @@ export const PROJECT_MENU_ITEMS: MenuItem[] = [
       {
         label: 'navigation.project.settings',
         routerLink: 'settings',
+      },
+      {
+        label: 'navigation.project.addons',
+        routerLink: 'addons',
       },
     ],
   },

@@ -14,6 +14,7 @@
 @layer reset {
   html,
   body {
+    color: var.$dark-blue-1;
     font-family: var.$openSans;
     font-weight: 400;
     font-size: var.$base-font-size;
@@ -25,12 +26,17 @@
     font-size: mix.rem(14px);
   }
 
+  i {
+    @include mix.flex-center;
+    font-size: mix.rem(16px);
+  }
+
   h1 {
-    font-size: 1.7rem;
+    font-size: mix.rem(24px);
   }
 
   h2 {
-    font-size: 1.3rem;
+    font-size: mix.rem(18px);
   }
 
   h3 {
@@ -49,12 +55,6 @@
     list-style: none;
   }
 
-  .inside-list {
-    li {
-      list-style: inside;
-    }
-  }
-
   a,
   a:visited {
     text-decoration: none;
@@ -63,10 +63,6 @@
 
   a:hover {
     text-decoration: underline;
-  }
-
-  i {
-    @include mix.flex-center;
   }
 
   dl {
