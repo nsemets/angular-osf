@@ -3,7 +3,6 @@ import { provideStore } from '@ngxs/store';
 
 import { TranslateModule } from '@ngx-translate/core';
 
-import Aura from '@primeng/themes/aura';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 
@@ -16,6 +15,7 @@ import { STATES } from '@core/constants';
 import { provideTranslation } from '@core/helpers';
 
 import { GlobalErrorHandler } from './core/handlers';
+import CustomPreset from './core/helpers/custom-preset';
 import { authInterceptor, errorInterceptor } from './core/interceptors';
 import { routes } from './app.routes';
 
@@ -26,7 +26,7 @@ export const appConfig: ApplicationConfig = {
     provideStore(STATES, withNgxsReduxDevtoolsPlugin({ disabled: false })),
     providePrimeNG({
       theme: {
-        preset: Aura,
+        preset: CustomPreset,
         options: {
           darkModeSelector: false,
           cssLayer: {
