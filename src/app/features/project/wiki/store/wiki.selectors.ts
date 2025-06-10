@@ -1,6 +1,8 @@
 import { Selector } from '@ngxs/store';
 
-import { WikiModesStateModel, WikiStateModel } from './wiki.model';
+import { Wiki } from '../models';
+
+import { ComponentWiki, WikiModesStateModel, WikiStateModel } from './wiki.model';
 import { WikiState } from './wiki.state';
 
 export class WikiSelectors {
@@ -17,6 +19,16 @@ export class WikiSelectors {
   @Selector([WikiState])
   static getWikiModes(state: WikiStateModel): WikiModesStateModel {
     return state.wikiModes;
+  }
+
+  @Selector([WikiState])
+  static getWikiList(state: WikiStateModel): Wiki[] {
+    return state.wikiData.list;
+  }
+
+  @Selector([WikiState])
+  static getComponentsWikiList(state: WikiStateModel): ComponentWiki[] {
+    return state.wikiData.componentsWiki;
   }
 
   @Selector([WikiState])

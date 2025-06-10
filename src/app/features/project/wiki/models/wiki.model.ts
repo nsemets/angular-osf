@@ -5,6 +5,18 @@ export enum WikiModes {
   Edit = 'edit',
   Compare = 'compare',
 }
+export interface Wiki {
+  id: string;
+  name: string;
+  kind: string;
+  content?: string;
+}
+
+export interface ComponentWiki {
+  id: string;
+  title: string;
+  list: Wiki[];
+}
 
 export interface HomeWiki {
   id: string;
@@ -26,6 +38,36 @@ export interface HomeWikiGetResponse {
   };
 }
 
+export interface WikiGetResponse {
+  id: string;
+  type: string;
+  attributes: {
+    name: string;
+    kind: string; // Assuming 'kind' is the correct attribute for content type
+  };
+}
+
+export interface ComponentsWikiGetResponse {
+  id: string;
+  type: string;
+  attributes: {
+    title: string;
+  };
+  embeds: {
+    wikis: {
+      data: WikiGetResponse[];
+    };
+  };
+}
+
 export interface HomeWikiJsonApiResponse extends JsonApiResponse<HomeWikiGetResponse[], null> {
   data: HomeWikiGetResponse[];
+}
+
+export interface WikiJsonApiResponse extends JsonApiResponse<WikiGetResponse[], null> {
+  data: WikiGetResponse[];
+}
+
+export interface ComponentsWikiJsonApiResponse extends JsonApiResponse<ComponentsWikiGetResponse[], null> {
+  data: ComponentsWikiGetResponse[];
 }

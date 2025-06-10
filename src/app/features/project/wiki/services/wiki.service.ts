@@ -7,7 +7,8 @@ import { inject, Injectable } from '@angular/core';
 import { JsonApiService } from '@osf/core/services';
 
 import { WikiMapper } from '../mappers';
-import { HomeWikiJsonApiResponse } from '../models';
+import { ComponentsWikiJsonApiResponse, HomeWikiJsonApiResponse, Wiki, WikiJsonApiResponse } from '../models';
+import { ComponentWiki } from '../store';
 
 import { environment } from 'src/environments/environment';
 
@@ -43,7 +44,15 @@ export class WikiService {
       );
   }
 
-  getWikiContent(projectId: string, wikiId: string): Observable<string> {
-    return of('some wiki content'); // Placeholder for actual implementation
+  getWikiList(projectId: string): Observable<Wiki[]> {
+    return this.#jsonApiService
+      .get<WikiJsonApiResponse>(environment.apiUrl + `/nodes/${projectId}/wikis/`)
+      .pipe(map((response) => response.data.map((wiki) => WikiMapper.fromGetWikiResponse(wiki))));
+  }
+
+  getComponentsWikiList(projectId: string): Observable<ComponentWiki[]> {
+    return this.#jsonApiService
+      .get<ComponentsWikiJsonApiResponse>(environment.apiUrl + `/nodes/${projectId}/children/?embed=wikis`)
+      .pipe(map((response) => response.data.map((component) => WikiMapper.fromGetComponentsWikiResponse(component))));
   }
 }

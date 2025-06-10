@@ -19,7 +19,7 @@
 </osf-sub-header>
 
 <section class="flex flex-column lg:flex-row bg-white flex-1 h-full p-5 gap-4 w-full overflow-auto">
-  <osf-wiki-list></osf-wiki-list>
+  <osf-wiki-list [list]="wikiList()" [componentsList]="componentsWikiList()"></osf-wiki-list>
   @if (wikiModes().view) {
     <osf-view-section [currentContent]="wikiContent()"></osf-view-section>
   }

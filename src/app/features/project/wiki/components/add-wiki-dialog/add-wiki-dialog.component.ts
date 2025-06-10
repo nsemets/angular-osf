@@ -1,6 +1,7 @@
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
@@ -16,6 +17,8 @@ import { CustomValidators } from '@osf/shared/utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddWikiDialogComponent {
+  protected readonly dialogRef = inject(DynamicDialogRef);
+
   #fb = inject(FormBuilder);
 
   addWikiForm: FormGroup = this.#fb.group({

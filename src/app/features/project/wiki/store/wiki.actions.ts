@@ -10,6 +10,18 @@ export class ClearWiki {
   static readonly type = '[Wiki] Clear Wiki';
 }
 
+export class GetWikiList {
+  static readonly type = '[Wiki] Get Wiki List';
+
+  constructor(public projectId: string) {}
+}
+
+export class GetComponentsWikiList {
+  static readonly type = '[Wiki] Get Components Wiki List';
+
+  constructor(public projectId: string) {}
+}
+
 export class GetWikiModes {
   static readonly type = '[Wiki] Get Wiki Modes';
 

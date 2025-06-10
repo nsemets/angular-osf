@@ -5,4 +5,10 @@
   &-expanded {
     min-width: 300px;
   }
+  ::ng-deep {
+    .p-panelmenu-header-label {
+      font-weight: bold;
+      font-size: 1rem;
+    }
+  }
 }
