@@ -15,8 +15,8 @@ import { STATES } from '@core/constants';
 import { provideTranslation } from '@core/helpers';
 
 import { GlobalErrorHandler } from './core/handlers';
-import CustomPreset from './core/helpers/custom-preset';
 import { authInterceptor, errorInterceptor } from './core/interceptors';
+import CustomPreset from './core/theme/custom-preset';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
