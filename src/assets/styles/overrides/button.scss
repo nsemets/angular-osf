@@ -21,8 +21,6 @@
 }
 
 .btn-icon-text,
-.btn-icon-text-success,
-.form-btn,
 .btn-icon {
   .p-button {
     background-color: transparent;
@@ -62,23 +60,6 @@
 
   .p-button {
     width: 100%;
-  }
-}
-
-.dropdown-button {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: end;
-
-  .p-button {
-    background: transparent;
-    color: var(--header-color, var.$dark-blue-1);
-    padding: 0;
-  }
-
-  i {
-    color: var.$grey-1;
   }
 }
 
