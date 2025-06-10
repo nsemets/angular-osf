@@ -50,8 +50,11 @@
                 }
               </div>
 
-              <p-button severity="secondary" (click)="makePrimary(email.id)">
-                {{ 'settings.accountSettings.connectedEmails.buttons.makePrimary' | translate }}
+              <p-button
+                severity="secondary"
+                (click)="makePrimary(email.id)"
+                [label]="'settings.accountSettings.connectedEmails.buttons.makePrimary' | translate"
+              >
               </p-button>
             </div>
           }
