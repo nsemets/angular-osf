@@ -99,21 +99,11 @@
         </td>
         <td>
           <div class="no-border-dropdown select-font-normal">
-            <p-select
-              [placeholder]="'project.contributors.permissionFilter' | translate"
+            <osf-select
               [options]="permissionsOptions"
-              optionValue="value"
-              appendTo="body"
-              [(ngModel)]="contributor.permission"
-            >
-              <ng-template #selectedItem let-selectedOption>
-                <p>{{ selectedOption.label | translate }}</p>
-              </ng-template>
-
-              <ng-template #item let-item>
-                <p>{{ item.label | translate }}</p>
-              </ng-template>
-            </p-select>
+              [placeholder]="'project.contributors.permissionFilter'"
+              [(selectedValue)]="contributor.permission"
+            ></osf-select>
           </div>
         </td>
         <td>

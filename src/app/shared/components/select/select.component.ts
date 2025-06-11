@@ -17,4 +17,5 @@ import { SelectOption } from '@osf/shared/models';
 export class SelectComponent {
   options = input.required<SelectOption[]>();
   selectedValue = model.required<number>();
+  placeholder = input<string>('');
 }

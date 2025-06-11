@@ -1,4 +1,11 @@
-<p-select class="w-full mb-4" [options]="options()" optionLabel="label" optionValue="value" [(ngModel)]="selectedValue">
+<p-select
+  class="w-full mb-4"
+  [options]="options()"
+  optionLabel="label"
+  optionValue="value"
+  [placeholder]="placeholder() | translate"
+  [(ngModel)]="selectedValue"
+>
   <ng-template #selectedItem let-selectedOption>
     {{ selectedOption.label | translate }}
   </ng-template>
