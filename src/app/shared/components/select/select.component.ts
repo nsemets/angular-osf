@@ -18,4 +18,5 @@ export class SelectComponent {
   options = input.required<SelectOption[]>();
   selectedValue = model.required<number>();
   placeholder = input<string>('');
+  appendTo = input<string | null>(null);
 }

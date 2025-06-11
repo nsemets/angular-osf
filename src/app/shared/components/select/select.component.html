@@ -1,8 +1,9 @@
 <p-select
-  class="w-full mb-4"
+  class="w-full"
   [options]="options()"
   optionLabel="label"
   optionValue="value"
+  [appendTo]="appendTo()"
   [placeholder]="placeholder() | translate"
   [(ngModel)]="selectedValue"
 >

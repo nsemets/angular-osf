@@ -102,6 +102,7 @@
             <osf-select
               [options]="permissionsOptions"
               [placeholder]="'project.contributors.permissionFilter'"
+              [appendTo]="'body'"
               [(selectedValue)]="contributor.permission"
             ></osf-select>
           </div>
@@ -117,7 +118,7 @@
           </div>
         </td>
         <td>
-          @if (contributor.employment) {
+          @if (contributor.employment?.length) {
             <a
               class="font-bold cursor-pointer"
               tabindex="0"
@@ -132,7 +133,7 @@
         </td>
         <td>
           <div class="flex column-gap-2">
-            @if (contributor.education) {
+            @if (contributor.education?.length) {
               <a
                 class="font-bold cursor-pointer"
                 tabindex="0"

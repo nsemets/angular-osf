@@ -14,11 +14,15 @@ import { environment } from 'src/environments/environment';
 })
 export class ModerationService {
   private readonly baseUrl = environment.apiUrl;
+  private readonly tesModeratorsUrl = 'assets/collection-moderators.json';
   private readonly jsonApiService = inject(JsonApiService);
 
   getCollectionModerators(providerId: string): Observable<Moderator[]> {
-    return this.jsonApiService
-      .get<ModeratorResponseJsonApi>(`${this.baseUrl}/providers/collections/${providerId}/moderators/`)
-      .pipe(map((response) => response.data.map((moderator) => ModerationMapper.fromModeratorResponse(moderator))));
+    return (
+      this.jsonApiService
+        // .get<ModeratorResponseJsonApi>(`${this.baseUrl}/providers/collections/${providerId}/moderators/`)
+        .get<ModeratorResponseJsonApi>(this.tesModeratorsUrl)
+        .pipe(map((response) => response.data.map((moderator) => ModerationMapper.fromModeratorResponse(moderator))))
+    );
   }
 }

@@ -1,3 +1,5 @@
+import { createDispatchMap, select } from '@ngxs/store';
+
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { ConfirmationService } from 'primeng/api';
@@ -19,6 +21,14 @@ import { ToastService } from '@osf/shared/services';
 import { defaultConfirmationConfig } from '@osf/shared/utils';
 
 import { Moderator } from '../../models';
+import {
+  AddCollectionModerator,
+  DeleteCollectionModerator,
+  LoadCollectionModerators,
+  ModerationSelectors,
+  UpdateCollectionModerator,
+  UpdateCollectionSearchValue,
+} from '../../store';
 import { CollectionModeratorsListComponent } from '../collection-moderators-list/collection-moderators-list.component';
 
 @Component({
@@ -39,12 +49,20 @@ export class CollectionModeratorsComponent implements OnInit {
   private readonly toastService = inject(ToastService);
 
   moderators = signal([]);
-  initialContributors = signal([]);
-  isModeratorsLoading = signal(false);
+  initialModerators = select(ModerationSelectors.getCollectionModerators);
+  isModeratorsLoading = select(ModerationSelectors.isModeratorsLoading);
+
+  protected actions = createDispatchMap({
+    loadModerators: LoadCollectionModerators,
+    updateSearchValue: UpdateCollectionSearchValue,
+    addModerators: AddCollectionModerator,
+    updateModerator: UpdateCollectionModerator,
+    deleteModerator: DeleteCollectionModerator,
+  });
 
   constructor() {
     effect(() => {
-      this.moderators.set(JSON.parse(JSON.stringify(this.initialContributors())));
+      this.moderators.set(JSON.parse(JSON.stringify(this.initialModerators())));
 
       if (this.isModeratorsLoading()) {
         this.searchControl.disable();
@@ -56,6 +74,8 @@ export class CollectionModeratorsComponent implements OnInit {
 
   ngOnInit(): void {
     this.setSearchSubscription();
+
+    this.actions.loadModerators('');
   }
 
   addModerator() {
