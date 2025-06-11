@@ -33,6 +33,7 @@
     "myProjects": "My Projects",
     "preprints": "Preprints",
     "collections": "Collections",
+    "moderation": "Moderation",
     "donate": "Donate",
     "profileSettings": "Profile Settings",
     "accountSettings": "Account Settings",
@@ -771,6 +772,24 @@
     "common": {
       "dateCreated": "Date Created:",
       "dateModified": "Date Modified:"
+    }
+  },
+  "moderation": {
+    "allItems": "All Items",
+    "moderators": "Moderators",
+    "settings": "Settings",
+    "settingsMessage": "To configure your notification preferences visit your",
+    "userSettings": "User settings",
+    "addModerator": "Add moderator",
+    "removeDialog": {
+      "title": "Remove moderator",
+      "message": "Are you sure you want to remove <b>{{name}}</b> moderator?"
+    },
+    "toastMessages": {
+      "addSuccessMessage": "Moderator {{name}} successfully added.",
+      "multipleAddSuccessMessage": "Moderators successfully added.",
+      "multipleUpdateSuccessMessage": "Moderators successfully updated.",
+      "deleteSuccessMessage": "Moderator {{name}} successfully removed."
     }
   },
   "settings": {

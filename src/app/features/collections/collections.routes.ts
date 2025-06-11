@@ -5,6 +5,19 @@ import { CollectionsComponent } from '@osf/features/collections/collections.comp
 export const collectionsRoutes: Routes = [
   {
     path: '',
-    component: CollectionsComponent,
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        component: CollectionsComponent,
+      },
+      {
+        path: 'moderation',
+        loadComponent: () =>
+          import('@osf/features/moderation/pages/collection-moderation/collection-moderation.component').then(
+            (m) => m.CollectionModerationComponent
+          ),
+      },
+    ],
   },
 ];
