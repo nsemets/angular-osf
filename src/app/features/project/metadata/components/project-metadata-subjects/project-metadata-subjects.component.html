@@ -2,9 +2,7 @@
   <div class="flex flex-column gap-3">
     <h3 class="text-lg m-0">{{ 'project.overview.metadata.subjects' | translate }}</h3>
 
-    <!-- Edit Mode -->
     <div class="flex flex-column gap-3">
-      <!-- Chips Display Field (shows selected subjects) -->
       <div class="subjects-chips">
         <div
           class="flex flex-wrap gap-2 p-3 border-1 border-round surface-border min-h-3rem align-items-center cursor-text"
@@ -14,38 +12,32 @@
           (click)="onInputFocus()"
           (keydown)="$event.key === 'Enter' && onInputFocus()"
         >
-          <!-- Current subjects as removable chips (unique only) -->
           @for (subject of getUniqueSubjects(); track subject.id) {
             <p-tag
               [value]="subject.text"
               severity="info"
-              class="cursor-pointer"
+              class="cursor-pointer removable-chip"
               tabindex="0"
               role="button"
               [attr.aria-label]="'Remove ' + subject.text"
-              (click)="removeSubject(subject)"
-              (focus)="onInputFocus()"
+              (click)="removeSubject(subject); $event.stopPropagation()"
               (keydown)="$event.key === 'Enter' && removeSubject(subject)"
               title="Click to remove"
             />
           }
 
-          <!-- Placeholder when no subjects selected -->
           @if (getUniqueSubjects().length === 0) {
             <span class="text-color-secondary">Add subjects...</span>
           }
         </div>
       </div>
 
-      <!-- Search Input Field (for filtering options) -->
       <osf-search-input
+        [control]="searchControl"
         class="w-full mt-4"
-        [searchValue]="searchValue()"
-        (searchValueChange)="onSearchChange($event || '')"
         [placeholder]="'meetings.details.searchPlaceholder' | translate"
       />
 
-      <!-- Dropdown as part of card layout (not overlay) -->
       @if (showDropdown() && filteredOptions().length > 0) {
         <div class="bg-white max-h-15rem overflow-y-auto">
           <div class="p-2">
@@ -118,12 +110,6 @@
           </div>
         </div>
       }
-
-      <!-- Action buttons -->
-      <div class="flex gap-2 justify-content-end">
-        <p-button severity="secondary" size="small" label="Cancel" (click)="cancelEditing()" />
-        <p-button severity="success" size="small" label="Save" (click)="saveChanges()" />
-      </div>
     </div>
   </div>
 </p-card>

@@ -5,15 +5,22 @@
     <h2>Select a Metadata Template</h2>
 
     <div>
-      OSF has partnered with<a class="font-bold">CEDAR</a>to provide more ways to annotate your research with domain or
-      community-specific metadata records. If you would like to request the addition of a new metadata template, contact
-      us at <a class="font-bold">support&#64;osf.io. </a>
+      OSF has partnered with <a class="font-bold">CEDAR</a> to provide more ways to annotate your research with domain
+      or community-specific metadata records. If you would like to request the addition of a new metadata template,
+      contact us at <a class="font-bold">support&#64;osf.io</a>.
     </div>
   </section>
 
   <div class="flex gap-2 flex-wrap">
     @for (meta of metadataTemplates; track meta.title) {
-      <div class="flex flex-column gap-4 metadata p-4 align-items-center">
+      <div
+        class="flex flex-column gap-4 metadata p-4 align-items-center cursor-pointer"
+        [class.selected]="selectedTemplate === meta.title"
+        (click)="onSelect(meta.title)"
+        (keydown.enter)="onSelect(meta.title)"
+        tabindex="0"
+        role="button"
+      >
         <div class="flex flex-row gap-4">
           <h2>{{ meta.title }}</h2>
         </div>
@@ -22,13 +29,18 @@
           <p>{{ meta.description }}</p>
         </div>
 
-        <p-button severity="secondary"> Select </p-button>
+        <p-button
+          severity="secondary"
+          [outlined]="selectedTemplate !== meta.title"
+          [label]="selectedTemplate === meta.title ? 'Selected' : 'Select'"
+          (click)="onSelect(meta.title)"
+        ></p-button>
       </div>
     }
   </div>
 
-  <div class="flex justify-content-end flex-0 mt-auto">
-    <p-button label="Cancel" [link]="true" severity="info" class="w-10rem btn-full-width"></p-button>
-    <p-button class="w-10rem btn-full-width bg-primary-blue-second" label="Next"></p-button>
+  <div class="flex justify-content-end flex-0 mt-auto gap-2">
+    <p-button label="Cancel" [link]="true" severity="info" class="w-10rem" (click)="onCancel()"></p-button>
+    <p-button label="Next" class="w-10rem" [disabled]="!selectedTemplate" (click)="onNext()"></p-button>
   </div>
 </section>

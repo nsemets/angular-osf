@@ -1,18 +1,16 @@
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { AutoComplete } from 'primeng/autocomplete';
-import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
-import { Tag } from 'primeng/tag';
+import { Chips } from 'primeng/chips';
 
-import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { ProjectOverview } from '@osf/features/project/overview/models';
 
 @Component({
   selector: 'osf-project-metadata-tags',
-  imports: [AutoComplete, Button, Card, Tag, TranslatePipe, FormsModule],
+  imports: [Card, TranslatePipe, FormsModule, Chips],
   templateUrl: './project-metadata-tags.component.html',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,68 +20,22 @@ export class ProjectMetadataTagsComponent {
 
   currentProject = input.required<ProjectOverview | null>();
 
-  isEditing = signal(false);
-  editingTags = signal<string[]>([]);
+  currentTags = signal<string[]>([]);
   suggestedTags = signal<string[]>([]);
-  searchValue = signal<string>('');
 
-  allAvailableTags = [
-    'research',
-    'data',
-    'analysis',
-    'methodology',
-    'experiment',
-    'statistics',
-    'psychology',
-    'neuroscience',
-    'cognitive',
-    'behavioral',
-    'social',
-    'clinical',
-    'developmental',
-    'education',
-    'technology',
-  ];
-
-  startEditing() {
-    this.isEditing.set(true);
-    this.editingTags.set([...(this.currentProject()?.tags || [])]);
+  constructor() {
+    effect(() => {
+      const project = this.currentProject();
+      this.currentTags.set(project ? project.tags || [] : []);
+    });
   }
 
-  cancelEditing() {
-    this.isEditing.set(false);
-    this.editingTags.set([]);
-    this.searchValue.set('');
+  onTagsChange(tags: string[]): void {
+    this.currentTags.set(tags);
+    this.tagsChanged.emit(tags);
   }
 
-  saveChanges() {
-    this.tagsChanged.emit(this.editingTags());
-    this.isEditing.set(false);
-    this.searchValue.set('');
-  }
-
-  searchTags(event: { query: string }) {
-    const query = event.query.toLowerCase();
-    this.suggestedTags.set(
-      this.allAvailableTags.filter((tag) => tag.toLowerCase().includes(query) && !this.editingTags().includes(tag))
-    );
-  }
-
-  onTagSelect(event: { value: string }) {
-    const tagValue = event.value;
-    if (tagValue && !this.editingTags().includes(tagValue)) {
-      this.editingTags.set([...this.editingTags(), tagValue]);
-    }
-    this.searchValue.set('');
-  }
-
-  removeTag(tag: string) {
-    this.editingTags.set(this.editingTags().filter((t) => t !== tag));
-  }
-
-  handleKeyboardEdit(event: KeyboardEvent) {
-    if (event.key === 'Enter' || event.key === ' ') {
-      this.startEditing();
-    }
+  searchTags(event: { query: string }): void {
+    this.suggestedTags.set([...this.suggestedTags(), event.query]);
   }
 }

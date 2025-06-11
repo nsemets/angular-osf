@@ -7,4 +7,8 @@ export const projectMetadataRoutes = [
     path: '',
     component: ProjectMetadataComponent,
   },
+  {
+    path: 'add',
+    loadComponent: () => import('./pages/add-metadata/add-metadata.component').then((c) => c.AddMetadataComponent),
+  },
 ] as Routes;

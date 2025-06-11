@@ -1,12 +1,16 @@
 <section class="flex flex-column flex-1">
-  <osf-sub-header [title]="'project.overview.metadata.title' | translate" />
+  <osf-sub-header
+    [showButton]="true"
+    [buttonLabel]="'project.metadata.addCommunityMetadataRecord.title' | translate"
+    (buttonClick)="openAddRecord()"
+    [title]="'project.overview.metadata.title' | translate"
+  />
 
   <div class="flex-column flex flex-1 w-full">
     <div class="p-6 bg-white">
       <div class="grid w-full">
         <!-- Left Column -->
         <div class="col-12 lg:col-6 flex flex-column gap-4">
-          <!-- Date Created / Updated Card -->
           <p-card>
             <div class="flex justify-content-between flex-wrap gap-4">
               <div class="flex flex-column gap-2 flex-1">
@@ -21,31 +25,26 @@
             </div>
           </p-card>
 
-          <!-- Contributors -->
           <osf-project-metadata-contributors
             (openEditContributorDialog)="openEditContributorDialog()"
             [currentProject]="currentProject()"
           />
 
-          <!-- Description -->
           <osf-project-metadata-description
             (openEditDescriptionDialog)="openEditDescriptionDialog()"
             [currentProject]="currentProject()"
           />
 
-          <!-- Resource Information -->
           <osf-project-metadata-resource-information
             (openEditResourceInformationDialog)="openEditResourceInformationDialog()"
             [currentProject]="currentProject()"
           />
 
-          <!-- Funding/Support Information -->
           <osf-project-metadata-funding
             (openEditFundingDialog)="openEditFundingDialog()"
             [currentProject]="currentProject()"
           />
 
-          <!-- Affiliated Institutions -->
           <osf-project-metadata-affiliated-institutions
             (openEditAffiliatedInstitutionsDialog)="openEditAffiliatedInstitutionsDialog()"
             [currentProject]="currentProject()"
@@ -54,22 +53,18 @@
 
         <!-- Right Column -->
         <div class="col-12 lg:col-6 flex flex-column gap-4">
-          <!-- License -->
           <osf-project-metadata-license
             (openEditLicenseDialog)="openEditLicenseDialog()"
             [currentProject]="currentProject()"
           />
 
-          <!-- Publication DOI -->
           <osf-project-metadata-publication-doi
-            (openEditPublicationDoiDialog)="openEditPublicationDoiDialog()"
+            (openEditPublicationDoiDialog)="handleEditDoi()"
             [currentProject]="currentProject()"
           />
 
-          <!-- Tags -->
           <osf-project-metadata-tags (tagsChanged)="onTagsChanged($event)" [currentProject]="currentProject()" />
 
-          <!-- Subjects -->
           <osf-project-metadata-subjects
             (subjectsChanged)="onSubjectsChanged($event)"
             [currentProject]="currentProject()"

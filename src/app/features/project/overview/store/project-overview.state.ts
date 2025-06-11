@@ -15,6 +15,7 @@ import {
   GetComponents,
   GetLinkedProjects,
   GetProjectById,
+  UpdateProjectDetails,
   UpdateProjectPublicStatus,
 } from './project-overview.actions';
 import { ProjectOverviewStateModel } from './project-overview.model';
@@ -105,6 +106,31 @@ export class ProjectOverviewState {
       );
     }
     return;
+  }
+
+  @Action(UpdateProjectDetails)
+  updateProjectDetails(ctx: StateContext<ProjectOverviewStateModel>, action: UpdateProjectDetails) {
+    const state = ctx.getState();
+    ctx.patchState({
+      project: {
+        ...state.project,
+        isSubmitting: true,
+      },
+    });
+
+    return this.projectOverviewService.updateProjectDetails(action.projectId, action.updates).pipe(
+      tap((updatedProject) => {
+        ctx.patchState({
+          project: {
+            data: updatedProject,
+            isLoading: false,
+            isSubmitting: false,
+            error: null,
+          },
+        });
+      }),
+      catchError((error) => this.handleError(ctx, 'project', error))
+    );
   }
 
   @Action(ForkProject)

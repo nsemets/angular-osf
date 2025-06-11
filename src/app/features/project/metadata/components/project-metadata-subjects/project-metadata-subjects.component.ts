@@ -1,13 +1,12 @@
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { Checkbox } from 'primeng/checkbox';
 import { Tag } from 'primeng/tag';
 
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, HostListener, input, output, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule } from '@angular/forms';
 
 import { ProjectOverview, ProjectOverviewSubject } from '@osf/features/project/overview/models';
 import { SearchInputComponent } from '@shared/components';
@@ -24,7 +23,7 @@ interface SubjectOption {
 
 @Component({
   selector: 'osf-project-metadata-subjects',
-  imports: [Button, Card, Tag, TranslatePipe, FormsModule, Checkbox, NgClass, SearchInputComponent],
+  imports: [Card, Tag, TranslatePipe, FormsModule, Checkbox, NgClass, SearchInputComponent],
   templateUrl: './project-metadata-subjects.component.html',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,13 +33,13 @@ export class ProjectMetadataSubjectsComponent {
 
   currentProject = input.required<ProjectOverview | null>();
 
-  // State for inline editing
+  searchControl = new FormControl('');
+
   editingSubjects = signal<ProjectOverviewSubject[]>([]);
   searchValue = signal<string>('');
   showDropdown = signal(false);
   filteredOptions = signal<SubjectOption[]>([]);
 
-  // Hierarchical subject options with checkboxes
   subjectOptions: SubjectOption[] = [
     {
       id: 'architecture',
@@ -109,7 +108,8 @@ export class ProjectMetadataSubjectsComponent {
   ];
 
   startEditing() {
-    this.editingSubjects.set([...(this.currentProject()?.subjects || [])]);
+    const project = this.currentProject();
+    this.editingSubjects.set(project ? [...(project.subjects || [])] : []);
     this.updateSelectionState();
     this.filterOptions();
   }
@@ -157,15 +157,13 @@ export class ProjectMetadataSubjectsComponent {
       const filteredChildren = option.children ? this.filterOptionsRecursive(option.children, search) : [];
 
       if (matchesSearch || filteredChildren.length > 0) {
-        // Find the original option to preserve selection state
         const originalOption = this.findOptionById(this.subjectOptions, option.id);
 
         filtered.push({
           ...option,
-          // Preserve selection state from original option
-          selected: originalOption?.selected || false,
-          indeterminate: originalOption?.indeterminate || false,
-          expanded: search ? true : originalOption?.expanded || false,
+          selected: originalOption ? originalOption.selected || false : false,
+          indeterminate: originalOption ? originalOption.indeterminate || false : false,
+          expanded: search ? true : originalOption ? originalOption.expanded || false : false,
           children: filteredChildren.length > 0 ? filteredChildren : option.children,
         });
       }
@@ -198,26 +196,23 @@ export class ProjectMetadataSubjectsComponent {
   }
 
   toggleSelection(option: SubjectOption) {
-    // Find and update the original option in subjectOptions array
     const originalOption = this.findOptionById(this.subjectOptions, option.id);
     if (!originalOption) return;
 
     originalOption.selected = !originalOption.selected;
 
     if (originalOption.selected) {
-      // Add to selected subjects
       const newSubject: ProjectOverviewSubject = {
         id: originalOption.id,
         text: originalOption.label,
       };
       this.editingSubjects.set([...this.editingSubjects(), newSubject]);
     } else {
-      // Remove from selected subjects
       this.editingSubjects.set(this.editingSubjects().filter((s) => s.id !== originalOption.id));
     }
 
     this.updateParentSelectionState();
-    this.filterOptions(); // Refresh the filtered view
+    this.filterOptions();
   }
 
   removeSubject(subject: ProjectOverviewSubject) {
