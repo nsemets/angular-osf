@@ -13,6 +13,23 @@ export class UpdateProjectPublicStatus {
   ) {}
 }
 
+export class UpdateProjectDetails {
+  static readonly type = '[Project Overview] Update Project Details';
+
+  constructor(
+    public projectId: string,
+    public updates: Partial<{
+      title: string;
+      description: string;
+      tags: string[];
+      category: string;
+      node_license?: {
+        id: string;
+      };
+    }>
+  ) {}
+}
+
 export class ForkProject {
   static readonly type = '[Project Overview] Fork Project';
 

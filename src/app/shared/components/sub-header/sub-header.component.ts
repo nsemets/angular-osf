@@ -9,6 +9,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
   templateUrl: './sub-header.component.html',
   styleUrl: './sub-header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class SubHeaderComponent {
   showButton = input<boolean>(false);
