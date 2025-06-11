@@ -9,6 +9,11 @@ export class CreateWiki {
   ) {}
 }
 
+export class DeleteWiki {
+  static readonly type = '[Wiki] Delete Wiki';
+  constructor(public wikiId: string) {}
+}
+
 export class GetHomeWiki {
   static readonly type = '[Wiki] Get Home Wiki';
 
@@ -52,4 +57,10 @@ export class UpdateWikiContent {
   static readonly type = '[Wiki] Update Wiki Content';
 
   constructor(public content: string) {}
+}
+
+export class SetCurrentWiki {
+  static readonly type = '[Wiki] Set Current Wiki';
+
+  constructor(public wikiId: string) {}
 }

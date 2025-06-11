@@ -24,6 +24,8 @@
     [projectId]="projectId()"
     [isLoading]="isWikiListLoading()"
     [componentsList]="componentsWikiList()"
+    [currentWikiId]="currentWikiId()"
+    (deleteWiki)="onDeleteWiki()"
   ></osf-wiki-list>
   @if (wikiModes().view) {
     <osf-view-section [currentContent]="currentContent()"></osf-view-section>

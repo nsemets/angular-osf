@@ -41,6 +41,10 @@ export class WikiService {
     );
   }
 
+  deleteWiki(wikiId: string): Observable<void> {
+    return this.#jsonApiService.delete(environment.apiUrl + `/wikis/${wikiId}/`);
+  }
+
   getHomeWiki(projectId: string): Observable<string> {
     const params: Record<string, unknown> = {
       'filter[name]': 'home',

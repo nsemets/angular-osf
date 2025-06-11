@@ -50,4 +50,9 @@ export class WikiSelectors {
   static getWikiSubmitting(state: WikiStateModel): boolean {
     return state.projectWikiList.isSubmitting ?? false;
   }
+
+  @Selector([WikiState])
+  static getCurrentWikiId(state: WikiStateModel): string {
+    return state.currentWikiId;
+  }
 }

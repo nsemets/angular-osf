@@ -19,7 +19,7 @@ export interface WikiStateModel {
   wikiModes: WikiModesStateModel;
   projectWikiList: AsyncStateModel<Wiki[]>;
   projectComponentsWikiList: AsyncStateModel<ComponentWiki[]>;
-  currentWiki: Wiki | null;
+  currentWikiId: string;
   currentContent: string;
   // wikiData: {
   //   componentsWiki: ComponentWiki[];

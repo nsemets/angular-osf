@@ -1,6 +1,6 @@
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
-import { MenuItem } from 'primeng/api';
+import { ConfirmationService, MenuItem } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { ButtonGroupModule } from 'primeng/buttongroup';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -8,7 +8,10 @@ import { PanelModule } from 'primeng/panel';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { Skeleton } from 'primeng/skeleton';
 
-import { ChangeDetectionStrategy, Component, computed, inject, input, Signal, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
+import { RouterModule } from '@angular/router';
+
+import { defaultConfirmationConfig } from '@osf/shared/utils';
 
 import { Wiki } from '../../models';
 import { ComponentWiki } from '../../store';
@@ -26,7 +29,7 @@ interface WikiMenuItem extends MenuItem {
 
 @Component({
   selector: 'osf-wiki-list',
-  imports: [PanelModule, Button, PanelMenuModule, ButtonGroupModule, Skeleton],
+  imports: [PanelModule, Button, PanelMenuModule, ButtonGroupModule, Skeleton, RouterModule, TranslatePipe],
   templateUrl: './wiki-list.component.html',
   styleUrl: './wiki-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,40 +37,43 @@ interface WikiMenuItem extends MenuItem {
 })
 export class WikiListComponent {
   readonly projectId = input.required<string>();
-  readonly list = input<Wiki[]>();
+  readonly list = input.required<Wiki[]>();
   readonly isLoading = input<boolean>(false);
-  readonly componentsList = input<ComponentWiki[]>();
-  readonly #dialogService = inject(DialogService);
-  readonly #translateService = inject(TranslateService);
+  readonly componentsList = input.required<ComponentWiki[]>();
+  readonly currentWikiId = input.required<string>();
+  readonly deleteWiki = output<void>();
+  private readonly dialogService = inject(DialogService);
+  private readonly translateService = inject(TranslateService);
+  private readonly confirmationService = inject(ConfirmationService);
   wikiItemType = WikiItemType;
   expanded = signal(true);
 
-  projectWikis: WikiMenuItem[] = [
-    {
-      label: 'Project Wiki Pages',
-      expanded: true,
-      type: WikiItemType.Folder,
-    },
-  ];
-  componentsWikis: WikiMenuItem[] = [
-    {
-      label: 'Components Wiki Pages',
-      type: WikiItemType.Folder,
-    },
-  ];
+  hasComponentsWikis = computed(() => {
+    return this.componentsList().length > 0;
+  });
 
-  wikiMenu: Signal<WikiMenuItem[]> = computed(() => {
-    return [
-      ...this.projectWikis.map((item) => ({
-        ...item,
+  isHomeWikiSelected = computed(() => {
+    const homeWikiId = this.list()?.find((wiki) => wiki.name.toLowerCase() === 'home')?.id;
+    return this.currentWikiId() === homeWikiId;
+  });
+
+  wikiMenu = computed(() => {
+    const menu: WikiMenuItem[] = [
+      {
+        expanded: true,
+        type: WikiItemType.Folder,
+        label: this.translateService.instant('project.wiki.list.header'),
         items: this.list()?.map((wiki) => ({
           id: wiki.id,
           label: wiki.name,
           type: WikiItemType.File,
         })),
-      })),
-      ...this.componentsWikis.map((item) => ({
-        ...item,
+      },
+    ];
+    if (this.hasComponentsWikis()) {
+      menu.push({
+        type: WikiItemType.Folder,
+        label: this.translateService.instant('project.wiki.list.componentsHeader'),
         items: this.componentsList()?.map((component) => ({
           id: component.id,
           label: component.title,
@@ -78,27 +84,32 @@ export class WikiListComponent {
             type: WikiItemType.File,
           })),
         })),
-      })),
-    ];
+      });
+    }
+    return menu;
   });
 
-  constructor() {
-    console.log('WikiListComponent initialized with wikis:', this.wikiMenu());
-  }
-
   openAddWikiDialog() {
-    const dialogRef = this.#dialogService.open(AddWikiDialogComponent, {
-      header: this.#translateService.instant('project.wiki.addNewWiki'),
+    this.dialogService.open(AddWikiDialogComponent, {
+      header: this.translateService.instant('project.wiki.addNewWiki'),
+      modal: true,
       data: {
         projectId: this.projectId(),
       },
     });
-    dialogRef.onClose.subscribe((result) => {
-      console.log('Dialog closed with result:', result);
-      if (result) {
-        // Handle the result from the dialog if needed
-        console.log('New wiki added:', result);
-      }
+  }
+
+  openDeleteWikiDialog(): void {
+    this.confirmationService.confirm({
+      ...defaultConfirmationConfig,
+      header: this.translateService.instant('project.wiki.deleteWiki'),
+      message: this.translateService.instant('project.wiki.deleteWikiMessage'),
+      acceptButtonProps: {
+        ...defaultConfirmationConfig.acceptButtonProps,
+        severity: 'danger',
+        label: this.translateService.instant('common.buttons.delete'),
+      },
+      accept: () => this.deleteWiki.emit(),
     });
   }
 

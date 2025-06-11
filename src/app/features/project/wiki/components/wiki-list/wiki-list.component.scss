@@ -6,6 +6,10 @@
   &-expanded {
     min-width: 300px;
   }
+  .active {
+    background-color: var(--pr-blue-1);
+    color: var(--white);
+  }
   ::ng-deep {
     .p-panelmenu-header-label {
       font-weight: bold;

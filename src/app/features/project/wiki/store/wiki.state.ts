@@ -9,9 +9,11 @@ import { WikiService } from '../services';
 import {
   ClearWiki,
   CreateWiki,
+  DeleteWiki,
   GetComponentsWikiList,
   GetHomeWiki,
   GetWikiList,
+  SetCurrentWiki,
   ToggleMode,
   UpdateWikiContent,
 } from './wiki.actions';
@@ -42,7 +44,7 @@ import { WikiStateModel } from './wiki.model';
       error: null,
     },
     currentContent: '',
-    currentWiki: null,
+    currentWikiId: '',
   },
 })
 @Injectable()
@@ -60,18 +62,42 @@ export class WikiState {
     });
     return this.wikiService.createWiki(action.projectId, action.name).pipe(
       tap((wiki) => {
-        console.log('Wiki created:', wiki);
         ctx.patchState({
           projectWikiList: {
             ...state.projectWikiList,
-            data: [wiki, ...state.projectWikiList.data],
+            data: [...state.projectWikiList.data, wiki],
             isSubmitting: false,
           },
-          currentWiki: wiki,
+          currentWikiId: wiki.id,
         });
       }),
-      map((wiki) => {
-        return wiki;
+      catchError((error) => this.handleError(ctx, error))
+    );
+  }
+
+  @Action(DeleteWiki)
+  deleteWiki(ctx: StateContext<WikiStateModel>, action: DeleteWiki) {
+    const state = ctx.getState();
+    ctx.patchState({
+      projectWikiList: {
+        ...state.projectWikiList,
+        isSubmitting: true,
+        isLoading: true,
+      },
+    });
+
+    return this.wikiService.deleteWiki(action.wikiId).pipe(
+      tap(() => {
+        const updatedList = state.projectWikiList.data.filter((wiki) => wiki.id !== action.wikiId);
+        ctx.patchState({
+          projectWikiList: {
+            data: updatedList,
+            isSubmitting: false,
+            error: null,
+            isLoading: false,
+          },
+          currentWikiId: updatedList.length > 0 ? updatedList[0].id : '',
+        });
       }),
       catchError((error) => this.handleError(ctx, error))
     );
@@ -113,23 +139,6 @@ export class WikiState {
     });
   }
 
-  private handleError(ctx: StateContext<WikiStateModel>, error: Error) {
-    ctx.patchState({
-      homeWikiContent: {
-        ...ctx.getState().homeWikiContent,
-        isLoading: false,
-        error: error.message,
-      },
-      projectWikiList: {
-        ...ctx.getState().projectWikiList,
-        isLoading: false,
-        isSubmitting: false,
-        error: error.message,
-      },
-    });
-    return throwError(() => error);
-  }
-
   @Action(ToggleMode)
   toggleMode(ctx: StateContext<WikiStateModel>, action: ToggleMode) {
     const state = ctx.getState();
@@ -163,8 +172,10 @@ export class WikiState {
             isLoading: false,
             error: null,
           },
+          currentWikiId: list.length > 0 ? list[0].id : '',
         });
       }),
+      map((wiki) => wiki),
       catchError((error) => this.handleError(ctx, error))
     );
   }
@@ -200,5 +211,29 @@ export class WikiState {
     ctx.patchState({
       currentContent: action.content,
     });
+  }
+
+  @Action(SetCurrentWiki)
+  setCurrentWiki(ctx: StateContext<WikiStateModel>, action: SetCurrentWiki) {
+    ctx.patchState({
+      currentWikiId: action.wikiId,
+    });
+  }
+
+  private handleError(ctx: StateContext<WikiStateModel>, error: Error) {
+    ctx.patchState({
+      homeWikiContent: {
+        ...ctx.getState().homeWikiContent,
+        isLoading: false,
+        error: error.message,
+      },
+      projectWikiList: {
+        ...ctx.getState().projectWikiList,
+        isLoading: false,
+        isSubmitting: false,
+        error: error.message,
+      },
+    });
+    return throwError(() => error);
   }
 }
