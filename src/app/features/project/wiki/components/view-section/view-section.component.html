@@ -14,7 +14,11 @@
   </div>
   <p-panel showHeader="false">
     <div class="editor-view-mode mt-3">
-      <div class="md-editor-container" [innerHTML]="currentContent()"></div>
+      @if (currentContent()) {
+        <div class="md-editor-container" [innerHTML]="currentContent()"></div>
+      } @else {
+        <p>Add important information, links, or images here to describe your project.</p>
+      }
     </div>
   </p-panel>
 </p-panel>

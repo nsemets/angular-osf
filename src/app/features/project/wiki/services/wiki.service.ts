@@ -7,7 +7,13 @@ import { inject, Injectable } from '@angular/core';
 import { JsonApiService } from '@osf/core/services';
 
 import { WikiMapper } from '../mappers';
-import { ComponentsWikiJsonApiResponse, HomeWikiJsonApiResponse, Wiki, WikiJsonApiResponse } from '../models';
+import {
+  ComponentsWikiJsonApiResponse,
+  HomeWikiJsonApiResponse,
+  Wiki,
+  WikiGetResponse,
+  WikiJsonApiResponse,
+} from '../models';
 import { ComponentWiki } from '../store';
 
 import { environment } from 'src/environments/environment';
@@ -19,6 +25,22 @@ export class WikiService {
   readonly #jsonApiService = inject(JsonApiService);
   readonly #http = inject(HttpClient);
 
+  createWiki(projectId: string, name: string): Observable<Wiki> {
+    const body = {
+      data: {
+        type: 'wikis',
+        attributes: {
+          name,
+        },
+      },
+    };
+    return this.#jsonApiService.post<WikiGetResponse>(environment.apiUrl + `/nodes/${projectId}/wikis/`, body).pipe(
+      map((response) => {
+        return WikiMapper.fromCreateWikiResponse(response);
+      })
+    );
+  }
+
   getHomeWiki(projectId: string): Observable<string> {
     const params: Record<string, unknown> = {
       'filter[name]': 'home',
@@ -27,7 +49,7 @@ export class WikiService {
       .get<HomeWikiJsonApiResponse>(environment.apiUrl + `/nodes/${projectId}/wikis/`, params)
       .pipe(
         map((response) => {
-          const homeWiki = response.data.find((wiki) => wiki.attributes.name === 'home');
+          const homeWiki = response.data.find((wiki) => wiki.attributes.name.toLocaleLowerCase() === 'home');
           if (!homeWiki) {
             return '';
           }

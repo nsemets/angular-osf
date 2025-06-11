@@ -23,16 +23,31 @@ export class WikiSelectors {
 
   @Selector([WikiState])
   static getWikiList(state: WikiStateModel): Wiki[] {
-    return state.wikiData.list;
+    return state.projectWikiList.data;
+  }
+
+  @Selector([WikiState])
+  static getWikiListLoading(state: WikiStateModel): boolean {
+    return state.projectWikiList.isLoading;
   }
 
   @Selector([WikiState])
   static getComponentsWikiList(state: WikiStateModel): ComponentWiki[] {
-    return state.wikiData.componentsWiki;
+    return state.projectComponentsWikiList.data;
   }
 
   @Selector([WikiState])
-  static getWikiContent(state: WikiStateModel): string {
-    return state.wikiData.content;
+  static getComponentsWikiListLoading(state: WikiStateModel): boolean {
+    return state.projectComponentsWikiList.isLoading;
+  }
+
+  @Selector([WikiState])
+  static getCurrentContent(state: WikiStateModel): string {
+    return state.currentContent;
+  }
+
+  @Selector([WikiState])
+  static getWikiSubmitting(state: WikiStateModel): boolean {
+    return state.projectWikiList.isSubmitting ?? false;
   }
 }

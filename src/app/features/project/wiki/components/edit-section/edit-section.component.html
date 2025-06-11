@@ -8,9 +8,8 @@
       </div>
     </div>
   </ng-template>
-  <div class="flex align-items-center mb-2"></div>
 
-  <p class="mt-3">
+  <div class="mt-3 h-full">
     <md-editor
       id="md-editor"
       name="Content"
@@ -21,7 +20,7 @@
       (onPreviewDomChanged)="onPreviewDomChanged($event)"
       required
       maxlength="600"
-      height="500px"
+      height="100%"
     >
       <slot custom-btns>
         <button class="btn btn-sm btn-default" (click)="undo()">
@@ -37,5 +36,5 @@
         </div>
       </slot>
     </md-editor>
-  </p>
+  </div>
 </p-panel>

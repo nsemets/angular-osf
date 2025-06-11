@@ -17,12 +17,13 @@ export interface ComponentWiki {
 export interface WikiStateModel {
   homeWikiContent: AsyncStateModel<string>;
   wikiModes: WikiModesStateModel;
-  wikiData: {
-    list: Wiki[];
-    componentsWiki: ComponentWiki[];
-    version: string;
-    content: string;
-    isLoading: boolean;
-    error: string | null;
-  };
+  projectWikiList: AsyncStateModel<Wiki[]>;
+  projectComponentsWikiList: AsyncStateModel<ComponentWiki[]>;
+  currentWiki: Wiki | null;
+  currentContent: string;
+  // wikiData: {
+  //   componentsWiki: ComponentWiki[];
+  //   version: string;
+  //   content: string;
+  // };
 }

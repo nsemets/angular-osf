@@ -8,6 +8,14 @@ import {
 } from '../models';
 
 export class WikiMapper {
+  static fromCreateWikiResponse(response: WikiGetResponse): Wiki {
+    return {
+      id: response.id,
+      name: response.attributes.name,
+      kind: response.attributes.kind, // Assuming content is part of the attributes
+    };
+  }
+
   static fromGetHomeWikiResponse(response: HomeWikiGetResponse): HomeWiki {
     return {
       id: response.id,

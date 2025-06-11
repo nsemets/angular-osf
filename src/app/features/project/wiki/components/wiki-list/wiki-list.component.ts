@@ -6,8 +6,9 @@ import { ButtonGroupModule } from 'primeng/buttongroup';
 import { DialogService } from 'primeng/dynamicdialog';
 import { PanelModule } from 'primeng/panel';
 import { PanelMenuModule } from 'primeng/panelmenu';
+import { Skeleton } from 'primeng/skeleton';
 
-import { ChangeDetectionStrategy, Component, inject, input, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, Signal, signal } from '@angular/core';
 
 import { Wiki } from '../../models';
 import { ComponentWiki } from '../../store';
@@ -25,75 +26,72 @@ interface WikiMenuItem extends MenuItem {
 
 @Component({
   selector: 'osf-wiki-list',
-  imports: [PanelModule, Button, PanelMenuModule, ButtonGroupModule],
+  imports: [PanelModule, Button, PanelMenuModule, ButtonGroupModule, Skeleton],
   templateUrl: './wiki-list.component.html',
   styleUrl: './wiki-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DialogService],
 })
-export class WikiListComponent implements OnInit {
-  list = input<Wiki[]>();
-  componentsList = input<ComponentWiki[]>();
-  expanded = signal(true);
+export class WikiListComponent {
+  readonly projectId = input.required<string>();
+  readonly list = input<Wiki[]>();
+  readonly isLoading = input<boolean>(false);
+  readonly componentsList = input<ComponentWiki[]>();
   readonly #dialogService = inject(DialogService);
   readonly #translateService = inject(TranslateService);
   wikiItemType = WikiItemType;
+  expanded = signal(true);
 
-  items: WikiMenuItem[] = [];
+  projectWikis: WikiMenuItem[] = [
+    {
+      label: 'Project Wiki Pages',
+      expanded: true,
+      type: WikiItemType.Folder,
+    },
+  ];
+  componentsWikis: WikiMenuItem[] = [
+    {
+      label: 'Components Wiki Pages',
+      type: WikiItemType.Folder,
+    },
+  ];
 
-  ngOnInit() {
-    console.log('WikiListComponent ngOnInit');
-
-    setTimeout(() => {
-      console.log('list', this.list());
-      console.log('componentsList', this.componentsList());
-    }, 4000);
-
-    this.items = [
-      {
-        label: 'Project Wiki Pages',
-        icon: 'fas fa-folder-open',
-        expanded: true,
-        type: WikiItemType.Folder,
-        items: [
-          {
-            label: 'Wiki 1',
-            icon: 'pi pi-file',
+  wikiMenu: Signal<WikiMenuItem[]> = computed(() => {
+    return [
+      ...this.projectWikis.map((item) => ({
+        ...item,
+        items: this.list()?.map((wiki) => ({
+          id: wiki.id,
+          label: wiki.name,
+          type: WikiItemType.File,
+        })),
+      })),
+      ...this.componentsWikis.map((item) => ({
+        ...item,
+        items: this.componentsList()?.map((component) => ({
+          id: component.id,
+          label: component.title,
+          type: WikiItemType.Component,
+          items: component.list.map((wiki) => ({
+            id: wiki.id,
+            label: wiki.name,
             type: WikiItemType.File,
-            queryParams: { mode: 'view', wikiId: 'wiki1' },
-          },
-          {
-            label: 'Wiki 2',
-            icon: 'pi pi-file',
-            type: WikiItemType.File,
-          },
-        ],
-      },
-      {
-        label: 'Component Wiki Pages',
-        icon: 'fas fa-folder',
-        type: WikiItemType.Folder,
-        items: [
-          {
-            label: 'Test Component 1',
-            icon: 'pi pi-cloud-upload',
-            type: WikiItemType.Component,
-            items: [
-              {
-                label: 'Test Sub Component 1',
-                icon: 'pi pi-cloud-upload',
-                type: WikiItemType.File,
-              },
-            ],
-          },
-        ],
-      },
+          })),
+        })),
+      })),
     ];
+  });
+
+  constructor() {
+    console.log('WikiListComponent initialized with wikis:', this.wikiMenu());
   }
 
   openAddWikiDialog() {
     const dialogRef = this.#dialogService.open(AddWikiDialogComponent, {
       header: this.#translateService.instant('project.wiki.addNewWiki'),
+      data: {
+        projectId: this.projectId(),
+      },
     });
     dialogRef.onClose.subscribe((result) => {
       console.log('Dialog closed with result:', result);

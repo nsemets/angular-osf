@@ -19,12 +19,20 @@
 </osf-sub-header>
 
 <section class="flex flex-column lg:flex-row bg-white flex-1 h-full p-5 gap-4 w-full overflow-auto">
-  <osf-wiki-list [list]="wikiList()" [componentsList]="componentsWikiList()"></osf-wiki-list>
+  <osf-wiki-list
+    [list]="wikiList()"
+    [projectId]="projectId()"
+    [isLoading]="isWikiListLoading()"
+    [componentsList]="componentsWikiList()"
+  ></osf-wiki-list>
   @if (wikiModes().view) {
-    <osf-view-section [currentContent]="wikiContent()"></osf-view-section>
+    <osf-view-section [currentContent]="currentContent()"></osf-view-section>
   }
   @if (wikiModes().edit) {
-    <osf-edit-section [initialContent]="wikiContent()" (contentChange)="updateWikiContent($event)"></osf-edit-section>
+    <osf-edit-section
+      [initialContent]="currentContent()"
+      (contentChange)="updateWikiContent($event)"
+    ></osf-edit-section>
   }
   @if (wikiModes().compare) {
     <osf-compare-section></osf-compare-section>

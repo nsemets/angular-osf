@@ -1,5 +1,14 @@
 import { WikiModes } from '../models';
 
+export class CreateWiki {
+  static readonly type = '[Wiki] Create Wiki';
+
+  constructor(
+    public projectId: string,
+    public name: string
+  ) {}
+}
+
 export class GetHomeWiki {
   static readonly type = '[Wiki] Get Home Wiki';
 

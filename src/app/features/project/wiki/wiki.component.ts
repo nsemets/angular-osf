@@ -51,8 +51,8 @@ export class WikiComponent {
 
   readonly projectId = toSignal(this.route.parent?.params.pipe(map((params) => params['id'])) ?? of(undefined));
   protected wikiModes = select(WikiSelectors.getWikiModes);
-  protected wikiContent = select(WikiSelectors.getWikiContent);
-  // protected isLoading = select(WikiSelectors.getIsLoading);
+  protected currentContent = select(WikiSelectors.getCurrentContent);
+  protected isWikiListLoading = select(WikiSelectors.getWikiListLoading || WikiSelectors.getComponentsWikiListLoading);
   protected wikiList = select(WikiSelectors.getWikiList);
   protected componentsWikiList = select(WikiSelectors.getComponentsWikiList);
 

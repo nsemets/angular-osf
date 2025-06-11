@@ -1,6 +1,6 @@
 import { Action, State, StateContext } from '@ngxs/store';
 
-import { catchError, tap, throwError } from 'rxjs';
+import { catchError, map, tap, throwError } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
@@ -8,6 +8,7 @@ import { WikiService } from '../services';
 
 import {
   ClearWiki,
+  CreateWiki,
   GetComponentsWikiList,
   GetHomeWiki,
   GetWikiList,
@@ -29,19 +30,52 @@ import { WikiStateModel } from './wiki.model';
       edit: true,
       compare: false,
     },
-    wikiData: {
-      list: [],
-      componentsWiki: [],
-      version: '',
-      content: '',
+    projectWikiList: {
+      data: [],
+      isLoading: false,
+      error: null,
+      isSubmitting: false,
+    },
+    projectComponentsWikiList: {
+      data: [],
       isLoading: false,
       error: null,
     },
+    currentContent: '',
+    currentWiki: null,
   },
 })
 @Injectable()
 export class WikiState {
   constructor(private wikiService: WikiService) {}
+
+  @Action(CreateWiki)
+  createWiki(ctx: StateContext<WikiStateModel>, action: CreateWiki) {
+    const state = ctx.getState();
+    ctx.patchState({
+      projectWikiList: {
+        ...state.projectWikiList,
+        isSubmitting: true,
+      },
+    });
+    return this.wikiService.createWiki(action.projectId, action.name).pipe(
+      tap((wiki) => {
+        console.log('Wiki created:', wiki);
+        ctx.patchState({
+          projectWikiList: {
+            ...state.projectWikiList,
+            data: [wiki, ...state.projectWikiList.data],
+            isSubmitting: false,
+          },
+          currentWiki: wiki,
+        });
+      }),
+      map((wiki) => {
+        return wiki;
+      }),
+      catchError((error) => this.handleError(ctx, error))
+    );
+  }
 
   @Action(GetHomeWiki)
   getHomeWiki(ctx: StateContext<WikiStateModel>, action: GetHomeWiki) {
@@ -86,6 +120,12 @@ export class WikiState {
         isLoading: false,
         error: error.message,
       },
+      projectWikiList: {
+        ...ctx.getState().projectWikiList,
+        isLoading: false,
+        isSubmitting: false,
+        error: error.message,
+      },
     });
     return throwError(() => error);
   }
@@ -108,8 +148,8 @@ export class WikiState {
   getWikiList(ctx: StateContext<WikiStateModel>, action: GetWikiList) {
     const state = ctx.getState();
     ctx.patchState({
-      wikiData: {
-        ...state.wikiData,
+      projectWikiList: {
+        ...state.projectWikiList,
         isLoading: true,
         error: null,
       },
@@ -117,11 +157,9 @@ export class WikiState {
 
     return this.wikiService.getWikiList(action.projectId).pipe(
       tap((list) => {
-        const currentWikiState = ctx.getState().wikiData;
         ctx.patchState({
-          wikiData: {
-            ...currentWikiState,
-            list: [...list],
+          projectWikiList: {
+            data: [...list],
             isLoading: false,
             error: null,
           },
@@ -134,9 +172,10 @@ export class WikiState {
   @Action(GetComponentsWikiList)
   getComponentsWikiList(ctx: StateContext<WikiStateModel>, action: GetComponentsWikiList) {
     const state = ctx.getState();
+
     ctx.patchState({
-      wikiData: {
-        ...state.wikiData,
+      projectComponentsWikiList: {
+        ...state.projectComponentsWikiList,
         isLoading: true,
         error: null,
       },
@@ -144,11 +183,9 @@ export class WikiState {
 
     return this.wikiService.getComponentsWikiList(action.projectId).pipe(
       tap((componentsWiki) => {
-        const currentWikiState = ctx.getState().wikiData;
         ctx.patchState({
-          wikiData: {
-            ...currentWikiState,
-            componentsWiki: [...componentsWiki],
+          projectComponentsWikiList: {
+            data: [...componentsWiki],
             isLoading: false,
             error: null,
           },
@@ -160,14 +197,8 @@ export class WikiState {
 
   @Action(UpdateWikiContent)
   updateWikiContent(ctx: StateContext<WikiStateModel>, action: UpdateWikiContent) {
-    const state = ctx.getState();
     ctx.patchState({
-      wikiData: {
-        ...state.wikiData,
-        content: action.content,
-        isLoading: false,
-        error: null,
-      },
+      currentContent: action.content,
     });
   }
 }
