@@ -13,10 +13,13 @@
 
       <p-tabpanels class="p-3 flex-1 md:p-5 xl:p-4">
         @if (!isMedium()) {
-          <osf-select [options]="tabOptions" [(selectedValue)]="selectedTab"></osf-select>
+          <osf-select [options]="tabOptions" [fullWidth]="true" [(selectedValue)]="selectedTab"></osf-select>
         }
 
-        <p-tabpanel [value]="tabs.AllItems"></p-tabpanel>
+        <p-tabpanel [value]="tabs.AllItems">
+          <osf-collection-moderation-submissions></osf-collection-moderation-submissions>
+        </p-tabpanel>
+
         <p-tabpanel [value]="tabs.Moderators">
           <osf-collection-moderators></osf-collection-moderators>
         </p-tabpanel>

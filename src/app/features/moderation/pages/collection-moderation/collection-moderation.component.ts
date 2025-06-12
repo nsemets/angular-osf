@@ -9,7 +9,11 @@ import { FormsModule } from '@angular/forms';
 import { SelectComponent, SubHeaderComponent } from '@osf/shared/components';
 import { IS_MEDIUM } from '@osf/shared/utils';
 
-import { CollectionModerationSettingsComponent, CollectionModeratorsComponent } from '../../components';
+import {
+  CollectionModerationSettingsComponent,
+  CollectionModerationSubmissionsComponent,
+  CollectionModeratorsComponent,
+} from '../../components';
 import { COLLECTION_MODERATION_TABS } from '../../constants';
 import { CollectionModerationTab } from '../../enums';
 
@@ -27,6 +31,7 @@ import { CollectionModerationTab } from '../../enums';
     SelectComponent,
     CollectionModerationSettingsComponent,
     CollectionModeratorsComponent,
+    CollectionModerationSubmissionsComponent,
   ],
   templateUrl: './collection-moderation.component.html',
   styleUrl: './collection-moderation.component.scss',

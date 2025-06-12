@@ -2,9 +2,10 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { Select } from 'primeng/select';
 
-import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
+import { Primitive } from '@osf/core/helpers';
 import { SelectOption } from '@osf/shared/models';
 
 @Component({
@@ -16,7 +17,9 @@ import { SelectOption } from '@osf/shared/models';
 })
 export class SelectComponent {
   options = input.required<SelectOption[]>();
-  selectedValue = model.required<number>();
+  selectedValue = model.required<Primitive>();
   placeholder = input<string>('');
   appendTo = input<string | null>(null);
+  changeValue = output<Primitive>();
+  fullWidth = input(false);
 }
