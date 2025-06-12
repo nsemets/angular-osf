@@ -6,6 +6,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { MetadataService } from '@osf/features/project/metadata/services/metadata.service';
 import {
+  GetCedarMetadataTemplates,
   GetCustomItemMetadata,
   GetFundersList,
   MetadataStateModel,
@@ -22,6 +23,8 @@ import {
     loading: false,
     fundersLoading: false,
     error: null,
+    cedarTemplates: null,
+    cedarTemplatesLoading: false,
   },
 })
 export class ProjectMetadataState {
@@ -37,14 +40,12 @@ export class ProjectMetadataState {
     return this.metadataService.getCustomItemMetadata(action.guid).pipe(
       tap({
         next: (response) => {
-          console.log('Custom metadata API response:', response);
           ctx.patchState({
             customItemMetadata: response.data.attributes,
             loading: false,
           });
         },
         error: (error) => {
-          console.error('Custom metadata API error:', error);
           ctx.patchState({
             error: error.message || 'Failed to load metadata',
             loading: false,
@@ -107,6 +108,32 @@ export class ProjectMetadataState {
     );
   }
 
+  @Action(GetCedarMetadataTemplates)
+  getCedarMetadataTemplates(ctx: StateContext<MetadataStateModel>, action: GetCedarMetadataTemplates) {
+    ctx.patchState({
+      cedarTemplatesLoading: true,
+      error: null,
+    });
+
+    return this.metadataService.getMetadataCedarTemplates(action.url).pipe(
+      tap({
+        next: (response) => {
+          ctx.patchState({
+            cedarTemplates: response,
+            cedarTemplatesLoading: false,
+          });
+        },
+        error: (error) => {
+          ctx.patchState({
+            error: error.message || 'Failed to load CEDAR templates',
+            cedarTemplatesLoading: false,
+          });
+        },
+      }),
+      finalize(() => ctx.patchState({ cedarTemplatesLoading: false }))
+    );
+  }
+
   @Action(ResetCustomItemMetadata)
   resetCustomItemMetadata(ctx: StateContext<MetadataStateModel>) {
     ctx.setState({
@@ -115,6 +142,8 @@ export class ProjectMetadataState {
       loading: false,
       fundersLoading: false,
       error: null,
+      cedarTemplates: null,
+      cedarTemplatesLoading: false,
     });
   }
 }

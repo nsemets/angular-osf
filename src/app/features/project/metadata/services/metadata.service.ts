@@ -3,6 +3,8 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
+import { CedarMetadataTemplate } from '@osf/features/project/metadata/models';
+
 import { environment } from '../../../../../environments/environment';
 import {
   CrossRefFundersResponse,
@@ -124,5 +126,9 @@ export class MetadataService {
     }
 
     return this.http.get<CrossRefFundersResponse>(url);
+  }
+
+  getMetadataCedarTemplates(url?: string): Observable<CedarMetadataTemplate> {
+    return this.http.get<CedarMetadataTemplate>(url || 'https://api.staging4.osf.io/_/cedar_metadata_templates/');
   }
 }

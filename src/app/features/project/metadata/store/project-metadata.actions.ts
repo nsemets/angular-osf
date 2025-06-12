@@ -20,6 +20,11 @@ export class GetFundersList {
   constructor(public search?: string) {}
 }
 
+export class GetCedarMetadataTemplates {
+  static readonly type = '[Project Metadata] Get Cedar Metadata Templates';
+  constructor(public url?: string) {}
+}
+
 export class ResetCustomItemMetadata {
   static readonly type = '[Metadata] Reset Custom Item Metadata';
 }

@@ -3,6 +3,9 @@
 .metadata {
   border: 1px solid var(--grey-2);
   border-radius: 12px;
-  flex-basis: 550px;
-  height: 188px;
+  flex-basis: calc(50% - 1.5rem); //gap is 1.5 rem
+
+  @media (max-width: 576px) {
+    flex-basis: 100%;
+  }
 }

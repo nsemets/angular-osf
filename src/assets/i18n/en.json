@@ -716,6 +716,15 @@
           "placeholder": "Enter publication DOI"
         }
       },
+      "addMetadata": {
+        "title": "Add community metadata record",
+        "selectTemplate": "Select a Metadata Template",
+        "cedarInfo": "OSF has partnered with <a target='_blank' href='https://metadatacenter.org/'>CEDAR</a> to provide more ways to annotate your research with domain or community-specific metadata records. If you would like to request the addition of a new metadata template, contact us at <a>support@osf.io</a>.",
+        "cancel": "Cancel",
+        "next": "Next",
+        "select": "Select",
+        "selected": "Selected"
+      },
       "funding": {
         "updated": "Funding information updated successfully",
         "dialog": {

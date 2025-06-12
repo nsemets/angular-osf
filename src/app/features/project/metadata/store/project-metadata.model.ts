@@ -1,4 +1,4 @@
-import { CrossRefFunder, CustomItemMetadataRecord } from '@osf/features/project/metadata/models/metadata.models';
+import { CedarMetadataTemplate, CrossRefFunder, CustomItemMetadataRecord } from '@osf/features/project/metadata/models';
 
 export interface MetadataStateModel {
   customItemMetadata: CustomItemMetadataRecord | null;
@@ -6,4 +6,6 @@ export interface MetadataStateModel {
   loading: boolean;
   fundersLoading: boolean;
   error: string | null;
+  cedarTemplates: CedarMetadataTemplate | null;
+  cedarTemplatesLoading: boolean;
 }

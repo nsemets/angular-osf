@@ -1,0 +1,127 @@
+@if (schema) {
+  <div class="dynamic-field">
+    <div class="field-header">
+      @if (getFieldLabel() && !isCheckbox()) {
+        <label class="field-label" [for]="'field-' + getFieldLabel()">
+          {{ getFieldLabel() }}
+        </label>
+      }
+
+      @if (getFieldDescription()) {
+        <p class="field-description">
+          {{ getFieldDescription() }}
+        </p>
+      }
+    </div>
+
+    <div class="field-content">
+      @switch (true) {
+        <!-- Array -->
+        @case (isArray()) {
+          <div class="array-field">
+            @if (valueArray().length === 0) {
+              <p class="empty-array-message">No items added yet.</p>
+            }
+
+            @for (item of valueArray(); let i = $index; track i) {
+              <div class="array-item">
+                <div class="array-item-content">
+                  <osf-dynamic-field
+                    [schema]="getArrayItemSchema()"
+                    [value]="item"
+                    (valueChange)="updateArrayItem(i, $event)"
+                  ></osf-dynamic-field>
+                </div>
+                <button
+                  type="button"
+                  pButton
+                  icon="pi pi-trash"
+                  severity="danger"
+                  size="small"
+                  (click)="removeItem(i)"
+                  [attr.aria-label]="'Remove item ' + (i + 1)"
+                  class="remove-button"
+                >
+                  Remove
+                </button>
+              </div>
+            }
+            <button type="button" pButton icon="pi pi-plus" size="small" (click)="addItem()" class="add-button">
+              Add {{ getFieldLabel() || 'Item' }}
+            </button>
+          </div>
+        }
+        @case (isObject()) {
+          <!-- Object -->
+          <div class="object-field">
+            @if (schema.properties) {
+              <div>
+                @for (propKey of Object.keys(schema.properties); track $index) {
+                  <div class="object-property">
+                    <osf-dynamic-field
+                      [schema]="schema.properties[propKey]"
+                      [value]="getObjectPropertyValue(propKey)"
+                      (valueChange)="onObjectPropertyChange(propKey, $event)"
+                    ></osf-dynamic-field>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+        @case (isTextArea()) {
+          <!-- Textarea -->
+          <textarea
+            pTextarea
+            [id]="'field-' + getFieldLabel()"
+            [value]="value || ''"
+            (input)="onInputChange($event)"
+            [placeholder]="getFieldLabel()"
+            rows="4"
+            class="field-input"
+          ></textarea>
+        }
+        @case (isDate()) {
+          <!-- Date -->
+          <p-calendar
+            [ngModel]="getDateValue()"
+            (ngModelChange)="onDateChange($event)"
+            [placeholder]="getFieldLabel()"
+            dateFormat="yy-mm-dd"
+            class="field-input"
+          ></p-calendar>
+        }
+        @case (isCheckbox()) {
+          <!-- Checkbox -->
+          <div class="checkbox-field">
+            <p-checkbox
+              [ngModel]="!!value"
+              (ngModelChange)="value = $event; onValueChange()"
+              [binary]="true"
+              [inputId]="'checkbox-' + getFieldLabel()"
+            ></p-checkbox>
+            <label [for]="'checkbox-' + getFieldLabel()" class="checkbox-label">
+              {{ getFieldLabel() }}
+            </label>
+          </div>
+        }
+        @default {
+          <!-- Default text/number -->
+          <input
+            pInputText
+            [id]="'field-' + getFieldLabel()"
+            [type]="getInputType()"
+            [value]="value || ''"
+            (input)="onInputChange($event)"
+            [placeholder]="getFieldLabel()"
+            class="field-input"
+          />
+        }
+      }
+    </div>
+  </div>
+} @else {
+  <div class="no-schema">
+    <p>No schema provided for this field.</p>
+  </div>
+}

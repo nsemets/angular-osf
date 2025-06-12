@@ -1,0 +1,17 @@
+@if (template()) {
+  <h1>{{ template().attributes.template.title }}</h1>
+  @for (section of getSectionOrder(); track section) {
+    <div class="section-card">
+      <h2>{{ getSectionLabel(section) }}</h2>
+      <p class="section-desc">{{ getSectionDescription(section) }}</p>
+      <osf-dynamic-field
+        [schema]="getSectionSchema(section)"
+        [value]="formData()[section]"
+        (valueChange)="onFieldChange(section, $event)"
+      ></osf-dynamic-field>
+    </div>
+  }
+  <div class="actions">
+    <button pButton type="button" label="Publish" (click)="onSubmit()">Publish</button>
+  </div>
+}

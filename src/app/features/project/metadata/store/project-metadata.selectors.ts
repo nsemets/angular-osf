@@ -28,4 +28,14 @@ export class ProjectMetadataSelectors {
   static getFundersLoading(state: MetadataStateModel) {
     return state.fundersLoading;
   }
+
+  @Selector([ProjectMetadataState])
+  static getCedarTemplates(state: MetadataStateModel) {
+    return state.cedarTemplates;
+  }
+
+  @Selector([ProjectMetadataState])
+  static getCedarTemplatesLoading(state: MetadataStateModel) {
+    return state.cedarTemplatesLoading;
+  }
 }

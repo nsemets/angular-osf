@@ -1,44 +1,76 @@
+import { createDispatchMap, select, Store } from '@ngxs/store';
+
+import { TranslatePipe } from '@ngx-translate/core';
+
 import { Button } from 'primeng/button';
 
-import { ChangeDetectionStrategy, Component, HostBinding, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { CedarMetadataDataTemplate } from '@osf/features/project/metadata/models';
+import { CedarTemplateFormComponent } from '@osf/features/project/metadata/pages/add-metadata/components';
 import { SubHeaderComponent } from '@shared/components';
 import { ToastService } from '@shared/services';
 
-import { metadataTemplates } from '../../models';
+import { GetCedarMetadataTemplates, ProjectMetadataSelectors } from '../../store';
 
 @Component({
   selector: 'osf-add-metadata',
   standalone: true,
-  imports: [SubHeaderComponent, Button],
+  imports: [SubHeaderComponent, Button, TranslatePipe, CedarTemplateFormComponent],
   templateUrl: './add-metadata.component.html',
   styleUrl: './add-metadata.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddMetadataComponent {
+export class AddMetadataComponent implements OnInit {
   @HostBinding('class') classes = 'flex flex-1 flex-column w-full h-full';
 
   private readonly router = inject(Router);
   private readonly toastService = inject(ToastService);
+  private readonly store = inject(Store);
 
-  protected readonly metadataTemplates = metadataTemplates;
-  protected selectedTemplate: string | null = null;
+  selectedTemplate!: CedarMetadataDataTemplate;
 
-  onSelect(templateTitle: string): void {
-    this.selectedTemplate = templateTitle;
+  protected readonly cedarTemplates = select(ProjectMetadataSelectors.getCedarTemplates);
+  protected readonly cedarTemplatesLoading = select(ProjectMetadataSelectors.getCedarTemplatesLoading);
+
+  protected actions = createDispatchMap({
+    getCedarTemplates: GetCedarMetadataTemplates,
+  });
+
+  ngOnInit(): void {
+    this.actions.getCedarTemplates();
+  }
+
+  onSelect(template: CedarMetadataDataTemplate): void {
+    this.selectedTemplate = template;
   }
 
   onCancel(): void {
-    this.router.navigate(['../']).catch(() => this.toastService.showError('common.errors.navigationFailed'));
+    const templates = this.cedarTemplates();
+    if (templates?.links?.first && templates?.links?.last && templates.links.first !== templates.links.last) {
+      this.actions.getCedarTemplates();
+    } else {
+      this.router.navigate(['../']);
+    }
   }
 
   onNext(): void {
-    if (!this.selectedTemplate) {
-      this.toastService.showError('common.errors.templateRequired');
+    const templates = this.cedarTemplates();
+    if (!templates?.links?.next) {
       return;
     }
-    // TODO: Implement next step logic
-    console.log('Selected template:', this.selectedTemplate);
+
+    this.actions.getCedarTemplates(templates.links.next);
+  }
+
+  hasNextPage(): boolean {
+    const templates = this.cedarTemplates();
+    return !!templates?.links?.next;
+  }
+
+  hasMultiplePages(): boolean {
+    const templates = this.cedarTemplates();
+    return !!(templates?.links?.first && templates?.links?.last && templates.links.first !== templates.links.last);
   }
 }

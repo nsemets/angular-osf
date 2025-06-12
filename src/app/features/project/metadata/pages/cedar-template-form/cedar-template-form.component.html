@@ -1,0 +1,121 @@
+@if (template()) {
+  <div class="cedar-template-form">
+    <header class="form-header">
+      <h1>{{ template().attributes.template.title }}</h1>
+      @if (template().attributes.template.description) {
+        <p class="template-description">{{ template().attributes.template.description }}</p>
+      }
+    </header>
+
+    <form class="form-content" (ngSubmit)="onSubmit()">
+      @for (section of getSectionOrder(); track section) {
+        @if (getSectionSchema(section); as schema) {
+          <div class="form-section">
+            <div class="section-header">
+              <h2>{{ getSectionLabel(section) }}</h2>
+              @if (getSectionDescription(section)) {
+                <p class="section-description">{{ getSectionDescription(section) }}</p>
+              }
+            </div>
+
+            <div class="section-content">
+              @if (isArray(schema)) {
+                <!-- Array Field -->
+                <div class="array-field">
+                  @for (item of getArrayItems(section); track $index) {
+                    <div class="array-item">
+                      <div class="array-item-content">
+                        @if (schema.items && isTextArea(schema.items)) {
+                          <textarea
+                            pInputTextarea
+                            [value]="item"
+                            (input)="updateArrayItem(section, $index, $any($event.target).value)"
+                            [placeholder]="getSectionLabel(section)"
+                            rows="3"
+                          ></textarea>
+                        } @else {
+                          <input
+                            pInputText
+                            [type]="schema.items ? getInputType(schema.items) : 'text'"
+                            [value]="item"
+                            (input)="updateArrayItem(section, $index, $any($event.target).value)"
+                            [placeholder]="getSectionLabel(section)"
+                          />
+                        }
+                      </div>
+                      <button
+                        type="button"
+                        pButton
+                        icon="pi pi-trash"
+                        severity="danger"
+                        [outlined]="true"
+                        size="small"
+                        (click)="removeArrayItem(section, $index)"
+                        [attr.aria-label]="'Remove item ' + ($index + 1)"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  }
+                  <button
+                    type="button"
+                    pButton
+                    icon="pi pi-plus"
+                    [outlined]="true"
+                    size="small"
+                    (click)="addArrayItem(section)"
+                  >
+                    Add {{ getSectionLabel(section) }}
+                  </button>
+                </div>
+              } @else {
+                <!-- Single Field -->
+                <div class="single-field">
+                  @if (isTextArea(schema)) {
+                    <textarea
+                      pInputTextarea
+                      [value]="getFieldValue(section)"
+                      (input)="onFieldChange(section, $any($event.target).value)"
+                      [placeholder]="getSectionLabel(section)"
+                      rows="4"
+                    ></textarea>
+                  } @else if (getInputType(schema) === 'date') {
+                    <p-calendar
+                      [ngModel]="getFieldValue(section)"
+                      (ngModelChange)="onFieldChange(section, $event)"
+                      [placeholder]="getSectionLabel(section)"
+                      dateFormat="yy-mm-dd"
+                    ></p-calendar>
+                  } @else if (getInputType(schema) === 'checkbox') {
+                    <div class="checkbox-field">
+                      <input
+                        type="checkbox"
+                        [id]="'field-' + section"
+                        [checked]="!!getFieldValue(section)"
+                        (change)="onFieldChange(section, $any($event.target).checked)"
+                      />
+                      <label [for]="'field-' + section">{{ getSectionLabel(section) }}</label>
+                    </div>
+                  } @else {
+                    <input
+                      pInputText
+                      [type]="getInputType(schema)"
+                      [value]="getFieldValue(section)"
+                      (input)="onFieldChange(section, $any($event.target).value)"
+                      [placeholder]="getSectionLabel(section)"
+                    />
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        }
+      }
+
+      <div class="form-actions">
+        <button type="button" pButton severity="secondary" [outlined]="true" (click)="onCancel()">Cancel</button>
+        <button type="submit" pButton severity="primary">Submit</button>
+      </div>
+    </form>
+  </div>
+}
