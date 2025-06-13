@@ -21,24 +21,12 @@
     </osf-text-input>
 
     <div class="mt-4">
-      <label for="permission-select">{{ 'moderation.selectPermission' | translate }}</label>
-
-      <p-select
-        class="w-full"
-        id="permission-select"
+      <osf-form-select
+        [control]="moderatorForm.controls['permission']"
         [options]="permissionsOptions"
-        optionLabel="label"
-        optionValue="value"
-        [formControl]="moderatorForm.controls['permission']"
-      >
-        <ng-template #selectedItem let-selectedOption>
-          {{ selectedOption.label | translate }}
-        </ng-template>
-
-        <ng-template #item let-item>
-          {{ item.label | translate }}
-        </ng-template>
-      </p-select>
+        [label]="'moderation.selectPermission'"
+        [fullWidth]="true"
+      ></osf-form-select>
     </div>
   </form>
 

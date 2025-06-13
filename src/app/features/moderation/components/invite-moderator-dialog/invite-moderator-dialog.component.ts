@@ -2,12 +2,11 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
-import { Select } from 'primeng/select';
 
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { TextInputComponent } from '@osf/shared/components';
+import { FormSelectComponent, TextInputComponent } from '@osf/shared/components';
 import { InputLimits } from '@osf/shared/constants';
 import { CustomValidators } from '@osf/shared/utils';
 
@@ -17,7 +16,7 @@ import { InviteModeratorForm, ModeratorAddModel, ModeratorDialogAddModel } from 
 
 @Component({
   selector: 'osf-invite-moderator-dialog',
-  imports: [Button, ReactiveFormsModule, TranslatePipe, TextInputComponent, Select],
+  imports: [Button, ReactiveFormsModule, TranslatePipe, TextInputComponent, FormSelectComponent],
   templateUrl: './invite-moderator-dialog.component.html',
   styleUrl: './invite-moderator-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
