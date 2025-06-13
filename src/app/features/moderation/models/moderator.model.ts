@@ -2,7 +2,7 @@ import { Education, Employment } from '@osf/shared/models';
 
 import { ModeratorPermission } from '../enums';
 
-export interface Moderator {
+export interface ModeratorModel {
   id: string;
   userId: string;
   fullName: string;

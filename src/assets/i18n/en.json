@@ -10,9 +10,11 @@
       "download": "Download",
       "copy": "Copy",
       "move": "Move",
-      "rename": "Rename"
+      "rename": "Rename",
+      "next": "Next"
     },
     "search": {
+      "title": "Search",
       "noResultsFound": "No results found."
     },
     "labels": {
@@ -718,6 +720,13 @@
     "settingsMessage": "To configure your notification preferences visit your",
     "userSettings": "User settings",
     "addModerator": "Add moderator",
+    "inviteModerator": "Invite moderator",
+    "searchModerator": "Search moderator",
+    "selectPermission": "Select permission",
+    "moderatorPermissions": {
+      "administrator": "Administrator",
+      "moderator": "Moderator"
+    },
     "removeDialog": {
       "title": "Remove moderator",
       "message": "Are you sure you want to remove <b>{{name}}</b> moderator?"
@@ -725,7 +734,7 @@
     "toastMessages": {
       "addSuccessMessage": "Moderator {{name}} successfully added.",
       "multipleAddSuccessMessage": "Moderators successfully added.",
-      "multipleUpdateSuccessMessage": "Moderators successfully updated.",
+      "updateSuccessMessage": "Moderator {{name}} updated.",
       "deleteSuccessMessage": "Moderator {{name}} successfully removed."
     },
     "submissionReviewStatus": {

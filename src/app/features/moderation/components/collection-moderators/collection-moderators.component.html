@@ -1,6 +1,6 @@
 <div class="flex flex-column gap-4 md:flex-row md:gap-6">
   <div class="md:w-8">
-    <osf-search-input [control]="searchControl" [placeholder]="'project.contributors.searchPlaceholder' | translate" />
+    <osf-search-input [control]="searchControl" [placeholder]="'common.search.title' | translate" />
   </div>
 
   <div class="ml-auto w-full md:w-4">
@@ -8,7 +8,7 @@
       class="w-full"
       styleClass="w-full"
       [label]="'moderation.addModerator' | translate"
-      (click)="addModerator()"
+      (click)="openAddModeratorDialog()"
     ></p-button>
   </div>
 </div>
@@ -17,6 +17,7 @@
   <osf-collection-moderators-list
     [items]="moderators()"
     [isLoading]="isModeratorsLoading()"
+    (update)="updateModerator($event)"
     (remove)="removeModerator($event)"
     (showEducationHistory)="openEducationHistory($event)"
     (showEmploymentHistory)="openEmploymentHistory($event)"

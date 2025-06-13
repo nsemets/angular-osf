@@ -6,21 +6,18 @@ import { ConfirmationService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
 
-import { debounceTime, distinctUntilChanged, skip } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, skip } from 'rxjs';
 
 import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl } from '@angular/forms';
 
-import {
-  ContributorEducationHistoryComponent,
-  ContributorEmploymentHistoryComponent,
-} from '@osf/features/project/contributors/components';
-import { SearchInputComponent } from '@osf/shared/components';
-import { ToastService } from '@osf/shared/services';
+import { EducationHistoryComponent, EmploymentHistoryComponent, SearchInputComponent } from '@osf/shared/components';
+import { LoaderService, ToastService } from '@osf/shared/services';
 import { defaultConfirmationConfig } from '@osf/shared/utils';
 
-import { Moderator } from '../../models';
+import { AddModeratorType } from '../../enums';
+import { ModeratorDialogAddModel, ModeratorModel } from '../../models';
 import {
   AddCollectionModerator,
   DeleteCollectionModerator,
@@ -29,7 +26,9 @@ import {
   UpdateCollectionModerator,
   UpdateCollectionSearchValue,
 } from '../../store';
+import { AddModeratorDialogComponent } from '../add-moderator-dialog/add-moderator-dialog.component';
 import { CollectionModeratorsListComponent } from '../collection-moderators-list/collection-moderators-list.component';
+import { InviteModeratorDialogComponent } from '../invite-moderator-dialog/invite-moderator-dialog.component';
 
 @Component({
   selector: 'osf-collection-moderators',
@@ -47,6 +46,9 @@ export class CollectionModeratorsComponent implements OnInit {
   private readonly confirmationService = inject(ConfirmationService);
   private readonly dialogService = inject(DialogService);
   private readonly toastService = inject(ToastService);
+  private readonly loaderService = inject(LoaderService);
+
+  providerId = signal('');
 
   moderators = signal([]);
   initialModerators = select(ModerationSelectors.getCollectionModerators);
@@ -74,15 +76,71 @@ export class CollectionModeratorsComponent implements OnInit {
 
   ngOnInit(): void {
     this.setSearchSubscription();
-
-    this.actions.loadModerators('');
+    this.actions.loadModerators(this.providerId());
   }
 
-  addModerator() {
-    console.log('Add moderator');
+  openAddModeratorDialog() {
+    const addedModeratorsIds = this.initialModerators().map((x) => x.userId);
+
+    this.dialogService
+      .open(AddModeratorDialogComponent, {
+        width: '448px',
+        data: addedModeratorsIds,
+        focusOnShow: false,
+        header: this.translateService.instant('moderation.addModerator'),
+        closeOnEscape: true,
+        modal: true,
+        closable: true,
+      })
+      .onClose.pipe(
+        filter((res: ModeratorDialogAddModel) => !!res),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((res: ModeratorDialogAddModel) => {
+        if (res.type === AddModeratorType.Invite) {
+          this.openInviteModeratorDialog();
+        } else {
+          // [NS] TODO: Implement logic
+          this.toastService.showSuccess('moderation.toastMessages.multipleAddSuccessMessage');
+        }
+      });
   }
 
-  removeModerator(moderator: Moderator) {
+  openInviteModeratorDialog() {
+    this.dialogService
+      .open(InviteModeratorDialogComponent, {
+        width: '448px',
+        focusOnShow: false,
+        header: this.translateService.instant('moderation.inviteModerator'),
+        closeOnEscape: true,
+        modal: true,
+        closable: true,
+      })
+      .onClose.pipe(
+        filter((res: ModeratorDialogAddModel) => !!res),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((res: ModeratorDialogAddModel) => {
+        if (res.type === AddModeratorType.Search) {
+          this.openAddModeratorDialog();
+        } else {
+          // [NS] TODO: Implement logic
+          this.toastService.showSuccess('moderation.toastMessages.addSuccessMessage', {
+            name: res.data[0].fullName,
+          });
+        }
+      });
+  }
+
+  updateModerator(item: ModeratorModel) {
+    // this.loaderService.show();
+
+    this.toastService.showSuccess('moderation.toastMessages.updateSuccessMessage', {
+      name: item.fullName,
+    });
+  }
+
+  removeModerator(moderator: ModeratorModel) {
     this.confirmationService.confirm({
       ...defaultConfirmationConfig,
       header: this.translateService.instant('moderation.removeDialog.title'),
@@ -95,16 +153,15 @@ export class CollectionModeratorsComponent implements OnInit {
         label: this.translateService.instant('common.buttons.remove'),
       },
       accept: () => {
-        console.log('Remove moderator', moderator);
-        this.toastService.showSuccess('project.contributors.removeDialog.successMessage', { name: moderator.fullName });
+        this.toastService.showSuccess('moderation.toastMessages.deleteSuccessMessage', { name: moderator.fullName });
       },
     });
   }
 
-  openEmploymentHistory(contributor: Moderator) {
-    this.dialogService.open(ContributorEmploymentHistoryComponent, {
+  openEmploymentHistory(moderator: ModeratorModel) {
+    this.dialogService.open(EmploymentHistoryComponent, {
       width: '552px',
-      data: contributor.employment,
+      data: moderator.employment,
       focusOnShow: false,
       header: this.translateService.instant('project.contributors.table.headers.employment'),
       closeOnEscape: true,
@@ -113,10 +170,10 @@ export class CollectionModeratorsComponent implements OnInit {
     });
   }
 
-  openEducationHistory(contributor: Moderator) {
-    this.dialogService.open(ContributorEducationHistoryComponent, {
+  openEducationHistory(moderator: ModeratorModel) {
+    this.dialogService.open(EducationHistoryComponent, {
       width: '552px',
-      data: contributor.education,
+      data: moderator.education,
       focusOnShow: false,
       header: this.translateService.instant('project.contributors.table.headers.education'),
       closeOnEscape: true,
@@ -128,6 +185,6 @@ export class CollectionModeratorsComponent implements OnInit {
   private setSearchSubscription() {
     this.searchControl.valueChanges
       .pipe(skip(1), debounceTime(500), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
-      .subscribe((res) => console.log(res));
+      .subscribe((res) => this.actions.updateSearchValue(res ?? null));
   }
 }

@@ -6,7 +6,7 @@
   border: 1px solid var(--grey-2);
   border-radius: mix.rem(8px);
   outline: none;
-  font-size: mix.rem(14px);
+  font-size: mix.rem(16px);
   color: var.$dark-blue-1;
 
   .p-placeholder {
@@ -20,6 +20,10 @@
     width: max-content;
     max-width: 300px;
     font-size: 1rem;
+  }
+
+  &:not(:disabled):hover {
+    border-color: var.$pr-blue-1;
   }
 }
 

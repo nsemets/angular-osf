@@ -19,38 +19,6 @@
       <th>
         <div class="flex align-items-center">
           <span>{{ 'project.contributors.table.headers.permissions' | translate }}</span>
-          <i class="osf-icon-information blue-icon ml-1" [pTooltip]="permissionsTooltip" tooltipPosition="top"></i>
-          <ng-template #permissionsTooltip>
-            <div class="flex flex-column row-gap-3">
-              <h2>{{ 'project.contributors.permissionInfo.title' | translate }}</h2>
-
-              <div class="inside-list">
-                <p class="font-bold">{{ 'project.contributors.permissions.read' | translate }}</p>
-                <ul class="font-normal ml-4">
-                  <li>{{ 'project.contributors.permissionInfo.viewProjectContent' | translate }}</li>
-                </ul>
-              </div>
-
-              <div class="inside-list">
-                <p class="font-bold">{{ 'project.contributors.permissions.readAndWrite' | translate }}</p>
-                <ul class="font-normal ml-4">
-                  <li>{{ 'project.contributors.permissionInfo.read' | translate }}</li>
-                  <li>{{ 'project.contributors.permissionInfo.addComponents' | translate }}</li>
-                  <li>{{ 'project.contributors.permissionInfo.editContent' | translate }}</li>
-                </ul>
-              </div>
-
-              <div class="inside-list">
-                <p class="font-bold">{{ 'project.contributors.permissions.administrator' | translate }}</p>
-                <ul class="font-normal ml-4">
-                  <li>{{ 'project.contributors.permissionInfo.readWrite' | translate }}</li>
-                  <li>{{ 'project.contributors.permissionInfo.manageContributors' | translate }}</li>
-                  <li>{{ 'project.contributors.permissionInfo.deleteRegister' | translate }}</li>
-                  <li>{{ 'project.contributors.permissionInfo.publicPrivate' | translate }}</li>
-                </ul>
-              </div>
-            </div>
-          </ng-template>
         </div>
       </th>
 
@@ -75,6 +43,7 @@
               [placeholder]="'project.contributors.permissionFilter'"
               [appendTo]="'body'"
               [(selectedValue)]="item.permission"
+              (changeValue)="updatePermission(item)"
             ></osf-select>
           </div>
         </td>
@@ -109,7 +78,7 @@
           </div>
         </td>
         <td>
-          <p-button variant="text" [severity]="'danger'" icon="fas fa-trash" (click)="removeContributor(item)">
+          <p-button variant="text" [severity]="'danger'" icon="fas fa-trash" (click)="removeModerator(item)">
           </p-button>
         </td>
       </tr>
