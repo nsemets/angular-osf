@@ -5,6 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
 import { Skeleton } from 'primeng/skeleton';
 
+import { TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, effect, HostBinding, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -35,6 +36,7 @@ import { ResourceTab } from '@shared/enums';
     BrowseBySubjectsComponent,
     Skeleton,
     TranslateModule,
+    TitleCasePipe,
   ],
   templateUrl: './preprints-landing.component.html',
   styleUrl: './preprints-landing.component.scss',

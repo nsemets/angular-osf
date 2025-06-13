@@ -10,7 +10,7 @@
       <p-button
         class="ml-auto w-full md:w-auto"
         styleClass="w-full md:w-auto"
-        [label]="'preprints.addPreprint' | translate: { preprintWord: osfPreprintProvider()?.preprintWord }"
+        [label]="'preprints.addPreprint' | translate: { preprintWord: osfPreprintProvider()?.preprintWord } | titlecase"
         routerLink="/preprints/select"
         (click)="addPreprint()"
       />
@@ -32,7 +32,7 @@
   <osf-search-input
     class="w-full"
     [control]="searchControl"
-    [placeholder]="'preprints.searchPlaceholder' | translate"
+    [placeholder]="'preprints.searchPlaceholder' | translate: { preprintWord: 'preprint' } | titlecase"
     (triggerSearch)="redirectToSearchPageWithValue()"
   />
 
