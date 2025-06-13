@@ -1,0 +1,15 @@
+@use "assets/styles/mixins" as mix;
+@use "assets/styles/variables" as var;
+
+.grid-item {
+  width: mix.rem(260px);
+  height: mix.rem(200px);
+}
+
+.active,
+p-card:hover {
+  --p-card-background: var(--bg-blue-3);
+  cursor: pointer;
+
+  --p-button-secondary-background: var(--white);
+}

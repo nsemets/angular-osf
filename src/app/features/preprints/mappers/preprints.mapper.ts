@@ -1,7 +1,7 @@
 import {
   PreprintProviderDetails,
   PreprintProviderDetailsGetResponse,
-  PreprintProviderToAdvertise,
+  PreprintProviderShortInfo,
   Subject,
   SubjectGetResponse,
 } from '@osf/features/preprints/models';
@@ -32,16 +32,16 @@ export class PreprintsMapper {
     };
   }
 
-  static fromPreprintProvidersToAdvertiseGetResponse(
+  static toPreprintProviderShortInfoFromGetResponse(
     response: PreprintProviderDetailsGetResponse[]
-  ): PreprintProviderToAdvertise[] {
-    return response
-      .filter((item) => !item.id.includes('osf'))
-      .map((item) => ({
-        id: item.id,
-        name: item.attributes.name,
-        whiteWideImageUrl: item.attributes.assets.wide_white,
-      }));
+  ): PreprintProviderShortInfo[] {
+    return response.map((item) => ({
+      id: item.id,
+      descriptionHtml: item.attributes.description,
+      name: item.attributes.name,
+      whiteWideImageUrl: item.attributes.assets?.wide_white,
+      squareColorNoTransparentImageUrl: item.attributes.assets?.square_color_no_transparent,
+    }));
   }
 
   static fromSubjectsGetResponse(providerId: string, response: SubjectGetResponse[]): Subject[] {

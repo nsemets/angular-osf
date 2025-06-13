@@ -20,6 +20,16 @@ export class PreprintsSelectors {
   }
 
   @Selector([PreprintsState])
+  static getPreprintProvidersAllowingSubmissions(state: PreprintsStateModel) {
+    return state.preprintProvidersAllowingSubmissions.data;
+  }
+
+  @Selector([PreprintsState])
+  static arePreprintProvidersAllowingSubmissionsLoading(state: PreprintsStateModel) {
+    return state.preprintProvidersAllowingSubmissions.isLoading;
+  }
+
+  @Selector([PreprintsState])
   static getHighlightedSubjectsForProvider(state: PreprintsStateModel) {
     return state.highlightedSubjectsForProvider.data;
   }
