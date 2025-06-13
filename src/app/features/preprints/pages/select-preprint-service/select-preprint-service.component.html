@@ -1,13 +1,14 @@
-<osf-sub-header title="Add A Preprint" />
+<osf-sub-header [title]="'preprints.selectService.title' | translate" />
 
 <section class="flex flex-1 flex-column bg-white p-3 md:p-4">
-  <h2>Select a preprint service</h2>
+  <h2>{{ 'preprints.selectService.sectionTitle' | translate }}</h2>
   <p class="m-t-12">
     <span>
-      A preprint is a version of a scholarly or scientific paper that is posted online before it has undergone formal
-      peer review and published in a scientific journal.
+      {{ 'preprints.selectService.description' | translate }}
     </span>
-    <a href="https://help.osf.io/article/376-preprints-home-page">Learn more</a>
+    <a href="https://help.osf.io/article/376-preprints-home-page">{{
+      'preprints.selectService.learnMore' | translate
+    }}</a>
   </p>
   <section class="m-t-48 grid justify-content-center align-items-start gap-4">
     @if (areProvidersLoading()) {
@@ -37,7 +38,11 @@
             <h4 class="m-t-12">{{ provider.name }}</h4>
             <p-button
               class="m-t-24"
-              [label]="selectedProviderId() === provider.id ? 'Deselect' : 'Select'"
+              [label]="
+                selectedProviderId() === provider.id
+                  ? ('preprints.selectService.buttons.deselect' | translate)
+                  : ('preprints.selectService.buttons.select' | translate)
+              "
               severity="secondary"
             />
           </div>
@@ -49,6 +54,10 @@
     }
   </section>
   <section class="m-t-48 flex flex-row justify-content-end">
-    <p-button label="Next" (click)="nextStep()" [disabled]="!selectedProviderId()" />
+    <p-button
+      [label]="'preprints.selectService.buttons.next' | translate"
+      (click)="nextStep()"
+      [disabled]="!selectedProviderId()"
+    />
   </section>
 </section>

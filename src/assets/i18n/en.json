@@ -1229,7 +1229,7 @@
     "title": "Preprints",
     "addPreprint": "Add a {{preprintWord}}",
     "poweredBy": "Powered by OSF Preprints",
-    "searchPlaceholder": "Search Preprints",
+    "searchPlaceholder": "Search {{preprintWord}}s",
     "showExample": "Show an example",
     "browseBySubjects": {
       "title": "Browse By Subjects"
@@ -1251,6 +1251,17 @@
       "header": "Search help",
       "message": "OSF Search provides a powerful discovery tool to help you find data, papers, analysis plans, and more content across the research lifecycle. OSF Preprints has some specialized filters, which you can learn more about on our",
       "linkText": "help guides"
+    },
+    "selectService": {
+      "title": "Add A Preprint",
+      "sectionTitle": "Select a preprint service",
+      "description": "A preprint is a version of a scholarly or scientific paper that is posted online before it has undergone formal peer review and published in a scientific journal.",
+      "learnMore": "Learn more",
+      "buttons": {
+        "next": "Next",
+        "select": "Select",
+        "deselect": "Deselect"
+      }
     }
   },
   "truncatedText": {
