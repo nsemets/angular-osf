@@ -9,13 +9,16 @@ import { WikiService } from '../services';
 import {
   ClearWiki,
   CreateWiki,
+  CreateWikiVersion,
   DeleteWiki,
   GetComponentsWikiList,
   GetHomeWiki,
   GetWikiList,
+  GetWikiVersionContent,
+  GetWikiVersions,
   SetCurrentWiki,
   ToggleMode,
-  UpdateWikiContent,
+  UpdateWikiPreviewContent,
 } from './wiki.actions';
 import { WikiStateModel } from './wiki.model';
 
@@ -43,8 +46,18 @@ import { WikiStateModel } from './wiki.model';
       isLoading: false,
       error: null,
     },
-    currentContent: '',
     currentWikiId: '',
+    previewContent: '',
+    wikiVersions: {
+      data: [],
+      isLoading: false,
+      error: null,
+    },
+    versionContent: {
+      data: '',
+      isLoading: false,
+      error: null,
+    },
   },
 })
 @Injectable()
@@ -172,7 +185,6 @@ export class WikiState {
             isLoading: false,
             error: null,
           },
-          currentWikiId: list.length > 0 ? list[0].id : '',
         });
       }),
       map((wiki) => wiki),
@@ -206,10 +218,10 @@ export class WikiState {
     );
   }
 
-  @Action(UpdateWikiContent)
-  updateWikiContent(ctx: StateContext<WikiStateModel>, action: UpdateWikiContent) {
+  @Action(UpdateWikiPreviewContent)
+  updateWikiContent(ctx: StateContext<WikiStateModel>, action: UpdateWikiPreviewContent) {
     ctx.patchState({
-      currentContent: action.content,
+      previewContent: action.content,
     });
   }
 
@@ -235,5 +247,78 @@ export class WikiState {
       },
     });
     return throwError(() => error);
+  }
+
+  @Action(GetWikiVersions)
+  getWikiVersions(ctx: StateContext<WikiStateModel>, action: GetWikiVersions) {
+    const state = ctx.getState();
+    ctx.patchState({
+      wikiVersions: {
+        ...state.wikiVersions,
+        isLoading: true,
+        error: null,
+      },
+    });
+
+    return this.wikiService.getWikiVersions(action.wikiId).pipe(
+      tap((versions) => {
+        ctx.patchState({
+          wikiVersions: {
+            data: [...versions],
+            isLoading: false,
+            error: null,
+          },
+        });
+      }),
+      catchError((error) => this.handleError(ctx, error))
+    );
+  }
+
+  @Action(CreateWikiVersion)
+  createWikiVersion(ctx: StateContext<WikiStateModel>, action: CreateWikiVersion) {
+    console.log('Creating wiki version with content:', action.content);
+    ctx.patchState({
+      versionContent: { data: action.content, isLoading: true, error: null, isSubmitting: true },
+    });
+
+    return this.wikiService.createWikiVersion(action.wikiId, action.content).pipe(
+      tap(() => {
+        ctx.patchState({
+          versionContent: {
+            data: action.content,
+            isLoading: false,
+            error: null,
+            isSubmitting: false,
+          },
+        });
+      }),
+      catchError((error) => this.handleError(ctx, error))
+    );
+  }
+
+  @Action(GetWikiVersionContent)
+  getWikiVersionContent(ctx: StateContext<WikiStateModel>, action: GetWikiVersionContent) {
+    const state = ctx.getState();
+    ctx.patchState({
+      versionContent: {
+        ...state.versionContent,
+        isLoading: true,
+        error: null,
+      },
+    });
+
+    return this.wikiService.getWikiVersionContent(action.wikiId, action.versionId).pipe(
+      tap((content) => {
+        ctx.patchState({
+          previewContent: content,
+          versionContent: {
+            data: content,
+            isLoading: false,
+            error: null,
+          },
+        });
+      }),
+      catchError((error) => this.handleError(ctx, error))
+    );
   }
 }

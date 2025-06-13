@@ -1,6 +1,6 @@
 import { Selector } from '@ngxs/store';
 
-import { Wiki } from '../models';
+import { Wiki, WikiVersion } from '../models';
 
 import { ComponentWiki, WikiModesStateModel, WikiStateModel } from './wiki.model';
 import { WikiState } from './wiki.state';
@@ -42,11 +42,6 @@ export class WikiSelectors {
   }
 
   @Selector([WikiState])
-  static getCurrentContent(state: WikiStateModel): string {
-    return state.currentContent;
-  }
-
-  @Selector([WikiState])
   static getWikiSubmitting(state: WikiStateModel): boolean {
     return state.projectWikiList.isSubmitting ?? false;
   }
@@ -54,5 +49,25 @@ export class WikiSelectors {
   @Selector([WikiState])
   static getCurrentWikiId(state: WikiStateModel): string {
     return state.currentWikiId;
+  }
+
+  @Selector([WikiState])
+  static getWikiVersions(state: WikiStateModel): WikiVersion[] {
+    return state.wikiVersions.data;
+  }
+
+  @Selector([WikiState])
+  static getWikiVersionContent(state: WikiStateModel): string {
+    return state.versionContent.data;
+  }
+
+  @Selector([WikiState])
+  static getWikiVersionSubmitting(state: WikiStateModel): boolean {
+    return state.versionContent.isSubmitting ?? false;
+  }
+
+  @Selector([WikiState])
+  static getPreviewContent(state: WikiStateModel): string {
+    return state.previewContent;
   }
 }

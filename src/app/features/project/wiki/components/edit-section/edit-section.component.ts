@@ -15,13 +15,18 @@ import { FormsModule } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditSectionComponent implements OnInit {
-  initialContent = input.required<string>();
-  content = '';
-  contentChange = output<string>();
+  readonly currentContent = input.required<string>();
+  readonly isSaving = input<boolean>(false);
+  readonly contentChange = output<string>();
+  readonly saveContent = output<string>();
+  private htmlContent = '';
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  editorInstance: any;
+  private editorInstance: any;
+  content = '';
+  initialContent = '';
+
   public options: MdEditorOption = {
-    showPreviewPanel: true,
+    showPreviewPanel: false,
     resizable: true,
     customRender: {},
     fontAwesomeVersion: '6',
@@ -32,32 +37,27 @@ export class EditSectionComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.content = this.initialContent();
+    this.content = this.currentContent();
+    this.initialContent = this.currentContent();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onEditorLoaded(editor: any) {
     this.editorInstance = editor;
     editor.setShowPrintMargin(false);
-    console.log(`ACE Editor Ins: `, editor);
-  }
-
-  onContentChanged(event: string) {
-    console.log('Content changed:', event);
-    this.contentChange.emit(event);
   }
 
   onPreviewDomChanged(event: HTMLElement) {
-    console.log('Preview DOM changed:', event);
+    this.htmlContent = event.innerHTML;
     this.contentChange.emit(event.innerHTML);
   }
 
   save() {
-    console.log('Save action triggered');
+    this.saveContent.emit(this.htmlContent);
   }
 
   revert() {
-    console.log('Revert action triggered');
+    this.content = this.initialContent;
   }
 
   undo() {

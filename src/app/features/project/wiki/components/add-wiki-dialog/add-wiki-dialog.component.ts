@@ -1,6 +1,6 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -9,6 +9,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
+import { ToastService } from '@osf/shared/services';
 import { CustomValidators } from '@osf/shared/utils';
 
 import { CreateWiki, WikiSelectors } from '../../store';
@@ -27,29 +28,23 @@ export class AddWikiDialogComponent {
     createWiki: CreateWiki,
   });
   protected isSubmitting = select(WikiSelectors.getWikiSubmitting);
+  private toastService = inject(ToastService);
+  private translateService = inject(TranslateService);
 
-  #fb = inject(FormBuilder);
+  private fb = inject(FormBuilder);
 
-  addWikiForm: FormGroup = this.#fb.group({
+  addWikiForm: FormGroup = this.fb.group({
     name: ['', [CustomValidators.requiredTrimmed()]],
   });
 
   submitForm(): void {
     if (this.addWikiForm.valid) {
-      // Handle form submission logic here
-      console.log('Form submitted:', this.addWikiForm.value);
       this.actions.createWiki(this.config.data.projectId, this.addWikiForm.value.name).subscribe({
         next: (res) => {
-          console.log('Wiki created successfully', res);
+          this.toastService.showSuccess(this.translateService.instant('project.wiki.addWikiSuccess'));
           this.dialogRef.close(res);
         },
-        error: (error) => {
-          console.error('Error creating wiki:', error);
-          // Optionally, you can show an error message to the user
-        },
       });
-    } else {
-      console.log('Form is invalid');
     }
   }
 }

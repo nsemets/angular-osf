@@ -13,6 +13,8 @@ import {
   Wiki,
   WikiGetResponse,
   WikiJsonApiResponse,
+  WikiVersion,
+  WikiVersionJsonApiResponse,
 } from '../models';
 import { ComponentWiki } from '../store';
 
@@ -80,5 +82,42 @@ export class WikiService {
     return this.#jsonApiService
       .get<ComponentsWikiJsonApiResponse>(environment.apiUrl + `/nodes/${projectId}/children/?embed=wikis`)
       .pipe(map((response) => response.data.map((component) => WikiMapper.fromGetComponentsWikiResponse(component))));
+  }
+
+  getWikiVersions(wikiId: string): Observable<WikiVersion[]> {
+    const params: Record<string, unknown> = {
+      embed: 'user',
+      'fields[users]': 'full_name',
+    };
+    return this.#jsonApiService
+      .get<WikiVersionJsonApiResponse>(environment.apiUrl + `/wikis/${wikiId}/versions/`, params)
+      .pipe(
+        map((response) => {
+          console.log('Wiki versions fetched:', response);
+          return response.data.map((version) => WikiMapper.fromGetWikiVersionResponse(version));
+        })
+      );
+  }
+
+  createWikiVersion(wikiId: string, content: string): Observable<unknown> {
+    const body = {
+      data: {
+        type: 'wiki-versions',
+        attributes: {
+          content,
+        },
+      },
+    };
+    return this.#jsonApiService.post<WikiGetResponse>(environment.apiUrl + `/wikis/${wikiId}/versions/`, body).pipe(
+      map((response) => {
+        return WikiMapper.fromCreateWikiResponse(response);
+      })
+    );
+  }
+
+  getWikiVersionContent(wikiId: string, versionId: string): Observable<string> {
+    return this.#http.get(environment.apiUrl + `/wikis/${wikiId}/versions/${versionId}/content/`, {
+      responseType: 'text',
+    });
   }
 }

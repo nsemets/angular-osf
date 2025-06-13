@@ -53,7 +53,7 @@ export class GetWikiContent {
   constructor(public content: string) {}
 }
 
-export class UpdateWikiContent {
+export class UpdateWikiPreviewContent {
   static readonly type = '[Wiki] Update Wiki Content';
 
   constructor(public content: string) {}
@@ -63,4 +63,27 @@ export class SetCurrentWiki {
   static readonly type = '[Wiki] Set Current Wiki';
 
   constructor(public wikiId: string) {}
+}
+
+export class CreateWikiVersion {
+  static readonly type = '[Wiki] Create Wiki Version';
+
+  constructor(
+    public wikiId: string,
+    public content: string
+  ) {}
+}
+
+export class GetWikiVersions {
+  static readonly type = '[Wiki] Get Wiki Versions';
+
+  constructor(public wikiId: string) {}
+}
+export class GetWikiVersionContent {
+  static readonly type = '[Wiki] Get Wiki Version Content';
+
+  constructor(
+    public wikiId: string,
+    public versionId: string
+  ) {}
 }

@@ -36,13 +36,7 @@
         <div class="flex flex-column justify-center">
           <p-panelmenu [model]="wikiMenu()" [multiple]="true" class="w-full">
             <ng-template #item let-item>
-              <div
-                class="flex align-items-center p-2 cursor-pointer"
-                [routerLink]="[]"
-                [queryParams]="{ wiki: item.id }"
-                queryParamsHandling="merge"
-                [class.active]="item.id === currentWikiId()"
-              >
+              <div class="flex align-items-center p-2 cursor-pointer" [class.active]="item.id === currentWikiId()">
                 @switch (item.type) {
                   @case (wikiItemType.Folder) {
                     <i [class]="item.expanded ? 'fa-minus' : 'fa-plus'" class="fas text-xs mr-1"></i>
@@ -50,7 +44,7 @@
                     <h3 class="ml-2">{{ item.label }}</h3>
                   }
                   @case (wikiItemType.Component) {
-                    <!-- <i [class]="item.expanded ? 'fa-minus' : 'fa-plus'" class="fas text-xs mr-1"></i> -->
+                    <i [class]="item.expanded ? 'fa-minus' : 'fa-plus'" class="fas text-xs mr-1"></i>
                     <i class="fa-solid fa-file-lines"></i>
                     <span class="ml-2">{{ item.label }}</span>
                   }

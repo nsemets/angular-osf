@@ -3,21 +3,22 @@
     <h2 class="mr-2">{{ 'project.wiki.view' | translate }}</h2>
   </ng-template>
   <div class="flex align-items-center mb-2">
-    <span class="mr-2">Version</span>
+    <span class="mr-2">{{ 'project.wiki.version.title' | translate }}</span>
     <p-select
-      [options]="versions"
-      [(ngModel)]="selectedVersion"
-      optionLabel="name"
-      placeholder="Version"
+      [options]="mappedVersions()"
+      [ngModel]="selectedVersion()"
+      (onChange)="onVersionChange($event.value)"
+      [placeholder]="'project.wiki.version.select' | translate"
       class="w-full"
+      styleClass="select-version"
     />
   </div>
   <p-panel showHeader="false">
     <div class="editor-view-mode mt-3">
-      @if (currentContent()) {
-        <div class="md-editor-container" [innerHTML]="currentContent()"></div>
+      @if (content()) {
+        <div class="md-editor-container" [innerHTML]="content() | safeHtml"></div>
       } @else {
-        <p>Add important information, links, or images here to describe your project.</p>
+        <p>{{ 'project.wiki.version.noContent' | translate }}</p>
       }
     </div>
   </p-panel>

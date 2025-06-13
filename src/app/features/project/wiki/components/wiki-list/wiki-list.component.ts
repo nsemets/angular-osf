@@ -9,7 +9,7 @@ import { PanelMenuModule } from 'primeng/panelmenu';
 import { Skeleton } from 'primeng/skeleton';
 
 import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 import { defaultConfirmationConfig } from '@osf/shared/utils';
 
@@ -42,9 +42,11 @@ export class WikiListComponent {
   readonly componentsList = input.required<ComponentWiki[]>();
   readonly currentWikiId = input.required<string>();
   readonly deleteWiki = output<void>();
+  readonly createWiki = output<void>();
   private readonly dialogService = inject(DialogService);
   private readonly translateService = inject(TranslateService);
   private readonly confirmationService = inject(ConfirmationService);
+  private readonly router = inject(Router);
   wikiItemType = WikiItemType;
   expanded = signal(true);
 
@@ -67,6 +69,7 @@ export class WikiListComponent {
           id: wiki.id,
           label: wiki.name,
           type: WikiItemType.File,
+          command: () => this.navigateTo(wiki.id),
         })),
       },
     ];
@@ -82,6 +85,7 @@ export class WikiListComponent {
             id: wiki.id,
             label: wiki.name,
             type: WikiItemType.File,
+            command: () => this.navigateTo(wiki.id, component.id),
           })),
         })),
       });
@@ -90,12 +94,15 @@ export class WikiListComponent {
   });
 
   openAddWikiDialog() {
-    this.dialogService.open(AddWikiDialogComponent, {
+    const dialogRef = this.dialogService.open(AddWikiDialogComponent, {
       header: this.translateService.instant('project.wiki.addNewWiki'),
       modal: true,
       data: {
         projectId: this.projectId(),
       },
+    });
+    dialogRef.onClose.subscribe(() => {
+      this.createWiki.emit();
     });
   }
 
@@ -115,5 +122,22 @@ export class WikiListComponent {
 
   collapseNavigation() {
     this.expanded.update((value) => !value);
+  }
+
+  private navigateTo(wikiId: string, componentId?: string) {
+    if (componentId) {
+      // Navigation trick to avoid reloading the page
+      this.router.navigateByUrl('/my-projects').then(() => {
+        this.router.navigate(['/my-projects', componentId, 'wiki'], {
+          queryParams: { wiki: wikiId },
+        });
+      });
+    } else {
+      // change only the wiki id in query params
+      this.router.navigate([], {
+        queryParams: { wiki: wikiId },
+        queryParamsHandling: 'merge',
+      });
+    }
   }
 }

@@ -9,7 +9,12 @@ export interface Wiki {
   id: string;
   name: string;
   kind: string;
-  content?: string;
+}
+
+export interface WikiVersion {
+  id: string;
+  createdAt: string;
+  createdBy: string;
 }
 
 export interface ComponentWiki {
@@ -60,6 +65,24 @@ export interface ComponentsWikiGetResponse {
   };
 }
 
+export interface WikiVersionJsonApi {
+  id: string;
+  type: string;
+  attributes: {
+    date_created: string;
+  };
+  embeds: {
+    user: {
+      data: {
+        id: string;
+        attributes: {
+          full_name: string;
+        };
+      };
+    };
+  };
+}
+
 export interface HomeWikiJsonApiResponse extends JsonApiResponse<HomeWikiGetResponse[], null> {
   data: HomeWikiGetResponse[];
 }
@@ -70,4 +93,8 @@ export interface WikiJsonApiResponse extends JsonApiResponse<WikiGetResponse[], 
 
 export interface ComponentsWikiJsonApiResponse extends JsonApiResponse<ComponentsWikiGetResponse[], null> {
   data: ComponentsWikiGetResponse[];
+}
+
+export interface WikiVersionJsonApiResponse extends JsonApiResponse<WikiVersionJsonApi[], null> {
+  data: WikiVersionJsonApi[];
 }

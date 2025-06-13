@@ -3,8 +3,15 @@
     <div class="flex align-items-center justify-content-between w-full">
       <h2 class="mr-2">{{ 'project.wiki.edit' | translate }}</h2>
       <div class="ml-auto flex">
-        <p-button label="Save" severity="success" class="mr-2" (click)="save()"></p-button>
-        <p-button label="Revert" severity="danger" (click)="revert()"></p-button>
+        <p-button
+          [label]="'common.buttons.save' | translate"
+          severity="success"
+          class="mr-2"
+          [disabled]="!currentContent()"
+          (click)="save()"
+          [loading]="isSaving()"
+        ></p-button>
+        <p-button [label]="'common.buttons.revert' | translate" severity="danger" (click)="revert()"></p-button>
       </div>
     </div>
   </ng-template>
@@ -13,8 +20,7 @@
     <md-editor
       id="md-editor"
       name="Content"
-      [ngModel]="content"
-      (ngModelChange)="onContentChanged($event)"
+      [(ngModel)]="content"
       [options]="options"
       (onEditorLoaded)="onEditorLoaded($event)"
       (onPreviewDomChanged)="onPreviewDomChanged($event)"
@@ -23,14 +29,14 @@
       height="100%"
     >
       <slot custom-btns>
-        <button class="btn btn-sm btn-default" (click)="undo()">
+        <button class="btn btn-sm btn-default" title="Undo" (click)="undo()">
           <i class="fas fa-rotate-left"></i>
         </button>
-        <button class="btn btn-sm btn-default" (click)="redo()">
+        <button class="btn btn-sm btn-default" title="Redo" (click)="redo()">
           <i class="fas fa-rotate-right"></i>
         </button>
         <div class="btn-group">
-          <button class="btn btn-sm btn-default" (click)="doHorizontalRule()">
+          <button class="btn btn-sm btn-default" title="Horizontal rule <hr>" (click)="doHorizontalRule()">
             <i class="fas fa-grip-lines"></i>
           </button>
         </div>

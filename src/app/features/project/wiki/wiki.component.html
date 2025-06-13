@@ -25,15 +25,23 @@
     [isLoading]="isWikiListLoading()"
     [componentsList]="componentsWikiList()"
     [currentWikiId]="currentWikiId()"
+    (createWiki)="onCreateWiki()"
     (deleteWiki)="onDeleteWiki()"
   ></osf-wiki-list>
   @if (wikiModes().view) {
-    <osf-view-section [currentContent]="currentContent()"></osf-view-section>
+    <osf-view-section
+      [versions]="wikiVersions()"
+      [previewContent]="previewContent()"
+      [versionContent]="versionContent()"
+      (selectVersion)="onSelectVersion($event)"
+    ></osf-view-section>
   }
   @if (wikiModes().edit) {
     <osf-edit-section
-      [initialContent]="currentContent()"
-      (contentChange)="updateWikiContent($event)"
+      [currentContent]="previewContent()"
+      (contentChange)="updateWikiPreviewContent($event)"
+      [isSaving]="isWikiVersionSubmitting()"
+      (saveContent)="onSaveContent($event)"
     ></osf-edit-section>
   }
   @if (wikiModes().compare) {
