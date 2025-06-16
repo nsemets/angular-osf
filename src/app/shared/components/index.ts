@@ -15,6 +15,7 @@ export { MyProjectsTableComponent } from './my-projects-table/my-projects-table.
 export { PasswordInputHintComponent } from './password-input-hint/password-input-hint.component';
 export { PieChartComponent } from './pie-chart/pie-chart.component';
 export { ResourceCardComponent } from './resource-card/resource-card.component';
+export { SearchHelpTutorialComponent } from './search-help-tutorial/search-help-tutorial.component';
 export { SearchInputComponent } from './search-input/search-input.component';
 export { SelectComponent } from './select/select.component';
 export { SubHeaderComponent } from './sub-header/sub-header.component';
