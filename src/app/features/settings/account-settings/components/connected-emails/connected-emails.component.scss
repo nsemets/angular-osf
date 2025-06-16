@@ -81,7 +81,7 @@
     }
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: var.$breakpoint-sm) {
     .account-setting-email {
       flex-wrap: wrap;
       gap: 0.5rem;
