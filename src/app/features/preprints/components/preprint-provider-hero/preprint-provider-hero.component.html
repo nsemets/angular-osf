@@ -41,33 +41,39 @@
     }
   </div>
 
-  <div class="search-input-container">
-    <img
-      ngSrc="assets/icons/colored/question-mark.svg"
-      alt="preprints help"
-      tabindex="0"
-      role="button"
-      height="36"
-      width="36"
-      class="cursor-pointer"
-      (click)="openHelpDialog()"
-      (keydown.enter)="openHelpDialog()"
-    />
+  @if (isPreprintProviderLoading()) {
+    <p-skeleton class="w-full" height="3rem" />
+  } @else {
+    <div class="search-input-container">
+      <img
+        ngSrc="assets/icons/colored/question-mark.svg"
+        alt="preprints help"
+        tabindex="0"
+        role="button"
+        height="36"
+        width="36"
+        class="cursor-pointer"
+        (click)="openHelpDialog()"
+        (keydown.enter)="openHelpDialog()"
+      />
 
-    <osf-search-input
-      class="w-full"
-      [placeholder]="
-        'preprints.searchPlaceholder' | translate: { preprintWord: preprintProvider()!.preprintWord } | titlecase
-      "
-      [control]="searchControl()"
-      (triggerSearch)="onTriggerSearch($event)"
-    />
-  </div>
+      <osf-search-input
+        class="w-full"
+        [placeholder]="
+          'preprints.searchPlaceholder' | translate: { preprintWord: preprintProvider()!.preprintWord } | titlecase
+        "
+        [control]="searchControl()"
+        (triggerSearch)="onTriggerSearch($event)"
+      />
+    </div>
+  }
 
   <!-- [Rni] TODO: add link to an example preprint -->
   @if (isPreprintProviderLoading()) {
     <p-skeleton width="10%" height="1rem" />
   } @else {
-    <a class="link font-bold">{{ 'preprints.showExample' | translate }}</a>
+    <p>
+      <a class="font-bold">{{ 'preprints.showExample' | translate }}</a>
+    </p>
   }
 </section>
