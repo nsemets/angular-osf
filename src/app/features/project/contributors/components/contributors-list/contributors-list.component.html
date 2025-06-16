@@ -148,7 +148,13 @@
           </div>
         </td>
         <td>
-          <p-button variant="text" [severity]="'danger'" icon="fas fa-trash" (click)="removeContributor(contributor)">
+          <p-button
+            class="danger-icon-btn"
+            icon="fas fa-trash"
+            severity="danger"
+            text
+            (click)="removeContributor(contributor)"
+          >
           </p-button>
         </td>
       </tr>
