@@ -3,7 +3,7 @@
   <div formArrayName="educations" class="flex flex-column row-gap-4">
     @if (haveEducations) {
       @for (education of educations.controls; track education.value; let index = $index) {
-        <div [formGroupName]="index" class="flex flex-column border-1 border-round-lg p-4 name-container row-gap-4">
+        <div [formGroupName]="index" class="flex flex-column border-1 border-round-lg p-4 grey-border-color row-gap-4">
           <div class="flex flex-row">
             <h2>
               {{ 'settings.profileSettings.education.title' | translate: { index: index + 1 } }}
