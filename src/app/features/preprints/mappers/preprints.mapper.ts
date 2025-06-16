@@ -29,6 +29,7 @@ export class PreprintsMapper {
         secondaryColor: brandRaw.attributes.secondary_color,
       },
       iri: response.links.iri,
+      faviconUrl: response.attributes.assets.favicon,
     };
   }
 

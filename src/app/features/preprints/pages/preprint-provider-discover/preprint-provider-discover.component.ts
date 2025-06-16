@@ -41,7 +41,7 @@ import {
 } from '@osf/features/preprints/store/preprints-resources-filters';
 import { GetAllOptions } from '@osf/features/preprints/store/preprints-resources-filters-options';
 import { FilterLabelsModel, ResourceFilterLabel } from '@shared/models';
-import { HeaderStyleHelper } from '@shared/utils';
+import { BrowserTabHelper, HeaderStyleHelper } from '@shared/utils';
 
 @Component({
   selector: 'osf-preprint-provider-discover',
@@ -110,6 +110,7 @@ export class PreprintProviderDiscoverComponent implements OnInit, OnDestroy {
           provider.brand.secondaryColor,
           provider.brand.heroBackgroundImageUrl
         );
+        BrowserTabHelper.updateTabStyles(provider.faviconUrl, provider.name);
       }
     });
 
@@ -187,6 +188,7 @@ export class PreprintProviderDiscoverComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     HeaderStyleHelper.resetToDefaults();
     BrandService.resetBranding();
+    BrowserTabHelper.resetToDefaults();
     this.actions.resetFiltersState();
     this.actions.resetDiscoverState();
   }

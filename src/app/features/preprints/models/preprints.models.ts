@@ -24,6 +24,7 @@ export interface PreprintProviderDetails {
   brand: Brand;
   lastFetched?: number;
   iri: string;
+  faviconUrl: string;
 }
 
 export interface PreprintProviderShortInfo {
@@ -56,6 +57,7 @@ export interface PreprintProviderDetailsGetResponse {
     assets: {
       wide_white: string;
       square_color_no_transparent: string;
+      favicon: string;
     };
     allow_submissions: boolean;
   };
