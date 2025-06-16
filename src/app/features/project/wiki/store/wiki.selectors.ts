@@ -57,6 +57,11 @@ export class WikiSelectors {
   }
 
   @Selector([WikiState])
+  static getWikiVersionsLoading(state: WikiStateModel): boolean {
+    return state.wikiVersions.isLoading;
+  }
+
+  @Selector([WikiState])
   static getWikiVersionContent(state: WikiStateModel): string {
     return state.versionContent.data;
   }

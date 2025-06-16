@@ -229,6 +229,13 @@ export class WikiState {
   setCurrentWiki(ctx: StateContext<WikiStateModel>, action: SetCurrentWiki) {
     ctx.patchState({
       currentWikiId: action.wikiId,
+      previewContent: '',
+      versionContent: {
+        data: '',
+        isLoading: false,
+        error: null,
+        isSubmitting: false,
+      },
     });
   }
 

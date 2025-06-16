@@ -20,6 +20,11 @@
   }
 }
 
+.p-button-icon-only,
+.btn-icon-only .p-button {
+  padding: mix.rem(15px) mix.rem(22px);
+}
+
 .btn-icon-text,
 .btn-icon {
   .p-button {

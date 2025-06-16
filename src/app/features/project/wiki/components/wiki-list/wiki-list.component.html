@@ -33,15 +33,15 @@
           >
           </p-button>
         }
-        <div class="flex flex-column justify-center">
-          <p-panelmenu [model]="wikiMenu()" [multiple]="true" class="w-full">
+        <div class="flex flex-column justify-center mt-4 flex-1">
+          <p-panelmenu [model]="wikiMenu()" [multiple]="true" class="w-full flex flex-1 flex-column">
             <ng-template #item let-item>
               <div class="flex align-items-center p-2 cursor-pointer" [class.active]="item.id === currentWikiId()">
                 @switch (item.type) {
                   @case (wikiItemType.Folder) {
                     <i [class]="item.expanded ? 'fa-minus' : 'fa-plus'" class="fas text-xs mr-1"></i>
                     <i [class]="item.expanded ? 'fas fa-folder-open' : 'fas fa-folder'"></i>
-                    <h3 class="ml-2">{{ item.label }}</h3>
+                    <h4 class="ml-2">{{ item.label }}</h4>
                   }
                   @case (wikiItemType.Component) {
                     <i [class]="item.expanded ? 'fa-minus' : 'fa-plus'" class="fas text-xs mr-1"></i>
@@ -62,12 +62,12 @@
       </p-panel>
     } @else {
       <div class="mb-2">
-        <p-button class="btn-icon" (click)="collapseNavigation()">
+        <p-button class="btn-icon-only" (click)="collapseNavigation()" raised outlined severity="contrast">
           <i class="fas fa-list-ul"></i>
           <i class="fas fa-forward"></i>
         </p-button>
       </div>
-      <p-button icon="pi pi-plus" class="btn-icon-text-success" (click)="openAddWikiDialog()" />
+      <p-button icon="pi pi-plus" raised outlined severity="success" (click)="openAddWikiDialog()" />
     }
   }
 </div>

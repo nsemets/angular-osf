@@ -70,6 +70,7 @@ export class WikiComponent {
   protected currentWikiId = select(WikiSelectors.getCurrentWikiId);
   protected wikiVersions = select(WikiSelectors.getWikiVersions);
   protected isWikiVersionSubmitting = select(WikiSelectors.getWikiVersionSubmitting);
+  protected isWikiVersionLoading = select(WikiSelectors.getWikiVersionsLoading);
 
   protected actions = createDispatchMap({
     getWikiModes: GetWikiModes,

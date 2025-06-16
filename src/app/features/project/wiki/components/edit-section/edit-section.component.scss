@@ -1,17 +1,8 @@
 :host {
   flex: 1 1 25%;
-  ::ng-deep {
-    .p-panel {
-      display: flex;
-      flex-direction: column;
-    }
-    .p-panel-content-container {
-      display: flex;
-      flex: 1;
-    }
-    md-editor {
-      display: block;
-      height: 100%;
-    }
+
+  md-editor {
+    display: block;
+    height: 100%;
   }
 }

@@ -54,3 +54,47 @@
     }
   }
 }
+
+.wiki-page {
+  .view-panel {
+    height: 100%;
+  }
+
+  .p-panel {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .p-panel-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .p-panel-content-container {
+    display: flex;
+    flex-direction: column;
+
+    flex: 1;
+  }
+
+  .wiki-list {
+    .p-panelmenu {
+      flex: 1;
+
+      .p-panelmenu-panel {
+        flex: 1;
+      }
+    }
+
+    .p-panelmenu-header-label {
+      font-weight: bold;
+      font-size: 1rem;
+    }
+  }
+
+  .edit-section {
+    display: block;
+    min-height: 300px;
+  }
+}

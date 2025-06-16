@@ -5,12 +5,14 @@
       position: relative;
       display: inline-flex;
       vertical-align: middle;
+
       .btn {
         padding: 0.5rem 0.75rem;
         font-size: 1rem;
         border: none;
         cursor: pointer;
         transition: all 0.1s ease-in-out;
+
         &:hover {
           background-color: var(--grey-2);
         }
@@ -19,6 +21,7 @@
 
     &.md-editor-resizable {
       margin-bottom: 0;
+
       .md-footer {
         z-index: 1;
       }
@@ -55,10 +58,12 @@
       margin-block-start: 1em;
       margin-block-end: 1em;
       padding-inline-start: 40px;
+
       li {
         list-style: initial;
       }
     }
+
     ol {
       li {
         list-style-type: decimal;

@@ -3,20 +3,22 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { SafeHtmlPipe } from 'primeng/menu';
 import { PanelModule } from 'primeng/panel';
 import { Select } from 'primeng/select';
+import { Skeleton } from 'primeng/skeleton';
 
-import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { WikiVersion } from '../../models';
 
 @Component({
   selector: 'osf-view-section',
-  imports: [PanelModule, Select, FormsModule, TranslatePipe, SafeHtmlPipe],
+  imports: [PanelModule, Select, FormsModule, TranslatePipe, SafeHtmlPipe, Skeleton],
   templateUrl: './view-section.component.html',
   styleUrl: './view-section.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewSectionComponent {
+  isLoading = input<boolean>(false);
   previewContent = input.required<string>();
   versions = input.required<WikiVersion[]>();
   versionContent = input.required<string>();
@@ -43,6 +45,13 @@ export class ViewSectionComponent {
       };
     }),
   ]);
+
+  constructor() {
+    effect(() => {
+      this.versions(); // this triggers effect when versions changes
+      this.selectedVersion.set(null);
+    });
+  }
 
   onVersionChange(versionId: string): void {
     this.selectedVersion.set(versionId);

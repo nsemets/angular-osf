@@ -27,7 +27,6 @@ export class EditSectionComponent implements OnInit {
 
   public options: MdEditorOption = {
     showPreviewPanel: false,
-    resizable: true,
     customRender: {},
     fontAwesomeVersion: '6',
     markedjsOpt: {
