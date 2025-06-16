@@ -19,13 +19,10 @@
   <div class="mt-3 h-full">
     <md-editor
       id="md-editor"
-      name="Content"
       [(ngModel)]="content"
       [options]="options"
       (onEditorLoaded)="onEditorLoaded($event)"
       (onPreviewDomChanged)="onPreviewDomChanged($event)"
-      required
-      maxlength="600"
       height="100%"
     >
       <slot custom-btns>
@@ -40,6 +37,9 @@
             <i class="fas fa-grip-lines"></i>
           </button>
         </div>
+        <button class="btn btn-sm btn-default" title="Wiki syntax help" (click)="openSyntaxHelpDialog()">
+          <i class="fas fa-question"></i>
+        </button>
       </slot>
     </md-editor>
   </div>

@@ -93,7 +93,6 @@ export class WikiService {
       .get<WikiVersionJsonApiResponse>(environment.apiUrl + `/wikis/${wikiId}/versions/`, params)
       .pipe(
         map((response) => {
-          console.log('Wiki versions fetched:', response);
           return response.data.map((version) => WikiMapper.fromGetWikiVersionResponse(version));
         })
       );

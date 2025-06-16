@@ -577,7 +577,8 @@
       "list": {
         "header": "Project Wiki Pages",
         "componentsHeader": "Components Wiki Pages"
-      }
+      },
+      "syntaxHelp": "Wiki syntax help"
     },
     "registrations": {
       "addRegistration": "Add a Registration",

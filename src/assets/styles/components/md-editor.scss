@@ -7,11 +7,12 @@
       vertical-align: middle;
 
       .btn {
-        padding: 0.5rem 0.75rem;
+        padding: 0.3rem 0.5rem;
         font-size: 1rem;
         border: none;
         cursor: pointer;
         transition: all 0.1s ease-in-out;
+        background-color: var(--white);
 
         &:hover {
           background-color: var(--grey-2);
@@ -21,9 +22,16 @@
 
     &.md-editor-resizable {
       margin-bottom: 0;
+    }
 
-      .md-footer {
-        z-index: 1;
+    .tool-bar {
+      position: relative;
+      padding-right: 40px;
+      background-color: var(--white);
+      .hide-split {
+        position: absolute;
+        right: 0;
+        top: 0;
       }
     }
 
@@ -69,5 +77,8 @@
         list-style-type: decimal;
       }
     }
+  }
+  .md-footer {
+    display: none;
   }
 }

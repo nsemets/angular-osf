@@ -1,11 +1,14 @@
 import { LMarkdownEditorModule, MdEditorOption } from 'ngx-markdown-editor';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
+import { DialogService } from 'primeng/dynamicdialog';
 import { PanelModule } from 'primeng/panel';
 
-import { ChangeDetectionStrategy, Component, input, OnInit, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, OnInit, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+
+import { WikiSyntaxHelpDialogComponent } from '../wiki-syntax-help-dialog/wiki-syntax-help-dialog.component';
 
 @Component({
   selector: 'osf-edit-section',
@@ -13,6 +16,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './edit-section.component.html',
   styleUrl: './edit-section.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [DialogService],
 })
 export class EditSectionComponent implements OnInit {
   readonly currentContent = input.required<string>();
@@ -24,6 +28,8 @@ export class EditSectionComponent implements OnInit {
   private editorInstance: any;
   content = '';
   initialContent = '';
+  private readonly dialogService = inject(DialogService);
+  private readonly translateService = inject(TranslateService);
 
   public options: MdEditorOption = {
     showPreviewPanel: false,
@@ -71,5 +77,12 @@ export class EditSectionComponent implements OnInit {
     this.editorInstance?.insert('\n');
     this.editorInstance?.insert('----------\n');
     this.editorInstance?.insert('\n');
+  }
+
+  openSyntaxHelpDialog() {
+    this.dialogService.open(WikiSyntaxHelpDialogComponent, {
+      header: this.translateService.instant('project.wiki.syntaxHelp'),
+      modal: true,
+    });
   }
 }
