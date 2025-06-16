@@ -11,7 +11,9 @@
       "copy": "Copy",
       "move": "Move",
       "rename": "Rename",
-      "next": "Next"
+      "next": "Next",
+      "select": "Select",
+      "deselect": "Deselect"
     },
     "search": {
       "title": "Search",
@@ -1238,11 +1240,7 @@
       "sectionTitle": "Select a preprint service",
       "description": "A preprint is a version of a scholarly or scientific paper that is posted online before it has undergone formal peer review and published in a scientific journal.",
       "learnMore": "Learn more",
-      "buttons": {
-        "next": "Next",
-        "select": "Select",
-        "deselect": "Deselect"
-      }
+      "providerLogoImageAlt": "Provider Logo"
     }
   },
   "truncatedText": {

@@ -25,23 +25,26 @@
       @for (provider of preprintProvidersAllowingSubmissions(); track $index) {
         <p-card
           [ngClass]="{ active: selectedProviderId() === provider.id }"
+          class="provider-card"
           [pTooltip]="descriptionTooltip"
           tooltipPosition="bottom"
           autoHide="false"
           (click)="selectDeselectProvider(provider)"
         >
           <div class="h-10rem w-13rem grid-item flex flex-column align-items-center justify-content-end">
-            @if (provider.squareColorNoTransparentImageUrl) {
-              <img height="60" [src]="provider.squareColorNoTransparentImageUrl" alt="Provider Logo" />
-            }
+            <img
+              height="60"
+              [src]="provider.squareColorNoTransparentImageUrl"
+              [alt]="'preprints.selectService.providerLogoImageAlt' | translate"
+            />
 
             <h4 class="m-t-12">{{ provider.name }}</h4>
             <p-button
               class="m-t-24"
               [label]="
                 selectedProviderId() === provider.id
-                  ? ('preprints.selectService.buttons.deselect' | translate)
-                  : ('preprints.selectService.buttons.select' | translate)
+                  ? ('common.buttons.deselect' | translate)
+                  : ('common.buttons.select' | translate)
               "
               severity="secondary"
             />
@@ -54,10 +57,6 @@
     }
   </section>
   <section class="m-t-48 flex flex-row justify-content-end">
-    <p-button
-      [label]="'preprints.selectService.buttons.next' | translate"
-      (click)="nextStep()"
-      [disabled]="!selectedProviderId()"
-    />
+    <p-button [label]="'common.buttons.next' | translate" (click)="nextStep()" [disabled]="!selectedProviderId()" />
   </section>
 </section>

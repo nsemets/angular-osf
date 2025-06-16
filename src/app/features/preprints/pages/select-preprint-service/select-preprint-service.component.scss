@@ -1,5 +1,4 @@
 @use "assets/styles/mixins" as mix;
-@use "assets/styles/variables" as var;
 
 .grid-item {
   width: mix.rem(260px);
@@ -7,7 +6,7 @@
 }
 
 .active,
-p-card:hover {
+.provider-card:hover {
   --p-card-background: var(--bg-blue-3);
   cursor: pointer;
 
