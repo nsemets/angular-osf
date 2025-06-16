@@ -12,12 +12,22 @@
       "move": "Move",
       "rename": "Rename",
       "next": "Next",
+      "skip": "Skip",
+      "done": "Done",
       "select": "Select",
       "deselect": "Deselect"
     },
     "search": {
       "title": "Search",
-      "noResultsFound": "No results found."
+      "noResultsFound": "No results found.",
+      "tabs": {
+        "all": "All",
+        "preprints": "Preprints",
+        "registrations": "Registrations",
+        "projects": "Projects",
+        "files": "Files",
+        "users": "Users"
+      }
     },
     "labels": {
       "downloads": "Downloads"
@@ -1301,5 +1311,20 @@
     "maxLength": "The field must be at most {{length}} characters.",
     "minLength": "The field must be at least {{length}} characters.",
     "invalidInput": "Invalid input."
+  },
+  "searchHelpTutorial": {
+    "step1": {
+      "title": "Improved OSF Search",
+      "description": "Enter any term in the search box and filter by specific object types. More information is available on our help guides."
+    },
+    "step2": {
+      "title": "Refine Your Search",
+      "description": "Narrow the source, discipline, and more. For example, find content supported by a specific funder or view only datasets."
+    },
+    "step3": {
+      "title": "Add Metadata",
+      "description": "Remember to add metadata and resources to your own work on OSF to make it more discoverable! Learn more in our help guides."
+    },
+    "stepCount": "{{current}} of {{total}}"
   }
 }
