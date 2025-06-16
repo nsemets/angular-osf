@@ -24,12 +24,15 @@ export interface PreprintProviderDetails {
   brand: Brand;
   lastFetched?: number;
   iri: string;
+  faviconUrl: string;
 }
 
-export interface PreprintProviderToAdvertise {
+export interface PreprintProviderShortInfo {
   id: string;
   name: string;
+  descriptionHtml: string;
   whiteWideImageUrl: string;
+  squareColorNoTransparentImageUrl: string;
 }
 
 export interface Subject {
@@ -53,6 +56,8 @@ export interface PreprintProviderDetailsGetResponse {
     preprint_word: string;
     assets: {
       wide_white: string;
+      square_color_no_transparent: string;
+      favicon: string;
     };
     allow_submissions: boolean;
   };

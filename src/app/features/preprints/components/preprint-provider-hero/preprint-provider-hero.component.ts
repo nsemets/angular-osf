@@ -4,6 +4,7 @@ import { Button } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Skeleton } from 'primeng/skeleton';
 
+import { TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -15,7 +16,7 @@ import { DecodeHtmlPipe } from '@shared/pipes';
 
 @Component({
   selector: 'osf-preprint-provider-hero',
-  imports: [Button, RouterLink, SearchInputComponent, Skeleton, TranslatePipe, DecodeHtmlPipe],
+  imports: [Button, RouterLink, SearchInputComponent, Skeleton, TranslatePipe, DecodeHtmlPipe, TitleCasePipe],
   templateUrl: './preprint-provider-hero.component.html',
   styleUrl: './preprint-provider-hero.component.scss',
   providers: [DialogService],

@@ -15,7 +15,7 @@ import {
   GetPreprintProviderById,
   PreprintsSelectors,
 } from '@osf/features/preprints/store/preprints';
-import { HeaderStyleHelper } from '@shared/utils';
+import { BrowserTabHelper, HeaderStyleHelper } from '@shared/utils';
 
 @Component({
   selector: 'osf-provider-overview',
@@ -55,6 +55,7 @@ export class PreprintProviderOverviewComponent implements OnInit, OnDestroy {
           provider.brand.secondaryColor,
           provider.brand.heroBackgroundImageUrl
         );
+        BrowserTabHelper.updateTabStyles(provider.faviconUrl, provider.name);
       }
     });
   }
@@ -67,6 +68,7 @@ export class PreprintProviderOverviewComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     HeaderStyleHelper.resetToDefaults();
     BrandService.resetBranding();
+    BrowserTabHelper.resetToDefaults();
   }
 
   redirectToDiscoverPageWithValue(searchValue: string) {
