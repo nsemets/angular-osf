@@ -6,6 +6,7 @@ import { JsonApiService } from '@core/services';
 import { JsonApiResponse } from '@osf/core/models';
 import { PreprintsMapper } from '@osf/features/preprints/mappers';
 import {
+  PreprintJsonApi,
   PreprintProviderDetails,
   PreprintProviderDetailsGetResponse,
   PreprintProviderShortInfo,
@@ -68,5 +69,14 @@ export class PreprintsService {
           return PreprintsMapper.fromSubjectsGetResponse(providerId, response.data);
         })
       );
+  }
+
+  createPreprint(title: string, abstract: string, providerId: string) {
+    const payload = PreprintsMapper.toCreatePayload(title, abstract, providerId);
+    return this.jsonApiService.post<PreprintJsonApi>(`${environment.apiUrl}/preprints/`, payload).pipe(
+      map((response) => {
+        return PreprintsMapper.fromPreprintJsonApi(response);
+      })
+    );
   }
 }

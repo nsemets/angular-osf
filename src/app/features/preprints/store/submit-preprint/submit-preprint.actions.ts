@@ -5,3 +5,13 @@ export class SetSelectedPreprintProviderId {
 
   constructor(public id: StringOrNull) {}
 }
+
+export class CreatePreprint {
+  static readonly type = '[Submit Preprint] Create Preprint';
+
+  constructor(
+    public title: string,
+    public abstract: string,
+    public providerId: string
+  ) {}
+}

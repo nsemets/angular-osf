@@ -81,6 +81,7 @@ export class SubmitPreprintStepperComponent implements OnInit, OnDestroy {
     HeaderStyleHelper.resetToDefaults();
     BrandService.resetBranding();
     BrowserTabHelper.resetToDefaults();
+    //TODO reset submit state, delete preprint if created
   }
 
   stepChange(step: number) {

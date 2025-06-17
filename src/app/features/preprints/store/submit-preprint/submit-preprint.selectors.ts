@@ -7,4 +7,9 @@ export class SubmitPreprintSelectors {
   static getSelectedProviderId(state: SubmitPreprintStateModel) {
     return state.selectedProviderId;
   }
+
+  @Selector([SubmitPreprintState])
+  static getCreatedPreprint(state: SubmitPreprintStateModel) {
+    return state.createdPreprint;
+  }
 }
