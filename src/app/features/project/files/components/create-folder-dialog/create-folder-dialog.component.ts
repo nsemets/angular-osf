@@ -1,9 +1,11 @@
+import { TranslatePipe } from '@ngx-translate/core';
+
+import { Button } from 'primeng/button';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { InputText } from 'primeng/inputtext';
+
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { Button } from 'primeng/button';
-import { InputText } from 'primeng/inputtext';
-import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'osf-create-folder-dialog',
@@ -13,14 +15,16 @@ import { TranslatePipe } from '@ngx-translate/core';
     <form [formGroup]="folderForm" (ngSubmit)="onSubmit()">
       <div class="flex flex-column gap-4">
         <div class="flex flex-column gap-2">
-          <label for="folderName" class="font-semibold">{{ 'project.files.folderName' | translate }}</label>
+          <label for="folderName" class="font-semibold">{{
+            'project.files.dialogs.createFolder.folderName' | translate
+          }}</label>
           <input
             pInputText
             formControlName="name"
             id="folderName"
             class="w-full"
             autocomplete="off"
-            placeholder="{{ 'project.files.enterFolderName' | translate }}"
+            placeholder="{{ 'project.files.dialogs.createFolder.folderNamePlaceholder' | translate }}"
           />
         </div>
 

@@ -27,7 +27,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { FilesTreeComponent, CreateFolderDialogComponent } from '@osf/features/project/files/components';
+import { CreateFolderDialogComponent, FilesTreeComponent } from '@osf/features/project/files/components';
+import { FilesTreeActions } from '@osf/features/project/files/models';
 import { ProjectFilesService } from '@osf/features/project/files/services';
 import {
   CreateFolder,
@@ -42,7 +43,6 @@ import {
   SetSearch,
   SetSort,
 } from '@osf/features/project/files/store';
-import { FilesTreeActions } from '@osf/features/project/files/models';
 import { LoadingSpinnerComponent, SearchInputComponent, SubHeaderComponent } from '@shared/components';
 import { ToastService } from '@shared/services';
 

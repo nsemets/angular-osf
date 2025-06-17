@@ -18,7 +18,8 @@
       "skip": "Skip",
       "done": "Done",
       "select": "Select",
-      "deselect": "Deselect"
+      "deselect": "Deselect",
+      "create": "Create"
     },
     "search": {
       "title": "Search",

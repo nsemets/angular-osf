@@ -23,8 +23,8 @@ import {
   embedDynamicJs,
   embedStaticHtml,
   FileMenuItems,
-  OsfFile,
   FilesTreeActions,
+  OsfFile,
 } from '@osf/features/project/files/models';
 import { ProjectFilesService } from '@osf/features/project/files/services';
 import { ProjectFilesSelectors } from '@osf/features/project/files/store';
@@ -150,10 +150,7 @@ export class FilesTreeComponent {
 
   deleteEntry(link: string): void {
     this.actions().setFilesIsLoading(true);
-    this.actions()
-      .deleteEntry(this.projectId(), link)
-      .pipe(take(1))
-      .subscribe();
+    this.actions().deleteEntry(this.projectId(), link).pipe(take(1)).subscribe();
   }
 
   confirmRename(file: OsfFile): void {
@@ -179,10 +176,7 @@ export class FilesTreeComponent {
   renameEntry(newName: string, file: OsfFile): void {
     if (newName.trim() && file.links.upload) {
       this.actions().setFilesIsLoading(true);
-      this.actions()
-        .renameEntry(this.projectId(), file.links.upload, newName)
-        .pipe(take(1))
-        .subscribe();
+      this.actions().renameEntry(this.projectId(), file.links.upload, newName).pipe(take(1)).subscribe();
     }
   }
 
@@ -216,7 +210,10 @@ export class FilesTreeComponent {
       .setMoveFileCurrentFolder(this.currentFolder())
       .pipe(take(1))
       .subscribe(() => {
-        const header = action === 'move' ? this.translateService.instant('project.files.dialogs.moveFile.title') : this.translateService.instant('project.files.dialogs.copyFile.title');
+        const header =
+          action === 'move'
+            ? this.translateService.instant('project.files.dialogs.moveFile.title')
+            : this.translateService.instant('project.files.dialogs.copyFile.title');
         this.dialogRef = this.dialogService.open(MoveFileDialogComponent, {
           width: '552px',
           focusOnShow: false,
@@ -236,12 +233,7 @@ export class FilesTreeComponent {
   updateFilesList(): void {
     const currentFolder = this.currentFolder();
     if (currentFolder?.relationships.filesLink) {
-      this.actions()
-        .getFiles(currentFolder?.relationships.filesLink)
-        .pipe(take(1))
-        .subscribe(() => {
-          this.actions().setFilesIsLoading(false);
-        });
+      this.actions().getFiles(currentFolder?.relationships.filesLink).pipe(take(1)).subscribe();
     } else {
       this.actions().getRootFolderFiles(this.projectId());
     }
@@ -264,7 +256,7 @@ export class FilesTreeComponent {
 
     const message = this.translateService.instant('project.files.dialogs.moveFile.message', {
       dragNodeName: dragNode.name,
-      dropNodeName: dropNode.previousFolder ? 'parent folder' : dropNode.name
+      dropNodeName: dropNode.previousFolder ? 'parent folder' : dropNode.name,
     });
 
     this.confirmationService.confirm({
