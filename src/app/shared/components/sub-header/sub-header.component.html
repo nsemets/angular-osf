@@ -8,10 +8,14 @@
       @if (isLoading()) {
         <p-skeleton width="12rem" height="37px"></p-skeleton>
       } @else {
-        <h1 class="flex">
+        <h1 class="flex align-items-center">
           {{ title() }}
           @if (tooltip()) {
-            <i class="osf-icon-information text-base ml-1 blue-icon" [pTooltip]="tooltip()" tooltipPosition="right"></i>
+            <i
+              class="fas fa-circle-info ml-1 blue-icon cursor-pointer"
+              [pTooltip]="tooltip()"
+              tooltipPosition="right"
+            ></i>
           }
         </h1>
       }
