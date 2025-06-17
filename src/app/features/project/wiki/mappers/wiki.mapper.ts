@@ -14,7 +14,7 @@ export class WikiMapper {
     return {
       id: response.id,
       name: response.attributes.name,
-      kind: response.attributes.kind, // Assuming content is part of the attributes
+      kind: response.attributes.kind,
     };
   }
 
@@ -31,7 +31,7 @@ export class WikiMapper {
     return {
       id: response.id,
       name: response.attributes.name,
-      kind: response.attributes.kind, // Assuming content is part of the attributes
+      kind: response.attributes.kind,
     };
   }
 
@@ -55,7 +55,7 @@ export class WikiMapper {
     return {
       id: response.id,
       name: response.attributes.name,
-      kind: response.attributes.kind, // Assuming content is part of the attributes
+      kind: response.attributes.kind,
     };
   }
 }

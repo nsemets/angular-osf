@@ -81,7 +81,7 @@ export class EditSectionComponent implements OnInit {
 
   openSyntaxHelpDialog() {
     this.dialogService.open(WikiSyntaxHelpDialogComponent, {
-      header: this.translateService.instant('project.wiki.syntaxHelp'),
+      header: this.translateService.instant('project.wiki.syntaxHelp.header'),
       modal: true,
     });
   }

@@ -594,7 +594,15 @@
         "header": "Project Wiki Pages",
         "componentsHeader": "Components Wiki Pages"
       },
-      "syntaxHelp": "Wiki syntax help"
+      "syntaxHelp": {
+        "header": "Wiki Syntax Help",
+        "startMsg": "The wiki uses the",
+        "endMsg": "syntax. For more information and examples, go to our",
+        "links": {
+          "markdown": "Markdown",
+          "guide": "Guides"
+        }
+      }
     },
     "registrations": {
       "addRegistration": "Add a Registration",

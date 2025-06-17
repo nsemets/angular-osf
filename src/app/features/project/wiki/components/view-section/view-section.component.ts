@@ -48,7 +48,7 @@ export class ViewSectionComponent {
 
   constructor() {
     effect(() => {
-      this.versions(); // this triggers effect when versions changes
+      this.versions();
       this.selectedVersion.set(null);
     });
   }

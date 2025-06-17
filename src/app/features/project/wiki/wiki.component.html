@@ -46,6 +46,11 @@
     ></osf-edit-section>
   }
   @if (wikiModes().compare) {
-    <osf-compare-section></osf-compare-section>
+    <osf-compare-section
+      [versions]="wikiVersions()"
+      [versionContent]="compareVersionContent()"
+      [isLoading]="isWikiVersionLoading()"
+      (selectVersion)="onSelectCompareVersion($event)"
+    ></osf-compare-section>
   }
 </section>

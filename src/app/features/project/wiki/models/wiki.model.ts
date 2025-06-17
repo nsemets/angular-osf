@@ -48,7 +48,7 @@ export interface WikiGetResponse {
   type: string;
   attributes: {
     name: string;
-    kind: string; // Assuming 'kind' is the correct attribute for content type
+    kind: string;
   };
 }
 

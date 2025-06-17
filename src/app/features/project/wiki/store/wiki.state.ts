@@ -11,6 +11,7 @@ import {
   CreateWiki,
   CreateWikiVersion,
   DeleteWiki,
+  GetCompareVersionContent,
   GetComponentsWikiList,
   GetHomeWiki,
   GetWikiList,
@@ -22,43 +23,50 @@ import {
 } from './wiki.actions';
 import { WikiStateModel } from './wiki.model';
 
+const DefaultState: WikiStateModel = {
+  homeWikiContent: {
+    data: '',
+    isLoading: false,
+    error: null,
+  },
+  wikiModes: {
+    view: true,
+    edit: false,
+    compare: false,
+  },
+  projectWikiList: {
+    data: [],
+    isLoading: false,
+    error: null,
+    isSubmitting: false,
+  },
+  projectComponentsWikiList: {
+    data: [],
+    isLoading: false,
+    error: null,
+  },
+  currentWikiId: '',
+  previewContent: '',
+  wikiVersions: {
+    data: [],
+    isLoading: false,
+    error: null,
+  },
+  versionContent: {
+    data: '',
+    isLoading: false,
+    error: null,
+  },
+  compareVersionContent: {
+    data: '',
+    isLoading: false,
+    error: null,
+  },
+};
+
 @State<WikiStateModel>({
   name: 'wiki',
-  defaults: {
-    homeWikiContent: {
-      data: '',
-      isLoading: false,
-      error: null,
-    },
-    wikiModes: {
-      view: true,
-      edit: true,
-      compare: false,
-    },
-    projectWikiList: {
-      data: [],
-      isLoading: false,
-      error: null,
-      isSubmitting: false,
-    },
-    projectComponentsWikiList: {
-      data: [],
-      isLoading: false,
-      error: null,
-    },
-    currentWikiId: '',
-    previewContent: '',
-    wikiVersions: {
-      data: [],
-      isLoading: false,
-      error: null,
-    },
-    versionContent: {
-      data: '',
-      isLoading: false,
-      error: null,
-    },
-  },
+  defaults: { ...DefaultState },
 })
 @Injectable()
 export class WikiState {
@@ -144,11 +152,15 @@ export class WikiState {
   @Action(ClearWiki)
   clearWiki(ctx: StateContext<WikiStateModel>) {
     ctx.patchState({
-      homeWikiContent: {
-        data: '',
-        isLoading: false,
-        error: null,
-      },
+      homeWikiContent: { ...DefaultState.homeWikiContent },
+      wikiModes: { ...DefaultState.wikiModes },
+      projectWikiList: { ...DefaultState.projectWikiList },
+      projectComponentsWikiList: { ...DefaultState.projectComponentsWikiList },
+      currentWikiId: DefaultState.currentWikiId,
+      previewContent: DefaultState.previewContent,
+      wikiVersions: { ...DefaultState.wikiVersions },
+      versionContent: { ...DefaultState.versionContent },
+      compareVersionContent: { ...DefaultState.compareVersionContent },
     });
   }
 
@@ -158,7 +170,6 @@ export class WikiState {
 
     const trueModesCount = Object.values(state.wikiModes).filter(Boolean).length;
 
-    // Allow toggling if there are  2 modes true or if the mode being toggled is not currently active
     if (trueModesCount >= 2 || !state.wikiModes[action.mode]) {
       ctx.patchState({
         wikiModes: { ...state.wikiModes, [`${action.mode}`]: !state.wikiModes[action.mode] },
@@ -283,7 +294,6 @@ export class WikiState {
 
   @Action(CreateWikiVersion)
   createWikiVersion(ctx: StateContext<WikiStateModel>, action: CreateWikiVersion) {
-    console.log('Creating wiki version with content:', action.content);
     ctx.patchState({
       versionContent: { data: action.content, isLoading: true, error: null, isSubmitting: true },
     });
@@ -319,6 +329,31 @@ export class WikiState {
         ctx.patchState({
           previewContent: content,
           versionContent: {
+            data: content,
+            isLoading: false,
+            error: null,
+          },
+        });
+      }),
+      catchError((error) => this.handleError(ctx, error))
+    );
+  }
+
+  @Action(GetCompareVersionContent)
+  getCompareVersionContent(ctx: StateContext<WikiStateModel>, action: GetCompareVersionContent) {
+    const state = ctx.getState();
+    ctx.patchState({
+      compareVersionContent: {
+        ...state.compareVersionContent,
+        isLoading: true,
+        error: null,
+      },
+    });
+
+    return this.wikiService.getWikiVersionContent(action.wikiId, action.versionId).pipe(
+      tap((content) => {
+        ctx.patchState({
+          compareVersionContent: {
             data: content,
             isLoading: false,
             error: null,

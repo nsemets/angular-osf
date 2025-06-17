@@ -23,9 +23,5 @@ export interface WikiStateModel {
   previewContent: string;
   wikiVersions: AsyncStateModel<WikiVersion[]>;
   versionContent: AsyncStateModel<string>;
-  // wikiData: {
-  //   componentsWiki: ComponentWiki[];
-  //   version: string;
-  //   content: string;
-  // };
+  compareVersionContent: AsyncStateModel<string>;
 }

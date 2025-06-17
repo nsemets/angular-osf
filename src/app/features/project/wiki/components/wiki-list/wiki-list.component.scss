@@ -2,7 +2,12 @@
   display: flex;
 }
 .wiki-list {
-  width: 300px;
+  width: auto;
+
+  &-expanded {
+    min-width: 300px;
+    width: 300px;
+  }
 
   .active {
     background-color: var(--pr-blue-1);

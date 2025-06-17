@@ -87,3 +87,12 @@ export class GetWikiVersionContent {
     public versionId: string
   ) {}
 }
+
+export class GetCompareVersionContent {
+  static readonly type = '[Wiki] Get Compare Version Content';
+
+  constructor(
+    public wikiId: string,
+    public versionId: string
+  ) {}
+}

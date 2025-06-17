@@ -62,8 +62,18 @@ export class WikiSelectors {
   }
 
   @Selector([WikiState])
+  static getCompareVersionsLoading(state: WikiStateModel): boolean {
+    return state.compareVersionContent.isLoading;
+  }
+
+  @Selector([WikiState])
   static getWikiVersionContent(state: WikiStateModel): string {
     return state.versionContent.data;
+  }
+
+  @Selector([WikiState])
+  static getCompareVersionContent(state: WikiStateModel): string {
+    return state.compareVersionContent.data;
   }
 
   @Selector([WikiState])

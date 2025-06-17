@@ -1,6 +1,6 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { ButtonGroupModule } from 'primeng/buttongroup';
@@ -24,6 +24,7 @@ import {
   CreateWiki,
   CreateWikiVersion,
   DeleteWiki,
+  GetCompareVersionContent,
   GetComponentsWikiList,
   GetWikiContent,
   GetWikiList,
@@ -57,13 +58,13 @@ export class WikiComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private toastService = inject(ToastService);
-  private translateService = inject(TranslateService);
   WikiModes = WikiModes;
 
   readonly projectId = toSignal(this.route.parent?.params.pipe(map((params) => params['id'])) ?? of(undefined));
   protected wikiModes = select(WikiSelectors.getWikiModes);
   protected previewContent = select(WikiSelectors.getPreviewContent);
   protected versionContent = select(WikiSelectors.getWikiVersionContent);
+  protected compareVersionContent = select(WikiSelectors.getCompareVersionContent);
   protected isWikiListLoading = select(WikiSelectors.getWikiListLoading || WikiSelectors.getComponentsWikiListLoading);
   protected wikiList = select(WikiSelectors.getWikiList);
   protected componentsWikiList = select(WikiSelectors.getComponentsWikiList);
@@ -71,6 +72,7 @@ export class WikiComponent {
   protected wikiVersions = select(WikiSelectors.getWikiVersions);
   protected isWikiVersionSubmitting = select(WikiSelectors.getWikiVersionSubmitting);
   protected isWikiVersionLoading = select(WikiSelectors.getWikiVersionsLoading);
+  protected isCompareVersionLoading = select(WikiSelectors.getCompareVersionsLoading);
 
   protected actions = createDispatchMap({
     getWikiModes: GetWikiModes,
@@ -85,6 +87,7 @@ export class WikiComponent {
     getWikiVersions: GetWikiVersions,
     createWikiVersion: CreateWikiVersion,
     getWikiVersionContent: GetWikiVersionContent,
+    getCompareVersionContent: GetCompareVersionContent, // Assuming this is the correct action for compare versions
   });
 
   protected wikiIdFromQueryParams = this.route.snapshot.queryParams['wiki'];
@@ -142,7 +145,7 @@ export class WikiComponent {
       .createWikiVersion(this.currentWikiId(), content)
       .pipe(
         tap(() => {
-          this.toastService.showSuccess(this.translateService.instant('project.wiki.version.successSaved'));
+          this.toastService.showSuccess('project.wiki.version.successSaved');
           this.actions.getWikiVersions(this.currentWikiId());
         })
       )
@@ -151,6 +154,10 @@ export class WikiComponent {
 
   onSelectVersion(versionId: string) {
     this.actions.getWikiVersionContent(this.currentWikiId(), versionId);
+  }
+
+  onSelectCompareVersion(versionId: string) {
+    this.actions.getCompareVersionContent(this.currentWikiId(), versionId);
   }
 
   private navigateToWiki(wiki: string) {

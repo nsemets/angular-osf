@@ -1,6 +1,6 @@
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
-import { ConfirmationService, MenuItem } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { ButtonGroupModule } from 'primeng/buttongroup';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -13,19 +13,9 @@ import { Router, RouterModule } from '@angular/router';
 
 import { defaultConfirmationConfig } from '@osf/shared/utils';
 
-import { Wiki } from '../../models';
+import { Wiki, WikiItemType, WikiMenuItem } from '../../models';
 import { ComponentWiki } from '../../store';
 import { AddWikiDialogComponent } from '../add-wiki-dialog/add-wiki-dialog.component';
-
-enum WikiItemType {
-  Folder = 'folder',
-  File = 'file',
-  Component = 'component',
-}
-interface WikiMenuItem extends MenuItem {
-  type?: WikiItemType;
-  items?: WikiMenuItem[];
-}
 
 @Component({
   selector: 'osf-wiki-list',
@@ -126,7 +116,6 @@ export class WikiListComponent {
 
   private navigateTo(wikiId: string, componentId?: string) {
     if (componentId) {
-      // Navigation trick to avoid reloading the page
       this.router.navigateByUrl('/my-projects').then(() => {
         this.router.navigate(['/my-projects', componentId, 'wiki'], {
           queryParams: { wiki: wikiId },
