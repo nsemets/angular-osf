@@ -12,6 +12,7 @@ export * from './query-params.model';
 export * from './resource-card';
 export * from './select-option.model';
 export * from './social-icon.model';
+export * from './stepper-step.model';
 export * from './store';
 export * from './tab-option.model';
 export * from './table-parameters.model';
