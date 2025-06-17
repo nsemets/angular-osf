@@ -87,7 +87,7 @@ export class WikiComponent {
     getWikiVersions: GetWikiVersions,
     createWikiVersion: CreateWikiVersion,
     getWikiVersionContent: GetWikiVersionContent,
-    getCompareVersionContent: GetCompareVersionContent, // Assuming this is the correct action for compare versions
+    getCompareVersionContent: GetCompareVersionContent,
   });
 
   protected wikiIdFromQueryParams = this.route.snapshot.queryParams['wiki'];
