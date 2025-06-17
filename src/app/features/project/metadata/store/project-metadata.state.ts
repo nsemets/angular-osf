@@ -1,4 +1,5 @@
 import { Action, State, StateContext } from '@ngxs/store';
+import { append, patch } from '@ngxs/store/operators';
 
 import { finalize, tap } from 'rxjs';
 
@@ -6,27 +7,40 @@ import { inject, Injectable } from '@angular/core';
 
 import { MetadataService } from '@osf/features/project/metadata/services/metadata.service';
 import {
+  AddCedarMetadataRecordToState,
+  CreateCedarMetadataRecord,
+  GetCedarMetadataRecords,
   GetCedarMetadataTemplates,
   GetCustomItemMetadata,
   GetFundersList,
   MetadataStateModel,
   ResetCustomItemMetadata,
+  UpdateCedarMetadataRecord,
   UpdateCustomItemMetadata,
 } from '@osf/features/project/metadata/store';
 
-@Injectable()
+import { CedarMetadataRecord, CedarMetadataRecordData, CedarMetadataRecordJsonApi, CrossRefFunder } from '../models';
+
+const initialState: MetadataStateModel = {
+  customItemMetadata: null,
+  customItemMetadataLoading: false,
+  fundersList: [] as CrossRefFunder[],
+  loading: false,
+  fundersLoading: false,
+  error: null,
+  cedarTemplates: null,
+  cedarTemplatesLoading: false,
+  cedarRecord: null,
+  cedarRecordLoading: false,
+  cedarRecords: [] as CedarMetadataRecordData[],
+  cedarRecordsLoading: false,
+};
+
 @State<MetadataStateModel>({
   name: 'metadata',
-  defaults: {
-    customItemMetadata: null,
-    fundersList: [],
-    loading: false,
-    fundersLoading: false,
-    error: null,
-    cedarTemplates: null,
-    cedarTemplatesLoading: false,
-  },
+  defaults: initialState,
 })
+@Injectable()
 export class ProjectMetadataState {
   private readonly metadataService = inject(MetadataService);
 
@@ -138,12 +152,64 @@ export class ProjectMetadataState {
   resetCustomItemMetadata(ctx: StateContext<MetadataStateModel>) {
     ctx.setState({
       customItemMetadata: null,
+      customItemMetadataLoading: false,
       fundersList: [],
       loading: false,
       fundersLoading: false,
       error: null,
       cedarTemplates: null,
       cedarTemplatesLoading: false,
+      cedarRecord: null,
+      cedarRecordLoading: false,
+      cedarRecords: [],
+      cedarRecordsLoading: false,
     });
+  }
+
+  @Action(GetCedarMetadataRecords)
+  getCedarMetadataRecords(ctx: StateContext<MetadataStateModel>, action: GetCedarMetadataRecords) {
+    ctx.patchState({ cedarRecordsLoading: true });
+    return this.metadataService.getMetadataCedarRecords(action.projectId).pipe(
+      tap((response: CedarMetadataRecordJsonApi) => {
+        ctx.patchState({
+          cedarRecords: response.data,
+          cedarRecordsLoading: false,
+        });
+      })
+    );
+  }
+
+  @Action(CreateCedarMetadataRecord)
+  createCedarMetadataRecord(ctx: StateContext<MetadataStateModel>, action: CreateCedarMetadataRecord) {
+    return this.metadataService.createMetadataCedarRecord(action.record).pipe(
+      tap((response: CedarMetadataRecord) => {
+        ctx.dispatch(new AddCedarMetadataRecordToState(response.data));
+      })
+    );
+  }
+
+  @Action(UpdateCedarMetadataRecord)
+  updateCedarMetadataRecord(ctx: StateContext<MetadataStateModel>, action: UpdateCedarMetadataRecord) {
+    return this.metadataService.updateMetadataCedarRecord(action.record, action.recordId).pipe(
+      tap((response: CedarMetadataRecord) => {
+        // Update the existing record in state
+        const state = ctx.getState();
+        const updatedRecords = state.cedarRecords.map((record) =>
+          record.id === action.recordId ? response.data : record
+        );
+        ctx.patchState({
+          cedarRecords: updatedRecords,
+        });
+      })
+    );
+  }
+
+  @Action(AddCedarMetadataRecordToState)
+  addCedarMetadataRecordToState(ctx: StateContext<MetadataStateModel>, action: AddCedarMetadataRecordToState) {
+    ctx.setState(
+      patch({
+        cedarRecords: append([action.record]),
+      })
+    );
   }
 }

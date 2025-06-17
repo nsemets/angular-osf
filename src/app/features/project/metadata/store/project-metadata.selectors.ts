@@ -1,6 +1,7 @@
 import { Selector } from '@ngxs/store';
 
-import { MetadataStateModel } from './project-metadata.model';
+import { MetadataStateModel } from '@osf/features/project/metadata/store/project-metadata.model';
+
 import { ProjectMetadataState } from './project-metadata.state';
 
 export class ProjectMetadataSelectors {
@@ -37,5 +38,25 @@ export class ProjectMetadataSelectors {
   @Selector([ProjectMetadataState])
   static getCedarTemplatesLoading(state: MetadataStateModel) {
     return state.cedarTemplatesLoading;
+  }
+
+  @Selector([ProjectMetadataState])
+  static getCedarRecord(state: MetadataStateModel) {
+    return state.cedarRecord;
+  }
+
+  @Selector([ProjectMetadataState])
+  static getCedarRecordLoading(state: MetadataStateModel) {
+    return state.cedarRecordLoading;
+  }
+
+  @Selector([ProjectMetadataState])
+  static getCedarRecords(state: MetadataStateModel) {
+    return state.cedarRecords;
+  }
+
+  @Selector([ProjectMetadataState])
+  static getCedarRecordsLoading(state: MetadataStateModel) {
+    return state.cedarRecordsLoading;
   }
 }

@@ -1,4 +1,8 @@
-import { CustomItemMetadataRecord } from '@osf/features/project/metadata/models/metadata.models';
+import {
+  CedarMetadataRecord,
+  CedarMetadataRecordData,
+  CustomItemMetadataRecord,
+} from '@osf/features/project/metadata/models';
 
 export class GetCustomItemMetadata {
   static readonly type = '[Metadata] Get Custom Item Metadata';
@@ -27,4 +31,27 @@ export class GetCedarMetadataTemplates {
 
 export class ResetCustomItemMetadata {
   static readonly type = '[Metadata] Reset Custom Item Metadata';
+}
+
+export class GetCedarMetadataRecords {
+  static readonly type = '[Project Metadata] Get Cedar Metadata Records';
+  constructor(public projectId: string) {}
+}
+
+export class CreateCedarMetadataRecord {
+  static readonly type = '[Project Metadata] Create Cedar Metadata Record';
+  constructor(public record: CedarMetadataRecord) {}
+}
+
+export class UpdateCedarMetadataRecord {
+  static readonly type = '[Project Metadata] Update Cedar Metadata Record';
+  constructor(
+    public record: CedarMetadataRecord,
+    public recordId: string
+  ) {}
+}
+
+export class AddCedarMetadataRecordToState {
+  static readonly type = '[Project Metadata] Add Cedar Metadata Record To State';
+  constructor(public record: CedarMetadataRecordData) {}
 }

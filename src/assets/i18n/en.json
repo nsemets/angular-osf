@@ -723,7 +723,11 @@
         "cancel": "Cancel",
         "next": "Next",
         "select": "Select",
-        "selected": "Selected"
+        "selected": "Selected",
+        "publish": "Publish",
+        "changeTemplate": "Change template",
+        "publishedText": "This metadata has a status of 'Published' and is publicly viewable.",
+        "notPublishedText": "This metadata has a status of 'Published' and is publicly viewable."
       },
       "funding": {
         "updated": "Funding information updated successfully",

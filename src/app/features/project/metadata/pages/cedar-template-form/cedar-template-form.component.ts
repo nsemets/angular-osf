@@ -8,7 +8,7 @@ import { Component, input, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { CedarMetadataDataTemplate } from '@osf/features/project/metadata/models';
+import { CedarMetadataDataTemplateJsonApi } from '@osf/features/project/metadata/models';
 
 interface FieldSchema {
   type?: string;
@@ -28,7 +28,7 @@ interface FieldSchema {
   styleUrl: './cedar-template-form.component.scss',
 })
 export class CedarTemplateFormComponent implements OnInit {
-  template = input.required<CedarMetadataDataTemplate>();
+  template = input.required<CedarMetadataDataTemplateJsonApi>();
   formData = signal<Record<string, unknown>>({});
 
   constructor(

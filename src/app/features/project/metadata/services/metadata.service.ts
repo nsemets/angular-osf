@@ -1,9 +1,13 @@
 import { Observable } from 'rxjs';
 
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
-import { CedarMetadataTemplate } from '@osf/features/project/metadata/models';
+import {
+  CedarMetadataRecord,
+  CedarMetadataRecordJsonApi,
+  CedarMetadataTemplateJsonApi,
+} from '@osf/features/project/metadata/models';
 
 import { environment } from '../../../../../environments/environment';
 import {
@@ -128,7 +132,28 @@ export class MetadataService {
     return this.http.get<CrossRefFundersResponse>(url);
   }
 
-  getMetadataCedarTemplates(url?: string): Observable<CedarMetadataTemplate> {
-    return this.http.get<CedarMetadataTemplate>(url || 'https://api.staging4.osf.io/_/cedar_metadata_templates/');
+  getMetadataCedarTemplates(url?: string): Observable<CedarMetadataTemplateJsonApi> {
+    return this.http.get<CedarMetadataTemplateJsonApi>(
+      url || 'https://api.staging4.osf.io/_/cedar_metadata_templates/'
+    );
+  }
+
+  getMetadataCedarRecords(projectId: string): Observable<CedarMetadataRecordJsonApi> {
+    const params = new HttpParams().set('embed', 'template').set('page[size]', 20);
+
+    return this.http.get<CedarMetadataRecordJsonApi>(`${this.apiUrl}/nodes/${projectId}/cedar_metadata_records/`, {
+      params,
+    });
+  }
+
+  createMetadataCedarRecord(data: CedarMetadataRecord): Observable<CedarMetadataRecord> {
+    return this.http.post<CedarMetadataRecord>(`https://api.staging4.osf.io/_/cedar_metadata_records/`, data);
+  }
+
+  updateMetadataCedarRecord(data: CedarMetadataRecord, recordId: string): Observable<CedarMetadataRecord> {
+    return this.http.patch<CedarMetadataRecord>(
+      `https://api.staging4.osf.io/_/cedar_metadata_records/${recordId}/`,
+      data
+    );
   }
 }
