@@ -10,6 +10,7 @@ import { PreprintsService } from '@osf/features/preprints/services';
 import {
   GetHighlightedSubjectsByProviderId,
   GetPreprintProviderById,
+  GetPreprintProvidersAllowingSubmissions,
   GetPreprintProvidersToAdvertise,
 } from '@osf/features/preprints/store/preprints/preprints.actions';
 
@@ -24,6 +25,11 @@ import { PreprintsStateModel } from './';
       error: null,
     },
     preprintProvidersToAdvertise: {
+      data: [],
+      isLoading: false,
+      error: null,
+    },
+    preprintProvidersAllowingSubmissions: {
       data: [],
       isLoading: false,
       error: null,
@@ -88,6 +94,25 @@ export class PreprintsState {
         );
       }),
       catchError((error) => this.handleError(ctx, 'preprintProvidersToAdvertise', error))
+    );
+  }
+
+  @Action(GetPreprintProvidersAllowingSubmissions)
+  getPreprintProvidersAllowingSubmissions(ctx: StateContext<PreprintsStateModel>) {
+    ctx.setState(patch({ preprintProvidersAllowingSubmissions: patch({ isLoading: true }) }));
+
+    return this.#preprintsService.getPreprintProvidersAllowingSubmissions().pipe(
+      tap((data) => {
+        ctx.setState(
+          patch({
+            preprintProvidersAllowingSubmissions: patch({
+              data: data,
+              isLoading: false,
+            }),
+          })
+        );
+      }),
+      catchError((error) => this.handleError(ctx, 'preprintProvidersAllowingSubmissions', error))
     );
   }
 

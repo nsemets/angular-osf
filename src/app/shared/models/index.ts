@@ -15,6 +15,7 @@ export * from './social-icon.model';
 export * from './store';
 export * from './tab-option.model';
 export * from './table-parameters.model';
+export * from './tutorial-step.model';
 export * from './update-node-request.model';
 export * from './user';
 export * from './validation-params.model';

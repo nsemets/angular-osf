@@ -7,6 +7,7 @@ import { PreprintsState } from '@osf/features/preprints/store/preprints';
 import { PreprintsDiscoverState } from '@osf/features/preprints/store/preprints-discover';
 import { PreprintsResourcesFiltersState } from '@osf/features/preprints/store/preprints-resources-filters';
 import { PreprintsResourcesFiltersOptionsState } from '@osf/features/preprints/store/preprints-resources-filters-options';
+import { SubmitPreprintState } from '@osf/features/preprints/store/submit-preprint';
 
 export const preprintsRoutes: Routes = [
   {
@@ -18,6 +19,7 @@ export const preprintsRoutes: Routes = [
         PreprintsDiscoverState,
         PreprintsResourcesFiltersState,
         PreprintsResourcesFiltersOptionsState,
+        SubmitPreprintState,
       ]),
     ],
     children: [
@@ -45,6 +47,13 @@ export const preprintsRoutes: Routes = [
         loadComponent: () =>
           import('@osf/features/preprints/pages/preprint-provider-discover/preprint-provider-discover.component').then(
             (c) => c.PreprintProviderDiscoverComponent
+          ),
+      },
+      {
+        path: 'select',
+        loadComponent: () =>
+          import('@osf/features/preprints/pages/select-preprint-service/select-preprint-service.component').then(
+            (c) => c.SelectPreprintServiceComponent
           ),
       },
     ],

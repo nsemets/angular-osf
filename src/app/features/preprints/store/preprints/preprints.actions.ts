@@ -13,3 +13,7 @@ export class GetHighlightedSubjectsByProviderId {
 export class GetPreprintProvidersToAdvertise {
   static readonly type = '[Preprints] Get Preprint Providers To Advertise';
 }
+
+export class GetPreprintProvidersAllowingSubmissions {
+  static readonly type = '[Preprints] Get Preprint Providers That Allows Submissions';
+}
