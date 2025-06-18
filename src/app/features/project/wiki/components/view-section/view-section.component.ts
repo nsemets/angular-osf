@@ -38,7 +38,7 @@ export class ViewSectionComponent {
   mappedVersions = computed(() => [
     this.previewOption,
     ...this.versions().map((version, index) => {
-      const labelPrefix = index === 0 ? '(Current)' : `(${index})`;
+      const labelPrefix = index === 0 ? '(Current)' : `(${this.versions().length - index})`;
       return {
         label: `${labelPrefix} ${version.createdBy}: (${new Date(version.createdAt).toLocaleString()})`,
         value: version.id,
