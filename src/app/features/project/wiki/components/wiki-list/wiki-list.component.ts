@@ -1,6 +1,5 @@
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
-import { ConfirmationService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { ButtonGroupModule } from 'primeng/buttongroup';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -11,7 +10,7 @@ import { Skeleton } from 'primeng/skeleton';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 
-import { defaultConfirmationConfig } from '@osf/shared/utils';
+import { CustomConfirmationService } from '@osf/shared/services';
 
 import { Wiki, WikiItemType, WikiMenuItem } from '../../models';
 import { ComponentWiki } from '../../store';
@@ -31,12 +30,15 @@ export class WikiListComponent {
   readonly isLoading = input<boolean>(false);
   readonly componentsList = input.required<ComponentWiki[]>();
   readonly currentWikiId = input.required<string>();
+
   readonly deleteWiki = output<void>();
   readonly createWiki = output<void>();
+
   private readonly dialogService = inject(DialogService);
   private readonly translateService = inject(TranslateService);
-  private readonly confirmationService = inject(ConfirmationService);
+  private readonly customConfirmationService = inject(CustomConfirmationService);
   private readonly router = inject(Router);
+
   wikiItemType = WikiItemType;
   expanded = signal(true);
 
@@ -97,16 +99,10 @@ export class WikiListComponent {
   }
 
   openDeleteWikiDialog(): void {
-    this.confirmationService.confirm({
-      ...defaultConfirmationConfig,
-      header: this.translateService.instant('project.wiki.deleteWiki'),
-      message: this.translateService.instant('project.wiki.deleteWikiMessage'),
-      acceptButtonProps: {
-        ...defaultConfirmationConfig.acceptButtonProps,
-        severity: 'danger',
-        label: this.translateService.instant('common.buttons.delete'),
-      },
-      accept: () => this.deleteWiki.emit(),
+    this.customConfirmationService.confirmDelete({
+      headerKey: 'project.wiki.deleteWiki',
+      messageKey: 'project.wiki.deleteWikiMessage',
+      onConfirm: () => this.deleteWiki.emit(),
     });
   }
 
@@ -122,7 +118,6 @@ export class WikiListComponent {
         });
       });
     } else {
-      // change only the wiki id in query params
       this.router.navigate([], {
         queryParams: { wiki: wikiId },
         queryParamsHandling: 'merge',

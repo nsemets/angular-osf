@@ -32,6 +32,10 @@
     },
     "labels": {
       "downloads": "Downloads"
+    },
+    "deleteConfirmation": {
+      "header": "Delete",
+      "message": "Are you sure you want to proceed?"
     }
   },
   "navigation": {
@@ -1145,6 +1149,10 @@
         },
         "dialog": {
           "title": "Add alternative email"
+        },
+        "deleteDialog": {
+          "header": "Delete email",
+          "message": "Are you sure you want to delete <b>{{name}}</b> email?"
         }
       },
       "connectedIdentities": {
