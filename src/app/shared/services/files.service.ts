@@ -41,7 +41,7 @@ export class FilesService {
   #jsonApiService = inject(JsonApiService);
   filesFields = 'name,guid,kind,extra,size,path,materialized_path,date_modified,parent_folder,files';
 
-  getRootFolderFiles(projectId: string, provider: string, search: string, sort: string): Observable<OsfFile[]> {
+  getRootFolderFiles(resourceId: string, provider: string, search: string, sort: string): Observable<OsfFile[]> {
     const params: Record<string, string> = {
       sort: sort,
       'fields[files]': this.filesFields,
@@ -49,7 +49,7 @@ export class FilesService {
     };
 
     return this.#jsonApiService
-      .get<GetFilesResponse>(`${environment.apiUrl}/nodes/${projectId}/files/${provider}/`, params)
+      .get<GetFilesResponse>(`${environment.apiUrl}/nodes/${resourceId}/files/${provider}/`, params)
       .pipe(map((response) => MapFiles(response.data)));
   }
 
@@ -67,7 +67,7 @@ export class FilesService {
 
   uploadFile(
     file: File,
-    projectId: string,
+    resourceId: string,
     provider: string,
     parentFolder: OsfFile | null
   ): Observable<HttpEvent<JsonApiResponse<AddFileResponse, null>>> {
@@ -79,21 +79,21 @@ export class FilesService {
     let link = '';
 
     if (parentFolder?.relationships.parentFolderLink) {
-      link = `${environment.fileApiUrl}/resources/${projectId}/providers/${provider}/${parentFolder?.id ? parentFolder?.id + '/' : ''}`;
+      link = `${environment.fileApiUrl}/resources/${resourceId}/providers/${provider}/${parentFolder?.id ? parentFolder?.id + '/' : ''}`;
     } else {
-      link = `${environment.fileApiUrl}/resources/${projectId}/providers/${provider}/`;
+      link = `${environment.fileApiUrl}/resources/${resourceId}/providers/${provider}/`;
     }
 
     return this.#jsonApiService.putFile<AddFileResponse>(link, file, params);
   }
 
-  createFolder(projectId: string, provider: string, folderName: string, folderId?: string): Observable<OsfFile> {
+  createFolder(resourceId: string, provider: string, folderName: string, folderId?: string): Observable<OsfFile> {
     const params: Record<string, string> = {
       kind: 'folder',
       name: folderName,
     };
 
-    const link = `${environment.fileApiUrl}/resources/${projectId}/providers/${provider}/${folderId ? folderId + '/' : ''}`;
+    const link = `${environment.fileApiUrl}/resources/${resourceId}/providers/${provider}/${folderId ? folderId + '/' : ''}`;
 
     return this.#jsonApiService
       .put<CreateFolderResponse>(link, null, params)
@@ -119,22 +119,22 @@ export class FilesService {
     return this.#jsonApiService.post(link, body);
   }
 
-  moveFile(link: string, path: string, projectId: string, provider: string, action: string): Observable<OsfFile> {
+  moveFile(link: string, path: string, resourceId: string, provider: string, action: string): Observable<OsfFile> {
     const body = {
       action: action,
       path: path,
       provider: provider,
-      resource: projectId,
+      resource: resourceId,
     };
 
     return this.#jsonApiService.post<GetFileResponse>(link, body).pipe(map((response) => MapFile(response)));
   }
 
-  getFolderDownloadLink(projectId: string, provider: string, folderId: string, isRootFolder: boolean): string {
+  getFolderDownloadLink(resourceId: string, provider: string, folderId: string, isRootFolder: boolean): string {
     if (isRootFolder) {
-      return `${environment.fileApiUrl}/resources/${projectId}/providers/${provider}/?zip=`;
+      return `${environment.fileApiUrl}/resources/${resourceId}/providers/${provider}/?zip=`;
     }
-    return `${environment.fileApiUrl}/resources/${projectId}/providers/${provider}/${folderId}/?zip=`;
+    return `${environment.fileApiUrl}/resources/${resourceId}/providers/${provider}/${folderId}/?zip=`;
   }
 
   getFileTarget(fileGuid: string): Observable<OsfFile> {
@@ -149,21 +149,21 @@ export class FilesService {
       .pipe(map((response) => MapFileCustomMetadata(response.data)));
   }
 
-  getProjectShortInfo(projectId: string): Observable<GetProjectShortInfoResponse> {
+  getProjectShortInfo(resourceId: string): Observable<GetProjectShortInfoResponse> {
     const params = {
       'field[nodes]': 'title,description,date_created,date_mofified',
       embed: 'bibliographic_contributors',
     };
-    return this.#jsonApiService.get<GetProjectShortInfoResponse>(`${environment.apiUrl}/nodes/${projectId}/`, params);
+    return this.#jsonApiService.get<GetProjectShortInfoResponse>(`${environment.apiUrl}/nodes/${resourceId}/`, params);
   }
 
-  getProjectCustomMetadata(projectId: string): Observable<GetProjectCustomMetadataResponse> {
+  getProjectCustomMetadata(resourceId: string): Observable<GetProjectCustomMetadataResponse> {
     return this.#jsonApiService.get<GetProjectCustomMetadataResponse>(
-      `${environment.apiUrl}/guids/${projectId}/?embed=custom_metadata&resolve=false`
+      `${environment.apiUrl}/guids/${resourceId}/?embed=custom_metadata&resolve=false`
     );
   }
 
-  getProjectContributors(projectId: string): Observable<OsfFileProjectContributor[]> {
+  getProjectContributors(resourceId: string): Observable<OsfFileProjectContributor[]> {
     const params = {
       'page[size]': '50',
       'fields[users]': 'full_name,active',
@@ -171,7 +171,7 @@ export class FilesService {
 
     return this.#jsonApiService
       .get<GetProjectContributorsResponse>(
-        `${environment.apiUrl}/nodes/${projectId}/contributors_and_group_members/`,
+        `${environment.apiUrl}/nodes/${resourceId}/contributors_and_group_members/`,
         params
       )
       .pipe(
@@ -201,10 +201,10 @@ export class FilesService {
       .pipe(map((response) => MapFileCustomMetadata(response)));
   }
 
-  getFileRevisions(projectId: string, provider: string, fileId: string): Observable<OsfFileRevision[]> {
+  getFileRevisions(resourceId: string, provider: string, fileId: string): Observable<OsfFileRevision[]> {
     return this.#jsonApiService
       .get<GetFileRevisionsResponse>(
-        `${environment.fileApiUrl}/resources/${projectId}/providers/${provider}/${fileId}?revisions=`
+        `${environment.fileApiUrl}/resources/${resourceId}/providers/${provider}/${fileId}?revisions=`
       )
       .pipe(map((response) => MapFileRevision(response.data)));
   }
