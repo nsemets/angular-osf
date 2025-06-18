@@ -48,6 +48,7 @@
   @if (wikiModes().compare) {
     <osf-compare-section
       [versions]="wikiVersions()"
+      [previewContent]="previewContent()"
       [versionContent]="compareVersionContent()"
       [isLoading]="isWikiVersionLoading()"
       (selectVersion)="onSelectCompareVersion($event)"

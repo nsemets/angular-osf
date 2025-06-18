@@ -35,6 +35,10 @@
     },
     "labels": {
       "downloads": "Downloads"
+    },
+    "deleteConfirmation": {
+      "header": "Delete",
+      "message": "Are you sure you want to proceed?"
     }
   },
   "navigation": {
@@ -1191,6 +1195,10 @@
         },
         "dialog": {
           "title": "Add alternative email"
+        },
+        "deleteDialog": {
+          "header": "Delete email",
+          "message": "Are you sure you want to delete <b>{{name}}</b> email?"
         }
       },
       "connectedIdentities": {
@@ -1382,7 +1390,8 @@
     "requestAccess": "Request Access",
     "switchAccount": "Switch Account",
     "commentLabel": "Comment (Optional)",
-    "requestedSuccessMessage": "Your request for access has been sent."
+    "requestedSuccessMessage": "Your request for access has been sent.",
+    "alreadyRequestedMessage": "You already requested access."
   },
   "validation": {
     "required": "The field is required.",

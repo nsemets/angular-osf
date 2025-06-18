@@ -15,12 +15,10 @@ export const authInterceptor: HttpInterceptorFn = (
     const authReq = req.clone({
       setHeaders: {
         Authorization: `Bearer ${authToken}`,
+        Accept: req.responseType === 'text' ? '*/*' : 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
       },
     });
-    if (req.responseType !== 'text') {
-      authReq.headers.set('Accept', 'application/vnd.api+json');
-    }
 
     return next(authReq);
   }

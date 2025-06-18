@@ -83,3 +83,15 @@
     display: none;
   }
 }
+
+.compare-view {
+  white-space: pre-wrap;
+
+  .added {
+    background-color: var(--green-2);
+  }
+
+  .removed {
+    background-color: var(--red-2);
+  }
+}
