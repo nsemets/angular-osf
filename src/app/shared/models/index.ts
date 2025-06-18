@@ -1,6 +1,8 @@
 export * from './charts';
 export * from './create-component-form.model';
 export * from './create-project-form.model';
+export * from './files/file.model';
+export * from './files/get-files-response.model';
 export * from './filter-labels.model';
 export * from './filters';
 export * from './google-drive-folder.model';
@@ -11,6 +13,7 @@ export * from './paginated-data.model';
 export * from './query-params.model';
 export * from './resource-card';
 export * from './select-option.model';
+export * from './severity.type';
 export * from './social-icon.model';
 export * from './store';
 export * from './tab-option.model';

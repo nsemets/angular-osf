@@ -1182,7 +1182,7 @@
         "description": "To merge an existing account with this one or to log in with multiple email addresses, add an alternate email address below. All projects and components will be displayed under the email address listed as primary.",
         "primaryEmail": "Primary Email:",
         "alternateEmails": "Alternate Emails:",
-        "unconfirmedEmails": "Unconfirmed emails:",
+        "unconfirmedEmails": "Unconfirmed Emails:",
         "buttons": {
           "makePrimary": "Make Primary",
           "resend": "Resend",

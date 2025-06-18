@@ -1,12 +1,12 @@
 import {
   FileProvider,
-  OsfFile,
   OsfFileCustomMetadata,
   OsfFileProjectContributor,
   OsfProjectMetadata,
 } from '@osf/features/project/files/models';
-import { AsyncStateModel } from '@shared/models/store';
 import { OsfFileRevision } from '@osf/features/project/files/models/osf-models/file-revisions.model';
+import { OsfFile } from '@shared/models';
+import { AsyncStateModel } from '@shared/models/store';
 
 export interface ProjectFilesStateModel {
   files: AsyncStateModel<OsfFile[]>;

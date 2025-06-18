@@ -1,0 +1,14 @@
+@use "assets/styles/variables" as var;
+
+.action-item {
+  font-style: normal;
+  margin-left: 0.4rem;
+}
+
+.copy-button {
+  --grey-outline: transparent;
+  --p-button-padding-y: 0;
+  --p-button-padding-x: 0;
+  --p-button-label-font-weight: normal;
+  --p-button-text-contrast-color: var(--pr-blue-3) !important;
+}

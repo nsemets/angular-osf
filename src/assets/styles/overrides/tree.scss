@@ -1,7 +1,6 @@
 @use "../variables" as var;
 @use "../mixins" as mix;
 
-
 .files-table {
   .p-tree {
     padding: 0;
@@ -17,6 +16,12 @@
     p-treenode:last-child {
       .file-tables-row {
         border-bottom: none;
+      }
+    }
+
+    .p-tree-node-dragover {
+      .files-table-row {
+        background: var.$bg-blue-3;
       }
     }
 

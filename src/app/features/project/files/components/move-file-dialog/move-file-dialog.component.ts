@@ -12,8 +12,6 @@ import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { OsfFile } from '@osf/features/project/files/models';
-import { ProjectFilesService } from '@osf/features/project/files/services';
 import {
   GetFiles,
   GetMoveFileFiles,
@@ -24,6 +22,8 @@ import {
   SetMoveFileCurrentFolder,
 } from '@osf/features/project/files/store';
 import { LoadingSpinnerComponent } from '@shared/components';
+import { OsfFile } from '@shared/models';
+import { FilesService } from '@shared/services';
 
 @Component({
   selector: 'osf-move-file-dialog',
@@ -35,7 +35,7 @@ import { LoadingSpinnerComponent } from '@shared/components';
 export class MoveFileDialogComponent {
   store = inject(Store);
   dialogRef = inject(DynamicDialogRef);
-  projectFilesService = inject(ProjectFilesService);
+  filesService = inject(FilesService);
   config = inject(DynamicDialogConfig);
   destroyRef = inject(DestroyRef);
   translateService = inject(TranslateService);
@@ -46,6 +46,7 @@ export class MoveFileDialogComponent {
   protected readonly isFolderSame = computed(() => {
     return this.currentFolder()?.id === this.config.data.file.relationships.parentFolderId;
   });
+  protected readonly provider = select(ProjectFilesSelectors.getProvider);
 
   protected readonly dispatch = createDispatchMap({
     getMoveFileFiles: GetMoveFileFiles,
@@ -76,7 +77,7 @@ export class MoveFileDialogComponent {
     if (!currentFolder) return;
 
     this.isFilesUpdating.set(true);
-    this.projectFilesService
+    this.filesService
       .getFolder(currentFolder.relationships.parentFolderLink)
       .pipe(
         take(1),
@@ -103,8 +104,14 @@ export class MoveFileDialogComponent {
     }
 
     this.isFilesUpdating.set(true);
-    this.projectFilesService
-      .moveFile(this.config.data.file.links.move, path, this.config.data.projectId, this.config.data.action)
+    this.filesService
+      .moveFile(
+        this.config.data.file.links.move,
+        path,
+        this.config.data.projectId,
+        this.provider(),
+        this.config.data.action
+      )
       .pipe(
         take(1),
         takeUntilDestroyed(this.destroyRef),

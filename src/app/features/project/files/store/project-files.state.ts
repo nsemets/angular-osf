@@ -5,7 +5,7 @@ import { catchError, forkJoin, switchMap, tap, throwError } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { MapProjectMetadata } from '@osf/features/project/files/mappers';
-import { ProjectFilesService } from '@osf/features/project/files/services/project-files.service';
+import { projectFilesStateDefaults } from '@osf/features/project/files/models/data/project-files-state-defaults.const';
 import {
   CreateFolder,
   DeleteEntry,
@@ -24,10 +24,11 @@ import {
   SetFilesIsLoading,
   SetMoveFileCurrentFolder,
   SetSearch,
-  SetSort, UpdateTags,
+  SetSort,
+  UpdateTags,
 } from '@osf/features/project/files/store/project-files.actions';
 import { ProjectFilesStateModel } from '@osf/features/project/files/store/project-files.model';
-import { projectFilesStateDefaults } from '@osf/features/project/files/models/data/project-files-state-defaults.const';
+import { FilesService } from '@shared/services/files.service';
 
 @Injectable()
 @State<ProjectFilesStateModel>({
@@ -35,19 +36,20 @@ import { projectFilesStateDefaults } from '@osf/features/project/files/models/da
   defaults: projectFilesStateDefaults,
 })
 export class ProjectFilesState {
-  projectFilesService = inject(ProjectFilesService);
+  filesService = inject(FilesService);
 
   @Action(GetRootFolderFiles)
   getRootFolderFiles(ctx: StateContext<ProjectFilesStateModel>, action: GetRootFolderFiles) {
     const state = ctx.getState();
     ctx.patchState({ files: { ...state.files, isLoading: true, error: null } });
+    console.log('root files true');
 
-    return this.projectFilesService.getRootFolderFiles(action.projectId, state.search, state.sort).pipe(
+    return this.filesService.getRootFolderFiles(action.projectId, state.provider, state.search, state.sort).pipe(
       switchMap((files) => {
-        return this.projectFilesService.getFolder(files[0].relationships.parentFolderLink).pipe(
+        return this.filesService.getFolder(files[0].relationships.parentFolderLink).pipe(
           tap({
             next: (parentFolder) => {
-              console.log('here');
+              console.log('root files false');
               ctx.patchState({
                 files: {
                   data: [...files],
@@ -71,7 +73,7 @@ export class ProjectFilesState {
       moveFileFiles: { ...state.moveFileFiles, isLoading: true, error: null },
     });
 
-    return this.projectFilesService.getRootFolderFiles(action.projectId, '', '').pipe(
+    return this.filesService.getRootFolderFiles(action.projectId, state.provider, '', '').pipe(
       tap({
         next: (files) => {
           ctx.patchState({
@@ -94,7 +96,7 @@ export class ProjectFilesState {
       moveFileFiles: { ...state.moveFileFiles, isLoading: true, error: null },
     });
 
-    return this.projectFilesService.getFiles(action.filesLink, '', '').pipe(
+    return this.filesService.getFiles(action.filesLink, '', '').pipe(
       tap({
         next: (files) => {
           ctx.patchState({
@@ -114,10 +116,12 @@ export class ProjectFilesState {
   getFiles(ctx: StateContext<ProjectFilesStateModel>, action: GetFiles) {
     const state = ctx.getState();
     ctx.patchState({ files: { ...state.files, isLoading: true, error: null } });
+    console.log('get files true');
 
-    return this.projectFilesService.getFiles(action.filesLink, state.search, state.sort).pipe(
+    return this.filesService.getFiles(action.filesLink, state.search, state.sort).pipe(
       tap({
         next: (files) => {
+          console.log('get files false');
           ctx.patchState({
             files: {
               data: files,
@@ -139,7 +143,6 @@ export class ProjectFilesState {
 
   @Action(SetCurrentFolder)
   setSelectedFolder(ctx: StateContext<ProjectFilesStateModel>, action: SetCurrentFolder) {
-    console.log('setting current folder');
     ctx.patchState({ currentFolder: action.folder });
   }
 
@@ -150,23 +153,13 @@ export class ProjectFilesState {
 
   @Action(CreateFolder)
   createFolder(ctx: StateContext<ProjectFilesStateModel>, action: CreateFolder) {
-    return this.projectFilesService.createFolder(action.projectId, action.folderName, action.parentFolderId).pipe(
-      tap({
-        next: () => {
-          const selectedFolder = ctx.getState().currentFolder;
-          if (selectedFolder?.relationships.filesLink) {
-            ctx.dispatch(new GetFiles(selectedFolder?.relationships.filesLink));
-          } else {
-            ctx.dispatch(new GetRootFolderFiles(action.projectId));
-          }
-        },
-      })
-    );
+    const state = ctx.getState();
+    return this.filesService.createFolder(action.projectId, state.provider, action.folderName, action.folderId);
   }
 
   @Action(DeleteEntry)
   deleteEntry(ctx: StateContext<ProjectFilesStateModel>, action: DeleteEntry) {
-    return this.projectFilesService.deleteEntry(action.link).pipe(
+    return this.filesService.deleteEntry(action.link).pipe(
       tap({
         next: () => {
           const selectedFolder = ctx.getState().currentFolder;
@@ -185,7 +178,7 @@ export class ProjectFilesState {
     const state = ctx.getState();
     ctx.patchState({ files: { ...state.files, isLoading: true, error: null } });
 
-    return this.projectFilesService.renameEntry(action.link, action.name).pipe(
+    return this.filesService.renameEntry(action.link, action.name).pipe(
       tap({
         next: () => {
           const selectedFolder = ctx.getState().currentFolder;
@@ -215,7 +208,7 @@ export class ProjectFilesState {
     ctx.patchState({ openedFile: { ...state.openedFile, isLoading: true, error: null } });
     ctx.patchState({ tags: { ...state.tags, isLoading: true, error: null } });
 
-    return this.projectFilesService.getFileTarget(action.fileGuid).pipe(
+    return this.filesService.getFileTarget(action.fileGuid).pipe(
       tap({
         next: (file) => {
           ctx.patchState({ openedFile: { data: file, isLoading: false, error: null } });
@@ -231,7 +224,7 @@ export class ProjectFilesState {
     const state = ctx.getState();
     ctx.patchState({ fileMetadata: { ...state.fileMetadata, isLoading: true, error: null } });
 
-    return this.projectFilesService.getFileMetadata(action.fileGuid).pipe(
+    return this.filesService.getFileMetadata(action.fileGuid).pipe(
       tap({
         next: (metadata) => {
           ctx.patchState({ fileMetadata: { data: metadata, isLoading: false, error: null } });
@@ -246,7 +239,7 @@ export class ProjectFilesState {
     const state = ctx.getState();
     ctx.patchState({ fileMetadata: { ...state.fileMetadata, isLoading: true, error: null } });
 
-    return this.projectFilesService.patchFileMetadata(action.payload, action.fileGuid).pipe(
+    return this.filesService.patchFileMetadata(action.payload, action.fileGuid).pipe(
       tap({
         next: (fileMetadata) => {
           if (fileMetadata.id) {
@@ -264,8 +257,8 @@ export class ProjectFilesState {
     ctx.patchState({ projectMetadata: { ...state.projectMetadata, isLoading: true, error: null } });
 
     forkJoin({
-      projectShortInfo: this.projectFilesService.getProjectShortInfo(action.projectId),
-      projectMetadata: this.projectFilesService.getProjectCustomMetadata(action.projectId),
+      projectShortInfo: this.filesService.getProjectShortInfo(action.projectId),
+      projectMetadata: this.filesService.getProjectCustomMetadata(action.projectId),
     })
       .pipe(catchError((error) => this.handleError(ctx, 'projectMetadata', error)))
       .subscribe((results) => {
@@ -285,7 +278,7 @@ export class ProjectFilesState {
     const state = ctx.getState();
     ctx.patchState({ contributors: { ...state.contributors, isLoading: true, error: null } });
 
-    return this.projectFilesService.getProjectContributors(action.projectId).pipe(
+    return this.filesService.getProjectContributors(action.projectId).pipe(
       tap({
         next: (contributors) => {
           ctx.patchState({ contributors: { data: contributors, isLoading: false, error: null } });
@@ -300,7 +293,7 @@ export class ProjectFilesState {
     const state = ctx.getState();
     ctx.patchState({ fileRevisions: { ...state.fileRevisions, isLoading: true, error: null } });
 
-    return this.projectFilesService.getFileRevisions(action.projectId, action.fileId).pipe(
+    return this.filesService.getFileRevisions(action.projectId, state.provider, action.fileId).pipe(
       tap({
         next: (revisions) => {
           ctx.patchState({ fileRevisions: { data: revisions, isLoading: false, error: null } });
@@ -315,14 +308,14 @@ export class ProjectFilesState {
     const state = ctx.getState();
     ctx.patchState({ tags: { ...state.tags, isLoading: true, error: null } });
 
-    return this.projectFilesService.updateTags(action.tags, action.fileGuid).pipe(
+    return this.filesService.updateTags(action.tags, action.fileGuid).pipe(
       tap({
         next: (file) => {
           ctx.patchState({ tags: { data: file.tags, isLoading: false, error: null } });
-        }
+        },
       }),
       catchError((error) => this.handleError(ctx, 'tags', error))
-    )
+    );
   }
 
   private handleError(

@@ -1,5 +1,9 @@
 export { CreateFolderDialogComponent } from './create-folder-dialog/create-folder-dialog.component';
-export { FileDetailComponent } from './file-detail/file-detail.component';
-export { FilesTreeComponent } from './files-tree/files-tree.component';
+export { FileMetadataComponent } from './file-metadata/file-metadata.component';
+export { FileKeywordsComponent } from './keywords/file-keywords.component';
 export { MoveFileDialogComponent } from './move-file-dialog/move-file-dialog.component';
+export { FileProjectMetadataComponent } from './project-metadata/project-metadata.component';
 export { RenameFileDialogComponent } from './rename-file-dialog/rename-file-dialog.component';
+export { FileRevisionsComponent } from '@osf/features/project/files/components/revisions/file-revisions.component';
+export { FileDetailComponent } from '@osf/features/project/files/pages/file-detail/file-detail.component';
+export { FilesTreeComponent } from '@shared/components/files-tree/files-tree.component';

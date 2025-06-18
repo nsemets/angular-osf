@@ -1,4 +1,5 @@
-import { OsfFile, PatchFileMetadata } from '@osf/features/project/files/models';
+import { PatchFileMetadata } from '@osf/features/project/files/models';
+import { OsfFile } from '@shared/models';
 
 export class GetRootFolderFiles {
   static readonly type = '[Project Files] Get Root Folder Files';
@@ -66,7 +67,7 @@ export class CreateFolder {
   constructor(
     public projectId: string,
     public folderName: string,
-    public parentFolderId?: string
+    public folderId: string
   ) {}
 }
 

@@ -1,0 +1,134 @@
+<osf-sub-header [isLoading]="file().isLoading" title="{{ file().data?.name }}" />
+
+<p-tabs [value]="selectedTab" (valueChange)="onTabChange(+$event)" class="flex-1 ml-auto mr-4">
+  <p-tablist>
+    <p-tab [value]="FileDetailTab.Details">{{ 'project.files.detail.tabs.details' | translate }}</p-tab>
+    <p-tab [value]="FileDetailTab.Revisions">{{ 'project.files.detail.tabs.revisions' | translate }}</p-tab>
+    <p-tab [value]="FileDetailTab.Keywords">{{ 'project.files.detail.tabs.keywords' | translate }}</p-tab>
+  </p-tablist>
+</p-tabs>
+
+<div #fileDetailContainer class="flex gap-4 bg-white flex-column h-full flex-1 p-4 h-full">
+  <div class="flex">
+    <div class="flex align-items-center gap-2 back-navigation font-semibold">
+      <i class="pi pi-angle-left text-base"></i>
+      <a [routerLink]="['../']" class="font-semibold">
+        {{ 'project.files.detail.backToList' | translate }}
+      </a>
+    </div>
+
+    <div class="flex gap-3 ml-auto sm-round-padding-btn">
+      <p-button
+        severity="secondary"
+        [label]="'project.files.detail.actions.addCommunityMetadata' | translate"
+        [routerLink]="['/metadata']"
+      ></p-button>
+
+      @if (file().data?.links?.download) {
+        <p-button severity="secondary" (click)="downloadFile(file().data?.links?.download!)"
+          ><i class="osf-icon-download p-1"></i
+        ></p-button>
+      }
+      @if (file().data?.links?.render) {
+        <div class="relative">
+          <p-button severity="secondary" (click)="$event.stopPropagation(); embed.toggle($event)"
+            ><i class="fa-solid fa-file-import p-1"></i>
+          </p-button>
+          <p-popover #embed>
+            <ul class="popover-menu">
+              <li
+                tabindex="0"
+                (click)="handleCopyDynamicEmbed(embed)"
+                (keydown.enter)="handleCopyDynamicEmbed(embed)"
+                class="popover-menu-item"
+              >
+                {{ 'project.files.detail.actions.copyDynamicIframe' | translate }}
+              </li>
+              <li
+                tabindex="0"
+                (click)="handleCopyStaticEmbed(embed)"
+                (keydown.enter)="handleCopyStaticEmbed(embed)"
+                class="popover-menu-item"
+              >
+                {{ 'project.files.detail.actions.copyStaticIframe' | translate }}
+              </li>
+            </ul>
+          </p-popover>
+        </div>
+      }
+      @if (file().data?.links?.html) {
+        <div class="relative">
+          <p-button severity="secondary" (click)="$event.stopPropagation(); share.toggle($event)"
+            ><i class="osf-icon-share p-1"></i
+          ></p-button>
+          <p-popover #share>
+            <ul class="popover-menu">
+              <li
+                tabindex="0"
+                (click)="handleEmailShare(share)"
+                (keydown.enter)="handleEmailShare(share)"
+                class="popover-menu-item"
+              >
+                {{ 'project.files.detail.actions.share.email' | translate }}
+              </li>
+              <li
+                tabindex="0"
+                (click)="handleTwitterShare(share)"
+                (keydown.enter)="handleTwitterShare(share)"
+                class="popover-menu-item"
+              >
+                {{ 'project.files.detail.actions.share.twitter' | translate }}
+              </li>
+              <li
+                tabindex="0"
+                (click)="handleFacebookShare(share)"
+                (keydown.enter)="handleFacebookShare(share)"
+                class="popover-menu-item"
+              >
+                {{ 'project.files.detail.actions.share.facebook' | translate }}
+              </li>
+            </ul>
+          </p-popover>
+        </div>
+      }
+      @if (file().data) {
+        <p-button severity="secondary" (click)="confirmDelete(file().data!)"
+          ><i class="osf-icon-trash red-icon p-1"></i
+        ></p-button>
+      }
+    </div>
+  </div>
+
+  <div class="flex flex-column lg:flex-row gap-4 flex-1 h-full">
+    <div class="w-full h-full lg:w-6">
+      @if (safeLink) {
+        <iframe
+          [src]="safeLink"
+          (load)="isIframeLoading = false"
+          [hidden]="isIframeLoading"
+          title="Rendering of document"
+          marginheight="0"
+          frameborder="0"
+          allowfullscreen=""
+          class="full-image"
+          height="100%"
+          width="100%"
+        ></iframe>
+      }
+      @if (isIframeLoading) {
+        <osf-loading-spinner></osf-loading-spinner>
+      }
+    </div>
+
+    <div class="w-full flex flex-column gap-4 flex-1 lg:w-6">
+      @if (selectedTab === FileDetailTab.Revisions) {
+        <osf-file-revisions class="metadata"></osf-file-revisions>
+      } @else if (selectedTab === FileDetailTab.Keywords) {
+        <osf-file-keywords class="metadata"></osf-file-keywords>
+      } @else {
+        <osf-file-metadata class="metadata"></osf-file-metadata>
+        <osf-project-metadata class="metadata"></osf-project-metadata>
+      }
+    </div>
+  </div>
+</div>
