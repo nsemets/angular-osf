@@ -5,7 +5,6 @@ import { RouterOutlet } from '@angular/router';
   selector: 'osf-project-files-container',
   imports: [RouterOutlet],
   templateUrl: './project-files-container.component.html',
-  styleUrl: './project-files-container.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectFilesContainerComponent {}
