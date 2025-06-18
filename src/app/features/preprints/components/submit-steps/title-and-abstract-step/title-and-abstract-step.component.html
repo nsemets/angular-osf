@@ -11,11 +11,33 @@
         autocomplete="off"
         [formControl]="titleAndAbstractForm.controls['title']"
       />
+      @let titleControl = titleAndAbstractForm.controls['title'];
+      @if (titleControl.invalid && (titleControl.touched || titleControl.dirty)) {
+        <p-message class="simple-variant flex mt-1" severity="error" variant="simple" size="small">
+          {{ INPUT_VALIDATION_MESSAGES.required | translate }}
+        </p-message>
+      }
     </div>
 
     <div class="flex flex-column">
       <label for="abstract">Abstract</label>
-      <textarea pTextarea id="abstract" [rows]="4" [formControl]="titleAndAbstractForm.controls['abstract']"></textarea>
+      <textarea
+        pTextarea
+        id="abstract"
+        [rows]="4"
+        [formControl]="titleAndAbstractForm.controls['description']"
+      ></textarea>
+      @let abstractControl = titleAndAbstractForm.controls['description'];
+      @if (abstractControl.errors?.['required'] && (abstractControl.touched || abstractControl.dirty)) {
+        <p-message class="simple-variant flex mt-1" severity="error" variant="simple" size="small">
+          {{ INPUT_VALIDATION_MESSAGES.required | translate }}
+        </p-message>
+      }
+      @if (abstractControl.errors?.['minlength'] && (abstractControl.touched || abstractControl.dirty)) {
+        <p-message class="simple-variant flex mt-1" severity="error" variant="simple" size="small">
+          {{ 'Abstract must be at least 20 characters.' | translate }}
+        </p-message>
+      }
     </div>
   </div>
 </p-card>
@@ -35,7 +57,7 @@
     [pTooltip]="titleAndAbstractForm.invalid ? 'Fill in \'Required\' fields to continue' : ''"
     tooltipPosition="top"
     [disabled]="titleAndAbstractForm.invalid"
-    [loading]="isCreatingPreprint()"
+    [loading]="isUpdatingPreprint()"
     (click)="nextButtonClicked()"
   />
 </section>

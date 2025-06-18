@@ -6,6 +6,7 @@ import { JsonApiService } from '@core/services';
 import { JsonApiResponse } from '@osf/core/models';
 import { PreprintsMapper } from '@osf/features/preprints/mappers';
 import {
+  Preprint,
   PreprintJsonApi,
   PreprintProviderDetails,
   PreprintProviderDetailsGetResponse,
@@ -20,8 +21,13 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class PreprintsService {
-  jsonApiService = inject(JsonApiService);
-  baseUrl = `${environment.apiUrl}/providers/preprints/`;
+  private jsonApiService = inject(JsonApiService);
+  private baseUrl = `${environment.apiUrl}/providers/preprints/`;
+
+  private domainToApiFieldMap: Record<string, string> = {
+    title: 'title',
+    description: 'description',
+  };
 
   getPreprintProviderById(id: string): Observable<PreprintProviderDetails> {
     return this.jsonApiService
@@ -78,5 +84,31 @@ export class PreprintsService {
         return PreprintsMapper.fromPreprintJsonApi(response);
       })
     );
+  }
+
+  deletePreprint(id: string) {
+    return this.jsonApiService.delete(`${environment.apiUrl}/preprints/${id}/`);
+  }
+
+  updatePreprint(id: string, payload: Partial<Preprint>): Observable<Preprint> {
+    const apiPayload = this.mapPreprintDomainToApiPayload(payload);
+
+    return this.jsonApiService.patch(`${environment.apiUrl}/preprints/${id}/`, {
+      data: {
+        type: 'preprints',
+        id,
+        attributes: apiPayload,
+      },
+    });
+  }
+
+  private mapPreprintDomainToApiPayload(domainPayload: Partial<Preprint>): Partial<PreprintJsonApi> {
+    const apiPayload: Record<string, unknown> = {};
+    Object.entries(domainPayload).forEach(([key, value]) => {
+      if (value !== undefined && this.domainToApiFieldMap[key]) {
+        apiPayload[this.domainToApiFieldMap[key]] = value;
+      }
+    });
+    return apiPayload;
   }
 }
