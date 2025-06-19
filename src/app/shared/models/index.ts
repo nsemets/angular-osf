@@ -1,4 +1,5 @@
 export * from './charts';
+export * from './confirmation-options.model';
 export * from './create-component-form.model';
 export * from './create-project-form.model';
 export * from './filter-labels.model';
