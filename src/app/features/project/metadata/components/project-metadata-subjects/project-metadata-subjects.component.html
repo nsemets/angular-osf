@@ -8,7 +8,7 @@
           class="flex flex-wrap gap-2 p-3 border-1 border-round surface-border min-h-3rem align-items-center cursor-text"
           tabindex="0"
           role="button"
-          [attr.aria-label]="'Selected subjects'"
+          [attr.aria-label]="'project.overview.metadata.subjects' | translate"
           (click)="onInputFocus()"
           (keydown)="$event.key === 'Enter' && onInputFocus()"
         >
@@ -19,15 +19,15 @@
               class="cursor-pointer removable-chip"
               tabindex="0"
               role="button"
-              [attr.aria-label]="'Remove ' + subject.text"
+              [attr.aria-label]="subject.text"
               (click)="removeSubject(subject); $event.stopPropagation()"
               (keydown)="$event.key === 'Enter' && removeSubject(subject)"
-              title="Click to remove"
+              [title]="'project.overview.metadata.clickToRemove' | translate"
             />
           }
 
           @if (getUniqueSubjects().length === 0) {
-            <span class="text-color-secondary">Add subjects...</span>
+            <span class="text-color-secondary">{{ 'project.overview.metadata.addSubjects' | translate }}</span>
           }
         </div>
       </div>
@@ -45,7 +45,7 @@
                       class="pi text-sm cursor-pointer w-1rem"
                       tabindex="0"
                       role="button"
-                      [attr.aria-label]="'Expand or collapse ' + option.label"
+                      [attr.aria-label]="('project.overview.metadata.expandOrCollapse' | translate) + option.label"
                       [ngClass]="option.expanded ? 'pi-chevron-down' : 'pi-chevron-right'"
                       (click)="toggleExpand(option, $event)"
                       (keydown)="$event.key === 'Enter' && toggleExpand(option, $event)"
@@ -68,7 +68,7 @@
                     [style.margin-left.rem]="(option.level || 0) * 1"
                     tabindex="0"
                     role="button"
-                    [attr.aria-label]="'Select ' + option.label"
+                    [attr.aria-label]="option.label"
                     (click)="toggleSelection(option)"
                     (keydown)="$event.key === 'Enter' && toggleSelection(option)"
                   >
@@ -88,7 +88,7 @@
                         [style.margin-left.rem]="child.level || 0"
                         tabindex="0"
                         role="button"
-                        [attr.aria-label]="'Select ' + child.label"
+                        [attr.aria-label]="child.label"
                         (click)="toggleSelection(child)"
                         (keydown)="$event.key === 'Enter' && toggleSelection(child)"
                       >

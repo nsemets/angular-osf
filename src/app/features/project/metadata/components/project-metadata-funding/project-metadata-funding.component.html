@@ -13,7 +13,7 @@
     <div class="pt-4">
       @for (supplement of currentProject()!.supplements!; track supplement.id) {
         <div class="mb-2 p-3 border-1 border-round surface-border">
-          <p class="font-semibold m-0 mb-2">{{ supplement.title || 'Untitled Award' }}</p>
+          <p class="font-semibold m-0 mb-2">{{ supplement.title }}</p>
           <p class="text-sm text-color-secondary m-0 mb-1">{{ supplement.dateCreated | date: 'MMM d, y' }}</p>
           @if (supplement.url) {
             <a [href]="supplement.url" target="_blank" class="text-primary text-sm">{{ supplement.url }}</a>

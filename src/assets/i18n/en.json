@@ -726,7 +726,10 @@
         "dialog": {
           "header": "Edit Description",
           "label": "Description",
-          "placeholder": "Enter description here"
+          "placeholder": "Enter description here",
+          "clickToRemove": "Click to remove",
+          "addSubjects": "Add subjects...",
+          "expandOrCollapse": "Expand or collapse "
         }
       },
       "resourceInformation": {
@@ -787,7 +790,7 @@
         "publishedText": "This metadata has a status of 'Published' and is publicly viewable.",
         "notPublishedText": "This metadata has a status of 'Published' and is publicly viewable.",
         "youAlreadyAddedText": "You have already added a record for this template",
-        "youAlreadyAdded": "Already Added"
+        "youAlreadyAdded": "Already Added",
       },
       "funding": {
         "updated": "Funding information updated successfully",

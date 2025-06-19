@@ -167,15 +167,12 @@ export class ProjectMetadataSubjectsComponent {
     originalOption.selected = newSelectedState;
     originalOption.indeterminate = false;
 
-    // Handle children selection
     if (originalOption.children) {
       this.updateChildrenSelection(originalOption.children, newSelectedState);
     }
 
-    // Update selected subjects
     let updatedSubjects: ProjectOverviewSubject[] = [];
     if (newSelectedState) {
-      // Add this subject and all its children
       const newSubject: ProjectOverviewSubject = {
         id: originalOption.id,
         text: originalOption.label,
