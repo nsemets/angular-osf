@@ -18,6 +18,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 
 import { TitleAndAbstractStepComponent } from '@osf/features/preprints/components';
+import { FileStepComponent } from '@osf/features/preprints/components/submit-steps/file-step/file-step.component';
 import { submitPreprintSteps } from '@osf/features/preprints/constants';
 import { BrandService } from '@osf/features/preprints/services';
 import {
@@ -25,13 +26,16 @@ import {
   GetPreprintProviderById,
   PreprintsSelectors,
 } from '@osf/features/preprints/store/preprints';
-import { SetSelectedPreprintProviderId } from '@osf/features/preprints/store/submit-preprint';
+import {
+  ResetStateAndDeletePreprint,
+  SetSelectedPreprintProviderId,
+} from '@osf/features/preprints/store/submit-preprint';
 import { StepperComponent } from '@shared/components/stepper/stepper.component';
 import { BrowserTabHelper, HeaderStyleHelper, IS_WEB } from '@shared/utils';
 
 @Component({
   selector: 'osf-submit-preprint-stepper',
-  imports: [Skeleton, StepperComponent, TitleAndAbstractStepComponent],
+  imports: [Skeleton, StepperComponent, TitleAndAbstractStepComponent, FileStepComponent],
   templateUrl: './submit-preprint-stepper.component.html',
   styleUrl: './submit-preprint-stepper.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -47,13 +51,14 @@ export class SubmitPreprintStepperComponent implements OnInit, OnDestroy {
     getPreprintProviderById: GetPreprintProviderById,
     getHighlightedSubjectsByProviderId: GetHighlightedSubjectsByProviderId,
     setSelectedPreprintProviderId: SetSelectedPreprintProviderId,
+    resetStateAndDeletePreprint: ResetStateAndDeletePreprint,
   });
 
   readonly submitPreprintSteps = submitPreprintSteps;
 
   preprintProvider = select(PreprintsSelectors.getPreprintProviderDetails(this.providerId()));
   isPreprintProviderLoading = select(PreprintsSelectors.isPreprintProviderDetailsLoading);
-  currentStep = signal<number>(0);
+  currentStep = signal<number>(1);
   isWeb = toSignal(inject(IS_WEB));
 
   constructor() {
@@ -81,7 +86,7 @@ export class SubmitPreprintStepperComponent implements OnInit, OnDestroy {
     HeaderStyleHelper.resetToDefaults();
     BrandService.resetBranding();
     BrowserTabHelper.resetToDefaults();
-    //TODO reset submit state, delete preprint if created
+    this.actions.resetStateAndDeletePreprint();
   }
 
   stepChange(step: number) {

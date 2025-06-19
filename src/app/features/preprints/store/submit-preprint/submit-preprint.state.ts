@@ -4,11 +4,13 @@ import { EMPTY, tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
+import { PreprintFileSource } from '@osf/features/preprints/enums';
 import { PreprintsService } from '@osf/features/preprints/services';
 
 import {
   CreatePreprint,
   ResetStateAndDeletePreprint,
+  SetSelectedPreprintFileSource,
   SetSelectedPreprintProviderId,
   SubmitPreprintStateModel,
   UpdatePreprint,
@@ -19,6 +21,7 @@ import {
   defaults: {
     selectedProviderId: null,
     createdPreprint: null,
+    fileSource: PreprintFileSource.None,
   },
 })
 @Injectable()
@@ -61,11 +64,19 @@ export class SubmitPreprintState {
     ctx.setState({
       selectedProviderId: null,
       createdPreprint: null,
+      fileSource: PreprintFileSource.None,
     });
     if (createdPreprintId) {
       return this.preprintsService.deletePreprint(createdPreprintId);
     }
 
     return EMPTY;
+  }
+
+  @Action(SetSelectedPreprintFileSource)
+  setSelectedPreprintFileSource(ctx: StateContext<SubmitPreprintStateModel>, action: SetSelectedPreprintFileSource) {
+    ctx.patchState({
+      fileSource: action.fileSource,
+    });
   }
 }

@@ -12,4 +12,9 @@ export class SubmitPreprintSelectors {
   static getCreatedPreprint(state: SubmitPreprintStateModel) {
     return state.createdPreprint;
   }
+
+  @Selector([SubmitPreprintState])
+  static getSelectedFileSource(state: SubmitPreprintStateModel) {
+    return state.fileSource;
+  }
 }

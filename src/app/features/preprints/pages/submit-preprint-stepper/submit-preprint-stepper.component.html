@@ -33,6 +33,9 @@
     @case (0) {
       <osf-title-and-abstract-step (nextClicked)="currentStep.set(currentStep() + 1)" />
     }
+    @case (1) {
+      <osf-file-step (nextClicked)="currentStep.set(currentStep() + 1)" />
+    }
     @default {
       <p>No such step</p>
     }

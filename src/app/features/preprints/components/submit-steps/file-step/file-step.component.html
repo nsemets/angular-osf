@@ -1,0 +1,57 @@
+<h2>File</h2>
+
+<section class="m-t-12">
+  <p class="line-height-3">Please Upload your Preprint</p>
+  <p class="line-height-3">Note: You cannot switch options once a file is attached.</p>
+</section>
+
+<section class="m-t-24 w-full flex flex-column gap-2 md:flex-row">
+  <p-button
+    [ngClass]="{
+      active: selectedFileSource() === PreprintFileSource.Computer,
+    }"
+    class="file-source-button w-full"
+    [styleClass]="selectedFileSource() ? 'w-full cursor-not-allowed' : 'w-full'"
+    [label]="'Upload From Your Computer' | titlecase"
+    severity="secondary"
+    [disabled]="isFileSourceSelected()"
+    [pTooltip]="isFileSourceSelected() ? 'Start a new preprint to attach a file from your computer.' : ''"
+    tooltipPosition="top"
+    (click)="selectFileSource(PreprintFileSource.Computer)"
+  />
+  <p-button
+    [ngClass]="{
+      active: selectedFileSource() === PreprintFileSource.Project,
+    }"
+    class="file-source-button w-full"
+    [styleClass]="isFileSourceSelected() ? 'w-full cursor-not-allowed' : 'w-full'"
+    [label]="'Select From existing OSF project' | titlecase"
+    severity="secondary"
+    [disabled]="isFileSourceSelected()"
+    [pTooltip]="isFileSourceSelected() ? 'Start a new preprint to attach a file from your project.' : ''"
+    tooltipPosition="top"
+    (click)="selectFileSource(PreprintFileSource.Project)"
+  />
+</section>
+
+@if (isFileSourceSelected() && selectedFileSource() === PreprintFileSource.Computer) {
+  <section class="m-t-24">
+    <p-button
+      outlined
+      raised
+      severity="success"
+      [icon]="'fas fa-upload'"
+      [label]="'Upload file'"
+      (click)="fileInput.click()"
+    />
+
+    <input #fileInput type="file" class="hidden" (change)="onFileSelected($event)" />
+  </section>
+}
+
+@if (isFileSourceSelected() && selectedFileSource() === PreprintFileSource.Project) {}
+
+<section class="m-t-48 flex flex-row justify-content-end align-items-center gap-2">
+  <p-button class="w-6rem" styleClass="w-full" label="Back" severity="info" (click)="backButtonClicked()" />
+  <p-button class="w-9rem" styleClass="w-full" label="Next" (click)="nextButtonClicked()" />
+</section>

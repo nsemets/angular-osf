@@ -1,4 +1,5 @@
 import { StringOrNull } from '@core/helpers';
+import { PreprintFileSource } from '@osf/features/preprints/enums';
 import { Preprint } from '@osf/features/preprints/models';
 
 export class SetSelectedPreprintProviderId {
@@ -24,6 +25,12 @@ export class UpdatePreprint {
     public id: string,
     public payload: Partial<Preprint>
   ) {}
+}
+
+export class SetSelectedPreprintFileSource {
+  static readonly type = '[Submit Preprint] Set Selected Preprint File Source';
+
+  constructor(public fileSource: PreprintFileSource) {}
 }
 
 export class ResetStateAndDeletePreprint {
