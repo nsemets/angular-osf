@@ -6,71 +6,93 @@
     [title]="'project.overview.metadata.title' | translate"
   />
 
-  <div class="flex-column flex flex-1 w-full">
-    <div class="p-6 bg-white">
-      <div class="grid w-full">
-        <!-- Left Column -->
-        <div class="col-12 lg:col-6 flex flex-column gap-4">
-          <p-card>
-            <div class="flex justify-content-between flex-wrap gap-4">
-              <div class="flex flex-column gap-2 flex-1">
-                <h3 class="text-lg font-semibold m-0">{{ 'project.overview.metadata.dateCreated' | translate }}</h3>
-                <p class="m-0 text-color-secondary">{{ currentProject()?.dateCreated | date: 'MMM d, y, h:mm a' }}</p>
-              </div>
+  <p-tabView [activeIndex]="activeTabIndex()" (activeIndexChange)="onTabChange($event)" class="flex-1">
+    @for (tab of tabs(); track tab.id) {
+      <p-tabPanel [header]="tab.label">
+        @if (tab.type === 'project') {
+          <div class="flex-column flex flex-1 w-full">
+            <div class="p-6 bg-white">
+              <div class="grid w-full">
+                <!-- Left Column -->
+                <div class="col-12 lg:col-6 flex flex-column gap-4">
+                  <p-card>
+                    <div class="flex justify-content-between flex-wrap gap-4">
+                      <div class="flex flex-column gap-2 flex-1">
+                        <h3 class="text-lg font-semibold m-0">
+                          {{ 'project.overview.metadata.dateCreated' | translate }}
+                        </h3>
+                        <p class="m-0 text-color-secondary">
+                          {{ currentProject()?.dateCreated | date: 'MMM d, y, h:mm a' }}
+                        </p>
+                      </div>
 
-              <div class="flex flex-column gap-2 flex-1">
-                <h3 class="text-lg font-semibold m-0">{{ 'project.overview.metadata.dateUpdated' | translate }}</h3>
-                <p class="m-0 text-color-secondary">{{ currentProject()?.dateModified | date: 'MMM d, y, h:mm a' }}</p>
+                      <div class="flex flex-column gap-2 flex-1">
+                        <h3 class="text-lg font-semibold m-0">
+                          {{ 'project.overview.metadata.dateUpdated' | translate }}
+                        </h3>
+                        <p class="m-0 text-color-secondary">
+                          {{ currentProject()?.dateModified | date: 'MMM d, y, h:mm a' }}
+                        </p>
+                      </div>
+                    </div>
+                  </p-card>
+
+                  <osf-project-metadata-contributors
+                    (openEditContributorDialog)="openEditContributorDialog()"
+                    [currentProject]="currentProject()"
+                  />
+
+                  <osf-project-metadata-description
+                    (openEditDescriptionDialog)="openEditDescriptionDialog()"
+                    [currentProject]="currentProject()"
+                  />
+
+                  <osf-project-metadata-resource-information
+                    (openEditResourceInformationDialog)="openEditResourceInformationDialog()"
+                    [customItemMetadata]="customItemMetadata()"
+                  />
+
+                  <osf-project-metadata-funding
+                    (openEditFundingDialog)="openEditFundingDialog()"
+                    [currentProject]="currentProject()"
+                  />
+
+                  <osf-project-metadata-affiliated-institutions
+                    (openEditAffiliatedInstitutionsDialog)="openEditAffiliatedInstitutionsDialog()"
+                    [currentProject]="currentProject()"
+                  />
+                </div>
+
+                <!-- Right Column -->
+                <div class="col-12 lg:col-6 flex flex-column gap-4">
+                  <osf-project-metadata-license
+                    (openEditLicenseDialog)="openEditLicenseDialog()"
+                    [currentProject]="currentProject()"
+                  />
+
+                  <osf-project-metadata-publication-doi
+                    (openEditPublicationDoiDialog)="handleEditDoi()"
+                    [currentProject]="currentProject()"
+                  />
+
+                  <osf-project-metadata-tags
+                    (tagsChanged)="onTagsChanged($event)"
+                    [currentProject]="currentProject()"
+                  />
+
+                  <osf-project-metadata-subjects
+                    (subjectsChanged)="onSubjectsChanged($event)"
+                    [currentProject]="currentProject()"
+                    [subjectsList]="highlightedSubjects()"
+                  />
+                </div>
               </div>
             </div>
-          </p-card>
-
-          <osf-project-metadata-contributors
-            (openEditContributorDialog)="openEditContributorDialog()"
-            [currentProject]="currentProject()"
-          />
-
-          <osf-project-metadata-description
-            (openEditDescriptionDialog)="openEditDescriptionDialog()"
-            [currentProject]="currentProject()"
-          />
-
-          <osf-project-metadata-resource-information
-            (openEditResourceInformationDialog)="openEditResourceInformationDialog()"
-            [currentProject]="currentProject()"
-          />
-
-          <osf-project-metadata-funding
-            (openEditFundingDialog)="openEditFundingDialog()"
-            [currentProject]="currentProject()"
-          />
-
-          <osf-project-metadata-affiliated-institutions
-            (openEditAffiliatedInstitutionsDialog)="openEditAffiliatedInstitutionsDialog()"
-            [currentProject]="currentProject()"
-          />
-        </div>
-
-        <!-- Right Column -->
-        <div class="col-12 lg:col-6 flex flex-column gap-4">
-          <osf-project-metadata-license
-            (openEditLicenseDialog)="openEditLicenseDialog()"
-            [currentProject]="currentProject()"
-          />
-
-          <osf-project-metadata-publication-doi
-            (openEditPublicationDoiDialog)="handleEditDoi()"
-            [currentProject]="currentProject()"
-          />
-
-          <osf-project-metadata-tags (tagsChanged)="onTagsChanged($event)" [currentProject]="currentProject()" />
-
-          <osf-project-metadata-subjects
-            (subjectsChanged)="onSubjectsChanged($event)"
-            [currentProject]="currentProject()"
-          />
-        </div>
-      </div>
-    </div>
-  </div>
+          </div>
+        } @else {
+          <div class="p-6 text-center">{{ 'project.metadata.viewingCedarRecord' | translate }}: {{ tab.label }}</div>
+        }
+      </p-tabPanel>
+    }
+  </p-tabView>
 </section>

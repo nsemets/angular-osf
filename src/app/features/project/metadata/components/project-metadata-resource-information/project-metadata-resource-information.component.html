@@ -4,25 +4,21 @@
 
     <p-button
       severity="secondary"
-      [label]="
-        currentProject()?.category
-          ? ('project.overview.metadata.editButton' | translate)
-          : ('project.overview.metadata.addButton' | translate)
-      "
+      [label]="'project.overview.metadata.editButton' | translate"
       (click)="openEditResourceInformationDialog.emit()"
     ></p-button>
   </div>
 
-  @if (currentProject()?.category) {
+  @if (customItemMetadata()?.resource_type_general) {
     <div class="flex-column flex gap-2">
       <p class="inline-block font-bold">
         <span> {{ 'project.overview.metadata.resourceType' | translate }}: </span>
-        <span>{{ currentProject()?.category }}</span>
+        <span>{{ customItemMetadata()?.resource_type_general | titlecase }}</span>
       </p>
 
       <p class="inline-block font-bold">
         <span> {{ 'project.overview.metadata.resourceLanguage' | translate }}: </span>
-        <span>{{ 'project.overview.metadata.notSpecified' | translate }}</span>
+        <span>{{ getLanguageName(customItemMetadata()?.language || '') }}</span>
       </p>
     </div>
   } @else {

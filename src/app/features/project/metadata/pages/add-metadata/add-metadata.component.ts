@@ -56,28 +56,39 @@ export class AddMetadataComponent implements OnInit {
     getCedarRecords: GetCedarMetadataRecords,
   });
 
+  get isEditingExistingRecord(): boolean {
+    return !!this.activatedRoute.snapshot.params['record-id'];
+  }
+
   constructor() {
     effect(() => {
       const records = this.cedarRecords();
       const cedarTemplatesData = this.cedarTemplates()?.data;
-      const metadataRecordId = this.activatedRoute.snapshot.params['metadata-record-id'];
+      const recordId = this.activatedRoute.snapshot.params['record-id'];
 
-      if (!records || !cedarTemplatesData || !metadataRecordId) {
+      if (!records || !cedarTemplatesData) {
         return;
       }
 
-      const existingRecord = records.find((record) => {
-        return record.relationships.template.data.id === metadataRecordId;
-      });
+      if (recordId) {
+        const existingRecord = records.find((record) => {
+          return record.id === recordId;
+        });
 
-      if (existingRecord) {
-        const matchingTemplate = cedarTemplatesData.find((template) => template.id === metadataRecordId);
+        if (existingRecord) {
+          const templateId = existingRecord.relationships.template.data.id;
+          const matchingTemplate = cedarTemplatesData.find((template) => template.id === templateId);
 
-        if (matchingTemplate) {
-          this.selectedTemplate = matchingTemplate;
-          this.existingRecord = existingRecord;
-          this.isEditMode = false;
+          if (matchingTemplate) {
+            this.selectedTemplate = matchingTemplate;
+            this.existingRecord = existingRecord;
+            this.isEditMode = false;
+          }
         }
+      } else {
+        this.selectedTemplate = null;
+        this.existingRecord = null;
+        this.isEditMode = true;
       }
     });
   }
@@ -165,11 +176,11 @@ export class AddMetadataComponent implements OnInit {
       },
     };
 
-    const metadataRecordId = this.activatedRoute.snapshot.params['metadata-record-id'];
+    const recordId = this.activatedRoute.snapshot.params['record-id'];
 
-    if (metadataRecordId && this.existingRecord) {
+    if (recordId && this.existingRecord) {
       this.store
-        .dispatch(new UpdateCedarMetadataRecord(model, metadataRecordId))
+        .dispatch(new UpdateCedarMetadataRecord(model, recordId))
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: () => {

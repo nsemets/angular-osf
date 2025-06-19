@@ -95,6 +95,11 @@ export class CedarTemplateFormComponent implements OnInit {
     }
   }
 
+  editModeEmit(): void {
+    this.editMode.emit();
+    this.cedarConfig = { ...this.cedarConfig, readOnlyMode: false };
+  }
+
   onSubmit() {
     const cedarEditor = document.querySelector('cedar-embeddable-editor') as CedarEditorElement;
     if (cedarEditor && typeof cedarEditor.currentMetadata !== 'undefined') {

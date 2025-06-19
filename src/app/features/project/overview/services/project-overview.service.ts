@@ -51,31 +51,6 @@ export class ProjectOverviewService {
     return this.#jsonApiService.patch<void>(`${environment.apiUrl}/nodes/${projectId}/`, payload);
   }
 
-  updateProjectDetails(
-    projectId: string,
-    updates: Partial<{
-      title: string;
-      description: string;
-      tags: string[];
-      category: string;
-      node_license?: {
-        id: string;
-      };
-    }>
-  ): Observable<ProjectOverview> {
-    const payload = {
-      data: {
-        id: projectId,
-        type: 'nodes',
-        attributes: updates,
-      },
-    };
-
-    return this.#jsonApiService
-      .patch<ProjectOverviewJsonApiResponse>(`${environment.apiUrl}/nodes/${projectId}`, payload)
-      .pipe(map((response) => ProjectOverviewMapper.fromGetProjectResponse(response.data)));
-  }
-
   forkProject(projectId: string): Observable<void> {
     const payload = {
       data: {

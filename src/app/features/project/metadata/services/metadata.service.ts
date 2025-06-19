@@ -1,120 +1,38 @@
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
+import { JsonApiService } from '@osf/core/services';
+import { ProjectMetadataMapper } from '@osf/features/project/metadata/mappers/project-metadata.mapper';
 import {
   CedarMetadataRecord,
   CedarMetadataRecordJsonApi,
   CedarMetadataTemplateJsonApi,
 } from '@osf/features/project/metadata/models';
+import { ProjectOverview } from '@osf/features/project/overview/models';
 
 import { environment } from '../../../../../environments/environment';
 import {
   CrossRefFundersResponse,
   CustomItemMetadataRecord,
   CustomItemMetadataResponse,
-  FundingInfo,
-  LicenseData,
-  MetadataResponse,
-  MetadataUpdateResponse,
-  ProjectMetadata,
-  ResourceInformation,
+  UserInstitutionsResponse,
 } from '../models/metadata.models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MetadataService {
-  private readonly http = inject(HttpClient);
+  private readonly jsonApiService = inject(JsonApiService);
   private readonly apiUrl = environment.apiUrl;
 
-  getProjectMetadata(projectId: string): Observable<MetadataResponse> {
-    return this.http.get<MetadataResponse>(`${this.apiUrl}/v2/nodes/${projectId}/custom_metadata/`);
-  }
-
-  updateProjectMetadata(projectId: string, metadata: ProjectMetadata): Observable<MetadataUpdateResponse> {
-    return this.http.put<MetadataUpdateResponse>(`${this.apiUrl}/v2/nodes/${projectId}/custom_metadata/`, {
-      data: {
-        type: 'custom_metadata',
-        attributes: metadata,
-      },
-    });
-  }
-
-  // For specific metadata sections
-  updateDescription(projectId: string, description: string): Observable<MetadataUpdateResponse> {
-    return this.http.patch<MetadataUpdateResponse>(`${this.apiUrl}/v2/nodes/${projectId}/`, {
-      data: {
-        type: 'nodes',
-        id: projectId,
-        attributes: {
-          description,
-        },
-      },
-    });
-  }
-
-  updateLicense(projectId: string, licenseData: LicenseData): Observable<MetadataUpdateResponse> {
-    return this.http.put<MetadataUpdateResponse>(`${this.apiUrl}/v2/nodes/${projectId}/license/`, {
-      data: {
-        type: 'node-licenses',
-        attributes: licenseData,
-      },
-    });
-  }
-
-  updateResourceInformation(projectId: string, resourceInfo: ResourceInformation): Observable<MetadataUpdateResponse> {
-    return this.updateProjectMetadata(projectId, {
-      resource_type: resourceInfo.resourceType,
-      resource_language: resourceInfo.resourceLanguage,
-    });
-  }
-
-  updateFunding(projectId: string, fundingData: FundingInfo[]): Observable<MetadataUpdateResponse> {
-    return this.updateProjectMetadata(projectId, {
-      funding_info: fundingData,
-    });
-  }
-
-  updatePublicationDoi(projectId: string, publicationDoi: string): Observable<MetadataUpdateResponse> {
-    return this.updateProjectMetadata(projectId, {
-      publication_doi: publicationDoi,
-    });
-  }
-
-  createDoi(projectId: string): Observable<MetadataUpdateResponse> {
-    return this.http.post<MetadataUpdateResponse>(`${this.apiUrl}/v2/nodes/${projectId}/identifiers/`, {
-      data: {
-        type: 'identifiers',
-        attributes: {
-          category: 'doi',
-        },
-      },
-    });
-  }
-
-  updateDoi(projectId: string, doi: string): Observable<MetadataUpdateResponse> {
-    return this.updateProjectMetadata(projectId, {
-      doi,
-    });
-  }
-
-  updateAffiliatedInstitutions(projectId: string, institutionIds: string[]): Observable<MetadataUpdateResponse> {
-    return this.http.put<MetadataUpdateResponse>(`${this.apiUrl}/v2/nodes/${projectId}/institutions/`, {
-      data: institutionIds.map((id) => ({
-        type: 'institutions',
-        id,
-      })),
-    });
-  }
-
   getCustomItemMetadata(guid: string): Observable<CustomItemMetadataResponse> {
-    return this.http.get<CustomItemMetadataResponse>(`${this.apiUrl}/custom_item_metadata_records/${guid}/`);
+    return this.jsonApiService.get<CustomItemMetadataResponse>(`${this.apiUrl}/custom_item_metadata_records/${guid}/`);
   }
 
   updateCustomItemMetadata(guid: string, metadata: CustomItemMetadataRecord): Observable<CustomItemMetadataResponse> {
-    return this.http.put<CustomItemMetadataResponse>(`${this.apiUrl}/custom_item_metadata_records/${guid}/`, {
+    return this.jsonApiService.put<CustomItemMetadataResponse>(`${this.apiUrl}/custom_item_metadata_records/${guid}/`, {
       data: {
         type: 'custom-item-metadata-records',
         attributes: metadata,
@@ -123,37 +41,92 @@ export class MetadataService {
   }
 
   getFundersList(searchQuery?: string): Observable<CrossRefFundersResponse> {
-    let url = `https://api.crossref.org/funders?mailto=support@staging4osf.io`;
+    let url = `https://api.crossref.org/funders?mailto=support@osf.io`;
 
     if (searchQuery && searchQuery.trim()) {
       url += `&query=${encodeURIComponent(searchQuery.trim())}`;
     }
 
-    return this.http.get<CrossRefFundersResponse>(url);
+    return this.jsonApiService.get<CrossRefFundersResponse>(url);
   }
 
   getMetadataCedarTemplates(url?: string): Observable<CedarMetadataTemplateJsonApi> {
-    return this.http.get<CedarMetadataTemplateJsonApi>(
+    return this.jsonApiService.get<CedarMetadataTemplateJsonApi>(
       url || 'https://api.staging4.osf.io/_/cedar_metadata_templates/'
     );
   }
 
   getMetadataCedarRecords(projectId: string): Observable<CedarMetadataRecordJsonApi> {
-    const params = new HttpParams().set('embed', 'template').set('page[size]', 20);
+    const params: Record<string, unknown> = {
+      embed: 'template',
+      'page[size]': 20,
+    };
 
-    return this.http.get<CedarMetadataRecordJsonApi>(`${this.apiUrl}/nodes/${projectId}/cedar_metadata_records/`, {
-      params,
-    });
+    return this.jsonApiService.get<CedarMetadataRecordJsonApi>(
+      `${this.apiUrl}/nodes/${projectId}/cedar_metadata_records/`,
+      params
+    );
   }
 
   createMetadataCedarRecord(data: CedarMetadataRecord): Observable<CedarMetadataRecord> {
-    return this.http.post<CedarMetadataRecord>(`https://api.staging4.osf.io/_/cedar_metadata_records/`, data);
+    return this.jsonApiService.post<CedarMetadataRecord>(`https://api.staging4.osf.io/_/cedar_metadata_records/`, data);
   }
 
   updateMetadataCedarRecord(data: CedarMetadataRecord, recordId: string): Observable<CedarMetadataRecord> {
-    return this.http.patch<CedarMetadataRecord>(
+    return this.jsonApiService.patch<CedarMetadataRecord>(
       `https://api.staging4.osf.io/_/cedar_metadata_records/${recordId}/`,
       data
     );
+  }
+
+  getProjectForMetadata(projectId: string): Observable<ProjectOverview> {
+    const params: Record<string, unknown> = {
+      'embed[]': ['contributors', 'affiliated_institutions', 'identifiers', 'license', 'subjects_acceptable'],
+      'fields[institutions]': 'assets,description,name',
+      'fields[users]': 'family_name,full_name,given_name,middle_name',
+      'fields[subjects]': 'text,taxonomy',
+    };
+
+    return this.jsonApiService
+      .get<{ data: Record<string, unknown> }>(`${environment.apiUrl}/nodes/${projectId}/`, params)
+      .pipe(map((response) => ProjectMetadataMapper.fromMetadataApiResponse(response.data)));
+  }
+
+  updateProjectDetails(
+    projectId: string,
+    updates: Partial<{
+      title: string;
+      description: string;
+      tags: string[];
+      category: string;
+      node_license?: {
+        id: string;
+      };
+    }>
+  ): Observable<ProjectOverview> {
+    const payload = {
+      data: {
+        id: projectId,
+        type: 'nodes',
+        attributes: updates,
+      },
+    };
+
+    return this.jsonApiService
+      .patch<Record<string, unknown>>(`${this.apiUrl}/nodes/${projectId}`, payload)
+      .pipe(
+        map((response) => ProjectMetadataMapper.fromMetadataApiResponse(response['data'] as Record<string, unknown>))
+      );
+  }
+
+  getUserInstitutions(userId: string, page = 1, pageSize = 10): Observable<UserInstitutionsResponse> {
+    const params = {
+      page: page.toString(),
+      'page[size]': pageSize.toString(),
+    };
+
+    return this.jsonApiService.get<UserInstitutionsResponse>(`${this.apiUrl}/users/${userId}/institutions/`, {
+      params,
+    });
   }
 }

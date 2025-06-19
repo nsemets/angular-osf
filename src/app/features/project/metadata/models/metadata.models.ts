@@ -1,4 +1,8 @@
 export interface ProjectMetadata {
+  id: string;
+  title: string;
+  description: string;
+  tags?: string[];
   resource_type?: string;
   resource_language?: string;
   funding_info?: FundingInfo[];
@@ -7,9 +11,9 @@ export interface ProjectMetadata {
 }
 
 export interface CustomItemMetadataRecord {
-  language: string;
-  resource_type_general: string;
-  funders: Funder[];
+  language?: string;
+  resource_type_general?: string;
+  funders?: Funder[];
 }
 
 export interface Funder {
@@ -28,7 +32,6 @@ export interface CustomItemMetadataResponse {
   };
 }
 
-// CrossRef Funder API Models
 export interface CrossRefFundersResponse {
   status: string;
   'message-type': string;
@@ -91,5 +94,34 @@ export interface MetadataUpdateResponse {
     type: string;
     id: string;
     attributes: ProjectMetadata;
+  };
+}
+
+export interface UserInstitution {
+  id: string;
+  type: string;
+  attributes: {
+    name: string;
+    description?: string;
+    assets?: {
+      logo?: string;
+    };
+  };
+}
+
+export interface UserInstitutionsResponse {
+  data: UserInstitution[];
+  links: {
+    first: string | null;
+    last: string | null;
+    prev: string | null;
+    next: string | null;
+    meta: {
+      total: number;
+      per_page: number;
+    };
+  };
+  meta: {
+    version: string;
   };
 }

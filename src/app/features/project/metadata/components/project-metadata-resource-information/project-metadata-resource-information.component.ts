@@ -3,13 +3,15 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
 
+import { TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
-import { ProjectOverview } from '@osf/features/project/overview/models';
+import { CustomItemMetadataRecord } from '@osf/features/project/metadata/models';
+import { LanguageCode, languageCodes } from '@shared/constants/language.const';
 
 @Component({
   selector: 'osf-project-metadata-resource-information',
-  imports: [Button, Card, TranslatePipe],
+  imports: [Button, Card, TranslatePipe, TitleCasePipe],
   templateUrl: './project-metadata-resource-information.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
@@ -17,5 +19,11 @@ import { ProjectOverview } from '@osf/features/project/overview/models';
 export class ProjectMetadataResourceInformationComponent {
   openEditResourceInformationDialog = output<void>();
 
-  currentProject = input.required<ProjectOverview | null>();
+  customItemMetadata = input.required<CustomItemMetadataRecord | null>();
+  protected readonly languageCodes = languageCodes;
+
+  getLanguageName(languageCode: string): string {
+    const language = this.languageCodes.find((lang: LanguageCode) => lang.code === languageCode);
+    return language ? language.name : languageCode;
+  }
 }

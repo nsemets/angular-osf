@@ -2,7 +2,11 @@
   <div class="flex justify-content-between align-items-center">
     <h3 class="text-lg font-semibold m-0">{{ 'project.overview.metadata.contributors' | translate }}</h3>
 
-    <p-button severity="secondary" [label]="'project.overview.metadata.editButton' | translate"></p-button>
+    <p-button
+      (click)="openEditContributorDialog.emit()"
+      severity="secondary"
+      [label]="'project.overview.metadata.editButton' | translate"
+    ></p-button>
   </div>
 
   @if (currentProject()?.contributors) {

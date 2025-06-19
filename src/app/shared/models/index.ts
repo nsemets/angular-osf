@@ -8,6 +8,7 @@ export * from './license.model';
 export * from './metadata-field.model';
 export * from './nav-item.model';
 export * from './node-response.model';
+export * from './node-subject.model';
 export * from './paginated-data.model';
 export * from './query-params.model';
 export * from './resource-card';

@@ -17,7 +17,7 @@ import { DeveloperAppsState } from '@osf/features/settings/developer-apps/store'
 import { NotificationSubscriptionState } from '@osf/features/settings/notifications/store';
 import { ProfileSettingsState } from '@osf/features/settings/profile-settings/store/profile-settings.state';
 import { TokensState } from '@osf/features/settings/tokens/store';
-import { LicensesState } from '@osf/shared/stores';
+import { LicensesState, SubjectsState } from '@osf/shared/stores';
 
 export const STATES = [
   AuthState,
@@ -40,4 +40,5 @@ export const STATES = [
   PreprintsState,
   ProjectMetadataState,
   LicensesState,
+  SubjectsState,
 ];

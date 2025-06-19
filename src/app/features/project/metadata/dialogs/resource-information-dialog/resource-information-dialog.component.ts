@@ -7,7 +7,9 @@ import { Select } from 'primeng/select';
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
+import { CustomItemMetadataRecord } from '@osf/features/project/metadata/models';
 import { ProjectOverview } from '@osf/features/project/overview/models';
+import { LanguageCode, languageCodes } from '@shared/constants/language.const';
 
 interface ResourceInformationForm {
   resourceType: FormControl<string>;
@@ -68,39 +70,31 @@ export class ResourceInformationDialogComponent implements OnInit {
     { label: 'Other', value: 'other' },
   ];
 
-  // Language options - ISO 639-1 language codes
-  languageOptions = [
-    { label: 'Arabic', value: 'ar' },
-    { label: 'Chinese (Simplified)', value: 'zh-CN' },
-    { label: 'Chinese (Traditional)', value: 'zh-TW' },
-    { label: 'Dutch', value: 'nl' },
-    { label: 'English', value: 'en' },
-    { label: 'French', value: 'fr' },
-    { label: 'German', value: 'de' },
-    { label: 'Hindi', value: 'hi' },
-    { label: 'Italian', value: 'it' },
-    { label: 'Japanese', value: 'ja' },
-    { label: 'Korean', value: 'ko' },
-    { label: 'Portuguese', value: 'pt' },
-    { label: 'Russian', value: 'ru' },
-    { label: 'Spanish', value: 'es' },
-    { label: 'Other', value: 'other' },
-  ];
+  // Language options - using shared language constants
+  languageOptions = languageCodes.map((lang: LanguageCode) => ({
+    label: lang.name,
+    value: lang.code,
+  }));
 
   get currentProject(): ProjectOverview | null {
     return this.config.data?.currentProject || null;
   }
 
+  get customItemMetadata(): CustomItemMetadataRecord | null {
+    return this.config.data?.customItemMetadata || null;
+  }
+
   get isEditMode(): boolean {
-    return !!this.currentProject?.category;
+    return !!this.customItemMetadata;
   }
 
   ngOnInit(): void {
     // Pre-populate the form if editing existing resource information
-    if (this.currentProject?.category) {
+    const metadata = this.customItemMetadata;
+    if (metadata) {
       this.resourceForm.patchValue({
-        resourceType: this.currentProject.category,
-        resourceLanguage: '',
+        resourceType: metadata.resource_type_general || '',
+        resourceLanguage: metadata.language || '',
       });
     }
   }

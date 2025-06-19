@@ -89,7 +89,7 @@ export class LicenseDialogComponent implements OnInit {
       const formValue = this.licenseForm.getRawValue();
       const allLicenses = this.licenses();
       const selectedLicense = allLicenses.find((license: License) => license.attributes.name === formValue.licenseName);
-
+      console.log(selectedLicense);
       this.dialogRef.close({
         licenseName: formValue.licenseName,
         licenseId: selectedLicense?.id,

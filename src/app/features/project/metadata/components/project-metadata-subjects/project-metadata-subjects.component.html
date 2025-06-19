@@ -32,21 +32,15 @@
         </div>
       </div>
 
-      <osf-search-input
-        [control]="searchControl"
-        class="w-full mt-4"
-        [placeholder]="'meetings.details.searchPlaceholder' | translate"
-      />
+      <osf-search-input [control]="searchControl" class="w-full" [placeholder]="'Search subjects...'" />
 
-      @if (showDropdown() && filteredOptions().length > 0) {
-        <div class="bg-white max-h-15rem overflow-y-auto">
+      @if (filteredOptions().length > 0) {
+        <div class="bg-white border-1 surface-border border-round max-h-20rem overflow-y-auto">
           <div class="p-2">
             @for (option of filteredOptions(); track option.id) {
               <div class="flex flex-column">
-                <!-- Parent category -->
                 <div class="flex align-items-center gap-2 p-2 hover:bg-gray-50 border-round cursor-pointer">
-                  <!-- Expand/Collapse arrow for parent categories -->
-                  @if (option.children && option.children.length > 0) {
+                  @if (option.children?.length) {
                     <i
                       class="pi text-sm cursor-pointer w-1rem"
                       tabindex="0"
@@ -61,7 +55,6 @@
                     <span class="inline-block w-1rem"></span>
                   }
 
-                  <!-- Checkbox -->
                   <p-checkbox
                     [ngModel]="option.selected"
                     (ngModelChange)="toggleSelection(option)"
@@ -69,9 +62,10 @@
                     [binary]="true"
                   />
 
-                  <!-- Label -->
                   <span
-                    class="flex-1 cursor-pointer text-sm font-medium"
+                    class="flex-1 cursor-pointer text-sm"
+                    [ngClass]="{ 'font-medium': (option.level ?? 0) === 0, 'font-normal': (option.level ?? 0) > 0 }"
+                    [style.margin-left.rem]="(option.level || 0) * 1"
                     tabindex="0"
                     role="button"
                     [attr.aria-label]="'Select ' + option.label"
@@ -82,18 +76,16 @@
                   </span>
                 </div>
 
-                <!-- Children (when expanded) -->
                 @if (option.expanded && option.children) {
                   @for (child of option.children; track child.id) {
-                    <div class="flex align-items-center gap-2 p-2 pl-4 hover:bg-gray-50 border-round cursor-pointer">
+                    <div class="flex align-items-center gap-2 p-2 pl-6 hover:bg-gray-50 border-round cursor-pointer">
                       <span class="inline-block w-1rem"></span>
 
-                      <!-- Child checkbox -->
                       <p-checkbox [ngModel]="child.selected" (ngModelChange)="toggleSelection(child)" [binary]="true" />
 
-                      <!-- Child label -->
                       <span
-                        class="flex-1 cursor-pointer text-sm pl-2"
+                        class="flex-1 cursor-pointer text-sm"
+                        [style.margin-left.rem]="child.level || 0"
                         tabindex="0"
                         role="button"
                         [attr.aria-label]="'Select ' + child.label"

@@ -13,15 +13,20 @@ import {
   GetCedarMetadataTemplates,
   GetCustomItemMetadata,
   GetFundersList,
+  GetProjectForMetadata,
+  GetUserInstitutions,
   MetadataStateModel,
   ResetCustomItemMetadata,
   UpdateCedarMetadataRecord,
   UpdateCustomItemMetadata,
+  UpdateProjectDetails,
 } from '@osf/features/project/metadata/store';
 
 import { CedarMetadataRecord, CedarMetadataRecordData, CedarMetadataRecordJsonApi, CrossRefFunder } from '../models';
 
 const initialState: MetadataStateModel = {
+  project: null,
+  projectLoading: false,
   customItemMetadata: null,
   customItemMetadataLoading: false,
   fundersList: [] as CrossRefFunder[],
@@ -34,6 +39,8 @@ const initialState: MetadataStateModel = {
   cedarRecordLoading: false,
   cedarRecords: [] as CedarMetadataRecordData[],
   cedarRecordsLoading: false,
+  userInstitutions: [],
+  userInstitutionsLoading: false,
 };
 
 @State<MetadataStateModel>({
@@ -151,6 +158,8 @@ export class ProjectMetadataState {
   @Action(ResetCustomItemMetadata)
   resetCustomItemMetadata(ctx: StateContext<MetadataStateModel>) {
     ctx.setState({
+      project: null,
+      projectLoading: false,
       customItemMetadata: null,
       customItemMetadataLoading: false,
       fundersList: [],
@@ -163,6 +172,8 @@ export class ProjectMetadataState {
       cedarRecordLoading: false,
       cedarRecords: [],
       cedarRecordsLoading: false,
+      userInstitutions: [],
+      userInstitutionsLoading: false,
     });
   }
 
@@ -210,6 +221,84 @@ export class ProjectMetadataState {
       patch({
         cedarRecords: append([action.record]),
       })
+    );
+  }
+
+  @Action(GetProjectForMetadata)
+  getProjectForMetadata(ctx: StateContext<MetadataStateModel>, action: GetProjectForMetadata) {
+    ctx.patchState({
+      projectLoading: true,
+      error: null,
+    });
+
+    return this.metadataService.getProjectForMetadata(action.projectId).pipe(
+      tap({
+        next: (project) => {
+          console.log(project);
+          ctx.patchState({
+            project: project,
+            projectLoading: false,
+          });
+        },
+        error: (error) => {
+          ctx.patchState({
+            error: error.message || 'Failed to load project',
+            projectLoading: false,
+          });
+        },
+      }),
+      finalize(() => ctx.patchState({ projectLoading: false }))
+    );
+  }
+
+  @Action(UpdateProjectDetails)
+  updateProjectDetails(ctx: StateContext<MetadataStateModel>, action: UpdateProjectDetails) {
+    ctx.patchState({
+      projectLoading: true,
+      error: null,
+    });
+
+    return this.metadataService.updateProjectDetails(action.projectId, action.updates).pipe(
+      tap({
+        next: (updatedProject) => {
+          ctx.patchState({
+            project: updatedProject,
+            projectLoading: false,
+          });
+        },
+        error: (error) => {
+          ctx.patchState({
+            error: (error as Error).message || 'Failed to update project details',
+            projectLoading: false,
+          });
+        },
+      }),
+      finalize(() => ctx.patchState({ projectLoading: false }))
+    );
+  }
+  @Action(GetUserInstitutions)
+  getUserInstitutions(ctx: StateContext<MetadataStateModel>, action: GetUserInstitutions) {
+    ctx.patchState({
+      userInstitutionsLoading: true,
+      error: null,
+    });
+
+    return this.metadataService.getUserInstitutions(action.userId, action.page, action.pageSize).pipe(
+      tap({
+        next: (response) => {
+          ctx.patchState({
+            userInstitutions: response.data,
+            userInstitutionsLoading: false,
+          });
+        },
+        error: (error) => {
+          ctx.patchState({
+            error: (error as Error).message || 'Failed to load user institutions',
+            userInstitutionsLoading: false,
+          });
+        },
+      }),
+      finalize(() => ctx.patchState({ userInstitutionsLoading: false }))
     );
   }
 }

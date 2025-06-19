@@ -5,11 +5,12 @@ import { Checkbox } from 'primeng/checkbox';
 import { Tag } from 'primeng/tag';
 
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, HostListener, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, input, output, signal } from '@angular/core';
 import { FormControl, FormsModule } from '@angular/forms';
 
 import { ProjectOverview, ProjectOverviewSubject } from '@osf/features/project/overview/models';
 import { SearchInputComponent } from '@shared/components';
+import { NodeSubjectModel } from '@shared/models';
 
 interface SubjectOption {
   id: string;
@@ -32,120 +33,74 @@ export class ProjectMetadataSubjectsComponent {
   subjectsChanged = output<ProjectOverviewSubject[]>();
 
   currentProject = input.required<ProjectOverview | null>();
+  subjectsList = input<NodeSubjectModel[]>([]);
 
   searchControl = new FormControl('');
 
-  editingSubjects = signal<ProjectOverviewSubject[]>([]);
+  selectedSubjects = signal<ProjectOverviewSubject[]>([]);
   searchValue = signal<string>('');
-  showDropdown = signal(false);
   filteredOptions = signal<SubjectOption[]>([]);
 
-  subjectOptions: SubjectOption[] = [
-    {
-      id: 'architecture',
-      label: 'Architecture',
-      expanded: false,
-      selected: false,
-      level: 0,
-      children: [
-        { id: 'architecture.engineering', label: 'Architectural Engineering', selected: false, level: 1 },
-        { id: 'architecture.history', label: 'Architectural History and Criticism', selected: false, level: 1 },
-        { id: 'architecture.technology', label: 'Architectural Technology', selected: false, level: 1 },
-      ],
-    },
-    {
-      id: 'arts',
-      label: 'Arts and Humanities',
-      expanded: false,
-      selected: false,
-      level: 0,
-      children: [
-        { id: 'arts.history', label: 'Art History', selected: false, level: 1 },
-        { id: 'arts.fine', label: 'Fine Arts', selected: false, level: 1 },
-        { id: 'arts.music', label: 'Music', selected: false, level: 1 },
-        { id: 'arts.theater', label: 'Theater', selected: false, level: 1 },
-      ],
-    },
-    {
-      id: 'business',
-      label: 'Business',
-      expanded: false,
-      selected: false,
-      level: 0,
-      children: [
-        { id: 'business.accounting', label: 'Accounting', selected: false, level: 1 },
-        { id: 'business.finance', label: 'Finance', selected: false, level: 1 },
-        { id: 'business.management', label: 'Management', selected: false, level: 1 },
-        { id: 'business.marketing', label: 'Marketing', selected: false, level: 1 },
-      ],
-    },
-    {
-      id: 'education',
-      label: 'Education',
-      expanded: false,
-      selected: false,
-      level: 0,
-      children: [
-        { id: 'education.curriculum', label: 'Curriculum and Instruction', selected: false, level: 1 },
-        { id: 'education.psychology', label: 'Educational Psychology', selected: false, level: 1 },
-        { id: 'education.higher', label: 'Higher Education', selected: false, level: 1 },
-        { id: 'education.special', label: 'Special Education', selected: false, level: 1 },
-      ],
-    },
-    {
-      id: 'engineering',
-      label: 'Engineering',
-      expanded: false,
-      selected: false,
-      level: 0,
-      children: [
-        { id: 'engineering.computer', label: 'Computer Engineering', selected: false, level: 1 },
-        { id: 'engineering.mechanical', label: 'Mechanical Engineering', selected: false, level: 1 },
-        { id: 'engineering.electrical', label: 'Electrical Engineering', selected: false, level: 1 },
-        { id: 'engineering.civil', label: 'Civil Engineering', selected: false, level: 1 },
-      ],
-    },
-  ];
+  subjectOptions = computed<SubjectOption[]>(() => {
+    const subjects = this.subjectsList();
+    return this.convertMetadataSubjectsToOptions(subjects);
+  });
 
-  startEditing() {
-    const project = this.currentProject();
-    this.editingSubjects.set(project ? [...(project.subjects || [])] : []);
-    this.updateSelectionState();
-    this.filterOptions();
+  constructor() {
+    effect(() => {
+      const project = this.currentProject();
+      if (project?.subjects) {
+        this.selectedSubjects.set([...project.subjects]);
+        this.updateSelectionState();
+      }
+    });
+
+    effect(() => {
+      const options = this.subjectOptions();
+      if (options.length > 0) {
+        this.filterOptions();
+      }
+    });
+
+    this.searchControl.valueChanges.subscribe((value) => {
+      this.searchValue.set(value || '');
+      this.filterOptions();
+    });
   }
 
-  cancelEditing() {
-    this.editingSubjects.set([]);
-    this.searchValue.set('');
-    this.showDropdown.set(false);
-    this.resetSelectionState();
-  }
+  private convertMetadataSubjectsToOptions(subjects: NodeSubjectModel[]): SubjectOption[] {
+    const convertSubject = (subject: NodeSubjectModel): SubjectOption => {
+      const isSelected = this.selectedSubjects().some((s) => s.id === subject.id);
+      const option: SubjectOption = {
+        id: subject.id,
+        label: subject.text,
+        expanded: false,
+        selected: isSelected,
+        level: subject.level,
+      };
 
-  saveChanges() {
-    this.subjectsChanged.emit(this.editingSubjects());
-    this.searchValue.set('');
-    this.showDropdown.set(false);
-    this.resetSelectionState();
+      if (subject.children && subject.children.length > 0) {
+        option.children = subject.children.map(convertSubject);
+        const allChildrenSelected = option.children.every((child) => child.selected);
+        const someChildrenSelected = option.children.some((child) => child.selected || child.indeterminate);
+
+        option.selected = allChildrenSelected;
+        option.indeterminate = !allChildrenSelected && someChildrenSelected;
+      }
+
+      return option;
+    };
+
+    return subjects.map(convertSubject);
   }
 
   onInputFocus() {
-    this.showDropdown.set(true);
-    this.filterOptions();
-  }
-
-  onInputChange(value: string) {
-    this.searchValue.set(value);
-    this.filterOptions();
-  }
-
-  onSearchChange(value: string) {
-    this.searchValue.set(value);
     this.filterOptions();
   }
 
   filterOptions() {
     const search = this.searchValue().toLowerCase();
-    const filtered = this.filterOptionsRecursive(this.subjectOptions, search);
+    const filtered = this.filterOptionsRecursive(this.subjectOptions(), search);
     this.filteredOptions.set(filtered);
   }
 
@@ -157,7 +112,7 @@ export class ProjectMetadataSubjectsComponent {
       const filteredChildren = option.children ? this.filterOptionsRecursive(option.children, search) : [];
 
       if (matchesSearch || filteredChildren.length > 0) {
-        const originalOption = this.findOptionById(this.subjectOptions, option.id);
+        const originalOption = this.findOptionById(this.subjectOptions(), option.id);
 
         filtered.push({
           ...option,
@@ -174,8 +129,7 @@ export class ProjectMetadataSubjectsComponent {
 
   toggleExpand(option: SubjectOption, event: Event) {
     event.stopPropagation();
-    // Update the original option in subjectOptions array
-    const originalOption = this.findOptionById(this.subjectOptions, option.id);
+    const originalOption = this.findOptionById(this.subjectOptions(), option.id);
     if (originalOption) {
       originalOption.expanded = !originalOption.expanded;
     }
@@ -195,40 +149,104 @@ export class ProjectMetadataSubjectsComponent {
     return null;
   }
 
+  private findAllChildrenIds(option: SubjectOption): string[] {
+    let ids: string[] = [];
+    if (option.children) {
+      option.children.forEach((child) => {
+        ids.push(child.id);
+        ids = ids.concat(this.findAllChildrenIds(child));
+      });
+    }
+    return ids;
+  }
+
   toggleSelection(option: SubjectOption) {
-    const originalOption = this.findOptionById(this.subjectOptions, option.id);
+    const originalOption = this.findOptionById(this.subjectOptions(), option.id);
     if (!originalOption) return;
 
-    originalOption.selected = !originalOption.selected;
+    const newSelectedState = !originalOption.selected;
+    originalOption.selected = newSelectedState;
+    originalOption.indeterminate = false;
 
-    if (originalOption.selected) {
+    // Handle children selection
+    if (originalOption.children) {
+      this.updateChildrenSelection(originalOption.children, newSelectedState);
+    }
+
+    // Update selected subjects
+    let updatedSubjects: ProjectOverviewSubject[] = [];
+    if (newSelectedState) {
+      // Add this subject and all its children
       const newSubject: ProjectOverviewSubject = {
         id: originalOption.id,
         text: originalOption.label,
       };
-      this.editingSubjects.set([...this.editingSubjects(), newSubject]);
+      const currentSubjects = this.selectedSubjects();
+      const childrenIds = this.findAllChildrenIds(originalOption);
+
+      // Filter out any existing children first
+      updatedSubjects = currentSubjects.filter((s) => !childrenIds.includes(s.id));
+      updatedSubjects.push(newSubject);
+
+      // Add all children subjects
+      if (originalOption.children) {
+        this.addChildrenToSelection(originalOption.children, updatedSubjects);
+      }
     } else {
-      this.editingSubjects.set(this.editingSubjects().filter((s) => s.id !== originalOption.id));
+      // Remove this subject and all its children
+      const childrenIds = this.findAllChildrenIds(originalOption);
+      updatedSubjects = this.selectedSubjects().filter(
+        (s) => s.id !== originalOption.id && !childrenIds.includes(s.id)
+      );
     }
+
+    this.selectedSubjects.set(updatedSubjects);
+    this.subjectsChanged.emit(updatedSubjects);
 
     this.updateParentSelectionState();
     this.filterOptions();
   }
 
+  private updateChildrenSelection(children: SubjectOption[], selected: boolean) {
+    children.forEach((child) => {
+      child.selected = selected;
+      child.indeterminate = false;
+      if (child.children) {
+        this.updateChildrenSelection(child.children, selected);
+      }
+    });
+  }
+
+  private addChildrenToSelection(children: SubjectOption[], selectedSubjects: ProjectOverviewSubject[]) {
+    children.forEach((child) => {
+      selectedSubjects.push({
+        id: child.id,
+        text: child.label,
+      });
+      if (child.children) {
+        this.addChildrenToSelection(child.children, selectedSubjects);
+      }
+    });
+  }
+
   removeSubject(subject: ProjectOverviewSubject) {
-    this.editingSubjects.set(this.editingSubjects().filter((s) => s.id !== subject.id));
+    const updatedSubjects = this.selectedSubjects().filter((s) => s.id !== subject.id);
+    this.selectedSubjects.set(updatedSubjects);
     this.updateSelectionState();
+    this.subjectsChanged.emit(updatedSubjects);
   }
 
   private updateSelectionState() {
-    const selectedIds = this.editingSubjects().map((s) => s.id);
-    this.updateOptionsSelection(this.subjectOptions, selectedIds);
+    const selectedIds = this.selectedSubjects().map((s) => s.id);
+    this.updateOptionsSelection(this.subjectOptions(), selectedIds);
     this.updateParentSelectionState();
+    this.filterOptions();
   }
 
   private updateOptionsSelection(options: SubjectOption[], selectedIds: string[]) {
     options.forEach((option) => {
       option.selected = selectedIds.includes(option.id);
+      option.indeterminate = false;
       if (option.children) {
         this.updateOptionsSelection(option.children, selectedIds);
       }
@@ -236,50 +254,35 @@ export class ProjectMetadataSubjectsComponent {
   }
 
   private updateParentSelectionState() {
-    this.subjectOptions.forEach((parent) => {
-      if (parent.children) {
-        const selectedChildren = parent.children.filter((child) => child.selected).length;
-        const totalChildren = parent.children.length;
+    const updateParent = (options: SubjectOption[]) => {
+      options.forEach((parent) => {
+        if (parent.children) {
+          const selectedChildren = parent.children.filter((child) => child.selected).length;
+          const indeterminateChildren = parent.children.filter((child) => child.indeterminate).length;
+          const totalChildren = parent.children.length;
 
-        if (selectedChildren === 0) {
-          parent.selected = false;
-          parent.indeterminate = false;
-        } else if (selectedChildren === totalChildren) {
-          parent.selected = true;
-          parent.indeterminate = false;
-        } else {
-          parent.selected = false;
-          parent.indeterminate = true;
+          if (selectedChildren === 0 && indeterminateChildren === 0) {
+            parent.selected = false;
+            parent.indeterminate = false;
+          } else if (selectedChildren === totalChildren) {
+            parent.selected = true;
+            parent.indeterminate = false;
+          } else {
+            parent.selected = false;
+            parent.indeterminate = true;
+          }
+
+          updateParent(parent.children);
         }
-      }
-    });
-  }
+      });
+    };
 
-  private resetSelectionState() {
-    this.updateOptionsSelection(this.subjectOptions, []);
-    this.updateParentSelectionState();
-  }
-
-  handleKeyboardEdit(event: KeyboardEvent) {
-    if (event.key === 'Enter' || event.key === ' ') {
-      this.startEditing();
-    }
-  }
-
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: Event) {
-    const target = event.target as HTMLElement;
-    const dropdown = document.querySelector('.subjects-dropdown');
-    const input = document.querySelector('.subjects-input');
-
-    if (dropdown && input && !dropdown.contains(target) && !input.contains(target)) {
-      this.showDropdown.set(false);
-    }
+    updateParent(this.subjectOptions());
   }
 
   getUniqueSubjects(): ProjectOverviewSubject[] {
     const seen = new Set<string>();
-    return this.editingSubjects().filter((subject) => {
+    return this.selectedSubjects().filter((subject) => {
       if (seen.has(subject.id)) {
         return false;
       }

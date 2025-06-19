@@ -12,7 +12,7 @@
           type="button"
           severity="secondary"
           [label]="'Edit record'"
-          (click)="editMode.emit()"
+          (click)="editModeEmit()"
         >
         </p-button>
       </div>
@@ -28,7 +28,7 @@
     </div>
 
     @if (!readonly()) {
-      <div class="flex justify-content-between gap-3 px-4 pb-8 sm:justify-content-end">
+      <div class="flex justify-content-between gap-3 px-4 pt-4 pb-8 sm:justify-content-end">
         <p-button
           class="w-10rem btn-full-width"
           type="button"

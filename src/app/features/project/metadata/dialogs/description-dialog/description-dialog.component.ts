@@ -4,7 +4,7 @@ import { Button } from 'primeng/button';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Textarea } from 'primeng/textarea';
 
-import { ChangeDetectionStrategy, Component, inject, OnInit, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { ProjectOverview } from '@osf/features/project/overview/models';
@@ -17,8 +17,6 @@ import { ProjectOverview } from '@osf/features/project/overview/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DescriptionDialogComponent implements OnInit {
-  openEditDescriptionDialog = output<void>();
-
   protected dialogRef = inject(DynamicDialogRef);
   protected config = inject(DynamicDialogConfig);
 
@@ -39,14 +37,13 @@ export class DescriptionDialogComponent implements OnInit {
 
   save(): void {
     if (this.descriptionControl.valid) {
-      this.dialogRef.close({
-        description: this.descriptionControl.value,
-        projectId: this.currentProject ? this.currentProject.id : undefined,
-      });
+      this.dialogRef.close(this.descriptionControl.value);
     }
   }
 
   cancel(): void {
     this.dialogRef.close();
   }
+
+  protected readonly onsubmit = onsubmit;
 }

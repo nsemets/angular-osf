@@ -15,6 +15,6 @@ export class LicensesService {
   private readonly baseUrl = environment.apiUrl;
 
   getAllLicenses(): Observable<LicensesApiResponse> {
-    return this.http.get<LicensesApiResponse>(`${this.baseUrl}/licenses/`);
+    return this.http.get<LicensesApiResponse>(`${this.baseUrl}/licenses/?page[size]=20`);
   }
 }

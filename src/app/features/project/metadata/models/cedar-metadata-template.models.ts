@@ -52,6 +52,7 @@ export interface CedarTemplateContext {
     '@type': string;
   };
 }
+
 export interface CedarMetadataTemplate {
   id: string;
   type: 'cedar-metadata-templates';
@@ -173,7 +174,9 @@ export interface CedarMetadataAttributes {
   LDbaseProjectDescription: {
     '@value': string;
   };
+
   [key: string]: unknown;
+
   LDbaseProjectContributors: {
     '@value': string;
   }[];
@@ -201,6 +204,18 @@ export interface CedarMetadataRecordJsonApi {
 export interface CedarMetadataRecordData {
   id?: string;
   attributes: CedarMetadataRecordAttributes;
+  embeds?: {
+    template: {
+      data: {
+        attributes: {
+          active: boolean;
+          cedar_id: string;
+          schema_name: string;
+        };
+        id: string;
+      };
+    };
+  };
   relationships: {
     template: {
       data: {

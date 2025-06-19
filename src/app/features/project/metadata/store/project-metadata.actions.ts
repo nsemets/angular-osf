@@ -4,6 +4,11 @@ import {
   CustomItemMetadataRecord,
 } from '@osf/features/project/metadata/models';
 
+export class GetProjectForMetadata {
+  static readonly type = '[Project Metadata] Get Project For Metadata';
+  constructor(public projectId: string) {}
+}
+
 export class GetCustomItemMetadata {
   static readonly type = '[Metadata] Get Custom Item Metadata';
 
@@ -19,6 +24,30 @@ export class UpdateCustomItemMetadata {
   ) {}
 }
 
+export class UpdateProjectDescription {
+  static readonly type = '[Project Metadata] Update Project Description';
+  constructor(
+    public projectId: string,
+    public description: string
+  ) {}
+}
+
+export class UpdateProjectDetails {
+  static readonly type = '[Project Metadata] Update Project Details';
+  constructor(
+    public projectId: string,
+    public updates: Partial<{
+      title: string;
+      description: string;
+      tags: string[];
+      category: string;
+      node_license?: {
+        id: string;
+        type: string;
+      };
+    }>
+  ) {}
+}
 export class GetFundersList {
   static readonly type = '[Project Metadata] Get Funders List';
   constructor(public search?: string) {}
@@ -54,4 +83,13 @@ export class UpdateCedarMetadataRecord {
 export class AddCedarMetadataRecordToState {
   static readonly type = '[Project Metadata] Add Cedar Metadata Record To State';
   constructor(public record: CedarMetadataRecordData) {}
+}
+
+export class GetUserInstitutions {
+  static readonly type = '[Project Metadata] Get User Institutions';
+  constructor(
+    public userId: string,
+    public page?: number,
+    public pageSize?: number
+  ) {}
 }

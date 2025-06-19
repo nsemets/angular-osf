@@ -6,6 +6,16 @@ import { ProjectMetadataState } from './project-metadata.state';
 
 export class ProjectMetadataSelectors {
   @Selector([ProjectMetadataState])
+  static getProject(state: MetadataStateModel) {
+    return state.project;
+  }
+
+  @Selector([ProjectMetadataState])
+  static getProjectLoading(state: MetadataStateModel) {
+    return state.projectLoading;
+  }
+
+  @Selector([ProjectMetadataState])
   static getCustomItemMetadata(state: MetadataStateModel) {
     return state.customItemMetadata;
   }
@@ -58,5 +68,15 @@ export class ProjectMetadataSelectors {
   @Selector([ProjectMetadataState])
   static getCedarRecordsLoading(state: MetadataStateModel) {
     return state.cedarRecordsLoading;
+  }
+
+  @Selector([ProjectMetadataState])
+  static getUserInstitutions(state: MetadataStateModel) {
+    return state.userInstitutions || [];
+  }
+
+  @Selector([ProjectMetadataState])
+  static getUserInstitutionsLoading(state: MetadataStateModel): boolean {
+    return state.userInstitutionsLoading;
   }
 }
