@@ -11,7 +11,6 @@ import { ProjectOverview } from '@osf/features/project/overview/models';
   selector: 'osf-project-metadata-license',
   imports: [Button, Card, TranslatePipe],
   templateUrl: './project-metadata-license.component.html',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectMetadataLicenseComponent {

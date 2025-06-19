@@ -21,7 +21,6 @@ interface AffiliatedInstitutionsForm {
   selector: 'osf-affiliated-institutions-dialog',
   imports: [Button, Checkbox, TranslatePipe, ReactiveFormsModule],
   templateUrl: './affiliated-institutions-dialog.component.html',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AffiliatedInstitutionsDialogComponent implements OnInit {
@@ -78,7 +77,7 @@ export class AffiliatedInstitutionsDialogComponent implements OnInit {
   save(): void {
     const institutions = this.userInstitutions();
     if (!institutions || !Array.isArray(institutions)) {
-      this.dialogRef.close({ institutions: [] });
+      this.dialogRef.close([]);
       return;
     }
 
@@ -86,7 +85,7 @@ export class AffiliatedInstitutionsDialogComponent implements OnInit {
       (_, index) => this.affiliatedInstitutionsForm.value.institutions?.[index]
     );
 
-    this.dialogRef.close({ institutions: selectedInstitutions });
+    this.dialogRef.close(selectedInstitutions);
   }
 
   cancel(): void {

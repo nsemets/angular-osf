@@ -27,7 +27,6 @@ import { ToastService } from '@osf/shared/services';
 
 @Component({
   selector: 'osf-contributors-dialog',
-  standalone: true,
   imports: [Button, SearchInputComponent, Skeleton, Tooltip, TranslatePipe, FormsModule],
   templateUrl: './contributors-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

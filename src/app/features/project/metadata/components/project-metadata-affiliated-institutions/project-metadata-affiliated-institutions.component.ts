@@ -11,7 +11,6 @@ import { ProjectOverview } from '@osf/features/project/overview/models';
   selector: 'osf-project-metadata-affiliated-institutions',
   imports: [Button, Card, TranslatePipe],
   templateUrl: './project-metadata-affiliated-institutions.component.html',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectMetadataAffiliatedInstitutionsComponent {

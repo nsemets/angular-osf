@@ -12,7 +12,6 @@ import { ProjectOverview } from '@osf/features/project/overview/models';
   selector: 'osf-project-metadata-tags',
   imports: [Card, TranslatePipe, FormsModule, Chips],
   templateUrl: './project-metadata-tags.component.html',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectMetadataTagsComponent {

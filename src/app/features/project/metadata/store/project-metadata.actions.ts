@@ -41,6 +41,8 @@ export class UpdateProjectDetails {
       description: string;
       tags: string[];
       category: string;
+      institutions: string[];
+      doi?: boolean;
       node_license?: {
         id: string;
         type: string;

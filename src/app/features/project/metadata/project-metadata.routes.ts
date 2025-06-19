@@ -16,7 +16,7 @@ export const projectMetadataRoutes = [
     loadComponent: () => import('./pages/add-metadata/add-metadata.component').then((c) => c.AddMetadataComponent),
   },
   {
-    path: ':record-id',
-    loadComponent: () => import('./pages/add-metadata/add-metadata.component').then((c) => c.AddMetadataComponent),
+    path: ':recordId',
+    component: ProjectMetadataComponent,
   },
 ] as Routes;

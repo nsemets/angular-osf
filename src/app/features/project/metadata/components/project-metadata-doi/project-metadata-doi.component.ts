@@ -14,7 +14,6 @@ import { ProjectOverview } from '@osf/features/project/overview/models';
   imports: [Button, Card, ConfirmDialog, TranslatePipe],
   providers: [ConfirmationService],
   templateUrl: './project-metadata-doi.component.html',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectMetadataDoiComponent {

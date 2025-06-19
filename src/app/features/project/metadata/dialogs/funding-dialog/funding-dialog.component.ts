@@ -29,7 +29,6 @@ import { GetFundersList } from '../../store/project-metadata.actions';
   selector: 'osf-funding-dialog',
   imports: [Button, Select, InputText, TranslatePipe, ReactiveFormsModule],
   templateUrl: './funding-dialog.component.html',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FundingDialogComponent implements OnInit, OnDestroy {

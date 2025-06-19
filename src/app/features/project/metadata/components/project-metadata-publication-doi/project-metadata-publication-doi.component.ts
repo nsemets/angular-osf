@@ -11,7 +11,6 @@ import { ProjectOverview } from '@osf/features/project/overview/models';
   selector: 'osf-project-metadata-publication-doi',
   imports: [Button, Card, TranslatePipe],
   templateUrl: './project-metadata-publication-doi.component.html',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectMetadataPublicationDoiComponent {

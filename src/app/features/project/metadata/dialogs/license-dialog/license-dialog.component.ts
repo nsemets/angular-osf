@@ -21,7 +21,6 @@ interface LicenseForm {
   selector: 'osf-license-dialog',
   imports: [Button, Select, TranslatePipe, ReactiveFormsModule],
   templateUrl: './license-dialog.component.html',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LicenseDialogComponent implements OnInit {

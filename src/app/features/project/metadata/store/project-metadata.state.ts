@@ -234,7 +234,6 @@ export class ProjectMetadataState {
     return this.metadataService.getProjectForMetadata(action.projectId).pipe(
       tap({
         next: (project) => {
-          console.log(project);
           ctx.patchState({
             project: project,
             projectLoading: false,

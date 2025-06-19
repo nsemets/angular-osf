@@ -11,7 +11,6 @@ import { ProjectOverview } from '@osf/features/project/overview/models';
   selector: 'osf-project-metadata-contributors',
   imports: [Button, Card, TranslatePipe],
   templateUrl: './project-metadata-contributors.component.html',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectMetadataContributorsComponent {

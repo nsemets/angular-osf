@@ -29,7 +29,6 @@ interface CedarEditorElement extends HTMLElement {
 
 @Component({
   selector: 'osf-cedar-template-form',
-  standalone: true,
   imports: [CommonModule, Button, TranslatePipe],
   templateUrl: './cedar-template-form.component.html',
   styleUrl: './cedar-template-form.component.scss',

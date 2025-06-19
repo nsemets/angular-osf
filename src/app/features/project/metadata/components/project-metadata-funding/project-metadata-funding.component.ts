@@ -12,7 +12,6 @@ import { ProjectOverview } from '@osf/features/project/overview/models';
   selector: 'osf-project-metadata-funding',
   imports: [Button, Card, TranslatePipe, DatePipe],
   templateUrl: './project-metadata-funding.component.html',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectMetadataFundingComponent {

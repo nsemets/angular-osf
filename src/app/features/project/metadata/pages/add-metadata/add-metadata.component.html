@@ -13,13 +13,11 @@
           <div
             class="flex flex-column gap-4 metadata p-4 align-items-center"
             [class.cursor-pointer]="!hasExistingRecord(meta.id)"
-            [class.opacity-50]="hasExistingRecord(meta.id)"
             [class.cursor-not-allowed]="hasExistingRecord(meta.id)"
             (click)="onSelect(meta)"
             (keydown.enter)="onSelect(meta)"
             [tabindex]="hasExistingRecord(meta.id) ? -1 : 0"
             role="button"
-            [title]="hasExistingRecord(meta.id) ? 'You have already added a record for this template' : ''"
           >
             <div class="flex flex-row gap-4">
               <h2>{{ meta.attributes.template.title }}</h2>
@@ -30,9 +28,18 @@
             </div>
 
             @if (hasExistingRecord(meta.id)) {
-              <p-button severity="secondary" [label]="'Already Added'" [disabled]="true"></p-button>
+              <p-button
+                severity="secondary"
+                [pTooltip]="'project.metadata.addMetadata.youAlreadyAddedText' | translate"
+                [label]="'project.metadata.addMetadata.youAlreadyAdded' | translate"
+                [disabled]="true"
+              ></p-button>
             } @else {
-              <p-button severity="secondary" [label]="'Select'" (click)="onSelect(meta)"></p-button>
+              <p-button
+                severity="secondary"
+                [label]="'project.metadata.addMetadata.select' | translate"
+                (click)="onSelect(meta)"
+              ></p-button>
             }
           </div>
         }

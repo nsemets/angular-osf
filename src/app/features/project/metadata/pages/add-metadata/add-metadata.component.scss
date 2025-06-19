@@ -3,7 +3,7 @@
 .metadata {
   border: 1px solid var(--grey-2);
   border-radius: 12px;
-  flex-basis: calc(50% - 1.5rem); //gap is 1.5 rem
+  flex-basis: calc(50% - 1.5rem);
 
   @media (max-width: 576px) {
     flex-basis: 100%;

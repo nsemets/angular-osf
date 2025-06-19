@@ -14,7 +14,6 @@ import { LanguageCode, languageCodes } from '@shared/constants/language.const';
   imports: [Button, Card, TranslatePipe, TitleCasePipe],
   templateUrl: './project-metadata-resource-information.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class ProjectMetadataResourceInformationComponent {
   openEditResourceInformationDialog = output<void>();

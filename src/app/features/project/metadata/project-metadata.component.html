@@ -90,7 +90,24 @@
             </div>
           </div>
         } @else {
-          <div class="p-6 text-center">{{ 'project.metadata.viewingCedarRecord' | translate }}: {{ tab.label }}</div>
+          <div class="p-6">
+            @if (selectedCedarTemplate() && selectedCedarRecord()) {
+              <osf-cedar-template-form
+                [template]="selectedCedarTemplate()!"
+                [existingRecord]="selectedCedarRecord()!"
+                [readonly]="cedarFormReadonly()"
+                [showEditButton]="true"
+                (emitData)="onCedarFormSubmit($event)"
+                (changeTemplate)="onCedarFormChangeTemplate()"
+                (editMode)="onCedarFormEdit()"
+              />
+            } @else {
+              <div class="text-center py-8">
+                <p class="text-lg mb-4">Loading CEDAR record...</p>
+                <p class="text-sm text-gray-600">{{ tab.label }}</p>
+              </div>
+            }
+          </div>
         }
       </p-tabPanel>
     }

@@ -727,7 +727,9 @@
         "publish": "Publish",
         "changeTemplate": "Change template",
         "publishedText": "This metadata has a status of 'Published' and is publicly viewable.",
-        "notPublishedText": "This metadata has a status of 'Published' and is publicly viewable."
+        "notPublishedText": "This metadata has a status of 'Published' and is publicly viewable.",
+        "youAlreadyAddedText": "You have already added a record for this template",
+        "youAlreadyAdded": "Already Added"
       },
       "funding": {
         "updated": "Funding information updated successfully",

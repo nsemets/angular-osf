@@ -11,7 +11,6 @@ import { ProjectOverview } from '@osf/features/project/overview/models';
   selector: 'osf-project-metadata-description',
   imports: [Card, Button, TranslatePipe],
   templateUrl: './project-metadata-description.component.html',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectMetadataDescriptionComponent {

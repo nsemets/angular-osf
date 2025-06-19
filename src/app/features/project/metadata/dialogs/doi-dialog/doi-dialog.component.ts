@@ -9,7 +9,6 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
   selector: 'osf-doi-dialog',
   imports: [Button, TranslatePipe],
   templateUrl: './doi-dialog.component.html',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DoiDialogComponent {

@@ -20,7 +20,6 @@ interface ResourceInformationForm {
   selector: 'osf-resource-information-dialog',
   imports: [Button, Select, TranslatePipe, ReactiveFormsModule],
   templateUrl: './resource-information-dialog.component.html',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceInformationDialogComponent implements OnInit {

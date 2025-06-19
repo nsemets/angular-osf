@@ -3,6 +3,7 @@ import { createDispatchMap, select, Store } from '@ngxs/store';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
+import { Tooltip } from 'primeng/tooltip';
 
 import { ChangeDetectionStrategy, Component, DestroyRef, effect, HostBinding, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -28,8 +29,7 @@ import {
 
 @Component({
   selector: 'osf-add-metadata',
-  standalone: true,
-  imports: [SubHeaderComponent, Button, TranslatePipe, CedarTemplateFormComponent],
+  imports: [SubHeaderComponent, Button, TranslatePipe, CedarTemplateFormComponent, Tooltip],
   templateUrl: './add-metadata.component.html',
   styleUrl: './add-metadata.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

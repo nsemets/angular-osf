@@ -26,7 +26,6 @@ interface SubjectOption {
   selector: 'osf-project-metadata-subjects',
   imports: [Card, Tag, TranslatePipe, FormsModule, Checkbox, NgClass, SearchInputComponent],
   templateUrl: './project-metadata-subjects.component.html',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectMetadataSubjectsComponent {
