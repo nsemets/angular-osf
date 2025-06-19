@@ -3,17 +3,20 @@ import { map, Observable } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { JsonApiService } from '@core/services';
-import { JsonApiResponse } from '@osf/core/models';
+import { ApiData, JsonApiResponse } from '@osf/core/models';
 import { PreprintsMapper } from '@osf/features/preprints/mappers';
 import {
   Preprint,
+  PreprintFilesLinks,
   PreprintJsonApi,
   PreprintProviderDetails,
   PreprintProviderDetailsGetResponse,
   PreprintProviderShortInfo,
+  PreprintsRelationshipsJsonApi,
   Subject,
   SubjectGetResponse,
 } from '@osf/features/preprints/models';
+import { FileLinks, FileRelationshipsResponse, FileResponse } from '@osf/features/project/files/models';
 
 import { environment } from 'src/environments/environment';
 
@@ -79,11 +82,15 @@ export class PreprintsService {
 
   createPreprint(title: string, abstract: string, providerId: string) {
     const payload = PreprintsMapper.toCreatePayload(title, abstract, providerId);
-    return this.jsonApiService.post<PreprintJsonApi>(`${environment.apiUrl}/preprints/`, payload).pipe(
-      map((response) => {
-        return PreprintsMapper.fromPreprintJsonApi(response);
-      })
-    );
+    return this.jsonApiService
+      .post<
+        ApiData<PreprintJsonApi, null, PreprintsRelationshipsJsonApi, null>
+      >(`${environment.apiUrl}/preprints/`, payload)
+      .pipe(
+        map((response) => {
+          return PreprintsMapper.fromPreprintJsonApi(response);
+        })
+      );
   }
 
   deletePreprint(id: string) {
@@ -100,6 +107,42 @@ export class PreprintsService {
         attributes: apiPayload,
       },
     });
+  }
+
+  updateFileRelationship(preprintId: string, fileId: string): Observable<Preprint> {
+    return this.jsonApiService.patch(`${environment.apiUrl}/preprints/${preprintId}/`, {
+      data: {
+        type: 'preprints',
+        id: preprintId,
+        attributes: {},
+        relationships: {
+          primary_file: {
+            data: {
+              type: 'files',
+              id: fileId,
+            },
+          },
+        },
+      },
+    });
+  }
+
+  getPreprintFilesLinks(id: string): Observable<PreprintFilesLinks> {
+    return this.jsonApiService
+      .get<
+        JsonApiResponse<ApiData<FileResponse, null, FileRelationshipsResponse, FileLinks>[], null>
+      >(`${environment.apiUrl}/preprints/${id}/files/`)
+      .pipe(
+        map((response) => {
+          const rel = response.data[0].relationships;
+          const links = response.data[0].links;
+
+          return {
+            filesLink: rel.files.links.related.href,
+            uploadFileLink: links.upload,
+          };
+        })
+      );
   }
 
   private mapPreprintDomainToApiPayload(domainPayload: Partial<Preprint>): Partial<PreprintJsonApi> {

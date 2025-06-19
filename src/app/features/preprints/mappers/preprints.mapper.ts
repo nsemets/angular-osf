@@ -1,9 +1,11 @@
+import { ApiData } from '@core/models';
 import {
   Preprint,
   PreprintJsonApi,
   PreprintProviderDetails,
   PreprintProviderDetailsGetResponse,
   PreprintProviderShortInfo,
+  PreprintsRelationshipsJsonApi,
   Subject,
   SubjectGetResponse,
 } from '@osf/features/preprints/models';
@@ -76,7 +78,7 @@ export class PreprintsMapper {
     };
   }
 
-  static fromPreprintJsonApi(response: PreprintJsonApi): Preprint {
+  static fromPreprintJsonApi(response: ApiData<PreprintJsonApi, null, PreprintsRelationshipsJsonApi, null>): Preprint {
     return {
       id: response.id,
       dateCreated: response.attributes.date_created,
@@ -88,6 +90,7 @@ export class PreprintsMapper {
       isPublic: response.attributes.public,
       version: response.attributes.version,
       isLatestVersion: response.attributes.is_latest_version,
+      primaryFileId: response.relationships.primary_file?.links?.related?.href || null,
     };
   }
 }

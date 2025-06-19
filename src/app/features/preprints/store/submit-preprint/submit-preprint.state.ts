@@ -1,19 +1,28 @@
 import { Action, State, StateContext } from '@ngxs/store';
+import { patch } from '@ngxs/store/operators';
 
-import { EMPTY, tap } from 'rxjs';
+import { EMPTY, take, tap, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
+import { HttpEventType } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
 import { PreprintFileSource } from '@osf/features/preprints/enums';
+import { Preprint } from '@osf/features/preprints/models';
 import { PreprintsService } from '@osf/features/preprints/services';
+import { OsfFile } from '@osf/features/project/files/models';
+import { ProjectFilesService } from '@osf/features/project/files/services';
 
 import {
   CreatePreprint,
+  GetPreprintFiles,
+  GetPreprintFilesLinks,
   ResetStateAndDeletePreprint,
   SetSelectedPreprintFileSource,
   SetSelectedPreprintProviderId,
   SubmitPreprintStateModel,
   UpdatePreprint,
+  UploadFile,
 } from './';
 
 @State<SubmitPreprintStateModel>({
@@ -22,11 +31,18 @@ import {
     selectedProviderId: null,
     createdPreprint: null,
     fileSource: PreprintFileSource.None,
+    preprintFilesLinks: null,
+    preprintFiles: {
+      data: [],
+      isLoading: false,
+      error: null,
+    },
   },
 })
 @Injectable()
 export class SubmitPreprintState {
-  preprintsService = inject(PreprintsService);
+  private preprintsService = inject(PreprintsService);
+  private fileService = inject(ProjectFilesService);
 
   @Action(SetSelectedPreprintProviderId)
   setSelectedPreprintProviderId(ctx: StateContext<SubmitPreprintStateModel>, action: SetSelectedPreprintProviderId) {
@@ -57,6 +73,83 @@ export class SubmitPreprintState {
     );
   }
 
+  @Action(GetPreprintFilesLinks)
+  getPreprintFilesLinks(ctx: StateContext<SubmitPreprintStateModel>) {
+    const state = ctx.getState();
+    if (!state.createdPreprint) {
+      return EMPTY;
+    }
+    return this.preprintsService.getPreprintFilesLinks(state.createdPreprint.id).pipe(
+      tap((preprintStorage) => {
+        ctx.patchState({
+          preprintFilesLinks: preprintStorage,
+        });
+      })
+    );
+  }
+
+  @Action(UploadFile)
+  uploadFile(ctx: StateContext<SubmitPreprintStateModel>, action: UploadFile) {
+    const state = ctx.getState();
+    if (!state.preprintFilesLinks?.uploadFileLink) {
+      return EMPTY;
+    }
+    return this.fileService.uploadFileByLink(action.file, state.preprintFilesLinks.uploadFileLink).pipe(
+      tap((event) => {
+        if (event.type === HttpEventType.Response) {
+          ctx.dispatch(GetPreprintFiles);
+          this.preprintsService
+            .updateFileRelationship(state.createdPreprint!.id, event.body!.data.id)
+            .pipe(
+              tap((preprint: Preprint) => {
+                ctx.setState((state: SubmitPreprintStateModel) => ({
+                  ...state,
+                  createdPreprint: state.createdPreprint
+                    ? { ...state.createdPreprint, primaryFileId: preprint.primaryFileId }
+                    : null,
+                }));
+              }),
+              take(1)
+            )
+            .subscribe();
+        }
+      })
+    );
+  }
+
+  @Action(GetPreprintFiles)
+  getPreprintFiles(ctx: StateContext<SubmitPreprintStateModel>) {
+    const state = ctx.getState();
+    if (!state.preprintFilesLinks?.filesLink) {
+      return EMPTY;
+    }
+    ctx.setState(patch({ preprintFiles: patch({ isLoading: true }) }));
+
+    return this.fileService.getFilesWithoutFiltering(state.preprintFilesLinks.filesLink).pipe(
+      tap((files: OsfFile[]) => {
+        ctx.setState(
+          patch({
+            preprintFiles: patch({
+              data: files,
+              isLoading: false,
+            }),
+          })
+        );
+      }),
+      catchError((error) => {
+        ctx.setState(
+          patch({
+            preprintFiles: patch({
+              isLoading: false,
+              error: error.message,
+            }),
+          })
+        );
+        return throwError(() => error);
+      })
+    );
+  }
+
   @Action(ResetStateAndDeletePreprint)
   resetStateAndDeletePreprint(ctx: StateContext<SubmitPreprintStateModel>) {
     const state = ctx.getState();
@@ -65,6 +158,12 @@ export class SubmitPreprintState {
       selectedProviderId: null,
       createdPreprint: null,
       fileSource: PreprintFileSource.None,
+      preprintFilesLinks: null,
+      preprintFiles: {
+        data: [],
+        isLoading: false,
+        error: null,
+      },
     });
     if (createdPreprintId) {
       return this.preprintsService.deletePreprint(createdPreprintId);

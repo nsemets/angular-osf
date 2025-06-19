@@ -36,16 +36,37 @@
 
 @if (isFileSourceSelected() && selectedFileSource() === PreprintFileSource.Computer) {
   <section class="m-t-24">
-    <p-button
-      outlined
-      raised
-      severity="success"
-      [icon]="'fas fa-upload'"
-      [label]="'Upload file'"
-      (click)="fileInput.click()"
-    />
+    @if (!fileUploadLink()) {
+      <p-skeleton width="5rem" height="2rem" />
+    } @else if (!preprintFiles().length) {
+      <p-button
+        outlined
+        raised
+        severity="success"
+        [icon]="'fas fa-upload'"
+        [label]="'Upload file'"
+        (click)="fileInput.click()"
+      />
 
-    <input #fileInput type="file" class="hidden" (change)="onFileSelected($event)" />
+      <input #fileInput type="file" class="hidden" (change)="onFileSelected($event)" />
+    }
+  </section>
+
+  <section>
+    @if (arePreprintFilesLoading()) {
+      <p-skeleton width="20rem" height="2rem" />
+    } @else {
+      @for (file of preprintFiles(); track file.id) {
+        <section class="file-row">
+          <div class="flex flex-row gap-2">
+            <osf-icon [iconClass]="'fas fa-file'" />
+            <p>{{ file.name }}</p>
+          </div>
+
+          <p-button class="danger-icon-btn" icon="fas fa-trash" severity="danger" text />
+        </section>
+      }
+    }
   </section>
 }
 

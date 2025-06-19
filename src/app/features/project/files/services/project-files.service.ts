@@ -62,6 +62,10 @@ export class ProjectFilesService {
       .pipe(map((response) => MapFiles(response.data)));
   }
 
+  getFilesWithoutFiltering(filesLink: string): Observable<OsfFile[]> {
+    return this.#jsonApiService.get<GetFilesResponse>(filesLink).pipe(map((response) => MapFiles(response.data)));
+  }
+
   uploadFile(
     file: File,
     projectId: string,
@@ -81,6 +85,15 @@ export class ProjectFilesService {
     }
 
     return this.#jsonApiService.putFile<AddFileResponse>(link, file, params);
+  }
+
+  uploadFileByLink(file: File, uploadLink: string): Observable<HttpEvent<JsonApiResponse<AddFileResponse, null>>> {
+    const params = {
+      kind: 'file',
+      name: file.name,
+    };
+
+    return this.#jsonApiService.putFile<AddFileResponse>(uploadLink, file, params);
   }
 
   createFolder(projectId: string, folderName: string, parentFolderId?: string): Observable<OsfFile> {

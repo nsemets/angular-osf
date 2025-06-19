@@ -1,49 +1,63 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
 import { Button } from 'primeng/button';
+import { Skeleton } from 'primeng/skeleton';
 import { Tooltip } from 'primeng/tooltip';
 
 import { NgClass, TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, HostListener, inject, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, HostListener, OnInit, output } from '@angular/core';
 
 import { PreprintFileSource } from '@osf/features/preprints/enums';
-import { SetSelectedPreprintFileSource, SubmitPreprintSelectors } from '@osf/features/preprints/store/submit-preprint';
-import { ProjectFilesService } from '@osf/features/project/files/services';
+import {
+  GetPreprintFilesLinks,
+  SetSelectedPreprintFileSource,
+  SubmitPreprintSelectors,
+  UploadFile,
+} from '@osf/features/preprints/store/submit-preprint';
+import { IconComponent } from '@shared/components';
 
 @Component({
   selector: 'osf-file-step',
-  imports: [Button, TitleCasePipe, NgClass, Tooltip],
+  imports: [Button, TitleCasePipe, NgClass, Tooltip, Skeleton, IconComponent],
   templateUrl: './file-step.component.html',
   styleUrl: './file-step.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FileStepComponent {
-  private projectFilesService = inject(ProjectFilesService);
+export class FileStepComponent implements OnInit {
   private actions = createDispatchMap({
     setSelectedFileSource: SetSelectedPreprintFileSource,
+    getPreprintFilesLinks: GetPreprintFilesLinks,
+    uploadFile: UploadFile,
   });
-  createdPreprint = select(SubmitPreprintSelectors.getCreatedPreprint);
-  providerId = select(SubmitPreprintSelectors.getSelectedProviderId);
-  nextClicked = output<void>();
+
   readonly PreprintFileSource = PreprintFileSource;
+
+  providerId = select(SubmitPreprintSelectors.getSelectedProviderId);
+  selectedFileSource = select(SubmitPreprintSelectors.getSelectedFileSource);
+  fileUploadLink = select(SubmitPreprintSelectors.getUploadLink);
+  preprintFiles = select(SubmitPreprintSelectors.getPreprintFiles);
+  arePreprintFilesLoading = select(SubmitPreprintSelectors.arePreprintFilesLoading);
+
+  nextClicked = output<void>();
 
   isFileSourceSelected = computed(() => {
     return this.selectedFileSource() !== PreprintFileSource.None;
   });
-  selectedFileSource = select(SubmitPreprintSelectors.getSelectedFileSource);
 
-  nextButtonClicked() {
-    this.nextClicked.emit();
+  ngOnInit() {
+    this.actions.getPreprintFilesLinks();
   }
 
-  @HostListener('window:beforeunload', ['$event'])
-  public onBeforeUnload($event: BeforeUnloadEvent): boolean {
-    $event.preventDefault();
-    return false;
+  selectFileSource(fileSource: PreprintFileSource) {
+    this.actions.setSelectedFileSource(fileSource);
   }
 
   backButtonClicked() {
     //todo
+  }
+
+  nextButtonClicked() {
+    this.nextClicked.emit();
   }
 
   onFileSelected(event: Event): void {
@@ -51,30 +65,12 @@ export class FileStepComponent {
     const file = input.files?.[0];
     if (!file) return;
 
-    // this.fileName.set(file.name);
-    // this.fileIsUploading = true;
-    // this.projectFilesService
-    //   .uploadFile(file, this.projectId(), null)
-    //   .pipe(
-    //     takeUntilDestroyed(this.destroyRef),
-    //     finalize(() => {
-    //       this.fileIsUploading = false;
-    //       this.fileName.set('');
-    //       input.value = '';
-    //       this.updateFilesList();
-    //     })
-    //   )
-    //   .subscribe((event) => {
-    //     if (event.type === HttpEventType.Response) {
-    //       if (event.body) {
-    //         const fileId = event?.body?.data.id;
-    //         this.approveFile(fileId);
-    //       }
-    //     }
-    //   });
+    this.actions.uploadFile(file);
   }
 
-  selectFileSource(fileSource: PreprintFileSource) {
-    this.actions.setSelectedFileSource(fileSource);
+  @HostListener('window:beforeunload', ['$event'])
+  public onBeforeUnload($event: BeforeUnloadEvent): boolean {
+    $event.preventDefault();
+    return false;
   }
 }

@@ -33,6 +33,20 @@ export class SetSelectedPreprintFileSource {
   constructor(public fileSource: PreprintFileSource) {}
 }
 
+export class GetPreprintFilesLinks {
+  static readonly type = '[Submit Preprint] Get Preprint Files Links';
+}
+
+export class UploadFile {
+  static readonly type = '[Submit Preprint] Upload File';
+
+  constructor(public file: File) {}
+}
+
+export class GetPreprintFiles {
+  static readonly type = '[Submit Preprint] Get Preprint Files';
+}
+
 export class ResetStateAndDeletePreprint {
   static readonly type = '[Submit Preprint] Reset State And Delete Preprint';
 }
