@@ -1,18 +1,18 @@
-<div class="addon-card flex flex-column flex-1 gap-3 p-4 text-center">
-  <div class="max-h-8rem">
+<div class="addon-card flex flex-1 gap-4 flex-column p-5">
+  <div class="max-h-8rem flex justify-content-center align-items-center">
     @if (card()!.externalServiceName) {
       <img
         class="addon-image"
-        [src]="'assets/images/addons/' + card()!.externalServiceName + '.svg'"
         alt="Addon card image"
+        [src]="'assets/images/addons/' + card()!.externalServiceName + '.svg'"
       />
     }
   </div>
 
-  <div class="flex flex-column gap-4">
-    <h3>{{ card()?.displayName }}</h3>
+  <div class="flex flex-column gap-3">
+    <h3 class="text-center">{{ card()?.displayName }}</h3>
 
-    <div class="flex flex-column justify-content-center align-items-center gap-3 md:flex-row md:gap-4">
+    <div class="flex justify-content-center align-items-center md:gap-5 md:mt-3 btn-container">
       @if (showDangerButton()) {
         <p-button
           [label]="'settings.addons.form.buttons.disable' | translate"
@@ -24,7 +24,7 @@
       <p-button
         [label]="cardButtonLabel() || ('settings.addons.form.buttons.connect' | translate)"
         severity="secondary"
-        (onClick)="onConnectAddon()"
+        (onClick)="!isConfiguredAddon() ? onConnectAddon() : onConfigureAddon()"
       ></p-button>
     </div>
   </div>

@@ -1,3 +1,4 @@
+export * from './addons';
 export { CustomConfirmationService } from './custom-confirmation.service';
 export { FiltersOptionsService } from './filters-options.service';
 export { LoaderService } from './loader.service';

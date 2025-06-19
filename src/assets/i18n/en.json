@@ -11,6 +11,8 @@
       "copy": "Copy",
       "move": "Move",
       "rename": "Rename",
+      "confirm": "Confirm",
+      "disconnect": "Disconnect",
       "revert": "Revert",
       "next": "Next",
       "skip": "Skip",
@@ -949,6 +951,24 @@
         "additionalService": "Additional Storage",
         "citationManager": "Citation Manager"
       },
+      "toast": {
+        "updateSuccess": "Successfully updated {{addonName}} add-on configuration",
+        "createSuccess": "Successfully connected to the {{addonName}} add-on",
+        "disconnectSuccess": "Successfully disconnected from the {{addonName}} account"
+      },
+      "configureAddon": {
+        "title": "Configure Add-on",
+        "noFolders": "No folders",
+        "noFolderSelected": "No selected folder",
+        "disconnect": "Disconnect {{addonName}}",
+        "disconnectMessage": "You are about to disconnect the following addon from the project:",
+        "account": "Account:",
+        "selectedFolder": "Selected folder:",
+        "folderName": "Folder name:",
+        "selectFolder": "Select",
+        "connectedAccount": "Connected to account:",
+        "home": "Home"
+      },
       "connectAddon": {
         "title": "Connect Add-on",
         "terms": "Terms",
@@ -956,10 +976,15 @@
           "function": "Function",
           "status": "Status"
         },
+        "confirmAccount": "Confirm account",
+        "connectAccount": "Connect following account: {{accountName}}",
+        "configure": "Configure",
         "termsDescription": "• This add-on connects your OSF project to an external service. Use of this service is bound by its terms and conditions. The OSF is not responsible for the service or for your use thereof.",
         "storageDescription": "• This add-on allows you to store files using an external service. Files added to this add-on are not stored within the OSF.",
         "reconnectAccount": "Reconnect Account",
         "setupNewAccount": "Setup new account",
+        "chooseExistingAccount": "Choose existing account",
+        "loginToOrSelectAccount": "Login to {{addonName}} or select an account",
         "startOauth": "Start OAuth",
         "oauthDescription": "Complete the OAuth process in the new window before returning to this page. If you do not see a new window, please click the Start OAuth link below."
       },
@@ -973,18 +998,22 @@
           "passwordDescription": "These credentials will be encrypted",
           "accessKey": "Access Key",
           "secretKey": "Secret Key",
+          "apiToken": "API Token",
           "accountName": "Account Name",
           "accountNameDescription": "This will distinguish your account from other using the same addon."
         },
         "buttons": {
           "cancel": "Cancel",
           "next": "Next",
+          "acceptingTerms": "Accepting...",
           "back": "Back",
           "connect": "Connect",
           "reconnect": "Reconnect",
           "authorize": "Authorize",
           "disable": "Disable",
-          "startOauth": "Start OAuth"
+          "startOauth": "Start OAuth",
+          "newAccount": "Setup New Account",
+          "existingAccount": "Choose Existing Account"
         }
       },
       "messages": {
@@ -997,7 +1026,8 @@
         "deleteConfirmation": {
           "title": "Disable Account?",
           "message": "Are you sure you want to disable this account? All projects connected to this account will be affected."
-        }
+        },
+        "noAddons": "No results found."
       }
     },
     "profileSettings": {
@@ -1057,6 +1087,7 @@
       }
     },
     "accountSettings": {
+      "title": "Account Settings",
       "common": {
         "buttons": {
           "cancel": "Cancel",
