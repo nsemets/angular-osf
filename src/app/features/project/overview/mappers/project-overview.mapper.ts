@@ -1,7 +1,12 @@
-import { ComponentGetResponse, ComponentOverview, ProjectOverview, ProjectOverviewGetResponse } from '../models';
+import {
+  ComponentGetResponseJsoApi,
+  ComponentOverview,
+  ProjectOverview,
+  ProjectOverviewGetResponseJsoApi,
+} from '../models';
 
 export class ProjectOverviewMapper {
-  static fromGetProjectResponse(response: ProjectOverviewGetResponse): ProjectOverview {
+  static fromGetProjectResponse(response: ProjectOverviewGetResponseJsoApi): ProjectOverview {
     return {
       id: response.id,
       type: response.type,
@@ -76,7 +81,7 @@ export class ProjectOverviewMapper {
     };
   }
 
-  static fromGetComponentResponse(response: ComponentGetResponse): ComponentOverview {
+  static fromGetComponentResponse(response: ComponentGetResponseJsoApi): ComponentOverview {
     return {
       id: response.id,
       type: response.type,

@@ -2,7 +2,6 @@ import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
-import { ConfirmationService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Select } from 'primeng/select';
@@ -15,10 +14,15 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { SearchInputComponent, ViewOnlyTableComponent } from '@osf/shared/components';
+import {
+  EducationHistoryDialogComponent,
+  EmploymentHistoryDialogComponent,
+  SearchInputComponent,
+  ViewOnlyTableComponent,
+} from '@osf/shared/components';
 import { SelectOption } from '@osf/shared/models';
-import { ToastService } from '@osf/shared/services';
-import { defaultConfirmationConfig, findChangedItems } from '@osf/shared/utils';
+import { CustomConfirmationService, ToastService } from '@osf/shared/services';
+import { findChangedItems } from '@osf/shared/utils';
 
 import { ViewOnlyLink, ViewOnlyLinkModel } from '../settings/models';
 import {
@@ -32,8 +36,6 @@ import {
 import {
   AddContributorDialogComponent,
   AddUnregisteredContributorDialogComponent,
-  ContributorEducationHistoryComponent,
-  ContributorEmploymentHistoryComponent,
   ContributorsListComponent,
   CreateViewLinkDialogComponent,
 } from './components';
@@ -73,9 +75,9 @@ export class ContributorsComponent implements OnInit {
 
   readonly destroyRef = inject(DestroyRef);
   readonly translateService = inject(TranslateService);
-  readonly confirmationService = inject(ConfirmationService);
   readonly dialogService = inject(DialogService);
   readonly toastService = inject(ToastService);
+  readonly customConfirmationService = inject(CustomConfirmationService);
 
   private readonly route = inject(ActivatedRoute);
   private readonly projectId = toSignal(this.route.parent?.params.pipe(map((params) => params['id'])) ?? of(undefined));
@@ -166,7 +168,7 @@ export class ContributorsComponent implements OnInit {
   }
 
   openEmploymentHistory(contributor: ContributorModel) {
-    this.dialogService.open(ContributorEmploymentHistoryComponent, {
+    this.dialogService.open(EmploymentHistoryDialogComponent, {
       width: '552px',
       data: contributor.employment,
       focusOnShow: false,
@@ -178,7 +180,7 @@ export class ContributorsComponent implements OnInit {
   }
 
   openEducationHistory(contributor: ContributorModel) {
-    this.dialogService.open(ContributorEducationHistoryComponent, {
+    this.dialogService.open(EducationHistoryDialogComponent, {
       width: '552px',
       data: contributor.education,
       focusOnShow: false,
@@ -248,18 +250,12 @@ export class ContributorsComponent implements OnInit {
   }
 
   removeContributor(contributor: ContributorModel) {
-    this.confirmationService.confirm({
-      ...defaultConfirmationConfig,
-      header: this.translateService.instant('project.contributors.removeDialog.title'),
-      message: this.translateService.instant('project.contributors.removeDialog.message', {
-        name: contributor.fullName,
-      }),
-      acceptButtonProps: {
-        ...defaultConfirmationConfig.acceptButtonProps,
-        severity: 'danger',
-        label: this.translateService.instant('common.buttons.remove'),
-      },
-      accept: () => {
+    this.customConfirmationService.confirmDelete({
+      headerKey: 'project.contributors.removeDialog.title',
+      messageKey: 'project.contributors.removeDialog.message',
+      messageParams: { name: contributor.fullName },
+      acceptLabelKey: 'common.buttons.remove',
+      onConfirm: () => {
         this.actions
           .deleteContributor(this.projectId(), contributor.userId)
           .pipe(takeUntilDestroyed(this.destroyRef))
@@ -301,20 +297,11 @@ export class ContributorsComponent implements OnInit {
   }
 
   deleteLinkItem(link: ViewOnlyLinkModel): void {
-    this.confirmationService.confirm({
-      ...defaultConfirmationConfig,
-      message: this.translateService.instant('myProjects.settings.delete.message'),
-      header: this.translateService.instant('myProjects.settings.delete.title', {
-        name: link.name,
-      }),
-      acceptButtonProps: {
-        ...defaultConfirmationConfig.acceptButtonProps,
-        severity: 'danger',
-        label: this.translateService.instant('settings.developerApps.list.deleteButton'),
-      },
-      accept: () => {
-        this.actions.deleteViewOnlyLink(this.projectId(), link.id);
-      },
+    this.customConfirmationService.confirmDelete({
+      headerKey: 'myProjects.settings.delete.title',
+      headerParams: { name: link.name },
+      messageKey: 'myProjects.settings.delete.message',
+      onConfirm: () => this.actions.deleteViewOnlyLink(this.projectId(), link.id),
     });
   }
 }

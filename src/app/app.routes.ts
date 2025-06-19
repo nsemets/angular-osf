@@ -157,14 +157,13 @@ export const routes: Routes = [
               import('@osf/features/project/analytics/analytics.component').then((mod) => mod.AnalyticsComponent),
           },
           {
-            path: 'settings',
-            loadComponent: () =>
-              import('./features/project/settings/settings.component').then((mod) => mod.SettingsComponent),
+            path: 'wiki',
+            loadComponent: () => import('@osf/features/project/wiki/wiki.component').then((mod) => mod.WikiComponent),
           },
           {
             path: 'addons',
-            loadComponent: () =>
-              import('./features/project/addons/addons.component').then((mod) => mod.AddonsComponent),
+            loadChildren: () =>
+              import('./features/project/addons/constants/addons.routes').then((mod) => mod.addonsRoutes),
           },
         ],
       },

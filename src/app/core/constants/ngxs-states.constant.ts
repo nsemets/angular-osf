@@ -4,7 +4,6 @@ import { CollectionsState } from '@osf/features/collections/store';
 import { InstitutionsState } from '@osf/features/institutions/store';
 import { MeetingsState } from '@osf/features/meetings/store';
 import { MyProjectsState } from '@osf/features/my-projects/store';
-import { PreprintsState } from '@osf/features/preprints/store';
 import { AnalyticsState } from '@osf/features/project/analytics/store';
 import { ProjectMetadataState } from '@osf/features/project/metadata/store/project-metadata.state';
 import { ProjectOverviewState } from '@osf/features/project/overview/store';
@@ -12,12 +11,12 @@ import { RegistrationsState } from '@osf/features/project/registrations/store';
 import { SettingsState } from '@osf/features/project/settings/store';
 import { WikiState } from '@osf/features/project/wiki/store/wiki.state';
 import { AccountSettingsState } from '@osf/features/settings/account-settings/store/account-settings.state';
-import { AddonsState } from '@osf/features/settings/addons/store';
 import { DeveloperAppsState } from '@osf/features/settings/developer-apps/store';
 import { NotificationSubscriptionState } from '@osf/features/settings/notifications/store';
 import { ProfileSettingsState } from '@osf/features/settings/profile-settings/store/profile-settings.state';
 import { TokensState } from '@osf/features/settings/tokens/store';
 import { LicensesState, SubjectsState } from '@osf/shared/stores';
+import { AddonsState } from '@shared/stores/addons';
 
 export const STATES = [
   AuthState,
@@ -37,7 +36,6 @@ export const STATES = [
   WikiState,
   MeetingsState,
   RegistrationsState,
-  PreprintsState,
   ProjectMetadataState,
   LicensesState,
   SubjectsState,

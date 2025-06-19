@@ -1,17 +1,16 @@
 import { createDispatchMap } from '@ngxs/store';
 
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
-import { ConfirmationService } from 'primeng/api';
 import { Button } from 'primeng/button';
 
 import { Component, computed, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Addon, AuthorizedAddon } from '@osf/features/settings/addons/models';
-import { DeleteAuthorizedAddon } from '@osf/features/settings/addons/store';
-import { LoaderService } from '@osf/shared/services';
-import { defaultConfirmationConfig } from '@shared/utils';
+import { CustomConfirmationService, LoaderService } from '@osf/shared/services';
+import { Addon, AuthorizedAddon, ConfiguredAddon } from '@shared/models';
+import { DeleteAuthorizedAddon } from '@shared/stores/addons';
+import { getAddonTypeString, isConfiguredAddon } from '@shared/utils';
 
 @Component({
   selector: 'osf-addon-card',
@@ -21,44 +20,49 @@ import { defaultConfirmationConfig } from '@shared/utils';
 })
 export class AddonCardComponent {
   private readonly router = inject(Router);
-  private readonly confirmationService = inject(ConfirmationService);
-  private readonly translateService = inject(TranslateService);
+  private readonly customConfirmationService = inject(CustomConfirmationService);
   private readonly loaderService = inject(LoaderService);
   private readonly actions = createDispatchMap({ deleteAuthorizedAddon: DeleteAuthorizedAddon });
 
-  readonly card = input<Addon | AuthorizedAddon | null>(null);
+  readonly card = input<Addon | AuthorizedAddon | ConfiguredAddon | null>(null);
   readonly cardButtonLabel = input<string>('');
   readonly showDangerButton = input<boolean>(false);
 
   protected readonly addonTypeString = computed(() => {
-    const addon = this.card();
-    if (addon) {
-      return addon.type === 'authorized-storage-accounts' ? 'storage' : 'citation';
-    }
-    return '';
+    return getAddonTypeString(this.card());
+  });
+  protected readonly isConfiguredAddon = computed(() => {
+    return isConfiguredAddon(this.card());
   });
 
   onConnectAddon(): void {
     const addon = this.card();
-
     if (addon) {
-      this.router.navigate(['/settings/addons/connect-addon'], {
+      const currentUrl = this.router.url;
+      const baseUrl = currentUrl.split('/addons')[0];
+      this.router.navigate([`${baseUrl}/addons/connect-addon`], {
+        state: { addon },
+      });
+    }
+  }
+
+  onConfigureAddon(): void {
+    const addon = this.card();
+    if (addon) {
+      const currentUrl = this.router.url;
+      const baseUrl = currentUrl.split('/addons')[0];
+      this.router.navigate([`${baseUrl}/addons/configure-addon`], {
         state: { addon },
       });
     }
   }
 
   showDisableDialog(): void {
-    this.confirmationService.confirm({
-      ...defaultConfirmationConfig,
-      header: this.translateService.instant('settings.addons.messages.deleteConfirmation.title'),
-      message: this.translateService.instant('settings.addons.messages.deleteConfirmation.message'),
-      acceptButtonProps: {
-        ...defaultConfirmationConfig.acceptButtonProps,
-        severity: 'danger',
-        label: this.translateService.instant('settings.addons.form.buttons.disable'),
-      },
-      accept: () => this.onDisableAddon(),
+    this.customConfirmationService.confirmDelete({
+      headerKey: 'settings.addons.messages.deleteConfirmation.title',
+      messageKey: 'settings.addons.messages.deleteConfirmation.message',
+      acceptLabelKey: 'settings.addons.form.buttons.disable',
+      onConfirm: () => this.onDisableAddon(),
     });
   }
 

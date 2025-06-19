@@ -18,7 +18,7 @@ export interface ComponentOverview {
   contributors: ProjectOverviewContributor[];
 }
 
-export interface ComponentGetResponse {
+export interface ComponentGetResponseJsoApi {
   id: string;
   type: string;
   attributes: {
@@ -121,7 +121,7 @@ export interface ProjectOverviewSubject {
   text: string;
 }
 
-export interface ProjectOverviewGetResponse {
+export interface ProjectOverviewGetResponseJsoApi {
   id: string;
   type: string;
   attributes: {
@@ -259,6 +259,6 @@ export interface ProjectOverviewGetResponse {
   };
 }
 
-export interface ProjectOverviewJsonApiResponse extends JsonApiResponse<ProjectOverviewGetResponse, null> {
-  data: ProjectOverviewGetResponse;
+export interface ProjectOverviewResponseJsoApi extends JsonApiResponse<ProjectOverviewGetResponseJsoApi, null> {
+  data: ProjectOverviewGetResponseJsoApi;
 }
