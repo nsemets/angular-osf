@@ -1,7 +1,6 @@
 import { withNgxsReduxDevtoolsPlugin } from '@ngxs/devtools-plugin';
 import { provideStore } from '@ngxs/store';
 
-import { provideMarkdown } from 'ngx-markdown';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -43,6 +42,5 @@ export const appConfig: ApplicationConfig = {
     ConfirmationService,
     MessageService,
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
-    provideMarkdown(),
   ],
 };
