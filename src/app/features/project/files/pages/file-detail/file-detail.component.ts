@@ -1,25 +1,15 @@
 import { select, Store } from '@ngxs/store';
 
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
-import { ConfirmationService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { Popover } from 'primeng/popover';
 import { Tab, TabList, Tabs } from 'primeng/tabs';
 
 import { EMPTY, switchMap } from 'rxjs';
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  ElementRef,
-  HostBinding,
-  inject,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, HostBinding, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -43,8 +33,7 @@ import {
 import { LoadingSpinnerComponent, SubHeaderComponent } from '@shared/components';
 import { ResourceTab } from '@shared/enums';
 import { OsfFile } from '@shared/models';
-import { ToastService } from '@shared/services';
-import { defaultConfirmationConfig } from '@shared/utils';
+import { CustomConfirmationService, ToastService } from '@shared/services';
 
 @Component({
   selector: 'osf-file-detail',
@@ -52,11 +41,9 @@ import { defaultConfirmationConfig } from '@shared/utils';
     SubHeaderComponent,
     RouterLink,
     LoadingSpinnerComponent,
-    TranslateModule,
+    TranslatePipe,
     FileMetadataComponent,
     Button,
-    FormsModule,
-    ReactiveFormsModule,
     Popover,
     FileKeywordsComponent,
     FileRevisionsComponent,
@@ -71,15 +58,14 @@ import { defaultConfirmationConfig } from '@shared/utils';
 })
 export class FileDetailComponent {
   @HostBinding('class') classes = 'flex flex-column flex-1 w-full h-full';
-  @ViewChild('fileDetailContainer') fileDetailContainer!: ElementRef;
+
   readonly store = inject(Store);
   readonly router = inject(Router);
   readonly route = inject(ActivatedRoute);
   readonly destroyRef = inject(DestroyRef);
   readonly sanitizer = inject(DomSanitizer);
   readonly toastService = inject(ToastService);
-  readonly confirmationService = inject(ConfirmationService);
-  readonly translateService = inject(TranslateService);
+  readonly customConfirmationService = inject(CustomConfirmationService);
 
   file = select(ProjectFilesSelectors.getOpenedFile);
   safeLink: SafeResourceUrl | null = null;
@@ -151,7 +137,7 @@ export class FileDetailComponent {
     navigator.clipboard
       .writeText(embedHtml)
       .then(() => {
-        this.toastService.showSuccess(this.translateService.instant('project.files.detail.toast.copiedToClipboard'));
+        this.toastService.showSuccess('project.files.detail.toast.copiedToClipboard');
       })
       .catch((err) => {
         this.toastService.showError(err.message);
@@ -170,19 +156,11 @@ export class FileDetailComponent {
   }
 
   confirmDelete(file: OsfFile): void {
-    this.confirmationService.confirm({
-      ...defaultConfirmationConfig,
-      header: this.translateService.instant('project.files.dialogs.deleteFile.title'),
-      message: this.translateService.instant('project.files.dialogs.deleteFile.message', {
-        name: file.name,
-      }),
-      acceptButtonProps: {
-        severity: 'danger',
-        label: this.translateService.instant('common.buttons.delete'),
-      },
-      accept: () => {
-        this.deleteEntry(file.links.delete);
-      },
+    this.customConfirmationService.confirmDelete({
+      headerKey: 'project.files.dialogs.deleteFile.title',
+      messageParams: { name: file.name },
+      messageKey: 'project.files.dialogs.deleteFile.message',
+      onConfirm: () => this.deleteEntry(file.links.delete),
     });
   }
 

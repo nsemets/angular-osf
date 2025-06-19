@@ -5,7 +5,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TreeDragDropService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { Dialog } from 'primeng/dialog';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DialogService } from 'primeng/dynamicdialog';
 import { FloatLabel } from 'primeng/floatlabel';
 import { Select } from 'primeng/select';
 import { TableModule } from 'primeng/table';
@@ -13,16 +13,7 @@ import { TableModule } from 'primeng/table';
 import { debounceTime, finalize, Observable, skip, take } from 'rxjs';
 
 import { HttpEventType } from '@angular/common/http';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  ElementRef,
-  HostBinding,
-  inject,
-  signal,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, HostBinding, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -43,15 +34,17 @@ import {
   SetSort,
 } from '@osf/features/project/files/store';
 import { approveFile } from '@osf/features/project/files/utils';
+import { ALL_SORT_OPTIONS } from '@osf/shared/constants';
 import {
   FilesTreeComponent,
+  FormSelectComponent,
   LoadingSpinnerComponent,
   SearchInputComponent,
   SubHeaderComponent,
 } from '@shared/components';
 import { FilesService, ToastService } from '@shared/services';
 
-import { FILE_MENU_ITEMS, FILE_SORT_OPTIONS } from '../../constants';
+import { FILE_MENU_ITEMS } from '../../constants';
 
 @Component({
   selector: 'osf-project-files',
@@ -68,6 +61,7 @@ import { FILE_MENU_ITEMS, FILE_SORT_OPTIONS } from '../../constants';
     ReactiveFormsModule,
     TranslatePipe,
     FilesTreeComponent,
+    FormSelectComponent,
   ],
   templateUrl: './project-files.component.html',
   styleUrl: './project-files.component.scss',
@@ -76,7 +70,6 @@ import { FILE_MENU_ITEMS, FILE_SORT_OPTIONS } from '../../constants';
 })
 export class ProjectFilesComponent {
   @HostBinding('class') classes = 'flex flex-column flex-1 w-full h-full';
-  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   readonly store = inject(Store);
   readonly filesService = inject(FilesService);
@@ -96,15 +89,13 @@ export class ProjectFilesComponent {
   protected readonly progress = signal(0);
   protected readonly fileName = signal('');
   protected readonly searchControl = new FormControl<string>('');
-  protected readonly sortControl = new FormControl(FILE_SORT_OPTIONS[0].value);
-
-  dialogRef: DynamicDialogRef | null = null;
+  protected readonly sortControl = new FormControl(ALL_SORT_OPTIONS[0].value);
 
   fileIsUploading = signal(false);
   isFolderOpening = signal(false);
 
   items = FILE_MENU_ITEMS;
-  sortOptions = FILE_SORT_OPTIONS;
+  sortOptions = ALL_SORT_OPTIONS;
 
   protected readonly filesTreeActions: FilesTreeActions = {
     setCurrentFolder: (folder) => this.store.dispatch(new SetCurrentFolder(folder)),
@@ -175,35 +166,35 @@ export class ProjectFilesComponent {
   }
 
   createFolder(): void {
-    const ref = this.dialogService.open(CreateFolderDialogComponent, {
-      width: '448px',
-      focusOnShow: false,
-      header: this.translateService.instant('project.files.dialogs.createFolder.title'),
-      closeOnEscape: true,
-      modal: true,
-      closable: true,
-    });
-
-    ref.onClose.subscribe((result) => {
-      if (result && this.currentFolder()) {
-        this.store.dispatch(new SetFilesIsLoading(true));
-        this.store
-          .dispatch(
-            new CreateFolder(
-              this.projectId(),
-              result,
-              this.currentFolder()?.relationships?.parentFolderId ? this.currentFolder()!.id : ''
+    this.dialogService
+      .open(CreateFolderDialogComponent, {
+        width: '448px',
+        focusOnShow: false,
+        header: this.translateService.instant('project.files.dialogs.createFolder.title'),
+        closeOnEscape: true,
+        modal: true,
+        closable: true,
+      })
+      .onClose.subscribe((result) => {
+        if (result && this.currentFolder()) {
+          this.store.dispatch(new SetFilesIsLoading(true));
+          this.store
+            .dispatch(
+              new CreateFolder(
+                this.projectId(),
+                result,
+                this.currentFolder()?.relationships?.parentFolderId ? this.currentFolder()!.id : ''
+              )
             )
-          )
-          .pipe(
-            take(1),
-            finalize(() => {
-              this.updateFilesList().subscribe(() => this.fileIsUploading.set(false));
-            })
-          )
-          .subscribe();
-      }
-    });
+            .pipe(
+              take(1),
+              finalize(() => {
+                this.updateFilesList().subscribe(() => this.fileIsUploading.set(false));
+              })
+            )
+            .subscribe();
+        }
+      });
   }
 
   downloadFolder(folderId: string, rootFolder: boolean): void {
@@ -234,7 +225,7 @@ export class ProjectFilesComponent {
     this.isFolderOpening.set(value);
     if (value) {
       this.searchControl.setValue('');
-      this.sortControl.setValue(FILE_SORT_OPTIONS[0].value);
+      this.sortControl.setValue(ALL_SORT_OPTIONS[0].value);
     }
   }
 }

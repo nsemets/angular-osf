@@ -29,7 +29,7 @@
     flex-direction: column;
     gap: mix.rem(8px);
     padding: mix.rem(4px);
-    background: white;
+    background: var(--white);
     border: 1px solid var.$grey-2;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

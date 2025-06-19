@@ -1,6 +1,6 @@
 import { select, Store } from '@ngxs/store';
 
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { Accordion, AccordionContent, AccordionHeader, AccordionPanel } from 'primeng/accordion';
 import { Tooltip } from 'primeng/tooltip';
@@ -24,7 +24,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./file-revisions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    TranslateModule,
+    TranslatePipe,
     Accordion,
     AccordionPanel,
     AccordionHeader,

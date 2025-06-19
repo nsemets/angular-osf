@@ -1,6 +1,6 @@
 import { Store } from '@ngxs/store';
 
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import type { SortEvent } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -56,7 +56,7 @@ import {
     TabPanels,
     Tabs,
     MyProjectsTableComponent,
-    TranslateModule,
+    TranslatePipe,
   ],
   templateUrl: './my-projects.component.html',
   styleUrl: './my-projects.component.scss',

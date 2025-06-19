@@ -1,5 +1,5 @@
-@use "../../../../assets/styles/variables" as var;
-@use "../../../../assets/styles/mixins" as mix;
+@use "assets/styles/variables" as var;
+@use "assets/styles/mixins" as mix;
 
 :host {
   .files-table {
@@ -42,17 +42,15 @@
     }
 
     &-readonly {
-      grid-template-columns: minmax(mix.rem(200px), 35rem) minmax(mix.rem(150px), 0.7fr) minmax(
-          mix.rem(100px),
-          100px
-        ) minmax(mix.rem(150px), 0.5fr);
+      grid-template-columns:
+        minmax(mix.rem(200px), 35rem) minmax(mix.rem(150px), 0.7fr) minmax(mix.rem(100px), 100px)
+        minmax(mix.rem(150px), 0.5fr);
     }
 
     &-editable {
-      grid-template-columns: minmax(mix.rem(200px), 32rem) minmax(mix.rem(150px), 0.7fr) minmax(
-          mix.rem(100px),
-          100px
-        ) minmax(mix.rem(150px), 1fr) minmax(mix.rem(50px), 50px);
+      grid-template-columns:
+        minmax(mix.rem(200px), 32rem) minmax(mix.rem(150px), 0.7fr) minmax(mix.rem(100px), 100px)
+        minmax(mix.rem(150px), 1fr) minmax(mix.rem(50px), 50px);
     }
   }
 

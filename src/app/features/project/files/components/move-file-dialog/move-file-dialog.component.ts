@@ -1,6 +1,6 @@
-import { createDispatchMap, select, Store } from '@ngxs/store';
+import { createDispatchMap, select } from '@ngxs/store';
 
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -27,13 +27,12 @@ import { FilesService } from '@shared/services';
 
 @Component({
   selector: 'osf-move-file-dialog',
-  imports: [Button, LoadingSpinnerComponent, NgOptimizedImage, Tooltip, TranslateModule],
+  imports: [Button, LoadingSpinnerComponent, NgOptimizedImage, Tooltip, TranslatePipe],
   templateUrl: './move-file-dialog.component.html',
   styleUrl: './move-file-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MoveFileDialogComponent {
-  store = inject(Store);
   dialogRef = inject(DynamicDialogRef);
   filesService = inject(FilesService);
   config = inject(DynamicDialogConfig);

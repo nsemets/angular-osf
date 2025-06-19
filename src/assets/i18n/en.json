@@ -650,6 +650,8 @@
         },
         "renameFile": {
           "title": "Rename file",
+          "newName": "New name",
+          "enterNewName": "Enter new name",
           "renameLabel": "Please rename the file"
         },
         "moveFile": {
@@ -658,6 +660,9 @@
           "message": "Are you sure you want to move <span class=\"font-bold\">{{dragNodeName}}</span> to <span class=\"font-bold\">{{dropNodeName}}</span> ?",
           "storage": "OSF Storage",
           "pathError": "Path is not specified!"
+        },
+        "copyFile": {
+          "title": "Copy file"
         },
         "deleteFile": {
           "title": "Delete File",

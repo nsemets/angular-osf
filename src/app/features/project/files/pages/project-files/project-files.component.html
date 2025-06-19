@@ -23,20 +23,12 @@
 
       <div class="sm:w-3 md:w-max">
         <div class="sorting-container no-border-dropdown select-font-normal">
-          <p-select
+          <osf-form-select
+            [control]="sortControl"
             [options]="sortOptions"
-            [formControl]="sortControl"
-            [placeholder]="'project.files.sort.placeholder' | translate"
-            optionLabel="label"
-            optionValue="value"
-          >
-            <ng-template #selectedItem let-selectedOption>
-              {{ selectedOption.label | translate }}
-            </ng-template>
-            <ng-template #item let-item>
-              {{ item.label | translate }}
-            </ng-template></p-select
-          >
+            [placeholder]="'project.files.sort.placeholder'"
+            [fullWidth]="true"
+          ></osf-form-select>
         </div>
       </div>
     </div>

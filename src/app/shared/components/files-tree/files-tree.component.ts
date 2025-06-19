@@ -1,10 +1,10 @@
-import { select, Store } from '@ngxs/store';
+import { select } from '@ngxs/store';
 
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
-import { ConfirmationService, PrimeTemplate } from 'primeng/api';
+import { PrimeTemplate } from 'primeng/api';
 import { Button } from 'primeng/button';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DialogService } from 'primeng/dynamicdialog';
 import { Menu } from 'primeng/menu';
 import { Popover } from 'primeng/popover';
 import { Tree, TreeNodeDropEvent } from 'primeng/tree';
@@ -12,55 +12,32 @@ import { Tree, TreeNodeDropEvent } from 'primeng/tree';
 import { finalize, firstValueFrom, Observable, switchMap, take, tap } from 'rxjs';
 
 import { DatePipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  EventEmitter,
-  inject,
-  input,
-  Output,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { MoveFileDialogComponent } from '@osf/features/project/files/components';
-import { RenameFileDialogComponent } from '@osf/features/project/files/components/rename-file-dialog/rename-file-dialog.component';
+import { MoveFileDialogComponent, RenameFileDialogComponent } from '@osf/features/project/files/components';
 import { FILE_MENU_ITEMS } from '@osf/features/project/files/constants';
 import { embedDynamicJs, embedStaticHtml, FileMenuItems, FilesTreeActions } from '@osf/features/project/files/models';
 import { ProjectFilesSelectors } from '@osf/features/project/files/store';
 import { LoadingSpinnerComponent } from '@shared/components';
 import { AsyncStateModel, OsfFile } from '@shared/models';
 import { FileSizePipe } from '@shared/pipes';
-import { FilesService, ToastService } from '@shared/services';
-import { defaultConfirmationConfig } from '@shared/utils';
+import { CustomConfirmationService, FilesService, ToastService } from '@shared/services';
 
 @Component({
   selector: 'osf-files-tree',
-  imports: [
-    Button,
-    DatePipe,
-    FileSizePipe,
-    Menu,
-    Popover,
-    PrimeTemplate,
-    TranslateModule,
-    Tree,
-    LoadingSpinnerComponent,
-  ],
+  imports: [Button, DatePipe, FileSizePipe, Menu, Popover, PrimeTemplate, TranslatePipe, Tree, LoadingSpinnerComponent],
   templateUrl: './files-tree.component.html',
   styleUrl: './files-tree.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FilesTreeComponent {
-  @Output() folderIsOpening = new EventEmitter<boolean>();
-  readonly store = inject(Store);
   readonly filesService = inject(FilesService);
   readonly router = inject(Router);
   readonly toastService = inject(ToastService);
   readonly route = inject(ActivatedRoute);
-  readonly confirmationService = inject(ConfirmationService);
+  readonly customConfirmationService = inject(CustomConfirmationService);
   readonly dialogService = inject(DialogService);
   readonly translateService = inject(TranslateService);
 
@@ -71,6 +48,8 @@ export class FilesTreeComponent {
   readonly = input.required<boolean>();
   files = input.required<AsyncStateModel<OsfFile[]>>();
   provider = input.required<string>();
+
+  folderIsOpening = output<boolean>();
 
   protected readonly currentFolder = select(ProjectFilesSelectors.getCurrentFolder);
   protected readonly nodes = computed(() => {
@@ -88,8 +67,6 @@ export class FilesTreeComponent {
   });
 
   protected readonly fileName = signal('');
-
-  dialogRef: DynamicDialogRef | null = null;
 
   items = FILE_MENU_ITEMS;
   dynamicHtml = embedDynamicJs;
@@ -138,18 +115,12 @@ export class FilesTreeComponent {
   }
 
   confirmDelete(file: OsfFile): void {
-    this.confirmationService.confirm({
-      ...defaultConfirmationConfig,
-      header: this.translateService.instant('project.files.dialogs.deleteFile.title'),
-      message: this.translateService.instant('project.files.dialogs.deleteFile.message', { name: file.name }),
-      acceptButtonProps: {
-        ...defaultConfirmationConfig.acceptButtonProps,
-        label: this.translateService.instant('common.buttons.delete'),
-        severity: 'danger',
-      },
-      accept: () => {
-        this.deleteEntry(file.links.delete);
-      },
+    this.customConfirmationService.confirmDelete({
+      headerKey: 'project.files.dialogs.deleteFile.title',
+      messageParams: { name: file.name },
+      messageKey: 'project.files.dialogs.deleteFile.message',
+      acceptLabelKey: 'common.buttons.remove',
+      onConfirm: () => this.deleteEntry(file.links.delete),
     });
   }
 
@@ -159,23 +130,23 @@ export class FilesTreeComponent {
   }
 
   confirmRename(file: OsfFile): void {
-    this.dialogRef = this.dialogService.open(RenameFileDialogComponent, {
-      width: '448px',
-      focusOnShow: false,
-      header: this.translateService.instant('project.files.dialogs.renameFile.title'),
-      closeOnEscape: true,
-      modal: true,
-      closable: true,
-      data: {
-        currentName: file.name,
-      },
-    });
-
-    this.dialogRef.onClose.subscribe((newName: string) => {
-      if (newName) {
-        this.renameEntry(newName, file);
-      }
-    });
+    this.dialogService
+      .open(RenameFileDialogComponent, {
+        width: '448px',
+        focusOnShow: false,
+        header: this.translateService.instant('project.files.dialogs.renameFile.title'),
+        closeOnEscape: true,
+        modal: true,
+        closable: true,
+        data: {
+          currentName: file.name,
+        },
+      })
+      .onClose.subscribe((newName: string) => {
+        if (newName) {
+          this.renameEntry(newName, file);
+        }
+      });
   }
 
   renameEntry(newName: string, file: OsfFile): void {
@@ -219,7 +190,8 @@ export class FilesTreeComponent {
           action === 'move'
             ? this.translateService.instant('project.files.dialogs.moveFile.title')
             : this.translateService.instant('project.files.dialogs.copyFile.title');
-        this.dialogRef = this.dialogService.open(MoveFileDialogComponent, {
+
+        this.dialogService.open(MoveFileDialogComponent, {
           width: '552px',
           focusOnShow: false,
           header: header,
@@ -259,23 +231,17 @@ export class FilesTreeComponent {
     const dragNode = event.dragNode as OsfFile;
     const dropNode = event.dropNode as OsfFile;
 
-    const message = this.translateService.instant('project.files.dialogs.moveFile.message', {
-      dragNodeName: dragNode.name,
-      dropNodeName: dropNode.previousFolder ? 'parent folder' : dropNode.name,
-    });
-
-    this.confirmationService.confirm({
-      ...defaultConfirmationConfig,
-      message,
-      header: this.translateService.instant('project.files.dialogs.moveFile.title'),
-      acceptButtonProps: {
-        ...defaultConfirmationConfig.acceptButtonProps,
-        label: this.translateService.instant('common.buttons.move'),
+    this.customConfirmationService.confirmAccept({
+      headerKey: 'project.files.dialogs.moveFile.title',
+      messageParams: {
+        dragNodeName: dragNode.name,
+        dropNodeName: dropNode.previousFolder ? 'parent folder' : dropNode.name,
       },
-      accept: async () => {
+      messageKey: 'project.files.dialogs.moveFile.message',
+      onConfirm: async () => {
         await this.dropFileToFolder(event);
       },
-      reject: () => {
+      onReject: () => {
         const filesLink = this.currentFolder()?.relationships.filesLink;
         if (filesLink) {
           this.actions().getFiles(filesLink);

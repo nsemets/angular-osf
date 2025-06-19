@@ -7,9 +7,8 @@ export function approveFile(fileId: string, projectId: string): void {
   iframe.style.display = 'none';
   iframe.src = link;
 
-  // Optionally clean up the iframe after it's done
   iframe.onload = () => {
-    setTimeout(() => iframe.remove(), 3000); // wait just in case redirects
+    setTimeout(() => iframe.remove(), 3000);
   };
 
   document.body.appendChild(iframe);

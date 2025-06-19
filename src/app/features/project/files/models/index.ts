@@ -22,5 +22,4 @@ export * from './requests/patch-file-metadata.model';
 export * from './data/embed-content.const';
 export * from './data/file-menu-items.const';
 export * from './data/file-provider.const';
-export * from './data/files-sort.const';
 export * from './files-tree-actions.interface';

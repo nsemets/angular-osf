@@ -42,14 +42,12 @@ export class ProjectFilesState {
   getRootFolderFiles(ctx: StateContext<ProjectFilesStateModel>, action: GetRootFolderFiles) {
     const state = ctx.getState();
     ctx.patchState({ files: { ...state.files, isLoading: true, error: null } });
-    console.log('root files true');
 
     return this.filesService.getRootFolderFiles(action.projectId, state.provider, state.search, state.sort).pipe(
       switchMap((files) => {
         return this.filesService.getFolder(files[0].relationships.parentFolderLink).pipe(
           tap({
             next: (parentFolder) => {
-              console.log('root files false');
               ctx.patchState({
                 files: {
                   data: [...files],
@@ -116,12 +114,10 @@ export class ProjectFilesState {
   getFiles(ctx: StateContext<ProjectFilesStateModel>, action: GetFiles) {
     const state = ctx.getState();
     ctx.patchState({ files: { ...state.files, isLoading: true, error: null } });
-    console.log('get files true');
 
     return this.filesService.getFiles(action.filesLink, state.search, state.sort).pipe(
       tap({
         next: (files) => {
-          console.log('get files false');
           ctx.patchState({
             files: {
               data: files,

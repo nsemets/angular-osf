@@ -4,28 +4,19 @@
   </div>
 
   <div class="flex align-items-center gap-2">
-    <input pInputText class="flex-1" [formControl]="searchControl" />
+    <input pInputText class="flex-1" [formControl]="keywordControl" />
     <p-button
       [label]="'common.buttons.add' | translate"
       (click)="updateTags()"
-      [disabled]="tags().isLoading"
-    ></p-button>
+      [disabled]="tags().isLoading || keywordControl.invalid"
+    >
+    </p-button>
   </div>
 
   @if (!tags().isLoading) {
     <div class="flex flex-wrap gap-1">
       @for (tag of tags().data; track $index) {
-        <p-chip [label]="tag" removable="true">
-          <ng-template pTemplate="removeicon">
-            <i
-              class="osf-icon-close text-xs font-bold text-align-center"
-              tabindex="0"
-              role="button"
-              (click)="deleteTag(tag)"
-              (keydown.enter)="deleteTag(tag)"
-            ></i>
-          </ng-template>
-        </p-chip>
+        <p-chip [label]="tag" removeIcon="fas fa-close" removable (onRemove)="deleteTag(tag)"></p-chip>
       }
     </div>
   } @else {

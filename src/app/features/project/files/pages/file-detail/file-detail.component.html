@@ -8,7 +8,7 @@
   </p-tablist>
 </p-tabs>
 
-<div #fileDetailContainer class="flex gap-4 bg-white flex-column h-full flex-1 p-4 h-full">
+<div class="flex gap-4 bg-white flex-column h-full flex-1 p-4 h-full">
   <div class="flex">
     <div class="flex align-items-center gap-2 back-navigation font-semibold">
       <i class="pi pi-angle-left text-base"></i>
@@ -25,15 +25,16 @@
       ></p-button>
 
       @if (file().data?.links?.download) {
-        <p-button severity="secondary" (click)="downloadFile(file().data?.links?.download!)"
-          ><i class="osf-icon-download p-1"></i
-        ></p-button>
+        <p-button severity="secondary" (click)="downloadFile(file().data?.links?.download!)">
+          <i class="fas fa-download p-1"></i>
+        </p-button>
       }
       @if (file().data?.links?.render) {
         <div class="relative">
-          <p-button severity="secondary" (click)="$event.stopPropagation(); embed.toggle($event)"
-            ><i class="fa-solid fa-file-import p-1"></i>
+          <p-button severity="secondary" (click)="$event.stopPropagation(); embed.toggle($event)">
+            <i class="fas fa-file-import p-1"></i>
           </p-button>
+
           <p-popover #embed>
             <ul class="popover-menu">
               <li
@@ -58,9 +59,10 @@
       }
       @if (file().data?.links?.html) {
         <div class="relative">
-          <p-button severity="secondary" (click)="$event.stopPropagation(); share.toggle($event)"
-            ><i class="osf-icon-share p-1"></i
-          ></p-button>
+          <p-button severity="secondary" (click)="$event.stopPropagation(); share.toggle($event)">
+            <i class="fas fa-share-nodes p-1"></i>
+          </p-button>
+
           <p-popover #share>
             <ul class="popover-menu">
               <li
@@ -92,9 +94,9 @@
         </div>
       }
       @if (file().data) {
-        <p-button severity="secondary" (click)="confirmDelete(file().data!)"
-          ><i class="osf-icon-trash red-icon p-1"></i
-        ></p-button>
+        <p-button severity="danger" (click)="confirmDelete(file().data!)">
+          <i class="fas fa-trash p-1"></i>
+        </p-button>
       }
     </div>
   </div>
@@ -127,7 +129,7 @@
         <osf-file-keywords class="metadata"></osf-file-keywords>
       } @else {
         <osf-file-metadata class="metadata"></osf-file-metadata>
-        <osf-project-metadata class="metadata"></osf-project-metadata>
+        <osf-file-project-metadata class="metadata"></osf-file-project-metadata>
       }
     </div>
   </div>

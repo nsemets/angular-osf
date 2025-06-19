@@ -5,10 +5,11 @@
 
   <p-accordion [multiple]="true">
     @for (item of fileRevisions().data; track item.version) {
-      <p-accordion-panel value="{{ item.version }}" class="border-none">
-        <p-accordion-header class="h-3rem font-normal"
-          >{{ item.version }}. {{ item.dateTime | date: 'MMM d, yyyy HH:mm' }}</p-accordion-header
-        >
+      <p-accordion-panel [value]="item.version" class="border-none">
+        <p-accordion-header class="h-3rem font-normal">
+          {{ item.version }}. {{ item.dateTime | date: 'MMM d, yyyy HH:mm' }}
+        </p-accordion-header>
+
         <p-accordion-content>
           <ul class="flex flex-column gap-2 ml-4">
             <li class="flex justify-content-between">
