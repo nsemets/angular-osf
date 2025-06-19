@@ -7,11 +7,12 @@ import { Skeleton } from 'primeng/skeleton';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { WikiSelectors } from '@osf/features/project/wiki/store';
+import { MarkdownComponent } from '@osf/shared/components/markdown/markdown.component';
 import { TruncatedTextComponent } from '@shared/components';
 
 @Component({
   selector: 'osf-project-wiki',
-  imports: [Skeleton, TranslatePipe, TruncatedTextComponent],
+  imports: [Skeleton, TranslatePipe, TruncatedTextComponent, MarkdownComponent],
   templateUrl: './overview-wiki.component.html',
   styleUrl: './overview-wiki.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
