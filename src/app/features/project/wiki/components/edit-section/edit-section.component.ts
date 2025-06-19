@@ -49,7 +49,6 @@ export class EditSectionComponent implements OnInit {
   constructor() {
     effect(() => {
       const versionContent = this.versionContent();
-      console.log('Version content:', versionContent);
       if (!this.initialContent) {
         this.content = versionContent;
         this.initialContent = versionContent;
@@ -75,7 +74,6 @@ export class EditSectionComponent implements OnInit {
   }
 
   onPreviewDomChanged() {
-    console.log('Preview DOM changed');
     this.contentChange.emit(this.editorInstance?.getValue());
   }
 
@@ -111,7 +109,6 @@ export class EditSectionComponent implements OnInit {
   toggleAutocomplete() {
     if (this.editorInstance) {
       this.autoCompleteEnabled = !this.autoCompleteEnabled;
-      console.log('Toggling autocomplete:', this.autoCompleteEnabled);
       this.editorInstance.setOptions({
         enableBasicAutocompletion: this.autoCompleteEnabled,
         enableLiveAutocompletion: this.autoCompleteEnabled,

@@ -7,7 +7,7 @@ import { Skeleton } from 'primeng/skeleton';
 import { ChangeDetectionStrategy, Component, computed, effect, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { MarkdownComponent } from '@osf/shared/components/markdown/markdown.component';
+import { MarkdownComponent } from '@osf/shared/components';
 
 import { WikiVersion } from '../../models';
 
