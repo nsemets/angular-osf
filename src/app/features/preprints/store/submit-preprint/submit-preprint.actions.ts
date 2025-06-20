@@ -47,6 +47,18 @@ export class GetPreprintFiles {
   static readonly type = '[Submit Preprint] Get Preprint Files';
 }
 
+export class GetAvailableProjects {
+  static readonly type = '[Submit Preprint] Get Available Projects';
+
+  constructor(public searchTerm: StringOrNull) {}
+}
+
+export class GetProjectFiles {
+  static readonly type = '[Submit Preprint] Get Project Files';
+
+  constructor(public projectId: string) {}
+}
+
 export class ResetStateAndDeletePreprint {
   static readonly type = '[Submit Preprint] Reset State And Delete Preprint';
 }

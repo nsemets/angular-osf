@@ -1,15 +1,33 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
 import { Button } from 'primeng/button';
+import { Card } from 'primeng/card';
+import { Select, SelectChangeEvent } from 'primeng/select';
 import { Skeleton } from 'primeng/skeleton';
 import { Tooltip } from 'primeng/tooltip';
 
-import { NgClass, TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, HostListener, OnInit, output } from '@angular/core';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
+import { NgClass, TitleCasePipe } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  HostListener,
+  inject,
+  OnInit,
+  output,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+
+import { StringOrNull } from '@core/helpers';
 import { PreprintFileSource } from '@osf/features/preprints/enums';
 import {
+  GetAvailableProjects,
   GetPreprintFilesLinks,
+  GetProjectFiles,
   SetSelectedPreprintFileSource,
   SubmitPreprintSelectors,
   UploadFile,
@@ -18,7 +36,7 @@ import { IconComponent } from '@shared/components';
 
 @Component({
   selector: 'osf-file-step',
-  imports: [Button, TitleCasePipe, NgClass, Tooltip, Skeleton, IconComponent],
+  imports: [Button, TitleCasePipe, NgClass, Tooltip, Skeleton, IconComponent, Card, Select, ReactiveFormsModule],
   templateUrl: './file-step.component.html',
   styleUrl: './file-step.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,7 +46,10 @@ export class FileStepComponent implements OnInit {
     setSelectedFileSource: SetSelectedPreprintFileSource,
     getPreprintFilesLinks: GetPreprintFilesLinks,
     uploadFile: UploadFile,
+    getAvailableProjects: GetAvailableProjects,
+    getFilesForSelectedProject: GetProjectFiles,
   });
+  private destroyRef = inject(DestroyRef);
 
   readonly PreprintFileSource = PreprintFileSource;
 
@@ -37,6 +58,9 @@ export class FileStepComponent implements OnInit {
   fileUploadLink = select(SubmitPreprintSelectors.getUploadLink);
   preprintFiles = select(SubmitPreprintSelectors.getPreprintFiles);
   arePreprintFilesLoading = select(SubmitPreprintSelectors.arePreprintFilesLoading);
+  availableProjects = select(SubmitPreprintSelectors.getAvailableProjects);
+  areAvailableProjectsLoading = select(SubmitPreprintSelectors.areAvailableProjectsLoading);
+  projectNameControl = new FormControl<StringOrNull>(null);
 
   nextClicked = output<void>();
 
@@ -50,6 +74,17 @@ export class FileStepComponent implements OnInit {
 
   selectFileSource(fileSource: PreprintFileSource) {
     this.actions.setSelectedFileSource(fileSource);
+
+    if (fileSource === PreprintFileSource.Project) {
+      this.actions.getAvailableProjects(null);
+
+      this.projectNameControl.valueChanges
+        .pipe(debounceTime(500), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+        .subscribe((value) => {
+          if (!value) return;
+          this.actions.getAvailableProjects(value);
+        });
+    }
   }
 
   backButtonClicked() {
@@ -72,5 +107,13 @@ export class FileStepComponent implements OnInit {
   public onBeforeUnload($event: BeforeUnloadEvent): boolean {
     $event.preventDefault();
     return false;
+  }
+
+  selectProject(event: SelectChangeEvent) {
+    if (!(event.originalEvent instanceof PointerEvent)) {
+      return;
+    }
+
+    this.actions.getFilesForSelectedProject(event.value);
   }
 }

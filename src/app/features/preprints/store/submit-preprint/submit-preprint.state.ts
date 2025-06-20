@@ -15,8 +15,10 @@ import { ProjectFilesService } from '@osf/features/project/files/services';
 
 import {
   CreatePreprint,
+  GetAvailableProjects,
   GetPreprintFiles,
   GetPreprintFilesLinks,
+  GetProjectFiles,
   ResetStateAndDeletePreprint,
   SetSelectedPreprintFileSource,
   SetSelectedPreprintProviderId,
@@ -33,6 +35,16 @@ import {
     fileSource: PreprintFileSource.None,
     preprintFilesLinks: null,
     preprintFiles: {
+      data: [],
+      isLoading: false,
+      error: null,
+    },
+    availableProjects: {
+      data: [],
+      isLoading: false,
+      error: null,
+    },
+    projectFiles: {
       data: [],
       isLoading: false,
       error: null,
@@ -150,6 +162,53 @@ export class SubmitPreprintState {
     );
   }
 
+  @Action(GetAvailableProjects)
+  getAvailableProjects(ctx: StateContext<SubmitPreprintStateModel>, action: GetAvailableProjects) {
+    ctx.setState(patch({ availableProjects: patch({ isLoading: true }) }));
+
+    return this.preprintsService.getAvailableProjects(action.searchTerm).pipe(
+      tap((projects) => {
+        ctx.setState(
+          patch({
+            availableProjects: patch({
+              data: projects,
+              isLoading: false,
+            }),
+          })
+        );
+      }),
+      catchError((error) => {
+        ctx.setState(
+          patch({
+            availableProjects: patch({
+              isLoading: false,
+              error: error.message,
+            }),
+          })
+        );
+        return throwError(() => error);
+      })
+    );
+  }
+
+  @Action(GetProjectFiles)
+  getProjectFiles(ctx: StateContext<SubmitPreprintStateModel>, action: GetProjectFiles) {
+    ctx.setState(patch({ projectFiles: patch({ isLoading: true }) }));
+
+    return this.preprintsService.getProjectFiles(action.projectId).pipe(
+      tap((files: OsfFile[]) => {
+        ctx.setState(
+          patch({
+            projectFiles: patch({
+              data: files,
+              isLoading: false,
+            }),
+          })
+        );
+      })
+    );
+  }
+
   @Action(ResetStateAndDeletePreprint)
   resetStateAndDeletePreprint(ctx: StateContext<SubmitPreprintStateModel>) {
     const state = ctx.getState();
@@ -160,6 +219,16 @@ export class SubmitPreprintState {
       fileSource: PreprintFileSource.None,
       preprintFilesLinks: null,
       preprintFiles: {
+        data: [],
+        isLoading: false,
+        error: null,
+      },
+      availableProjects: {
+        data: [],
+        isLoading: false,
+        error: null,
+      },
+      projectFiles: {
         data: [],
         isLoading: false,
         error: null,
