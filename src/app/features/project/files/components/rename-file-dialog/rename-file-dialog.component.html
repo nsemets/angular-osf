@@ -16,7 +16,7 @@
         [label]="'common.buttons.cancel' | translate"
         (click)="onCancel()"
       ></p-button>
-      <p-button type="submit" [label]="'common.buttons.rename' | translate" [disabled]="!renameForm.valid"></p-button>
+      <p-button type="submit" [label]="'common.buttons.rename' | translate" [disabled]="renameForm.invalid"></p-button>
     </div>
   </div>
 </form>

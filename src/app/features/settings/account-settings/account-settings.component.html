@@ -1,6 +1,6 @@
 <osf-sub-header [showButton]="false" [title]="'Account settings'" [icon]="'settings'" />
 
-@if (this.currentUser()?.id) {
+@if (currentUser()?.id) {
   <section class="content">
     <osf-connected-emails></osf-connected-emails>
 

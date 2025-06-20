@@ -19,8 +19,9 @@ import { CustomValidators } from '@osf/shared/utils';
 export class RenameFileDialogComponent {
   private readonly dialogRef = inject(DynamicDialogRef);
   private readonly config = inject(DynamicDialogConfig);
-  nameLimit = InputLimits.name.maxLength;
-  nameMinLength = InputLimits.name.minLength;
+
+  readonly nameLimit = InputLimits.name.maxLength;
+  readonly nameMinLength = InputLimits.name.minLength;
 
   protected readonly renameForm = new FormGroup({
     name: new FormControl(this.config.data?.currentName ?? '', {

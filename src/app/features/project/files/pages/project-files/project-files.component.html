@@ -22,32 +22,28 @@
       />
 
       <div class="sm:w-3 md:w-max">
-        <div class="sorting-container no-border-dropdown select-font-normal">
-          <osf-form-select
-            [control]="sortControl"
-            [options]="sortOptions"
-            [placeholder]="'project.files.sort.placeholder'"
-            [fullWidth]="true"
-          ></osf-form-select>
-        </div>
+        <osf-form-select
+          [control]="sortControl"
+          [options]="sortOptions"
+          [placeholder]="'project.files.sort.placeholder'"
+          [fullWidth]="true"
+        ></osf-form-select>
       </div>
     </div>
 
     <div class="flex flex-column w-full gap-2 sm:flex-row md:w-max">
-      @let id = currentFolder()?.id ?? '';
-      @let rootFolder = !currentFolder()?.relationships?.parentFolderLink;
       <p-button
-        [disabled]="fileIsUploading() || files().isLoading"
+        [disabled]="fileIsUploading() || isFilesLoading()"
         outlined
         raised
-        (click)="downloadFolder(id, rootFolder)"
+        (click)="downloadFolder()"
         [icon]="'fas fa-download'"
         [label]="'project.files.actions.downloadAsZip' | translate"
       >
       </p-button>
 
       <p-button
-        [disabled]="fileIsUploading() || files().isLoading"
+        [disabled]="fileIsUploading() || isFilesLoading()"
         outlined
         raised
         severity="success"
@@ -58,7 +54,7 @@
       </p-button>
 
       <p-button
-        [disabled]="fileIsUploading() || files().isLoading"
+        [disabled]="fileIsUploading() || isFilesLoading()"
         outlined
         raised
         severity="success"
@@ -91,10 +87,9 @@
 
   <osf-files-tree
     [files]="files()"
+    [isLoading]="isFilesLoading()"
     [actions]="filesTreeActions"
     [readonly]="false"
-    [searchControl]="searchControl"
-    [sortControl]="sortControl"
     [projectId]="projectId()"
     [provider]="provider()"
     (folderIsOpening)="folderIsOpening($event)"

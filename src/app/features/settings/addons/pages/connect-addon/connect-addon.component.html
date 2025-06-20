@@ -186,7 +186,7 @@
                   class="w-10rem btn-full-width"
                   [label]="'settings.addons.form.buttons.authorize' | translate"
                   type="submit"
-                  [disabled]="!addonForm.valid || !this.userReference().length || isConnecting()"
+                  [disabled]="!addonForm.valid || !userReference().length || isConnecting()"
                 ></p-button>
               } @else {
                 <p-button
@@ -202,7 +202,7 @@
                   [label]="'settings.addons.form.buttons.reconnect' | translate"
                   [link]="true"
                   (onClick)="handleConnectStorageAddon()"
-                  [disabled]="!addonForm.valid || !this.userReference().length || isConnecting()"
+                  [disabled]="!addonForm.valid || !userReference().length || isConnecting()"
                 ></p-button>
               }
             </div>

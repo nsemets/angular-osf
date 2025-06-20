@@ -1,4 +1,4 @@
-<osf-sub-header [isLoading]="file().isLoading" title="{{ file().data?.name }}" />
+<osf-sub-header [isLoading]="isFileLoading()" title="{{ file()?.name }}" />
 
 <p-tabs [value]="selectedTab" (valueChange)="onTabChange(+$event)" class="flex-1 ml-auto mr-4">
   <p-tablist>
@@ -24,77 +24,39 @@
         [routerLink]="['/metadata']"
       ></p-button>
 
-      @if (file().data?.links?.download) {
-        <p-button severity="secondary" (click)="downloadFile(file().data?.links?.download!)">
+      @if (file()?.links?.download) {
+        <p-button severity="secondary" (click)="downloadFile(file()?.links?.download!)">
           <i class="fas fa-download p-1"></i>
         </p-button>
       }
-      @if (file().data?.links?.render) {
+      @if (file()?.links?.render) {
         <div class="relative">
-          <p-button severity="secondary" (click)="$event.stopPropagation(); embed.toggle($event)">
+          <p-button severity="secondary" (click)="embedMenu.toggle($event)">
             <i class="fas fa-file-import p-1"></i>
           </p-button>
 
-          <p-popover #embed>
-            <ul class="popover-menu">
-              <li
-                tabindex="0"
-                (click)="handleCopyDynamicEmbed(embed)"
-                (keydown.enter)="handleCopyDynamicEmbed(embed)"
-                class="popover-menu-item"
-              >
-                {{ 'project.files.detail.actions.copyDynamicIframe' | translate }}
-              </li>
-              <li
-                tabindex="0"
-                (click)="handleCopyStaticEmbed(embed)"
-                (keydown.enter)="handleCopyStaticEmbed(embed)"
-                class="popover-menu-item"
-              >
-                {{ 'project.files.detail.actions.copyStaticIframe' | translate }}
-              </li>
-            </ul>
-          </p-popover>
+          <p-menu appendTo="body" [model]="embedItems" popup #embedMenu>
+            <ng-template #item let-item>
+              <a class="p-menu-item-link">{{ item.label | translate }}</a>
+            </ng-template>
+          </p-menu>
         </div>
       }
-      @if (file().data?.links?.html) {
+      @if (file()?.links?.html) {
         <div class="relative">
-          <p-button severity="secondary" (click)="$event.stopPropagation(); share.toggle($event)">
+          <p-button severity="secondary" (click)="shareMenu.toggle($event)">
             <i class="fas fa-share-nodes p-1"></i>
           </p-button>
 
-          <p-popover #share>
-            <ul class="popover-menu">
-              <li
-                tabindex="0"
-                (click)="handleEmailShare(share)"
-                (keydown.enter)="handleEmailShare(share)"
-                class="popover-menu-item"
-              >
-                {{ 'project.files.detail.actions.share.email' | translate }}
-              </li>
-              <li
-                tabindex="0"
-                (click)="handleTwitterShare(share)"
-                (keydown.enter)="handleTwitterShare(share)"
-                class="popover-menu-item"
-              >
-                {{ 'project.files.detail.actions.share.twitter' | translate }}
-              </li>
-              <li
-                tabindex="0"
-                (click)="handleFacebookShare(share)"
-                (keydown.enter)="handleFacebookShare(share)"
-                class="popover-menu-item"
-              >
-                {{ 'project.files.detail.actions.share.facebook' | translate }}
-              </li>
-            </ul>
-          </p-popover>
+          <p-menu appendTo="body" [model]="shareItems" popup #shareMenu>
+            <ng-template #item let-item>
+              <a class="p-menu-item-link">{{ item.label | translate }}</a>
+            </ng-template>
+          </p-menu>
         </div>
       }
-      @if (file().data) {
-        <p-button severity="danger" (click)="confirmDelete(file().data!)">
+      @if (file()) {
+        <p-button severity="danger" (click)="confirmDelete(file()!)">
           <i class="fas fa-trash p-1"></i>
         </p-button>
       }

@@ -683,7 +683,7 @@
           "copyStaticIframe": "Copy static HTML iFrame",
           "share": {
             "email": "Email",
-            "twitter": "Twitter",
+            "x": "X",
             "facebook": "Facebook"
           }
         },

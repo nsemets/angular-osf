@@ -20,6 +20,7 @@ export * from './requests/patch-file-metadata.model';
 
 // Constants
 export * from './data/embed-content.const';
-export * from './data/file-menu-items.const';
 export * from './data/file-provider.const';
+export * from './data/project-files-state-defaults.const';
+export * from './files-metadata-fields';
 export * from './files-tree-actions.interface';

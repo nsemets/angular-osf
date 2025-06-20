@@ -19,8 +19,8 @@ import { SeverityType } from '@shared/models';
 export class CopyButtonComponent {
   copyItem = input<string>('');
   tooltip = input<string>('common.buttons.copy');
-  label = input<string | null>(null);
-  severity = input<SeverityType>(null);
+  label = input<string>('');
+  severity = input<SeverityType>('contrast');
 
   private readonly clipboard = inject(Clipboard);
   private readonly toastService = inject(ToastService);

@@ -3,31 +3,27 @@ import { select } from '@ngxs/store';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { PrimeTemplate } from 'primeng/api';
-import { Button } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
-import { Menu } from 'primeng/menu';
-import { Popover } from 'primeng/popover';
 import { Tree, TreeNodeDropEvent } from 'primeng/tree';
 
 import { finalize, firstValueFrom, Observable, switchMap, take, tap } from 'rxjs';
 
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { MoveFileDialogComponent, RenameFileDialogComponent } from '@osf/features/project/files/components';
-import { FILE_MENU_ITEMS } from '@osf/features/project/files/constants';
-import { embedDynamicJs, embedStaticHtml, FileMenuItems, FilesTreeActions } from '@osf/features/project/files/models';
+import { embedDynamicJs, embedStaticHtml, FilesTreeActions } from '@osf/features/project/files/models';
 import { ProjectFilesSelectors } from '@osf/features/project/files/store';
-import { LoadingSpinnerComponent } from '@shared/components';
-import { AsyncStateModel, OsfFile } from '@shared/models';
+import { FileMenuType } from '@osf/shared/enums';
+import { FileMenuComponent, LoadingSpinnerComponent } from '@shared/components';
+import { FileMenuAction, OsfFile } from '@shared/models';
 import { FileSizePipe } from '@shared/pipes';
 import { CustomConfirmationService, FilesService, ToastService } from '@shared/services';
 
 @Component({
   selector: 'osf-files-tree',
-  imports: [Button, DatePipe, FileSizePipe, Menu, Popover, PrimeTemplate, TranslatePipe, Tree, LoadingSpinnerComponent],
+  imports: [DatePipe, FileSizePipe, PrimeTemplate, TranslatePipe, Tree, LoadingSpinnerComponent, FileMenuComponent],
   templateUrl: './files-tree.component.html',
   styleUrl: './files-tree.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,13 +37,12 @@ export class FilesTreeComponent {
   readonly dialogService = inject(DialogService);
   readonly translateService = inject(TranslateService);
 
-  searchControl = input.required<FormControl>();
-  sortControl = input.required<FormControl>();
+  files = input.required<OsfFile[]>();
   projectId = input.required<string>();
   actions = input.required<FilesTreeActions>();
   readonly = input.required<boolean>();
-  files = input.required<AsyncStateModel<OsfFile[]>>();
   provider = input.required<string>();
+  isLoading = input(false);
 
   folderIsOpening = output<boolean>();
 
@@ -59,20 +54,12 @@ export class FilesTreeComponent {
           ...this.currentFolder(),
           previousFolder: true,
         },
-        ...this.files().data,
+        ...this.files(),
       ] as OsfFile[];
     } else {
-      return this.files().data;
+      return this.files();
     }
   });
-
-  protected readonly fileName = signal('');
-
-  items = FILE_MENU_ITEMS;
-  dynamicHtml = embedDynamicJs;
-  staticHtml = embedStaticHtml;
-
-  protected readonly FileMenuItems = FileMenuItems;
 
   openEntry(file: OsfFile) {
     if (file.kind === 'file') {
@@ -112,6 +99,69 @@ export class FilesTreeComponent {
         )
       )
       .subscribe();
+  }
+
+  onFileMenuAction(action: FileMenuAction, file: OsfFile): void {
+    const { value, data } = action;
+
+    switch (value) {
+      case FileMenuType.Download:
+        if (file.kind === 'file') {
+          this.downloadFile(file.links.download);
+        } else {
+          this.downloadFolder(file.id, false);
+        }
+        break;
+      case FileMenuType.Delete:
+        this.confirmDelete(file);
+        break;
+      case FileMenuType.Share:
+        this.handleShareAction(file, data?.type);
+        break;
+      case FileMenuType.Embed:
+        this.handleEmbedAction(file, data?.type);
+        break;
+      case FileMenuType.Rename:
+        this.confirmRename(file);
+        break;
+      case FileMenuType.Move:
+        this.moveFile(file, 'move');
+        break;
+      case FileMenuType.Copy:
+        this.moveFile(file, 'copy');
+        break;
+    }
+  }
+
+  private handleShareAction(file: OsfFile, shareType?: string): void {
+    const emailLink = `mailto:?subject=${file.name}&body=${file.links.html}`;
+    const twitterLink = `https://twitter.com/intent/tweet?url=${file.links.html}&text=${file.name}&via=OSFramework`;
+    const facebookLink = `https://www.facebook.com/dialog/share?app_id=1022273774556662&display=popup&href=${file.links.html}&redirect_uri=${file.links.html}`;
+
+    switch (shareType) {
+      case 'email':
+        this.openLink(emailLink);
+        break;
+      case 'twitter':
+        this.openLinkNewTab(twitterLink);
+        break;
+      case 'facebook':
+        this.openLinkNewTab(facebookLink);
+        break;
+    }
+  }
+
+  private handleEmbedAction(file: OsfFile, embedType?: string): void {
+    let embedHtml = '';
+    if (embedType === 'dynamic') {
+      embedHtml = embedDynamicJs.replace('ENCODED_URL', file.links.render);
+    } else if (embedType === 'static') {
+      embedHtml = embedStaticHtml.replace('ENCODED_URL', file.links.render);
+    }
+
+    if (embedHtml) {
+      this.copyToClipboard(embedHtml);
+    }
   }
 
   confirmDelete(file: OsfFile): void {

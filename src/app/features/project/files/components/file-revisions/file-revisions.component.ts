@@ -1,20 +1,20 @@
-import { select, Store } from '@ngxs/store';
+import { select } from '@ngxs/store';
 
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { Accordion, AccordionContent, AccordionHeader, AccordionPanel } from 'primeng/accordion';
-import { Tooltip } from 'primeng/tooltip';
+import { Button } from 'primeng/button';
+import { Skeleton } from 'primeng/skeleton';
 
 import { map, of } from 'rxjs';
 
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 
 import { ProjectFilesSelectors } from '@osf/features/project/files/store';
-import { CopyButtonComponent } from '@shared/components';
-import { ToastService } from '@shared/services';
+import { CopyButtonComponent, InfoIconComponent } from '@shared/components';
 
 import { environment } from 'src/environments/environment';
 
@@ -24,24 +24,23 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./file-revisions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    TranslatePipe,
     Accordion,
     AccordionPanel,
     AccordionHeader,
     AccordionContent,
+    Button,
     DatePipe,
-    Tooltip,
+    TranslatePipe,
+    InfoIconComponent,
     CopyButtonComponent,
+    Skeleton,
   ],
 })
 export class FileRevisionsComponent {
-  readonly store = inject(Store);
-  readonly destroyRef = inject(DestroyRef);
-  readonly toastService = inject(ToastService);
-  readonly route = inject(ActivatedRoute);
-  readonly translateService = inject(TranslateService);
+  private readonly route = inject(ActivatedRoute);
 
   readonly fileRevisions = select(ProjectFilesSelectors.getFileRevisions);
+  readonly isLoading = select(ProjectFilesSelectors.isFileRevisionsLoading);
   readonly fileGuid = toSignal(this.route.params.pipe(map((params) => params['fileGuid'])) ?? of(undefined));
 
   downloadRevision(version: string): void {

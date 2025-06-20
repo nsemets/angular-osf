@@ -5,28 +5,29 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
 import { Chip } from 'primeng/chip';
 import { InputText } from 'primeng/inputtext';
-
-import { take } from 'rxjs';
+import { Skeleton } from 'primeng/skeleton';
 
 import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { ProjectFilesSelectors, UpdateTags } from '@osf/features/project/files/store';
-import { LoadingSpinnerComponent } from '@shared/components';
 import { InputLimits } from '@shared/constants';
 import { CustomValidators } from '@shared/utils';
 
 @Component({
   selector: 'osf-file-keywords',
-  imports: [Button, Chip, LoadingSpinnerComponent, InputText, ReactiveFormsModule, TranslatePipe],
+  imports: [Button, Chip, Skeleton, InputText, ReactiveFormsModule, TranslatePipe],
   templateUrl: './file-keywords.component.html',
   styleUrls: ['./file-keywords.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileKeywordsComponent {
-  readonly actions = createDispatchMap({ updateTags: UpdateTags });
-  readonly destroyRef = inject(DestroyRef);
+  private readonly actions = createDispatchMap({ updateTags: UpdateTags });
+  private readonly destroyRef = inject(DestroyRef);
+
   readonly tags = select(ProjectFilesSelectors.getFileTags);
+  readonly isTagsLoading = select(ProjectFilesSelectors.isFileTagsLoading);
   readonly file = select(ProjectFilesSelectors.getOpenedFile);
 
   keywordControl = new FormControl('', {
@@ -34,26 +35,29 @@ export class FileKeywordsComponent {
     validators: [CustomValidators.requiredTrimmed(), Validators.maxLength(InputLimits.name.maxLength)],
   });
 
-  updateTags(): void {
-    if (this.keywordControl.value && this.file().data?.guid) {
-      const updatedTags = [...this.tags().data, this.keywordControl.value!];
-      const fileGuid = this.file().data?.guid ?? '';
-      this.actions.updateTags(updatedTags, fileGuid);
-      this.keywordControl.reset();
+  addTag(): void {
+    const fileGuid = this.file()?.guid;
+
+    if (this.keywordControl.value && fileGuid) {
+      const updatedTags = [...this.tags(), this.keywordControl.value!];
+      this.updateTags(updatedTags, fileGuid);
     }
   }
 
   deleteTag(value: string): void {
-    if (this.file().data?.guid) {
-      const updatedTags = [...this.tags().data];
+    const fileGuid = this.file()?.guid;
+
+    if (fileGuid) {
+      const updatedTags = [...this.tags()];
       updatedTags.splice(updatedTags.indexOf(value), 1);
-      const fileGuid = this.file().data?.guid ?? '';
-      this.actions
-        .updateTags(updatedTags, fileGuid)
-        .pipe(take(1))
-        .subscribe(() => {
-          this.keywordControl.reset();
-        });
+      this.updateTags(updatedTags, fileGuid);
     }
+  }
+
+  private updateTags(updatedTags: string[], fileGuid: string) {
+    this.actions
+      .updateTags(updatedTags, fileGuid)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.keywordControl.reset());
   }
 }

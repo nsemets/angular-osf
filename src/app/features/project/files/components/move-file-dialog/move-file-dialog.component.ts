@@ -21,25 +21,27 @@ import {
   SetFilesIsLoading,
   SetMoveFileCurrentFolder,
 } from '@osf/features/project/files/store';
-import { LoadingSpinnerComponent } from '@shared/components';
+import { IconComponent, LoadingSpinnerComponent } from '@shared/components';
 import { OsfFile } from '@shared/models';
 import { FilesService } from '@shared/services';
 
 @Component({
   selector: 'osf-move-file-dialog',
-  imports: [Button, LoadingSpinnerComponent, NgOptimizedImage, Tooltip, TranslatePipe],
+  imports: [Button, LoadingSpinnerComponent, NgOptimizedImage, Tooltip, TranslatePipe, IconComponent],
   templateUrl: './move-file-dialog.component.html',
   styleUrl: './move-file-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MoveFileDialogComponent {
-  dialogRef = inject(DynamicDialogRef);
-  filesService = inject(FilesService);
-  config = inject(DynamicDialogConfig);
-  destroyRef = inject(DestroyRef);
-  translateService = inject(TranslateService);
+  readonly config = inject(DynamicDialogConfig);
+  readonly dialogRef = inject(DynamicDialogRef);
+
+  private readonly filesService = inject(FilesService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly translateService = inject(TranslateService);
 
   protected readonly files = select(ProjectFilesSelectors.getMoveFileFiles);
+  protected readonly isLoading = select(ProjectFilesSelectors.isMoveFileFilesLoading);
   protected readonly currentFolder = select(ProjectFilesSelectors.getMoveFileCurrentFolder);
   protected readonly isFilesUpdating = signal(false);
   protected readonly isFolderSame = computed(() => {
@@ -112,7 +114,6 @@ export class MoveFileDialogComponent {
         this.config.data.action
       )
       .pipe(
-        take(1),
         takeUntilDestroyed(this.destroyRef),
         finalize(() => {
           this.dispatch.setCurrentFolder(this.currentFolder());
@@ -122,6 +123,7 @@ export class MoveFileDialogComponent {
       )
       .subscribe((file) => {
         this.dialogRef.close();
+
         if (file.id) {
           const filesLink = this.currentFolder()?.relationships.filesLink;
           if (filesLink) {

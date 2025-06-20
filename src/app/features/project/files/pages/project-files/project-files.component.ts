@@ -44,8 +44,6 @@ import {
 } from '@shared/components';
 import { FilesService, ToastService } from '@shared/services';
 
-import { FILE_MENU_ITEMS } from '../../constants';
-
 @Component({
   selector: 'osf-project-files',
   imports: [
@@ -82,6 +80,7 @@ export class ProjectFilesComponent {
   readonly translateService = inject(TranslateService);
 
   protected readonly files = select(ProjectFilesSelectors.getFiles);
+  protected readonly isFilesLoading = select(ProjectFilesSelectors.isFilesLoading);
   protected readonly currentFolder = select(ProjectFilesSelectors.getCurrentFolder);
   protected readonly provider = select(ProjectFilesSelectors.getProvider);
 
@@ -94,7 +93,6 @@ export class ProjectFilesComponent {
   fileIsUploading = signal(false);
   isFolderOpening = signal(false);
 
-  items = FILE_MENU_ITEMS;
   sortOptions = ALL_SORT_OPTIONS;
 
   protected readonly filesTreeActions: FilesTreeActions = {
@@ -197,10 +195,13 @@ export class ProjectFilesComponent {
       });
   }
 
-  downloadFolder(folderId: string, rootFolder: boolean): void {
+  downloadFolder(): void {
     const projectId = this.projectId();
+    const folderId = this.currentFolder()?.id ?? '';
+    const isRootFolder = !this.currentFolder()?.relationships?.parentFolderLink;
+
     if (projectId && folderId) {
-      if (rootFolder) {
+      if (isRootFolder) {
         const link = this.filesService.getFolderDownloadLink(projectId, this.provider(), '', true);
         window.open(link, '_blank')?.focus();
       } else {

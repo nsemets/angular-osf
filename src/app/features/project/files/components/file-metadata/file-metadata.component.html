@@ -3,70 +3,31 @@
     <h2>{{ 'project.files.detail.fileMetadata.title' | translate }}</h2>
 
     <div class="flex gap-2">
-      <div class="sm-round-padding-btn">
-        <p-button severity="secondary" (click)="downloadFileMetadata()">
-          <i class="fas fa-download p-1"></i>
-        </p-button>
-      </div>
-      <div class="sm-padding-btn">
-        <p-button
-          severity="secondary"
-          (click)="openEditFileMetadataDialog()"
-          [label]="'project.files.detail.fileMetadata.edit' | translate"
-        ></p-button>
-      </div>
+      <p-button severity="secondary" (click)="downloadFileMetadata()">
+        <i class="fas fa-download p-1"></i>
+      </p-button>
+
+      <p-button
+        severity="secondary"
+        (click)="openEditFileMetadataDialog()"
+        [label]="'project.files.detail.fileMetadata.edit' | translate"
+      ></p-button>
     </div>
   </div>
 
-  <div class="flex flex-column gap-2">
-    <h3>{{ 'project.files.detail.fileMetadata.fields.title' | translate }}</h3>
-
-    @if (fileMetadata().isLoading) {
-      <p-skeleton width="3rem" height="19px"></p-skeleton>
-    } @else {
-      <span>{{ fileMetadata().data?.title }}</span>
+  @if (isLoading()) {
+    <p-skeleton width="100%" height="4rem" />
+    <p-skeleton width="100%" height="4rem" />
+    <p-skeleton width="100%" height="4rem" />
+    <p-skeleton width="100%" height="4rem" />
+  } @else {
+    @for (field of metadataFields; track field.key) {
+      @if (fileMetadata()?.[field.key]) {
+        <div class="flex flex-column gap-2">
+          <h4>{{ field.label | translate }}</h4>
+          <p>{{ fileMetadata()?.[field.key] }}</p>
+        </div>
+      }
     }
-  </div>
-
-  @if (fileMetadata().data?.description) {
-    <div class="flex flex-column gap-2">
-      <h3>{{ 'project.files.detail.fileMetadata.fields.description' | translate }}</h3>
-
-      @if (fileMetadata().isLoading) {
-        <p-skeleton width="6rem" height="19px"></p-skeleton>
-      } @else {
-        <div>
-          {{ fileMetadata().data?.description }}
-        </div>
-      }
-    </div>
-  }
-
-  @if (fileMetadata().data?.resourceTypeGeneral) {
-    <div class="flex flex-column gap-2">
-      <h3>{{ 'project.files.detail.fileMetadata.fields.resourceType' | translate }}</h3>
-
-      @if (fileMetadata().isLoading) {
-        <p-skeleton width="7.5rem" height="19px"></p-skeleton>
-      } @else {
-        <div>
-          <span>{{ fileMetadata().data?.resourceTypeGeneral }}</span>
-        </div>
-      }
-    </div>
-  }
-
-  @if (fileMetadata().data?.language) {
-    <div class="flex flex-column gap-2">
-      <h3>{{ 'project.files.detail.fileMetadata.fields.resourceLanguage' | translate }}</h3>
-
-      @if (fileMetadata().isLoading) {
-        <p-skeleton width="10rem" height="19px"></p-skeleton>
-      } @else {
-        <div>
-          <span>{{ fileMetadata().data?.language }}</span>
-        </div>
-      }
-    </div>
   }
 </div>

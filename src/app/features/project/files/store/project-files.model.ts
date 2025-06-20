@@ -2,9 +2,9 @@ import {
   FileProvider,
   OsfFileCustomMetadata,
   OsfFileProjectContributor,
+  OsfFileRevision,
   OsfProjectMetadata,
 } from '@osf/features/project/files/models';
-import { OsfFileRevision } from '@osf/features/project/files/models/osf-models/file-revisions.model';
 import { OsfFile } from '@shared/models';
 import { AsyncStateModel } from '@shared/models/store';
 

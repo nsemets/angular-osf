@@ -8,13 +8,13 @@ import { Skeleton } from 'primeng/skeleton';
 
 import { filter, map, of } from 'rxjs';
 
-import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 
 import { ProjectFilesSelectors, SetFileMetadata } from '@osf/features/project/files/store';
-import { resourceLanguages, resourceTypes } from '@shared/constants';
 
+import { FileMetadataFields } from '../../constants';
 import { PatchFileMetadata } from '../../models';
 import { EditFileMetadataDialogComponent } from '../edit-file-metadata-dialog/edit-file-metadata-dialog.component';
 
@@ -29,21 +29,20 @@ import { environment } from 'src/environments/environment';
   providers: [DialogService],
 })
 export class FileMetadataComponent {
-  readonly actions = createDispatchMap({ setFileMetadata: SetFileMetadata });
-  readonly destroyRef = inject(DestroyRef);
-  readonly route = inject(ActivatedRoute);
-  readonly dialogService = inject(DialogService);
-  readonly translateService = inject(TranslateService);
+  private readonly actions = createDispatchMap({ setFileMetadata: SetFileMetadata });
+  private readonly route = inject(ActivatedRoute);
+  private readonly dialogService = inject(DialogService);
+  private readonly translateService = inject(TranslateService);
 
   fileMetadata = select(ProjectFilesSelectors.getFileCustomMetadata);
+  isLoading = select(ProjectFilesSelectors.isFileMetadataLoading);
 
   readonly fileGuid = toSignal(this.route.params.pipe(map((params) => params['fileGuid'])) ?? of(undefined));
 
-  protected readonly resourceTypes = resourceTypes;
-  protected readonly languages = resourceLanguages;
+  metadataFields = FileMetadataFields;
 
   setFileMetadata(formValues: PatchFileMetadata) {
-    const fileId = this.fileMetadata().data?.id;
+    const fileId = this.fileMetadata()?.id;
 
     if (fileId) {
       this.actions.setFileMetadata(formValues, fileId);
@@ -67,8 +66,6 @@ export class FileMetadataComponent {
         closable: true,
       })
       .onClose.pipe(filter((res: PatchFileMetadata) => !!res))
-      .subscribe((res) => {
-        this.setFileMetadata(res);
-      });
+      .subscribe((res) => this.setFileMetadata(res));
   }
 }

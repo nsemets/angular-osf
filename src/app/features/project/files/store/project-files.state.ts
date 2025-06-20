@@ -5,7 +5,6 @@ import { catchError, forkJoin, switchMap, tap, throwError } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { MapProjectMetadata } from '@osf/features/project/files/mappers';
-import { projectFilesStateDefaults } from '@osf/features/project/files/models/data/project-files-state-defaults.const';
 import {
   CreateFolder,
   DeleteEntry,
@@ -30,9 +29,11 @@ import {
 import { ProjectFilesStateModel } from '@osf/features/project/files/store/project-files.model';
 import { FilesService } from '@shared/services/files.service';
 
+import { projectFilesStateDefaults } from '../models';
+
 @Injectable()
 @State<ProjectFilesStateModel>({
-  name: 'ProjectFilesState',
+  name: 'projectFilesState',
   defaults: projectFilesStateDefaults,
 })
 export class ProjectFilesState {
@@ -150,6 +151,7 @@ export class ProjectFilesState {
   @Action(CreateFolder)
   createFolder(ctx: StateContext<ProjectFilesStateModel>, action: CreateFolder) {
     const state = ctx.getState();
+
     return this.filesService.createFolder(action.projectId, state.provider, action.folderName, action.folderId);
   }
 
