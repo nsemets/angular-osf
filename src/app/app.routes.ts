@@ -157,8 +157,8 @@ export const routes: Routes = [
           },
           {
             path: 'addons',
-            loadComponent: () =>
-              import('./features/project/addons/addons.component').then((mod) => mod.AddonsComponent),
+            loadChildren: () =>
+              import('./features/project/addons/constants/addons.routes').then((mod) => mod.addonsRoutes),
           },
         ],
       },

@@ -1,3 +1,4 @@
+export * from './addons';
 export * from './charts';
 export * from './confirmation-options.model';
 export * from './create-component-form.model';

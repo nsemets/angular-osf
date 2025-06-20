@@ -1,0 +1,175 @@
+<osf-sub-header [title]="'settings.addons.connectAddon.title' | translate" />
+<section class="stepper-container flex-column flex flex-1 p-5">
+  <p-stepper [value]="AddonStepperValue.TERMS">
+    <p-step-panels>
+      <p-step-panel [value]="AddonStepperValue.TERMS">
+        <ng-template #content let-activateCallback="activateCallback">
+          <section class="flex flex-column gap-2">
+            <h2>
+              {{ addon()?.providerName }}
+              {{ 'settings.addons.connectAddon.terms' | translate }}
+            </h2>
+
+            <div class="mt-4">
+              <osf-addon-terms [addon]="addon()" />
+            </div>
+
+            <div class="flex flex-column gap-2 mt-4">
+              <p>
+                {{ 'settings.addons.connectAddon.termsDescription' | translate }}
+              </p>
+              <p>
+                {{ 'settings.addons.connectAddon.storageDescription' | translate }}
+              </p>
+            </div>
+
+            <div class="flex gap-4 align-self-center md:align-self-end mt-3">
+              <p-button
+                [label]="'settings.addons.form.buttons.cancel' | translate"
+                severity="info"
+                class="w-10rem btn-full-width"
+                [routerLink]="[baseUrl() + '/addons']"
+              ></p-button>
+              <p-button
+                [label]="
+                  !(isAuthorizedCitationAddonsLoading() || isAuthorizedStorageAddonsLoading())
+                    ? ('settings.addons.form.buttons.next' | translate)
+                    : ('settings.addons.form.buttons.acceptingTerms' | translate)
+                "
+                class="w-10rem btn-full-width"
+                [loading]="isAuthorizedCitationAddonsLoading() || isAuthorizedStorageAddonsLoading()"
+                (onClick)="handleAuthorizedAccountsPresenceCheck()"
+              ></p-button>
+            </div>
+          </section>
+        </ng-template>
+      </p-step-panel>
+
+      <p-step-panel [value]="AddonStepperValue.CHOOSE_CONNECTION">
+        <ng-template #content let-activateCallback="activateCallback">
+          <div class="flex flex-column gap-4">
+            <div class="flex justify-content-between">
+              <h2 class="align-self-center inline-block">{{ loginOrChooseAccountText() }}</h2>
+              <p-button
+                [label]="'settings.addons.form.buttons.back' | translate"
+                severity="info"
+                class="w-7rem btn-full-width"
+                (click)="activateCallback(AddonStepperValue.TERMS)"
+              ></p-button>
+            </div>
+
+            <div class="flex mt-3 gap-4 justify-content-end">
+              <p-button
+                [label]="'settings.addons.form.buttons.existingAccount' | translate"
+                (click)="activateCallback(AddonStepperValue.CHOOSE_ACCOUNT)"
+              ></p-button>
+
+              <p-button
+                [label]="'settings.addons.form.buttons.newAccount' | translate"
+                severity="secondary"
+                (click)="activateCallback(AddonStepperValue.SETUP_NEW_ACCOUNT)"
+              ></p-button>
+            </div>
+          </div>
+        </ng-template>
+      </p-step-panel>
+
+      <p-step-panel [value]="AddonStepperValue.CHOOSE_ACCOUNT">
+        <ng-template #content let-activateCallback="activateCallback">
+          <section class="flex flex-column gap-5">
+            <h2 class="pt-2">{{ 'settings.addons.connectAddon.chooseExistingAccount' | translate }}</h2>
+            <ul class="flex flex-column gap-3 mt-2">
+              @for (account of currentAuthorizedAddonAccounts(); track account.id) {
+                <li class="flex cursor-pointer" tabindex="0">
+                  <p-radiobutton
+                    [ngModel]="chosenAccountId()"
+                    [value]="account.id"
+                    [inputId]="account.id"
+                    (ngModelChange)="chosenAccountId.set($event)"
+                  ></p-radiobutton>
+                  <label [for]="account.id" class="ml-2 radio-label">{{ account.displayName }}</label>
+                </li>
+              }
+            </ul>
+            <div class="flex gap-4 align-self-end">
+              <p-button
+                class="w-10rem btn-full-width"
+                [label]="'settings.addons.form.buttons.back' | translate"
+                severity="info"
+                (onClick)="activateCallback(AddonStepperValue.CHOOSE_CONNECTION)"
+              ></p-button>
+              <p-button
+                class="w-10rem btn-full-width"
+                [disabled]="!chosenAccountId()"
+                [label]="'settings.addons.form.buttons.next' | translate"
+                (onClick)="handleConfirmAccountConnection()"
+              ></p-button>
+            </div>
+          </section>
+        </ng-template>
+      </p-step-panel>
+
+      <p-step-panel [value]="AddonStepperValue.CONFIGURE_ROOT_FOLDER">
+        <ng-template #content let-activateCallback="activateCallback">
+          <section class="flex flex-column gap-5">
+            <h2 class="pt-2">{{ 'settings.addons.connectAddon.configure' | translate }} {{ addon()?.displayName }}</h2>
+            <osf-folder-selector
+              [accountName]="chosenAccountName()"
+              [operationInvocationResult]="operationInvocation()?.operationResult || []"
+              [accountNameControl]="accountNameControl"
+              [isCreateMode]="true"
+              [(selectedRootFolderId)]="selectedRootFolderId"
+              (operationInvoke)="handleCreateOperationInvocation($event.operationName, $event.itemId)"
+              (save)="handleCreateConfiguredAddon()"
+              (cancelSelection)="activateCallback(AddonStepperValue.CHOOSE_ACCOUNT)"
+            />
+          </section>
+        </ng-template>
+      </p-step-panel>
+
+      <p-step-panel [value]="AddonStepperValue.SETUP_NEW_ACCOUNT">
+        <ng-template #content let-activateCallback="activateCallback">
+          <section class="flex flex-column gap-5">
+            <h2>{{ 'settings.addons.connectAddon.setupNewAccount' | translate }}</h2>
+
+            @if (addon() && userReferenceId() && addonTypeString()) {
+              <osf-addon-setup-account-form
+                [addon]="addon()!"
+                [userReferenceId]="userReferenceId()!"
+                [addonTypeString]="addonTypeString()"
+                [isSubmitting]="isCreatingAuthorizedAddon()"
+                (formSubmit)="handleCreateAuthorizedAddon($event)"
+                (backClick)="activateCallback(AddonStepperValue.TERMS)"
+              />
+            }
+          </section>
+        </ng-template>
+      </p-step-panel>
+
+      <p-step-panel [value]="AddonStepperValue.AUTH">
+        <ng-template #content>
+          <div class="flex flex-column gap-4">
+            <div class="flex justify-content-between">
+              <h2 class="align-self-center inline-block">
+                {{ 'settings.addons.connectAddon.setupNewAccount' | translate }}
+              </h2>
+              <p-button
+                [label]="'settings.addons.form.buttons.back' | translate"
+                severity="info"
+                class="w-7rem btn-full-width"
+                [routerLink]="[baseUrl() + '/addons']"
+              ></p-button>
+            </div>
+
+            <p>
+              {{ 'settings.addons.connectAddon.oauthDescription' | translate }}
+            </p>
+            <a [href]="addonAuthUrl()" target="_blank" rel="noopener noreferrer">
+              {{ 'settings.addons.connectAddon.startOauth' | translate }}
+            </a>
+          </div>
+        </ng-template>
+      </p-step-panel>
+    </p-step-panels>
+  </p-stepper>
+</section>
