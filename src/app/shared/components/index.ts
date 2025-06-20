@@ -6,11 +6,15 @@ export { EducationHistoryComponent } from './education-history/education-history
 export { EducationHistoryDialogComponent } from './education-history-dialog/education-history-dialog.component';
 export { EmploymentHistoryComponent } from './employment-history/employment-history.component';
 export { EmploymentHistoryDialogComponent } from './employment-history-dialog/employment-history-dialog.component';
+export { FileMenuComponent } from './file-menu/file-menu.component';
+export { FilesTreeComponent } from './files-tree/files-tree.component';
 export { FormSelectComponent } from './form-select/form-select.component';
 export { FullScreenLoaderComponent } from './full-screen-loader/full-screen-loader.component';
 export { IconComponent } from './icon/icon.component';
+export { InfoIconComponent } from './info-icon/info-icon.component';
 export { LineChartComponent } from './line-chart/line-chart.component';
 export { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
+export { MarkdownComponent } from './markdown/markdown.component';
 export { MyProjectsTableComponent } from './my-projects-table/my-projects-table.component';
 export { PasswordInputHintComponent } from './password-input-hint/password-input-hint.component';
 export { PieChartComponent } from './pie-chart/pie-chart.component';

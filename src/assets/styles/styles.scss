@@ -38,5 +38,7 @@
 @use "./overrides/tooltip";
 @use "./overrides/toast";
 @use "./overrides/multiselect";
+@use "./overrides/tree";
+@use "./overrides/breadcrumbs";
 @use "./components/md-editor";
-@use "components/preprints";
+@use "./components/preprints";

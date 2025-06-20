@@ -1,4 +1,4 @@
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, input, signal, viewChild } from '@angular/core';
@@ -10,10 +10,11 @@ import { AfterViewInit, Component, ElementRef, input, signal, viewChild } from '
   selector: 'osf-truncated-text',
   templateUrl: './truncated-text.component.html',
   styleUrls: ['./truncated-text.component.scss'],
-  imports: [CommonModule, TranslateModule],
+  imports: [CommonModule, TranslatePipe],
 })
 export class TruncatedTextComponent implements AfterViewInit {
   readonly text = input('');
+  readonly hasContent = input<boolean>(false);
   readonly maxVisibleLines = input(3);
   protected readonly contentElement = viewChild<ElementRef>('textContent');
   protected isTextExpanded = signal(false);

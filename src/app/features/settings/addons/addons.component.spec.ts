@@ -10,9 +10,9 @@ import { UserSelectors } from '@osf/core/store/user';
 import { SearchInputComponent, SubHeaderComponent } from '@osf/shared/components';
 import { IS_XSMALL } from '@osf/shared/utils';
 import { AddonCardListComponent } from '@shared/components/addons';
+import { AddonsSelectors } from '@shared/stores/addons';
 
 import { AddonsComponent } from './addons.component';
-import { AddonsSelectors } from './store';
 
 describe('AddonsComponent', () => {
   let component: AddonsComponent;
@@ -27,7 +27,7 @@ describe('AddonsComponent', () => {
             if (selector === UserSelectors.getCurrentUser) {
               return () => ({ id: 'test-user-id' });
             }
-            if (selector === AddonsSelectors.getAddonUserReference) {
+            if (selector === AddonsSelectors.getAddonsUserReference) {
               return () => [{ id: 'test-reference-id' }];
             }
             if (selector === AddonsSelectors.getStorageAddons) {

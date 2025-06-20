@@ -17,9 +17,8 @@ import {
   Subject,
   SubjectGetResponse,
 } from '@osf/features/preprints/models';
-import { GetFileResponse, GetFilesResponse, OsfFile } from '@osf/features/project/files/models';
-import { ProjectFilesService } from '@osf/features/project/files/services';
-import { IdName, NodeData } from '@shared/models';
+import { GetFileResponse, GetFilesResponse, IdName, NodeData, OsfFile } from '@shared/models';
+import { FilesService } from '@shared/services';
 
 import { environment } from 'src/environments/environment';
 
@@ -27,7 +26,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class PreprintsService {
-  private filesService = inject(ProjectFilesService);
+  private filesService = inject(FilesService);
   private jsonApiService = inject(JsonApiService);
   private baseUrl = `${environment.apiUrl}/providers/preprints/`;
 

@@ -1,0 +1,77 @@
+<osf-sub-header [title]="'settings.addons.configureAddon.title' | translate" />
+
+<section class="flex flex-column flex-1 bg-white h-full gap-4 p-3 md:p-5">
+  @if (!isEditMode()) {
+    <div class="flex flex-column gap-4">
+      <div class="flex justify-content-between">
+        <h2 class="align-self-center inline-block">
+          {{ 'settings.addons.connectAddon.configure' | translate }} {{ addon()?.externalServiceName }}
+        </h2>
+        <p-button
+          [label]="'settings.addons.form.buttons.back' | translate"
+          severity="info"
+          [routerLink]="[baseUrl() + '/addons']"
+        ></p-button>
+      </div>
+
+      @if (selectedFolder()) {
+        <div class="flex flex-column flex-1">
+          <p-card>
+            <div class="flex justify-content-between">
+              <p class="text-lg align-self-center">
+                {{ 'settings.addons.configureAddon.connectedAccount' | translate }}
+                <span class="font-bold">{{ addon()?.displayName }}</span>
+              </p>
+
+              <div class="flex gap-2">
+                <p-button
+                  icon="fas fa-pencil"
+                  text
+                  (click)="toggleEditMode()"
+                  (keydown.enter)="toggleEditMode()"
+                ></p-button>
+                <p-button
+                  icon="fas fa-trash"
+                  severity="danger"
+                  text
+                  (click)="handleDisconnectAccount()"
+                  (keydown.enter)="handleDisconnectAccount()"
+                ></p-button>
+              </div>
+            </div>
+
+            <p class="font-normal mt-2">
+              {{ 'settings.addons.configureAddon.selectedFolder' | translate }}
+              <span class="font-bold">{{ selectedFolder()?.itemName }}</span>
+            </p>
+          </p-card>
+        </div>
+      } @else {
+        <p-skeleton width="100%" height="7.5rem" borderRadius="16" />
+      }
+    </div>
+  } @else {
+    <section class="flex flex-column gap-5">
+      <div class="flex justify-content-between">
+        <h2 class="align-self-center">
+          {{ 'settings.addons.connectAddon.configure' | translate }} {{ addon()?.externalServiceName }}
+        </h2>
+        <p-button
+          [label]="'settings.addons.form.buttons.back' | translate"
+          severity="info"
+          (click)="toggleEditMode()"
+          (keydown.enter)="toggleEditMode()"
+        ></p-button>
+      </div>
+      <osf-folder-selector
+        [accountName]="addon()?.displayName || ''"
+        [operationInvocationResult]="operationInvocation()?.operationResult || []"
+        [accountNameControl]="accountNameControl"
+        (operationInvoke)="handleCreateOperationInvocation($event.operationName, $event.itemId)"
+        [(selectedRootFolderId)]="selectedRootFolderId"
+        (save)="handleUpdateAddonConfiguration()"
+        (cancelSelection)="toggleEditMode()"
+      />
+    </section>
+  }
+</section>

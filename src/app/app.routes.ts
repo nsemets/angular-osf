@@ -122,16 +122,9 @@ export const routes: Routes = [
           },
           {
             path: 'files',
-            loadComponent: () =>
-              import('@osf/features/project/files/project-files.component').then((mod) => mod.ProjectFilesComponent),
+            loadChildren: () =>
+              import('@osf/features/project/files/project-files.routes').then((mod) => mod.projectFilesRoutes),
             providers: [provideStates([ProjectFilesState])],
-          },
-          {
-            path: 'files/:fileGuid',
-            loadComponent: () =>
-              import('@osf/features/project/files/components/file-detail/file-detail.component').then(
-                (mod) => mod.FileDetailComponent
-              ),
           },
           {
             path: 'registrations',
@@ -164,8 +157,8 @@ export const routes: Routes = [
           },
           {
             path: 'addons',
-            loadComponent: () =>
-              import('./features/project/addons/addons.component').then((mod) => mod.AddonsComponent),
+            loadChildren: () =>
+              import('./features/project/addons/constants/addons.routes').then((mod) => mod.addonsRoutes),
           },
         ],
       },

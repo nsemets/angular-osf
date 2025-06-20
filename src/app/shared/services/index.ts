@@ -1,4 +1,6 @@
+export * from './addons';
 export { CustomConfirmationService } from './custom-confirmation.service';
+export { FilesService } from './files.service';
 export { FiltersOptionsService } from './filters-options.service';
 export { LoaderService } from './loader.service';
 export { ResourceCardService } from './resource-card.service';

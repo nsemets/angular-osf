@@ -17,6 +17,8 @@
       background-color: var.$bg-blue-3;
       border-radius: mix.rem(12px);
       margin: mix.rem(6px);
+      display: flex;
+      flex-direction: column;
       flex: 1;
       overflow-y: auto;
     }

@@ -1,6 +1,6 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
@@ -19,7 +19,7 @@ import { DecodeHtmlPipe } from '@shared/pipes';
 
 @Component({
   selector: 'osf-select-preprint-service',
-  imports: [SubHeaderComponent, Card, Button, NgClass, Tooltip, DecodeHtmlPipe, Skeleton, TranslateModule, RouterLink],
+  imports: [SubHeaderComponent, Card, Button, NgClass, Tooltip, DecodeHtmlPipe, Skeleton, TranslatePipe, RouterLink],
   templateUrl: './select-preprint-service.component.html',
   styleUrl: './select-preprint-service.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -10,8 +10,8 @@ import { inject, Injectable } from '@angular/core';
 import { PreprintFileSource } from '@osf/features/preprints/enums';
 import { Preprint } from '@osf/features/preprints/models';
 import { PreprintsService } from '@osf/features/preprints/services';
-import { OsfFile } from '@osf/features/project/files/models';
-import { ProjectFilesService } from '@osf/features/project/files/services';
+import { OsfFile } from '@shared/models';
+import { FilesService } from '@shared/services';
 
 import {
   CreatePreprint,
@@ -54,7 +54,7 @@ import {
 @Injectable()
 export class SubmitPreprintState {
   private preprintsService = inject(PreprintsService);
-  private fileService = inject(ProjectFilesService);
+  private fileService = inject(FilesService);
 
   @Action(SetSelectedPreprintProviderId)
   setSelectedPreprintProviderId(ctx: StateContext<SubmitPreprintStateModel>, action: SetSelectedPreprintProviderId) {

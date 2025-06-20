@@ -1,29 +1,37 @@
-import { Store } from '@ngxs/store';
+import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { AutoCompleteModule } from 'primeng/autocomplete';
-import { SelectModule } from 'primeng/select';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
 
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
+
+import { ChangeDetectionStrategy, Component, computed, effect, signal } from '@angular/core';
 import { FormControl, FormsModule } from '@angular/forms';
 
+import { Primitive } from '@osf/core/helpers';
 import { UserSelectors } from '@osf/core/store/user';
-import { LoadingSpinnerComponent, SearchInputComponent, SubHeaderComponent } from '@osf/shared/components';
-import { SelectOption } from '@osf/shared/models';
-import { IS_XSMALL } from '@osf/shared/utils';
+import {
+  LoadingSpinnerComponent,
+  SearchInputComponent,
+  SelectComponent,
+  SubHeaderComponent,
+} from '@osf/shared/components';
 import { AddonCardListComponent } from '@shared/components/addons';
-
+import { ADDON_CATEGORY_OPTIONS, ADDON_TAB_OPTIONS } from '@shared/constants';
+import { AddonCategory, AddonTabValue } from '@shared/enums';
 import {
   AddonsSelectors,
+  CreateAuthorizedAddon,
+  DeleteAuthorizedAddon,
   GetAddonsUserReference,
   GetAuthorizedCitationAddons,
   GetAuthorizedStorageAddons,
   GetCitationAddons,
   GetStorageAddons,
-} from './store';
+  UpdateAuthorizedAddon,
+} from '@shared/stores/addons';
 
 @Component({
   selector: 'osf-addons',
@@ -37,7 +45,7 @@ import {
     SearchInputComponent,
     AutoCompleteModule,
     AddonCardListComponent,
-    SelectModule,
+    SelectComponent,
     FormsModule,
     TranslatePipe,
     LoadingSpinnerComponent,
@@ -47,23 +55,61 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddonsComponent {
-  #store = inject(Store);
-  protected readonly defaultTabValue = 0;
-  protected readonly isMobile = toSignal(inject(IS_XSMALL));
-  protected readonly searchControl = new FormControl<string>('');
+  protected readonly tabOptions = ADDON_TAB_OPTIONS;
+  protected readonly categoryOptions = ADDON_CATEGORY_OPTIONS;
+  protected AddonTabValue = AddonTabValue;
+  protected defaultTabValue = AddonTabValue.ALL_ADDONS;
+  protected searchControl = new FormControl<string>('');
+  protected searchValue = signal<string>('');
+  protected selectedCategory = signal<string>(AddonCategory.EXTERNAL_STORAGE_SERVICES);
+  protected selectedTab = signal<number>(this.defaultTabValue);
 
-  protected readonly selectedCategory = signal<string>('external-storage-services');
-  protected readonly selectedTab = signal<number>(this.defaultTabValue);
-  protected readonly currentUser = this.#store.selectSignal(UserSelectors.getCurrentUser);
-  protected readonly addonsUserReference = this.#store.selectSignal(AddonsSelectors.getAddonUserReference);
-  protected readonly storageAddons = this.#store.selectSignal(AddonsSelectors.getStorageAddons);
-  protected readonly citationAddons = this.#store.selectSignal(AddonsSelectors.getCitationAddons);
-  protected readonly authorizedStorageAddons = this.#store.selectSignal(AddonsSelectors.getAuthorizedStorageAddons);
-  protected readonly authorizedCitationAddons = this.#store.selectSignal(AddonsSelectors.getAuthorizedCitationAddons);
+  protected currentUser = select(UserSelectors.getCurrentUser);
+  protected addonsUserReference = select(AddonsSelectors.getAddonsUserReference);
+  protected storageAddons = select(AddonsSelectors.getStorageAddons);
+  protected citationAddons = select(AddonsSelectors.getCitationAddons);
+  protected authorizedStorageAddons = select(AddonsSelectors.getAuthorizedStorageAddons);
+  protected authorizedCitationAddons = select(AddonsSelectors.getAuthorizedCitationAddons);
+
+  protected isCurrentUserLoading = select(UserSelectors.getCurrentUserLoading);
+  protected isUserReferenceLoading = select(AddonsSelectors.getAddonsUserReferenceLoading);
+  protected isStorageAddonsLoading = select(AddonsSelectors.getStorageAddonsLoading);
+  protected isCitationAddonsLoading = select(AddonsSelectors.getCitationAddonsLoading);
+  protected isAuthorizedStorageAddonsLoading = select(AddonsSelectors.getAuthorizedStorageAddonsLoading);
+  protected isAuthorizedCitationAddonsLoading = select(AddonsSelectors.getAuthorizedCitationAddonsLoading);
+
+  protected isAddonsLoading = computed(() => {
+    return (
+      this.isStorageAddonsLoading() ||
+      this.isCitationAddonsLoading() ||
+      this.isUserReferenceLoading() ||
+      this.isCurrentUserLoading()
+    );
+  });
+  protected isAuthorizedAddonsLoading = computed(() => {
+    return (
+      this.isAuthorizedStorageAddonsLoading() ||
+      this.isAuthorizedCitationAddonsLoading() ||
+      this.isUserReferenceLoading() ||
+      this.isCurrentUserLoading()
+    );
+  });
+
+  protected actions = createDispatchMap({
+    getStorageAddons: GetStorageAddons,
+    getCitationAddons: GetCitationAddons,
+    getAuthorizedStorageAddons: GetAuthorizedStorageAddons,
+    getAuthorizedCitationAddons: GetAuthorizedCitationAddons,
+    createAuthorizedAddon: CreateAuthorizedAddon,
+    updateAuthorizedAddon: UpdateAuthorizedAddon,
+    getAddonsUserReference: GetAddonsUserReference,
+    deleteAuthorizedAddon: DeleteAuthorizedAddon,
+  });
+
   protected readonly allAuthorizedAddons = computed(() => {
     const authorizedAddons = [...this.authorizedStorageAddons(), ...this.authorizedCitationAddons()];
 
-    const searchValue = this.searchControl.value?.toLowerCase() ?? '';
+    const searchValue = this.searchValue().toLowerCase();
     return authorizedAddons.filter((card) => card.displayName.includes(searchValue));
   });
 
@@ -72,66 +118,57 @@ export class AddonsComponent {
   });
 
   protected readonly currentAction = computed(() =>
-    this.selectedCategory() === 'external-storage-services' ? GetStorageAddons : GetCitationAddons
+    this.selectedCategory() === AddonCategory.EXTERNAL_STORAGE_SERVICES
+      ? this.actions.getStorageAddons
+      : this.actions.getCitationAddons
   );
 
   protected readonly currentAddonsState = computed(() =>
-    this.selectedCategory() === 'external-storage-services' ? this.storageAddons() : this.citationAddons()
+    this.selectedCategory() === AddonCategory.EXTERNAL_STORAGE_SERVICES ? this.storageAddons() : this.citationAddons()
   );
 
   protected readonly filteredAddonCards = computed(() => {
-    const searchValue = this.searchControl.value?.toLowerCase() ?? '';
-    return this.currentAddonsState().filter((card) => card.externalServiceName.includes(searchValue));
+    const searchValue = this.searchValue().toLowerCase();
+    return this.currentAddonsState().filter((card) => card.externalServiceName.toLowerCase().includes(searchValue));
   });
 
-  protected readonly tabOptions: SelectOption[] = [
-    {
-      label: 'settings.addons.tabs.allAddons',
-      value: 0,
-    },
-    {
-      label: 'settings.addons.tabs.connectedAddons',
-      value: 1,
-    },
-  ];
-
-  protected readonly categoryOptions: SelectOption[] = [
-    {
-      label: 'settings.addons.categories.additionalService',
-      value: 'external-storage-services',
-    },
-    {
-      label: 'settings.addons.categories.citationManager',
-      value: 'external-citation-services',
-    },
-  ];
-
-  protected onCategoryChange(value: string): void {
-    this.selectedCategory.set(value);
+  protected onCategoryChange(value: Primitive): void {
+    if (typeof value === 'string') {
+      this.selectedCategory.set(value);
+    }
   }
 
   constructor() {
     effect(() => {
       if (this.currentUser()) {
-        this.#store.dispatch(GetAddonsUserReference);
+        this.actions.getAddonsUserReference();
       }
     });
 
     effect(() => {
       if (this.currentUser() && this.userReferenceId()) {
-        this.#loadAddonsIfNeeded(this.userReferenceId());
+        const action = this.currentAction();
+        const addons = this.currentAddonsState();
+
+        if (!addons?.length) {
+          action();
+        }
       }
+    });
+
+    effect(() => {
+      if (this.currentUser() && this.userReferenceId()) {
+        this.fetchAllAuthorizedAddons(this.userReferenceId());
+      }
+    });
+
+    this.searchControl.valueChanges.pipe(debounceTime(300), distinctUntilChanged()).subscribe((value) => {
+      this.searchValue.set(value ?? '');
     });
   }
 
-  #loadAddonsIfNeeded(userReferenceId: string): void {
-    const action = this.currentAction();
-    const addons = this.currentAddonsState();
-
-    if (!addons?.length) {
-      this.#store.dispatch(action);
-      this.#store.dispatch(new GetAuthorizedStorageAddons(userReferenceId));
-      this.#store.dispatch(new GetAuthorizedCitationAddons(userReferenceId));
-    }
+  private fetchAllAuthorizedAddons(userReferenceId: string): void {
+    this.actions.getAuthorizedStorageAddons(userReferenceId);
+    this.actions.getAuthorizedCitationAddons(userReferenceId);
   }
 }

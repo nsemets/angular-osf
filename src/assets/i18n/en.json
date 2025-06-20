@@ -11,12 +11,17 @@
       "copy": "Copy",
       "move": "Move",
       "rename": "Rename",
+      "share": "Share",
+      "embed": "Embed",
+      "confirm": "Confirm",
+      "disconnect": "Disconnect",
       "revert": "Revert",
       "next": "Next",
       "skip": "Skip",
       "done": "Done",
       "select": "Select",
-      "deselect": "Deselect"
+      "deselect": "Deselect",
+      "create": "Create"
     },
     "search": {
       "title": "Search",
@@ -647,13 +652,43 @@
         },
         "renameFile": {
           "title": "Rename file",
+          "newName": "New name",
+          "enterNewName": "Enter new name",
           "renameLabel": "Please rename the file"
         },
-        "moveFile": "Cannot move to the same folder"
+        "moveFile": {
+          "cannotMove": "Cannot move to the same folder",
+          "title": "Move file",
+          "message": "Are you sure you want to move <span class=\"font-bold\">{{dragNodeName}}</span> to <span class=\"font-bold\">{{dropNodeName}}</span> ?",
+          "storage": "OSF Storage",
+          "pathError": "Path is not specified!"
+        },
+        "copyFile": {
+          "title": "Copy file"
+        },
+        "deleteFile": {
+          "title": "Delete File",
+          "message": "Are you sure you want to delete <span class=\"font-bold\">{{name}}</span>?"
+        }
       },
       "emptyState": "This folder is empty",
       "detail": {
         "backToList": "Back to list of files",
+        "tabs": {
+          "details": "Details",
+          "revisions": "Revisions",
+          "keywords": "Keywords"
+        },
+        "actions": {
+          "addCommunityMetadata": "Add community Metadata",
+          "copyDynamicIframe": "Copy dynamic JS iFrame",
+          "copyStaticIframe": "Copy static HTML iFrame",
+          "share": {
+            "email": "Email",
+            "x": "X",
+            "facebook": "Facebook"
+          }
+        },
         "fileMetadata": {
           "title": "File Metadata",
           "edit": "Edit",
@@ -679,6 +714,24 @@
             "dateCreated": "Date created",
             "dateModified": "Date modified",
             "contributors": "Contributors"
+          }
+        },
+        "toast": {
+          "copiedToClipboard": "Copied to clipboard"
+        },
+        "keywords": {
+          "title": "Keywords"
+        },
+        "revisions": {
+          "title": "Revisions",
+          "actions": {
+            "copyMd5": "Copy MD5",
+            "copySha2": "Copy SHA-2",
+            "download": "Download"
+          },
+          "tooltips": {
+            "md5": "MD5 is an algorithm used to verify data integrity",
+            "sha2": "SHA-2 is a cryptographic hash function designed by the NSA used to verify data integrity."
           }
         }
       }
@@ -949,6 +1002,24 @@
         "additionalService": "Additional Storage",
         "citationManager": "Citation Manager"
       },
+      "toast": {
+        "updateSuccess": "Successfully updated {{addonName}} add-on configuration",
+        "createSuccess": "Successfully connected to the {{addonName}} add-on",
+        "disconnectSuccess": "Successfully disconnected from the {{addonName}} account"
+      },
+      "configureAddon": {
+        "title": "Configure Add-on",
+        "noFolders": "No folders",
+        "noFolderSelected": "No selected folder",
+        "disconnect": "Disconnect {{addonName}}",
+        "disconnectMessage": "You are about to disconnect the following addon from the project:",
+        "account": "Account:",
+        "selectedFolder": "Selected folder:",
+        "folderName": "Folder name:",
+        "selectFolder": "Select",
+        "connectedAccount": "Connected to account:",
+        "home": "Home"
+      },
       "connectAddon": {
         "title": "Connect Add-on",
         "terms": "Terms",
@@ -956,10 +1027,15 @@
           "function": "Function",
           "status": "Status"
         },
+        "confirmAccount": "Confirm account",
+        "connectAccount": "Connect following account: {{accountName}}",
+        "configure": "Configure",
         "termsDescription": "• This add-on connects your OSF project to an external service. Use of this service is bound by its terms and conditions. The OSF is not responsible for the service or for your use thereof.",
         "storageDescription": "• This add-on allows you to store files using an external service. Files added to this add-on are not stored within the OSF.",
         "reconnectAccount": "Reconnect Account",
         "setupNewAccount": "Setup new account",
+        "chooseExistingAccount": "Choose existing account",
+        "loginToOrSelectAccount": "Login to {{addonName}} or select an account",
         "startOauth": "Start OAuth",
         "oauthDescription": "Complete the OAuth process in the new window before returning to this page. If you do not see a new window, please click the Start OAuth link below."
       },
@@ -973,18 +1049,22 @@
           "passwordDescription": "These credentials will be encrypted",
           "accessKey": "Access Key",
           "secretKey": "Secret Key",
+          "apiToken": "API Token",
           "accountName": "Account Name",
           "accountNameDescription": "This will distinguish your account from other using the same addon."
         },
         "buttons": {
           "cancel": "Cancel",
           "next": "Next",
+          "acceptingTerms": "Accepting...",
           "back": "Back",
           "connect": "Connect",
           "reconnect": "Reconnect",
           "authorize": "Authorize",
           "disable": "Disable",
-          "startOauth": "Start OAuth"
+          "startOauth": "Start OAuth",
+          "newAccount": "Setup New Account",
+          "existingAccount": "Choose Existing Account"
         }
       },
       "messages": {
@@ -997,7 +1077,8 @@
         "deleteConfirmation": {
           "title": "Disable Account?",
           "message": "Are you sure you want to disable this account? All projects connected to this account will be affected."
-        }
+        },
+        "noAddons": "No results found."
       }
     },
     "profileSettings": {
@@ -1057,6 +1138,7 @@
       }
     },
     "accountSettings": {
+      "title": "Account Settings",
       "common": {
         "buttons": {
           "cancel": "Cancel",
