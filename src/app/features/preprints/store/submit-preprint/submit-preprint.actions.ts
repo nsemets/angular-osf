@@ -59,6 +59,12 @@ export class GetProjectFiles {
   constructor(public projectId: string) {}
 }
 
+export class GetProjectFilesByLink {
+  static readonly type = '[Submit Preprint] Get Project Files By Link';
+
+  constructor(public filesLink: string) {}
+}
+
 export class ResetStateAndDeletePreprint {
   static readonly type = '[Submit Preprint] Reset State And Delete Preprint';
 }

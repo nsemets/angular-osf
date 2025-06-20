@@ -82,7 +82,7 @@
         optionLabel="name"
         optionValue="id"
         [formControl]="projectNameControl"
-        [placeholder]="'Creator name'"
+        [placeholder]="'Project Title'"
         class="w-6"
         [editable]="true"
         styleClass="m-t-24"
@@ -93,6 +93,19 @@
       />
     </div>
   </p-card>
+
+  <section class="m-t-24">
+    @if (selectedProjectId()) {
+      <osf-files-tree
+        [currentFolder]="currentFolder()"
+        [files]="projectFiles()"
+        [isLoading]="areProjectFilesLoading()"
+        [projectId]="selectedProjectId()!"
+        [actions]="filesTreeActions"
+        (entryFileClicked)="selectProjectFile($event)"
+      />
+    }
+  </section>
 }
 
 <section class="m-t-48 flex flex-row justify-content-end align-items-center gap-2">

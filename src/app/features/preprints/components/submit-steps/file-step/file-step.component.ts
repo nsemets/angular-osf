@@ -2,11 +2,12 @@ import { createDispatchMap, select } from '@ngxs/store';
 
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
+import { DialogService } from 'primeng/dynamicdialog';
 import { Select, SelectChangeEvent } from 'primeng/select';
 import { Skeleton } from 'primeng/skeleton';
 import { Tooltip } from 'primeng/tooltip';
 
-import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { debounceTime, distinctUntilChanged, EMPTY, Observable } from 'rxjs';
 
 import { NgClass, TitleCasePipe } from '@angular/common';
 import {
@@ -18,6 +19,7 @@ import {
   inject,
   OnInit,
   output,
+  signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -28,17 +30,32 @@ import {
   GetAvailableProjects,
   GetPreprintFilesLinks,
   GetProjectFiles,
+  GetProjectFilesByLink,
   SetSelectedPreprintFileSource,
   SubmitPreprintSelectors,
   UploadFile,
 } from '@osf/features/preprints/store/submit-preprint';
-import { IconComponent } from '@shared/components';
+import { FilesTreeActions } from '@osf/features/project/files/models';
+import { FilesTreeComponent, IconComponent } from '@shared/components';
+import { OsfFile } from '@shared/models';
 
 @Component({
   selector: 'osf-file-step',
-  imports: [Button, TitleCasePipe, NgClass, Tooltip, Skeleton, IconComponent, Card, Select, ReactiveFormsModule],
+  imports: [
+    Button,
+    TitleCasePipe,
+    NgClass,
+    Tooltip,
+    Skeleton,
+    IconComponent,
+    Card,
+    Select,
+    ReactiveFormsModule,
+    FilesTreeComponent,
+  ],
   templateUrl: './file-step.component.html',
   styleUrl: './file-step.component.scss',
+  providers: [DialogService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileStepComponent implements OnInit {
@@ -48,6 +65,7 @@ export class FileStepComponent implements OnInit {
     uploadFile: UploadFile,
     getAvailableProjects: GetAvailableProjects,
     getFilesForSelectedProject: GetProjectFiles,
+    getProjectFilesByLink: GetProjectFilesByLink,
   });
   private destroyRef = inject(DestroyRef);
 
@@ -60,7 +78,25 @@ export class FileStepComponent implements OnInit {
   arePreprintFilesLoading = select(SubmitPreprintSelectors.arePreprintFilesLoading);
   availableProjects = select(SubmitPreprintSelectors.getAvailableProjects);
   areAvailableProjectsLoading = select(SubmitPreprintSelectors.areAvailableProjectsLoading);
+  projectFiles = select(SubmitPreprintSelectors.getProjectFiles);
+  areProjectFilesLoading = select(SubmitPreprintSelectors.areProjectFilesLoading);
+  selectedProjectId = signal<StringOrNull>(null);
+  currentFolder = signal<OsfFile | null>(null);
+
   projectNameControl = new FormControl<StringOrNull>(null);
+
+  filesTreeActions: FilesTreeActions = {
+    setCurrentFolder: (folder: OsfFile | null): Observable<void> => {
+      this.currentFolder.set(folder);
+      return EMPTY;
+    },
+    getFiles: (filesLink: string): Observable<void> => {
+      return this.actions.getProjectFilesByLink(filesLink);
+    },
+    getRootFolderFiles: (projectId: string): Observable<void> => {
+      return this.actions.getFilesForSelectedProject(projectId);
+    },
+  };
 
   nextClicked = output<void>();
 
@@ -70,6 +106,13 @@ export class FileStepComponent implements OnInit {
 
   ngOnInit() {
     this.actions.getPreprintFilesLinks();
+
+    this.projectNameControl.valueChanges
+      .pipe(debounceTime(500), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+      .subscribe((value) => {
+        this.selectedProjectId.set(value);
+        this.actions.getAvailableProjects(value);
+      });
   }
 
   selectFileSource(fileSource: PreprintFileSource) {
@@ -77,13 +120,6 @@ export class FileStepComponent implements OnInit {
 
     if (fileSource === PreprintFileSource.Project) {
       this.actions.getAvailableProjects(null);
-
-      this.projectNameControl.valueChanges
-        .pipe(debounceTime(500), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
-        .subscribe((value) => {
-          if (!value) return;
-          this.actions.getAvailableProjects(value);
-        });
     }
   }
 
@@ -115,5 +151,9 @@ export class FileStepComponent implements OnInit {
     }
 
     this.actions.getFilesForSelectedProject(event.value);
+  }
+
+  selectProjectFile(file: OsfFile) {
+    //[RNi] TODO: implement logic of linking preprint to that file
   }
 }

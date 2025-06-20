@@ -19,6 +19,7 @@ import {
   GetPreprintFiles,
   GetPreprintFilesLinks,
   GetProjectFiles,
+  GetProjectFilesByLink,
   ResetStateAndDeletePreprint,
   SetSelectedPreprintFileSource,
   SetSelectedPreprintProviderId,
@@ -196,6 +197,24 @@ export class SubmitPreprintState {
     ctx.setState(patch({ projectFiles: patch({ isLoading: true }) }));
 
     return this.preprintsService.getProjectFiles(action.projectId).pipe(
+      tap((files: OsfFile[]) => {
+        ctx.setState(
+          patch({
+            projectFiles: patch({
+              data: files,
+              isLoading: false,
+            }),
+          })
+        );
+      })
+    );
+  }
+
+  @Action(GetProjectFilesByLink)
+  getProjectFilesByLink(ctx: StateContext<SubmitPreprintStateModel>, action: GetProjectFilesByLink) {
+    ctx.setState(patch({ projectFiles: patch({ isLoading: true }) }));
+
+    return this.fileService.getFilesWithoutFiltering(action.filesLink).pipe(
       tap((files: OsfFile[]) => {
         ctx.setState(
           patch({

@@ -42,4 +42,14 @@ export class SubmitPreprintSelectors {
   static areAvailableProjectsLoading(state: SubmitPreprintStateModel) {
     return state.availableProjects.isLoading;
   }
+
+  @Selector([SubmitPreprintState])
+  static getProjectFiles(state: SubmitPreprintStateModel) {
+    return state.projectFiles.data;
+  }
+
+  @Selector([SubmitPreprintState])
+  static areProjectFilesLoading(state: SubmitPreprintStateModel) {
+    return state.projectFiles.isLoading;
+  }
 }
