@@ -1,6 +1,6 @@
 import { Action, State, StateContext } from '@ngxs/store';
 
-import { catchError, forkJoin, switchMap, tap, throwError } from 'rxjs';
+import { catchError, finalize, forkJoin, switchMap, tap, throwError } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
@@ -151,8 +151,11 @@ export class ProjectFilesState {
   @Action(CreateFolder)
   createFolder(ctx: StateContext<ProjectFilesStateModel>, action: CreateFolder) {
     const state = ctx.getState();
+    ctx.patchState({ files: { ...state.files, isLoading: true, error: null } });
 
-    return this.filesService.createFolder(action.projectId, state.provider, action.folderName, action.folderId);
+    return this.filesService
+      .createFolder(action.projectId, state.provider, action.folderName, action.folderId)
+      .pipe(finalize(() => ctx.patchState({ files: { ...state.files, isLoading: false, error: null } })));
   }
 
   @Action(DeleteEntry)

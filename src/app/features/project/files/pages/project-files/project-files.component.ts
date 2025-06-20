@@ -1,4 +1,4 @@
-import { select, Store } from '@ngxs/store';
+import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
@@ -10,13 +10,13 @@ import { FloatLabel } from 'primeng/floatlabel';
 import { Select } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 
-import { debounceTime, finalize, Observable, skip, take } from 'rxjs';
+import { debounceTime, filter, finalize, Observable, skip, take } from 'rxjs';
 
 import { HttpEventType } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, DestroyRef, HostBinding, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 import { CreateFolderDialogComponent } from '@osf/features/project/files/components';
 import { FilesTreeActions } from '@osf/features/project/files/models';
@@ -42,7 +42,7 @@ import {
   SearchInputComponent,
   SubHeaderComponent,
 } from '@shared/components';
-import { FilesService, ToastService } from '@shared/services';
+import { FilesService } from '@shared/services';
 
 @Component({
   selector: 'osf-project-files',
@@ -69,15 +69,23 @@ import { FilesService, ToastService } from '@shared/services';
 export class ProjectFilesComponent {
   @HostBinding('class') classes = 'flex flex-column flex-1 w-full h-full';
 
-  readonly store = inject(Store);
-  readonly filesService = inject(FilesService);
-  readonly router = inject(Router);
-  readonly activeRoute = inject(ActivatedRoute);
-  readonly destroyRef = inject(DestroyRef);
-  readonly toastService = inject(ToastService);
-  readonly route = inject(ActivatedRoute);
-  readonly dialogService = inject(DialogService);
-  readonly translateService = inject(TranslateService);
+  private readonly filesService = inject(FilesService);
+  private readonly activeRoute = inject(ActivatedRoute);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly dialogService = inject(DialogService);
+  private readonly translateService = inject(TranslateService);
+  private readonly actions = createDispatchMap({
+    createFolder: CreateFolder,
+    deleteEntry: DeleteEntry,
+    getFiles: GetFiles,
+    getRootFolderFiles: GetRootFolderFiles,
+    renameEntry: RenameEntry,
+    setCurrentFolder: SetCurrentFolder,
+    setFilesIsLoading: SetFilesIsLoading,
+    setMoveFileCurrentFolder: SetMoveFileCurrentFolder,
+    setSearch: SetSearch,
+    setSort: SetSort,
+  });
 
   protected readonly files = select(ProjectFilesSelectors.getFiles);
   protected readonly isFilesLoading = select(ProjectFilesSelectors.isFilesLoading);
@@ -96,36 +104,36 @@ export class ProjectFilesComponent {
   sortOptions = ALL_SORT_OPTIONS;
 
   protected readonly filesTreeActions: FilesTreeActions = {
-    setCurrentFolder: (folder) => this.store.dispatch(new SetCurrentFolder(folder)),
-    setSearch: (search) => this.store.dispatch(new SetSearch(search)),
-    setSort: (sort) => this.store.dispatch(new SetSort(sort)),
-    setFilesIsLoading: (isLoading) => this.store.dispatch(new SetFilesIsLoading(isLoading)),
-    getFiles: (filesLink) => this.store.dispatch(new GetFiles(filesLink)),
-    getRootFolderFiles: (projectId) => this.store.dispatch(new GetRootFolderFiles(projectId)),
-    deleteEntry: (projectId, link) => this.store.dispatch(new DeleteEntry(projectId, link)),
-    renameEntry: (projectId, link, newName) => this.store.dispatch(new RenameEntry(projectId, link, newName)),
-    setMoveFileCurrentFolder: (folder) => this.store.dispatch(new SetMoveFileCurrentFolder(folder)),
+    setCurrentFolder: (folder) => this.actions.setCurrentFolder(folder),
+    setSearch: (search) => this.actions.setSearch(search),
+    setSort: (sort) => this.actions.setSort(sort),
+    setFilesIsLoading: (isLoading) => this.actions.setFilesIsLoading(isLoading),
+    getFiles: (filesLink) => this.actions.getFiles(filesLink),
+    getRootFolderFiles: (projectId) => this.actions.getRootFolderFiles(projectId),
+    deleteEntry: (projectId, link) => this.actions.deleteEntry(projectId, link),
+    renameEntry: (projectId, link, newName) => this.actions.renameEntry(projectId, link, newName),
+    setMoveFileCurrentFolder: (folder) => this.actions.setMoveFileCurrentFolder(folder),
   };
 
   constructor() {
     this.activeRoute.parent?.parent?.parent?.params.subscribe((params) => {
       if (params['id']) {
         this.projectId.set(params['id']);
-        this.store.dispatch(new GetRootFolderFiles(params['id']));
+        this.actions.getRootFolderFiles(params['id']);
       }
     });
 
     this.searchControl.valueChanges
       .pipe(skip(1), takeUntilDestroyed(this.destroyRef), debounceTime(500))
       .subscribe((searchText) => {
-        this.store.dispatch(new SetSearch(searchText ?? ''));
+        this.actions.setSearch(searchText ?? '');
         if (!this.isFolderOpening()) {
           this.updateFilesList();
         }
       });
 
     this.sortControl.valueChanges.pipe(skip(1), takeUntilDestroyed(this.destroyRef)).subscribe((sort) => {
-      this.store.dispatch(new SetSort(sort ?? ''));
+      this.actions.setSort(sort ?? '');
       if (!this.isFolderOpening()) {
         this.updateFilesList();
       }
@@ -173,25 +181,21 @@ export class ProjectFilesComponent {
         modal: true,
         closable: true,
       })
-      .onClose.subscribe((result) => {
-        if (result && this.currentFolder()) {
-          this.store.dispatch(new SetFilesIsLoading(true));
-          this.store
-            .dispatch(
-              new CreateFolder(
-                this.projectId(),
-                result,
-                this.currentFolder()?.relationships?.parentFolderId ? this.currentFolder()!.id : ''
-              )
-            )
-            .pipe(
-              take(1),
-              finalize(() => {
-                this.updateFilesList().subscribe(() => this.fileIsUploading.set(false));
-              })
-            )
-            .subscribe();
-        }
+      .onClose.pipe(filter((folderName: string) => !!folderName))
+      .subscribe((folderName) => {
+        this.actions
+          .createFolder(
+            this.projectId(),
+            folderName,
+            this.currentFolder()?.relationships?.parentFolderId ? this.currentFolder()!.id : ''
+          )
+          .pipe(
+            take(1),
+            finalize(() => {
+              this.updateFilesList().subscribe(() => this.fileIsUploading.set(false));
+            })
+          )
+          .subscribe();
       });
   }
 
@@ -214,11 +218,9 @@ export class ProjectFilesComponent {
   updateFilesList(): Observable<void> {
     const currentFolder = this.currentFolder();
     if (currentFolder?.relationships.filesLink) {
-      return this.store
-        .dispatch(new GetFiles(currentFolder?.relationships.filesLink))
-        .pipe(takeUntilDestroyed(this.destroyRef));
+      return this.actions.getFiles(currentFolder?.relationships.filesLink).pipe(takeUntilDestroyed(this.destroyRef));
     } else {
-      return this.store.dispatch(new GetRootFolderFiles(this.projectId()));
+      return this.actions.getRootFolderFiles(this.projectId());
     }
   }
 

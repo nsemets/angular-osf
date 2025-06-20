@@ -18,7 +18,6 @@ import {
   GetRootFolderFiles,
   ProjectFilesSelectors,
   SetCurrentFolder,
-  SetFilesIsLoading,
   SetMoveFileCurrentFolder,
 } from '@osf/features/project/files/store';
 import { IconComponent, LoadingSpinnerComponent } from '@shared/components';
@@ -52,7 +51,6 @@ export class MoveFileDialogComponent {
   protected readonly dispatch = createDispatchMap({
     getMoveFileFiles: GetMoveFileFiles,
     setMoveFileCurrentFolder: SetMoveFileCurrentFolder,
-    setFilesIsLoading: SetFilesIsLoading,
     setCurrentFolder: SetCurrentFolder,
     getFiles: GetFiles,
     getRootFolderFiles: GetRootFolderFiles,
