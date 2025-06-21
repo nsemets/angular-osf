@@ -38,6 +38,9 @@
     "deleteConfirmation": {
       "header": "Delete",
       "message": "Are you sure you want to proceed?"
+    },
+    "links": {
+      "clickHere": "Click here"
     }
   },
   "navigation": {
@@ -329,6 +332,19 @@
       },
       "updateProjectDetailsMessage": "Successfully updated project details.",
       "updateProjectSettingsMessage": "Successfully updated project settings."
+    }
+  },
+  "registries": {
+    "new": {
+      "addNewRegistry": "Add New Registry",
+      "infoText1": "You are submitting to OSF Registries.",
+      "infoText2": "to learn more about other hosted registries",
+      "steps": {
+        "step1": "Do you have content for registration in an existing OSF project?",
+        "step2": "Which project do you want to register?",
+        "step3": "Which type of registration would you like to create?",
+        "stepTwoInfo": "If your project includes components, you can select which components to include or exclude at the end of the registration."
+      }
     }
   },
   "myProfile": {

@@ -170,6 +170,20 @@ export const routes: Routes = [
         ],
       },
       {
+        path: 'registries',
+        loadComponent: () =>
+          import('./features/registries/registries.component').then((mod) => mod.RegistriesComponent),
+        children: [
+          {
+            path: 'new',
+            loadComponent: () =>
+              import('./features/registries/components/new-registration/new-registration.component').then(
+                (mod) => mod.NewRegistrationComponent
+              ),
+          },
+        ],
+      },
+      {
         path: 'settings',
         loadChildren: () => import('./features/settings/settings.routes').then((mod) => mod.settingsRoutes),
       },
