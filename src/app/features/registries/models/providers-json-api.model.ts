@@ -9,6 +9,5 @@ export interface ProvidersResponseJsonApi {
 export type ProviderDataJsonApi = ApiData<ProviderAttributesJsonApi, null, null, null>;
 
 interface ProviderAttributesJsonApi {
-  full_name: string;
-  permission_group: 'moderator' | 'admin';
+  name: string;
 }

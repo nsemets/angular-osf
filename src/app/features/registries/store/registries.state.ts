@@ -1,9 +1,13 @@
-import { State } from '@ngxs/store';
+import { Action, State, StateContext } from '@ngxs/store';
+
+import { throwError } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 
-import { ProvidersService } from '../services';
+import { Project } from '../models';
+import { ProjectsService, ProvidersService } from '../services';
 
+import { GetProjects, GetProviders } from './registries.actions';
 import { RegistriesStateModel } from './registries.model';
 
 const DefaultState: RegistriesStateModel = {
@@ -13,6 +17,11 @@ const DefaultState: RegistriesStateModel = {
     error: null,
   },
   currentProviderId: null,
+  projects: {
+    data: [],
+    isLoading: false,
+    error: null,
+  },
 };
 
 @State<RegistriesStateModel>({
@@ -21,5 +30,70 @@ const DefaultState: RegistriesStateModel = {
 })
 @Injectable()
 export class RegistriesState {
-  constructor(private providersService: ProvidersService) {}
+  constructor(
+    private providersService: ProvidersService,
+    private projectsService: ProjectsService
+  ) {}
+
+  @Action(GetProjects)
+  getProjects({ patchState }: StateContext<RegistriesStateModel>) {
+    patchState({
+      projects: {
+        ...DefaultState.projects,
+        isLoading: true,
+      },
+    });
+    return this.projectsService.getProjects().subscribe({
+      next: (projects: Project[]) => {
+        patchState({
+          projects: {
+            data: projects,
+            isLoading: false,
+            error: null,
+          },
+        });
+      },
+      error: (error) => {
+        patchState({
+          projects: { ...DefaultState.projects, isLoading: false, error },
+        });
+      },
+    });
+  }
+
+  @Action(GetProviders)
+  getProviders({ patchState }: StateContext<RegistriesStateModel>) {
+    patchState({
+      providers: {
+        ...DefaultState.providers,
+        isLoading: true,
+      },
+    });
+
+    return this.providersService.getProviders().subscribe({
+      next: (providers) => {
+        patchState({
+          providers: {
+            data: providers,
+            isLoading: false,
+            error: null,
+          },
+        });
+      },
+      error: (error) => {
+        patchState({
+          providers: {
+            ...DefaultState.providers,
+            isLoading: false,
+            error,
+          },
+        });
+      },
+    });
+  }
+
+  private handleError(ctx: StateContext<RegistriesStateModel>, error: Error) {
+    ctx.patchState({});
+    return throwError(() => error);
+  }
 }
