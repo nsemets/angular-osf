@@ -1,4 +1,4 @@
-import { Store } from '@ngxs/store';
+import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
@@ -15,8 +15,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { IS_XSMALL } from '@osf/shared/utils';
-
 import { Token, TokenForm, TokenFormControls } from '../../models';
 import { CreateToken, GetTokens, TokensSelectors, UpdateToken } from '../../store';
 import { TokenCreatedDialogComponent } from '../token-created-dialog/token-created-dialog.component';
@@ -29,19 +27,23 @@ import { TokenCreatedDialogComponent } from '../token-created-dialog/token-creat
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TokenAddEditFormComponent implements OnInit {
-  #store = inject(Store);
-  #route = inject(ActivatedRoute);
-  #router = inject(Router);
-  #dialogService = inject(DialogService);
-  #translateService = inject(TranslateService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly dialogService = inject(DialogService);
+  private readonly translateService = inject(TranslateService);
+  private readonly actions = createDispatchMap({
+    createToken: CreateToken,
+    getTokens: GetTokens,
+    updateToken: UpdateToken,
+  });
 
   isEditMode = input(false);
   initialValues = input<Token | null>(null);
-  protected readonly tokenId = toSignal(this.#route.params.pipe(map((params) => params['id'])));
+
+  protected readonly tokenId = toSignal(this.route.params.pipe(map((params) => params['id'])));
   protected readonly dialogRef = inject(DynamicDialogRef);
   protected readonly TokenFormControls = TokenFormControls;
-  protected readonly isMobile = toSignal(inject(IS_XSMALL));
-  protected readonly tokenScopes = this.#store.selectSignal(TokensSelectors.getScopes);
+  protected readonly tokenScopes = select(TokensSelectors.getScopes);
 
   readonly tokenForm: TokenForm = new FormGroup({
     [TokenFormControls.TokenName]: new FormControl('', {
@@ -55,7 +57,6 @@ export class TokenAddEditFormComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.#store.dispatch(GetTokens);
     if (this.initialValues()) {
       this.tokenForm.patchValue({
         [TokenFormControls.TokenName]: this.initialValues()?.name,
@@ -73,36 +74,31 @@ export class TokenAddEditFormComponent implements OnInit {
     }
 
     const { tokenName, scopes } = this.tokenForm.value;
+
     if (!tokenName || !scopes) return;
 
     if (!this.isEditMode()) {
-      this.#store.dispatch(new CreateToken(tokenName, scopes)).subscribe({
+      this.actions.createToken(tokenName, scopes).subscribe({
         complete: () => {
-          const tokens = this.#store.selectSnapshot(TokensSelectors.getTokens);
-          const newToken = tokens[0];
+          const tokens = select(TokensSelectors.getTokens);
+          const newToken = tokens()[0];
           this.dialogRef.close();
-          this.#showTokenCreatedDialog(newToken.name, newToken.tokenId);
+          this.showTokenCreatedDialog(newToken.name, newToken.tokenId);
         },
       });
     } else {
-      this.#store.dispatch(new UpdateToken(this.tokenId(), tokenName, scopes)).subscribe({
+      this.actions.updateToken(this.tokenId(), tokenName, scopes).subscribe({
         complete: () => {
-          this.#router.navigate(['settings/tokens']);
+          this.router.navigate(['settings/tokens']);
         },
       });
     }
   }
 
-  #showTokenCreatedDialog(tokenName: string, tokenValue: string) {
-    let dialogWidth = '500px';
-
-    if (this.isMobile()) {
-      dialogWidth = '345px';
-    }
-
-    this.#dialogService.open(TokenCreatedDialogComponent, {
-      width: dialogWidth,
-      header: this.#translateService.instant('settings.tokens.created-dialog.title'),
+  showTokenCreatedDialog(tokenName: string, tokenValue: string) {
+    this.dialogService.open(TokenCreatedDialogComponent, {
+      width: '500px',
+      header: this.translateService.instant('settings.tokens.createdDialog.title'),
       closeOnEscape: true,
       modal: true,
       closable: true,

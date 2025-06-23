@@ -6,28 +6,25 @@ import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
-import { map, of, switchMap } from 'rxjs';
-
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
+import { IconComponent } from '@osf/shared/components';
 import { CustomConfirmationService } from '@osf/shared/services';
-import { IS_XSMALL } from '@osf/shared/utils';
 
 import { TokenAddEditFormComponent } from '../../components';
 import { DeleteToken, GetTokenById, TokensSelectors } from '../../store';
 
 @Component({
   selector: 'osf-token-details',
-  imports: [Button, Card, FormsModule, RouterLink, TokenAddEditFormComponent, TranslatePipe],
+  imports: [Button, Card, FormsModule, RouterLink, TokenAddEditFormComponent, TranslatePipe, IconComponent],
   providers: [DialogService, DynamicDialogRef],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './token-details.component.html',
   styleUrls: ['./token-details.component.scss'],
 })
-export class TokenDetailsComponent {
+export class TokenDetailsComponent implements OnInit {
   private readonly customConfirmationService = inject(CustomConfirmationService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -35,30 +32,14 @@ export class TokenDetailsComponent {
 
   private readonly actions = createDispatchMap({ getTokenById: GetTokenById, deleteToken: DeleteToken });
 
-  protected readonly isXSmall = toSignal(inject(IS_XSMALL));
+  tokenId = signal(this.route.snapshot.paramMap.get('id') ?? '');
+  token = computed(() => this.store.selectSignal(TokensSelectors.getTokenById)()(this.tokenId()));
 
-  readonly tokenId = toSignal(
-    this.route.params.pipe(
-      map((params) => params['id']),
-      switchMap((tokenId) => {
-        const token = this.store.selectSnapshot(TokensSelectors.getTokenById)(tokenId);
-
-        if (!token) {
-          this.actions.getTokenById(tokenId);
-        }
-
-        return of(tokenId);
-      })
-    )
-  );
-
-  readonly token = computed(() => {
-    const id = this.tokenId();
-    if (!id) return null;
-
-    const token = this.store.selectSignal(TokensSelectors.getTokenById)();
-    return token(id) ?? null;
-  });
+  ngOnInit(): void {
+    if (this.tokenId()) {
+      this.actions.getTokenById(this.tokenId());
+    }
+  }
 
   deleteToken(): void {
     this.customConfirmationService.confirmDelete({

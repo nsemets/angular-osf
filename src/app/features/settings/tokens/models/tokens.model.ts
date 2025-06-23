@@ -1,4 +1,3 @@
-// API Request Model
 export interface TokenCreateRequestJsonApi {
   data: {
     attributes: {
@@ -9,7 +8,6 @@ export interface TokenCreateRequestJsonApi {
   };
 }
 
-// API Response Model
 export interface TokenCreateResponseJsonApi {
   id: string;
   type: 'tokens';
@@ -21,7 +19,6 @@ export interface TokenCreateResponseJsonApi {
   };
 }
 
-// API Response Model for GET request
 export interface TokenGetResponseJsonApi {
   id: string;
   type: 'tokens';
@@ -32,7 +29,6 @@ export interface TokenGetResponseJsonApi {
   };
 }
 
-// Domain Models
 export interface Token {
   id: string;
   name: string;

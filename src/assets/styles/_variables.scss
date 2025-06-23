@@ -137,6 +137,11 @@ $white-60: var(--white-60);
     #f3f8fd;
   --gradient-3: linear-gradient(90.12deg, #dbedfb 0.03%, #eff4fc 54.38%, #dbedfb 98.07%);
 
+  // Primeng changes
+  --p-form-field-border-color: var(--grey-2);
+  --p-form-field-hover-border-color: var(--grey-1);
+
+  // White labeling
   --header-color: none;
   --header-background-color: none;
   --header-background-image-url: none;

@@ -1,4 +1,4 @@
-export interface Scope {
+export interface ScopeJsonApi {
   id: string;
   type: string;
   attributes: {
