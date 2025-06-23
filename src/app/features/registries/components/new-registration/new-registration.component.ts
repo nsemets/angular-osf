@@ -7,31 +7,36 @@ import { Card } from 'primeng/card';
 import { Select } from 'primeng/select';
 
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { SubHeaderComponent } from '@osf/shared/components';
+import { ToastService } from '@osf/shared/services';
 
-import { Project } from '../../models';
-import { GetProjects, GetProviders, RegistriesSelectors } from '../../store';
+import { CreateDraft, GetProjects, GetProviders, RegistriesSelectors } from '../../store';
 
 @Component({
   selector: 'osf-new-registration',
-  imports: [SubHeaderComponent, TranslatePipe, Card, Button, Select],
+  imports: [SubHeaderComponent, TranslatePipe, Card, Button, ReactiveFormsModule, Select],
   templateUrl: './new-registration.component.html',
   styleUrl: './new-registration.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewRegistrationComponent {
   private readonly fb = inject(FormBuilder);
+  private readonly toastService = inject(ToastService);
   protected readonly projects = select(RegistriesSelectors.getProjects);
   protected readonly providers = select(RegistriesSelectors.getProviders);
+  protected readonly isDraftSubmitting = select(RegistriesSelectors.isDraftSubmitting);
   protected actions = createDispatchMap({
     getProjects: GetProjects,
     getProviders: GetProviders,
+    createDraft: CreateDraft,
   });
-  isProjectRegistration = true;
+  fromProject = false;
+
   draftForm = this.fb.group({
-    provider: [''],
+    provider: ['', Validators.required],
+    project: [''],
   });
 
   constructor() {
@@ -39,7 +44,36 @@ export class NewRegistrationComponent {
     this.actions.getProviders();
   }
 
-  onSelectProject(project: Project) {
-    console.log('Project selected', project);
+  onSelectProject(projectId: string) {
+    this.draftForm.patchValue({
+      project: projectId,
+    });
+  }
+
+  onSelectProvider(providerId: string) {
+    this.draftForm.patchValue({
+      provider: providerId,
+    });
+  }
+
+  toggleFromProject() {
+    this.fromProject = !this.fromProject;
+    this.draftForm.get('project')?.setValidators(this.fromProject ? Validators.required : null);
+    this.draftForm.get('project')?.updateValueAndValidity();
+  }
+
+  createDraft() {
+    const { provider, project } = this.draftForm.value;
+
+    if (this.draftForm.valid) {
+      this.actions
+        .createDraft({
+          registrationSchemaId: provider!,
+          projectId: this.fromProject ? (project ?? undefined) : undefined,
+        })
+        .subscribe(() => {
+          this.toastService.showSuccess('Draft created successfully');
+        });
+    }
   }
 }

@@ -18,11 +18,8 @@ export class ProvidersService {
   private readonly jsonApiService = inject(JsonApiService);
 
   getProviders(): Observable<Provider[]> {
-    const params: Record<string, unknown> = {
-      'filter[current_user_permissions]': 'admin',
-    };
     return this.jsonApiService
-      .get<ProvidersResponseJsonApi>(`${this.apiUrl}/nodes/`, params)
+      .get<ProvidersResponseJsonApi>(`${this.apiUrl}/providers/registrations/osf/schemas/`)
       .pipe(map((response) => ProvidersMapper.fromProvidersResponse(response)));
   }
 }

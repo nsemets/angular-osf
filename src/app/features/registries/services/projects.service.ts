@@ -22,7 +22,7 @@ export class ProjectsService {
       'filter[current_user_permissions]': 'admin',
     };
     return this.jsonApiService
-      .get<ProjectsResponseJsonApi>(`${this.apiUrl}/nodes/`, params)
+      .get<ProjectsResponseJsonApi>(`${this.apiUrl}/users/me/nodes/`, params)
       .pipe(map((response) => ProjectsMapper.fromProjectsResponse(response)));
   }
 }

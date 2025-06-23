@@ -15,4 +15,9 @@ export class RegistriesSelectors {
   static getProjects(state: RegistriesStateModel): Project[] {
     return state.projects.data;
   }
+
+  @Selector([RegistriesState])
+  static isDraftSubmitting(state: RegistriesStateModel): boolean {
+    return state.registrations.isSubmitting ?? false;
+  }
 }

@@ -1,9 +1,10 @@
 import { AsyncStateModel } from '@osf/shared/models';
 
 import { Project, Provider } from '../models';
+import { Registration } from '../models/registries.model';
 
 export interface RegistriesStateModel {
   providers: AsyncStateModel<Provider[]>;
-  currentProviderId: string | null;
   projects: AsyncStateModel<Project[]>;
+  registrations: AsyncStateModel<Registration | null>;
 }

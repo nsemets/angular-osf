@@ -1,13 +1,14 @@
 import { Action, State, StateContext } from '@ngxs/store';
 
 import { throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
 
 import { Project } from '../models';
-import { ProjectsService, ProvidersService } from '../services';
+import { ProjectsService, ProvidersService, RegistriesService } from '../services';
 
-import { GetProjects, GetProviders } from './registries.actions';
+import { CreateDraft, GetProjects, GetProviders } from './registries.actions';
 import { RegistriesStateModel } from './registries.model';
 
 const DefaultState: RegistriesStateModel = {
@@ -16,10 +17,15 @@ const DefaultState: RegistriesStateModel = {
     isLoading: false,
     error: null,
   },
-  currentProviderId: null,
   projects: {
     data: [],
     isLoading: false,
+    error: null,
+  },
+  registrations: {
+    isLoading: false,
+    data: null,
+    isSubmitting: false,
     error: null,
   },
 };
@@ -32,7 +38,8 @@ const DefaultState: RegistriesStateModel = {
 export class RegistriesState {
   constructor(
     private providersService: ProvidersService,
-    private projectsService: ProjectsService
+    private projectsService: ProjectsService,
+    private registriesService: RegistriesService
   ) {}
 
   @Action(GetProjects)
@@ -92,8 +99,46 @@ export class RegistriesState {
     });
   }
 
-  private handleError(ctx: StateContext<RegistriesStateModel>, error: Error) {
-    ctx.patchState({});
+  @Action(CreateDraft)
+  createDraft(ctx: StateContext<RegistriesStateModel>, { payload }: CreateDraft) {
+    ctx.patchState({
+      registrations: {
+        ...ctx.getState().registrations,
+        isSubmitting: true,
+      },
+    });
+
+    return this.registriesService.createDraft(payload.registrationSchemaId, payload.projectId).pipe(
+      tap(() => {
+        ctx.patchState({
+          registrations: {
+            ...ctx.getState().registrations,
+            isSubmitting: false,
+            error: null,
+          },
+        });
+      }),
+      catchError((error) => {
+        ctx.patchState({
+          registrations: {
+            ...ctx.getState().registrations,
+            isSubmitting: false,
+            error: error.message,
+          },
+        });
+        return this.handleError(ctx, 'registrations', error);
+      })
+    );
+  }
+
+  private handleError(ctx: StateContext<RegistriesStateModel>, section: keyof RegistriesStateModel, error: Error) {
+    ctx.patchState({
+      [section]: {
+        ...ctx.getState()[section],
+        isLoading: false,
+        error: error.message,
+      },
+    });
     return throwError(() => error);
   }
 }
