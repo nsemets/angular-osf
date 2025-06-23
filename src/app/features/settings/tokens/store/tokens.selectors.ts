@@ -1,13 +1,13 @@
 import { Selector } from '@ngxs/store';
 
-import { ScopeJsonApi, Token } from '../models';
+import { ScopeModel, TokenModel } from '../models';
 
 import { TokensStateModel } from './tokens.models';
 import { TokensState } from './tokens.state';
 
 export class TokensSelectors {
   @Selector([TokensState])
-  static getScopes(state: TokensStateModel): ScopeJsonApi[] {
+  static getScopes(state: TokensStateModel): ScopeModel[] {
     return state.scopes.data;
   }
 
@@ -17,7 +17,7 @@ export class TokensSelectors {
   }
 
   @Selector([TokensState])
-  static getTokens(state: TokensStateModel): Token[] {
+  static getTokens(state: TokensStateModel): TokenModel[] {
     return state.tokens.data;
   }
 

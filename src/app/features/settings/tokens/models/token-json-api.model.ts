@@ -28,11 +28,3 @@ export interface TokenGetResponseJsonApi {
     owner: string;
   };
 }
-
-export interface Token {
-  id: string;
-  name: string;
-  tokenId: string;
-  scopes: string[];
-  ownerId: string;
-}

@@ -15,7 +15,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { Token, TokenForm, TokenFormControls } from '../../models';
+import { TokenForm, TokenFormControls, TokenModel } from '../../models';
 import { CreateToken, GetTokens, TokensSelectors, UpdateToken } from '../../store';
 import { TokenCreatedDialogComponent } from '../token-created-dialog/token-created-dialog.component';
 
@@ -38,7 +38,7 @@ export class TokenAddEditFormComponent implements OnInit {
   });
 
   isEditMode = input(false);
-  initialValues = input<Token | null>(null);
+  initialValues = input<TokenModel | null>(null);
 
   protected readonly tokenId = toSignal(this.route.params.pipe(map((params) => params['id'])));
   protected readonly dialogRef = inject(DynamicDialogRef);

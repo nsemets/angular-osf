@@ -10,7 +10,7 @@ import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter, RouterModule } from '@angular/router';
 
-import { Token } from '../../models';
+import { TokenModel } from '../../models';
 
 import { TokenDetailsComponent } from './token-details.component';
 
@@ -20,7 +20,7 @@ describe('TokenDetailsComponent', () => {
   let store: Partial<Store>;
   let confirmationService: Partial<ConfirmationService>;
 
-  const mockToken: Token = {
+  const mockToken: TokenModel = {
     id: '1',
     name: 'Test Token',
     tokenId: 'token1',

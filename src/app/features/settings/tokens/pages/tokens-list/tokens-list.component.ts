@@ -11,7 +11,7 @@ import { RouterLink } from '@angular/router';
 
 import { CustomConfirmationService } from '@osf/shared/services';
 
-import { Token } from '../../models';
+import { TokenModel } from '../../models';
 import { DeleteToken, GetTokens, TokensSelectors } from '../../store';
 
 @Component({
@@ -33,7 +33,7 @@ export class TokensListComponent implements OnInit {
     this.actions.getTokens();
   }
 
-  deleteToken(token: Token) {
+  deleteToken(token: TokenModel) {
     this.customConfirmationService.confirmDelete({
       headerKey: 'settings.tokens.confirmation.delete.title',
       headerParams: { name: token.name },

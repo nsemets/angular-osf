@@ -4,7 +4,7 @@ import { catchError, of, tap, throwError } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { Token } from '../models';
+import { TokenModel } from '../models';
 import { TokensService } from '../services';
 
 import { CreateToken, DeleteToken, GetScopes, GetTokenById, GetTokens, UpdateToken } from './tokens.actions';
@@ -59,7 +59,7 @@ export class TokensState {
   @Action(GetTokenById)
   getTokenById(ctx: StateContext<TokensStateModel>, action: GetTokenById) {
     const state = ctx.getState();
-    const tokenFromState = state.tokens.data.find((token: Token) => token.id === action.tokenId);
+    const tokenFromState = state.tokens.data.find((token: TokenModel) => token.id === action.tokenId);
 
     ctx.patchState({ tokens: { ...state.tokens, isLoading: true, error: null } });
 
@@ -84,7 +84,7 @@ export class TokensState {
     return this.tokensService.updateToken(action.tokenId, action.name, action.scopes).pipe(
       tap((updatedToken) => {
         const state = ctx.getState();
-        const updatedTokens = state.tokens.data.map((token: Token) =>
+        const updatedTokens = state.tokens.data.map((token: TokenModel) =>
           token.id === action.tokenId ? updatedToken : token
         );
         ctx.patchState({ tokens: { data: updatedTokens, isLoading: false, error: null } });
@@ -101,7 +101,7 @@ export class TokensState {
     return this.tokensService.deleteToken(action.tokenId).pipe(
       tap(() => {
         const state = ctx.getState();
-        const updatedTokens = state.tokens.data.filter((token: Token) => token.id !== action.tokenId);
+        const updatedTokens = state.tokens.data.filter((token: TokenModel) => token.id !== action.tokenId);
         ctx.patchState({ tokens: { data: updatedTokens, isLoading: false, error: null } });
       }),
       catchError((error) => this.handleError(ctx, 'tokens', error))

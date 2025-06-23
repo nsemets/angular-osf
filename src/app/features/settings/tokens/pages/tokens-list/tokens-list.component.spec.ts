@@ -12,7 +12,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
-import { Token } from '../../models';
+import { TokenModel } from '../../models';
 import { DeleteToken } from '../../store';
 
 import { TokensListComponent } from './tokens-list.component';
@@ -23,7 +23,7 @@ describe('TokensListComponent', () => {
   let store: Partial<Store>;
   let confirmationService: Partial<ConfirmationService>;
 
-  const mockTokens: Token[] = [
+  const mockTokens: TokenModel[] = [
     {
       id: '1',
       name: 'Test Token 1',
