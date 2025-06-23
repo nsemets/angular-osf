@@ -6,7 +6,7 @@ import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { Select } from 'primeng/select';
 
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { SubHeaderComponent } from '@osf/shared/components';
@@ -42,6 +42,13 @@ export class NewRegistrationComponent {
   constructor() {
     this.actions.getProjects();
     this.actions.getProviders();
+    effect(() => {
+      //set the provider value when the providers are loaded
+      const provider = this.draftForm.get('provider')?.value;
+      if (!provider) {
+        this.draftForm.get('provider')?.setValue(this.providers()[0]?.id);
+      }
+    });
   }
 
   onSelectProject(projectId: string) {

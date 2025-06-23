@@ -1,5 +1,4 @@
-import { Project } from '../models';
-import { ProjectsResponseJsonApi } from '../models/projects-json-api.model';
+import { Project, ProjectsResponseJsonApi } from '../models';
 
 export class ProjectsMapper {
   static fromProjectsResponse(response: ProjectsResponseJsonApi): Project[] {

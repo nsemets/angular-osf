@@ -1,5 +1,4 @@
-import { Provider } from '../models';
-import { ProvidersResponseJsonApi } from '../models/providers-json-api.model';
+import { Provider, ProvidersResponseJsonApi } from '../models';
 
 export class ProvidersMapper {
   static fromProvidersResponse(response: ProvidersResponseJsonApi): Provider[] {

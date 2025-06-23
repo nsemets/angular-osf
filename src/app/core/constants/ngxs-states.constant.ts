@@ -9,7 +9,6 @@ import { ProjectOverviewState } from '@osf/features/project/overview/store';
 import { RegistrationsState } from '@osf/features/project/registrations/store';
 import { SettingsState } from '@osf/features/project/settings/store';
 import { WikiState } from '@osf/features/project/wiki/store/wiki.state';
-import { RegistriesState } from '@osf/features/registries/store';
 import { AccountSettingsState } from '@osf/features/settings/account-settings/store/account-settings.state';
 import { DeveloperAppsState } from '@osf/features/settings/developer-apps/store';
 import { NotificationSubscriptionState } from '@osf/features/settings/notifications/store';
@@ -35,5 +34,4 @@ export const STATES = [
   WikiState,
   MeetingsState,
   RegistrationsState,
-  RegistriesState,
 ];
