@@ -7,10 +7,10 @@ import { ProjectFilesState } from '@osf/features/project/files/store/project-fil
 import { MyProfileResourceFiltersOptionsState } from './features/my-profile/components/filters/store';
 import { MyProfileResourceFiltersState } from './features/my-profile/components/my-profile-resource-filters/store';
 import { MyProfileState } from './features/my-profile/store';
-import { ContributorsState } from './features/project/contributors/store';
 import { ResourceFiltersOptionsState } from './features/search/components/filters/store';
 import { ResourceFiltersState } from './features/search/components/resource-filters/store';
 import { SearchState } from './features/search/store';
+import { ContributorsState } from './shared/components/contributors/store';
 
 export const routes: Routes = [
   {
