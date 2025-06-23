@@ -11,6 +11,8 @@
       "copy": "Copy",
       "move": "Move",
       "rename": "Rename",
+      "share": "Share",
+      "embed": "Embed",
       "confirm": "Confirm",
       "disconnect": "Disconnect",
       "revert": "Revert",
@@ -18,7 +20,8 @@
       "skip": "Skip",
       "done": "Done",
       "select": "Select",
-      "deselect": "Deselect"
+      "deselect": "Deselect",
+      "create": "Create"
     },
     "search": {
       "title": "Search",
@@ -650,13 +653,43 @@
         },
         "renameFile": {
           "title": "Rename file",
+          "newName": "New name",
+          "enterNewName": "Enter new name",
           "renameLabel": "Please rename the file"
         },
-        "moveFile": "Cannot move to the same folder"
+        "moveFile": {
+          "cannotMove": "Cannot move to the same folder",
+          "title": "Move file",
+          "message": "Are you sure you want to move <span class=\"font-bold\">{{dragNodeName}}</span> to <span class=\"font-bold\">{{dropNodeName}}</span> ?",
+          "storage": "OSF Storage",
+          "pathError": "Path is not specified!"
+        },
+        "copyFile": {
+          "title": "Copy file"
+        },
+        "deleteFile": {
+          "title": "Delete File",
+          "message": "Are you sure you want to delete <span class=\"font-bold\">{{name}}</span>?"
+        }
       },
       "emptyState": "This folder is empty",
       "detail": {
         "backToList": "Back to list of files",
+        "tabs": {
+          "details": "Details",
+          "revisions": "Revisions",
+          "keywords": "Keywords"
+        },
+        "actions": {
+          "addCommunityMetadata": "Add community Metadata",
+          "copyDynamicIframe": "Copy dynamic JS iFrame",
+          "copyStaticIframe": "Copy static HTML iFrame",
+          "share": {
+            "email": "Email",
+            "x": "X",
+            "facebook": "Facebook"
+          }
+        },
         "fileMetadata": {
           "title": "File Metadata",
           "edit": "Edit",
@@ -682,6 +715,24 @@
             "dateCreated": "Date created",
             "dateModified": "Date modified",
             "contributors": "Contributors"
+          }
+        },
+        "toast": {
+          "copiedToClipboard": "Copied to clipboard"
+        },
+        "keywords": {
+          "title": "Keywords"
+        },
+        "revisions": {
+          "title": "Revisions",
+          "actions": {
+            "copyMd5": "Copy MD5",
+            "copySha2": "Copy SHA-2",
+            "download": "Download"
+          },
+          "tooltips": {
+            "md5": "MD5 is an algorithm used to verify data integrity",
+            "sha2": "SHA-2 is a cryptographic hash function designed by the NSA used to verify data integrity."
           }
         }
       }

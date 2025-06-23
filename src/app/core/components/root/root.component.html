@@ -5,7 +5,7 @@
     <div class="content-wrapper">
       <osf-header></osf-header>
 
-      <main class="flex flex-column min-h-full">
+      <main class="flex flex-1">
         <router-outlet />
       </main>
 
@@ -21,7 +21,9 @@
         <osf-breadcrumb></osf-breadcrumb>
       }
 
-      <router-outlet />
+      <main class="flex flex-1">
+        <router-outlet />
+      </main>
 
       <osf-footer></osf-footer>
     </div>
