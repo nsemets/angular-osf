@@ -9,7 +9,8 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 
 import { CustomItemMetadataRecord } from '@osf/features/project/metadata/models';
 import { ProjectOverview } from '@osf/features/project/overview/models';
-import { LanguageCode, languageCodes } from '@shared/constants/language.const';
+import { languageCodes } from '@shared/constants/language.const';
+import { LanguageCodeModel } from '@shared/models';
 
 interface ResourceInformationForm {
   resourceType: FormControl<string>;
@@ -70,7 +71,7 @@ export class ResourceInformationDialogComponent implements OnInit {
   ];
 
   // Language options - using shared language constants
-  languageOptions = languageCodes.map((lang: LanguageCode) => ({
+  languageOptions = languageCodes.map((lang: LanguageCodeModel) => ({
     label: lang.name,
     value: lang.code,
   }));

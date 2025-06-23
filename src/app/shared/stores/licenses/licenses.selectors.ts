@@ -1,11 +1,21 @@
 import { Selector } from '@ngxs/store';
 
-import { License, LicensesStateModel } from '@shared/models';
-import { LicensesState } from '@shared/stores';
+import { License } from '@shared/models';
+import { LicensesState, LicensesStateModel } from '@shared/stores';
 
 export class LicensesSelectors {
   @Selector([LicensesState])
   static getLicenses(state: LicensesStateModel): License[] {
-    return state.licenses;
+    return state.licenses.data;
+  }
+
+  @Selector([LicensesState])
+  static getLoading(state: LicensesStateModel): boolean {
+    return state.licenses.isLoading;
+  }
+
+  @Selector([LicensesState])
+  static getError(state: LicensesStateModel): string | null {
+    return state.licenses.error;
   }
 }

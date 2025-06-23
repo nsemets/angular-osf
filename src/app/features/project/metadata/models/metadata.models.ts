@@ -7,7 +7,13 @@ export interface ProjectMetadata {
   resource_language?: string;
   funding_info?: FundingInfo[];
   publication_doi?: string;
+  institutions?: string[];
   doi?: string;
+  node_license?: {
+    id: string;
+    type: string;
+  };
+  category?: string;
 }
 
 export interface CustomItemMetadataRecord {
@@ -67,18 +73,6 @@ export interface FundingInfo {
   award_title?: string;
   award_number?: string;
   award_uri?: string;
-}
-
-export interface LicenseData {
-  name: string;
-  year?: string;
-  copyright_holders?: string[];
-  statement_of_purpose?: string;
-}
-
-export interface ResourceInformation {
-  resourceType: string;
-  resourceLanguage: string;
 }
 
 export interface MetadataResponse {

@@ -5,10 +5,12 @@ import { inject, Injectable } from '@angular/core';
 
 import { JsonApiService } from '@osf/core/services';
 import { ProjectMetadataMapper } from '@osf/features/project/metadata/mappers/project-metadata.mapper';
+import { ProjectMetadataUpdateMapper } from '@osf/features/project/metadata/mappers/project-metadata-update.mapper';
 import {
   CedarMetadataRecord,
   CedarMetadataRecordJsonApi,
   CedarMetadataTemplateJsonApi,
+  ProjectMetadata,
 } from '@osf/features/project/metadata/models';
 import { ProjectOverview } from '@osf/features/project/overview/models';
 
@@ -92,18 +94,7 @@ export class MetadataService {
       .pipe(map((response) => ProjectMetadataMapper.fromMetadataApiResponse(response.data)));
   }
 
-  updateProjectDetails(
-    projectId: string,
-    updates: Partial<{
-      title: string;
-      description: string;
-      tags: string[];
-      category: string;
-      node_license?: {
-        id: string;
-      };
-    }>
-  ): Observable<ProjectOverview> {
+  updateProjectDetails(projectId: string, updates: Partial<ProjectMetadata>): Observable<ProjectOverview> {
     const payload = {
       data: {
         id: projectId,
@@ -114,9 +105,7 @@ export class MetadataService {
 
     return this.jsonApiService
       .patch<Record<string, unknown>>(`${this.apiUrl}/nodes/${projectId}`, payload)
-      .pipe(
-        map((response) => ProjectMetadataMapper.fromMetadataApiResponse(response['data'] as Record<string, unknown>))
-      );
+      .pipe(map((response) => ProjectMetadataUpdateMapper.fromMetadataApiResponse(response)));
   }
 
   getUserInstitutions(userId: string, page = 1, pageSize = 10): Observable<UserInstitutionsResponse> {

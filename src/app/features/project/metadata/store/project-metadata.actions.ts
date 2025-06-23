@@ -2,10 +2,11 @@ import {
   CedarMetadataRecord,
   CedarMetadataRecordData,
   CustomItemMetadataRecord,
+  ProjectMetadata,
 } from '@osf/features/project/metadata/models';
 
 export class GetProjectForMetadata {
-  static readonly type = '[Project Metadata] Get Project For Metadata';
+  static readonly type = '[Metadata] Get Project For Metadata';
   constructor(public projectId: string) {}
 }
 
@@ -24,58 +25,36 @@ export class UpdateCustomItemMetadata {
   ) {}
 }
 
-export class UpdateProjectDescription {
-  static readonly type = '[Project Metadata] Update Project Description';
+export class UpdateProjectDetails {
+  static readonly type = '[Metadata] Update Project Details';
   constructor(
     public projectId: string,
-    public description: string
+    public updates: Partial<ProjectMetadata>
   ) {}
 }
 
-export class UpdateProjectDetails {
-  static readonly type = '[Project Metadata] Update Project Details';
-  constructor(
-    public projectId: string,
-    public updates: Partial<{
-      title: string;
-      description: string;
-      tags: string[];
-      category: string;
-      institutions: string[];
-      doi?: boolean;
-      node_license?: {
-        id: string;
-        type: string;
-      };
-    }>
-  ) {}
-}
 export class GetFundersList {
-  static readonly type = '[Project Metadata] Get Funders List';
+  static readonly type = '[Metadata] Get Funders List';
   constructor(public search?: string) {}
 }
 
 export class GetCedarMetadataTemplates {
-  static readonly type = '[Project Metadata] Get Cedar Metadata Templates';
+  static readonly type = '[Metadata] Get Cedar Metadata Templates';
   constructor(public url?: string) {}
 }
 
-export class ResetCustomItemMetadata {
-  static readonly type = '[Metadata] Reset Custom Item Metadata';
-}
-
 export class GetCedarMetadataRecords {
-  static readonly type = '[Project Metadata] Get Cedar Metadata Records';
+  static readonly type = '[Metadata] Get Cedar Metadata Records';
   constructor(public projectId: string) {}
 }
 
 export class CreateCedarMetadataRecord {
-  static readonly type = '[Project Metadata] Create Cedar Metadata Record';
+  static readonly type = '[Metadata] Create Cedar Metadata Record';
   constructor(public record: CedarMetadataRecord) {}
 }
 
 export class UpdateCedarMetadataRecord {
-  static readonly type = '[Project Metadata] Update Cedar Metadata Record';
+  static readonly type = '[Metadata] Update Cedar Metadata Record';
   constructor(
     public record: CedarMetadataRecord,
     public recordId: string
@@ -83,12 +62,12 @@ export class UpdateCedarMetadataRecord {
 }
 
 export class AddCedarMetadataRecordToState {
-  static readonly type = '[Project Metadata] Add Cedar Metadata Record To State';
+  static readonly type = '[Metadata] Add Cedar Metadata Record To State';
   constructor(public record: CedarMetadataRecordData) {}
 }
 
 export class GetUserInstitutions {
-  static readonly type = '[Project Metadata] Get User Institutions';
+  static readonly type = '[Metadata] Get User Institutions';
   constructor(
     public userId: string,
     public page?: number,

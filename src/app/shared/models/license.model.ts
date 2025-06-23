@@ -16,7 +16,7 @@ export interface License {
   links: LicenseLinks;
 }
 
-export interface LicensesApiResponse {
+export interface LicensesResponseJsonApi {
   data: License[];
   links: {
     first: string | null;
@@ -31,10 +31,4 @@ export interface LicensesApiResponse {
   meta: {
     version: string;
   };
-}
-
-export interface LicensesStateModel {
-  licenses: License[];
-  loading: boolean;
-  error: string | null;
 }

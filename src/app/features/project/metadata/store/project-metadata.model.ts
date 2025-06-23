@@ -6,24 +6,16 @@ import {
   UserInstitution,
 } from '@osf/features/project/metadata/models';
 import { ProjectOverview } from '@osf/features/project/overview/models';
+import { AsyncStateModel } from '@shared/models';
 
 import { CrossRefFunder } from '../models';
 
 export interface MetadataStateModel {
-  project: ProjectOverview | null;
-  projectLoading: boolean;
-  customItemMetadata: CustomItemMetadataRecord | null;
-  customItemMetadataLoading: boolean;
-  fundersList: CrossRefFunder[];
-  fundersLoading: boolean;
-  loading: boolean;
-  error: string | null;
-  cedarTemplates: CedarMetadataTemplateJsonApi | null;
-  cedarTemplatesLoading: boolean;
-  cedarRecord: CedarMetadataRecord | null;
-  cedarRecordLoading: boolean;
-  cedarRecords: CedarMetadataRecordData[];
-  cedarRecordsLoading: boolean;
-  userInstitutions: UserInstitution[];
-  userInstitutionsLoading: boolean;
+  project: AsyncStateModel<ProjectOverview | null>;
+  customItemMetadata: AsyncStateModel<CustomItemMetadataRecord | null>;
+  fundersList: AsyncStateModel<CrossRefFunder[]>;
+  cedarTemplates: AsyncStateModel<CedarMetadataTemplateJsonApi | null>;
+  cedarRecord: AsyncStateModel<CedarMetadataRecord | null>;
+  cedarRecords: AsyncStateModel<CedarMetadataRecordData[]>;
+  userInstitutions: AsyncStateModel<UserInstitution[]>;
 }

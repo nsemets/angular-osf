@@ -1948,8 +1948,3 @@ export const languageCodes = [
     name: 'Zuni',
   },
 ];
-
-export interface LanguageCode {
-  code: string;
-  name: string;
-}

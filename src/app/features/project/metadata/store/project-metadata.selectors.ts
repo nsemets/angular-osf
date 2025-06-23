@@ -7,76 +7,76 @@ import { ProjectMetadataState } from './project-metadata.state';
 export class ProjectMetadataSelectors {
   @Selector([ProjectMetadataState])
   static getProject(state: MetadataStateModel) {
-    return state.project;
+    return state.project.data;
   }
 
   @Selector([ProjectMetadataState])
   static getProjectLoading(state: MetadataStateModel) {
-    return state.projectLoading;
+    return state.project.isLoading;
   }
 
   @Selector([ProjectMetadataState])
   static getCustomItemMetadata(state: MetadataStateModel) {
-    return state.customItemMetadata;
+    return state.customItemMetadata.data;
   }
 
   @Selector([ProjectMetadataState])
   static getLoading(state: MetadataStateModel) {
-    return state.loading;
+    return state.project.isLoading;
   }
 
   @Selector([ProjectMetadataState])
   static getError(state: MetadataStateModel) {
-    return state.error;
+    return state.project.error;
   }
 
   @Selector([ProjectMetadataState])
   static getFundersList(state: MetadataStateModel) {
-    return state.fundersList;
+    return state.fundersList.data;
   }
 
   @Selector([ProjectMetadataState])
   static getFundersLoading(state: MetadataStateModel) {
-    return state.fundersLoading;
+    return state.fundersList.isLoading;
   }
 
   @Selector([ProjectMetadataState])
   static getCedarTemplates(state: MetadataStateModel) {
-    return state.cedarTemplates;
+    return state.cedarTemplates.data;
   }
 
   @Selector([ProjectMetadataState])
   static getCedarTemplatesLoading(state: MetadataStateModel) {
-    return state.cedarTemplatesLoading;
+    return state.cedarTemplates.isLoading;
   }
 
   @Selector([ProjectMetadataState])
   static getCedarRecord(state: MetadataStateModel) {
-    return state.cedarRecord;
+    return state.cedarRecord.data;
   }
 
   @Selector([ProjectMetadataState])
   static getCedarRecordLoading(state: MetadataStateModel) {
-    return state.cedarRecordLoading;
+    return state.cedarRecord.isLoading;
   }
 
   @Selector([ProjectMetadataState])
   static getCedarRecords(state: MetadataStateModel) {
-    return state.cedarRecords;
+    return state.cedarRecords.data;
   }
 
   @Selector([ProjectMetadataState])
   static getCedarRecordsLoading(state: MetadataStateModel) {
-    return state.cedarRecordsLoading;
+    return state.cedarRecords.isLoading;
   }
 
   @Selector([ProjectMetadataState])
   static getUserInstitutions(state: MetadataStateModel) {
-    return state.userInstitutions || [];
+    return state.userInstitutions.data;
   }
 
   @Selector([ProjectMetadataState])
   static getUserInstitutionsLoading(state: MetadataStateModel): boolean {
-    return state.userInstitutionsLoading;
+    return state.userInstitutions.isLoading;
   }
 }

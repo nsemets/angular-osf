@@ -1,48 +1,75 @@
-import { Action, State, StateContext, Store } from '@ngxs/store';
+import { Action, State, StateContext } from '@ngxs/store';
 
-import { finalize, tap } from 'rxjs';
+import { catchError, tap, throwError } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
 import { NodeSubjectModel } from '@shared/models';
 import { SubjectsService } from '@shared/services';
-import { GetSubjects, SubjectsStateModel, UpdateProjectSubjects } from '@shared/stores';
+import { GetSubjects, SubjectsModel, UpdateProjectSubjects } from '@shared/stores';
 
-const initialState: SubjectsStateModel = {
-  highlightedSubjects: [],
-  highlightedSubjectsLoading: false,
+const initialState: SubjectsModel = {
+  highlightedSubjects: {
+    data: [],
+    isLoading: false,
+    error: null,
+  },
 };
 
-@State<SubjectsStateModel>({
+@State<SubjectsModel>({
   name: 'subjects',
   defaults: initialState,
 })
 @Injectable()
 export class SubjectsState {
   private readonly subjectsService = inject(SubjectsService);
-  private readonly store = inject(Store);
 
   @Action(GetSubjects)
-  getSubjects(ctx: StateContext<SubjectsStateModel>) {
-    ctx.patchState({ highlightedSubjectsLoading: true });
+  getSubjects(ctx: StateContext<SubjectsModel>) {
+    ctx.patchState({
+      highlightedSubjects: {
+        data: [],
+        isLoading: true,
+        error: null,
+      },
+    });
     return this.subjectsService.getSubjects().pipe(
       tap({
         next: (subjects) => {
           ctx.patchState({
-            highlightedSubjects: subjects,
-            highlightedSubjectsLoading: false,
+            highlightedSubjects: {
+              data: subjects,
+              error: null,
+              isLoading: false,
+            },
           });
         },
-        error: () => {
-          ctx.patchState({ highlightedSubjectsLoading: false });
-        },
       }),
-      finalize(() => ctx.patchState({ highlightedSubjectsLoading: false }))
+      catchError((error) => {
+        ctx.patchState({
+          highlightedSubjects: {
+            ...ctx.getState().highlightedSubjects,
+            isLoading: false,
+            error,
+          },
+        });
+        return throwError(() => error);
+      }),
+      catchError((error) => {
+        ctx.patchState({
+          highlightedSubjects: {
+            ...ctx.getState().highlightedSubjects,
+            isLoading: false,
+            error,
+          },
+        });
+        return throwError(() => error);
+      })
     );
   }
 
   @Action(UpdateProjectSubjects)
-  updateProjectSubjects(ctx: StateContext<SubjectsStateModel>, action: UpdateProjectSubjects) {
+  updateProjectSubjects(ctx: StateContext<SubjectsModel>, action: UpdateProjectSubjects) {
     return this.subjectsService.updateProjectSubjects(action.projectId, action.subjectIds).pipe(
       tap({
         next: (result) => {
@@ -65,7 +92,7 @@ export class SubjectsState {
                 return undefined;
               };
 
-              const foundSubject = findSubjectById(state.highlightedSubjects);
+              const foundSubject = findSubjectById(state.highlightedSubjects.data);
               return foundSubject
                 ? {
                     id: foundSubject.id,

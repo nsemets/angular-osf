@@ -4,6 +4,7 @@
       "delete": "Delete",
       "remove": "Remove",
       "add": "Add",
+      "edit": "Edit",
       "addMore": "Add More",
       "cancel": "Cancel",
       "save": "Save",
@@ -479,15 +480,12 @@
         "noTags": "No tags",
         "noSupplements": "No supplements",
         "noAffiliatedInstitutions": "No affiliated institutions",
-        "editButton": "Edit",
-        "addButton": "Add",
         "resourceInformation": "Resource Information",
         "resourceType": "Resource type",
         "resourceLanguage": "Resource language",
         "fundingSupport": "Funding/Support Information",
         "noResourceInformation": "No resource information available",
         "notSpecified": "Not specified",
-        "editLabel": "Edit",
         "loading": "Loading metadata...",
         "placeholders": {
           "edit": "Edit description here",
@@ -721,6 +719,7 @@
       }
     },
     "metadata": {
+      "addSubjects": "Add subjects...",
       "description": {
         "updated": "Description updated successfully",
         "dialog": {
@@ -728,7 +727,6 @@
           "label": "Description",
           "placeholder": "Enter description here",
           "clickToRemove": "Click to remove",
-          "addSubjects": "Add subjects...",
           "expandOrCollapse": "Expand or collapse "
         }
       },
@@ -781,8 +779,6 @@
         "title": "Add community metadata record",
         "selectTemplate": "Select a Metadata Template",
         "cedarInfo": "OSF has partnered with <a target='_blank' href='https://metadatacenter.org/'>CEDAR</a> to provide more ways to annotate your research with domain or community-specific metadata records. If you would like to request the addition of a new metadata template, contact us at <a>support@osf.io</a>.",
-        "cancel": "Cancel",
-        "next": "Next",
         "select": "Select",
         "selected": "Selected",
         "publish": "Publish",

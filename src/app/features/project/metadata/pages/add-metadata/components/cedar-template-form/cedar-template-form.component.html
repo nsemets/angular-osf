@@ -7,13 +7,7 @@
         } @else {
           <h3 class="text-lg text-red-500">{{ 'project.metadata.addMetadata.notPublishedText' | translate }}</h3>
         }
-        <p-button
-          class="w-10rem btn-full-width"
-          type="button"
-          severity="secondary"
-          [label]="'Edit record'"
-          (click)="editModeEmit()"
-        >
+        <p-button class="w-10rem btn-full-width" severity="secondary" [label]="'Edit record'" (click)="editModeEmit()">
         </p-button>
       </div>
     }
@@ -41,7 +35,6 @@
         <p-button
           class="w-10rem btn-full-width"
           [label]="'project.metadata.addMetadata.publish' | translate"
-          type="button"
           (click)="onSubmit()"
         >
         </p-button>

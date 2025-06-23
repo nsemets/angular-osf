@@ -1,32 +1,14 @@
-import { ProjectOverview, ProjectOverviewContributor } from '@osf/features/project/overview/models';
+import { ProjectOverview } from '@osf/features/project/overview/models';
 
-export class ProjectMetadataMapper {
+export class ProjectMetadataUpdateMapper {
   static fromMetadataApiResponse(response: Record<string, unknown>): ProjectOverview {
-    const attributes = response['attributes'] as Record<string, unknown>;
-    const embeds = response['embeds'] as Record<string, unknown>;
-
-    const contributors: ProjectOverviewContributor[] = [];
-    if (embeds['contributors']) {
-      const contributorsData = (embeds['contributors'] as Record<string, unknown>)['data'] as Record<string, unknown>[];
-      contributorsData?.forEach((contributor) => {
-        const contributorEmbeds = contributor['embeds'] as Record<string, unknown>;
-        const userData = (contributorEmbeds['users'] as Record<string, unknown>)['data'] as Record<string, unknown>;
-        const userAttributes = userData['attributes'] as Record<string, unknown>;
-
-        contributors.push({
-          id: userData['id'] as string,
-          type: userData['type'] as string,
-          fullName: userAttributes['full_name'] as string,
-          givenName: userAttributes['given_name'] as string,
-          familyName: userAttributes['family_name'] as string,
-          middleName: '',
-        });
-      });
-    }
+    const id = response['id'] as string;
+    const type = (response['type'] as string) || 'nodes';
+    const attributes = (response['attributes'] as Record<string, unknown>) || {};
 
     return {
-      id: response['id'] as string,
-      type: (response['type'] as string) || 'nodes',
+      id,
+      type,
       title: attributes['title'] as string,
       description: attributes['description'] as string,
       category: attributes['category'] as string,
@@ -45,7 +27,6 @@ export class ProjectMetadataMapper {
       currentUserIsContributor: attributes['current_user_is_contributor'] as boolean,
       currentUserIsContributorOrGroupMember: attributes['current_user_is_contributor_or_group_member'] as boolean,
       analyticsKey: '',
-      contributors: contributors,
       subjects: Array.isArray(attributes['subjects']) ? attributes['subjects'].flat() : attributes['subjects'],
       forksCount: 0,
       viewOnlyLinksCount: 0,

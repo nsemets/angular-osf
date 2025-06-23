@@ -7,12 +7,12 @@ import { JsonApiService } from '@core/services';
 import { SubjectMapper } from '@shared/mappers';
 import {
   NodeSubjectModel,
-  SubjectApiResponse,
+  SubjectJsonApi,
   UpdateSubjectRequestJsonApi,
   UpdateSubjectResponseJsonApi,
 } from '@shared/models';
 
-import { environment } from '../../../environments/environment';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +22,7 @@ export class SubjectsService {
   private readonly apiUrl = environment.apiUrl;
 
   getSubjects(): Observable<NodeSubjectModel[]> {
-    return this.jsonApiService.get<SubjectApiResponse>(`${this.apiUrl}/subjects/?page[size]=150&embed=parent`).pipe(
+    return this.jsonApiService.get<SubjectJsonApi>(`${this.apiUrl}/subjects/?page[size]=150&embed=parent`).pipe(
       map((response) => {
         return SubjectMapper.mapSubjectsResponse(response.data);
       })

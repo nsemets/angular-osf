@@ -1,15 +1,15 @@
 import { Selector } from '@ngxs/store';
 
-import { SubjectsState, SubjectsStateModel } from '@shared/stores';
+import { SubjectsModel, SubjectsState } from '@shared/stores';
 
 export class SubjectsSelectors {
   @Selector([SubjectsState])
-  static getHighlightedSubjects(state: SubjectsStateModel) {
-    return state.highlightedSubjects;
+  static getHighlightedSubjects(state: SubjectsModel) {
+    return state.highlightedSubjects.data;
   }
 
   @Selector([SubjectsState])
-  static getHighlightedSubjectsLoading(state: SubjectsStateModel): boolean {
-    return state.highlightedSubjectsLoading;
+  static getHighlightedSubjectsLoading(state: SubjectsModel): boolean {
+    return state.highlightedSubjects.isLoading;
   }
 }

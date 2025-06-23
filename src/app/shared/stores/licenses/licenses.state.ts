@@ -1,4 +1,4 @@
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Action, State, StateContext } from '@ngxs/store';
 
 import { throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
@@ -6,13 +6,14 @@ import { catchError, tap } from 'rxjs/operators';
 import { inject, Injectable } from '@angular/core';
 
 import { LicensesService } from '@core/services/licenses.service';
-import { License, LicensesStateModel } from '@shared/models';
-import { LoadAllLicenses } from '@shared/stores';
+import { LicensesStateModel, LoadAllLicenses } from '@shared/stores';
 
 const defaultState: LicensesStateModel = {
-  licenses: [],
-  loading: false,
-  error: null,
+  licenses: {
+    data: [],
+    isLoading: false,
+    error: null,
+  },
 };
 
 @State<LicensesStateModel>({
@@ -23,38 +24,34 @@ const defaultState: LicensesStateModel = {
 export class LicensesState {
   private readonly licensesService = inject(LicensesService);
 
-  @Selector()
-  static getLicenses(state: LicensesStateModel): License[] {
-    return state.licenses;
-  }
-
-  @Selector()
-  static getLoading(state: LicensesStateModel): boolean {
-    return state.loading;
-  }
-
-  @Selector()
-  static getError(state: LicensesStateModel): string | null {
-    return state.error;
-  }
-
   @Action(LoadAllLicenses)
   loadAllLicenses(ctx: StateContext<LicensesStateModel>) {
-    ctx.patchState({ loading: true, error: null });
+    ctx.patchState({
+      licenses: {
+        data: [],
+        isLoading: true,
+        error: null,
+      },
+    });
 
     return this.licensesService.getAllLicenses().pipe(
       tap((response) => {
         ctx.patchState({
-          licenses: response.data,
-          loading: false,
-          error: null,
+          licenses: {
+            data: response.data,
+            isLoading: false,
+            error: null,
+          },
         });
       }),
       catchError((error) => {
         const errorMessage = error?.error?.message || error?.message;
         ctx.patchState({
-          loading: false,
-          error: errorMessage,
+          licenses: {
+            data: ctx.getState().licenses.data,
+            isLoading: false,
+            error: errorMessage,
+          },
         });
         return throwError(() => error);
       })

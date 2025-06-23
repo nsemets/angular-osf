@@ -47,7 +47,7 @@ export interface SubjectData extends UpdateSubjectRequestJsonApi {
   };
 }
 
-export interface SubjectApiResponse {
+export interface SubjectJsonApi {
   data: SubjectData[];
   links: {
     first: string | null;
