@@ -8,7 +8,7 @@ export interface ProjectMetadata {
   funding_info?: FundingInfo[];
   publication_doi?: string;
   institutions?: string[];
-  doi?: string;
+  doi?: boolean;
   node_license?: {
     id: string;
     type: string;

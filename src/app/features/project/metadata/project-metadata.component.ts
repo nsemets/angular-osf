@@ -2,6 +2,7 @@ import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
+import { ConfirmationService } from 'primeng/api';
 import { Card } from 'primeng/card';
 import { DialogService } from 'primeng/dynamicdialog';
 import { TabPanel, TabView } from 'primeng/tabview';
@@ -31,7 +32,6 @@ import {
   AffiliatedInstitutionsDialogComponent,
   ContributorsDialogComponent,
   DescriptionDialogComponent,
-  DoiDialogComponent,
   FundingDialogComponent,
   LicenseDialogComponent,
   ResourceInformationDialogComponent,
@@ -66,7 +66,6 @@ import { GetSubjects, SubjectsSelectors, UpdateProjectSubjects } from '@shared/s
     SubHeaderComponent,
     Card,
     DatePipe,
-
     ProjectMetadataContributorsComponent,
     ProjectMetadataDescriptionComponent,
     ProjectMetadataResourceInformationComponent,
@@ -94,6 +93,7 @@ export class ProjectMetadataComponent implements OnInit {
   private readonly dialogService = inject(DialogService);
   private readonly translateService = inject(TranslateService);
   private readonly toastService = inject(ToastService);
+  private readonly confirmationService = inject(ConfirmationService);
 
   activeTabIndex = signal<number>(0);
   tabs = signal<{ id: string; label: string; type: 'project' | 'cedar' }[]>([]);
@@ -432,25 +432,20 @@ export class ProjectMetadataComponent implements OnInit {
   }
 
   handleEditDoi(): void {
-    const dialogRef = this.dialogService.open(DoiDialogComponent, {
+    this.confirmationService.confirm({
       header: this.translateService.instant('project.metadata.doi.dialog.createConfirm.header'),
-      width: '500px',
+      message: this.translateService.instant('project.metadata.doi.dialog.createConfirm.message'),
+      acceptLabel: this.translateService.instant('common.buttons.create'),
+      rejectLabel: this.translateService.instant('common.buttons.cancel'),
+      accept: () => {
+        const projectId = this.currentProject()?.id;
+        if (projectId) {
+          this.actions.updateProjectDetails(projectId, { doi: true }).subscribe({
+            next: () => this.toastService.showSuccess('project.metadata.doi.created'),
+          });
+        }
+      },
     });
-
-    dialogRef.onClose
-      .pipe(
-        filter((result) => !!result),
-        switchMap((result) => {
-          const projectId = this.currentProject()?.id;
-          if (projectId) {
-            return this.actions.updateProjectDetails(projectId, { doi: result });
-          }
-          return EMPTY;
-        })
-      )
-      .subscribe({
-        next: () => this.toastService.showSuccess('project.metadata.doi.created'),
-      });
   }
 
   onTabChange(index: number): void {

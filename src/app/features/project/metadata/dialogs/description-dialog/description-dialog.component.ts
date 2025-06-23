@@ -44,6 +44,4 @@ export class DescriptionDialogComponent implements OnInit {
   cancel(): void {
     this.dialogRef.close();
   }
-
-  protected readonly onsubmit = onsubmit;
 }

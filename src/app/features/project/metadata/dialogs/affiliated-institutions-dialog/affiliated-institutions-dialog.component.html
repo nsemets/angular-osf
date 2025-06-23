@@ -3,10 +3,12 @@
     @if (userInstitutionsLoading()) {
       <div class="flex justify-content-center p-3">
         <i class="pi pi-spinner pi-spin"></i>
-        <span class="ml-2">Loading institutions...</span>
+        <span class="ml-2">{{ 'project.metadata.affiliatedInstitutions.loadingInstitutions' | translate }}</span>
       </div>
     } @else if (!hasInstitutions) {
-      <p class="text-color-secondary">No institutions found</p>
+      <p class="text-color-secondary">
+        {{ 'project.metadata.affiliatedInstitutions.dialog.noInstitutions' | translate }}
+      </p>
     } @else {
       @for (institution of userInstitutions(); track institution.id; let i = $index) {
         <div class="flex align-items-center gap-2">

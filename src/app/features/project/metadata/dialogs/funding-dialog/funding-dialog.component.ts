@@ -7,9 +7,10 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputText } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
 
-import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
-import { ChangeDetectionStrategy, Component, effect, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { ProjectMetadataSelectors } from '@osf/features/project/metadata/store';
@@ -31,11 +32,11 @@ import { GetFundersList } from '../../store/project-metadata.actions';
   templateUrl: './funding-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FundingDialogComponent implements OnInit, OnDestroy {
+export class FundingDialogComponent implements OnInit {
   protected dialogRef = inject(DynamicDialogRef);
   protected config = inject(DynamicDialogConfig);
+  protected destroyRef = inject(DestroyRef);
 
-  private unsubscribe$ = new Subject<void>();
   private searchSubject = new Subject<string>();
 
   protected actions = createDispatchMap({
@@ -78,15 +79,10 @@ export class FundingDialogComponent implements OnInit, OnDestroy {
     this.addFundingEntry();
 
     this.searchSubject
-      .pipe(debounceTime(300), distinctUntilChanged(), takeUntil(this.unsubscribe$))
+      .pipe(debounceTime(300), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe((searchQuery) => {
         this.actions.getFundersList(searchQuery);
       });
-  }
-
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
   }
 
   onFunderSearch(searchTerm: string): void {

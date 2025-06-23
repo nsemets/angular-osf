@@ -808,6 +808,7 @@
       },
       "affiliatedInstitutions": {
         "updated": "Affiliated institutions updated successfully",
+        "loadingInstitutions": "Loading institutions...",
         "dialog": {
           "header": "Edit Affiliated Institutions",
           "noInstitutions": "No institutions available"

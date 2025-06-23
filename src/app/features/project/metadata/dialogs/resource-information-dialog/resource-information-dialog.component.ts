@@ -7,9 +7,10 @@ import { Select } from 'primeng/select';
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
+import { RESOURCE_TYPE_OPTIONS } from '@osf/features/project/metadata/constants';
 import { CustomItemMetadataRecord } from '@osf/features/project/metadata/models';
 import { ProjectOverview } from '@osf/features/project/overview/models';
-import { languageCodes } from '@shared/constants/language.const';
+import { languageCodes } from '@shared/constants';
 import { LanguageCodeModel } from '@shared/models';
 
 interface ResourceInformationForm {
@@ -38,39 +39,7 @@ export class ResourceInformationDialogComponent implements OnInit {
     }),
   });
 
-  // Resource type options - based on common research resource types
-  resourceTypeOptions = [
-    { label: 'Audiovisual', value: 'audiovisual' },
-    { label: 'Book', value: 'book' },
-    { label: 'Book Chapter', value: 'book-chapter' },
-    { label: 'Collection', value: 'collection' },
-    { label: 'Computational Notebook', value: 'computational-notebook' },
-    { label: 'Conference Paper', value: 'conference-paper' },
-    { label: 'Conference Proceeding', value: 'conference-proceeding' },
-    { label: 'Data Paper', value: 'data-paper' },
-    { label: 'Dataset', value: 'dataset' },
-    { label: 'Dissertation', value: 'dissertation' },
-    { label: 'Event', value: 'event' },
-    { label: 'Image', value: 'image' },
-    { label: 'Interactive Resource', value: 'interactive-resource' },
-    { label: 'Journal Article', value: 'journal-article' },
-    { label: 'Model', value: 'model' },
-    { label: 'Output Management Plan', value: 'output-management-plan' },
-    { label: 'Peer Review', value: 'peer-review' },
-    { label: 'Physical Object', value: 'physical-object' },
-    { label: 'Preprint', value: 'preprint' },
-    { label: 'Report', value: 'report' },
-    { label: 'Service', value: 'service' },
-    { label: 'Software', value: 'software' },
-    { label: 'Sound', value: 'sound' },
-    { label: 'Standard', value: 'standard' },
-    { label: 'Text', value: 'text' },
-    { label: 'Thesis', value: 'thesis' },
-    { label: 'Workflow', value: 'workflow' },
-    { label: 'Other', value: 'other' },
-  ];
-
-  // Language options - using shared language constants
+  resourceTypeOptions = RESOURCE_TYPE_OPTIONS;
   languageOptions = languageCodes.map((lang: LanguageCodeModel) => ({
     label: lang.name,
     value: lang.code,
@@ -89,7 +58,6 @@ export class ResourceInformationDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Pre-populate the form if editing existing resource information
     const metadata = this.customItemMetadata;
     if (metadata) {
       this.resourceForm.patchValue({
