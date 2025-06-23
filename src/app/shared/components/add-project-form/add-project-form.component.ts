@@ -16,12 +16,13 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 
 import { MY_PROJECTS_TABLE_PARAMS } from '@core/constants/my-projects-table.constants';
 import { STORAGE_LOCATIONS } from '@core/constants/storage-locations.constant';
-import { InstitutionsSelectors } from '@osf/features/institutions/store';
 import { CreateProject, GetMyProjects, MyProjectsSelectors } from '@osf/features/my-projects/store';
 import { ProjectFormControls } from '@osf/shared/enums/create-project-form-controls.enum';
 import { ProjectForm } from '@osf/shared/models/create-project-form.model';
 import { CustomValidators } from '@osf/shared/utils';
 import { IS_XSMALL } from '@shared/utils/breakpoints.tokens';
+
+import { InstitutionsSelectors } from 'src/app/shared/stores/institutions';
 
 @Component({
   selector: 'osf-add-project-form',

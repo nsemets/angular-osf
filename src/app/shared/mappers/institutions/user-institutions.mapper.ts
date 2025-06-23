@@ -1,6 +1,6 @@
-import { Institution, UserInstitutionGetResponse } from '../models';
+import { Institution, UserInstitutionGetResponse } from '@shared/models';
 
-export class InstitutionsMapper {
+export class UserInstitutionsMapper {
   static fromResponse(response: UserInstitutionGetResponse): Institution {
     return {
       id: response.id,

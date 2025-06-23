@@ -54,6 +54,13 @@ export const NAV_ITEMS: NavItem[] = [
     useExactMatch: true,
   },
   {
+    path: '/institutions',
+    label: 'navigation.institutions',
+    icon: 'institutions',
+    useExactMatch: true,
+  },
+
+  {
     path: '/collections',
     label: 'navigation.collections',
     icon: 'collections',

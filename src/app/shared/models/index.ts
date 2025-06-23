@@ -10,6 +10,7 @@ export * from './filter-labels.model';
 export * from './filters';
 export * from './google-drive-folder.model';
 export * from './id-name.model';
+export * from './institutions';
 export * from './metadata-field.model';
 export * from './nav-item.model';
 export * from './node-response.model';
