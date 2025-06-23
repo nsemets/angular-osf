@@ -126,8 +126,7 @@ export class AddProjectFormComponent implements OnInit {
           this.#store.dispatch(new GetMyProjects(1, MY_PROJECTS_TABLE_PARAMS.rows, {}));
           this.dialogRef.close();
         },
-        error: (error) => {
-          console.error('Failed to create project:', error);
+        error: () => {
           this.isSubmitting.set(false);
         },
       });

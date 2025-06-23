@@ -12,13 +12,11 @@ import { AccountSettingsState } from '@osf/features/settings/account-settings/st
 import { DeveloperAppsState } from '@osf/features/settings/developer-apps/store';
 import { NotificationSubscriptionState } from '@osf/features/settings/notifications/store';
 import { ProfileSettingsState } from '@osf/features/settings/profile-settings/store/profile-settings.state';
-import { TokensState } from '@osf/features/settings/tokens/store';
 import { InstitutionsState } from '@shared/stores';
 import { AddonsState } from '@shared/stores/addons';
 
 export const STATES = [
   AuthState,
-  TokensState,
   AddonsState,
   UserState,
   MyProjectsState,

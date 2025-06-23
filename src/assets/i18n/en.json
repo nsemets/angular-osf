@@ -954,6 +954,11 @@
         "copyNotification": "Copied!",
         "tokenWarning": "This is the only time your token will be displayed.",
         "closeButton": "Close"
+      },
+      "toastMessage": {
+        "successDelete": "Token successfully deleted.",
+        "successCreate": "Token successfully created.",
+        "successEdit": "Token successfully updated."
       }
     },
     "notifications": {
