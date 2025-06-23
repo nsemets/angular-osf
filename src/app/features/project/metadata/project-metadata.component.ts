@@ -169,10 +169,10 @@ export class ProjectMetadataComponent implements OnInit {
     const projectId = this.route.parent?.parent?.snapshot.params['id'];
 
     if (projectId) {
+      this.actions.getHighlightedSubjects();
       this.actions.getProject(projectId);
       this.actions.getCustomItemMetadata(projectId);
       this.actions.getContributors(projectId);
-      this.actions.getHighlightedSubjects();
       this.actions.getCedarRecords(projectId);
       this.actions.getCedarTemplates();
 
