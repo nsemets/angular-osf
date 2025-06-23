@@ -4,20 +4,20 @@ import { Button } from 'primeng/button';
 
 import { CommonModule } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   effect,
-  inject,
   input,
   OnInit,
   output,
   signal,
   ViewEncapsulation,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 
+import { CEDAR_CONFIG } from '@osf/features/project/metadata/constants';
+import { CedarMetadataHelper } from '@osf/features/project/metadata/helpers';
 import {
-  CedarMetadataAttributes,
   CedarMetadataDataTemplateJsonApi,
   CedarMetadataRecordData,
   CedarRecordDataBinding,
@@ -34,38 +34,21 @@ interface CedarEditorElement extends HTMLElement {
   styleUrl: './cedar-template-form.component.scss',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CedarTemplateFormComponent implements OnInit {
-  private readonly activatedRoute = inject(ActivatedRoute);
-
   emitData = output<CedarRecordDataBinding>();
   changeTemplate = output<void>();
   editMode = output<void>();
 
   template = input.required<CedarMetadataDataTemplateJsonApi>();
-  existingRecord = input<CedarMetadataRecordData | null>();
+  existingRecord = input<CedarMetadataRecordData | null>(null);
   readonly = input<boolean>(false);
-  showEditButton = input<boolean>();
+  showEditButton = input<boolean>(false);
 
   formData = signal<Record<string, unknown>>({});
 
-  cedarConfig = {
-    showSampleTemplateLinks: false,
-    terminologyIntegratedSearchUrl: 'https://terminology.metadatacenter.org/bioportal/integrated-search',
-    showTemplateRenderingRepresentation: false,
-    showInstanceDataCore: false,
-    showMultiInstanceInfo: false,
-    showInstanceDataFull: false,
-    showTemplateSourceData: false,
-    showDataQualityReport: false,
-    showHeader: false,
-    showFooter: false,
-    readOnlyMode: false,
-    hideEmptyFields: false,
-    showPreferencesMenu: false,
-    strictValidation: false,
-    autoInitializeFields: true,
-  };
+  cedarConfig = CEDAR_CONFIG;
 
   constructor() {
     effect(() => {
@@ -115,63 +98,10 @@ export class CedarTemplateFormComponent implements OnInit {
     const metadata = this.existingRecord()?.attributes?.metadata;
 
     if (this.existingRecord()) {
-      const structuredMetadata = this.buildStructuredMetadata(metadata);
+      const structuredMetadata = CedarMetadataHelper.buildStructuredMetadata(metadata);
       this.formData.set(structuredMetadata);
     } else {
-      this.formData.set(this.buildEmptyMetadata());
+      this.formData.set(CedarMetadataHelper.buildEmptyMetadata());
     }
   }
-
-  private ensureProperStructure(items: unknown): Record<string, unknown>[] {
-    if (!Array.isArray(items)) return [];
-
-    return items.map((item) => {
-      const safeItem = typeof item === 'object' && item !== null ? (item as Record<string, unknown>) : {};
-      return {
-        '@id': safeItem['@id'] ?? '',
-        '@type': safeItem['@type'] ?? '',
-        'rdfs:label': safeItem['rdfs:label'] ?? null,
-      };
-    });
-  }
-
-  private buildStructuredMetadata(metadata: CedarMetadataAttributes | undefined): Record<string, unknown> {
-    const keysToFix = [
-      'Constructs',
-      'Assessments',
-      'Project Methods',
-      'Participant Types',
-      'Special Populations',
-      'Educational Curricula',
-      'LDbaseInvestigatorORCID',
-    ];
-
-    const fixedMetadata: Record<string, unknown> = { ...metadata };
-
-    const raw = metadata as Record<string, unknown>;
-
-    for (const key of keysToFix) {
-      const value = raw[key];
-      if (value) {
-        fixedMetadata[key] = this.ensureProperStructure(value);
-      }
-    }
-
-    return fixedMetadata;
-  }
-
-  private buildEmptyMetadata(): Record<string, unknown> {
-    return {
-      '@context': {},
-      Constructs: this.ensureProperStructure([]),
-      Assessments: this.ensureProperStructure([]),
-      'Project Methods': this.ensureProperStructure([]),
-      'Participant Types': this.ensureProperStructure([]),
-      'Special Populations': this.ensureProperStructure([]),
-      'Educational Curricula': this.ensureProperStructure([]),
-      LDbaseInvestigatorORCID: this.ensureProperStructure([]),
-    };
-  }
-
-  protected readonly Object = Object;
 }

@@ -14,13 +14,14 @@ import {
 } from '@osf/features/project/metadata/models';
 import { ProjectOverview } from '@osf/features/project/overview/models';
 
-import { environment } from '../../../../../environments/environment';
 import {
   CrossRefFundersResponse,
   CustomItemMetadataRecord,
   CustomItemMetadataResponse,
   UserInstitutionsResponse,
 } from '../models/metadata.models';
+
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -43,7 +44,7 @@ export class MetadataService {
   }
 
   getFundersList(searchQuery?: string): Observable<CrossRefFundersResponse> {
-    let url = `https://api.crossref.org/funders?mailto=support@osf.io`;
+    let url = environment.funderApiUrl;
 
     if (searchQuery && searchQuery.trim()) {
       url += `&query=${encodeURIComponent(searchQuery.trim())}`;
@@ -54,7 +55,7 @@ export class MetadataService {
 
   getMetadataCedarTemplates(url?: string): Observable<CedarMetadataTemplateJsonApi> {
     return this.jsonApiService.get<CedarMetadataTemplateJsonApi>(
-      url || 'https://api.staging4.osf.io/_/cedar_metadata_templates/'
+      url || `${environment.apiDomainUrl}/_/cedar_metadata_templates/`
     );
   }
 
@@ -71,7 +72,7 @@ export class MetadataService {
   }
 
   createMetadataCedarRecord(data: CedarMetadataRecord): Observable<CedarMetadataRecord> {
-    return this.jsonApiService.post<CedarMetadataRecord>(`https://api.staging4.osf.io/_/cedar_metadata_records/`, data);
+    return this.jsonApiService.post<CedarMetadataRecord>(`${environment.apiDomainUrl}/_/cedar_metadata_records/`, data);
   }
 
   updateMetadataCedarRecord(data: CedarMetadataRecord, recordId: string): Observable<CedarMetadataRecord> {

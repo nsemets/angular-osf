@@ -10,85 +10,91 @@
     @for (tab of tabs(); track tab.id) {
       <p-tabPanel [header]="tab.label">
         @if (tab.type === 'project') {
-          <div class="flex-column flex flex-1 w-full">
-            <div class="p-6 bg-white">
-              <div class="grid w-full">
-                <!-- Left Column -->
-                <div class="col-12 lg:col-6 flex flex-column gap-4">
-                  <p-card>
-                    <div class="flex justify-content-between flex-wrap gap-4">
-                      <div class="flex flex-column gap-2 flex-1">
-                        <h3 class="text-lg font-semibold m-0">
-                          {{ 'project.overview.metadata.dateCreated' | translate }}
-                        </h3>
-                        <p class="m-0 text-color-secondary">
-                          {{ currentProject()?.dateCreated | date: 'MMM d, y, h:mm a' }}
-                        </p>
+          @if (highlightedSubjectsLoading() && currentProjectLoading()) {
+            <div class="flex-1 mt-4 md:mt-8 lg:pt-5">
+              <osf-loading-spinner />
+            </div>
+          } @else {
+            <div class="flex-column flex flex-1 w-full">
+              <div class="p-6 bg-white">
+                <div class="grid w-full">
+                  <!-- Left Column -->
+                  <div class="col-12 lg:col-6 flex flex-column gap-4">
+                    <p-card>
+                      <div class="flex justify-content-between flex-wrap gap-4">
+                        <div class="flex flex-column gap-2 flex-1">
+                          <h3 class="text-lg font-semibold m-0">
+                            {{ 'project.overview.metadata.dateCreated' | translate }}
+                          </h3>
+                          <p class="m-0 text-color-secondary">
+                            {{ currentProject()?.dateCreated | date: 'MMM d, y, h:mm a' }}
+                          </p>
+                        </div>
+
+                        <div class="flex flex-column gap-2 flex-1">
+                          <h3 class="text-lg font-semibold m-0">
+                            {{ 'project.overview.metadata.dateUpdated' | translate }}
+                          </h3>
+                          <p class="m-0 text-color-secondary">
+                            {{ currentProject()?.dateModified | date: 'MMM d, y, h:mm a' }}
+                          </p>
+                        </div>
                       </div>
+                    </p-card>
 
-                      <div class="flex flex-column gap-2 flex-1">
-                        <h3 class="text-lg font-semibold m-0">
-                          {{ 'project.overview.metadata.dateUpdated' | translate }}
-                        </h3>
-                        <p class="m-0 text-color-secondary">
-                          {{ currentProject()?.dateModified | date: 'MMM d, y, h:mm a' }}
-                        </p>
-                      </div>
-                    </div>
-                  </p-card>
+                    <osf-project-metadata-contributors
+                      (openEditContributorDialog)="openEditContributorDialog()"
+                      [currentProject]="currentProject()"
+                    />
 
-                  <osf-project-metadata-contributors
-                    (openEditContributorDialog)="openEditContributorDialog()"
-                    [currentProject]="currentProject()"
-                  />
+                    <osf-project-metadata-description
+                      (openEditDescriptionDialog)="openEditDescriptionDialog()"
+                      [currentProject]="currentProject()"
+                    />
 
-                  <osf-project-metadata-description
-                    (openEditDescriptionDialog)="openEditDescriptionDialog()"
-                    [currentProject]="currentProject()"
-                  />
+                    <osf-project-metadata-resource-information
+                      (openEditResourceInformationDialog)="openEditResourceInformationDialog()"
+                      [customItemMetadata]="customItemMetadata()"
+                    />
 
-                  <osf-project-metadata-resource-information
-                    (openEditResourceInformationDialog)="openEditResourceInformationDialog()"
-                    [customItemMetadata]="customItemMetadata()"
-                  />
+                    <osf-project-metadata-funding
+                      (openEditFundingDialog)="openEditFundingDialog()"
+                      [currentProject]="currentProject()"
+                    />
 
-                  <osf-project-metadata-funding
-                    (openEditFundingDialog)="openEditFundingDialog()"
-                    [currentProject]="currentProject()"
-                  />
+                    <osf-project-metadata-affiliated-institutions
+                      (openEditAffiliatedInstitutionsDialog)="openEditAffiliatedInstitutionsDialog()"
+                      [currentProject]="currentProject()"
+                    />
+                  </div>
 
-                  <osf-project-metadata-affiliated-institutions
-                    (openEditAffiliatedInstitutionsDialog)="openEditAffiliatedInstitutionsDialog()"
-                    [currentProject]="currentProject()"
-                  />
-                </div>
+                  <!-- Right Column -->
+                  <div class="col-12 lg:col-6 flex flex-column gap-4">
+                    <osf-project-metadata-license
+                      (openEditLicenseDialog)="openEditLicenseDialog()"
+                      [currentProject]="currentProject()"
+                    />
 
-                <!-- Right Column -->
-                <div class="col-12 lg:col-6 flex flex-column gap-4">
-                  <osf-project-metadata-license
-                    (openEditLicenseDialog)="openEditLicenseDialog()"
-                    [currentProject]="currentProject()"
-                  />
+                    <osf-project-metadata-publication-doi
+                      (openEditPublicationDoiDialog)="handleEditDoi()"
+                      [currentProject]="currentProject()"
+                    />
 
-                  <osf-project-metadata-publication-doi
-                    (openEditPublicationDoiDialog)="handleEditDoi()"
-                    [currentProject]="currentProject()"
-                  />
+                    <osf-project-metadata-tags
+                      (tagsChanged)="onTagsChanged($event)"
+                      [currentProject]="currentProject()"
+                    />
 
-                  <osf-project-metadata-tags
-                    (tagsChanged)="onTagsChanged($event)"
-                    [currentProject]="currentProject()"
-                  />
-
-                  <osf-project-metadata-subjects
-                    (subjectsChanged)="onSubjectsChanged($event)"
-                    [currentProject]="currentProject()"
-                    [subjectsList]="highlightedSubjects()"
-                  />
+                    <osf-project-metadata-subjects
+                      (subjectsChanged)="onSubjectsChanged($event)"
+                      [currentProject]="currentProject()"
+                      [subjectsList]="highlightedSubjects()"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          }
         } @else {
           <div class="p-6">
             @if (selectedCedarTemplate() && selectedCedarRecord()) {
@@ -103,7 +109,7 @@
               />
             } @else {
               <div class="text-center py-8">
-                <p class="text-lg mb-4">Loading CEDAR record...</p>
+                <p class="text-lg mb-4">{{ 'project.metadata.addMetadata.loadingCedar' | translate }}</p>
                 <p class="text-sm text-gray-600">{{ tab.label }}</p>
               </div>
             }

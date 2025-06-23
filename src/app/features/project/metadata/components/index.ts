@@ -1,3 +1,4 @@
+export { CedarTemplateFormComponent } from './cedar-template-form/cedar-template-form.component';
 export { ProjectMetadataAffiliatedInstitutionsComponent } from './project-metadata-affiliated-institutions/project-metadata-affiliated-institutions.component';
 export { ProjectMetadataContributorsComponent } from './project-metadata-contributors/project-metadata-contributors.component';
 export { ProjectMetadataDescriptionComponent } from './project-metadata-description/project-metadata-description.component';

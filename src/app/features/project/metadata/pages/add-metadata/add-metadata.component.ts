@@ -1,4 +1,4 @@
-import { createDispatchMap, select, Store } from '@ngxs/store';
+import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -9,14 +9,14 @@ import { ChangeDetectionStrategy, Component, DestroyRef, effect, HostBinding, in
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { CedarTemplateFormComponent } from '@osf/features/project/metadata/components';
 import {
   CedarMetadataDataTemplateJsonApi,
   CedarMetadataRecord,
   CedarMetadataRecordData,
   CedarRecordDataBinding,
 } from '@osf/features/project/metadata/models';
-import { CedarTemplateFormComponent } from '@osf/features/project/metadata/pages/add-metadata/components';
-import { SubHeaderComponent } from '@shared/components';
+import { LoadingSpinnerComponent, SubHeaderComponent } from '@shared/components';
 import { ToastService } from '@shared/services';
 
 import {
@@ -29,7 +29,7 @@ import {
 
 @Component({
   selector: 'osf-add-metadata',
-  imports: [SubHeaderComponent, Button, TranslatePipe, CedarTemplateFormComponent, Tooltip],
+  imports: [SubHeaderComponent, Button, TranslatePipe, CedarTemplateFormComponent, Tooltip, LoadingSpinnerComponent],
   templateUrl: './add-metadata.component.html',
   styleUrl: './add-metadata.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,7 +38,6 @@ export class AddMetadataComponent implements OnInit {
   @HostBinding('class') classes = 'flex flex-1 flex-column w-full h-full';
   private readonly router = inject(Router);
   private readonly toastService = inject(ToastService);
-  private readonly store = inject(Store);
   private readonly destroyRef = inject(DestroyRef);
   private readonly activatedRoute = inject(ActivatedRoute);
 
@@ -54,6 +53,8 @@ export class AddMetadataComponent implements OnInit {
   protected actions = createDispatchMap({
     getCedarTemplates: GetCedarMetadataTemplates,
     getCedarRecords: GetCedarMetadataRecords,
+    createCedarMetadataRecord: CreateCedarMetadataRecord,
+    updateCedarMetadataRecord: UpdateCedarMetadataRecord,
   });
 
   get isEditingExistingRecord(): boolean {
@@ -179,23 +180,23 @@ export class AddMetadataComponent implements OnInit {
     const recordId = this.activatedRoute.snapshot.params['record-id'];
 
     if (recordId && this.existingRecord) {
-      this.store
-        .dispatch(new UpdateCedarMetadataRecord(model, recordId))
+      this.actions
+        .updateCedarMetadataRecord(model, recordId)
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: () => {
             this.toggleEditMode();
-            this.toastService.showSuccess('Record updated successfully');
+            this.toastService.showSuccess('project.metadata.addMetadata.recordUpdatedSuccessfully');
           },
         });
     } else {
-      this.store
-        .dispatch(new CreateCedarMetadataRecord(model))
+      this.actions
+        .createCedarMetadataRecord(model)
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: () => {
             this.toggleEditMode();
-            this.toastService.showSuccess('Record created successfully');
+            this.toastService.showSuccess('project.metadata.addMetadata.recordCreatedSuccessfully');
           },
         });
     }

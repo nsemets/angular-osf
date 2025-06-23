@@ -1,4 +1,4 @@
-import { createDispatchMap, select, Store } from '@ngxs/store';
+import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
@@ -14,9 +14,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { UserSelectors } from '@osf/core/store/user';
-// Import contributors functionality
 import { ContributorsSelectors, GetAllContributors } from '@osf/features/project/contributors/store';
 import {
+  CedarTemplateFormComponent,
   ProjectMetadataAffiliatedInstitutionsComponent,
   ProjectMetadataContributorsComponent,
   ProjectMetadataDescriptionComponent,
@@ -40,8 +40,8 @@ import {
   CedarMetadataDataTemplateJsonApi,
   CedarMetadataRecord,
   CedarMetadataRecordData,
+  CedarRecordDataBinding,
 } from '@osf/features/project/metadata/models';
-import { CedarTemplateFormComponent } from '@osf/features/project/metadata/pages/add-metadata/components';
 import {
   CreateCedarMetadataRecord,
   GetCedarMetadataRecords,
@@ -56,7 +56,7 @@ import {
   UpdateProjectDetails,
 } from '@osf/features/project/metadata/store';
 import { ProjectOverviewSubject } from '@osf/features/project/overview/models';
-import { SubHeaderComponent } from '@shared/components';
+import { LoadingSpinnerComponent, SubHeaderComponent } from '@shared/components';
 import { ToastService } from '@shared/services';
 import { GetSubjects, SubjectsSelectors, UpdateProjectSubjects } from '@shared/stores';
 
@@ -80,6 +80,7 @@ import { GetSubjects, SubjectsSelectors, UpdateProjectSubjects } from '@shared/s
     TranslatePipe,
     TabView,
     TabPanel,
+    LoadingSpinnerComponent,
   ],
   templateUrl: './project-metadata.component.html',
   styleUrl: './project-metadata.component.scss',
@@ -92,7 +93,6 @@ export class ProjectMetadataComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly dialogService = inject(DialogService);
   private readonly translateService = inject(TranslateService);
-  private readonly store = inject(Store);
   private readonly toastService = inject(ToastService);
 
   activeTabIndex = signal<number>(0);
@@ -119,6 +119,7 @@ export class ProjectMetadataComponent implements OnInit {
   });
 
   protected currentProject = select(ProjectMetadataSelectors.getProject);
+  protected currentProjectLoading = select(ProjectMetadataSelectors.getProjectLoading);
   protected customItemMetadata = select(ProjectMetadataSelectors.getCustomItemMetadata);
   protected fundersList = select(ProjectMetadataSelectors.getFundersList);
   protected contributors = select(ContributorsSelectors.getContributors);
@@ -180,10 +181,6 @@ export class ProjectMetadataComponent implements OnInit {
         this.actions.getUserInstitutions(user.id);
       }
     }
-
-    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
-      this.handleRouteBasedTabSelection();
-    });
   }
 
   private handleRouteBasedTabSelection(): void {
@@ -238,12 +235,10 @@ export class ProjectMetadataComponent implements OnInit {
       },
     });
 
-    dialogRef.onClose.pipe(filter((result) => !!result)).subscribe({
+    dialogRef.onClose.pipe(filter((result) => !!result && (result.refresh || result.saved))).subscribe({
       next: (result) => {
-        if (result.refresh || result.saved) {
-          this.refreshContributorsData();
-          this.toastService.showSuccess('project.metadata.contributors.updated');
-        }
+        this.refreshContributorsData();
+        this.toastService.showSuccess('project.metadata.contributors.updated');
       },
       error: () => this.toastService.showError('project.metadata.contributors.updateFailed'),
     });
@@ -271,11 +266,7 @@ export class ProjectMetadataComponent implements OnInit {
         switchMap((result) => {
           const projectId = this.currentProject()?.id;
           if (projectId) {
-            return this.store.dispatch(
-              new UpdateProjectDetails(projectId, {
-                description: result,
-              })
-            );
+            return this.actions.updateProjectDetails(projectId, { description: result });
           }
           return EMPTY;
         })
@@ -303,22 +294,20 @@ export class ProjectMetadataComponent implements OnInit {
 
     dialogRef.onClose
       .pipe(
-        filter((result) => !!result),
+        filter((result) => !!result && (result.resourceType || result.resourceLanguage)),
         switchMap((result) => {
-          if (result && (result.resourceType || result.resourceLanguage)) {
-            const projectId = this.currentProject()?.id;
-            if (projectId) {
-              const currentMetadata = this.customItemMetadata();
+          const projectId = this.currentProject()?.id;
+          if (projectId) {
+            const currentMetadata = this.customItemMetadata();
 
-              const updatedMetadata = {
-                ...currentMetadata,
-                language: result.resourceLanguage || currentMetadata?.language,
-                resource_type_general: result.resourceType || currentMetadata?.resource_type_general,
-                funder: currentMetadata?.funders,
-              };
+            const updatedMetadata = {
+              ...currentMetadata,
+              language: result.resourceLanguage || currentMetadata?.language,
+              resource_type_general: result.resourceType || currentMetadata?.resource_type_general,
+              funder: currentMetadata?.funders,
+            };
 
-              return this.actions.updateCustomItemMetadata(projectId, updatedMetadata);
-            }
+            return this.actions.updateCustomItemMetadata(projectId, updatedMetadata);
           }
           return EMPTY;
         })
@@ -340,21 +329,18 @@ export class ProjectMetadataComponent implements OnInit {
 
     dialogRef.onClose
       .pipe(
-        filter((result) => !!result),
+        filter((result) => !!result && result.licenseName && result.licenseId),
         switchMap((result) => {
-          if (result && result.licenseName && result.licenseId) {
-            const projectId = this.currentProject()?.id;
-            if (projectId) {
-              return this.store.dispatch(
-                new UpdateProjectDetails(projectId, {
-                  node_license: {
-                    id: result.licenseId,
-                    type: 'node-license',
-                  },
-                })
-              );
-            }
+          const projectId = this.currentProject()?.id;
+          if (projectId) {
+            return this.actions.updateProjectDetails(projectId, {
+              node_license: {
+                id: result.licenseId,
+                type: 'node-license',
+              },
+            });
           }
+
           return EMPTY;
         })
       )
@@ -376,41 +362,40 @@ export class ProjectMetadataComponent implements OnInit {
 
     dialogRef.onClose
       .pipe(
-        filter((result) => !!result),
+        filter((result) => !!result && result.fundingEntries),
         switchMap((result) => {
-          if (result && result.fundingEntries) {
-            const projectId = this.currentProject()?.id;
-            if (projectId) {
-              const currentMetadata = this.customItemMetadata() || {
-                language: 'en',
-                resource_type_general: 'Dataset',
-                funders: [],
-              };
+          const projectId = this.currentProject()?.id;
+          if (projectId) {
+            const currentMetadata = this.customItemMetadata() || {
+              language: 'en',
+              resource_type_general: 'Dataset',
+              funders: [],
+            };
 
-              const updatedMetadata = {
-                ...currentMetadata,
-                funders: result.fundingEntries.map(
-                  (entry: {
-                    funderName?: string;
-                    funderIdentifier?: string;
-                    funderIdentifierType?: string;
-                    awardNumber?: string;
-                    awardUri?: string;
-                    awardTitle?: string;
-                  }) => ({
-                    funder_name: entry.funderName || '',
-                    funder_identifier: entry.funderIdentifier || '',
-                    funder_identifier_type: entry.funderIdentifierType || '',
-                    award_number: entry.awardNumber || '',
-                    award_uri: entry.awardUri || '',
-                    award_title: entry.awardTitle || '',
-                  })
-                ),
-              };
+            const updatedMetadata = {
+              ...currentMetadata,
+              funders: result.fundingEntries.map(
+                (entry: {
+                  funderName?: string;
+                  funderIdentifier?: string;
+                  funderIdentifierType?: string;
+                  awardNumber?: string;
+                  awardUri?: string;
+                  awardTitle?: string;
+                }) => ({
+                  funder_name: entry.funderName || '',
+                  funder_identifier: entry.funderIdentifier || '',
+                  funder_identifier_type: entry.funderIdentifierType || '',
+                  award_number: entry.awardNumber || '',
+                  award_uri: entry.awardUri || '',
+                  award_title: entry.awardTitle || '',
+                })
+              ),
+            };
 
-              return this.actions.updateCustomItemMetadata(projectId, updatedMetadata);
-            }
+            return this.actions.updateCustomItemMetadata(projectId, updatedMetadata);
           }
+
           return EMPTY;
         })
       )
@@ -434,11 +419,9 @@ export class ProjectMetadataComponent implements OnInit {
         switchMap((result) => {
           const projectId = this.currentProject()?.id;
           if (projectId) {
-            return this.store.dispatch(
-              new UpdateProjectDetails(projectId, {
-                institutions: result,
-              })
-            );
+            return this.actions.updateProjectDetails(projectId, {
+              institutions: result,
+            });
           }
           return EMPTY;
         })
@@ -460,11 +443,7 @@ export class ProjectMetadataComponent implements OnInit {
         switchMap((result) => {
           const projectId = this.currentProject()?.id;
           if (projectId) {
-            return this.store.dispatch(
-              new UpdateProjectDetails(projectId, {
-                doi: result,
-              })
-            );
+            return this.actions.updateProjectDetails(projectId, { doi: result });
           }
           return EMPTY;
         })
@@ -527,7 +506,7 @@ export class ProjectMetadataComponent implements OnInit {
     this.cedarFormReadonly.set(false);
   }
 
-  onCedarFormSubmit(data: { data: Record<string, unknown>; id: string }): void {
+  onCedarFormSubmit(data: CedarRecordDataBinding): void {
     const projectId = this.currentProject()?.id;
     const selectedRecord = this.selectedCedarRecord();
 
