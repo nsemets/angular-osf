@@ -31,8 +31,8 @@ import { SortOrder } from '@osf/shared/enums';
 import { QueryParams, TableParameters, TabOption } from '@osf/shared/models';
 import { IS_MEDIUM, IS_WEB, IS_XSMALL } from '@osf/shared/utils';
 
+import { GetUserInstitutions } from '../../shared/stores/institutions';
 import { CollectionsSelectors, GetBookmarksCollectionId } from '../collections/store';
-import { GetUserInstitutions } from '../institutions/store';
 
 import { MyProjectsItem, MyProjectsSearchFilters } from './models';
 import {

@@ -141,6 +141,16 @@ $white-60: var(--white-60);
   --p-form-field-border-color: var(--grey-2);
   --p-form-field-hover-border-color: var(--grey-1);
 
+  // Stepper
+  --stepper-step-background: var(--white);
+  --stepper-active-step-background: var(--pr-blue-1);
+  --stepper-step-color: var(--dark-blue-1);
+  --stepper-active-step-color: var(--white);
+  --stepper-space-line-color: var(--white);
+  --stepper-active-space-line-color: var(--pr-blue-1);
+  --stepper-step-border-color: var(--white);
+  --stepper-active-step-border-color: var(--pr-blue-1);
+
   // White labeling
   --header-color: none;
   --header-background-color: none;
