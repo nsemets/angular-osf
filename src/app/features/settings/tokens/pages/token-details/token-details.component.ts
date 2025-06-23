@@ -10,7 +10,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } 
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { IconComponent, LoadingSpinnerComponent } from '@osf/shared/components';
-import { CustomConfirmationService } from '@osf/shared/services';
+import { CustomConfirmationService, ToastService } from '@osf/shared/services';
 
 import { TokenAddEditFormComponent } from '../../components';
 import { DeleteToken, GetTokenById, TokensSelectors } from '../../store';
@@ -18,16 +18,17 @@ import { DeleteToken, GetTokenById, TokensSelectors } from '../../store';
 @Component({
   selector: 'osf-token-details',
   imports: [Button, Card, RouterLink, TranslatePipe, TokenAddEditFormComponent, IconComponent, LoadingSpinnerComponent],
-  providers: [DialogService, DynamicDialogRef],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './token-details.component.html',
   styleUrls: ['./token-details.component.scss'],
+  providers: [DialogService, DynamicDialogRef],
 })
 export class TokenDetailsComponent implements OnInit {
   private readonly customConfirmationService = inject(CustomConfirmationService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly store = inject(Store);
+  private readonly toastService = inject(ToastService);
 
   private readonly actions = createDispatchMap({ getTokenById: GetTokenById, deleteToken: DeleteToken });
 
@@ -46,13 +47,13 @@ export class TokenDetailsComponent implements OnInit {
       headerKey: 'settings.tokens.confirmation.delete.title',
       headerParams: { name: this.token()?.name },
       messageKey: 'settings.tokens.confirmation.delete.message',
-      onConfirm: () => {
+      onConfirm: () =>
         this.actions.deleteToken(this.tokenId()).subscribe({
           next: () => {
+            this.toastService.showSuccess('settings.tokens.toastMessage.successDelete');
             this.router.navigate(['settings/tokens']);
           },
-        });
-      },
+        }),
     });
   }
 }

@@ -4,31 +4,31 @@
   </p>
 
   <section class="flex flex-column flex-1 gap-3 mt-4">
-    @for (token of tokens(); track $index) {
-      <p-card>
-        <section class="flex flex-column gap-3 md:flex-row md:align-items-center md:justify-content-between">
-          <a [routerLink]="[token.id, 'details']" class="token-link">
-            {{ token.name }}
-          </a>
-
-          <div class="align-self-end w-6 md:w-auto">
-            <p-button
-              class="btn-full-width"
-              [label]="'settings.tokens.list.deleteButton' | translate"
-              severity="danger"
-              (onClick)="deleteToken(token)"
-            />
-          </div>
-        </section>
-      </p-card>
-    }
-
     @if (isLoading()) {
       @for (_ of [1, 2, 3]; track $index) {
         <p-card>
           <section class="flex align-items-center justify-content-between">
             <p-skeleton width="20rem" height="2rem"></p-skeleton>
             <p-skeleton width="6rem" height="3rem"></p-skeleton>
+          </section>
+        </p-card>
+      }
+    } @else {
+      @for (token of tokens(); track $index) {
+        <p-card>
+          <section class="flex flex-column gap-3 md:flex-row md:align-items-center md:justify-content-between">
+            <a [routerLink]="[token.id, 'details']" class="token-link">
+              {{ token.name }}
+            </a>
+
+            <div class="align-self-end w-6 md:w-auto">
+              <p-button
+                class="btn-full-width"
+                [label]="'settings.tokens.list.deleteButton' | translate"
+                severity="danger"
+                (onClick)="deleteToken(token)"
+              />
+            </div>
           </section>
         </p-card>
       }

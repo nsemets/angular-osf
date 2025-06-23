@@ -1,4 +1,4 @@
-import { provideStore } from '@ngxs/store';
+import { provideStates } from '@ngxs/store';
 
 import { Route } from '@angular/router';
 
@@ -8,7 +8,7 @@ import { TokensComponent } from './tokens.component';
 export const tokensAppsRoute: Route = {
   path: 'tokens',
   component: TokensComponent,
-  providers: [provideStore([TokensState])],
+  providers: [provideStates([TokensState])],
   children: [
     {
       path: '',

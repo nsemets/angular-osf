@@ -61,11 +61,11 @@ export class TokensState {
     const state = ctx.getState();
     const tokenFromState = state.tokens.data.find((token: TokenModel) => token.id === action.tokenId);
 
-    ctx.patchState({ tokens: { ...state.tokens, isLoading: true, error: null } });
-
     if (tokenFromState) {
       return of(tokenFromState);
     }
+
+    ctx.patchState({ tokens: { ...state.tokens, isLoading: true, error: null } });
 
     return this.tokensService.getTokenById(action.tokenId).pipe(
       tap((token) => {

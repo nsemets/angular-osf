@@ -9,7 +9,7 @@ import { Skeleton } from 'primeng/skeleton';
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { CustomConfirmationService } from '@osf/shared/services';
+import { CustomConfirmationService, ToastService } from '@osf/shared/services';
 
 import { TokenModel } from '../../models';
 import { DeleteToken, GetTokens, TokensSelectors } from '../../store';
@@ -24,6 +24,7 @@ import { DeleteToken, GetTokens, TokensSelectors } from '../../store';
 export class TokensListComponent implements OnInit {
   private readonly actions = createDispatchMap({ getTokens: GetTokens, deleteToken: DeleteToken });
   private readonly customConfirmationService = inject(CustomConfirmationService);
+  private readonly toastService = inject(ToastService);
 
   protected readonly isLoading = select(TokensSelectors.isTokensLoading);
 
@@ -38,7 +39,10 @@ export class TokensListComponent implements OnInit {
       headerKey: 'settings.tokens.confirmation.delete.title',
       headerParams: { name: token.name },
       messageKey: 'settings.tokens.confirmation.delete.message',
-      onConfirm: () => this.actions.deleteToken(token.id),
+      onConfirm: () =>
+        this.actions.deleteToken(token.id).subscribe({
+          next: () => this.toastService.showSuccess('settings.tokens.toastMessage.successDelete'),
+        }),
     });
   }
 }

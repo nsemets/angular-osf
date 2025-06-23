@@ -19,13 +19,13 @@ export class TokensService {
 
   getScopes(): Observable<ScopeModel[]> {
     return this.jsonApiService
-      .get<JsonApiResponse<ScopeJsonApi[], null>>(environment.apiUrl + '/scopes/')
+      .get<JsonApiResponse<ScopeJsonApi[], null>>(`${environment.apiUrl}/scopes/`)
       .pipe(map((responses) => ScopeMapper.fromResponse(responses.data)));
   }
 
   getTokens(): Observable<TokenModel[]> {
     return this.jsonApiService
-      .get<JsonApiResponse<TokenGetResponseJsonApi[], null>>(environment.apiUrl + '/tokens/')
+      .get<JsonApiResponse<TokenGetResponseJsonApi[], null>>(`${environment.apiUrl}/tokens/`)
       .pipe(map((responses) => responses.data.map((response) => TokenMapper.fromGetResponse(response))));
   }
 
@@ -39,7 +39,7 @@ export class TokensService {
     const request = TokenMapper.toRequest(name, scopes);
 
     return this.jsonApiService
-      .post<TokenCreateResponseJsonApi>(environment.apiUrl + '/tokens/', request)
+      .post<TokenCreateResponseJsonApi>(`${environment.apiUrl}/tokens/`, request)
       .pipe(map((response) => TokenMapper.fromCreateResponse(response)));
   }
 

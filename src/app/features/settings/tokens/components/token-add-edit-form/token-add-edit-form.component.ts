@@ -1,19 +1,21 @@
-import { createDispatchMap, select } from '@ngxs/store';
+import { createDispatchMap, select, Store } from '@ngxs/store';
 
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { Checkbox } from 'primeng/checkbox';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { InputText } from 'primeng/inputtext';
 
 import { map } from 'rxjs';
 
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input, OnInit } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+
+import { TextInputComponent } from '@osf/shared/components';
+import { InputLimits } from '@osf/shared/constants';
+import { ToastService } from '@osf/shared/services';
 
 import { TokenForm, TokenFormControls, TokenModel } from '../../models';
 import { CreateToken, GetTokens, TokensSelectors, UpdateToken } from '../../store';
@@ -21,7 +23,7 @@ import { TokenCreatedDialogComponent } from '../token-created-dialog/token-creat
 
 @Component({
   selector: 'osf-token-add-edit-form',
-  imports: [Button, InputText, ReactiveFormsModule, CommonModule, Checkbox, TranslatePipe],
+  imports: [Button, Checkbox, ReactiveFormsModule, TextInputComponent, TranslatePipe],
   templateUrl: './token-add-edit-form.component.html',
   styleUrl: './token-add-edit-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,6 +33,9 @@ export class TokenAddEditFormComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly dialogService = inject(DialogService);
   private readonly translateService = inject(TranslateService);
+  private readonly toastService = inject(ToastService);
+  private readonly store = inject(Store);
+
   private readonly actions = createDispatchMap({
     createToken: CreateToken,
     getTokens: GetTokens,
@@ -40,10 +45,13 @@ export class TokenAddEditFormComponent implements OnInit {
   isEditMode = input(false);
   initialValues = input<TokenModel | null>(null);
 
+  inputLimits = InputLimits.fullName;
+
   protected readonly tokenId = toSignal(this.route.params.pipe(map((params) => params['id'])));
   protected readonly dialogRef = inject(DynamicDialogRef);
   protected readonly TokenFormControls = TokenFormControls;
   protected readonly tokenScopes = select(TokensSelectors.getScopes);
+  protected readonly isLoading = select(TokensSelectors.isTokensLoading);
 
   readonly tokenForm: TokenForm = new FormGroup({
     [TokenFormControls.TokenName]: new FormControl('', {
@@ -55,6 +63,12 @@ export class TokenAddEditFormComponent implements OnInit {
       validators: [Validators.required],
     }),
   });
+
+  constructor() {
+    effect(() => {
+      return this.isLoading() ? this.tokenForm.disable() : this.tokenForm.enable();
+    });
+  }
 
   ngOnInit(): void {
     if (this.initialValues()) {
@@ -80,7 +94,8 @@ export class TokenAddEditFormComponent implements OnInit {
     if (!this.isEditMode()) {
       this.actions.createToken(tokenName, scopes).subscribe({
         complete: () => {
-          const tokens = select(TokensSelectors.getTokens);
+          this.toastService.showSuccess('settings.tokens.toastMessage.successCreate');
+          const tokens = this.store.selectSignal(TokensSelectors.getTokens);
           const newToken = tokens()[0];
           this.dialogRef.close();
           this.showTokenCreatedDialog(newToken.name, newToken.tokenId);
@@ -89,6 +104,7 @@ export class TokenAddEditFormComponent implements OnInit {
     } else {
       this.actions.updateToken(this.tokenId(), tokenName, scopes).subscribe({
         complete: () => {
+          this.toastService.showSuccess('settings.tokens.toastMessage.successEdit');
           this.router.navigate(['settings/tokens']);
         },
       });

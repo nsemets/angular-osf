@@ -1,7 +1,12 @@
 <form [formGroup]="tokenForm" (ngSubmit)="handleSubmitForm()" class="flex flex-column gap-4">
   <div class="flex flex-column">
-    <label for="token-name">{{ 'settings.tokens.form.tokenName' | translate }}</label>
-    <input pInputText id="token-name" type="text" [formControlName]="TokenFormControls.TokenName" />
+    <osf-text-input
+      [control]="tokenForm.controls[TokenFormControls.TokenName]"
+      [label]="'settings.tokens.form.tokenName'"
+      [maxLength]="inputLimits.maxLength"
+      [minLength]="inputLimits.minLength"
+    >
+    </osf-text-input>
   </div>
 
   <div class="flex flex-column gap-4">
@@ -15,7 +20,7 @@
       </p>
     </div>
 
-    <div class="flex flex-column gap-4">
+    <div class="scope-container flex flex-column gap-4">
       @for (scope of tokenScopes(); track scope.id) {
         <div class="flex align-items-start gap-2">
           <p-checkbox [value]="scope.id" [formControlName]="TokenFormControls.Scopes" [inputId]="scope.id" />
@@ -50,7 +55,8 @@
         class="w-12rem btn-full-width"
         [label]="'settings.tokens.form.buttons.create' | translate"
         type="submit"
-        [disabled]="!tokenForm.valid"
+        [disabled]="!tokenForm.valid || isLoading()"
+        [loading]="isLoading()"
       />
     }
   </div>
