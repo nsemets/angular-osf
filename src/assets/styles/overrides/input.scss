@@ -6,7 +6,7 @@
   background: var.$white;
   border-color: var.$grey-2;
 
-  &:enabled:hover {
+  &:not([readonly]):enabled:hover {
     border-color: var.$pr-blue-1;
   }
 }

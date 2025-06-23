@@ -8,11 +8,12 @@
   padding: 4px 12px 4px 12px;
 
   &:hover {
-    cursor: pointer;
     background: var.$bg-blue-2;
     color: var.$pr-blue-3;
+    cursor: pointer;
 
-    i {
+    i,
+    .p-chip-remove-icon {
       color: var.$pr-blue-1;
     }
   }
@@ -25,6 +26,7 @@
 
   .p-chip-remove-icon {
     display: flex;
+    align-items: center;
     margin-left: 12px;
   }
 }

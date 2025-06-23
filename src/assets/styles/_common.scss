@@ -76,6 +76,12 @@
   text-transform: none;
 }
 
+.overflow-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 // ------------------------- Universal custom hover state -------------------------
 
 .custom-dark-hover:hover:not(:disabled) {

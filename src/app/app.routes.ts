@@ -120,16 +120,9 @@ export const routes: Routes = [
           },
           {
             path: 'files',
-            loadComponent: () =>
-              import('@osf/features/project/files/project-files.component').then((mod) => mod.ProjectFilesComponent),
+            loadChildren: () =>
+              import('@osf/features/project/files/project-files.routes').then((mod) => mod.projectFilesRoutes),
             providers: [provideStates([ProjectFilesState])],
-          },
-          {
-            path: 'files/:fileGuid',
-            loadComponent: () =>
-              import('@osf/features/project/files/components/file-detail/file-detail.component').then(
-                (mod) => mod.FileDetailComponent
-              ),
           },
           {
             path: 'registrations',
@@ -187,6 +180,10 @@ export const routes: Routes = [
         providers: [
           provideStates([MyProfileResourceFiltersState, MyProfileResourceFiltersOptionsState, MyProfileState]),
         ],
+      },
+      {
+        path: 'institutions',
+        loadChildren: () => import('./features/institutions/institutions.routes').then((r) => r.routes),
       },
       {
         path: 'confirm/:userId/:token',
