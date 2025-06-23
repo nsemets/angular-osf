@@ -3,20 +3,7 @@
 <p-card styleClass="m-t-24">
   <div class="flex flex-column gap-3">
     <div class="flex flex-column">
-      <label for="title">Title</label>
-      <input
-        pInputText
-        id="title"
-        type="text"
-        autocomplete="off"
-        [formControl]="titleAndAbstractForm.controls['title']"
-      />
-      @let titleControl = titleAndAbstractForm.controls['title'];
-      @if (titleControl.invalid && (titleControl.touched || titleControl.dirty)) {
-        <p-message class="simple-variant flex mt-1" severity="error" variant="simple" size="small">
-          {{ INPUT_VALIDATION_MESSAGES.required | translate }}
-        </p-message>
-      }
+      <osf-text-input [control]="titleAndAbstractForm.controls['title']" label="Title" [maxLength]="100" />
     </div>
 
     <div class="flex flex-column">
@@ -36,6 +23,11 @@
       @if (abstractControl.errors?.['minlength'] && (abstractControl.touched || abstractControl.dirty)) {
         <p-message class="simple-variant flex mt-1" severity="error" variant="simple" size="small">
           {{ 'Abstract must be at least 20 characters.' | translate }}
+        </p-message>
+      }
+      @if (abstractControl.errors?.['maxlength'] && (abstractControl.touched || abstractControl.dirty)) {
+        <p-message class="simple-variant flex mt-1" severity="error" variant="simple" size="small">
+          {{ 'Abstract can not exceed 3000 characters.' | translate }}
         </p-message>
       }
     </div>

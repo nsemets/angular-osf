@@ -10,7 +10,12 @@ export class SubmitPreprintSelectors {
 
   @Selector([SubmitPreprintState])
   static getCreatedPreprint(state: SubmitPreprintStateModel) {
-    return state.createdPreprint;
+    return state.createdPreprint.data;
+  }
+
+  @Selector([SubmitPreprintState])
+  static isPreprintSubmitting(state: SubmitPreprintStateModel) {
+    return state.createdPreprint.isSubmitting;
   }
 
   @Selector([SubmitPreprintState])
@@ -20,7 +25,7 @@ export class SubmitPreprintSelectors {
 
   @Selector([SubmitPreprintState])
   static getUploadLink(state: SubmitPreprintStateModel) {
-    return state.preprintFilesLinks?.uploadFileLink;
+    return state.preprintFilesLinks.data?.uploadFileLink;
   }
 
   @Selector([SubmitPreprintState])

@@ -4,18 +4,18 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
-import { InputText } from 'primeng/inputtext';
 import { Message } from 'primeng/message';
 import { Textarea } from 'primeng/textarea';
 import { Tooltip } from 'primeng/tooltip';
 
-import { ChangeDetectionStrategy, Component, HostListener, OnInit, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, OnInit, output } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
 import { formInputLimits } from '@osf/features/preprints/constants';
 import { TitleAndAbstractForm } from '@osf/features/preprints/models';
 import { CreatePreprint, SubmitPreprintSelectors, UpdatePreprint } from '@osf/features/preprints/store/submit-preprint';
+import { TextInputComponent } from '@shared/components';
 import { INPUT_VALIDATION_MESSAGES } from '@shared/constants';
 import { CustomValidators } from '@shared/utils';
 
@@ -24,7 +24,6 @@ import { CustomValidators } from '@shared/utils';
   imports: [
     Card,
     FormsModule,
-    InputText,
     Button,
     Textarea,
     RouterLink,
@@ -32,6 +31,7 @@ import { CustomValidators } from '@shared/utils';
     Tooltip,
     Message,
     TranslatePipe,
+    TextInputComponent,
   ],
   templateUrl: './title-and-abstract-step.component.html',
   styleUrl: './title-and-abstract-step.component.scss',
@@ -50,7 +50,7 @@ export class TitleAndAbstractStepComponent implements OnInit {
   createdPreprint = select(SubmitPreprintSelectors.getCreatedPreprint);
   providerId = select(SubmitPreprintSelectors.getSelectedProviderId);
 
-  isUpdatingPreprint = signal<boolean>(false);
+  isUpdatingPreprint = select(SubmitPreprintSelectors.isPreprintSubmitting);
   nextClicked = output<void>();
 
   ngOnInit() {
@@ -61,11 +61,15 @@ export class TitleAndAbstractStepComponent implements OnInit {
     this.titleAndAbstractForm = new FormGroup<TitleAndAbstractForm>({
       title: new FormControl(this.createdPreprint()?.title || '', {
         nonNullable: true,
-        validators: [CustomValidators.requiredTrimmed()],
+        validators: [CustomValidators.requiredTrimmed(), Validators.maxLength(this.inputLimits.title.maxLength)],
       }),
       description: new FormControl(this.createdPreprint()?.description || '', {
         nonNullable: true,
-        validators: [CustomValidators.requiredTrimmed(), Validators.minLength(this.inputLimits.abstract.minLength)],
+        validators: [
+          CustomValidators.requiredTrimmed(),
+          Validators.minLength(this.inputLimits.abstract.minLength),
+          Validators.maxLength(this.inputLimits.abstract.maxLength),
+        ],
       }),
     });
   }
@@ -78,18 +82,14 @@ export class TitleAndAbstractStepComponent implements OnInit {
     const model = this.titleAndAbstractForm.value;
 
     if (this.createdPreprint()) {
-      this.isUpdatingPreprint.set(true);
       this.actions.updatePreprint(this.createdPreprint()!.id, model).subscribe({
         complete: () => {
-          this.isUpdatingPreprint.set(false);
           this.nextClicked.emit();
         },
       });
     } else {
-      this.isUpdatingPreprint.set(true);
       this.actions.createPreprint(model.title!, model.description!, this.providerId()!).subscribe({
         complete: () => {
-          this.isUpdatingPreprint.set(false);
           this.nextClicked.emit();
         },
       });

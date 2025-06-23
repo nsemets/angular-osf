@@ -1,6 +1,5 @@
 import { StringOrNull } from '@core/helpers';
 
-// domain models
 export interface Brand {
   id: string;
   name: string;
@@ -61,7 +60,6 @@ export interface PreprintFilesLinks {
   uploadFileLink: string;
 }
 
-//api models
 export interface PreprintProviderDetailsGetResponse {
   id: string;
   type: 'preprint-providers';

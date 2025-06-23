@@ -32,9 +32,18 @@ import {
   name: 'submitPreprint',
   defaults: {
     selectedProviderId: null,
-    createdPreprint: null,
+    createdPreprint: {
+      data: null,
+      isLoading: false,
+      error: null,
+      isSubmitting: false,
+    },
     fileSource: PreprintFileSource.None,
-    preprintFilesLinks: null,
+    preprintFilesLinks: {
+      data: null,
+      isLoading: false,
+      error: null,
+    },
     preprintFiles: {
       data: [],
       isLoading: false,
@@ -66,37 +75,39 @@ export class SubmitPreprintState {
 
   @Action(CreatePreprint)
   createPreprint(ctx: StateContext<SubmitPreprintStateModel>, action: CreatePreprint) {
+    ctx.setState(patch({ createdPreprint: patch({ isSubmitting: true }) }));
+
     return this.preprintsService.createPreprint(action.title, action.abstract, action.providerId).pipe(
       tap((preprint) => {
-        ctx.patchState({
-          createdPreprint: preprint,
-        });
-      })
+        ctx.setState(patch({ createdPreprint: patch({ isSubmitting: false, data: preprint }) }));
+      }),
+      catchError((error) => this.handleError(ctx, 'createdPreprint', error))
     );
   }
 
   @Action(UpdatePreprint)
   updatePreprint(ctx: StateContext<SubmitPreprintStateModel>, action: UpdatePreprint) {
+    ctx.setState(patch({ createdPreprint: patch({ isSubmitting: true }) }));
+
     return this.preprintsService.updatePreprint(action.id, action.payload).pipe(
       tap((preprint) => {
-        ctx.patchState({
-          createdPreprint: preprint,
-        });
-      })
+        ctx.setState(patch({ createdPreprint: patch({ isSubmitting: false, data: preprint }) }));
+      }),
+      catchError((error) => this.handleError(ctx, 'createdPreprint', error))
     );
   }
 
   @Action(GetPreprintFilesLinks)
   getPreprintFilesLinks(ctx: StateContext<SubmitPreprintStateModel>) {
     const state = ctx.getState();
-    if (!state.createdPreprint) {
+    if (!state.createdPreprint.data) {
       return EMPTY;
     }
-    return this.preprintsService.getPreprintFilesLinks(state.createdPreprint.id).pipe(
+    ctx.setState(patch({ preprintFilesLinks: patch({ isLoading: true }) }));
+
+    return this.preprintsService.getPreprintFilesLinks(state.createdPreprint.data.id).pipe(
       tap((preprintStorage) => {
-        ctx.patchState({
-          preprintFilesLinks: preprintStorage,
-        });
+        ctx.setState(patch({ preprintFilesLinks: patch({ isLoading: false, data: preprintStorage }) }));
       })
     );
   }
@@ -104,25 +115,32 @@ export class SubmitPreprintState {
   @Action(UploadFile)
   uploadFile(ctx: StateContext<SubmitPreprintStateModel>, action: UploadFile) {
     const state = ctx.getState();
-    if (!state.preprintFilesLinks?.uploadFileLink) {
+    if (!state.preprintFilesLinks.data?.uploadFileLink) {
       return EMPTY;
     }
-    return this.fileService.uploadFileByLink(action.file, state.preprintFilesLinks.uploadFileLink).pipe(
+
+    ctx.setState(patch({ preprintFiles: patch({ isLoading: true }) }));
+
+    return this.fileService.uploadFileByLink(action.file, state.preprintFilesLinks.data.uploadFileLink).pipe(
       tap((event) => {
         if (event.type === HttpEventType.Response) {
           ctx.dispatch(GetPreprintFiles);
           this.preprintsService
-            .updateFileRelationship(state.createdPreprint!.id, event.body!.data.id)
+            .updateFileRelationship(state.createdPreprint.data!.id, event.body!.data.id)
             .pipe(
               tap((preprint: Preprint) => {
                 ctx.setState((state: SubmitPreprintStateModel) => ({
                   ...state,
-                  createdPreprint: state.createdPreprint
-                    ? { ...state.createdPreprint, primaryFileId: preprint.primaryFileId }
-                    : null,
+                  createdPreprint: {
+                    ...state.createdPreprint,
+                    data: state.createdPreprint.data
+                      ? { ...state.createdPreprint.data, primaryFileId: preprint.primaryFileId }
+                      : null,
+                  },
                 }));
               }),
-              take(1)
+              take(1),
+              catchError((error) => this.handleError(ctx, 'createdPreprint', error))
             )
             .subscribe();
         }
@@ -133,12 +151,12 @@ export class SubmitPreprintState {
   @Action(GetPreprintFiles)
   getPreprintFiles(ctx: StateContext<SubmitPreprintStateModel>) {
     const state = ctx.getState();
-    if (!state.preprintFilesLinks?.filesLink) {
+    if (!state.preprintFilesLinks.data?.filesLink) {
       return EMPTY;
     }
     ctx.setState(patch({ preprintFiles: patch({ isLoading: true }) }));
 
-    return this.fileService.getFilesWithoutFiltering(state.preprintFilesLinks.filesLink).pipe(
+    return this.fileService.getFilesWithoutFiltering(state.preprintFilesLinks.data.filesLink).pipe(
       tap((files: OsfFile[]) => {
         ctx.setState(
           patch({
@@ -149,17 +167,7 @@ export class SubmitPreprintState {
           })
         );
       }),
-      catchError((error) => {
-        ctx.setState(
-          patch({
-            preprintFiles: patch({
-              isLoading: false,
-              error: error.message,
-            }),
-          })
-        );
-        return throwError(() => error);
-      })
+      catchError((error) => this.handleError(ctx, 'preprintFiles', error))
     );
   }
 
@@ -178,17 +186,7 @@ export class SubmitPreprintState {
           })
         );
       }),
-      catchError((error) => {
-        ctx.setState(
-          patch({
-            availableProjects: patch({
-              isLoading: false,
-              error: error.message,
-            }),
-          })
-        );
-        return throwError(() => error);
-      })
+      catchError((error) => this.handleError(ctx, 'availableProjects', error))
     );
   }
 
@@ -206,7 +204,8 @@ export class SubmitPreprintState {
             }),
           })
         );
-      })
+      }),
+      catchError((error) => this.handleError(ctx, 'projectFiles', error))
     );
   }
 
@@ -224,19 +223,29 @@ export class SubmitPreprintState {
             }),
           })
         );
-      })
+      }),
+      catchError((error) => this.handleError(ctx, 'projectFiles', error))
     );
   }
 
   @Action(ResetStateAndDeletePreprint)
   resetStateAndDeletePreprint(ctx: StateContext<SubmitPreprintStateModel>) {
     const state = ctx.getState();
-    const createdPreprintId = state.createdPreprint?.id;
+    const createdPreprintId = state.createdPreprint.data?.id;
     ctx.setState({
       selectedProviderId: null,
-      createdPreprint: null,
+      createdPreprint: {
+        data: null,
+        isLoading: false,
+        error: null,
+        isSubmitting: false,
+      },
       fileSource: PreprintFileSource.None,
-      preprintFilesLinks: null,
+      preprintFilesLinks: {
+        data: null,
+        isLoading: false,
+        error: null,
+      },
       preprintFiles: {
         data: [],
         isLoading: false,
@@ -265,5 +274,21 @@ export class SubmitPreprintState {
     ctx.patchState({
       fileSource: action.fileSource,
     });
+  }
+
+  private handleError(
+    ctx: StateContext<SubmitPreprintStateModel>,
+    section: keyof SubmitPreprintStateModel,
+    error: Error
+  ) {
+    ctx.patchState({
+      [section]: {
+        ...(ctx.getState()[section] as object),
+        isLoading: false,
+        isSubmitting: false,
+        error: error.message,
+      },
+    });
+    return throwError(() => error);
   }
 }

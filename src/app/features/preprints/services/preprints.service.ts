@@ -114,11 +114,7 @@ export class PreprintsService {
           },
         }
       )
-      .pipe(
-        map((response) => {
-          return PreprintsMapper.fromPreprintJsonApi(response);
-        })
-      );
+      .pipe(map((response) => PreprintsMapper.fromPreprintJsonApi(response)));
   }
 
   updateFileRelationship(preprintId: string, fileId: string): Observable<Preprint> {
@@ -141,11 +137,7 @@ export class PreprintsService {
           },
         }
       )
-      .pipe(
-        map((response) => {
-          return PreprintsMapper.fromPreprintJsonApi(response);
-        })
-      );
+      .pipe(map((response) => PreprintsMapper.fromPreprintJsonApi(response)));
   }
 
   getPreprintFilesLinks(id: string): Observable<PreprintFilesLinks> {
@@ -187,11 +179,9 @@ export class PreprintsService {
         return this.jsonApiService
           .get<JsonApiResponse<GetFileResponse, null>>(response.data[0].relationships.root_folder.links.related.href)
           .pipe(
-            switchMap((fileResponse) => {
-              return this.filesService.getFilesWithoutFiltering(
-                fileResponse.data.relationships.files.links.related.href
-              );
-            })
+            switchMap((fileResponse) =>
+              this.filesService.getFilesWithoutFiltering(fileResponse.data.relationships.files.links.related.href)
+            )
           );
       })
     );

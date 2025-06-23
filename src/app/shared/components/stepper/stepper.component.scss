@@ -49,9 +49,9 @@
     margin-top: mix.rem(10px);
 
     .step-label {
-      width: 80px;
+      width: mix.rem(80px);
       text-align: center;
-      margin-right: 48px;
+      margin-right: mix.rem(48px);
 
       &:last-child {
         margin-right: 0;

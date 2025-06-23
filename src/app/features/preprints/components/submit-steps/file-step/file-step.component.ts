@@ -124,7 +124,7 @@ export class FileStepComponent implements OnInit {
   }
 
   backButtonClicked() {
-    //todo
+    //[RNi] TODO: implement logic of going back to the previous step
   }
 
   nextButtonClicked() {

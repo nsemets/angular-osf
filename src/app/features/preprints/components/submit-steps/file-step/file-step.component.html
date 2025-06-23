@@ -54,7 +54,7 @@
 
   <section>
     @if (arePreprintFilesLoading()) {
-      <p-skeleton width="20rem" height="2rem" />
+      <p-skeleton width="20rem" height="2rem" class="m-t-48" />
     } @else {
       @for (file of preprintFiles(); track file.id) {
         <section class="file-row">
