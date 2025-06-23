@@ -1,10 +1,14 @@
+import { provideStore } from '@ngxs/store';
+
 import { Route } from '@angular/router';
 
+import { TokensState } from './store';
 import { TokensComponent } from './tokens.component';
 
 export const tokensAppsRoute: Route = {
   path: 'tokens',
   component: TokensComponent,
+  providers: [provideStore([TokensState])],
   children: [
     {
       path: '',
