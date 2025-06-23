@@ -1,4 +1,4 @@
-import { TableParameters } from '@osf/shared/models';
+import { TableParameters } from '@shared/models';
 
 export const MEETINGS_TABLE_PARAMS: TableParameters = {
   rows: 10,

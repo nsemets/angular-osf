@@ -13,14 +13,26 @@ import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { parseQueryFilterParams } from '@core/helpers';
-import { MEETINGS_TABLE_PARAMS } from '@osf/features/meetings/constants';
-import { CustomPaginatorComponent, SearchInputComponent, SubHeaderComponent } from '@shared/components';
+import {
+  CustomPaginatorComponent,
+  LoadingSpinnerComponent,
+  SearchInputComponent,
+  SubHeaderComponent,
+} from '@shared/components';
+import { MEETINGS_TABLE_PARAMS } from '@shared/constants';
 import { QueryParams } from '@shared/models';
-import { GetInstitutions, InstitutionsSelectors } from '@shared/stores';
+import { FetchInstitutions, InstitutionsSelectors } from '@shared/stores';
 
 @Component({
   selector: 'osf-institutions',
-  imports: [SubHeaderComponent, TranslatePipe, SearchInputComponent, NgOptimizedImage, CustomPaginatorComponent],
+  imports: [
+    SubHeaderComponent,
+    TranslatePipe,
+    SearchInputComponent,
+    NgOptimizedImage,
+    CustomPaginatorComponent,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './institutions.component.html',
   styleUrl: './institutions.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,7 +42,7 @@ export class InstitutionsComponent {
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
 
-  private readonly actions = createDispatchMap({ getInstitutions: GetInstitutions });
+  private readonly actions = createDispatchMap({ getInstitutions: FetchInstitutions });
 
   searchControl = new FormControl('');
 

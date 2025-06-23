@@ -25,11 +25,11 @@ import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { parseQueryFilterParams } from '@core/helpers';
-import { MEETINGS_TABLE_PARAMS } from '@osf/features/meetings/constants';
 import { Meeting } from '@osf/features/meetings/models';
 import { GetAllMeetings, MeetingsSelectors } from '@osf/features/meetings/store';
 import { IS_XSMALL } from '@osf/shared/utils';
 import { SearchInputComponent, SubHeaderComponent } from '@shared/components';
+import { MEETINGS_TABLE_PARAMS } from '@shared/constants';
 import { SortOrder } from '@shared/enums';
 import { QueryParams, TableParameters } from '@shared/models';
 import { SearchFilters } from '@shared/models/filters';

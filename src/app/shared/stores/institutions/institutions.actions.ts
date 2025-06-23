@@ -2,7 +2,7 @@ export class GetUserInstitutions {
   static readonly type = '[Institutions] Get User Institutions';
 }
 
-export class GetInstitutions {
+export class FetchInstitutions {
   static readonly type = '[Institutions] Get';
 
   constructor(

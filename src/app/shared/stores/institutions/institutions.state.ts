@@ -1,12 +1,12 @@
 import { Action, State, StateContext } from '@ngxs/store';
 import { patch } from '@ngxs/store/operators';
 
-import { tap } from 'rxjs';
+import { catchError, tap, throwError } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
 import { InstitutionsService } from '@shared/services';
-import { GetInstitutions, GetUserInstitutions, InstitutionsStateModel } from '@shared/stores';
+import { FetchInstitutions, GetUserInstitutions, InstitutionsStateModel } from '@shared/stores';
 
 @State<InstitutionsStateModel>({
   name: 'institutions',
@@ -16,7 +16,6 @@ import { GetInstitutions, GetUserInstitutions, InstitutionsStateModel } from '@s
       data: [],
       isLoading: false,
       error: null,
-      isSubmitting: false,
       totalCount: 0,
     },
   },
@@ -36,8 +35,16 @@ export class InstitutionsState {
     );
   }
 
-  @Action(GetInstitutions)
-  getInstitutions(ctx: StateContext<InstitutionsStateModel>, action: GetInstitutions) {
+  @Action(FetchInstitutions)
+  getInstitutions(ctx: StateContext<InstitutionsStateModel>, action: FetchInstitutions) {
+    ctx.patchState({
+      institutions: {
+        ...ctx.getState().institutions,
+        isLoading: true,
+        error: null,
+      },
+    });
+
     return this.institutionsService.getInstitutions(action.pageNumber, action.pageSize, action.searchValue).pipe(
       tap((response) => {
         ctx.setState(
@@ -45,12 +52,21 @@ export class InstitutionsState {
             institutions: patch({
               data: response.data,
               totalCount: response.total,
-              isSubmitting: false,
               error: null,
               isLoading: false,
             }),
           })
         );
+      }),
+      catchError((error) => {
+        ctx.patchState({
+          institutions: {
+            ...ctx.getState().institutions,
+            isLoading: false,
+            error,
+          },
+        });
+        return throwError(() => error);
       })
     );
   }

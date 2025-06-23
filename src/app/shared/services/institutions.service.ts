@@ -13,7 +13,7 @@ import {
   UserInstitutionGetResponse,
 } from '@shared/models';
 
-import { environment } from '../../../environments/environment';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
