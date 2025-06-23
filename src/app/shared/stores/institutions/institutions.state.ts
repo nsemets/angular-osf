@@ -39,7 +39,8 @@ export class InstitutionsState {
   getInstitutions(ctx: StateContext<InstitutionsStateModel>, action: FetchInstitutions) {
     ctx.patchState({
       institutions: {
-        ...ctx.getState().institutions,
+        data: [],
+        totalCount: 0,
         isLoading: true,
         error: null,
       },

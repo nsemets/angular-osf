@@ -19,7 +19,7 @@ import {
   SearchInputComponent,
   SubHeaderComponent,
 } from '@shared/components';
-import { MEETINGS_TABLE_PARAMS } from '@shared/constants';
+import { TABLE_PARAMS } from '@shared/constants';
 import { QueryParams } from '@shared/models';
 import { FetchInstitutions, InstitutionsSelectors } from '@shared/stores';
 
@@ -48,7 +48,7 @@ export class InstitutionsComponent {
 
   queryParams = toSignal(this.route.queryParams);
   currentPage = signal(1);
-  currentPageSize = signal(MEETINGS_TABLE_PARAMS.rows);
+  currentPageSize = signal(TABLE_PARAMS.rows);
   first = signal(0);
 
   institutions = select(InstitutionsSelectors.getInstitutions);

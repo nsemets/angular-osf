@@ -1,6 +1,6 @@
 import { TableParameters } from '@shared/models';
 
-export const MEETINGS_TABLE_PARAMS: TableParameters = {
+export const TABLE_PARAMS: TableParameters = {
   rows: 10,
   paginator: true,
   scrollable: false,

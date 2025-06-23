@@ -29,7 +29,7 @@ import { Meeting } from '@osf/features/meetings/models';
 import { GetAllMeetings, MeetingsSelectors } from '@osf/features/meetings/store';
 import { IS_XSMALL } from '@osf/shared/utils';
 import { SearchInputComponent, SubHeaderComponent } from '@shared/components';
-import { MEETINGS_TABLE_PARAMS } from '@shared/constants';
+import { TABLE_PARAMS } from '@shared/constants';
 import { SortOrder } from '@shared/enums';
 import { QueryParams, TableParameters } from '@shared/models';
 import { SearchFilters } from '@shared/models/filters';
@@ -55,9 +55,9 @@ export class MeetingsLandingComponent {
   sortColumn = signal('');
   sortOrder = signal<SortOrder>(SortOrder.Asc);
   currentPage = signal(1);
-  currentPageSize = signal(MEETINGS_TABLE_PARAMS.rows);
+  currentPageSize = signal(TABLE_PARAMS.rows);
   tableParams = signal<TableParameters>({
-    ...MEETINGS_TABLE_PARAMS,
+    ...TABLE_PARAMS,
     firstRowIndex: 0,
   });
 
