@@ -200,6 +200,10 @@ export const routes: Routes = [
         ],
       },
       {
+        path: 'institutions',
+        loadChildren: () => import('./features/institutions/institutions.routes').then((r) => r.routes),
+      },
+      {
         path: 'confirm/:userId/:token',
         loadComponent: () => import('./features/home/home.component').then((mod) => mod.HomeComponent),
         data: { skipBreadcrumbs: true },
