@@ -1,0 +1,18 @@
+<h2>{{ " 'registries.new.metadata.title' | translate" }}</h2>
+<p>{{ "'registries.new.metadata.description' | translate" }}</p>
+<section class="flex flex-column gap-4">
+  <p-card class="w-full">
+    <form [formGroup]="metadataForm" (ngSubmit)="submitMetadata()" class="flex flex-column gap-4">
+      <osf-text-input [control]="metadataForm.controls['title']" [maxLength]="inputLimits.fullName.maxLength">
+      </osf-text-input>
+
+      <p-textarea formControlName="description" class="w-full" [required]="true"></p-textarea>
+
+      <div class="flex justify-content-end"></div>
+    </form>
+  </p-card>
+  <div class="flex justify-content-end">
+    <p-button [label]="'common.buttons.back' | translate" (click)="back()" class="mr-2"> </p-button>
+    <p-button [label]="'common.buttons.next' | translate" type="submit" [disabled]="metadataForm.invalid"></p-button>
+  </div>
+</section>
