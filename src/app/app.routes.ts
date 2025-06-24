@@ -176,6 +176,32 @@ export const routes: Routes = [
                 (mod) => mod.NewRegistrationComponent
               ),
           },
+          {
+            path: 'drafts',
+            loadComponent: () =>
+              import('./features/registries/components/drafts/drafts.component').then((mod) => mod.DraftsComponent),
+            children: [
+              {
+                path: ':id/metadata',
+                loadComponent: () =>
+                  import('./features/registries/components/metadata/metadata.component').then(
+                    (mod) => mod.MetadataComponent
+                  ),
+              },
+              {
+                path: ':id/review',
+                loadComponent: () =>
+                  import('./features/registries/components/review/review.component').then((mod) => mod.ReviewComponent),
+              },
+              {
+                path: ':id/:step',
+                loadComponent: () =>
+                  import('./features/registries/components/custom-step/custom-step.component').then(
+                    (mod) => mod.CustomStepComponent
+                  ),
+              },
+            ],
+          },
         ],
       },
       {

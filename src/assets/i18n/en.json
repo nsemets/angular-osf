@@ -17,6 +17,7 @@
       "disconnect": "Disconnect",
       "revert": "Revert",
       "next": "Next",
+      "back": "Back",
       "skip": "Skip",
       "done": "Done",
       "select": "Select",
@@ -38,7 +39,9 @@
       }
     },
     "labels": {
-      "downloads": "Downloads"
+      "downloads": "Downloads",
+      "title": "Title",
+      "description": "Description"
     },
     "deleteConfirmation": {
       "header": "Delete",
@@ -351,6 +354,10 @@
         "step2": "Which project do you want to register?",
         "step3": "Which type of registration would you like to create?",
         "step2InfoText": "If your project includes components, you can select which components to include or exclude at the end of the registration."
+      },
+      "metadata": {
+        "title": "Registration  Metadata",
+        "description": "This metadata applies only to the registration you are creating, and will not be applied to your project."
       },
       "createDraft": "Create draft"
     }
