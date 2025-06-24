@@ -167,7 +167,7 @@ export const routes: Routes = [
         path: 'registries',
         loadComponent: () =>
           import('./features/registries/registries.component').then((mod) => mod.RegistriesComponent),
-        providers: [provideStates([RegistriesState])],
+        providers: [provideStates([RegistriesState, ContributorsState])],
         children: [
           {
             path: 'new',

@@ -355,11 +355,17 @@
         "step3": "Which type of registration would you like to create?",
         "step2InfoText": "If your project includes components, you can select which components to include or exclude at the end of the registration."
       },
-      "metadata": {
-        "title": "Registration  Metadata",
-        "description": "This metadata applies only to the registration you are creating, and will not be applied to your project."
-      },
+
       "createDraft": "Create draft"
+    },
+    "deleteDraft": "Delete Draft",
+    "metadata": {
+      "title": "Registration  Metadata",
+      "description": "This metadata applies only to the registration you are creating, and will not be applied to your project.",
+      "addContributors": "Add Contributor By Search"
+    },
+    "review": {
+      "title": "Review Registration"
     }
   },
   "myProfile": {

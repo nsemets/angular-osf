@@ -18,6 +18,11 @@ export class RegistriesSelectors {
 
   @Selector([RegistriesState])
   static isDraftSubmitting(state: RegistriesStateModel): boolean {
-    return state.registrations.isSubmitting ?? false;
+    return state.draftRegistration.isSubmitting ?? false;
+  }
+
+  @Selector([RegistriesState])
+  static getContributors(state: RegistriesStateModel) {
+    return state.contributorsList.data;
   }
 }

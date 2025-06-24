@@ -8,7 +8,16 @@ import { Injectable } from '@angular/core';
 import { Project } from '../models';
 import { ProjectsService, ProvidersService, RegistriesService } from '../services';
 
-import { CreateDraft, GetProjects, GetProviders } from './registries.actions';
+import {
+  AddContributor,
+  CreateDraft,
+  DeleteContributor,
+  DeleteDraft,
+  FetchContributors,
+  GetProjects,
+  GetProviders,
+  UpdateContributor,
+} from './registries.actions';
 import { RegistriesStateModel } from './registries.model';
 
 const DefaultState: RegistriesStateModel = {
@@ -22,10 +31,15 @@ const DefaultState: RegistriesStateModel = {
     isLoading: false,
     error: null,
   },
-  registrations: {
+  draftRegistration: {
     isLoading: false,
     data: null,
     isSubmitting: false,
+    error: null,
+  },
+  contributorsList: {
+    data: [],
+    isLoading: false,
     error: null,
   },
 };
@@ -102,8 +116,8 @@ export class RegistriesState {
   @Action(CreateDraft)
   createDraft(ctx: StateContext<RegistriesStateModel>, { payload }: CreateDraft) {
     ctx.patchState({
-      registrations: {
-        ...ctx.getState().registrations,
+      draftRegistration: {
+        ...ctx.getState().draftRegistration,
         isSubmitting: true,
       },
     });
@@ -111,8 +125,8 @@ export class RegistriesState {
     return this.registriesService.createDraft(payload.registrationSchemaId, payload.projectId).pipe(
       tap(() => {
         ctx.patchState({
-          registrations: {
-            ...ctx.getState().registrations,
+          draftRegistration: {
+            ...ctx.getState().draftRegistration,
             isSubmitting: false,
             error: null,
           },
@@ -120,14 +134,132 @@ export class RegistriesState {
       }),
       catchError((error) => {
         ctx.patchState({
-          registrations: {
-            ...ctx.getState().registrations,
+          draftRegistration: {
+            ...ctx.getState().draftRegistration,
             isSubmitting: false,
             error: error.message,
           },
         });
-        return this.handleError(ctx, 'registrations', error);
+        return this.handleError(ctx, 'draftRegistration', error);
       })
+    );
+  }
+
+  @Action(DeleteDraft)
+  deleteDraft(ctx: StateContext<RegistriesStateModel>, { draftId }: DeleteDraft) {
+    ctx.patchState({
+      draftRegistration: {
+        ...ctx.getState().draftRegistration,
+        isSubmitting: true,
+      },
+    });
+
+    return this.registriesService.deleteDraft(draftId).pipe(
+      tap(() => {
+        ctx.patchState({
+          draftRegistration: {
+            ...ctx.getState().draftRegistration,
+            isSubmitting: false,
+            data: null,
+            error: null,
+          },
+        });
+      }),
+      catchError((error) => this.handleError(ctx, 'draftRegistration', error))
+    );
+  }
+
+  @Action(FetchContributors)
+  fetchContributors(ctx: StateContext<RegistriesStateModel>, action: FetchContributors) {
+    const state = ctx.getState();
+
+    ctx.patchState({
+      contributorsList: { ...state.contributorsList, isLoading: true, error: null },
+    });
+
+    return this.registriesService.getContributors(action.draftId).pipe(
+      tap((contributors) => {
+        ctx.patchState({
+          contributorsList: {
+            ...state.contributorsList,
+            data: contributors,
+            isLoading: false,
+          },
+        });
+      }),
+      catchError((error) => this.handleError(ctx, 'contributorsList', error))
+    );
+  }
+
+  @Action(AddContributor)
+  addContributor(ctx: StateContext<RegistriesStateModel>, action: AddContributor) {
+    const state = ctx.getState();
+
+    ctx.patchState({
+      contributorsList: { ...state.contributorsList, isLoading: true, error: null },
+    });
+
+    return this.registriesService.addContributor(action.draftId, action.contributor).pipe(
+      tap((contributor) => {
+        const currentState = ctx.getState();
+
+        ctx.patchState({
+          contributorsList: {
+            ...currentState.contributorsList,
+            data: [...currentState.contributorsList.data, contributor],
+            isLoading: false,
+          },
+        });
+      }),
+      catchError((error) => this.handleError(ctx, 'contributorsList', error))
+    );
+  }
+
+  @Action(UpdateContributor)
+  updateContributor(ctx: StateContext<RegistriesStateModel>, action: UpdateContributor) {
+    const state = ctx.getState();
+
+    ctx.patchState({
+      contributorsList: { ...state.contributorsList, isLoading: true, error: null },
+    });
+
+    return this.registriesService.updateContributor(action.draftId, action.contributor).pipe(
+      tap((updatedContributor) => {
+        const currentState = ctx.getState();
+
+        ctx.patchState({
+          contributorsList: {
+            ...currentState.contributorsList,
+            data: currentState.contributorsList.data.map((contributor) =>
+              contributor.id === updatedContributor.id ? updatedContributor : contributor
+            ),
+            isLoading: false,
+          },
+        });
+      }),
+      catchError((error) => this.handleError(ctx, 'contributorsList', error))
+    );
+  }
+
+  @Action(DeleteContributor)
+  deleteContributor(ctx: StateContext<RegistriesStateModel>, action: DeleteContributor) {
+    const state = ctx.getState();
+
+    ctx.patchState({
+      contributorsList: { ...state.contributorsList, isLoading: true, error: null },
+    });
+
+    return this.registriesService.deleteContributor(action.draftId, action.contributorId).pipe(
+      tap(() => {
+        ctx.patchState({
+          contributorsList: {
+            ...state.contributorsList,
+            data: state.contributorsList.data.filter((contributor) => contributor.userId !== action.contributorId),
+            isLoading: false,
+          },
+        });
+      }),
+      catchError((error) => this.handleError(ctx, 'contributorsList', error))
     );
   }
 
