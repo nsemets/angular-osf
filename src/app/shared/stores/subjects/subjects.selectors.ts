@@ -1,6 +1,6 @@
 import { Selector } from '@ngxs/store';
 
-import { SubjectsModel, SubjectsState } from '@shared/stores';
+import { SubjectsModel, SubjectsState } from '@shared/stores/subjects';
 
 export class SubjectsSelectors {
   @Selector([SubjectsState])

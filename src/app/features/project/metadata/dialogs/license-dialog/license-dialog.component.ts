@@ -11,7 +11,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 
 import { ProjectOverview } from '@osf/features/project/overview/models';
 import { License, SelectOption } from '@shared/models';
-import { LicensesSelectors, LoadAllLicenses } from '@shared/stores';
+import { LicensesSelectors, LoadAllLicenses } from '@shared/stores/licenses';
 
 interface LicenseForm {
   licenseName: FormControl<string>;
@@ -49,18 +49,18 @@ export class LicenseDialogComponent implements OnInit {
   constructor() {
     effect(() => {
       const currentLicenses = this.licenses();
-      if (!currentLicenses || currentLicenses.length === 0) {
-        this.actions.loadLicenses();
+      if (currentLicenses) {
+        this.licenseOptions = currentLicenses.map((license: License) => ({
+          label: license.attributes.name,
+          value: license.id,
+        }));
       }
-
-      this.licenseOptions = currentLicenses.map((license: License) => ({
-        label: license.attributes.name,
-        value: license.id,
-      }));
     });
   }
 
   ngOnInit(): void {
+    this.actions.loadLicenses();
+
     if (this.currentProject?.license) {
       this.licenseForm.patchValue({
         licenseName: this.currentProject.license.name || '',
@@ -72,8 +72,8 @@ export class LicenseDialogComponent implements OnInit {
     });
   }
 
-  private updateSelectedLicenseText(licenseName: string): void {
-    const selectedLicense = this.licenses().find((license: License) => license.attributes.name === licenseName);
+  private updateSelectedLicenseText(licenseId: string): void {
+    const selectedLicense = this.licenses().find((license: License) => license.id === licenseId);
 
     if (selectedLicense) {
       this.selectedLicenseText.set(selectedLicense.attributes.text);
@@ -85,7 +85,7 @@ export class LicenseDialogComponent implements OnInit {
   save(): void {
     if (this.licenseForm.valid) {
       const formValue = this.licenseForm.getRawValue();
-      const selectedLicense = this.licenses().find((license) => license.attributes.name === formValue.licenseName);
+      const selectedLicense = this.licenses().find((license) => license.id === formValue.licenseName);
       this.dialogRef.close({
         licenseName: formValue.licenseName,
         licenseId: selectedLicense?.id,

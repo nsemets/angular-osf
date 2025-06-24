@@ -67,32 +67,6 @@ export class ProjectMetadataSubjectsComponent {
     });
   }
 
-  private convertMetadataSubjectsToOptions(subjects: NodeSubjectModel[]): SubjectOption[] {
-    const convertSubject = (subject: NodeSubjectModel): SubjectOption => {
-      const isSelected = this.selectedSubjects().some((s) => s.id === subject.id);
-      const option: SubjectOption = {
-        id: subject.id,
-        label: subject.text,
-        expanded: false,
-        selected: isSelected,
-        level: subject.level,
-      };
-
-      if (subject.children && subject.children.length > 0) {
-        option.children = subject.children.map(convertSubject);
-        const allChildrenSelected = option.children.every((child) => child.selected);
-        const someChildrenSelected = option.children.some((child) => child.selected || child.indeterminate);
-
-        option.selected = allChildrenSelected;
-        option.indeterminate = !allChildrenSelected && someChildrenSelected;
-      }
-
-      return option;
-    };
-
-    return subjects.map(convertSubject);
-  }
-
   onInputFocus() {
     this.filterOptions();
   }
@@ -164,43 +138,41 @@ export class ProjectMetadataSubjectsComponent {
     if (!originalOption) return;
 
     const newSelectedState = !originalOption.selected;
+
+    const expandedStates = this.getExpandedStates();
+
     originalOption.selected = newSelectedState;
     originalOption.indeterminate = false;
 
-    if (originalOption.children) {
-      this.updateChildrenSelection(originalOption.children, newSelectedState);
-    }
+    let updatedSubjects = [...this.selectedSubjects()];
 
-    let updatedSubjects: ProjectOverviewSubject[] = [];
     if (newSelectedState) {
-      const newSubject: ProjectOverviewSubject = {
-        id: originalOption.id,
-        text: originalOption.label,
-      };
-      const currentSubjects = this.selectedSubjects();
-      const childrenIds = this.findAllChildrenIds(originalOption);
-
-      // Filter out any existing children first
-      updatedSubjects = currentSubjects.filter((s) => !childrenIds.includes(s.id));
-      updatedSubjects.push(newSubject);
-
-      // Add all children subjects
+      updatedSubjects.push({ id: originalOption.id, text: originalOption.label });
       if (originalOption.children) {
         this.addChildrenToSelection(originalOption.children, updatedSubjects);
+        this.updateChildrenSelection(originalOption.children, true);
       }
     } else {
-      // Remove this subject and all its children
-      const childrenIds = this.findAllChildrenIds(originalOption);
-      updatedSubjects = this.selectedSubjects().filter(
-        (s) => s.id !== originalOption.id && !childrenIds.includes(s.id)
-      );
+      const idsToRemove = [originalOption.id, ...this.findAllChildrenIds(originalOption)];
+      updatedSubjects = updatedSubjects.filter((s) => !idsToRemove.includes(s.id));
+      if (originalOption.children) {
+        this.updateChildrenSelection(originalOption.children, false);
+      }
     }
 
-    this.selectedSubjects.set(updatedSubjects);
-    this.subjectsChanged.emit(updatedSubjects);
+    this.selectedSubjects.set(this.getUniqueSubjects(updatedSubjects));
 
     this.updateParentSelectionState();
+
+    this.restoreExpandedStates(expandedStates);
+
+    if (originalOption.children && originalOption.children.length > 0) {
+      originalOption.expanded = true;
+    }
+
     this.filterOptions();
+
+    this.subjectsChanged.emit(this.selectedSubjects());
   }
 
   private updateChildrenSelection(children: SubjectOption[], selected: boolean) {
@@ -213,12 +185,41 @@ export class ProjectMetadataSubjectsComponent {
     });
   }
 
+  private convertMetadataSubjectsToOptions(subjects: NodeSubjectModel[]): SubjectOption[] {
+    const selectedIds = this.selectedSubjects().map((s) => s.id);
+
+    const convertSubject = (subject: NodeSubjectModel): SubjectOption => {
+      const isSelected = selectedIds.includes(subject.id);
+      const option: SubjectOption = {
+        id: subject.id,
+        label: subject.text,
+        expanded: false,
+        selected: isSelected,
+        level: subject.level,
+      };
+
+      if (subject.children && subject.children.length > 0) {
+        option.children = subject.children.map(convertSubject);
+        const allChildrenSelected = option.children.every((child) => child.selected);
+        const someChildrenSelected = option.children.some((child) => child.selected || child.indeterminate);
+
+        if (someChildrenSelected) {
+          option.expanded = true;
+        }
+
+        option.selected = allChildrenSelected;
+        option.indeterminate = !allChildrenSelected && someChildrenSelected;
+      }
+
+      return option;
+    };
+
+    return subjects.map(convertSubject);
+  }
+
   private addChildrenToSelection(children: SubjectOption[], selectedSubjects: ProjectOverviewSubject[]) {
     children.forEach((child) => {
-      selectedSubjects.push({
-        id: child.id,
-        text: child.label,
-      });
+      selectedSubjects.push({ id: child.id, text: child.label });
       if (child.children) {
         this.addChildrenToSelection(child.children, selectedSubjects);
       }
@@ -276,14 +277,43 @@ export class ProjectMetadataSubjectsComponent {
     updateParent(this.subjectOptions());
   }
 
-  getUniqueSubjects(): ProjectOverviewSubject[] {
+  getUniqueSubjects(subjects?: ProjectOverviewSubject[]): ProjectOverviewSubject[] {
     const seen = new Set<string>();
-    return this.selectedSubjects().filter((subject) => {
+    const subjectList = subjects ? subjects : this.selectedSubjects();
+    return subjectList.filter((subject) => {
       if (seen.has(subject.id)) {
         return false;
       }
       seen.add(subject.id);
       return true;
+    });
+  }
+
+  private getExpandedStates(): Map<string, boolean> {
+    const expandedStates = new Map<string, boolean>();
+    this.collectExpandedStates(this.subjectOptions(), expandedStates);
+    return expandedStates;
+  }
+
+  private collectExpandedStates(options: SubjectOption[], expandedStates: Map<string, boolean>) {
+    options.forEach((option) => {
+      expandedStates.set(option.id, option.expanded || false);
+      if (option.children) {
+        this.collectExpandedStates(option.children, expandedStates);
+      }
+    });
+  }
+
+  private restoreExpandedStates(expandedStates: Map<string, boolean>) {
+    this.applyExpandedStates(this.subjectOptions(), expandedStates);
+  }
+
+  private applyExpandedStates(options: SubjectOption[], expandedStates: Map<string, boolean>) {
+    options.forEach((option) => {
+      option.expanded = expandedStates.get(option.id) || false;
+      if (option.children) {
+        this.applyExpandedStates(option.children, expandedStates);
+      }
     });
   }
 }

@@ -6,7 +6,7 @@ import { catchError, tap } from 'rxjs/operators';
 import { inject, Injectable } from '@angular/core';
 
 import { LicensesService } from '@core/services/licenses.service';
-import { LicensesStateModel, LoadAllLicenses } from '@shared/stores';
+import { LicensesStateModel, LoadAllLicenses } from '@shared/stores/licenses';
 
 const defaultState: LicensesStateModel = {
   licenses: {

@@ -6,7 +6,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { NodeSubjectModel } from '@shared/models';
 import { SubjectsService } from '@shared/services';
-import { GetSubjects, SubjectsModel, UpdateProjectSubjects } from '@shared/stores';
+import { GetSubjects, SubjectsModel, UpdateProjectSubjects } from '@shared/stores/subjects';
 
 const initialState: SubjectsModel = {
   highlightedSubjects: {
@@ -75,7 +75,8 @@ export class SubjectsState {
         next: (result) => {
           const state = ctx.getState();
 
-          return result
+          // The API returns the updated subjects, we need to map them to the expected format
+          const updatedSubjects = result
             .map((updatedSubject: { id: string; type: string }) => {
               const findSubjectById = (subjects: NodeSubjectModel[]): NodeSubjectModel | undefined => {
                 for (const subject of subjects) {
@@ -101,6 +102,8 @@ export class SubjectsState {
                 : null;
             })
             .filter((subject: { id: string; text: string } | null) => subject !== null);
+
+          return updatedSubjects;
         },
       })
     );

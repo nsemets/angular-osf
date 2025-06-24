@@ -21,13 +21,12 @@
               role="button"
               [attr.aria-label]="subject.text"
               (click)="removeSubject(subject); $event.stopPropagation()"
-              (keydown)="$event.key === 'Enter' && removeSubject(subject)"
               [title]="'project.overview.metadata.clickToRemove' | translate"
             />
           }
 
           @if (getUniqueSubjects().length === 0) {
-            <span class="text-color-secondary">{{ 'project.overview.metadata.addSubjects' | translate }}</span>
+            <span class="text-color-secondary">{{ 'project.metadata.addSubjects' | translate }}</span>
           }
         </div>
       </div>

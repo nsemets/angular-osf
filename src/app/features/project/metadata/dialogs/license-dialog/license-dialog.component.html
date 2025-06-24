@@ -1,6 +1,5 @@
 <div class="flex flex-column gap-4">
   @if (!licensesLoading()) {
-    <p>{{ licensesLoading() }}</p>
     <form [formGroup]="licenseForm" class="flex flex-column gap-4">
       <div>
         <label for="licenseName" class="block text-sm font-medium mb-2">
@@ -9,7 +8,7 @@
         <p-select
           id="licenseName"
           formControlName="licenseName"
-          [options]="licenses()"
+          [options]="licenseOptions"
           placeholder="{{ 'project.metadata.license.dialog.chooseLicense.placeholder' | translate }}"
           class="w-full"
           appendTo="body"

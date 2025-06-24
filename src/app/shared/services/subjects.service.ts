@@ -5,12 +5,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { JsonApiService } from '@core/services';
 import { SubjectMapper } from '@shared/mappers';
-import {
-  NodeSubjectModel,
-  SubjectJsonApi,
-  UpdateSubjectRequestJsonApi,
-  UpdateSubjectResponseJsonApi,
-} from '@shared/models';
+import { NodeSubjectModel, SubjectJsonApi, UpdateSubjectRequestJsonApi } from '@shared/models';
 
 import { environment } from 'src/environments/environment';
 
@@ -37,8 +32,9 @@ export class SubjectsService {
       })),
     };
 
-    return this.jsonApiService
-      .put<UpdateSubjectResponseJsonApi>(`${this.apiUrl}/nodes/${projectId}/relationships/subjects/`, payload)
-      .pipe(map((result) => result.data));
+    return this.jsonApiService.put<UpdateSubjectRequestJsonApi[]>(
+      `${this.apiUrl}/nodes/${projectId}/relationships/subjects/`,
+      payload
+    );
   }
 }

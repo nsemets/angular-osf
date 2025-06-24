@@ -58,7 +58,7 @@ import {
 import { ProjectOverviewSubject } from '@osf/features/project/overview/models';
 import { LoadingSpinnerComponent, SubHeaderComponent } from '@shared/components';
 import { ToastService } from '@shared/services';
-import { GetSubjects, SubjectsSelectors, UpdateProjectSubjects } from '@shared/stores';
+import { GetSubjects, SubjectsSelectors, UpdateProjectSubjects } from '@shared/stores/subjects';
 
 @Component({
   selector: 'osf-project-metadata',

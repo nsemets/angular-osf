@@ -13,7 +13,9 @@ import { AccountSettingsState } from '@osf/features/settings/account-settings/st
 import { DeveloperAppsState } from '@osf/features/settings/developer-apps/store';
 import { NotificationSubscriptionState } from '@osf/features/settings/notifications/store';
 import { ProfileSettingsState } from '@osf/features/settings/profile-settings/store/profile-settings.state';
-import { AddonsState, InstitutionsState, LicensesState, SubjectsState } from '@shared/stores';
+import { AddonsState, InstitutionsState } from '@shared/stores';
+import { LicensesState } from '@shared/stores/licenses';
+import { SubjectsState } from '@shared/stores/subjects';
 
 export const STATES = [
   AuthState,
