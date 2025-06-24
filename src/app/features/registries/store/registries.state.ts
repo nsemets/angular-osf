@@ -3,7 +3,11 @@ import { Action, State, StateContext } from '@ngxs/store';
 import { throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+
+import { ResourceTab } from '@osf/shared/enums';
+import { SearchService } from '@osf/shared/services';
+import { getResourceTypes } from '@osf/shared/utils';
 
 import { Project } from '../models';
 import { ProjectsService, ProvidersService, RegistriesService } from '../services';
@@ -16,6 +20,7 @@ import {
   FetchContributors,
   GetProjects,
   GetProviders,
+  GetRegistries,
   UpdateContributor,
 } from './registries.actions';
 import { RegistriesStateModel } from './registries.model';
@@ -42,6 +47,11 @@ const DefaultState: RegistriesStateModel = {
     isLoading: false,
     error: null,
   },
+  registries: {
+    data: [],
+    isLoading: false,
+    error: null,
+  },
 };
 
 @State<RegistriesStateModel>({
@@ -50,11 +60,35 @@ const DefaultState: RegistriesStateModel = {
 })
 @Injectable()
 export class RegistriesState {
-  constructor(
-    private providersService: ProvidersService,
-    private projectsService: ProjectsService,
-    private registriesService: RegistriesService
-  ) {}
+  searchService = inject(SearchService);
+  providersService = inject(ProvidersService);
+  projectsService = inject(ProjectsService);
+  registriesService = inject(RegistriesService);
+  @Action(GetRegistries)
+  getRegistries(ctx: StateContext<RegistriesStateModel>) {
+    const state = ctx.getState();
+    ctx.patchState({
+      registries: {
+        ...state.registries,
+        isLoading: true,
+      },
+    });
+
+    const resourceType = getResourceTypes(ResourceTab.Registrations);
+
+    return this.searchService.getResources({}, '', '', resourceType).pipe(
+      tap((registries) => {
+        ctx.patchState({
+          registries: {
+            data: registries.resources,
+            isLoading: false,
+            error: null,
+          },
+        });
+      }),
+      catchError((error) => this.handleError(ctx, 'registries', error))
+    );
+  }
 
   @Action(GetProjects)
   getProjects({ patchState }: StateContext<RegistriesStateModel>) {
@@ -90,12 +124,12 @@ export class RegistriesState {
         isLoading: true,
       },
     });
-
     return this.providersService.getProviders().subscribe({
       next: (providers) => {
         patchState({
           providers: {
             data: providers,
+
             isLoading: false,
             error: null,
           },

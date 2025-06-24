@@ -1,5 +1,9 @@
 import { ContributorAddModel, ContributorModel } from '@osf/shared/components/contributors/models';
 
+export class GetRegistries {
+  static readonly type = '[Registries] Get Registries';
+}
+
 export class GetProviders {
   static readonly type = '[Registries]  Get Providers';
 }
