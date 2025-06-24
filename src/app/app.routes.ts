@@ -52,6 +52,7 @@ export const routes: Routes = [
           import('@osf/features/home/pages/home-logged-out/home-logged-out.component').then(
             (mod) => mod.HomeLoggedOutComponent
           ),
+        data: { skipBreadcrumbs: true },
       },
       {
         path: 'support',

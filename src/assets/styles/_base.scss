@@ -89,8 +89,11 @@
   svg {
     outline: none;
   }
-}
 
-.cursor-not-allowed {
-  cursor: not-allowed;
+  label {
+    display: block;
+    color: var(--dark-blue-1);
+    margin-bottom: mix.rem(4px);
+    font-weight: 400;
+  }
 }
