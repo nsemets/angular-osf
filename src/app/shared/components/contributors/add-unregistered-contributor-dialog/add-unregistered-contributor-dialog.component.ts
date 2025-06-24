@@ -10,9 +10,9 @@ import { TextInputComponent } from '@osf/shared/components';
 import { InputLimits } from '@osf/shared/constants';
 import { CustomValidators } from '@osf/shared/utils';
 
-import { AddContributorType, ContributorPermission } from '../../enums';
-import { ContributorAddModel, UnregisteredContributorForm } from '../../models';
-import { ContributorDialogAddModel } from '../../models/contributor-dialog-add.model';
+import { AddContributorType, ContributorPermission } from './../enums';
+import { ContributorAddModel, UnregisteredContributorForm } from './../models';
+import { ContributorDialogAddModel } from './../models/contributor-dialog-add.model';
 
 @Component({
   selector: 'osf-add-unregistered-contributor-dialog',

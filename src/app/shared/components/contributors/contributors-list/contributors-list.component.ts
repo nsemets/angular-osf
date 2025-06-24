@@ -13,8 +13,8 @@ import { MY_PROJECTS_TABLE_PARAMS } from '@osf/core/constants';
 import { SelectComponent } from '@osf/shared/components';
 import { SelectOption, TableParameters } from '@osf/shared/models';
 
-import { PERMISSION_OPTIONS } from '../../constants';
-import { ContributorModel } from '../../models';
+import { PERMISSION_OPTIONS } from '../constants';
+import { ContributorModel } from '../models';
 
 @Component({
   selector: 'osf-contributors-list',
