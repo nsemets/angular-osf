@@ -1,3 +1,4 @@
 export * from './addon.mapper';
 export * from './filters';
+export * from './institutions';
 export * from './resource-card';
