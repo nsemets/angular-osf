@@ -54,3 +54,7 @@ export class DeleteContributor {
     public contributorId: string
   ) {}
 }
+
+export class FetchLicenses {
+  static readonly type = '[Registries] Fetch Licenses';
+}

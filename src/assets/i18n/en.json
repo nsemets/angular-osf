@@ -41,14 +41,16 @@
     "labels": {
       "downloads": "Downloads",
       "title": "Title",
-      "description": "Description"
+      "description": "Description",
+      "year": "Year"
     },
     "deleteConfirmation": {
       "header": "Delete",
       "message": "Are you sure you want to proceed?"
     },
     "links": {
-      "clickHere": "Click here"
+      "clickHere": "Click here",
+      "helpGuide": "Help Guide"
     }
   },
   "navigation": {
@@ -1463,6 +1465,13 @@
       "materials": "Materials",
       "papers": "Papers",
       "supplements": "Supplements"
+    },
+    "license": {
+      "title": "License",
+      "selectLicense": "Select license",
+      "description": "A license tells others how they can use your work in the future and only applies to the information and files submitted with the registration.",
+      "helpText": "For more information, see this ",
+      "copyrightHolders": "Copyright Holders"
     }
   },
   "pageNotFound": {

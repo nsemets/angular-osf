@@ -2,7 +2,7 @@ import { Selector } from '@ngxs/store';
 
 import { Resource } from '@shared/models';
 
-import { Project, Provider } from '../models';
+import { License, Project, Provider } from '../models';
 
 import { RegistriesStateModel } from './registries.model';
 import { RegistriesState } from './registries.state';
@@ -36,5 +36,10 @@ export class RegistriesSelectors {
   @Selector([RegistriesState])
   static isRegistriesLoading(state: RegistriesStateModel): boolean {
     return state.registries.isLoading;
+  }
+
+  @Selector([RegistriesState])
+  static getLicenses(state: RegistriesStateModel): License[] {
+    return state.licenses.data;
   }
 }

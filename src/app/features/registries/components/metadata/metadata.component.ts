@@ -17,6 +17,7 @@ import { CustomValidators } from '@osf/shared/utils';
 import { DeleteDraft } from '../../store';
 
 import { ContributorsComponent } from './contributors/contributors.component';
+import { LicenseComponent } from './license/license.component';
 
 @Component({
   selector: 'osf-metadata',
@@ -28,6 +29,7 @@ import { ContributorsComponent } from './contributors/contributors.component';
     TranslatePipe,
     TextareaModule,
     ContributorsComponent,
+    LicenseComponent,
   ],
   templateUrl: './metadata.component.html',
   styleUrl: './metadata.component.scss',

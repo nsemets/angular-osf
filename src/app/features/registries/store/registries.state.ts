@@ -10,7 +10,7 @@ import { SearchService } from '@osf/shared/services';
 import { getResourceTypes } from '@osf/shared/utils';
 
 import { Project } from '../models';
-import { ProjectsService, ProvidersService, RegistriesService } from '../services';
+import { LicensesService, ProjectsService, ProvidersService, RegistriesService } from '../services';
 
 import {
   AddContributor,
@@ -18,6 +18,7 @@ import {
   DeleteContributor,
   DeleteDraft,
   FetchContributors,
+  FetchLicenses,
   GetProjects,
   GetProviders,
   GetRegistries,
@@ -52,6 +53,11 @@ const DefaultState: RegistriesStateModel = {
     isLoading: false,
     error: null,
   },
+  licenses: {
+    data: [],
+    isLoading: false,
+    error: null,
+  },
 };
 
 @State<RegistriesStateModel>({
@@ -64,6 +70,8 @@ export class RegistriesState {
   providersService = inject(ProvidersService);
   projectsService = inject(ProjectsService);
   registriesService = inject(RegistriesService);
+  licensesService = inject(LicensesService);
+
   @Action(GetRegistries)
   getRegistries(ctx: StateContext<RegistriesStateModel>) {
     const state = ctx.getState();
@@ -294,6 +302,29 @@ export class RegistriesState {
         });
       }),
       catchError((error) => this.handleError(ctx, 'contributorsList', error))
+    );
+  }
+
+  @Action(FetchLicenses)
+  fetchLicenses(ctx: StateContext<RegistriesStateModel>) {
+    ctx.patchState({
+      licenses: {
+        ...ctx.getState().licenses,
+        isLoading: true,
+      },
+    });
+
+    return this.licensesService.getLicenses().pipe(
+      tap((licenses) => {
+        ctx.patchState({
+          licenses: {
+            data: licenses,
+            isLoading: false,
+            error: null,
+          },
+        });
+      }),
+      catchError((error) => this.handleError(ctx, 'licenses', error))
     );
   }
 
