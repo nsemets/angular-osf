@@ -1,7 +1,9 @@
 import { Selector } from '@ngxs/store';
 
-import { License } from '@shared/models';
-import { LicensesState, LicensesStateModel } from '@shared/stores/licenses';
+import { License } from '@osf/shared/models';
+
+import { LicensesStateModel } from './licenses.model';
+import { LicensesState } from './licenses.state';
 
 export class LicensesSelectors {
   @Selector([LicensesState])

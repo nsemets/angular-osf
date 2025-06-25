@@ -15,7 +15,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { UserSelectors } from '@osf/core/store/user';
-import { ContributorsSelectors, GetAllContributors } from '@osf/features/project/contributors/store';
 import {
   CedarTemplateFormComponent,
   ProjectMetadataAffiliatedInstitutionsComponent,
@@ -56,6 +55,7 @@ import {
   UpdateProjectDetails,
 } from '@osf/features/project/metadata/store';
 import { ProjectOverviewSubject } from '@osf/features/project/overview/models';
+import { ContributorsSelectors, GetAllContributors } from '@osf/shared/components/contributors/store';
 import { LoadingSpinnerComponent, SubHeaderComponent } from '@shared/components';
 import { ToastService } from '@shared/services';
 import { GetSubjects, SubjectsSelectors, UpdateProjectSubjects } from '@shared/stores/subjects';

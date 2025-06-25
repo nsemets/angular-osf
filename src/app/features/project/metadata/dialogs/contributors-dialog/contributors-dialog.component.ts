@@ -13,16 +13,17 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule } from '@angular/forms';
 
-import { AddContributorType } from '@osf/features/project/contributors/enums';
-import { ContributorDialogAddModel, ContributorModel } from '@osf/features/project/contributors/models';
+import { SearchInputComponent } from '@osf/shared/components';
+import { AddContributorDialogComponent } from '@osf/shared/components/contributors';
+import { AddContributorType } from '@osf/shared/components/contributors/enums';
+import { ContributorDialogAddModel, ContributorModel } from '@osf/shared/components/contributors/models';
 import {
   AddContributor,
   DeleteContributor,
   UpdateBibliographyFilter,
   UpdatePermissionFilter,
   UpdateSearchValue,
-} from '@osf/features/project/contributors/store';
-import { SearchInputComponent } from '@osf/shared/components';
+} from '@osf/shared/components/contributors/store';
 import { ToastService } from '@osf/shared/services';
 
 @Component({
@@ -73,33 +74,29 @@ export class ContributorsDialogComponent implements OnInit {
   }
 
   openAddContributorDialog(): void {
-    import(
-      '@osf/features/project/contributors/components/add-contributor-dialog/add-contributor-dialog.component'
-    ).then(({ AddContributorDialogComponent }) => {
-      const addedContributorIds = this.contributors().map((x) => x.userId);
+    const addedContributorIds = this.contributors().map((x) => x.userId);
 
-      this.dialogService
-        .open(AddContributorDialogComponent, {
-          width: '448px',
-          data: addedContributorIds,
-          focusOnShow: false,
-          header: this.translateService.instant('project.contributors.addDialog.addRegisteredContributor'),
-          closeOnEscape: true,
-          modal: true,
-          closable: true,
-        })
-        .onClose.pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe((res: ContributorDialogAddModel) => {
-          if (res?.type === AddContributorType.Registered) {
-            const addRequests = res.data.map((payload) => this.actions.addContributor(this.projectId, payload));
+    this.dialogService
+      .open(AddContributorDialogComponent, {
+        width: '448px',
+        data: addedContributorIds,
+        focusOnShow: false,
+        header: this.translateService.instant('project.contributors.addDialog.addRegisteredContributor'),
+        closeOnEscape: true,
+        modal: true,
+        closable: true,
+      })
+      .onClose.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((res: ContributorDialogAddModel) => {
+        if (res?.type === AddContributorType.Registered) {
+          const addRequests = res.data.map((payload) => this.actions.addContributor(this.projectId, payload));
 
-            forkJoin(addRequests).subscribe(() => {
-              this.toastService.showSuccess('project.contributors.toastMessages.multipleAddSuccessMessage');
-              this.dialogRef.close({ refresh: true });
-            });
-          }
-        });
-    });
+          forkJoin(addRequests).subscribe(() => {
+            this.toastService.showSuccess('project.contributors.toastMessages.multipleAddSuccessMessage');
+            this.dialogRef.close({ refresh: true });
+          });
+        }
+      });
   }
 
   removeContributor(contributor: ContributorModel): void {

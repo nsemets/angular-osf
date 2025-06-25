@@ -1,15 +1,11 @@
-import { provideStates } from '@ngxs/store';
-
 import { Routes } from '@angular/router';
 
-import { ContributorsState } from '@osf/features/project/contributors/store';
-import { ProjectMetadataComponent } from '@osf/features/project/metadata/project-metadata.component';
+import { ProjectMetadataComponent } from './project-metadata.component';
 
-export const projectMetadataRoutes = [
+export const projectMetadataRoutes: Routes = [
   {
     path: '',
     component: ProjectMetadataComponent,
-    providers: [provideStates([ContributorsState])],
   },
   {
     path: 'add',
@@ -19,4 +15,4 @@ export const projectMetadataRoutes = [
     path: ':recordId',
     component: ProjectMetadataComponent,
   },
-] as Routes;
+];

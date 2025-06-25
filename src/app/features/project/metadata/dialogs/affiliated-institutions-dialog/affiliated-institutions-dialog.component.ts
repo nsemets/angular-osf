@@ -1,4 +1,4 @@
-import { Store } from '@ngxs/store';
+import { select } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -26,17 +26,15 @@ interface AffiliatedInstitutionsForm {
 export class AffiliatedInstitutionsDialogComponent implements OnInit {
   protected dialogRef = inject(DynamicDialogRef);
   protected config = inject(DynamicDialogConfig);
-  private store = inject(Store);
 
-  protected userInstitutions = this.store.selectSignal(ProjectMetadataSelectors.getUserInstitutions);
-  protected userInstitutionsLoading = this.store.selectSignal(ProjectMetadataSelectors.getUserInstitutionsLoading);
+  protected userInstitutions = select(ProjectMetadataSelectors.getUserInstitutions);
+  protected userInstitutionsLoading = select(ProjectMetadataSelectors.getUserInstitutionsLoading);
 
   affiliatedInstitutionsForm = new FormGroup<AffiliatedInstitutionsForm>({
     institutions: new FormArray<FormControl<boolean>>([]),
   });
 
   constructor() {
-    // Update form when institutions are loaded
     effect(() => {
       const institutions = this.userInstitutions();
       if (institutions && Array.isArray(institutions) && institutions.length > 0) {
@@ -55,8 +53,6 @@ export class AffiliatedInstitutionsDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Institutions should already be loaded by the metadata component
-    // If they're already available, update the form
     const institutions = this.userInstitutions();
     if (institutions && Array.isArray(institutions) && institutions.length > 0) {
       this.updateFormControls(institutions);
@@ -64,10 +60,8 @@ export class AffiliatedInstitutionsDialogComponent implements OnInit {
   }
 
   private updateFormControls(institutions: UserInstitution[]): void {
-    // Clear existing form controls
     this.affiliatedInstitutionsForm.controls.institutions.clear();
 
-    // Add form controls for each institution
     institutions.forEach((institution) => {
       const isSelected = this.currentProject?.affiliatedInstitutions?.some((i) => i.id === institution.id) ?? false;
       this.affiliatedInstitutionsForm.controls.institutions.push(new FormControl(isSelected, { nonNullable: true }));

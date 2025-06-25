@@ -75,7 +75,6 @@ export class SubjectsState {
         next: (result) => {
           const state = ctx.getState();
 
-          // The API returns the updated subjects, we need to map them to the expected format
           const updatedSubjects = result
             .map((updatedSubject: { id: string; type: string }) => {
               const findSubjectById = (subjects: NodeSubjectModel[]): NodeSubjectModel | undefined => {
