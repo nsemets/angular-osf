@@ -20,9 +20,8 @@ import { CreateProject, GetMyProjects, MyProjectsSelectors } from '@osf/features
 import { ProjectFormControls } from '@osf/shared/enums/create-project-form-controls.enum';
 import { ProjectForm } from '@osf/shared/models/create-project-form.model';
 import { CustomValidators } from '@osf/shared/utils';
+import { InstitutionsSelectors } from '@shared/stores/institutions';
 import { IS_XSMALL } from '@shared/utils/breakpoints.tokens';
-
-import { InstitutionsSelectors } from 'src/app/shared/stores/institutions';
 
 @Component({
   selector: 'osf-add-project-form',

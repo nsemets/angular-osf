@@ -49,6 +49,7 @@ export const routes: Routes = [
           import('@osf/features/home/pages/home-logged-out/home-logged-out.component').then(
             (mod) => mod.HomeLoggedOutComponent
           ),
+        data: { skipBreadcrumbs: true },
       },
       {
         path: 'support',
@@ -139,6 +140,10 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./core/components/request-access/request-access.component').then((mod) => mod.RequestAccessComponent),
         data: { skipBreadcrumbs: true },
+      },
+      {
+        path: 'registries',
+        loadChildren: () => import('./features/registries/registries.routes').then((mod) => mod.registriesRoutes),
       },
       {
         path: '**',

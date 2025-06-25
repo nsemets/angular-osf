@@ -93,6 +93,13 @@
 }
 
 // ------------------------- Universal custom hover state -------------------------
+
 .grey-border-color {
   border-color: var(--grey-2);
+}
+
+// ------------------------- Cursor not allowed -------------------------
+
+.cursor-not-allowed {
+  cursor: not-allowed;
 }
