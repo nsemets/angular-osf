@@ -22,6 +22,11 @@ export class DeleteDraft {
   constructor(public draftId: string) {}
 }
 
+export class FetchSchemaBlocks {
+  static readonly type = '[Registries] Fetch Schema Blocks';
+  constructor(public registrationSchemaId: string) {}
+}
+
 export class FetchContributors {
   static readonly type = '[Registries] Fetch Contributors';
 

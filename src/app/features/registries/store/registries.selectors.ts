@@ -2,7 +2,7 @@ import { Selector } from '@ngxs/store';
 
 import { Resource } from '@shared/models';
 
-import { License, Project, Provider } from '../models';
+import { License, PageSchema, Project, Provider } from '../models';
 
 import { RegistriesStateModel } from './registries.model';
 import { RegistriesState } from './registries.state';
@@ -41,5 +41,10 @@ export class RegistriesSelectors {
   @Selector([RegistriesState])
   static getLicenses(state: RegistriesStateModel): License[] {
     return state.licenses.data;
+  }
+
+  @Selector([RegistriesState])
+  static getPagesSchema(state: RegistriesStateModel): PageSchema[] {
+    return state.pagesSchema.data;
   }
 }

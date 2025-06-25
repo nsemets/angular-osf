@@ -19,6 +19,7 @@ import {
   DeleteDraft,
   FetchContributors,
   FetchLicenses,
+  FetchSchemaBlocks,
   GetProjects,
   GetProviders,
   GetRegistries,
@@ -54,6 +55,11 @@ const DefaultState: RegistriesStateModel = {
     error: null,
   },
   licenses: {
+    data: [],
+    isLoading: false,
+    error: null,
+  },
+  pagesSchema: {
     data: [],
     isLoading: false,
     error: null,
@@ -165,7 +171,7 @@ export class RegistriesState {
     });
 
     return this.registriesService.createDraft(payload.registrationSchemaId, payload.projectId).pipe(
-      tap(() => {
+      tap((registration) => {
         ctx.patchState({
           draftRegistration: {
             ...ctx.getState().draftRegistration,
@@ -208,6 +214,26 @@ export class RegistriesState {
         });
       }),
       catchError((error) => this.handleError(ctx, 'draftRegistration', error))
+    );
+  }
+
+  @Action(FetchSchemaBlocks)
+  fetchSchemaBlocks(ctx: StateContext<RegistriesStateModel>, action: FetchSchemaBlocks) {
+    const state = ctx.getState();
+    ctx.patchState({
+      pagesSchema: { ...state.pagesSchema, isLoading: true, error: null },
+    });
+    return this.registriesService.getSchemaBlocks(action.registrationSchemaId).pipe(
+      tap((schemaBlocks) => {
+        ctx.patchState({
+          pagesSchema: {
+            data: schemaBlocks,
+            isLoading: false,
+            error: null,
+          },
+        });
+      }),
+      catchError((error) => this.handleError(ctx, 'pagesSchema', error))
     );
   }
 

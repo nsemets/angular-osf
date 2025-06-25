@@ -8,8 +8,10 @@ import { AddContributorType } from '@osf/shared/components/contributors/enums';
 import { ContributorsMapper } from '@osf/shared/components/contributors/mappers';
 import { ContributorAddModel, ContributorModel, ContributorResponse } from '@osf/shared/components/contributors/models';
 
-import { Registration } from '../models';
+import { PageSchemaMapper } from '../mappers';
+import { PageSchema, Registration } from '../models';
 import { RegistrationDataJsonApi } from '../models/registries-json-api.model';
+import { SchemaBlocksResponseJsonApi } from '../models/schema-blocks-json-api.model';
 
 import { environment } from 'src/environments/environment';
 
@@ -57,30 +59,14 @@ export class RegistriesService {
     return this.jsonApiService.patch(`${this.apiUrl}/draft_registrations/${draftId}/`, payload);
   }
 
-  // addContributor(draftId: string, userId: string, permission: string): Observable<RegistrationDataJsonApi> {
-  //   const payload = {
-  //     data: {
-  //       type: 'contributors',
-  //       attributes: {
-  //         permission,
-  //       },
-  //       relationships: {
-  //         users: {
-  //           data: [
-  //             {
-  //               type: 'users',
-  //               id: userId,
-  //             },
-  //           ],
-  //         },
-  //       },
-  //     },
-  //   };
-  //   return this.jsonApiService.post(`${this.apiUrl}/draft_registrations/${draftId}/contributors/`, payload);
-  // }
-
   deleteDraft(draftId: string): Observable<void> {
     return this.jsonApiService.delete(`${this.apiUrl}/draft_registrations/${draftId}/`);
+  }
+
+  getSchemaBlocks(registrationSchemaId: string): Observable<PageSchema[]> {
+    return this.jsonApiService
+      .get<SchemaBlocksResponseJsonApi>(`${this.apiUrl}/schemas/registrations/${registrationSchemaId}/schema_blocks/`)
+      .pipe(map((response) => PageSchemaMapper.fromSchemaBlocksResponse(response)));
   }
 
   getContributors(draftId: string): Observable<ContributorModel[]> {
