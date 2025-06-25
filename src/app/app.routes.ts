@@ -7,11 +7,10 @@ import { ProjectFilesState } from '@osf/features/project/files/store/project-fil
 import { MyProfileResourceFiltersOptionsState } from './features/my-profile/components/filters/store';
 import { MyProfileResourceFiltersState } from './features/my-profile/components/my-profile-resource-filters/store';
 import { MyProfileState } from './features/my-profile/store';
-import { ContributorsState } from './features/project/contributors/store';
-import { RegistriesState } from './features/registries/store';
 import { ResourceFiltersOptionsState } from './features/search/components/filters/store';
 import { ResourceFiltersState } from './features/search/components/resource-filters/store';
 import { SearchState } from './features/search/store';
+import { ContributorsState } from './shared/components/contributors/store';
 
 export const routes: Routes = [
   {
@@ -53,6 +52,7 @@ export const routes: Routes = [
           import('@osf/features/home/pages/home-logged-out/home-logged-out.component').then(
             (mod) => mod.HomeLoggedOutComponent
           ),
+        data: { skipBreadcrumbs: true },
       },
       {
         path: 'support',
@@ -165,19 +165,9 @@ export const routes: Routes = [
       },
       {
         path: 'registries',
-        loadComponent: () =>
-          import('./features/registries/registries.component').then((mod) => mod.RegistriesComponent),
-        providers: [provideStates([RegistriesState])],
-        children: [
-          {
-            path: 'new',
-            loadComponent: () =>
-              import('./features/registries/components/new-registration/new-registration.component').then(
-                (mod) => mod.NewRegistrationComponent
-              ),
-          },
-        ],
+        loadChildren: () => import('./features/registries/registries.routes').then((mod) => mod.registriesRoutes),
       },
+
       {
         path: 'settings',
         loadChildren: () => import('./features/settings/settings.routes').then((mod) => mod.settingsRoutes),
@@ -219,6 +209,10 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./core/components/request-access/request-access.component').then((mod) => mod.RequestAccessComponent),
         data: { skipBreadcrumbs: true },
+      },
+      {
+        path: 'registries',
+        loadChildren: () => import('./features/registries/registries.routes').then((mod) => mod.registriesRoutes),
       },
       {
         path: '**',

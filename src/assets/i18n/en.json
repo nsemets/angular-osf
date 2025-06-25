@@ -17,6 +17,7 @@
       "disconnect": "Disconnect",
       "revert": "Revert",
       "next": "Next",
+      "back": "Back",
       "skip": "Skip",
       "done": "Done",
       "select": "Select",
@@ -38,7 +39,9 @@
       }
     },
     "labels": {
-      "downloads": "Downloads"
+      "downloads": "Downloads",
+      "title": "Title",
+      "description": "Description"
     },
     "deleteConfirmation": {
       "header": "Delete",
@@ -60,6 +63,10 @@
     "support": "Support",
     "meetings": "Meetings",
     "myProjects": "My Projects",
+    "registries": "Registries",
+    "registriesSubRoutes": {
+      "overview": "Overview"
+    },
     "preprints": "Preprints",
     "preprintsSubRoutes": {
       "overview": "Overview",
@@ -341,6 +348,17 @@
     }
   },
   "registries": {
+    "title": "Registries",
+    "addRegistration": "Add a Registration",
+    "description": "The open registries network",
+    "searchPlaceholder": "Search Registrations",
+    "services": {
+      "title": "Registry Services",
+      "description": "Leading registry service providers use this open source infrastructure to support their communities.",
+      "contactUs": "Contact Us"
+    },
+    "browse": "Browse Registrations",
+    "seeMore": "See more",
     "new": {
       "addNewRegistry": "Add New Registry",
       "infoText1": "You are submitting to OSF Registries.",
@@ -352,7 +370,17 @@
         "step3": "Which type of registration would you like to create?",
         "step2InfoText": "If your project includes components, you can select which components to include or exclude at the end of the registration."
       },
+
       "createDraft": "Create draft"
+    },
+    "deleteDraft": "Delete Draft",
+    "metadata": {
+      "title": "Registration  Metadata",
+      "description": "This metadata applies only to the registration you are creating, and will not be applied to your project.",
+      "addContributors": "Add Contributor By Search"
+    },
+    "review": {
+      "title": "Review Registration"
     }
   },
   "myProfile": {
