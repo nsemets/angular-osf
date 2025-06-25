@@ -23,8 +23,7 @@
       "skip": "Skip",
       "done": "Done",
       "select": "Select",
-      "deselect": "Deselect",
-      "create": "Create"
+      "deselect": "Deselect"
     },
     "search": {
       "title": "Search",
@@ -880,6 +879,10 @@
       },
       "addCommunityMetadataRecord": {
         "title": "Add community metadata record"
+      },
+      "contributors": {
+        "editContributors": "Edit contributors",
+        "updateSucceed": "Contributors successfully updated."
       }
     }
   },

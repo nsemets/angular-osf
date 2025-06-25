@@ -2,10 +2,9 @@ import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
-import { ConfirmationService } from 'primeng/api';
 import { Card } from 'primeng/card';
 import { DialogService } from 'primeng/dynamicdialog';
-import { TabPanel, TabView } from 'primeng/tabview';
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
 
 import { EMPTY, filter, switchMap } from 'rxjs';
 
@@ -57,7 +56,7 @@ import {
 import { ProjectOverviewSubject } from '@osf/features/project/overview/models';
 import { ContributorsSelectors, GetAllContributors } from '@osf/shared/components/contributors/store';
 import { LoadingSpinnerComponent, SubHeaderComponent } from '@shared/components';
-import { ToastService } from '@shared/services';
+import { CustomConfirmationService, ToastService } from '@shared/services';
 import { GetSubjects, SubjectsSelectors, UpdateProjectSubjects } from '@shared/stores/subjects';
 
 @Component({
@@ -77,8 +76,11 @@ import { GetSubjects, SubjectsSelectors, UpdateProjectSubjects } from '@shared/s
     ProjectMetadataAffiliatedInstitutionsComponent,
     CedarTemplateFormComponent,
     TranslatePipe,
-    TabView,
+    Tab,
+    TabList,
     TabPanel,
+    TabPanels,
+    Tabs,
     LoadingSpinnerComponent,
   ],
   templateUrl: './project-metadata.component.html',
@@ -93,10 +95,10 @@ export class ProjectMetadataComponent implements OnInit {
   private readonly dialogService = inject(DialogService);
   private readonly translateService = inject(TranslateService);
   private readonly toastService = inject(ToastService);
-  private readonly confirmationService = inject(ConfirmationService);
+  private readonly customConfirmationService = inject(CustomConfirmationService);
 
-  activeTabIndex = signal<number>(0);
   tabs = signal<{ id: string; label: string; type: 'project' | 'cedar' }[]>([]);
+  protected readonly selectedTab = signal('project');
 
   selectedCedarRecord = signal<CedarMetadataRecordData | null>(null);
   selectedCedarTemplate = signal<CedarMetadataDataTemplateJsonApi | null>(null);
@@ -187,18 +189,17 @@ export class ProjectMetadataComponent implements OnInit {
     const recordId = this.route.snapshot.paramMap.get('recordId');
 
     if (!recordId) {
-      this.activeTabIndex.set(0);
+      this.selectedTab.set('project');
       this.selectedCedarRecord.set(null);
       this.selectedCedarTemplate.set(null);
       return;
     }
 
-    const tabs = this.tabs();
-    const index = tabs.findIndex((tab) => tab.id === recordId);
+    const tab = this.tabs().find((tab) => tab.id === recordId);
 
-    if (index >= 0) {
-      this.activeTabIndex.set(index);
-      const tab = tabs[index];
+    if (tab) {
+      this.selectedTab.set('project');
+
       if (tab.type === 'cedar') {
         this.loadCedarRecord(tab.id);
       }
@@ -226,8 +227,12 @@ export class ProjectMetadataComponent implements OnInit {
 
   openEditContributorDialog(): void {
     const dialogRef = this.dialogService.open(ContributorsDialogComponent, {
-      header: this.translateService.instant('project.metadata.contributors.dialog.header'),
       width: '800px',
+      header: this.translateService.instant('project.metadata.contributors.editContributors'),
+      focusOnShow: false,
+      closeOnEscape: true,
+      modal: true,
+      closable: true,
       data: {
         projectId: this.currentProject()?.id,
         contributors: this.contributors(),
@@ -236,11 +241,10 @@ export class ProjectMetadataComponent implements OnInit {
     });
 
     dialogRef.onClose.pipe(filter((result) => !!result && (result.refresh || result.saved))).subscribe({
-      next: (result) => {
+      next: () => {
         this.refreshContributorsData();
-        this.toastService.showSuccess('project.metadata.contributors.updated');
+        this.toastService.showSuccess('project.metadata.contributors.updateSucceed');
       },
-      error: () => this.toastService.showError('project.metadata.contributors.updateFailed'),
     });
   }
 
@@ -255,6 +259,10 @@ export class ProjectMetadataComponent implements OnInit {
     const dialogRef = this.dialogService.open(DescriptionDialogComponent, {
       header: this.translateService.instant('project.metadata.description.dialog.header'),
       width: '500px',
+      focusOnShow: false,
+      closeOnEscape: true,
+      modal: true,
+      closable: true,
       data: {
         currentProject: this.currentProject(),
       },
@@ -286,6 +294,10 @@ export class ProjectMetadataComponent implements OnInit {
     const dialogRef = this.dialogService.open(ResourceInformationDialogComponent, {
       header: this.translateService.instant('project.metadata.resourceInformation.dialog.header'),
       width: '500px',
+      focusOnShow: false,
+      closeOnEscape: true,
+      modal: true,
+      closable: true,
       data: {
         currentProject: this.currentProject(),
         customItemMetadata: this.customItemMetadata(),
@@ -322,6 +334,10 @@ export class ProjectMetadataComponent implements OnInit {
     const dialogRef = this.dialogService.open(LicenseDialogComponent, {
       header: this.translateService.instant('project.metadata.license.dialog.header'),
       width: '600px',
+      focusOnShow: false,
+      closeOnEscape: true,
+      modal: true,
+      closable: true,
       data: {
         currentProject: this.currentProject(),
       },
@@ -355,6 +371,10 @@ export class ProjectMetadataComponent implements OnInit {
     const dialogRef = this.dialogService.open(FundingDialogComponent, {
       header: this.translateService.instant('project.metadata.funding.dialog.header'),
       width: '600px',
+      focusOnShow: false,
+      closeOnEscape: true,
+      modal: true,
+      closable: true,
       data: {
         currentProject: this.currentProject(),
       },
@@ -408,6 +428,10 @@ export class ProjectMetadataComponent implements OnInit {
     const dialogRef = this.dialogService.open(AffiliatedInstitutionsDialogComponent, {
       header: this.translateService.instant('project.metadata.affiliatedInstitutions.dialog.header'),
       width: '500px',
+      focusOnShow: false,
+      closeOnEscape: true,
+      modal: true,
+      closable: true,
       data: {
         currentProject: this.currentProject(),
       },
@@ -432,12 +456,12 @@ export class ProjectMetadataComponent implements OnInit {
   }
 
   handleEditDoi(): void {
-    this.confirmationService.confirm({
-      header: this.translateService.instant('project.metadata.doi.dialog.createConfirm.header'),
-      message: this.translateService.instant('project.metadata.doi.dialog.createConfirm.message'),
-      acceptLabel: this.translateService.instant('common.buttons.create'),
-      rejectLabel: this.translateService.instant('common.buttons.cancel'),
-      accept: () => {
+    this.customConfirmationService.confirmDelete({
+      headerKey: this.translateService.instant('project.metadata.doi.dialog.createConfirm.header'),
+      messageKey: this.translateService.instant('project.metadata.doi.dialog.createConfirm.message'),
+      acceptLabelKey: this.translateService.instant('common.buttons.create'),
+      acceptLabelType: 'primary',
+      onConfirm: () => {
         const projectId = this.currentProject()?.id;
         if (projectId) {
           this.actions.updateProjectDetails(projectId, { doi: true }).subscribe({
@@ -448,9 +472,12 @@ export class ProjectMetadataComponent implements OnInit {
     });
   }
 
-  onTabChange(index: number): void {
-    this.activeTabIndex.set(index);
-    const tab = this.tabs()[index];
+  onTabChange(tabId: string | number): void {
+    const tab = this.tabs().find((x) => x.id === tabId);
+
+    if (!tab) {
+      return;
+    }
 
     if (tab.type === 'cedar') {
       this.loadCedarRecord(tab.id);
@@ -465,7 +492,7 @@ export class ProjectMetadataComponent implements OnInit {
 
       const currentRecordId = this.route.snapshot.paramMap.get('recordId');
       if (currentRecordId) {
-        this.router.navigate(['..'], { relativeTo: this.route });
+        this.router.navigate(['.'], { relativeTo: this.route });
       }
     }
   }

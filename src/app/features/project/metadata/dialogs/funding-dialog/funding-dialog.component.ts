@@ -63,6 +63,12 @@ export class FundingDialogComponent implements OnInit {
         }))
       );
     });
+
+    effect(() => {
+      const control = this.fundingForm.controls['fundingEntries'];
+
+      return this.fundersLoading() ? control.disable() : control.enable();
+    });
   }
 
   get currentProject(): ProjectOverview | null {

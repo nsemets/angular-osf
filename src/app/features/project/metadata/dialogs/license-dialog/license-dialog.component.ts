@@ -10,6 +10,7 @@ import { ChangeDetectionStrategy, Component, effect, inject, OnInit, signal } fr
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { ProjectOverview } from '@osf/features/project/overview/models';
+import { LoadingSpinnerComponent } from '@osf/shared/components';
 import { License, SelectOption } from '@shared/models';
 import { LicensesSelectors, LoadAllLicenses } from '@shared/stores/licenses';
 
@@ -19,7 +20,7 @@ interface LicenseForm {
 
 @Component({
   selector: 'osf-license-dialog',
-  imports: [Button, Select, TranslatePipe, ReactiveFormsModule],
+  imports: [Button, Select, TranslatePipe, ReactiveFormsModule, LoadingSpinnerComponent],
   templateUrl: './license-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -40,7 +41,6 @@ export class LicenseDialogComponent implements OnInit {
 
   licenses = select(LicensesSelectors.getLicenses);
   licensesLoading = select(LicensesSelectors.getLoading);
-  licensesError = select(LicensesSelectors.getError);
 
   selectedLicenseText = signal<string>('');
   licenseOptions: SelectOption[] = [];
@@ -49,6 +49,7 @@ export class LicenseDialogComponent implements OnInit {
   constructor() {
     effect(() => {
       const currentLicenses = this.licenses();
+
       if (currentLicenses) {
         this.licenseOptions = currentLicenses.map((license: License) => ({
           label: license.attributes.name,

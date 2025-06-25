@@ -6,18 +6,30 @@
     [title]="'project.overview.metadata.title' | translate"
   />
 
-  <p-tabView [activeIndex]="activeTabIndex()" (activeIndexChange)="onTabChange($event)" class="flex-1">
-    @for (tab of tabs(); track tab.id) {
-      <p-tabPanel [header]="tab.label">
-        @if (tab.type === 'project') {
-          @if (highlightedSubjectsLoading() && currentProjectLoading()) {
-            <div class="flex-1 mt-4 md:mt-8 lg:pt-5">
-              <osf-loading-spinner />
-            </div>
-          } @else {
-            <div class="flex-column flex flex-1 w-full">
-              <div class="p-6 bg-white">
-                <div class="grid w-full">
+  @if (!tabs().length) {
+    <div class="flex-1 mt-4 md:mt-8 lg:pt-5">
+      <osf-loading-spinner />
+    </div>
+  }
+
+  @if (tabs().length) {
+    <p-tabs class="flex-1" [value]="selectedTab()" [lazy]="true" scrollable (valueChange)="onTabChange($event)">
+      <p-tablist class="pr-5 pl-5">
+        @for (item of tabs(); track $index) {
+          <p-tab [value]="item.id">{{ item.label | translate }}</p-tab>
+        }
+      </p-tablist>
+
+      <p-tabpanels class="p-3 flex-1 md:p-5 xl:p-4">
+        @for (tab of tabs(); track $index) {
+          <p-tabpanel [value]="tab.id">
+            @if (tab.type === 'project') {
+              @if (highlightedSubjectsLoading() && currentProjectLoading()) {
+                <div class="flex-1 mt-4 md:mt-8 lg:pt-5">
+                  <osf-loading-spinner />
+                </div>
+              } @else {
+                <div class="flex-column flex flex-1 w-full bg-white">
                   <div class="col-12 lg:col-6 flex flex-column gap-4">
                     <p-card>
                       <div class="flex justify-content-between flex-wrap gap-4">
@@ -25,6 +37,7 @@
                           <h3 class="text-lg font-semibold m-0">
                             {{ 'project.overview.metadata.dateCreated' | translate }}
                           </h3>
+
                           <p class="m-0 text-color-secondary">
                             {{ currentProject()?.dateCreated | date: 'MMM d, y, h:mm a' }}
                           </p>
@@ -34,6 +47,7 @@
                           <h3 class="text-lg font-semibold m-0">
                             {{ 'project.overview.metadata.dateUpdated' | translate }}
                           </h3>
+
                           <p class="m-0 text-color-secondary">
                             {{ currentProject()?.dateModified | date: 'MMM d, y, h:mm a' }}
                           </p>
@@ -90,30 +104,30 @@
                     />
                   </div>
                 </div>
-              </div>
-            </div>
-          }
-        } @else {
-          <div class="p-6">
-            @if (selectedCedarTemplate() && selectedCedarRecord()) {
-              <osf-cedar-template-form
-                [template]="selectedCedarTemplate()!"
-                [existingRecord]="selectedCedarRecord()!"
-                [readonly]="cedarFormReadonly()"
-                [showEditButton]="true"
-                (emitData)="onCedarFormSubmit($event)"
-                (changeTemplate)="onCedarFormChangeTemplate()"
-                (editMode)="onCedarFormEdit()"
-              />
+              }
             } @else {
-              <div class="text-center py-8">
-                <p class="text-lg mb-4">{{ 'project.metadata.addMetadata.loadingCedar' | translate }}</p>
-                <p class="text-sm text-gray-600">{{ tab.label }}</p>
+              <div class="p-6">
+                @if (selectedCedarTemplate() && selectedCedarRecord()) {
+                  <osf-cedar-template-form
+                    [template]="selectedCedarTemplate()!"
+                    [existingRecord]="selectedCedarRecord()!"
+                    [readonly]="cedarFormReadonly()"
+                    [showEditButton]="true"
+                    (emitData)="onCedarFormSubmit($event)"
+                    (changeTemplate)="onCedarFormChangeTemplate()"
+                    (editMode)="onCedarFormEdit()"
+                  />
+                } @else {
+                  <div class="text-center py-8">
+                    <p class="text-lg mb-4">{{ 'project.metadata.addMetadata.loadingCedar' | translate }}</p>
+                    <p class="text-sm text-gray-600">{{ tab.label }}</p>
+                  </div>
+                }
               </div>
             }
-          </div>
+          </p-tabpanel>
         }
-      </p-tabPanel>
-    }
-  </p-tabView>
+      </p-tabpanels>
+    </p-tabs>
+  }
 </section>

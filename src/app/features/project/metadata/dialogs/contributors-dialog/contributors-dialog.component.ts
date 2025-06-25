@@ -9,6 +9,7 @@ import { Tooltip } from 'primeng/tooltip';
 
 import { forkJoin } from 'rxjs';
 
+import { TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule } from '@angular/forms';
@@ -28,7 +29,7 @@ import { ToastService } from '@osf/shared/services';
 
 @Component({
   selector: 'osf-contributors-dialog',
-  imports: [Button, SearchInputComponent, Skeleton, Tooltip, TranslatePipe, FormsModule],
+  imports: [Button, SearchInputComponent, Skeleton, Tooltip, TranslatePipe, TitleCasePipe, FormsModule],
   templateUrl: './contributors-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DialogService],

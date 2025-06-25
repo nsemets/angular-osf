@@ -1,5 +1,7 @@
 <div class="flex flex-column gap-4">
-  @if (!licensesLoading()) {
+  @if (licensesLoading()) {
+    <osf-loading-spinner></osf-loading-spinner>
+  } @else {
     <form [formGroup]="licenseForm" class="flex flex-column gap-4">
       <div>
         <label for="licenseName" class="block text-sm font-medium mb-2">
@@ -9,7 +11,7 @@
           id="licenseName"
           formControlName="licenseName"
           [options]="licenseOptions"
-          placeholder="{{ 'project.metadata.license.dialog.chooseLicense.placeholder' | translate }}"
+          [placeholder]="'project.metadata.license.dialog.chooseLicense.placeholder' | translate"
           class="w-full"
           appendTo="body"
           optionLabel="label"
@@ -24,8 +26,9 @@
       }
     </form>
   }
+
   <div class="flex justify-content-end gap-2">
-    <p-button severity="secondary" [label]="'common.buttons.cancel' | translate" (click)="cancel()" />
+    <p-button severity="info" [label]="'common.buttons.cancel' | translate" (click)="cancel()" />
     <p-button [label]="'common.buttons.create' | translate" (click)="save()" [disabled]="!licenseForm.valid" />
   </div>
 </div>

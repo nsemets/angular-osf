@@ -5,9 +5,10 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Textarea } from 'primeng/textarea';
 
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 import { ProjectOverview } from '@osf/features/project/overview/models';
+import { CustomValidators } from '@osf/shared/utils';
 
 @Component({
   selector: 'osf-description-dialog',
@@ -22,7 +23,7 @@ export class DescriptionDialogComponent implements OnInit {
 
   descriptionControl = new FormControl('', {
     nonNullable: true,
-    validators: [Validators.required],
+    validators: [CustomValidators.requiredTrimmed],
   });
 
   get currentProject(): ProjectOverview | null {
