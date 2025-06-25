@@ -3,6 +3,7 @@ export * from './addons-category-options.const';
 export * from './addons-tab-options.const';
 export * from './input-limits.const';
 export * from './input-validation-messages.const';
+export * from './language.const';
 export * from './meetings-table.constants';
 export * from './registry-services-icons.const';
 export * from './remove-nullable.const';
