@@ -2,15 +2,12 @@ import { provideStates } from '@ngxs/store';
 
 import { Routes } from '@angular/router';
 
-import { ProjectFilesState } from '@osf/features/project/files/store/project-files.state';
-
 import { MyProfileResourceFiltersOptionsState } from './features/my-profile/components/filters/store';
 import { MyProfileResourceFiltersState } from './features/my-profile/components/my-profile-resource-filters/store';
 import { MyProfileState } from './features/my-profile/store';
 import { ResourceFiltersOptionsState } from './features/search/components/filters/store';
 import { ResourceFiltersState } from './features/search/components/resource-filters/store';
 import { SearchState } from './features/search/store';
-import { ContributorsState } from './shared/components/contributors/store';
 
 export const routes: Routes = [
   {
@@ -100,68 +97,7 @@ export const routes: Routes = [
       },
       {
         path: 'my-projects/:id',
-        loadComponent: () => import('@osf/features/project/project.component').then((mod) => mod.ProjectComponent),
-        children: [
-          {
-            path: '',
-            pathMatch: 'full',
-            redirectTo: 'overview',
-          },
-          {
-            path: 'overview',
-            loadComponent: () =>
-              import('@osf/features/project/overview/project-overview.component').then(
-                (mod) => mod.ProjectOverviewComponent
-              ),
-          },
-          {
-            path: 'metadata',
-            loadComponent: () =>
-              import('@osf/features/project/metadata/project-metadata.component').then(
-                (mod) => mod.ProjectMetadataComponent
-              ),
-          },
-          {
-            path: 'files',
-            loadChildren: () =>
-              import('@osf/features/project/files/project-files.routes').then((mod) => mod.projectFilesRoutes),
-            providers: [provideStates([ProjectFilesState])],
-          },
-          {
-            path: 'registrations',
-            loadComponent: () =>
-              import('@osf/features/project/registrations/registrations.component').then(
-                (mod) => mod.RegistrationsComponent
-              ),
-          },
-          {
-            path: 'settings',
-            loadComponent: () =>
-              import('./features/project/settings/settings.component').then((mod) => mod.SettingsComponent),
-          },
-          {
-            path: 'contributors',
-            loadComponent: () =>
-              import('@osf/features/project/contributors/contributors.component').then(
-                (mod) => mod.ContributorsComponent
-              ),
-            providers: [provideStates([ContributorsState])],
-          },
-          {
-            path: 'analytics',
-            loadComponent: () =>
-              import('@osf/features/project/analytics/analytics.component').then((mod) => mod.AnalyticsComponent),
-          },
-          {
-            path: 'wiki',
-            loadComponent: () => import('@osf/features/project/wiki/wiki.component').then((mod) => mod.WikiComponent),
-          },
-          {
-            path: 'addons',
-            loadChildren: () =>
-              import('./features/project/addons/constants/addons.routes').then((mod) => mod.addonsRoutes),
-          },
-        ],
+        loadChildren: () => import('./features/project/project.routes').then((mod) => mod.projectRoutes),
       },
       {
         path: 'registries',
