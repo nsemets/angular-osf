@@ -27,6 +27,7 @@
   i {
     @include mix.flex-center;
     font-size: mix.rem(16px);
+    outline: none;
   }
 
   h1 {
@@ -81,11 +82,6 @@
       content: "";
       display: block;
     }
-  }
-
-  i,
-  svg {
-    outline: none;
   }
 }
 
