@@ -362,7 +362,7 @@
     "browse": "Browse Registrations",
     "seeMore": "See more",
     "new": {
-      "addNewRegistry": "Add New Registry",
+      "addNewRegistry": "Add New Registration",
       "infoText1": "You are submitting to OSF Registries.",
       "infoText2": "to learn more about other hosted registries",
       "steps": {

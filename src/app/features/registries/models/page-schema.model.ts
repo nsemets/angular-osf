@@ -1,29 +1,21 @@
+import { FieldType } from '../enums';
+
 export interface PageSchema {
   id: string;
   title: string;
+  description?: string;
   questions?: Question[];
 }
 
 export interface Question {
   id: string;
-  title: string;
-  description?: string;
-  type: QuestionType;
+  displayText: string;
+  exampleText?: string;
+  helpText?: string;
+  paragraphText?: string;
+  fieldType?: FieldType;
   options?: string[];
   required: boolean;
   groupKey?: string;
   responseKey?: string;
-}
-
-export enum QuestionType {
-  Text = 'text',
-  TextArea = 'textarea',
-  Select = 'select',
-  MultiSelect = 'multi-select',
-  Checkbox = 'checkbox',
-  Radio = 'radio',
-  Date = 'date',
-  Number = 'number',
-  Email = 'email',
-  Url = 'url',
 }

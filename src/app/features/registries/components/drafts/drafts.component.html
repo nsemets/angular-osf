@@ -1,2 +1,9 @@
-<osf-stepper class="m-t-48" [steps]="steps()" [currentStep]="currentStep()" (currentStepChange)="stepChange($event)" />
+<osf-sub-header [title]="'registries.new.addNewRegistry' | translate" />
+<osf-stepper
+  class="block ml-4 mb-4"
+  [steps]="steps()"
+  [linear]="false"
+  [currentStep]="currentStep()"
+  (currentStepChange)="stepChange($event)"
+/>
 <router-outlet></router-outlet>

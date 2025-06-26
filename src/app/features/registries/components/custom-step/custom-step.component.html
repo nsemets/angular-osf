@@ -1,1 +1,44 @@
-<p>custom-step works!</p>
+<section class="flex flex-column bg-white flex-1 h-full p-5 gap-4 w-full">
+  @if (currentPage()) {
+    <h2>{{ currentPage().title }}</h2>
+  }
+
+  @for (question of currentPage().questions; track question.id) {
+    <p-card>
+      <label [for]="question.groupKey">
+        <h3 class="mb-2">
+          {{ question.displayText }}
+          @if (question.required) {
+            <span class="text-red-500">*</span>
+          }
+        </h3>
+        @if (question.helpText) {
+          <p class="mb-3">{{ question.helpText }}</p>
+        }
+        @if (question.paragraphText) {
+          <p class="mb-3">{{ question.paragraphText }}</p>
+        }
+      </label>
+      @switch (question.fieldType) {
+        @case (FieldType.TextArea) {
+          <textarea id="{{ question.groupKey }}" class="w-full" rows="5" cols="30" pTextarea></textarea>
+        }
+        @case (FieldType.Radio) {
+          <div class="flex flex-column gap-2">
+            @for (option of question.options; track option) {
+              <div class="flex align -items-center gap-2">
+                <p-radioButton
+                  [inputId]="option"
+                  [(ngModel)]="radio"
+                  [name]="question.groupKey || ''"
+                  [value]="option"
+                ></p-radioButton>
+                <label [for]="option" class="ml-2">{{ option }}</label>
+              </div>
+            }
+          </div>
+        }
+      }
+    </p-card>
+  }
+</section>
