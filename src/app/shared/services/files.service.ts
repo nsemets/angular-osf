@@ -240,4 +240,17 @@ export class FilesService {
       >(`${environment.apiUrl}/files/${fileGuid}/`, payload)
       .pipe(map((response) => MapFile(response)));
   }
+
+  copyFileToAnotherLocation(moveLink: string, provider: string, resourceId: string) {
+    const body = {
+      action: 'copy',
+      conflict: 'replace',
+      path: '/',
+      provider,
+      resource: resourceId,
+    };
+    return this.#jsonApiService
+      .post<ApiData<FileResponse, FileTargetResponse, FileRelationshipsResponse, FileLinks>>(moveLink, body)
+      .pipe(map((response) => MapFile(response)));
+  }
 }

@@ -27,6 +27,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { StringOrNull } from '@core/helpers';
 import { PreprintFileSource } from '@osf/features/preprints/enums';
 import {
+  CopyFileFromProject,
   GetAvailableProjects,
   GetPreprintFilesLinks,
   GetProjectFiles,
@@ -66,6 +67,7 @@ export class FileStepComponent implements OnInit {
     getAvailableProjects: GetAvailableProjects,
     getFilesForSelectedProject: GetProjectFiles,
     getProjectFilesByLink: GetProjectFilesByLink,
+    copyFileFromProject: CopyFileFromProject,
   });
   private destroyRef = inject(DestroyRef);
 
@@ -128,6 +130,7 @@ export class FileStepComponent implements OnInit {
   }
 
   nextButtonClicked() {
+    //TODO only if primary file id
     this.nextClicked.emit();
   }
 
@@ -154,6 +157,6 @@ export class FileStepComponent implements OnInit {
   }
 
   selectProjectFile(file: OsfFile) {
-    //[RNi] TODO: implement logic of linking preprint to that file
+    this.actions.copyFileFromProject(file);
   }
 }

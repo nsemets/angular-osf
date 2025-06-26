@@ -1,6 +1,7 @@
 import { StringOrNull } from '@core/helpers';
 import { PreprintFileSource } from '@osf/features/preprints/enums';
 import { Preprint } from '@osf/features/preprints/models';
+import { OsfFile } from '@shared/models';
 
 export class SetSelectedPreprintProviderId {
   static readonly type = '[Submit Preprint] Set Selected Preprint Provider Id';
@@ -41,6 +42,12 @@ export class UploadFile {
   static readonly type = '[Submit Preprint] Upload File';
 
   constructor(public file: File) {}
+}
+
+export class CopyFileFromProject {
+  static readonly type = '[Submit Preprint] Copy File From Project';
+
+  constructor(public file: OsfFile) {}
 }
 
 export class GetPreprintFiles {

@@ -14,6 +14,7 @@ import { OsfFile } from '@shared/models';
 import { FilesService } from '@shared/services';
 
 import {
+  CopyFileFromProject,
   CreatePreprint,
   GetAvailableProjects,
   GetPreprintFiles,
@@ -125,8 +126,11 @@ export class SubmitPreprintState {
       tap((event) => {
         if (event.type === HttpEventType.Response) {
           ctx.dispatch(GetPreprintFiles);
+
+          const file = event.body!.data;
+          const createdFileId = file.id.split('/')[1];
           this.preprintsService
-            .updateFileRelationship(state.createdPreprint.data!.id, event.body!.data.id)
+            .updateFileRelationship(state.createdPreprint.data!.id, createdFileId)
             .pipe(
               tap((preprint: Preprint) => {
                 ctx.setState((state: SubmitPreprintStateModel) => ({
@@ -274,6 +278,44 @@ export class SubmitPreprintState {
     ctx.patchState({
       fileSource: action.fileSource,
     });
+  }
+
+  @Action(CopyFileFromProject)
+  copyFileFromProject(ctx: StateContext<SubmitPreprintStateModel>, action: CopyFileFromProject) {
+    const createdPreprintId = ctx.getState().createdPreprint.data?.id;
+    if (!createdPreprintId) {
+      return;
+    }
+
+    ctx.setState(patch({ preprintFiles: patch({ isLoading: true }) }));
+
+    return this.fileService
+      .copyFileToAnotherLocation(action.file.links.move, action.file.provider, createdPreprintId)
+      .pipe(
+        tap((file: OsfFile) => {
+          ctx.dispatch(GetPreprintFiles);
+          const fileIdAfterCopy = file.id.split('/')[1];
+          this.preprintsService
+            .updateFileRelationship(createdPreprintId, fileIdAfterCopy)
+            .pipe(
+              tap((preprint: Preprint) => {
+                ctx.setState((state: SubmitPreprintStateModel) => ({
+                  ...state,
+                  createdPreprint: {
+                    ...state.createdPreprint,
+                    data: state.createdPreprint.data
+                      ? { ...state.createdPreprint.data, primaryFileId: preprint.primaryFileId }
+                      : null,
+                  },
+                }));
+              }),
+              take(1),
+              catchError((error) => this.handleError(ctx, 'createdPreprint', error))
+            )
+            .subscribe();
+        }),
+        catchError((error) => this.handleError(ctx, 'preprintFiles', error))
+      );
   }
 
   private handleError(
