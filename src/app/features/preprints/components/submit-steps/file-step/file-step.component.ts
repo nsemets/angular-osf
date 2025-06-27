@@ -78,6 +78,7 @@ export class FileStepComponent implements OnInit {
 
   readonly PreprintFileSource = PreprintFileSource;
 
+  createdPreprint = select(SubmitPreprintSelectors.getCreatedPreprint);
   providerId = select(SubmitPreprintSelectors.getSelectedProviderId);
   selectedFileSource = select(SubmitPreprintSelectors.getSelectedFileSource);
   fileUploadLink = select(SubmitPreprintSelectors.getUploadLink);
@@ -90,8 +91,6 @@ export class FileStepComponent implements OnInit {
   selectedProjectId = signal<StringOrNull>(null);
   currentFolder = signal<OsfFile | null>(null);
 
-  //TODO fix files tree bug, of showing old files when change project
-  //TODO check version file for project
   versionFileMode = signal<boolean>(false);
 
   projectNameControl = new FormControl<StringOrNull>(null);
@@ -110,6 +109,7 @@ export class FileStepComponent implements OnInit {
   };
 
   nextClicked = output<void>();
+  backClicked = output<void>();
 
   isFileSourceSelected = computed(() => {
     return this.selectedFileSource() !== PreprintFileSource.None;
@@ -120,9 +120,12 @@ export class FileStepComponent implements OnInit {
 
     this.projectNameControl.valueChanges
       .pipe(debounceTime(500), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
-      .subscribe((value) => {
-        this.selectedProjectId.set(value);
-        this.actions.getAvailableProjects(value);
+      .subscribe((projectNameOrId) => {
+        if (this.selectedProjectId() === projectNameOrId) {
+          return;
+        }
+
+        this.actions.getAvailableProjects(projectNameOrId);
       });
   }
 
@@ -135,11 +138,14 @@ export class FileStepComponent implements OnInit {
   }
 
   backButtonClicked() {
-    //[RNi] TODO: implement logic of going back to the previous step
+    this.backClicked.emit();
   }
 
   nextButtonClicked() {
-    //TODO only if primary file id
+    if (!this.createdPreprint()?.primaryFileId) {
+      return;
+    }
+
     this.nextClicked.emit();
   }
 
@@ -167,6 +173,7 @@ export class FileStepComponent implements OnInit {
       return;
     }
 
+    this.selectedProjectId.set(event.value);
     this.actions.getFilesForSelectedProject(event.value);
   }
 

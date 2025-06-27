@@ -1,7 +1,7 @@
 import { Action, State, StateContext } from '@ngxs/store';
 import { patch } from '@ngxs/store/operators';
 
-import { EMPTY, switchMap, take, tap, throwError } from 'rxjs';
+import { EMPTY, filter, switchMap, tap, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { HttpEventType } from '@angular/common/http';
@@ -124,31 +124,26 @@ export class SubmitPreprintState {
     ctx.setState(patch({ preprintFiles: patch({ isLoading: true }) }));
 
     return this.fileService.uploadFileByLink(action.file, state.preprintFilesLinks.data.uploadFileLink).pipe(
-      tap((event) => {
-        if (event.type === HttpEventType.Response) {
-          ctx.dispatch(GetPreprintFiles);
+      filter((event) => event.type === HttpEventType.Response),
+      switchMap((event) => {
+        const file = event.body!.data;
+        const createdFileId = file.id.split('/')[1];
+        ctx.dispatch(new GetPreprintFiles());
 
-          const file = event.body!.data;
-          const createdFileId = file.id.split('/')[1];
-          this.preprintsService
-            .updateFileRelationship(state.createdPreprint.data!.id, createdFileId)
-            .pipe(
-              tap((preprint: Preprint) => {
-                ctx.setState((state: SubmitPreprintStateModel) => ({
-                  ...state,
-                  createdPreprint: {
-                    ...state.createdPreprint,
-                    data: state.createdPreprint.data
-                      ? { ...state.createdPreprint.data, primaryFileId: preprint.primaryFileId }
-                      : null,
-                  },
-                }));
-              }),
-              take(1),
-              catchError((error) => this.handleError(ctx, 'createdPreprint', error))
-            )
-            .subscribe();
-        }
+        return this.preprintsService.updateFileRelationship(state.createdPreprint.data!.id, createdFileId).pipe(
+          tap((preprint: Preprint) => {
+            ctx.patchState({
+              createdPreprint: {
+                ...ctx.getState().createdPreprint,
+                data: {
+                  ...ctx.getState().createdPreprint.data!,
+                  primaryFileId: preprint.primaryFileId,
+                },
+              },
+            });
+          }),
+          catchError((error) => this.handleError(ctx, 'createdPreprint', error))
+        );
       })
     );
   }
@@ -226,7 +221,16 @@ export class SubmitPreprintState {
           })
         );
       }),
-      catchError((error) => this.handleError(ctx, 'projectFiles', error))
+      catchError((error) => {
+        ctx.setState(
+          patch({
+            preprintFiles: patch({
+              data: [],
+            }),
+          })
+        );
+        return this.handleError(ctx, 'projectFiles', error);
+      })
     );
   }
 
@@ -305,31 +309,28 @@ export class SubmitPreprintState {
     }
 
     ctx.setState(patch({ preprintFiles: patch({ isLoading: true }) }));
-
     return this.fileService
       .copyFileToAnotherLocation(action.file.links.move, action.file.provider, createdPreprintId)
       .pipe(
-        tap((file: OsfFile) => {
-          ctx.dispatch(GetPreprintFiles);
+        switchMap((file: OsfFile) => {
+          ctx.dispatch(new GetPreprintFiles());
+
           const fileIdAfterCopy = file.id.split('/')[1];
-          this.preprintsService
-            .updateFileRelationship(createdPreprintId, fileIdAfterCopy)
-            .pipe(
-              tap((preprint: Preprint) => {
-                ctx.setState((state: SubmitPreprintStateModel) => ({
-                  ...state,
-                  createdPreprint: {
-                    ...state.createdPreprint,
-                    data: state.createdPreprint.data
-                      ? { ...state.createdPreprint.data, primaryFileId: preprint.primaryFileId }
-                      : null,
+
+          return this.preprintsService.updateFileRelationship(createdPreprintId, fileIdAfterCopy).pipe(
+            tap((preprint: Preprint) => {
+              ctx.patchState({
+                createdPreprint: {
+                  ...ctx.getState().createdPreprint,
+                  data: {
+                    ...ctx.getState().createdPreprint.data!,
+                    primaryFileId: preprint.primaryFileId,
                   },
-                }));
-              }),
-              take(1),
-              catchError((error) => this.handleError(ctx, 'createdPreprint', error))
-            )
-            .subscribe();
+                },
+              });
+            }),
+            catchError((error) => this.handleError(ctx, 'createdPreprint', error))
+          );
         }),
         catchError((error) => this.handleError(ctx, 'preprintFiles', error))
       );
