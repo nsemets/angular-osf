@@ -6,7 +6,12 @@ export interface RegistrationResponseJsonApi {
   links: PaginationLinksJsonApi;
 }
 
-export type RegistrationDataJsonApi = ApiData<RegistrationAttributesJsonApi, null, null, null>;
+export type RegistrationDataJsonApi = ApiData<
+  RegistrationAttributesJsonApi,
+  null,
+  RegistrationRelationshipsJsonApi,
+  null
+>;
 
 interface RegistrationAttributesJsonApi {
   category: string;
@@ -20,4 +25,13 @@ interface RegistrationAttributesJsonApi {
   registration_responses: Record<string, unknown>;
   tags: string[];
   title: string;
+}
+
+interface RegistrationRelationshipsJsonApi {
+  registration_schema: {
+    data: {
+      id: '58fd62fcda3e2400012ca5c1';
+      type: 'registration-schemas';
+    };
+  };
 }

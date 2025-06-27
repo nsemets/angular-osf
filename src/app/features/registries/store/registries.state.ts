@@ -18,6 +18,7 @@ import {
   DeleteContributor,
   DeleteDraft,
   FetchContributors,
+  FetchDraft,
   FetchLicenses,
   FetchSchemaBlocks,
   GetProjects,
@@ -174,7 +175,8 @@ export class RegistriesState {
       tap((registration) => {
         ctx.patchState({
           draftRegistration: {
-            ...ctx.getState().draftRegistration,
+            data: { ...registration },
+            isLoading: false,
             isSubmitting: false,
             error: null,
           },
@@ -190,6 +192,31 @@ export class RegistriesState {
         });
         return this.handleError(ctx, 'draftRegistration', error);
       })
+    );
+  }
+
+  @Action(FetchDraft)
+  fetchDraft(ctx: StateContext<RegistriesStateModel>, { draftId }: FetchDraft) {
+    ctx.patchState({
+      draftRegistration: {
+        ...ctx.getState().draftRegistration,
+        isLoading: true,
+        error: null,
+      },
+    });
+
+    return this.registriesService.getDraft(draftId).pipe(
+      tap((draft) => {
+        ctx.patchState({
+          draftRegistration: {
+            data: { ...draft },
+            isLoading: false,
+            isSubmitting: false,
+            error: null,
+          },
+        });
+      }),
+      catchError((error) => this.handleError(ctx, 'draftRegistration', error))
     );
   }
 

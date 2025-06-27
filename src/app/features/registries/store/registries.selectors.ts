@@ -2,7 +2,7 @@ import { Selector } from '@ngxs/store';
 
 import { Resource } from '@shared/models';
 
-import { License, PageSchema, Project, Provider } from '../models';
+import { License, PageSchema, Project, Provider, Registration } from '../models';
 
 import { RegistriesStateModel } from './registries.model';
 import { RegistriesState } from './registries.state';
@@ -21,6 +21,11 @@ export class RegistriesSelectors {
   @Selector([RegistriesState])
   static isDraftSubmitting(state: RegistriesStateModel): boolean {
     return state.draftRegistration.isSubmitting ?? false;
+  }
+
+  @Selector([RegistriesState])
+  static getDraftRegistration(state: RegistriesStateModel): Registration | null {
+    return state.draftRegistration.data;
   }
 
   @Selector([RegistriesState])

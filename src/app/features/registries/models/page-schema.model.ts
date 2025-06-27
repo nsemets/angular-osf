@@ -5,6 +5,14 @@ export interface PageSchema {
   title: string;
   description?: string;
   questions?: Question[];
+  sections?: Section[];
+}
+
+export interface Section {
+  id: string;
+  title: string;
+  description?: string;
+  questions?: Question[];
 }
 
 export interface Question {
@@ -14,8 +22,14 @@ export interface Question {
   helpText?: string;
   paragraphText?: string;
   fieldType?: FieldType;
-  options?: string[];
+  options?: QuestionOption[];
   required: boolean;
   groupKey?: string;
   responseKey?: string;
+}
+
+export interface QuestionOption {
+  label: string;
+  value: string;
+  helpText?: string;
 }

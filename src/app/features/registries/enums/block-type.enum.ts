@@ -8,4 +8,6 @@ export enum BlockType {
   SelectInputOption = 'select-input-option',
   FileInput = 'file-input',
   MultiSelectInput = 'multi-select-input',
+  ShortTextInput = 'short-text-input',
+  SectionHeading = 'section-heading',
 }

@@ -12,6 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { TextInputComponent } from '@osf/shared/components';
 import { InputLimits } from '@osf/shared/constants';
+import { CustomConfirmationService, ToastService } from '@osf/shared/services';
 import { CustomValidators } from '@osf/shared/utils';
 
 import { DeleteDraft } from '../../store';
@@ -37,14 +38,17 @@ import { LicenseComponent } from './license/license.component';
 })
 export class MetadataComponent {
   private readonly fb = inject(FormBuilder);
-  protected inputLimits = InputLimits;
+  private readonly toastService = inject(ToastService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly customConfirmationService = inject(CustomConfirmationService);
+
   private readonly draftId = this.route.snapshot.params['id'];
 
   protected actions = createDispatchMap({
     deleteDraft: DeleteDraft,
   });
+  protected inputLimits = InputLimits;
 
   metadataForm = this.fb.group({
     title: ['', CustomValidators.requiredTrimmed()],
@@ -56,9 +60,15 @@ export class MetadataComponent {
   }
 
   deleteDraft(): void {
-    this.actions.deleteDraft(this.draftId).subscribe({
-      next: () => {
-        this.router.navigateByUrl('/registries/new');
+    this.customConfirmationService.confirmDelete({
+      headerKey: 'registries.deleteDraft',
+      messageKey: 'registries.confirmDeleteDraft',
+      onConfirm: () => {
+        this.actions.deleteDraft(this.draftId).subscribe({
+          next: () => {
+            this.router.navigateByUrl('/registries/new');
+          },
+        });
       },
     });
   }

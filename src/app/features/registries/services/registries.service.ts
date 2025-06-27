@@ -9,9 +9,14 @@ import { ContributorsMapper } from '@osf/shared/components/contributors/mappers'
 import { ContributorAddModel, ContributorModel, ContributorResponse } from '@osf/shared/components/contributors/models';
 
 import { PageSchemaMapper } from '../mappers';
-import { PageSchema, Registration } from '../models';
-import { RegistrationDataJsonApi } from '../models/registries-json-api.model';
-import { SchemaBlocksResponseJsonApi } from '../models/schema-blocks-json-api.model';
+import { RegistrationMapper } from '../mappers/registration.mapper';
+import {
+  PageSchema,
+  Registration,
+  RegistrationDataJsonApi,
+  RegistrationResponseJsonApi,
+  SchemaBlocksResponseJsonApi,
+} from '../models';
 
 import { environment } from 'src/environments/environment';
 
@@ -22,7 +27,7 @@ export class RegistriesService {
   private apiUrl = environment.apiUrl;
   private readonly jsonApiService = inject(JsonApiService);
 
-  createDraft(registrationSchemaId: string, projectId?: string | undefined): Observable<RegistrationDataJsonApi> {
+  createDraft(registrationSchemaId: string, projectId?: string | undefined): Observable<Registration> {
     const payload = {
       data: {
         type: 'draft_registrations',
@@ -44,7 +49,15 @@ export class RegistriesService {
         },
       },
     };
-    return this.jsonApiService.post(`${this.apiUrl}/draft_registrations/`, payload);
+    return this.jsonApiService
+      .post<RegistrationDataJsonApi>(`${this.apiUrl}/draft_registrations/`, payload)
+      .pipe(map((response) => RegistrationMapper.fromRegistrationResponse(response)));
+  }
+
+  getDraft(draftId: string): Observable<Registration> {
+    return this.jsonApiService
+      .get<RegistrationResponseJsonApi>(`${this.apiUrl}/draft_registrations/${draftId}/`)
+      .pipe(map((response) => RegistrationMapper.fromRegistrationResponse(response.data)));
   }
 
   updateDraft(draftId: string, data: Registration): Observable<RegistrationDataJsonApi> {

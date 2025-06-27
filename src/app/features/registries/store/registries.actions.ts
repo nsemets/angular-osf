@@ -17,6 +17,11 @@ export class CreateDraft {
   constructor(public payload: { registrationSchemaId: string; projectId?: string }) {}
 }
 
+export class FetchDraft {
+  static readonly type = '[Registries]  Fetch Draft';
+  constructor(public draftId: string) {}
+}
+
 export class DeleteDraft {
   static readonly type = '[Registries]  Delete Draft';
   constructor(public draftId: string) {}

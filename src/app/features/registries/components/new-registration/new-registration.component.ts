@@ -8,6 +8,7 @@ import { Select } from 'primeng/select';
 
 import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { SubHeaderComponent } from '@osf/shared/components';
 import { ToastService } from '@osf/shared/services';
@@ -24,9 +25,11 @@ import { CreateDraft, GetProjects, GetProviders, RegistriesSelectors } from '../
 export class NewRegistrationComponent {
   private readonly fb = inject(FormBuilder);
   private readonly toastService = inject(ToastService);
+  private readonly router = inject(Router);
   protected readonly projects = select(RegistriesSelectors.getProjects);
   protected readonly providers = select(RegistriesSelectors.getProviders);
   protected readonly isDraftSubmitting = select(RegistriesSelectors.isDraftSubmitting);
+  protected readonly draftRegistration = select(RegistriesSelectors.getDraftRegistration);
   protected actions = createDispatchMap({
     getProjects: GetProjects,
     getProviders: GetProviders,
@@ -80,6 +83,7 @@ export class NewRegistrationComponent {
         })
         .subscribe(() => {
           this.toastService.showSuccess('Draft created successfully');
+          this.router.navigate(['/registries/drafts/', this.draftRegistration()?.id, 'metadata']);
         });
     }
   }
