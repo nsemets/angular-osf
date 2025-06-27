@@ -1,4 +1,5 @@
 @use "assets/styles/mixins" as mix;
+@use "assets/styles/variables" as var;
 
 .file-source-button {
   --p-button-secondary-border-color: var(--grey-2);
@@ -18,4 +19,10 @@
   padding: mix.rem(6px) mix.rem(12px);
   border-bottom: 1px solid var(--grey-2);
   border-top: 1px solid var(--grey-2);
+}
+
+.card {
+  @media (max-width: var.$breakpoint-sm) {
+    --p-card-body-padding: 0.75rem;
+  }
 }
