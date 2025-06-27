@@ -1,4 +1,5 @@
-@use "../variables" as var;
+@use "assets/styles/variables" as var;
+@use "assets/styles/mixins" as mix;
 
 .p-message:not(.p-message-simple) {
   border: none;
@@ -19,16 +20,17 @@
 }
 
 .warning-message {
+  --p-message-text-font-weight: 700;
+  --p-message-text-font-size: mix.rem(14px);
+
   .p-message {
     width: fit-content;
     height: fit-content;
     color: var.$red-1;
     background: var.$red-2;
     padding: 1rem;
-
-    .p-message-text {
-      font-weight: 700;
-    }
+    border: none;
+    outline: none;
   }
 }
 
