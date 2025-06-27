@@ -20,9 +20,10 @@
 
   <div class="sorting-container">
     @if (isWeb()) {
-      <h3>Sort by:</h3>
+      <p>Sort by:</p>
+
       <p-select
-        class="no-border-dropdown font-bold"
+        class="no-border-dropdown font-bold ml-2"
         [options]="searchSortingOptions"
         optionLabel="label"
         optionValue="value"
