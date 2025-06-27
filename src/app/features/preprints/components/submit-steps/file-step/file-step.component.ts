@@ -1,5 +1,6 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
+import { ConfirmationService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -32,6 +33,7 @@ import {
   GetPreprintFilesLinks,
   GetProjectFiles,
   GetProjectFilesByLink,
+  ReuploadFile,
   SetSelectedPreprintFileSource,
   SubmitPreprintSelectors,
   UploadFile,
@@ -39,6 +41,7 @@ import {
 import { FilesTreeActions } from '@osf/features/project/files/models';
 import { FilesTreeComponent, IconComponent } from '@shared/components';
 import { OsfFile } from '@shared/models';
+import { defaultConfirmationConfig } from '@shared/utils';
 
 @Component({
   selector: 'osf-file-step',
@@ -60,10 +63,12 @@ import { OsfFile } from '@shared/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileStepComponent implements OnInit {
+  private confirmationService = inject(ConfirmationService);
   private actions = createDispatchMap({
     setSelectedFileSource: SetSelectedPreprintFileSource,
     getPreprintFilesLinks: GetPreprintFilesLinks,
     uploadFile: UploadFile,
+    reuploadFile: ReuploadFile,
     getAvailableProjects: GetAvailableProjects,
     getFilesForSelectedProject: GetProjectFiles,
     getProjectFilesByLink: GetProjectFilesByLink,
@@ -84,6 +89,10 @@ export class FileStepComponent implements OnInit {
   areProjectFilesLoading = select(SubmitPreprintSelectors.areProjectFilesLoading);
   selectedProjectId = signal<StringOrNull>(null);
   currentFolder = signal<OsfFile | null>(null);
+
+  //TODO fix files tree bug, of showing old files when change project
+  //TODO check version file for project
+  versionFileMode = signal<boolean>(false);
 
   projectNameControl = new FormControl<StringOrNull>(null);
 
@@ -139,7 +148,12 @@ export class FileStepComponent implements OnInit {
     const file = input.files?.[0];
     if (!file) return;
 
-    this.actions.uploadFile(file);
+    if (this.versionFileMode()) {
+      this.versionFileMode.set(false);
+      this.actions.reuploadFile(file);
+    } else {
+      this.actions.uploadFile(file);
+    }
   }
 
   @HostListener('window:beforeunload', ['$event'])
@@ -158,5 +172,22 @@ export class FileStepComponent implements OnInit {
 
   selectProjectFile(file: OsfFile) {
     this.actions.copyFileFromProject(file);
+  }
+
+  versionFile() {
+    this.confirmationService.confirm({
+      ...defaultConfirmationConfig,
+      header: 'Add a new preprint file',
+      message:
+        'This will allow a new version of the preprint file to be uploaded to the preprint. The existing file will be retained as a version of the preprint.',
+      acceptButtonProps: {
+        label: 'Continue',
+        severity: 'danger',
+      },
+      accept: () => {
+        this.versionFileMode.set(true);
+        this.actions.setSelectedFileSource(PreprintFileSource.None);
+      },
+    });
   }
 }

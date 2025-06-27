@@ -44,6 +44,12 @@ export class UploadFile {
   constructor(public file: File) {}
 }
 
+export class ReuploadFile {
+  static readonly type = '[Submit Preprint] Reupload File';
+
+  constructor(public file: File) {}
+}
+
 export class CopyFileFromProject {
   static readonly type = '[Submit Preprint] Copy File From Project';
 

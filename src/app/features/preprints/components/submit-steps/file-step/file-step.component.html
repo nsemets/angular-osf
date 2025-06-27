@@ -27,7 +27,7 @@
     [styleClass]="isFileSourceSelected() ? 'w-full cursor-not-allowed' : 'w-full'"
     [label]="'Select From existing OSF project' | titlecase"
     severity="secondary"
-    [disabled]="isFileSourceSelected()"
+    [disabled]="isFileSourceSelected() || versionFileMode()"
     [pTooltip]="isFileSourceSelected() ? 'Start a new preprint to attach a file from your project.' : ''"
     tooltipPosition="top"
     (click)="selectFileSource(PreprintFileSource.Project)"
@@ -38,7 +38,7 @@
   <section class="m-t-48">
     @if (!fileUploadLink()) {
       <p-skeleton width="5rem" height="2rem" />
-    } @else if (!preprintFiles().length && !arePreprintFilesLoading()) {
+    } @else if ((!preprintFiles().length && !arePreprintFilesLoading()) || versionFileMode()) {
       <p-button
         outlined
         raised
@@ -90,23 +90,24 @@
     }
   </section>
 }
+@if (!versionFileMode()) {
+  <section class="m-t-48">
+    @if (arePreprintFilesLoading()) {
+      <p-skeleton height="2rem" class="w-full" />
+    } @else {
+      @for (file of preprintFiles(); track file.id) {
+        <section class="file-row">
+          <div class="flex flex-row gap-2">
+            <osf-icon [iconClass]="'fas fa-file'" />
+            <p>{{ file.name }}</p>
+          </div>
 
-<section class="m-t-48">
-  @if (arePreprintFilesLoading()) {
-    <p-skeleton height="2rem" class="w-full" />
-  } @else {
-    @for (file of preprintFiles(); track file.id) {
-      <section class="file-row">
-        <div class="flex flex-row gap-2">
-          <osf-icon [iconClass]="'fas fa-file'" />
-          <p>{{ file.name }}</p>
-        </div>
-
-        <p-button class="danger-icon-btn" icon="fas fa-trash" severity="danger" text />
-      </section>
+          <p-button class="danger-icon-btn" icon="fas fa-trash" severity="danger" text (click)="versionFile()" />
+        </section>
+      }
     }
-  }
-</section>
+  </section>
+}
 
 <section class="m-t-48 flex flex-row justify-content-end align-items-center gap-2">
   <p-button class="w-6rem" styleClass="w-full" label="Back" severity="info" (click)="backButtonClicked()" />

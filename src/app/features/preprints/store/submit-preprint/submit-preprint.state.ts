@@ -1,7 +1,7 @@
 import { Action, State, StateContext } from '@ngxs/store';
 import { patch } from '@ngxs/store/operators';
 
-import { EMPTY, take, tap, throwError } from 'rxjs';
+import { EMPTY, switchMap, take, tap, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { HttpEventType } from '@angular/common/http';
@@ -22,6 +22,7 @@ import {
   GetProjectFiles,
   GetProjectFilesByLink,
   ResetStateAndDeletePreprint,
+  ReuploadFile,
   SetSelectedPreprintFileSource,
   SetSelectedPreprintProviderId,
   SubmitPreprintStateModel,
@@ -148,6 +149,22 @@ export class SubmitPreprintState {
             )
             .subscribe();
         }
+      })
+    );
+  }
+
+  @Action(ReuploadFile)
+  reuploadFile(ctx: StateContext<SubmitPreprintStateModel>, action: ReuploadFile) {
+    const state = ctx.getState();
+    const uploadedFile = state.preprintFiles.data[0];
+    if (!uploadedFile) return EMPTY;
+
+    ctx.setState(patch({ preprintFiles: patch({ isLoading: true }) }));
+
+    return this.fileService.updateFileContent(action.file, uploadedFile.links.upload).pipe(
+      switchMap(() => this.fileService.renameEntry(uploadedFile.links.upload, action.file.name, 'replace')),
+      tap(() => {
+        ctx.dispatch(GetPreprintFiles);
       })
     );
   }
