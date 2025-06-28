@@ -17,6 +17,7 @@ export * from './node-response.model';
 export * from './paginated-data.model';
 export * from './query-params.model';
 export * from './resource-card';
+export * from './search';
 export * from './select-option.model';
 export * from './severity.type';
 export * from './social-icon.model';
