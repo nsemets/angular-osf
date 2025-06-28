@@ -6,6 +6,7 @@ export interface DeleteConfirmationOptions {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   messageParams?: any;
   acceptLabelKey?: string;
+  acceptLabelType?: string;
   onConfirm: () => void;
 }
 

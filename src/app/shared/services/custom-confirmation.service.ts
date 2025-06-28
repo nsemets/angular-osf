@@ -21,7 +21,7 @@ export class CustomConfirmationService {
       closeOnEscape: false,
       acceptButtonProps: {
         label: this.translateService.instant(options.acceptLabelKey || 'common.buttons.delete'),
-        severity: 'danger',
+        severity: options.acceptLabelType || 'danger',
       },
       rejectButtonProps: {
         label: this.translateService.instant('common.buttons.cancel'),

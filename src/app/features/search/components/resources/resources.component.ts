@@ -1,7 +1,7 @@
 import { Store } from '@ngxs/store';
 
 import { AccordionModule } from 'primeng/accordion';
-import { AutoCompleteModule } from 'primeng/autocomplete';
+import { Button } from 'primeng/button';
 import { DataViewModule } from 'primeng/dataview';
 import { Select } from 'primeng/select';
 import { TableModule } from 'primeng/table';
@@ -27,7 +27,6 @@ import { ResourceFiltersSelectors } from '../resource-filters/store';
     FormsModule,
     ResourceFiltersComponent,
     ReactiveFormsModule,
-    AutoCompleteModule,
     AccordionModule,
     TableModule,
     DataViewModule,
@@ -35,6 +34,7 @@ import { ResourceFiltersSelectors } from '../resource-filters/store';
     Select,
     NgOptimizedImage,
     ResourceCardComponent,
+    Button,
   ],
   templateUrl: './resources.component.html',
   styleUrl: './resources.component.scss',

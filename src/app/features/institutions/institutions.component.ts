@@ -7,7 +7,16 @@ import { PaginatorState } from 'primeng/paginator';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { NgOptimizedImage } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, signal, untracked } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  effect,
+  HostBinding,
+  inject,
+  signal,
+  untracked,
+} from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -39,6 +48,8 @@ import { FetchInstitutions, InstitutionsSelectors } from '@shared/stores';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InstitutionsComponent {
+  @HostBinding('class') classes = 'flex-1 flex flex-column w-full h-full';
+
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
