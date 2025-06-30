@@ -326,7 +326,8 @@
       "enabledForWiki": "This feature is enabled for wikis of private projects.",
       "delete": {
         "title": "Delete Link {{name}}?",
-        "message": "Are you sure you want to delete this view only link?"
+        "message": "Are you sure you want to delete this view only link?",
+        "success": "View only link successfully deleted."
       },
       "descriptions": {
         "comments": {

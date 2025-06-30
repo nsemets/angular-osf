@@ -178,7 +178,11 @@ export class SettingsComponent implements OnInit {
     const id = `${'n5str'}_${data.event}`;
     const frequency = data.frequency;
 
-    this.actions.updateNotificationSubscriptionForNodeId({ id, frequency }).subscribe();
+    this.loaderService.show();
+    this.actions.updateNotificationSubscriptionForNodeId({ id, frequency }).subscribe(() => {
+      this.toastService.showSuccess('myProjects.settings.updateProjectSettingsMessage');
+      this.loaderService.hide();
+    });
   }
 
   deleteLinkItem(link: ViewOnlyLinkModel): void {
@@ -187,7 +191,10 @@ export class SettingsComponent implements OnInit {
       headerParams: { name: link.name },
       messageKey: 'myProjects.settings.delete.message',
       onConfirm: () => {
-        this.actions.deleteViewOnlyLink(this.projectId(), link.id).subscribe();
+        this.actions.deleteViewOnlyLink(this.projectId(), link.id).subscribe(() => {
+          this.toastService.showSuccess('myProjects.settings.delete.success');
+          this.loaderService.hide();
+        });
       },
     });
   }
