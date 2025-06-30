@@ -9,18 +9,20 @@
       (ngModelChange)="selectTab($event)"
     />
 
-    @if (searchCount() > 10000) {
-      <h3>10 000+ results</h3>
-    } @else if (searchCount() > 0) {
-      <h3>{{ searchCount() }} results</h3>
-    } @else {
-      <h3>0 results</h3>
-    }
+    <h3>
+      @if (searchCount() > 10000) {
+        10 000+ {{ 'collections.searchResults.results' | translate }}
+      } @else if (searchCount() > 0) {
+        {{ searchCount() }} {{ 'collections.searchResults.results' | translate }}
+      } @else {
+        0 {{ 'collections.searchResults.results' | translate }}
+      }
+    </h3>
   </div>
 
   <div class="sorting-container">
     @if (isWeb()) {
-      <p>Sort by:</p>
+      <p>{{ 'collections.filters.sortBy' | translate }}:</p>
 
       <p-select
         class="no-border-dropdown font-bold ml-2"
@@ -90,7 +92,7 @@
     <ng-content></ng-content>
 
     <p-dataView [value]="resources()" class="resources-container" [rows]="10">
-      <ng-template #list let-items>
+      <ng-template let-items>
         <div class="resources-list">
           @if (items.length > 0) {
             @for (item of items; track item.id) {
@@ -99,7 +101,7 @@
 
             <div class="flex column-gap-2 w-full justify-content-center pt-2">
               @if (first() && prev()) {
-                <p-button icon="fas fa-angles-left" severity="contrast" text (click)="switchPage(first())"> </p-button>
+                <p-button icon="fas fa-angles-left" severity="contrast" text (click)="switchPage(first())"></p-button>
               }
 
               <p-button

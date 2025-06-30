@@ -1,3 +1,5 @@
+import { TranslatePipe } from '@ngx-translate/core';
+
 import { Button } from 'primeng/button';
 import { DataView } from 'primeng/dataview';
 import { Select } from 'primeng/select';
@@ -16,7 +18,7 @@ import { ResourceCardComponent } from '../resource-card/resource-card.component'
 
 @Component({
   selector: 'osf-search-results-container',
-  imports: [FormsModule, NgOptimizedImage, Button, DataView, Select, ResourceCardComponent],
+  imports: [FormsModule, NgOptimizedImage, Button, DataView, Select, ResourceCardComponent, TranslatePipe],
   templateUrl: './search-results-container.component.html',
   styleUrl: './search-results-container.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -897,6 +897,9 @@
       "placeholder": "Enter search term(s) here"
     },
     "filters": {
+      "sortBy": "Sort by",
+      "noFiltersAvailable": "No filters available",
+      "noOptionsAvailable": "No options available",
       "programArea": {
         "label": "Program Area",
         "placeholder": "Select program areas",

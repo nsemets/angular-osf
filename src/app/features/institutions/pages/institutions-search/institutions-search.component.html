@@ -1,63 +1,65 @@
-<div class="xl:mt-6 xl:pt-6 h-screen">
-  <div class="mt-5 mx-3 md:mx-4">
-    <osf-search-input
-      [control]="searchControl"
-      [showHelpIcon]="true"
-      [placeholder]="'collections.searchInput.placeholder' | translate"
-      (helpClicked)="showTutorial()"
-    />
-  </div>
+<section class="flex flex-column xl:mt-6">
+  <div class="flex flex-1 flex-column h-full w-full">
+    <div class="mt-5 mx-3 md:mx-4">
+      <osf-search-input
+        [control]="searchControl"
+        [showHelpIcon]="true"
+        [placeholder]="'collections.searchInput.placeholder' | translate"
+        (helpClicked)="showTutorial()"
+      />
+    </div>
 
-  <div class="flex-column flex w-full pt-6">
-    <p-tabs [value]="selectedTab" (valueChange)="onTabChange(+$event)" class="flex-1 px-3 md:px-5 xl:px-4">
-      <p-tablist>
-        @for (item of resourceTabOptions; track $index) {
-          <p-tab [value]="item.value">{{ item.label | translate }}</p-tab>
-        }
-      </p-tablist>
-    </p-tabs>
+    <div class="flex-column flex-1 flex w-full pt-6">
+      <p-tabs [value]="selectedTab" (valueChange)="onTabChange(+$event)" class="flex-1 px-3 md:px-5 xl:px-4">
+        <p-tablist>
+          @for (item of resourceTabOptions; track $index) {
+            <p-tab [value]="item.value">{{ item.label | translate }}</p-tab>
+          }
+        </p-tablist>
+      </p-tabs>
 
-    <div class="py-4 px-3 md:px-5 xl:px-4 bg-white">
-      <osf-search-results-container
-        [resources]="resources()"
-        [searchCount]="resourcesCount()"
-        [selectedSort]="selectedSort()"
-        [selectedTab]="resourceType()"
-        [selectedValues]="selectedValues()"
-        [first]="first()"
-        [prev]="previous()"
-        [next]="next()"
-        [isFiltersOpen]="isFiltersOpen()"
-        [isSortingOpen]="isSortingOpen()"
-        (sortChanged)="onSortChanged($event)"
-        (tabChanged)="onTabChanged($event)"
-        (pageChanged)="onPageChanged($event)"
-        (filtersToggled)="onFiltersToggled()"
-        (sortingToggled)="onSortingToggled()"
-      >
-        <div slot="filter-chips">
-          <osf-filter-chips
-            [selectedValues]="selectedValues()"
-            [filterLabels]="filterLabels()"
-            [filterOptions]="filterOptions()"
-            (filterRemoved)="onFilterChipRemoved($event)"
-            (allFiltersCleared)="onAllFiltersCleared()"
-          />
-        </div>
+      <div class="py-4 px-3 md:px-5 xl:px-4 bg-white">
+        <osf-search-results-container
+          [resources]="resources()"
+          [searchCount]="resourcesCount()"
+          [selectedSort]="selectedSort()"
+          [selectedTab]="resourceType()"
+          [selectedValues]="selectedValues()"
+          [first]="first()"
+          [prev]="previous()"
+          [next]="next()"
+          [isFiltersOpen]="isFiltersOpen()"
+          [isSortingOpen]="isSortingOpen()"
+          (sortChanged)="onSortChanged($event)"
+          (tabChanged)="onTabChanged($event)"
+          (pageChanged)="onPageChanged($event)"
+          (filtersToggled)="onFiltersToggled()"
+          (sortingToggled)="onSortingToggled()"
+        >
+          <div slot="filter-chips">
+            <osf-filter-chips
+              [selectedValues]="selectedValues()"
+              [filterLabels]="filterLabels()"
+              [filterOptions]="filterOptions()"
+              (filterRemoved)="onFilterChipRemoved($event)"
+              (allFiltersCleared)="onAllFiltersCleared()"
+            />
+          </div>
 
-        <div class="sm:w-3">
-          <osf-reusable-filters
-            [filters]="filters()"
-            [selectedValues]="selectedValues()"
-            [isLoading]="isResourcesLoading()"
-            [showEmptyState]="true"
-            (loadFilterOptions)="onLoadFilterOptions($event)"
-            (filterValueChanged)="onFilterChanged($event)"
-          />
-        </div>
-      </osf-search-results-container>
+          <div class="sm:w-3">
+            <osf-reusable-filters
+              [filters]="filters()"
+              [selectedValues]="selectedValues()"
+              [isLoading]="isResourcesLoading()"
+              [showEmptyState]="true"
+              (loadFilterOptions)="onLoadFilterOptions($event)"
+              (filterValueChanged)="onFilterChanged($event)"
+            />
+          </div>
+        </osf-search-results-container>
 
-      <osf-search-help-tutorial [(currentStep)]="currentStep"></osf-search-help-tutorial>
+        <osf-search-help-tutorial [(currentStep)]="currentStep"></osf-search-help-tutorial>
+      </div>
     </div>
   </div>
-</div>
+</section>

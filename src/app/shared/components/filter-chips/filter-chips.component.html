@@ -8,9 +8,5 @@
         (onRemove)="removeFilter(chip.key)"
       ></p-chip>
     }
-
-    @if (chips().length > 1) {
-      <button type="button" class="clear-all-btn" (click)="clearAllFilters()">Clear all</button>
-    }
   </div>
 }

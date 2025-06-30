@@ -117,10 +117,6 @@ export class ReusableFilterComponent {
     return this.FILTER_PLACEHOLDERS[filterKey] || '';
   }
 
-  isFilterEditable(filterKey: string): boolean {
-    return this.FILTER_PLACEHOLDERS[filterKey]?.editable ?? true;
-  }
-
   getFilterDescription(filter: DiscoverableFilter): string | null {
     return filter.description || null;
   }

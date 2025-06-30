@@ -36,7 +36,7 @@
                 (valueChanged)="onFilterChanged(filter.key, $event)"
               />
             } @else {
-              <p class="text-sm text-gray-500">No options available</p>
+              <p class="text-sm text-gray-500">{{ 'collections.filters.noOptionsAvailable' | translate }}</p>
             }
           </p-accordion-content>
         </p-accordion-panel>
@@ -45,6 +45,6 @@
   </div>
 } @else if (showEmptyState()) {
   <div class="text-center text-gray-500 py-4">
-    <p>No filters available</p>
+    <p>{{ 'collections.filters.noFiltersAvailable' | translate }}</p>
   </div>
 }
