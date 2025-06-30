@@ -22,6 +22,12 @@ export class UpdateResourceType {
   constructor(public type: ResourceTab) {}
 }
 
+export class UpdateSortBy {
+  static readonly type = '[Institutions] Update Sort By';
+
+  constructor(public sortBy: string) {}
+}
+
 export class LoadFilterOptions {
   static readonly type = '[InstitutionsSearch] Load Filter Options';
   constructor(public filterKey: string) {}
