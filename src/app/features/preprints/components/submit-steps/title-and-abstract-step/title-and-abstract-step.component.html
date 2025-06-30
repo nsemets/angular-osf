@@ -3,7 +3,11 @@
 <p-card styleClass="m-t-24" class="card">
   <div class="flex flex-column gap-3">
     <div class="flex flex-column">
-      <osf-text-input [control]="titleAndAbstractForm.controls['title']" label="Title" [maxLength]="100" />
+      <osf-text-input
+        [control]="titleAndAbstractForm.controls['title']"
+        label="Title"
+        [maxLength]="inputLimits.title.maxLength"
+      />
     </div>
 
     <div class="flex flex-column">
