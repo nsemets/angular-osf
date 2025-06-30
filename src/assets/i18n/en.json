@@ -874,6 +874,11 @@
         "editContributors": "Edit contributors",
         "updateSucceed": "Contributors successfully updated."
       }
+    },
+    "deleteProject": {
+      "title": "Delete project",
+      "message": "Are you sure you want to delete <b>{{name}}</b> project?",
+      "success": "Project has been successfully deleted."
     }
   },
   "collections": {

@@ -11,7 +11,7 @@ import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, effect, inject, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import {
   ProjectSettingNotificationsComponent,
@@ -30,6 +30,7 @@ import {
   ViewOnlyLinkModel,
 } from '@osf/features/project/settings/models';
 import {
+  DeleteProject,
   DeleteViewOnlyLink,
   GetProjectDetails,
   GetProjectSettings,
@@ -74,6 +75,7 @@ import { UpdateNodeRequestModel } from '@shared/models';
 })
 export class SettingsComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly customConfirmationService = inject(CustomConfirmationService);
   private readonly toastService = inject(ToastService);
   private readonly loaderService = inject(LoaderService);
@@ -95,6 +97,7 @@ export class SettingsComponent implements OnInit {
     updateProjectSettings: UpdateProjectSettings,
     updateNotificationSubscriptionForNodeId: UpdateNotificationSubscriptionForNodeId,
     deleteViewOnlyLink: DeleteViewOnlyLink,
+    deleteProject: DeleteProject,
   });
 
   projectForm = new FormGroup({
@@ -190,7 +193,19 @@ export class SettingsComponent implements OnInit {
   }
 
   deleteProject(): void {
-    this.projectForm.reset();
+    this.customConfirmationService.confirmDelete({
+      headerKey: 'project.deleteProject.title',
+      messageParams: { name: this.projectDetails().attributes.title },
+      messageKey: 'project.deleteProject.message',
+      onConfirm: () => {
+        this.loaderService.show();
+        this.actions.deleteProject(this.projectId()).subscribe(() => {
+          this.loaderService.hide();
+          this.toastService.showSuccess('project.deleteProject.success');
+          this.router.navigate(['/']);
+        });
+      },
+    });
   }
 
   private syncSettingsChanges(changedField: string, value: boolean | { url: string; label: string }): void {
