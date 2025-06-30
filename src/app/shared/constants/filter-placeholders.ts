@@ -1,38 +1,11 @@
-export const FILTER_PLACEHOLDERS: Record<string, { placeholder: string; editable: boolean }> = {
-  affiliation: {
-    placeholder: 'Select institution',
-    editable: false,
-  },
-  subject: {
-    placeholder: 'Select subject',
-    editable: true,
-  },
-  funder: {
-    placeholder: 'Select funder',
-    editable: true,
-  },
-  rights: {
-    placeholder: 'Select license',
-    editable: false,
-  },
-  publisher: {
-    placeholder: 'Select provider',
-    editable: false,
-  },
-  isPartOfCollection: {
-    placeholder: 'Select part of collection',
-    editable: false,
-  },
-  dateCreated: {
-    placeholder: 'Select date',
-    editable: false,
-  },
-  creator: {
-    placeholder: 'Creator name',
-    editable: true,
-  },
-  resourceType: {
-    placeholder: 'Select resource type',
-    editable: false,
-  },
+export const FILTER_PLACEHOLDERS: Record<string, string> = {
+  affiliation: 'common.search.filterPlaceholders.affiliation',
+  subject: 'common.search.filterPlaceholders.subject',
+  funder: 'common.search.filterPlaceholders.funder',
+  rights: 'common.search.filterPlaceholders.rights',
+  publisher: 'common.search.filterPlaceholders.publisher',
+  isPartOfCollection: 'common.search.filterPlaceholders.isPartOfCollection',
+  dateCreated: 'common.search.filterPlaceholders.dateCreated',
+  creator: 'common.search.filterPlaceholders.creator',
+  resourceType: 'common.search.filterPlaceholders.resourceType',
 };

@@ -35,6 +35,17 @@
         "projects": "Projects",
         "files": "Files",
         "users": "Users"
+      },
+      "filterPlaceholders": {
+        "affiliation": "Select institution",
+        "subject": "Select subject",
+        "funder": "Select funder",
+        "rights": "Select license",
+        "publisher": "Select provider",
+        "isPartOfCollection": "Select part of collection",
+        "dateCreated": "Select date",
+        "creator": "Creator name",
+        "resourceType": "Select resource type"
       }
     },
     "labels": {

@@ -9,7 +9,7 @@ export interface FilterOptionsResponseData {
   relationships?: Record<string, unknown>;
 }
 
-export interface FilterOptionsResponse {
+export interface FilterOptionsResponseJsonApi {
   data: FilterOptionsResponseData;
   included?: FilterOptionItem[];
   links?: {

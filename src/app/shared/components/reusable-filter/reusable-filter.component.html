@@ -14,8 +14,7 @@
                 [options]="getFilterOptions(filter)"
                 [isLoading]="isFilterLoading(filter)"
                 [selectedValue]="getSelectedValue(filter.key)"
-                [placeholder]="getFilterPlaceholder(filter.key)"
-                [editable]="isFilterEditable(filter.key)"
+                [placeholder]="getFilterPlaceholder(filter.key) | translate"
                 [filterType]="filter.key"
                 (valueChanged)="onFilterChanged(filter.key, $event)"
               />

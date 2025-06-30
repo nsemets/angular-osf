@@ -11,10 +11,9 @@
       optionValue="value"
       [ngModel]="selectedValue()"
       [placeholder]="currentSelectedOption() ? currentSelectedOption()?.label : placeholder()"
-      [editable]="editable()"
       styleClass="w-full"
       appendTo="body"
-      [filter]="editable()"
+      filter
       (onChange)="onValueChange($event)"
       [showClear]="!!selectedValue()"
     ></p-select>

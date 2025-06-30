@@ -13,7 +13,7 @@ import {
   mapFilterOption,
   RelatedPropertyPathItem,
 } from '@shared/mappers';
-import { FilterOptionsResponse, SelectOption } from '@shared/models';
+import { FilterOptionsResponseJsonApi, SelectOption } from '@shared/models';
 
 import { environment } from 'src/environments/environment';
 
@@ -103,7 +103,7 @@ export class SearchService {
     };
 
     return this.jsonApiService
-      .get<FilterOptionsResponse>(`${environment.shareDomainUrl}/index-card-search`, params)
+      .get<FilterOptionsResponseJsonApi>(`${environment.shareDomainUrl}/index-card-search`, params)
       .pipe(
         map((response) => {
           if (response?.included) {

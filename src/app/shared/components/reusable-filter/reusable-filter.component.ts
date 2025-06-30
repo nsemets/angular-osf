@@ -1,3 +1,5 @@
+import { TranslatePipe } from '@ngx-translate/core';
+
 import { Accordion, AccordionContent, AccordionHeader, AccordionPanel } from 'primeng/accordion';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 
@@ -20,6 +22,7 @@ import { GenericFilterComponent } from '../generic-filter/generic-filter.compone
     AutoCompleteModule,
     ReactiveFormsModule,
     GenericFilterComponent,
+    TranslatePipe,
   ],
   templateUrl: './reusable-filter.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -75,10 +78,6 @@ export class ReusableFilterComponent {
   }
 
   getFilterPlaceholder(filterKey: string): string {
-    return this.FILTER_PLACEHOLDERS[filterKey]?.placeholder || '';
-  }
-
-  isFilterEditable(filterKey: string): boolean {
-    return this.FILTER_PLACEHOLDERS[filterKey]?.editable || false;
+    return this.FILTER_PLACEHOLDERS[filterKey] || '';
   }
 }
