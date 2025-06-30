@@ -47,6 +47,9 @@ export interface Preprint {
   dateModified: string;
   title: string;
   description: string;
+  doi: StringOrNull;
+  originalPublicationDate: Date | null;
+  customPublicationCitation: StringOrNull;
   isPublished: boolean;
   tags: string[];
   isPublic: boolean;

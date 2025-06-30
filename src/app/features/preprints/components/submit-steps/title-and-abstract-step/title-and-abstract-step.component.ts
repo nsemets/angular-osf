@@ -53,7 +53,6 @@ export class TitleAndAbstractStepComponent implements OnInit {
   isUpdatingPreprint = select(SubmitPreprintSelectors.isPreprintSubmitting);
   nextClicked = output<void>();
 
-  //[RNi] TODO: Handle back button click
   ngOnInit() {
     this.initForm();
   }

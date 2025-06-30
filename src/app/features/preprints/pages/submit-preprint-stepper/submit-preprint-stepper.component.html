@@ -40,7 +40,7 @@
       />
     }
     @case (2) {
-      <osf-preprint-metadata />
+      <osf-preprint-metadata (nextClicked)="currentStep.set(currentStep() + 1)" />
     }
     @default {
       <p>No such step</p>
