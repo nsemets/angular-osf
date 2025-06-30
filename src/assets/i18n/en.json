@@ -959,8 +959,12 @@
     "allItems": "All Items",
     "moderators": "Moderators",
     "settings": "Settings",
+    "submitted": "Submitted",
+    "pending": "Pending",
     "settingsMessage": "To configure your notification preferences visit your",
     "userSettings": "User settings",
+    "bulkUpload": "Bulk upload",
+    "bulkUploadMessage": "Drag and drop the csv file that has the registration information to upload.",
     "addModerator": "Add moderator",
     "inviteModerator": "Invite moderator",
     "searchModerator": "Search moderator",
@@ -983,7 +987,9 @@
       "pending": "Pending",
       "accepted": "Accepted",
       "rejected": "Rejected",
-      "withdrawn": "Withdrawn"
+      "withdrawn": "Withdrawn",
+      "public": "public",
+      "embargo": "embargo"
     },
     "submissionReview": {
       "submitted": "Submitted",
