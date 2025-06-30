@@ -43,6 +43,9 @@
     "deleteConfirmation": {
       "header": "Delete",
       "message": "Are you sure you want to proceed?"
+    },
+    "placeholder": {
+      "addTag": "Add tags"
     }
   },
   "navigation": {
