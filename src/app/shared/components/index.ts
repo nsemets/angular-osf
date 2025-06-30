@@ -8,6 +8,7 @@ export { EmploymentHistoryComponent } from './employment-history/employment-hist
 export { EmploymentHistoryDialogComponent } from './employment-history-dialog/employment-history-dialog.component';
 export { FileMenuComponent } from './file-menu/file-menu.component';
 export { FilesTreeComponent } from './files-tree/files-tree.component';
+export { FilterChipsComponent } from './filter-chips/filter-chips.component';
 export { FormSelectComponent } from './form-select/form-select.component';
 export { FullScreenLoaderComponent } from './full-screen-loader/full-screen-loader.component';
 export { GenericFilterComponent } from './generic-filter/generic-filter.component';
@@ -23,6 +24,7 @@ export { ResourceCardComponent } from './resource-card/resource-card.component';
 export { ReusableFilterComponent } from './reusable-filter/reusable-filter.component';
 export { SearchHelpTutorialComponent } from './search-help-tutorial/search-help-tutorial.component';
 export { SearchInputComponent } from './search-input/search-input.component';
+export { SearchResultsContainerComponent } from './search-results-container/search-results-container.component';
 export { SelectComponent } from './select/select.component';
 export { StepperComponent } from './stepper/stepper.component';
 export { SubHeaderComponent } from './sub-header/sub-header.component';

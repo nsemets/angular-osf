@@ -18,6 +18,7 @@ import {
   LoadFilterOptionsAndSetValues,
   SetFilterValues,
   UpdateFilterValue,
+  UpdateSortBy,
 } from './institutions-search.actions';
 import { InstitutionsSearchModel } from './institutions-search.model';
 
@@ -226,5 +227,10 @@ export class InstitutionsSearchState implements NgxsOnInit {
   @Action(UpdateResourceType)
   updateResourceType(ctx: StateContext<InstitutionsSearchModel>, action: UpdateResourceType) {
     ctx.patchState({ resourceType: action.type });
+  }
+
+  @Action(UpdateSortBy)
+  updateSortBy(ctx: StateContext<InstitutionsSearchModel>, action: UpdateSortBy) {
+    ctx.patchState({ sortBy: action.sortBy });
   }
 }

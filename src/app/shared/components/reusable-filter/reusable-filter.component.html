@@ -1,15 +1,32 @@
-@if (hasFilters()) {
-  <div class="border-1 bg-white m-6 grey-border-color px-4 flex flex-column gap-2 border-round-xl">
+@if (isLoading()) {
+  <div class="flex-1 mt-4 md:mt-8 lg:pt-5">
+    <osf-loading-spinner />
+  </div>
+} @else if (hasVisibleFilters()) {
+  <div class="border-1 bg-white grey-border-color px-4 flex flex-column gap-2 border-round-xl">
     <p-accordion (valueChange)="onAccordionToggle($event)">
-      @for (filter of filters(); track filter.key) {
-        @if (shouldShowFilter(filter)) {
-          <p-accordion-panel [value]="filter.key">
-            <p-accordion-header>{{ filter.label }}</p-accordion-header>
-            <p-accordion-content>
-              @if (filter.description) {
-                <p class="text-sm text-gray-600 mb-3">{{ filter.description }}</p>
-              }
+      @for (filter of visibleFilters(); track filter.key) {
+        <p-accordion-panel [value]="filter.key">
+          <p-accordion-header>{{ getFilterLabel(filter) }}</p-accordion-header>
+          <p-accordion-content>
+            @if (getFilterDescription(filter)) {
+              <p class="text-sm text-gray-600 mb-3">{{ getFilterDescription(filter) }}</p>
+            }
 
+            @if (getFilterHelpLink(filter) && getFilterHelpLinkText(filter)) {
+              <p class="text-sm mb-3">
+                <a
+                  [href]="getFilterHelpLink(filter)"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-primary hover:underline"
+                >
+                  {{ getFilterHelpLinkText(filter) }}
+                </a>
+              </p>
+            }
+
+            @if (hasFilterContent(filter)) {
               <osf-generic-filter
                 [options]="getFilterOptions(filter)"
                 [isLoading]="isFilterLoading(filter)"
@@ -19,10 +36,16 @@
                 [filterType]="filter.key"
                 (valueChanged)="onFilterChanged(filter.key, $event)"
               />
-            </p-accordion-content>
-          </p-accordion-panel>
-        }
+            } @else {
+              <p class="text-sm text-gray-500">No options available</p>
+            }
+          </p-accordion-content>
+        </p-accordion-panel>
       }
     </p-accordion>
+  </div>
+} @else if (showEmptyState()) {
+  <div class="text-center text-gray-500 py-4">
+    <p>No filters available</p>
   </div>
 }

@@ -14,6 +14,7 @@ import { TutorialStep } from '@osf/shared/models';
   templateUrl: './search-help-tutorial.component.html',
   styleUrl: './search-help-tutorial.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class SearchHelpTutorialComponent {
   currentStep = model(0);
