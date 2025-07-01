@@ -1,6 +1,5 @@
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { PrimeTemplate } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { DataView } from 'primeng/dataview';
 import { Select } from 'primeng/select';
@@ -9,11 +8,13 @@ import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
+import { Primitive } from '@core/helpers';
 import { SEARCH_TAB_OPTIONS, searchSortingOptions } from '@shared/constants';
 import { ResourceTab } from '@shared/enums';
 import { Resource } from '@shared/models';
 
 import { ResourceCardComponent } from '../resource-card/resource-card.component';
+import { SelectComponent } from '../select/select.component';
 
 @Component({
   selector: 'osf-search-results-container',
@@ -25,18 +26,17 @@ import { ResourceCardComponent } from '../resource-card/resource-card.component'
     Select,
     ResourceCardComponent,
     TranslatePipe,
-    PrimeTemplate,
+    SelectComponent,
   ],
   templateUrl: './search-results-container.component.html',
   styleUrl: './search-results-container.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class SearchResultsContainerComponent {
   resources = input<Resource[]>([]);
   searchCount = input<number>(0);
   selectedSort = input<string>('');
-  selectedTab = input<ResourceTab>(ResourceTab.All);
+  selectedTab = input<Primitive>(ResourceTab.All);
   selectedValues = input<Record<string, string | null>>({});
   first = input<string | null>(null);
   prev = input<string | null>(null);
@@ -68,8 +68,8 @@ export class SearchResultsContainerComponent {
     this.sortChanged.emit(value);
   }
 
-  selectTab(value: ResourceTab): void {
-    this.tabChanged.emit(value);
+  selectTab(value?: ResourceTab): void {
+    this.tabChanged.emit((value ? value : this.selectedTab()) as ResourceTab);
   }
 
   switchPage(link: string | null): void {

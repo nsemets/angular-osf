@@ -5,7 +5,6 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 
 @Component({
   selector: 'osf-filter-chips',
-  standalone: true,
   imports: [CommonModule, Chip],
   templateUrl: './filter-chips.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

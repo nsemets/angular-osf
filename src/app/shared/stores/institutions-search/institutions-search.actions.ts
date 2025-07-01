@@ -7,11 +7,11 @@ export class FetchInstitutionById {
 }
 
 export class FetchResources {
-  static readonly type = '[Institutions] Get Resources';
+  static readonly type = '[Institutions] Fetch Resources';
 }
 
 export class FetchResourcesByLink {
-  static readonly type = '[Institutions] Get Resources By Link';
+  static readonly type = '[Institutions] Fetch Resources By Link';
 
   constructor(public link: string) {}
 }

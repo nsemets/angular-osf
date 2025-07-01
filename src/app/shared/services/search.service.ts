@@ -1,4 +1,4 @@
-import { map, Observable, tap } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
@@ -62,8 +62,7 @@ export class SearchService {
         }
 
         return {} as ResourcesData;
-      }),
-      tap((res) => console.log(res))
+      })
     );
   }
 

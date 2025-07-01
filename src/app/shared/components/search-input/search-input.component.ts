@@ -12,7 +12,6 @@ import { IconComponent } from '../icon/icon.component';
   templateUrl: './search-input.component.html',
   styleUrl: './search-input.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class SearchInputComponent {
   control = input<FormControl>(new FormControl<string>(''));

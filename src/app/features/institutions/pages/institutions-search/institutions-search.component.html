@@ -67,7 +67,18 @@
               />
             </div>
 
-            <div class="sm:w-3">
+            <div slot="filters">
+              <osf-reusable-filters
+                [filters]="filters()"
+                [selectedValues]="selectedValues()"
+                [isLoading]="isResourcesLoading()"
+                [showEmptyState]="true"
+                (loadFilterOptions)="onLoadFilterOptions($event)"
+                (filterValueChanged)="onFilterChanged($event)"
+              />
+            </div>
+
+            <div slot="mobile-filters">
               <osf-reusable-filters
                 [filters]="filters()"
                 [selectedValues]="selectedValues()"

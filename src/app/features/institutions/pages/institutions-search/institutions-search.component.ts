@@ -58,7 +58,6 @@ import {
   templateUrl: './institutions-search.component.html',
   styleUrl: './institutions-search.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class InstitutionsSearchComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
@@ -101,7 +100,7 @@ export class InstitutionsSearchComponent implements OnInit {
   protected searchControl = new FormControl('');
   protected selectedTab: ResourceTab = ResourceTab.All;
   protected currentStep = signal(0);
-  protected isFiltersOpen = signal(false);
+  protected isFiltersOpen = signal(true);
   protected isSortingOpen = signal(false);
 
   readonly resourceTab = ResourceTab;

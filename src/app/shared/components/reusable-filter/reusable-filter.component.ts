@@ -28,7 +28,6 @@ import { GenericFilterComponent } from '../generic-filter/generic-filter.compone
   ],
   templateUrl: './reusable-filter.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class ReusableFilterComponent {
   filters = input<DiscoverableFilter[]>([]);
@@ -126,11 +125,11 @@ export class ReusableFilterComponent {
   }
 
   getFilterHelpLinkText(filter: DiscoverableFilter): string | null {
-    return filter.helpLinkText || 'Learn more';
+    return filter.helpLinkText || '';
   }
 
   getFilterLabel(filter: DiscoverableFilter): string {
-    return filter.label || filter.key || 'Filter';
+    return filter.label || filter.key || '';
   }
 
   hasFilterContent(filter: DiscoverableFilter): boolean {
