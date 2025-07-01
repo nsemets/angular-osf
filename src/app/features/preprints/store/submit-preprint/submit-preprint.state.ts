@@ -317,7 +317,7 @@ export class SubmitPreprintState {
       },
     });
     if (createdPreprintId) {
-      //return this.preprintsService.deletePreprint(createdPreprintId);
+      return this.preprintsService.deletePreprint(createdPreprintId);
     }
 
     return EMPTY;
