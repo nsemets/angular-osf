@@ -1,4 +1,4 @@
-import { createDispatchMap } from '@ngxs/store';
+import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -6,7 +6,7 @@ import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { TextareaModule } from 'primeng/textarea';
 
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -15,11 +15,12 @@ import { InputLimits } from '@osf/shared/constants';
 import { CustomConfirmationService, ToastService } from '@osf/shared/services';
 import { CustomValidators } from '@osf/shared/utils';
 
-import { DeleteDraft } from '../../store';
+import { DeleteDraft, RegistriesSelectors } from '../../store';
 
 import { ContributorsComponent } from './contributors/contributors.component';
 import { LicenseComponent } from './license/license.component';
 import { SubjectsRegistriesComponent } from './subjects/subjects.component';
+import { RegistriesMetadataTagsComponent } from './tags/tags.component';
 
 @Component({
   selector: 'osf-metadata',
@@ -33,6 +34,7 @@ import { SubjectsRegistriesComponent } from './subjects/subjects.component';
     ContributorsComponent,
     LicenseComponent,
     SubjectsRegistriesComponent,
+    RegistriesMetadataTagsComponent,
   ],
   templateUrl: './metadata.component.html',
   styleUrl: './metadata.component.scss',
@@ -46,6 +48,7 @@ export class MetadataComponent {
   private readonly customConfirmationService = inject(CustomConfirmationService);
 
   private readonly draftId = this.route.snapshot.params['id'];
+  protected readonly draftRegistration = select(RegistriesSelectors.getDraftRegistration);
 
   protected actions = createDispatchMap({
     deleteDraft: DeleteDraft,
@@ -56,6 +59,18 @@ export class MetadataComponent {
     title: ['', CustomValidators.requiredTrimmed()],
     description: ['', CustomValidators.requiredTrimmed()],
   });
+
+  constructor() {
+    effect(() => {
+      const draft = this.draftRegistration();
+      if (draft) {
+        this.metadataForm.patchValue({
+          title: draft.title,
+          description: draft.description,
+        });
+      }
+    });
+  }
 
   submitMetadata(): void {
     console.log('Metadata submitted');

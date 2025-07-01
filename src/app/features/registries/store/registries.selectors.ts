@@ -14,6 +14,11 @@ export class RegistriesSelectors {
   }
 
   @Selector([RegistriesState])
+  static isProvidersLoading(state: RegistriesStateModel): boolean {
+    return state.providers.isLoading;
+  }
+
+  @Selector([RegistriesState])
   static getProjects(state: RegistriesStateModel): Project[] {
     return state.projects.data;
   }
@@ -26,6 +31,11 @@ export class RegistriesSelectors {
   @Selector([RegistriesState])
   static getDraftRegistration(state: RegistriesStateModel): Registration | null {
     return state.draftRegistration.data;
+  }
+
+  @Selector([RegistriesState])
+  static getRegistrationLoading(state: RegistriesStateModel): boolean {
+    return state.draftRegistration.isLoading || state.draftRegistration.isSubmitting || state.pagesSchema.isLoading;
   }
 
   @Selector([RegistriesState])

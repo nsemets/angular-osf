@@ -2,11 +2,14 @@ import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { tap } from 'rxjs';
+
 import { ChangeDetectionStrategy, Component, computed, effect, inject, Signal, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 
 import { StepperComponent, SubHeaderComponent } from '@osf/shared/components';
 import { StepOption } from '@osf/shared/models';
+import { LoaderService } from '@osf/shared/services';
 
 import { defaultSteps } from '../../constants';
 import { FetchDraft, FetchSchemaBlocks, RegistriesSelectors } from '../../store';
@@ -19,11 +22,13 @@ import { FetchDraft, FetchSchemaBlocks, RegistriesSelectors } from '../../store'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DraftsComponent {
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly loaderService = inject(LoaderService);
+
   protected readonly pages = select(RegistriesSelectors.getPagesSchema);
   protected readonly draftRegistration = select(RegistriesSelectors.getDraftRegistration);
 
-  private readonly router = inject(Router);
-  private readonly route = inject(ActivatedRoute);
   private readonly actions = createDispatchMap({
     getSchemaBlocks: FetchSchemaBlocks,
     getDraftRegistration: FetchDraft,
@@ -48,13 +53,21 @@ export class DraftsComponent {
   registrationId = this.route.snapshot.children[0]?.params['id'] || '';
 
   constructor() {
+    this.loaderService.show();
     if (!this.draftRegistration()) {
       this.actions.getDraftRegistration(this.registrationId);
     }
     effect(() => {
       const registrationSchemaId = this.draftRegistration()?.registrationSchemaId;
       if (registrationSchemaId) {
-        this.actions.getSchemaBlocks(registrationSchemaId || '');
+        this.actions
+          .getSchemaBlocks(registrationSchemaId || '')
+          .pipe(
+            tap(() => {
+              this.loaderService.hide();
+            })
+          )
+          .subscribe();
       }
     });
 

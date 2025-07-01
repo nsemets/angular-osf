@@ -37,6 +37,7 @@
           <p-select
             formControlName="project"
             [options]="projects()"
+            [placeholder]="'registries.new.selectProject' | translate"
             optionLabel="title"
             optionValue="id"
             (onChange)="onSelectProject($event.value)"
@@ -54,6 +55,7 @@
           [options]="providers()"
           optionLabel="name"
           optionValue="id"
+          [loading]="isProvidersLoading()"
           (onChange)="onSelectProvider($event.value)"
           class="w-6"
         />

@@ -35,7 +35,7 @@ export class SubjectsComponent {
 
   subjectsTree = computed(() => this.list().map((subject: Subject) => this.mapSubjectToTreeNode(subject)));
   selectedTree = computed(() => this.selected().map((subject: Subject) => this.mapSubjectToTreeNode(subject)));
-  searchedList = computed(() => this.searchedSubjects().map((subject: Subject) => this.mapSearchedSubject(subject)));
+  searchedList = computed(() => this.searchedSubjects().map((subject: Subject) => this.mapParentsSubject(subject)));
   expanded: Record<string, boolean> = {};
 
   protected searchControl = new FormControl<string>('');
@@ -60,6 +60,12 @@ export class SubjectsComponent {
   selectSubject(subject: Subject) {
     const childrenIds = this.getChildrenIds([subject]);
     const updatedSelection = [...this.selected().filter((s) => !childrenIds.includes(s.id)), subject];
+    const parentSubjects = this.mapParentsSubject(subject.parent).filter(
+      (p) => !updatedSelection.some((s) => s.id === p.id)
+    );
+    if (parentSubjects.length) {
+      updatedSelection.push(...parentSubjects);
+    }
     this.updateSelection.emit(updatedSelection);
   }
 
@@ -100,12 +106,12 @@ export class SubjectsComponent {
     };
   }
 
-  private mapSearchedSubject(subject: Subject | null | undefined, acc: Subject[] = []): Subject[] {
+  private mapParentsSubject(subject: Subject | null | undefined, acc: Subject[] = []): Subject[] {
     if (!subject) {
       return acc.reverse();
     }
 
     acc.push(subject);
-    return this.mapSearchedSubject(subject.parent, acc);
+    return this.mapParentsSubject(subject.parent, acc);
   }
 }

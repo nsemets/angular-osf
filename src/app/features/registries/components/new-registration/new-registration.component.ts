@@ -30,6 +30,7 @@ export class NewRegistrationComponent {
   protected readonly providers = select(RegistriesSelectors.getProviders);
   protected readonly isDraftSubmitting = select(RegistriesSelectors.isDraftSubmitting);
   protected readonly draftRegistration = select(RegistriesSelectors.getDraftRegistration);
+  protected readonly isProvidersLoading = select(RegistriesSelectors.isProvidersLoading);
   protected actions = createDispatchMap({
     getProjects: GetProjects,
     getProviders: GetProviders,

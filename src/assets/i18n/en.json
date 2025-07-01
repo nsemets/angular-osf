@@ -380,6 +380,7 @@
         "step3": "Which type of registration would you like to create?",
         "step2InfoText": "If your project includes components, you can select which components to include or exclude at the end of the registration."
       },
+      "selectProject": "Select your project",
 
       "createDraft": "Create draft"
     },
