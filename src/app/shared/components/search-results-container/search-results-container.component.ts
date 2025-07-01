@@ -1,24 +1,32 @@
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { PrimeTemplate } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { DataView } from 'primeng/dataview';
 import { Select } from 'primeng/select';
 
 import { NgOptimizedImage } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { SEARCH_TAB_OPTIONS, searchSortingOptions } from '@shared/constants';
 import { ResourceTab } from '@shared/enums';
 import { Resource } from '@shared/models';
-import { IS_WEB, IS_XSMALL } from '@shared/utils';
 
 import { ResourceCardComponent } from '../resource-card/resource-card.component';
 
 @Component({
   selector: 'osf-search-results-container',
-  imports: [FormsModule, NgOptimizedImage, Button, DataView, Select, ResourceCardComponent, TranslatePipe],
+  imports: [
+    FormsModule,
+    NgOptimizedImage,
+    Button,
+    DataView,
+    Select,
+    ResourceCardComponent,
+    TranslatePipe,
+    PrimeTemplate,
+  ],
   templateUrl: './search-results-container.component.html',
   styleUrl: './search-results-container.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,9 +52,6 @@ export class SearchResultsContainerComponent {
 
   protected readonly searchSortingOptions = searchSortingOptions;
   protected readonly ResourceTab = ResourceTab;
-
-  protected readonly isMobile = toSignal(inject(IS_XSMALL));
-  protected readonly isWeb = toSignal(inject(IS_WEB));
 
   protected readonly tabsOptions = SEARCH_TAB_OPTIONS;
 

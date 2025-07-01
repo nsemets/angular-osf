@@ -1,13 +1,21 @@
 <div class="flex justify-content-between align-items-start pb-3 column-gap-3">
   <div class="flex flex-1 flex-column row-gap-7">
     <p-select
-      class="text-center block sm:hidden"
+      class="text-center inline-flex md:hidden"
       [ngModel]="selectedTab()"
       [options]="tabsOptions"
       optionLabel="label"
       optionValue="value"
       (ngModelChange)="selectTab($event)"
-    />
+    >
+      <ng-template let-item pTemplate="item">
+        <span>{{ item.label | translate }}</span>
+      </ng-template>
+
+      <ng-template let-item pTemplate="selectedItem">
+        <span>{{ item.label | translate }}</span>
+      </ng-template>
+    </p-select>
 
     <h3>
       @if (searchCount() > 10000) {
@@ -21,44 +29,41 @@
   </div>
 
   <div class="sorting-container">
-    @if (isWeb()) {
-      <p>{{ 'collections.filters.sortBy' | translate }}:</p>
+    <p class="hidden md:block">{{ 'collections.filters.sortBy' | translate }}:</p>
 
-      <p-select
-        class="no-border-dropdown font-bold ml-2"
-        [options]="searchSortingOptions"
-        optionLabel="label"
-        optionValue="value"
-        appendTo="body"
-        [ngModel]="selectedSort()"
-        (ngModelChange)="selectSort($event)"
-      ></p-select>
-    } @else {
-      @if (isAnyFilterOptions()) {
-        <img
-          class="custom-dark-hover cursor-pointer"
-          ngSrc="assets/icons/colored/filter.svg"
-          tabindex="0"
-          role="button"
-          alt="filter by"
-          width="44"
-          height="44"
-          (keydown.enter)="openFilters()"
-          (click)="openFilters()"
-        />
-      }
+    <p-select
+      class="no-border-dropdown font-bold ml-2 hidden md:block"
+      [options]="searchSortingOptions"
+      optionLabel="label"
+      optionValue="value"
+      appendTo="body"
+      [ngModel]="selectedSort()"
+      (ngModelChange)="selectSort($event)"
+    ></p-select>
+    @if (isAnyFilterOptions()) {
       <img
-        class="custom-dark-hover cursor-pointer ml-2"
-        ngSrc="assets/icons/colored/sort.svg"
+        class="custom-dark-hover cursor-pointer inline md:hidden"
+        ngSrc="assets/icons/colored/filter.svg"
         tabindex="0"
         role="button"
-        alt="sort by"
+        alt="filter by"
         width="44"
         height="44"
-        (keydown.enter)="openSorting()"
-        (click)="openSorting()"
+        (keydown.enter)="openFilters()"
+        (click)="openFilters()"
       />
     }
+    <img
+      class="custom-dark-hover cursor-pointer ml-2 inline md:hidden"
+      ngSrc="assets/icons/colored/sort.svg"
+      tabindex="0"
+      role="button"
+      alt="sort by"
+      width="44"
+      height="44"
+      (keydown.enter)="openSorting()"
+      (click)="openSorting()"
+    />
   </div>
 </div>
 

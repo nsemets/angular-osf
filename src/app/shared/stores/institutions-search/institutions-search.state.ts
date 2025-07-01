@@ -219,6 +219,12 @@ export class InstitutionsSearchState implements NgxsOnInit {
 
   @Action(UpdateFilterValue)
   updateFilterValue(ctx: StateContext<InstitutionsSearchModel>, action: UpdateFilterValue) {
+    if (action.filterKey === 'search') {
+      ctx.patchState({ searchText: action.value || '' });
+      this.loadRequests.next({ type: GetResourcesRequestTypeEnum.GetResources });
+      return;
+    }
+
     const updatedFilterValues = { ...ctx.getState().filterValues, [action.filterKey]: action.value };
     ctx.patchState({ filterValues: updatedFilterValues });
     this.loadRequests.next({ type: GetResourcesRequestTypeEnum.GetResources });

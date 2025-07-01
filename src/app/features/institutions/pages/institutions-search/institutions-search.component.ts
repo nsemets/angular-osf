@@ -6,8 +6,11 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { SafeHtmlPipe } from 'primeng/menu';
 import { Tabs, TabsModule } from 'primeng/tabs';
 
+import { debounceTime, distinctUntilChanged } from 'rxjs';
+
 import { NgOptimizedImage } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -60,6 +63,7 @@ import {
 export class InstitutionsSearchComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
   institution = select(InstitutionsSearchSelectors.getInstitution);
   isInstitutionLoading = select(InstitutionsSearchSelectors.getInstitutionLoading);
@@ -132,6 +136,8 @@ export class InstitutionsSearchComponent implements OnInit {
   ngOnInit(): void {
     this.restoreFiltersFromUrl();
     this.restoreTabFromUrl();
+    this.restoreSearchFromUrl();
+    this.handleSearch();
 
     const institutionId = this.route.snapshot.params['institution-id'];
     if (institutionId) {
@@ -177,11 +183,6 @@ export class InstitutionsSearchComponent implements OnInit {
     this.actions.fetchResources();
   }
 
-  onTabChanged(tab: ResourceTab): void {
-    this.actions.updateResourceType(tab);
-    this.actions.fetchResources();
-  }
-
   onPageChanged(link: string): void {
     this.actions.fetchResourcesByLink(link);
   }
@@ -210,9 +211,25 @@ export class InstitutionsSearchComponent implements OnInit {
   onAllFiltersCleared(): void {
     this.actions.setFilterValues({});
 
-    this.updateUrlWithFilters({});
+    this.searchControl.setValue('', { emitEvent: false });
+    this.actions.updateFilterValue('search', '');
 
-    this.actions.fetchResources();
+    const queryParams: Record<string, string> = { ...this.route.snapshot.queryParams };
+
+    Object.keys(queryParams).forEach((key) => {
+      if (key.startsWith('filter_')) {
+        delete queryParams[key];
+      }
+    });
+
+    delete queryParams['search'];
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams,
+      queryParamsHandling: 'replace',
+      replaceUrl: true,
+    });
   }
 
   private restoreFiltersFromUrl(): void {
@@ -284,5 +301,29 @@ export class InstitutionsSearchComponent implements OnInit {
         this.actions.updateResourceType(tab);
       }
     }
+  }
+
+  private restoreSearchFromUrl(): void {
+    const queryParams = this.route.snapshot.queryParams;
+    const searchTerm = queryParams['search'];
+    if (searchTerm) {
+      this.searchControl.setValue(searchTerm, { emitEvent: false });
+      this.actions.updateFilterValue('search', searchTerm);
+    }
+  }
+
+  private handleSearch(): void {
+    this.searchControl.valueChanges
+      .pipe(debounceTime(1000), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (newValue) => {
+          this.actions.updateFilterValue('search', newValue);
+          this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: { search: newValue },
+            queryParamsHandling: 'merge',
+          });
+        },
+      });
   }
 }
