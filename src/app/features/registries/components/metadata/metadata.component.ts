@@ -19,6 +19,7 @@ import { DeleteDraft } from '../../store';
 
 import { ContributorsComponent } from './contributors/contributors.component';
 import { LicenseComponent } from './license/license.component';
+import { SubjectsRegistriesComponent } from './subjects/subjects.component';
 
 @Component({
   selector: 'osf-metadata',
@@ -31,6 +32,7 @@ import { LicenseComponent } from './license/license.component';
     TextareaModule,
     ContributorsComponent,
     LicenseComponent,
+    SubjectsRegistriesComponent,
   ],
   templateUrl: './metadata.component.html',
   styleUrl: './metadata.component.scss',

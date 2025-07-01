@@ -1606,6 +1606,12 @@
       "description": "A license tells others how they can use your work in the future and only applies to the information and files submitted with the registration.",
       "helpText": "For more information, see this ",
       "copyrightHolders": "Copyright Holders"
+    },
+    "subjects": {
+      "title": "Subjects",
+      "noSelected": "No subjects selected",
+      "searchSubjects": "Search subjects",
+      "noSubject": "No subjects found"
     }
   },
   "pageNotFound": {

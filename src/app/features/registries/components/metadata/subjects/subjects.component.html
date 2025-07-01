@@ -1,1 +1,10 @@
-<p>subjects works!</p>
+<osf-subjects
+  [loading]="subjectsLoading() || isSubjectsUpdating()"
+  [isSearching]="isSearching()"
+  [list]="subjects()"
+  [selected]="selectedSubjects()"
+  [searchedSubjects]="searchedSubjects()"
+  (loadChildren)="getSubjectChildren($event)"
+  (searchChanged)="searchSubjects($event)"
+  (updateSelection)="updateSelectedSubjects($event)"
+></osf-subjects>

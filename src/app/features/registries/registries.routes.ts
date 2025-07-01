@@ -5,12 +5,22 @@ import { Routes } from '@angular/router';
 import { RegistriesComponent } from '@osf/features/registries/registries.component';
 import { RegistriesState } from '@osf/features/registries/store';
 import { ContributorsState } from '@osf/shared/components/contributors/store';
+import { SubjectsState } from '@osf/shared/stores';
+import { SUBJECTS_SERVICE } from '@osf/shared/tokens/subjects.token';
+
+import { RegistrationSubjectsService } from './services';
 
 export const registriesRoutes: Routes = [
   {
     path: '',
     component: RegistriesComponent,
-    providers: [provideStates([RegistriesState, ContributorsState])],
+    providers: [
+      provideStates([RegistriesState, ContributorsState, SubjectsState]),
+      {
+        provide: SUBJECTS_SERVICE,
+        useClass: RegistrationSubjectsService,
+      },
+    ],
     children: [
       {
         path: '',
