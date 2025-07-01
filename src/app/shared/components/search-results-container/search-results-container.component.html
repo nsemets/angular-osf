@@ -97,35 +97,37 @@
     <ng-content></ng-content>
 
     <p-dataView [value]="resources()" class="resources-container" [rows]="10">
-      <ng-template let-items>
+      <ng-template #list let-items>
         <div class="resources-list">
-          @for (item of items; track item.id) {
-            <osf-resource-card [item]="item" />
-          }
-
-          <div class="flex column-gap-2 w-full justify-content-center pt-2">
-            @if (first() && prev()) {
-              <p-button icon="fas fa-angles-left" severity="contrast" text (click)="switchPage(first())"></p-button>
+          @if (items.length > 0) {
+            @for (item of items; track item.id) {
+              <osf-resource-card [item]="item" />
             }
 
-            <p-button
-              icon="fas fa-angle-left"
-              severity="contrast"
-              text
-              [disabled]="!prev()"
-              (click)="switchPage(prev())"
-            >
-            </p-button>
+            <div class="flex column-gap-2 w-full justify-content-center pt-2">
+              @if (first() && prev()) {
+                <p-button icon="fas fa-angles-left" severity="contrast" text (click)="switchPage(first())"></p-button>
+              }
 
-            <p-button
-              icon="fas fa-angle-right"
-              severity="contrast"
-              text
-              [disabled]="!next()"
-              (click)="switchPage(!next() ? first() : next())"
-            >
-            </p-button>
-          </div>
+              <p-button
+                icon="fas fa-angle-left"
+                severity="contrast"
+                text
+                [disabled]="!prev()"
+                (click)="switchPage(prev())"
+              >
+              </p-button>
+
+              <p-button
+                icon="fas fa-angle-right"
+                severity="contrast"
+                text
+                [disabled]="!next()"
+                (click)="switchPage(!next() ? first() : next())"
+              >
+              </p-button>
+            </div>
+          }
         </div>
       </ng-template>
     </p-dataView>
