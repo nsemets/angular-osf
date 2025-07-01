@@ -17,7 +17,6 @@ export class GenericFilterComponent {
   isLoading = input<boolean>(false);
   selectedValue = input<string | null>(null);
   placeholder = input<string>('');
-  // editable = input<boolean>(false);
   filterType = input<string>('');
 
   valueChanged = output<string | null>();

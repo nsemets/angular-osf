@@ -44,7 +44,6 @@ import { FetchInstitutions, InstitutionsSelectors } from '@shared/stores';
     RouterLink,
   ],
   templateUrl: './institutions.component.html',
-  styleUrl: './institutions.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InstitutionsComponent {

@@ -3,13 +3,20 @@ import { createDispatchMap, select } from '@ngxs/store';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { SafeHtmlPipe } from 'primeng/menu';
 import { Tabs, TabsModule } from 'primeng/tabs';
 
+import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { ReusableFilterComponent, SearchHelpTutorialComponent, SearchInputComponent } from '@shared/components';
+import {
+  LoadingSpinnerComponent,
+  ReusableFilterComponent,
+  SearchHelpTutorialComponent,
+  SearchInputComponent,
+} from '@shared/components';
 import { FilterChipsComponent } from '@shared/components/filter-chips/filter-chips.component';
 import { SearchResultsContainerComponent } from '@shared/components/search-results-container/search-results-container.component';
 import { SEARCH_TAB_OPTIONS } from '@shared/constants';
@@ -41,8 +48,12 @@ import {
     SearchHelpTutorialComponent,
     SearchInputComponent,
     TranslatePipe,
+    NgOptimizedImage,
+    LoadingSpinnerComponent,
+    SafeHtmlPipe,
   ],
   templateUrl: './institutions-search.component.html',
+  styleUrl: './institutions-search.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
 })
