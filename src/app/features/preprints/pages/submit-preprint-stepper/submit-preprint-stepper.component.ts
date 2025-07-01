@@ -24,11 +24,7 @@ import {
 } from '@osf/features/preprints/components';
 import { submitPreprintSteps } from '@osf/features/preprints/constants';
 import { BrandService } from '@osf/features/preprints/services';
-import {
-  GetHighlightedSubjectsByProviderId,
-  GetPreprintProviderById,
-  PreprintsSelectors,
-} from '@osf/features/preprints/store/preprints';
+import { GetPreprintProviderById, PreprintsSelectors } from '@osf/features/preprints/store/preprints';
 import {
   ResetStateAndDeletePreprint,
   SetSelectedPreprintProviderId,
@@ -52,7 +48,6 @@ export class SubmitPreprintStepperComponent implements OnInit, OnDestroy {
 
   private actions = createDispatchMap({
     getPreprintProviderById: GetPreprintProviderById,
-    getHighlightedSubjectsByProviderId: GetHighlightedSubjectsByProviderId,
     setSelectedPreprintProviderId: SetSelectedPreprintProviderId,
     resetStateAndDeletePreprint: ResetStateAndDeletePreprint,
   });

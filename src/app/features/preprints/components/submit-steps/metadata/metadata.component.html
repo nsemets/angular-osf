@@ -1,6 +1,18 @@
-<h2 class="m-b-24">Metadata</h2>
+<h2>Metadata</h2>
 
-<osf-preprint-contributors />
+<div class="m-t-24">
+  <osf-preprint-contributors />
+</div>
+
+<div class="m-t-24">
+  <osf-license
+    [licenses]="licences()"
+    [selectedLicenseId]="createdPreprint()?.licenseId"
+    [selectedLicenseOptions]="createdPreprint()?.licenseOptions"
+    (createLicense)="createLicense($event)"
+    (selectLicense)="selectLicense($event)"
+  />
+</div>
 
 <p-card styleClass="m-t-24" class="card">
   <div>

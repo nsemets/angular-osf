@@ -15,9 +15,16 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ContributorsComponent } from '@osf/features/preprints/components/submit-steps/metadata/contributors/contributors.component';
 import { formInputLimits } from '@osf/features/preprints/constants';
 import { MetadataForm, Preprint } from '@osf/features/preprints/models';
-import { CreatePreprint, SubmitPreprintSelectors, UpdatePreprint } from '@osf/features/preprints/store/submit-preprint';
-import { IconComponent, TextInputComponent } from '@shared/components';
+import {
+  CreatePreprint,
+  FetchLicenses,
+  SaveLicense,
+  SubmitPreprintSelectors,
+  UpdatePreprint,
+} from '@osf/features/preprints/store/submit-preprint';
+import { IconComponent, LicenseComponent, TextInputComponent } from '@shared/components';
 import { INPUT_VALIDATION_MESSAGES } from '@shared/constants';
+import { License, LicenseOptions } from '@shared/models';
 import { CustomValidators, findChangedFields } from '@shared/utils';
 
 @Component({
@@ -34,6 +41,7 @@ import { CustomValidators, findChangedFields } from '@shared/utils';
     InputText,
     TextInputComponent,
     Tooltip,
+    LicenseComponent,
   ],
   templateUrl: './metadata.component.html',
   styleUrl: './metadata.component.scss',
@@ -43,16 +51,20 @@ export class MetadataComponent implements OnInit {
   private actions = createDispatchMap({
     createPreprint: CreatePreprint,
     updatePreprint: UpdatePreprint,
+    fetchLicenses: FetchLicenses,
+    saveLicense: SaveLicense,
   });
 
   protected metadataForm!: FormGroup<MetadataForm>;
   protected inputLimits = formInputLimits;
   protected readonly INPUT_VALIDATION_MESSAGES = INPUT_VALIDATION_MESSAGES;
 
+  licences = select(SubmitPreprintSelectors.getLicenses);
   createdPreprint = select(SubmitPreprintSelectors.getCreatedPreprint);
   nextClicked = output<void>();
 
   ngOnInit() {
+    this.actions.fetchLicenses();
     this.initForm();
   }
 
@@ -94,5 +106,13 @@ export class MetadataComponent implements OnInit {
   public onBeforeUnload($event: BeforeUnloadEvent): boolean {
     $event.preventDefault();
     return false;
+  }
+
+  createLicense(licenseDetails: { id: string; licenseOptions: LicenseOptions }) {
+    this.actions.saveLicense(licenseDetails.id, licenseDetails.licenseOptions);
+  }
+
+  selectLicense(license: License) {
+    this.actions.saveLicense(license.id);
   }
 }

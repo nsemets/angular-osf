@@ -2,7 +2,7 @@ import { StringOrNull } from '@core/helpers';
 import { PreprintFileSource } from '@osf/features/preprints/enums';
 import { Preprint } from '@osf/features/preprints/models';
 import { ContributorAddModel, ContributorModel } from '@shared/components/contributors/models';
-import { OsfFile } from '@shared/models';
+import { LicenseOptions, OsfFile } from '@shared/models';
 
 export class SetSelectedPreprintProviderId {
   static readonly type = '[Submit Preprint] Set Selected Preprint Provider Id';
@@ -99,6 +99,19 @@ export class DeleteContributor {
   static readonly type = '[Submit Preprint] Delete Contributor';
 
   constructor(public userId: string) {}
+}
+
+export class FetchLicenses {
+  static readonly type = '[Submit Preprint] Fetch Licenses';
+}
+
+export class SaveLicense {
+  static readonly type = '[Submit Preprint] Save License';
+
+  constructor(
+    public licenseId: string,
+    public licenseOptions?: LicenseOptions
+  ) {}
 }
 
 export class ResetStateAndDeletePreprint {

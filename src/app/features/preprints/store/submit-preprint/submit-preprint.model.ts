@@ -3,6 +3,7 @@ import { PreprintFileSource } from '@osf/features/preprints/enums';
 import { Preprint, PreprintFilesLinks } from '@osf/features/preprints/models';
 import { ContributorModel } from '@shared/components/contributors/models';
 import { AsyncStateModel, IdName, OsfFile } from '@shared/models';
+import { License } from '@shared/models/license.model';
 
 export interface SubmitPreprintStateModel {
   selectedProviderId: StringOrNull;
@@ -13,4 +14,5 @@ export interface SubmitPreprintStateModel {
   availableProjects: AsyncStateModel<IdName[]>;
   projectFiles: AsyncStateModel<OsfFile[]>;
   contributors: AsyncStateModel<ContributorModel[]>;
+  licenses: AsyncStateModel<License[]>;
 }

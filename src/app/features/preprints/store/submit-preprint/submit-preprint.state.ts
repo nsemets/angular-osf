@@ -10,6 +10,7 @@ import { inject, Injectable } from '@angular/core';
 import { PreprintFileSource } from '@osf/features/preprints/enums';
 import { Preprint } from '@osf/features/preprints/models';
 import { ContributorsService, PreprintsService } from '@osf/features/preprints/services';
+import { LicensesService } from '@osf/features/preprints/services/licenses.service';
 import { OsfFile } from '@shared/models';
 import { FilesService } from '@shared/services';
 
@@ -19,6 +20,7 @@ import {
   CreatePreprint,
   DeleteContributor,
   FetchContributors,
+  FetchLicenses,
   GetAvailableProjects,
   GetPreprintFiles,
   GetPreprintFilesLinks,
@@ -26,6 +28,7 @@ import {
   GetProjectFilesByLink,
   ResetStateAndDeletePreprint,
   ReuploadFile,
+  SaveLicense,
   SetSelectedPreprintFileSource,
   SetSelectedPreprintProviderId,
   SubmitPreprintStateModel,
@@ -70,6 +73,11 @@ import {
       isLoading: false,
       error: null,
     },
+    licenses: {
+      data: [],
+      isLoading: false,
+      error: null,
+    },
   },
 })
 @Injectable()
@@ -77,6 +85,7 @@ export class SubmitPreprintState {
   private preprintsService = inject(PreprintsService);
   private fileService = inject(FilesService);
   private contributorsService = inject(ContributorsService);
+  private licensesService = inject(LicensesService);
 
   @Action(SetSelectedPreprintProviderId)
   setSelectedPreprintProviderId(ctx: StateContext<SubmitPreprintStateModel>, action: SetSelectedPreprintProviderId) {
@@ -301,6 +310,11 @@ export class SubmitPreprintState {
         isLoading: false,
         error: null,
       },
+      licenses: {
+        data: [],
+        isLoading: false,
+        error: null,
+      },
     });
     if (createdPreprintId) {
       return this.preprintsService.deletePreprint(createdPreprintId);
@@ -430,6 +444,33 @@ export class SubmitPreprintState {
         );
       }),
       catchError((error) => this.handleError(ctx, 'contributors', error))
+    );
+  }
+
+  @Action(FetchLicenses)
+  fetchLicenses(ctx: StateContext<SubmitPreprintStateModel>) {
+    const providerId = ctx.getState().selectedProviderId;
+    if (!providerId) return;
+    ctx.setState(patch({ licenses: patch({ isLoading: true }) }));
+
+    return this.licensesService.getLicenses(providerId).pipe(
+      tap((licenses) => {
+        ctx.setState(patch({ licenses: patch({ isLoading: false, data: licenses }) }));
+      }),
+      catchError((error) => this.handleError(ctx, 'licenses', error))
+    );
+  }
+
+  @Action(SaveLicense)
+  saveLicense(ctx: StateContext<SubmitPreprintStateModel>, action: SaveLicense) {
+    const createdPreprintId = ctx.getState().createdPreprint.data!.id;
+    ctx.setState(patch({ createdPreprint: patch({ isSubmitting: true }) }));
+
+    return this.licensesService.updatePreprintLicense(createdPreprintId, action.licenseId, action.licenseOptions).pipe(
+      tap((preprint) => {
+        ctx.setState(patch({ createdPreprint: patch({ isSubmitting: false, data: preprint }) }));
+      }),
+      catchError((error) => this.handleError(ctx, 'createdPreprint', error))
     );
   }
 

@@ -94,6 +94,13 @@ export class PreprintsMapper {
       version: response.attributes.version,
       isLatestVersion: response.attributes.is_latest_version,
       primaryFileId: response.relationships.primary_file?.links?.related?.href || null,
+      licenseId: response.relationships.license?.data?.id || null,
+      licenseOptions: response.attributes.license_record
+        ? {
+            year: response.attributes.license_record.year,
+            copyrightHolder: response.attributes.license_record.copyright_holders[0],
+          }
+        : null,
     };
   }
 }
