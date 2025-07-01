@@ -25,6 +25,7 @@ export { SelectComponent } from './select/select.component';
 export { StepperComponent } from './stepper/stepper.component';
 export { SubHeaderComponent } from './sub-header/sub-header.component';
 export { SubjectsComponent } from './subjects/subjects.component';
+export { TagsInputComponent } from './tags-input/tags-input.component';
 export { TextInputComponent } from './text-input/text-input.component';
 export { ToastComponent } from './toast/toast.component';
 export { TruncatedTextComponent } from './truncated-text/truncated-text.component';

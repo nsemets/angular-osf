@@ -55,6 +55,9 @@
       "helpGuide": "Help Guide",
       "showExample": "Show Example",
       "hideExample": "Hide Example"
+    },
+    "placeholder": {
+      "addTag": "Add tags"
     }
   },
   "navigation": {
