@@ -1,6 +1,5 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
-import { ConfirmationService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -41,7 +40,7 @@ import {
 import { FilesTreeActions } from '@osf/features/project/files/models';
 import { FilesTreeComponent, IconComponent } from '@shared/components';
 import { OsfFile } from '@shared/models';
-import { defaultConfirmationConfig } from '@shared/utils';
+import { CustomConfirmationService } from '@shared/services';
 
 @Component({
   selector: 'osf-file-step',
@@ -63,7 +62,7 @@ import { defaultConfirmationConfig } from '@shared/utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileStepComponent implements OnInit {
-  private confirmationService = inject(ConfirmationService);
+  private customConfirmationService = inject(CustomConfirmationService);
   private actions = createDispatchMap({
     setSelectedFileSource: SetSelectedPreprintFileSource,
     getPreprintFilesLinks: GetPreprintFilesLinks,
@@ -182,19 +181,15 @@ export class FileStepComponent implements OnInit {
   }
 
   versionFile() {
-    this.confirmationService.confirm({
-      ...defaultConfirmationConfig,
-      header: 'Add a new preprint file',
-      message:
+    this.customConfirmationService.confirmContinue({
+      headerKey: 'Add a new preprint file',
+      messageKey:
         'This will allow a new version of the preprint file to be uploaded to the preprint. The existing file will be retained as a version of the preprint.',
-      acceptButtonProps: {
-        label: 'Continue',
-        severity: 'danger',
-      },
-      accept: () => {
+      onConfirm: () => {
         this.versionFileMode.set(true);
         this.actions.setSelectedFileSource(PreprintFileSource.None);
       },
+      onReject: () => null,
     });
   }
 }

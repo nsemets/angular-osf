@@ -12,7 +12,6 @@ import { Tooltip } from 'primeng/tooltip';
 import { ChangeDetectionStrategy, Component, HostListener, OnInit, output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { ContributorsComponent } from '@osf/features/preprints/components/submit-steps/metadata/contributors/contributors.component';
 import { formInputLimits } from '@osf/features/preprints/constants';
 import { MetadataForm, Preprint } from '@osf/features/preprints/models';
 import {
@@ -26,6 +25,8 @@ import { IconComponent, LicenseComponent, TextInputComponent } from '@shared/com
 import { INPUT_VALIDATION_MESSAGES } from '@shared/constants';
 import { License, LicenseOptions } from '@shared/models';
 import { CustomValidators, findChangedFields } from '@shared/utils';
+
+import { ContributorsComponent } from './contributors/contributors.component';
 
 @Component({
   selector: 'osf-preprint-metadata',

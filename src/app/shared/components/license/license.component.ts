@@ -48,7 +48,6 @@ export class LicenseComponent {
   selectLicense = output<License>();
   protected inputLimits = InputLimits;
   saveButtonDisabled = signal(false);
-  //saveButtonCLickedAtLeastOnce = signal(false);
 
   currentYear = new Date();
   licenseForm = new FormGroup<LicenseForm>({

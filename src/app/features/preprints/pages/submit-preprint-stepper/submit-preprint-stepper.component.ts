@@ -23,6 +23,7 @@ import {
   TitleAndAbstractStepComponent,
 } from '@osf/features/preprints/components';
 import { submitPreprintSteps } from '@osf/features/preprints/constants';
+import { SubmitSteps } from '@osf/features/preprints/enums';
 import { BrandService } from '@osf/features/preprints/services';
 import { GetPreprintProviderById, PreprintsSelectors } from '@osf/features/preprints/store/preprints';
 import {
@@ -52,11 +53,12 @@ export class SubmitPreprintStepperComponent implements OnInit, OnDestroy {
     resetStateAndDeletePreprint: ResetStateAndDeletePreprint,
   });
 
+  readonly SubmitStepsEnum = SubmitSteps;
   readonly submitPreprintSteps = submitPreprintSteps;
 
   preprintProvider = select(PreprintsSelectors.getPreprintProviderDetails(this.providerId()));
   isPreprintProviderLoading = select(PreprintsSelectors.isPreprintProviderDetailsLoading);
-  currentStep = signal<number>(2);
+  currentStep = signal<number>(0);
   isWeb = toSignal(inject(IS_WEB));
 
   constructor() {

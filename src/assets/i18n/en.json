@@ -20,6 +20,7 @@
       "disconnect": "Disconnect",
       "revert": "Revert",
       "next": "Next",
+      "continue": "Continue",
       "skip": "Skip",
       "done": "Done",
       "select": "Select",
