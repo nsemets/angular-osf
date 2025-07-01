@@ -10,7 +10,13 @@ import { SearchService } from '@osf/shared/services';
 import { getResourceTypes } from '@osf/shared/utils';
 
 import { Project } from '../models';
-import { LicensesService, ProjectsService, ProvidersService, RegistriesService } from '../services';
+import {
+  LicensesService,
+  ProjectsService,
+  ProvidersService,
+  RegistrationSubjectsService,
+  RegistriesService,
+} from '../services';
 
 import {
   AddContributor,
@@ -20,11 +26,13 @@ import {
   FetchContributors,
   FetchDraft,
   FetchLicenses,
+  FetchRegistrationSubjects,
   FetchSchemaBlocks,
   GetProjects,
   GetProviders,
   GetRegistries,
   UpdateContributor,
+  UpdateRegistrationSubjects,
 } from './registries.actions';
 import { RegistriesStateModel } from './registries.model';
 
@@ -60,6 +68,11 @@ const DefaultState: RegistriesStateModel = {
     isLoading: false,
     error: null,
   },
+  registrationSubjects: {
+    data: [],
+    isLoading: false,
+    error: null,
+  },
   pagesSchema: {
     data: [],
     isLoading: false,
@@ -78,6 +91,7 @@ export class RegistriesState {
   projectsService = inject(ProjectsService);
   registriesService = inject(RegistriesService);
   licensesService = inject(LicensesService);
+  subjectsService = inject(RegistrationSubjectsService);
 
   @Action(GetRegistries)
   getRegistries(ctx: StateContext<RegistriesStateModel>) {
@@ -378,6 +392,56 @@ export class RegistriesState {
         });
       }),
       catchError((error) => this.handleError(ctx, 'licenses', error))
+    );
+  }
+
+  @Action(FetchRegistrationSubjects)
+  fetchRegistrationSubjects(ctx: StateContext<RegistriesStateModel>, { registrationId }: FetchRegistrationSubjects) {
+    ctx.patchState({
+      registrationSubjects: {
+        ...ctx.getState().registrationSubjects,
+        isLoading: true,
+        error: null,
+      },
+    });
+
+    return this.subjectsService.getRegistrationSubjects(registrationId).pipe(
+      tap((subjects) => {
+        ctx.patchState({
+          registrationSubjects: {
+            data: subjects,
+            isLoading: false,
+            error: null,
+          },
+        });
+      }),
+      catchError((error) => this.handleError(ctx, 'registrationSubjects', error))
+    );
+  }
+
+  @Action(UpdateRegistrationSubjects)
+  updateRegistrationSubjects(
+    ctx: StateContext<RegistriesStateModel>,
+    { registrationId, subjects }: UpdateRegistrationSubjects
+  ) {
+    ctx.patchState({
+      registrationSubjects: {
+        ...ctx.getState().registrationSubjects,
+        isLoading: true,
+        error: null,
+      },
+    });
+    return this.subjectsService.updateRegistrationSubjects(registrationId, subjects).pipe(
+      tap(() => {
+        ctx.patchState({
+          registrationSubjects: {
+            data: subjects,
+            isLoading: false,
+            error: null,
+          },
+        });
+      }),
+      catchError((error) => this.handleError(ctx, 'registrationSubjects', error))
     );
   }
 

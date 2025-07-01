@@ -3,7 +3,6 @@ import { Registration } from '../models/registration.model';
 
 export class RegistrationMapper {
   static fromRegistrationResponse(response: RegistrationDataJsonApi): Registration {
-    console.log('RegistrationMapper.fromRegistrationResponse', response);
     return {
       id: response.id,
       title: response.attributes.title,

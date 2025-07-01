@@ -25,6 +25,7 @@ export * from './severity.type';
 export * from './social-icon.model';
 export * from './step-option.model';
 export * from './store';
+export * from './subject';
 export * from './tab-option.model';
 export * from './table-parameters.model';
 export * from './tooltip-position.model';

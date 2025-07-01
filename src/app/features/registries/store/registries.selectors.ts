@@ -1,6 +1,6 @@
 import { Selector } from '@ngxs/store';
 
-import { Resource } from '@shared/models';
+import { Resource, Subject } from '@shared/models';
 
 import { License, PageSchema, Project, Provider, Registration } from '../models';
 
@@ -51,5 +51,15 @@ export class RegistriesSelectors {
   @Selector([RegistriesState])
   static getPagesSchema(state: RegistriesStateModel): PageSchema[] {
     return state.pagesSchema.data;
+  }
+
+  @Selector([RegistriesState])
+  static getSelectedSubjects(state: RegistriesStateModel): Subject[] {
+    return state.registrationSubjects.data;
+  }
+
+  @Selector([RegistriesState])
+  static isSubjectsUpdating(state: RegistriesStateModel): boolean {
+    return state.registrationSubjects.isLoading;
   }
 }
