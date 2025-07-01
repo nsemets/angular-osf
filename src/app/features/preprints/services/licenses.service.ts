@@ -47,7 +47,7 @@ export class LicensesService {
         attributes: {
           ...(licenseOptions && {
             license_record: {
-              copyright_holders: [licenseOptions.copyrightHolder],
+              copyright_holders: [licenseOptions.copyrightHolders],
               year: licenseOptions.year,
             },
           }),

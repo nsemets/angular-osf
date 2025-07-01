@@ -6,16 +6,19 @@ import { DatePicker } from 'primeng/datepicker';
 import { Divider } from 'primeng/divider';
 import { Select } from 'primeng/select';
 
-import { ChangeDetectionStrategy, Component, effect, input, model, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, model, output, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { StringOrNullOrUndefined } from '@core/helpers';
-import { TextInputComponent, TruncatedTextComponent } from '@shared/components';
-import { LicenseForm } from '@shared/components/license/models';
 import { InputLimits } from '@shared/constants';
 import { License, LicenseOptions } from '@shared/models';
 import { InterpolatePipe } from '@shared/pipes';
 import { CustomValidators } from '@shared/utils';
+
+import { LicenseForm } from '../license/models';
+import { TextInputComponent } from '../text-input/text-input.component';
+import { TruncatedTextComponent } from '../truncated-text/truncated-text.component';
 
 @Component({
   selector: 'osf-license',
@@ -25,11 +28,11 @@ import { CustomValidators } from '@shared/utils';
     Select,
     FormsModule,
     Divider,
-    TruncatedTextComponent,
     DatePicker,
     TextInputComponent,
     ReactiveFormsModule,
     Button,
+    TruncatedTextComponent,
     InterpolatePipe,
   ],
   templateUrl: './license.component.html',
@@ -44,9 +47,21 @@ export class LicenseComponent {
   createLicense = output<{ id: string; licenseOptions: LicenseOptions }>();
   selectLicense = output<License>();
   protected inputLimits = InputLimits;
+  saveButtonDisabled = signal(false);
+  //saveButtonCLickedAtLeastOnce = signal(false);
 
   currentYear = new Date();
-  licenseForm!: FormGroup<LicenseForm>;
+  licenseForm = new FormGroup<LicenseForm>({
+    year: new FormControl<string>(this.currentYear.getFullYear().toString(), {
+      nonNullable: true,
+      validators: [CustomValidators.requiredTrimmed()],
+    }),
+    copyrightHolders: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [CustomValidators.requiredTrimmed()],
+    }),
+  });
+  licenseFormValue = toSignal(this.licenseForm.valueChanges);
 
   constructor() {
     effect(() => {
@@ -59,12 +74,25 @@ export class LicenseComponent {
       if (this.selectedLicenseOptions()) {
         this.licenseForm.patchValue({
           year: options!.year,
-          copyrightHolder: options!.copyrightHolder,
+          copyrightHolders: options!.copyrightHolders,
         });
       }
     });
 
-    this.initForm();
+    effect(() => {
+      const licenseOptionsInput = this.selectedLicenseOptions();
+      const licenseOptionsFormValue = this.licenseFormValue();
+
+      if (!this.selectedLicense() || !this.selectedLicense()?.requiredFields.length) {
+        return;
+      }
+
+      if (JSON.stringify(licenseOptionsInput) === JSON.stringify(licenseOptionsFormValue)) {
+        this.saveButtonDisabled.set(true);
+      } else {
+        this.saveButtonDisabled.set(false);
+      }
+    });
   }
 
   onSelectLicense(license: License): void {
@@ -89,23 +117,9 @@ export class LicenseComponent {
   }
 
   cancel() {
-    this.selectedLicense.set(null);
     this.licenseForm.reset({
       year: this.currentYear.getFullYear().toString(),
-      copyrightHolder: '',
-    });
-  }
-
-  private initForm() {
-    this.licenseForm = new FormGroup<LicenseForm>({
-      year: new FormControl<string>(this.currentYear.getFullYear().toString(), {
-        nonNullable: true,
-        validators: [CustomValidators.requiredTrimmed()],
-      }),
-      copyrightHolder: new FormControl<string>('', {
-        nonNullable: true,
-        validators: [CustomValidators.requiredTrimmed()],
-      }),
+      copyrightHolders: '',
     });
   }
 }

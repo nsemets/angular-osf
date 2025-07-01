@@ -98,7 +98,7 @@ export class PreprintsMapper {
       licenseOptions: response.attributes.license_record
         ? {
             year: response.attributes.license_record.year,
-            copyrightHolder: response.attributes.license_record.copyright_holders[0],
+            copyrightHolders: response.attributes.license_record.copyright_holders.join(','),
           }
         : null,
     };

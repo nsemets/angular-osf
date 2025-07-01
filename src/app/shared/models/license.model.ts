@@ -7,6 +7,6 @@ export interface License {
 }
 
 export interface LicenseOptions {
-  copyrightHolder: string;
+  copyrightHolders: string;
   year: string;
 }

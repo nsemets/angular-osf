@@ -35,7 +35,7 @@
         <osf-text-input
           class="w-full md:w-6"
           label="shared.license.copyrightHolders"
-          [control]="licenseForm.controls['copyrightHolder']"
+          [control]="licenseForm.controls['copyrightHolders']"
           [maxLength]="inputLimits.fullName.maxLength"
         />
       </form>
@@ -57,8 +57,8 @@
         <p-button
           class="w-6 md:w-9rem"
           styleClass="w-full"
-          [label]="'common.buttons.create' | translate"
-          [disabled]="licenseForm.invalid"
+          [label]="'common.buttons.save' | translate"
+          [disabled]="licenseForm.invalid || saveButtonDisabled()"
           (click)="saveLicense()"
         />
       </section>
