@@ -8,6 +8,8 @@ import { ContributorsState } from '@osf/shared/components/contributors/store';
 import { SubjectsState } from '@osf/shared/stores';
 import { SUBJECTS_SERVICE } from '@osf/shared/tokens/subjects.token';
 
+import { ModerationState } from '../moderation/store';
+
 import { RegistrationSubjectsService } from './services';
 
 export const registriesRoutes: Routes = [
@@ -30,6 +32,14 @@ export const registriesRoutes: Routes = [
       {
         path: 'overview',
         loadComponent: () => import('@osf/features/registries/pages').then((c) => c.RegistriesLandingComponent),
+      },
+      {
+        path: 'moderation',
+        loadComponent: () =>
+          import('@osf/features/moderation/pages/registries-moderation/registries-moderation.component').then(
+            (m) => m.RegistriesModerationComponent
+          ),
+        providers: [provideStates([ModerationState])],
       },
       {
         path: 'new',
