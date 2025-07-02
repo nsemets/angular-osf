@@ -3,8 +3,9 @@ import { map } from 'rxjs/operators';
 
 import { inject, Injectable } from '@angular/core';
 
+import { JsonApiResponse } from '@core/models';
 import { JsonApiService } from '@osf/core/services';
-import { SparseCollectionsResponse } from '@osf/features/collections/models';
+import { SparseCollectionsResponseJsonApi } from '@osf/features/collections/models';
 import { SortOrder } from '@osf/shared/enums';
 import { NodeResponseModel, UpdateNodeRequestModel } from '@shared/models';
 
@@ -90,7 +91,7 @@ export class MyProjectsService {
       'fields[collections]': 'title,bookmarks',
     };
 
-    return this.jsonApiService.get<SparseCollectionsResponse>(environment.apiUrl + '/collections/', params).pipe(
+    return this.jsonApiService.get<SparseCollectionsResponseJsonApi>(environment.apiUrl + '/collections/', params).pipe(
       map((response) => {
         const bookmarksCollection = response.data.find(
           (collection) => collection.attributes.title === 'Bookmarks' && collection.attributes.bookmarks
@@ -167,8 +168,8 @@ export class MyProjectsService {
     };
 
     return this.jsonApiService
-      .post<MyProjectsItemGetResponseJsonApi>(`${environment.apiUrl}/nodes/`, payload, params)
-      .pipe(map((response) => MyProjectsMapper.fromResponse(response)));
+      .post<JsonApiResponse<MyProjectsItemGetResponseJsonApi, null>>(`${environment.apiUrl}/nodes/`, payload, params)
+      .pipe(map((response) => MyProjectsMapper.fromResponse(response.data)));
   }
 
   getProjectById(projectId: string): Observable<NodeResponseModel> {

@@ -38,6 +38,13 @@
         "users": "Users"
       }
     },
+    "sort": {
+      "relevance": "Relevance",
+      "createdNewest": "Date created (newest)",
+      "createdOldest": "Date created (oldest)",
+      "modifiedNewest": "Date modified (newest)",
+      "modifiedOldest": "Date modified (oldest)"
+    },
     "labels": {
       "downloads": "Downloads",
       "year": "Year"
@@ -912,7 +919,7 @@
         "description": "Please select the status from the dropdown below or start typing to find it"
       },
       "collectedType": {
-        "label": "Collected Type",
+        "label": "Type",
         "placeholder": "Select collected types",
         "description": "Please select the collected type from the dropdown below or start typing to find it"
       },
@@ -963,11 +970,14 @@
     "searchResults": {
       "noResults": "0 results",
       "10000Results": "10,000+ results",
-      "results": "results"
+      "results": "results",
+      "noResultsFound": "No results found",
+      "noResultsFoundMessage": "Try broadening your search terms"
     },
     "common": {
       "dateCreated": "Date Created:",
-      "dateModified": "Date Modified:"
+      "dateModified": "Date Modified:",
+      "by": "by"
     }
   },
   "moderation": {

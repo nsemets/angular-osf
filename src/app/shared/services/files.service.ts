@@ -148,7 +148,9 @@ export class FilesService {
       resource: resourceId,
     };
 
-    return this.#jsonApiService.post<GetFileResponse>(link, body).pipe(map((response) => MapFile(response)));
+    return this.#jsonApiService
+      .post<JsonApiResponse<GetFileResponse, null>>(link, body)
+      .pipe(map((response) => MapFile(response.data)));
   }
 
   getFolderDownloadLink(resourceId: string, provider: string, folderId: string, isRootFolder: boolean): string {
