@@ -20,11 +20,14 @@
       "disconnect": "Disconnect",
       "revert": "Revert",
       "next": "Next",
+      "back": "Back",
       "continue": "Continue",
       "skip": "Skip",
       "done": "Done",
       "select": "Select",
-      "deselect": "Deselect"
+      "deselect": "Deselect",
+      "yes": "Yes",
+      "no": "No"
     },
     "search": {
       "title": "Search",
@@ -38,8 +41,17 @@
         "users": "Users"
       }
     },
+    "sort": {
+      "relevance": "Relevance",
+      "createdNewest": "Date created (newest)",
+      "createdOldest": "Date created (oldest)",
+      "modifiedNewest": "Date modified (newest)",
+      "modifiedOldest": "Date modified (oldest)"
+    },
     "labels": {
       "downloads": "Downloads",
+      "title": "Title",
+      "description": "Description",
       "year": "Year"
     },
     "deleteConfirmation": {
@@ -48,7 +60,9 @@
     },
     "links": {
       "clickHere": "Click here",
-      "helpGuide": "Help Guide"
+      "helpGuide": "Help Guide",
+      "showExample": "Show Example",
+      "hideExample": "Hide Example"
     },
     "placeholder": {
       "addTag": "Add tags"
@@ -349,6 +363,46 @@
       },
       "updateProjectDetailsMessage": "Successfully updated project details.",
       "updateProjectSettingsMessage": "Successfully updated project settings."
+    }
+  },
+  "registries": {
+    "title": "Registries",
+    "addRegistration": "Add a Registration",
+    "description": "The open registries network",
+    "searchPlaceholder": "Search Registrations",
+    "services": {
+      "title": "Registry Services",
+      "description": "Leading registry service providers use this open source infrastructure to support their communities.",
+      "contactUs": "Contact Us"
+    },
+    "browse": "Browse Registrations",
+    "seeMore": "See more",
+    "new": {
+      "addNewRegistry": "Add New Registration",
+      "infoText1": "You are submitting to OSF Registries.",
+      "infoText2": "to learn more about other hosted registries",
+      "steps": {
+        "title": "Step",
+        "step1": "Do you have content for registration in an existing OSF project?",
+        "step2": "Which project do you want to register?",
+        "step3": "Which type of registration would you like to create?",
+        "step2InfoText": "If your project includes components, you can select which components to include or exclude at the end of the registration."
+      },
+      "selectProject": "Select your project",
+
+      "createDraft": "Create draft",
+      "createdSuccessfully": "Draft created successfully"
+    },
+    "deleteDraft": "Delete Draft",
+    "confirmDeleteDraft": "Are you sure you want to delete this draft registration?",
+    "metadata": {
+      "title": "Registration  Metadata",
+      "description": "This metadata applies only to the registration you are creating, and will not be applied to your project.",
+      "addContributors": "Add Contributor By Search"
+    },
+    "review": {
+      "step": "Review",
+      "title": "Review Registration"
     }
   },
   "myProfile": {
@@ -912,7 +966,7 @@
         "description": "Please select the status from the dropdown below or start typing to find it"
       },
       "collectedType": {
-        "label": "Collected Type",
+        "label": "Type",
         "placeholder": "Select collected types",
         "description": "Please select the collected type from the dropdown below or start typing to find it"
       },
@@ -963,11 +1017,14 @@
     "searchResults": {
       "noResults": "0 results",
       "10000Results": "10,000+ results",
-      "results": "results"
+      "results": "results",
+      "noResultsFound": "No results found",
+      "noResultsFoundMessage": "Try broadening your search terms"
     },
     "common": {
       "dateCreated": "Date Created:",
-      "dateModified": "Date Modified:"
+      "dateModified": "Date Modified:",
+      "by": "by"
     }
   },
   "moderation": {
@@ -1538,19 +1595,6 @@
       "providerLogoImageAlt": "Provider Logo"
     }
   },
-  "registries": {
-    "title": "Registries",
-    "addRegistration": "Add a Registration",
-    "description": "The open registries network",
-    "searchPlaceholder": "Search Registrations",
-    "services": {
-      "title": "Registry Services",
-      "description": "Leading registry service providers use this open source infrastructure to support their communities.",
-      "contactUs": "Contact Us"
-    },
-    "browse": "Browse Registrations",
-    "seeMore": "See more"
-  },
   "truncatedText": {
     "readMore": "Read more",
     "hide": "Hide"
@@ -1591,6 +1635,12 @@
       "description": "A license tells others how they can use your work in the future and only applies to the information and files submitted with the registration.",
       "helpText": "For more information, see this ",
       "copyrightHolders": "Copyright Holders"
+    },
+    "subjects": {
+      "title": "Subjects",
+      "noSelected": "No subjects selected",
+      "searchSubjects": "Search subjects",
+      "noSubject": "No subjects found"
     }
   },
   "pageNotFound": {

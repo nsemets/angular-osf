@@ -1,4 +1,5 @@
 export * from './addons';
+export * from './brand.model';
 export * from './charts';
 export * from './confirmation-options.model';
 export * from './contributors';
@@ -26,7 +27,9 @@ export * from './resource-card';
 export * from './select-option.model';
 export * from './severity.type';
 export * from './social-icon.model';
+export * from './step-option.model';
 export * from './store';
+export * from './subject';
 export * from './tab-option.model';
 export * from './table-parameters.model';
 export * from './tooltip-position.model';

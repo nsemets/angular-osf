@@ -24,7 +24,6 @@ export class NavMenuComponent {
   private readonly route = inject(ActivatedRoute);
   protected readonly navItems = NAV_ITEMS;
   protected readonly myProjectMenuItems = PROJECT_MENU_ITEMS;
-  protected readonly mainMenuItems = this.navItems.map((item) => this.convertToMenuItem(item));
 
   closeMenu = output<void>();
 
@@ -40,8 +39,17 @@ export class NavMenuComponent {
 
   protected readonly currentProjectId = computed(() => this.currentRoute().projectId);
   protected readonly isProjectRoute = computed(() => !!this.currentProjectId());
+  protected readonly isCollectionsRoute = computed(() => this.currentRoute().isCollectionsWithId);
 
-  convertToMenuItem(item: NavItem): MenuItem {
+  protected readonly mainMenuItems = computed(() => {
+    const filteredItems = this.isCollectionsRoute()
+      ? this.navItems
+      : this.navItems.filter((item) => item.path !== '/collections');
+
+    return filteredItems.map((item) => this.convertToMenuItem(item));
+  });
+
+  private convertToMenuItem(item: NavItem): MenuItem {
     const currentUrl = this.router.url;
     const isExpanded =
       item.isCollapsible &&
@@ -57,11 +65,20 @@ export class NavMenuComponent {
     };
   }
 
-  getRouteInfo() {
+  private getRouteInfo() {
+    const url = this.router.url;
+    const urlSegments = url.split('/').filter((segment) => segment);
+
     const projectId = this.route.firstChild?.snapshot.params['id'] || null;
     const section = this.route.firstChild?.firstChild?.snapshot.url[0]?.path || 'overview';
 
-    return { projectId, section };
+    const isCollectionsWithId = urlSegments[0] === 'collections' && urlSegments[1] && urlSegments[1] !== '';
+
+    return {
+      projectId,
+      section,
+      isCollectionsWithId,
+    };
   }
 
   goToLink(item: MenuItem) {

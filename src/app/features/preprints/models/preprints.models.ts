@@ -1,15 +1,6 @@
 import { StringOrNull } from '@core/helpers';
+import { Brand } from '@osf/shared/models';
 import { LicenseOptions, LicenseRecordJsonApi } from '@shared/models';
-
-export interface Brand {
-  id: string;
-  name: string;
-  heroLogoImageUrl: string;
-  heroBackgroundImageUrl: string;
-  topNavLogoImageUrl: string;
-  primaryColor: string;
-  secondaryColor: string;
-}
 
 export interface PreprintProviderDetails {
   id: string;

@@ -24,13 +24,13 @@ import {
 } from '@osf/features/preprints/components';
 import { submitPreprintSteps } from '@osf/features/preprints/constants';
 import { SubmitSteps } from '@osf/features/preprints/enums';
-import { BrandService } from '@osf/features/preprints/services';
 import { GetPreprintProviderById, PreprintsSelectors } from '@osf/features/preprints/store/preprints';
 import {
   ResetStateAndDeletePreprint,
   SetSelectedPreprintProviderId,
 } from '@osf/features/preprints/store/submit-preprint';
 import { StepperComponent } from '@shared/components/stepper/stepper.component';
+import { BrandService } from '@shared/services';
 import { BrowserTabHelper, HeaderStyleHelper, IS_WEB } from '@shared/utils';
 
 @Component({
