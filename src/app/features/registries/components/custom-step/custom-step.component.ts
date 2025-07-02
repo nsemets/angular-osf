@@ -8,13 +8,14 @@ import { Inplace } from 'primeng/inplace';
 import { InputText } from 'primeng/inputtext';
 import { RadioButton } from 'primeng/radiobutton';
 import { Textarea } from 'primeng/textarea';
-import { Tooltip } from 'primeng/tooltip';
 
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+
+import { InfoIconComponent } from '@osf/shared/components';
 
 import { FieldType } from '../../enums';
 import { RegistriesSelectors } from '../../store';
@@ -27,11 +28,12 @@ import { RegistriesSelectors } from '../../store';
     RadioButton,
     FormsModule,
     Checkbox,
-    Tooltip,
+
     InputText,
     NgTemplateOutlet,
     Inplace,
     TranslatePipe,
+    InfoIconComponent,
   ],
   templateUrl: './custom-step.component.html',
   styleUrl: './custom-step.component.scss',

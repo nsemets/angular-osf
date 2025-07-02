@@ -47,7 +47,6 @@ export class NewRegistrationComponent {
     this.actions.getProjects();
     this.actions.getProviders();
     effect(() => {
-      //set the provider value when the providers are loaded
       const provider = this.draftForm.get('provider')?.value;
       if (!provider) {
         this.draftForm.get('provider')?.setValue(this.providers()[0]?.id);

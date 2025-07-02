@@ -43,15 +43,16 @@
               </ng-template>
               <ng-template #content>
                 <div class="p-inplace-display">
-                  <span
-                    class="text-primary"
+                  <button
+                    class="text-primary border-none cursor-pointer bg-transparent text-sm"
                     tabindex="0"
                     role="button"
                     (click)="inplaceRef.deactivate()"
                     (keyup.enter)="inplaceRef.deactivate()"
                     (keyup.space)="inplaceRef.deactivate()"
-                    >{{ 'common.links.hideExample' | translate }}</span
                   >
+                    {{ 'common.links.hideExample' | translate }}
+                  </button>
                 </div>
                 <p class="m-0">{{ question.exampleText }}</p>
               </ng-template>
@@ -74,11 +75,7 @@
                     ></p-radioButton>
                     <label [for]="option.value" class="ml-2">{{ option.label }}</label>
                     @if (option.helpText) {
-                      <i
-                        class="flex mb-1 fas fa-circle-info ml-1 blue-icon cursor-pointer"
-                        [pTooltip]="option.helpText"
-                        tooltipPosition="right"
-                      ></i>
+                      <osf-info-icon [tooltipText]="option.helpText"></osf-info-icon>
                     }
                   </div>
                 }
