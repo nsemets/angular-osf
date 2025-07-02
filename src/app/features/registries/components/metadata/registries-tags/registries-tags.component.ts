@@ -7,13 +7,13 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TagsInputComponent } from '@osf/shared/components';
 
 @Component({
-  selector: 'osf-registries-metadata-tags',
+  selector: 'osf-registries-tags',
   imports: [Card, TagsInputComponent, TranslatePipe],
-  templateUrl: './tags.component.html',
-  styleUrl: './tags.component.scss',
+  templateUrl: './registries-tags.component.html',
+  styleUrl: './registries-tags.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RegistriesMetadataTagsComponent {
+export class RegistriesTagsComponent {
   onTagsChanged(tags: string[]): void {
     console.log('Tags changed:', tags);
   }

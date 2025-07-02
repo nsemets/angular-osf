@@ -19,7 +19,7 @@ import { InterpolatePipe } from '@osf/shared/pipes';
 import { CustomValidators } from '@osf/shared/utils';
 
 @Component({
-  selector: 'osf-license',
+  selector: 'osf-registries-license',
   imports: [
     Card,
     TranslatePipe,
@@ -32,11 +32,11 @@ import { CustomValidators } from '@osf/shared/utils';
     InterpolatePipe,
     ReactiveFormsModule,
   ],
-  templateUrl: './license.component.html',
-  styleUrl: './license.component.scss',
+  templateUrl: './registries-license.component.html',
+  styleUrl: './registries-license.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LicenseComponent {
+export class RegistriesLicenseComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly draftId = this.route.snapshot.params['id'];
   private readonly fb = inject(FormBuilder);

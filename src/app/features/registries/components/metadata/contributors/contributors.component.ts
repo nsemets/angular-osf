@@ -88,7 +88,7 @@ export class ContributorsComponent implements OnInit {
   }
 
   onFocusOut() {
-    // TODO: make request to update contributor if changed
+    // [NM] TODO: make request to update contributor if changed
     console.log('Focus out event:', 'Changed:', this.hasChanges);
   }
 

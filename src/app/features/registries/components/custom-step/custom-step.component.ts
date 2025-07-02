@@ -12,6 +12,7 @@ import { Tooltip } from 'primeng/tooltip';
 
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
@@ -46,7 +47,7 @@ export class CustomStepComponent {
   radio = null;
 
   constructor() {
-    this.route.params.subscribe((params) => {
+    this.route.params.pipe(takeUntilDestroyed()).subscribe((params) => {
       this.step.set(+params['step'].split('-')[0]);
     });
   }

@@ -158,7 +158,6 @@ export class RegistriesState {
         patchState({
           providers: {
             data: providers,
-
             isLoading: false,
             error: null,
           },

@@ -4,7 +4,6 @@ import { SchemaBlocksResponseJsonApi } from '../models/schema-blocks-json-api.mo
 
 export class PageSchemaMapper {
   static fromSchemaBlocksResponse(response: SchemaBlocksResponseJsonApi): PageSchema[] {
-    console.log('PageSchemaMapper.fromSchemaBlocksResponse', response);
     const pages: PageSchema[] = [];
     let currentPage!: PageSchema;
     let currentQuestion: Question | null = null;

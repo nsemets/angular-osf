@@ -4,8 +4,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { JsonApiService } from '@osf/core/services';
 import { SubjectMapper } from '@osf/shared/mappers';
-import { Subject, SubjectsResponseJsonApi } from '@osf/shared/models';
-import { ISubjectsService } from '@osf/shared/models/subject/subject-service.model';
+import { ISubjectsService, Subject, SubjectsResponseJsonApi } from '@osf/shared/models';
 
 import { environment } from 'src/environments/environment';
 

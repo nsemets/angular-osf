@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LicenseComponent } from './license.component';
+import { RegistriesLicenseComponent } from './registries-license.component';
 
 describe('LicenseComponent', () => {
-  let component: LicenseComponent;
-  let fixture: ComponentFixture<LicenseComponent>;
+  let component: RegistriesLicenseComponent;
+  let fixture: ComponentFixture<RegistriesLicenseComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LicenseComponent],
+      imports: [RegistriesLicenseComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(LicenseComponent);
+    fixture = TestBed.createComponent(RegistriesLicenseComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

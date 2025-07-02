@@ -16,11 +16,11 @@ import { SubjectsSelectors } from '@osf/shared/stores/subjects/subjects.selector
 @Component({
   selector: 'osf-registries-subjects',
   imports: [SubjectsComponent],
-  templateUrl: './subjects.component.html',
-  styleUrl: './subjects.component.scss',
+  templateUrl: './registries-subjects.component.html',
+  styleUrl: './registries-subjects.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SubjectsRegistriesComponent {
+export class RegistriesSubjectsComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly draftId = this.route.snapshot.params['id'];
 

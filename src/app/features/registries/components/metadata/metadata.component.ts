@@ -18,9 +18,9 @@ import { CustomValidators } from '@osf/shared/utils';
 import { DeleteDraft, RegistriesSelectors } from '../../store';
 
 import { ContributorsComponent } from './contributors/contributors.component';
-import { LicenseComponent } from './license/license.component';
-import { SubjectsRegistriesComponent } from './subjects/subjects.component';
-import { RegistriesMetadataTagsComponent } from './tags/tags.component';
+import { RegistriesLicenseComponent } from './registries-license/registries-license.component';
+import { RegistriesSubjectsComponent } from './registries-subjects/registries-subjects.component';
+import { RegistriesTagsComponent } from './registries-tags/registries-tags.component';
 
 @Component({
   selector: 'osf-metadata',
@@ -32,9 +32,9 @@ import { RegistriesMetadataTagsComponent } from './tags/tags.component';
     TranslatePipe,
     TextareaModule,
     ContributorsComponent,
-    LicenseComponent,
-    SubjectsRegistriesComponent,
-    RegistriesMetadataTagsComponent,
+    RegistriesSubjectsComponent,
+    RegistriesTagsComponent,
+    RegistriesLicenseComponent,
   ],
   templateUrl: './metadata.component.html',
   styleUrl: './metadata.component.scss',

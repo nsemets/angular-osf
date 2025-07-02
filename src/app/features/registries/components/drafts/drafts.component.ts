@@ -1,6 +1,6 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { tap } from 'rxjs';
 
@@ -20,11 +20,13 @@ import { FetchDraft, FetchSchemaBlocks, RegistriesSelectors } from '../../store'
   templateUrl: './drafts.component.html',
   styleUrl: './drafts.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [TranslateService],
 })
 export class DraftsComponent {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly loaderService = inject(LoaderService);
+  private readonly translateService = inject(TranslateService);
 
   protected readonly pages = select(RegistriesSelectors.getPagesSchema);
   protected readonly draftRegistration = select(RegistriesSelectors.getDraftRegistration);
@@ -38,12 +40,17 @@ export class DraftsComponent {
     return this.router.url.includes('/review');
   }
 
+  defaultSteps: StepOption[] = defaultSteps.map((step) => ({
+    ...step,
+    label: this.translateService.instant(step.label),
+  }));
+
   steps: Signal<StepOption[]> = computed(() => {
     const customSteps = this.pages().map((page) => ({
       label: page.title,
       value: page.id,
     }));
-    return [defaultSteps[0], ...customSteps, defaultSteps[1]];
+    return [this.defaultSteps[0], ...customSteps, this.defaultSteps[1]];
   });
 
   currentStep = signal(
@@ -80,7 +87,7 @@ export class DraftsComponent {
   }
 
   stepChange(step: number): void {
-    // TODO: before navigating, validate the current step
+    // [NM] TODO: before navigating, validate the current step
     this.currentStep.set(step);
     const pageStep = this.steps()[step];
 

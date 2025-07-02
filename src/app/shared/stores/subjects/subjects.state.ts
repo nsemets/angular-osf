@@ -4,9 +4,8 @@ import { catchError, tap, throwError } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { ISubjectsService } from '@osf/shared/models/subject/subject-service.model';
 import { SUBJECTS_SERVICE } from '@osf/shared/tokens/subjects.token';
-import { NodeSubjectModel, Subject } from '@shared/models';
+import { ISubjectsService, NodeSubjectModel, Subject } from '@shared/models';
 import { SubjectsService } from '@shared/services';
 
 import { FetchChildrenSubjects, FetchSubjects, GetSubjects, UpdateProjectSubjects } from './subjects.actions';

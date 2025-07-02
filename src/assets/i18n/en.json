@@ -383,7 +383,8 @@
       },
       "selectProject": "Select your project",
 
-      "createDraft": "Create draft"
+      "createDraft": "Create draft",
+      "createdSuccessfully": "Draft created successfully"
     },
     "deleteDraft": "Delete Draft",
     "confirmDeleteDraft": "Are you sure you want to delete this draft registration?",
@@ -393,6 +394,7 @@
       "addContributors": "Add Contributor By Search"
     },
     "review": {
+      "step": "Review",
       "title": "Review Registration"
     }
   },
