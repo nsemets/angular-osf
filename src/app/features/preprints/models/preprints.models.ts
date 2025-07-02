@@ -1,4 +1,5 @@
 import { StringOrNull } from '@core/helpers';
+import { LicenseOptions, LicenseRecordJsonApi } from '@shared/models';
 
 export interface Brand {
   id: string;
@@ -47,12 +48,17 @@ export interface Preprint {
   dateModified: string;
   title: string;
   description: string;
+  doi: StringOrNull;
+  originalPublicationDate: Date | null;
+  customPublicationCitation: StringOrNull;
   isPublished: boolean;
   tags: string[];
   isPublic: boolean;
   version: number;
   isLatestVersion: boolean;
   primaryFileId: StringOrNull;
+  licenseId: StringOrNull;
+  licenseOptions: LicenseOptions | null;
 }
 
 export interface PreprintFilesLinks {
@@ -122,7 +128,7 @@ export interface PreprintJsonApi {
   description: string;
   is_published: boolean;
   is_preprint_orphan: boolean;
-  license_record: StringOrNull;
+  license_record: LicenseRecordJsonApi | null;
   tags: string[];
   date_withdrawn: Date | null;
   current_user_permissions: string[];
@@ -142,6 +148,12 @@ export interface PreprintsRelationshipsJsonApi {
       related: {
         href: string;
       };
+    };
+  };
+  license: {
+    data: {
+      id: string;
+      type: 'licenses';
     };
   };
 }

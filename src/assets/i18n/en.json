@@ -21,6 +21,7 @@
       "revert": "Revert",
       "next": "Next",
       "back": "Back",
+      "continue": "Continue",
       "skip": "Skip",
       "done": "Done",
       "select": "Select",
@@ -1047,8 +1048,8 @@
       "accepted": "Accepted",
       "rejected": "Rejected",
       "withdrawn": "Withdrawn",
-      "public": "public",
-      "embargo": "embargo"
+      "public": "Public",
+      "embargo": "Embargo"
     },
     "submissionReview": {
       "submitted": "Submitted",
