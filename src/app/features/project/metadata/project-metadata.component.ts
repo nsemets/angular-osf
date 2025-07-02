@@ -53,7 +53,7 @@ import {
   UpdateProjectDetails,
 } from '@osf/features/project/metadata/store';
 import { ProjectOverviewSubject } from '@osf/features/project/overview/models';
-import { ContributorsSelectors, GetAllContributors } from '@osf/shared/components/contributors/store';
+import { ContributorsSelectors, GetAllContributors } from '@osf/shared/stores';
 import { LoadingSpinnerComponent, SubHeaderComponent, TagsInputComponent } from '@shared/components';
 import { CustomConfirmationService, ToastService } from '@shared/services';
 import { GetSubjects, SubjectsSelectors, UpdateProjectSubjects } from '@shared/stores/subjects';

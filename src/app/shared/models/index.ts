@@ -1,6 +1,7 @@
 export * from './addons';
 export * from './charts';
 export * from './confirmation-options.model';
+export * from './contributors';
 export * from './create-component-form.model';
 export * from './create-project-form.model';
 export * from './file-menu-action.model';

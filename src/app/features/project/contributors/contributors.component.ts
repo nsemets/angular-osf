@@ -14,20 +14,16 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import {
-  EducationHistoryDialogComponent,
-  EmploymentHistoryDialogComponent,
-  SearchInputComponent,
-  ViewOnlyTableComponent,
-} from '@osf/shared/components';
+import { SearchInputComponent, ViewOnlyTableComponent } from '@osf/shared/components';
 import {
   AddContributorDialogComponent,
   AddUnregisteredContributorDialogComponent,
   ContributorsListComponent,
 } from '@osf/shared/components/contributors';
-import { BIBLIOGRAPHY_OPTIONS, PERMISSION_OPTIONS } from '@osf/shared/components/contributors/constants';
-import { AddContributorType, ContributorPermission } from '@osf/shared/components/contributors/enums';
-import { ContributorDialogAddModel, ContributorModel } from '@osf/shared/components/contributors/models';
+import { BIBLIOGRAPHY_OPTIONS, PERMISSION_OPTIONS } from '@osf/shared/constants';
+import { AddContributorType, ContributorPermission } from '@osf/shared/enums';
+import { ContributorDialogAddModel, ContributorModel, SelectOption } from '@osf/shared/models';
+import { CustomConfirmationService, ToastService } from '@osf/shared/services';
 import {
   AddContributor,
   ContributorsSelectors,
@@ -37,9 +33,7 @@ import {
   UpdateContributor,
   UpdatePermissionFilter,
   UpdateSearchValue,
-} from '@osf/shared/components/contributors/store';
-import { SelectOption } from '@osf/shared/models';
-import { CustomConfirmationService, ToastService } from '@osf/shared/services';
+} from '@osf/shared/stores';
 import { findChangedItems } from '@osf/shared/utils';
 
 import { ViewOnlyLink, ViewOnlyLinkModel } from '../settings/models';
@@ -164,30 +158,6 @@ export class ContributorsComponent implements OnInit {
 
     forkJoin(updateRequests).subscribe(() => {
       this.toastService.showSuccess('project.contributors.toastMessages.multipleUpdateSuccessMessage');
-    });
-  }
-
-  openEmploymentHistory(contributor: ContributorModel) {
-    this.dialogService.open(EmploymentHistoryDialogComponent, {
-      width: '552px',
-      data: contributor.employment,
-      focusOnShow: false,
-      header: this.translateService.instant('project.contributors.table.headers.employment'),
-      closeOnEscape: true,
-      modal: true,
-      closable: true,
-    });
-  }
-
-  openEducationHistory(contributor: ContributorModel) {
-    this.dialogService.open(EducationHistoryDialogComponent, {
-      width: '552px',
-      data: contributor.education,
-      focusOnShow: false,
-      header: this.translateService.instant('project.contributors.table.headers.education'),
-      closeOnEscape: true,
-      modal: true,
-      closable: true,
     });
   }
 

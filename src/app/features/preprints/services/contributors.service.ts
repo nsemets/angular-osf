@@ -4,9 +4,9 @@ import { inject, Injectable } from '@angular/core';
 
 import { JsonApiResponse } from '@core/models';
 import { JsonApiService } from '@core/services';
-import { AddContributorType } from '@shared/components/contributors/enums';
-import { ContributorsMapper } from '@shared/components/contributors/mappers';
-import { ContributorAddModel, ContributorModel, ContributorResponse } from '@shared/components/contributors/models';
+import { AddContributorType } from '@osf/shared/enums';
+import { ContributorsMapper } from '@osf/shared/mappers';
+import { ContributorAddModel, ContributorModel, ContributorResponse } from '@osf/shared/models';
 
 import { environment } from 'src/environments/environment';
 

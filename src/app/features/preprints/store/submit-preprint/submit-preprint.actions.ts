@@ -1,8 +1,7 @@
 import { StringOrNull } from '@core/helpers';
 import { PreprintFileSource } from '@osf/features/preprints/enums';
 import { Preprint } from '@osf/features/preprints/models';
-import { ContributorAddModel, ContributorModel } from '@shared/components/contributors/models';
-import { LicenseOptions, OsfFile } from '@shared/models';
+import { ContributorAddModel, ContributorModel, LicenseOptions, OsfFile } from '@shared/models';
 
 export class SetSelectedPreprintProviderId {
   static readonly type = '[Submit Preprint] Set Selected Preprint Provider Id';

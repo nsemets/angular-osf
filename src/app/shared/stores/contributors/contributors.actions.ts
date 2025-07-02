@@ -1,4 +1,4 @@
-import { ContributorAddModel, ContributorModel } from '../models';
+import { ContributorAddModel, ContributorModel } from '@osf/shared/models';
 
 export class GetAllContributors {
   static readonly type = '[Contributors] Get All Contributors';

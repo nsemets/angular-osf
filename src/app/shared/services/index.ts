@@ -5,6 +5,7 @@ export { FiltersOptionsService } from './filters-options.service';
 export { InstitutionsService } from './institutions.service';
 export { LicensesService } from './licenses.service';
 export { LoaderService } from './loader.service';
+export { ProjectContributorsService } from './project-contributors.service';
 export { ResourceCardService } from './resource-card.service';
 export { SearchService } from './search.service';
 export { SubjectsService } from './subjects.service';

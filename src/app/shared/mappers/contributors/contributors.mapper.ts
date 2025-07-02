@@ -1,8 +1,12 @@
 import { JsonApiResponseWithPaging, UserGetResponse } from '@osf/core/models';
-import { PaginatedData } from '@osf/shared/models';
-
-import { AddContributorType, ContributorPermission } from '../enums';
-import { ContributorAddModel, ContributorAddRequestModel, ContributorModel, ContributorResponse } from '../models';
+import { AddContributorType, ContributorPermission } from '@osf/shared/enums';
+import {
+  ContributorAddModel,
+  ContributorAddRequestModel,
+  ContributorModel,
+  ContributorResponse,
+  PaginatedData,
+} from '@osf/shared/models';
 
 export class ContributorsMapper {
   static fromResponse(response: ContributorResponse[]): ContributorModel[] {

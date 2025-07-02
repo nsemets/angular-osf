@@ -2,7 +2,7 @@ import { provideStates } from '@ngxs/store';
 
 import { Routes } from '@angular/router';
 
-import { ContributorsState } from '@osf/shared/components/contributors/store';
+import { ContributorsState } from '@osf/shared/stores';
 
 import { ProjectMetadataComponent } from './project-metadata.component';
 

@@ -21,14 +21,13 @@ import {
   SubmitPreprintSelectors,
   UpdateContributor,
 } from '@osf/features/preprints/store/submit-preprint';
-import { EducationHistoryDialogComponent, EmploymentHistoryDialogComponent } from '@osf/shared/components';
 import {
   AddContributorDialogComponent,
   AddUnregisteredContributorDialogComponent,
   ContributorsListComponent,
 } from '@osf/shared/components/contributors';
-import { AddContributorType } from '@osf/shared/components/contributors/enums';
-import { ContributorDialogAddModel, ContributorModel } from '@osf/shared/components/contributors/models';
+import { AddContributorType } from '@osf/shared/enums';
+import { ContributorDialogAddModel, ContributorModel } from '@osf/shared/models';
 import { CustomConfirmationService, ToastService } from '@osf/shared/services';
 import { findChangedItems } from '@osf/shared/utils';
 
@@ -84,30 +83,6 @@ export class ContributorsComponent implements OnInit {
 
     forkJoin(updateRequests).subscribe(() => {
       this.toastService.showSuccess('project.contributors.toastMessages.multipleUpdateSuccessMessage');
-    });
-  }
-
-  openEmploymentHistory(contributor: ContributorModel) {
-    this.dialogService.open(EmploymentHistoryDialogComponent, {
-      width: '552px',
-      data: contributor.employment,
-      focusOnShow: false,
-      header: this.translateService.instant('project.contributors.table.headers.employment'),
-      closeOnEscape: true,
-      modal: true,
-      closable: true,
-    });
-  }
-
-  openEducationHistory(contributor: ContributorModel) {
-    this.dialogService.open(EducationHistoryDialogComponent, {
-      width: '552px',
-      data: contributor.education,
-      focusOnShow: false,
-      header: this.translateService.instant('project.contributors.table.headers.education'),
-      closeOnEscape: true,
-      modal: true,
-      closable: true,
     });
   }
 

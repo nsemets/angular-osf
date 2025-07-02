@@ -2,7 +2,9 @@ import { provideStates } from '@ngxs/store';
 
 import { Routes } from '@angular/router';
 
-import { ContributorsState } from '@osf/shared/components/contributors/store';
+import { CONTRIBUTORS_SERVICE } from '@osf/shared/constants';
+import { ProjectContributorsService } from '@osf/shared/services';
+import { ContributorsState } from '@osf/shared/stores';
 
 import { ProjectFilesState } from './files/store';
 
@@ -44,7 +46,13 @@ export const projectRoutes: Routes = [
         path: 'contributors',
         loadComponent: () =>
           import('../project/contributors/contributors.component').then((mod) => mod.ContributorsComponent),
-        providers: [provideStates([ContributorsState])],
+        providers: [
+          provideStates([ContributorsState]),
+          {
+            provide: CONTRIBUTORS_SERVICE,
+            useClass: ProjectContributorsService,
+          },
+        ],
       },
       {
         path: 'analytics',

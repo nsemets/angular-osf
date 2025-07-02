@@ -16,16 +16,16 @@ import { FormControl, FormsModule } from '@angular/forms';
 
 import { SearchInputComponent } from '@osf/shared/components';
 import { AddContributorDialogComponent } from '@osf/shared/components/contributors';
-import { AddContributorType } from '@osf/shared/components/contributors/enums';
-import { ContributorDialogAddModel, ContributorModel } from '@osf/shared/components/contributors/models';
+import { AddContributorType } from '@osf/shared/enums';
+import { ContributorDialogAddModel, ContributorModel } from '@osf/shared/models';
+import { ToastService } from '@osf/shared/services';
 import {
   AddContributor,
   DeleteContributor,
   UpdateBibliographyFilter,
   UpdatePermissionFilter,
   UpdateSearchValue,
-} from '@osf/shared/components/contributors/store';
-import { ToastService } from '@osf/shared/services';
+} from '@osf/shared/stores';
 
 @Component({
   selector: 'osf-contributors-dialog',

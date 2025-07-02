@@ -4,7 +4,7 @@ import { catchError, of, tap, throwError } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { ContributorsService } from '../services';
+import { CONTRIBUTORS_SERVICE } from '@osf/shared/constants';
 
 import {
   AddContributor,
@@ -40,7 +40,7 @@ import { ContributorsStateModel } from './contributors.model';
 })
 @Injectable()
 export class ContributorsState {
-  private readonly contributorsService = inject(ContributorsService);
+  private readonly contributorsService = inject(CONTRIBUTORS_SERVICE);
 
   @Action(GetAllContributors)
   getAllContributors(ctx: StateContext<ContributorsStateModel>, action: GetAllContributors) {

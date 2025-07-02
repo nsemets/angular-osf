@@ -11,8 +11,6 @@
     [contributors]="contributors()"
     [isLoading]="isContributorsLoading()"
     (remove)="removeContributor($event)"
-    (showEducationHistory)="openEducationHistory($event)"
-    (showEmploymentHistory)="openEmploymentHistory($event)"
   />
   <div class="flex justify-content-end mt-3">
     @if (hasChanges) {
