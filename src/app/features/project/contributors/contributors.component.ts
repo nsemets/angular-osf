@@ -22,28 +22,31 @@ import {
 } from '@osf/shared/components/contributors';
 import { BIBLIOGRAPHY_OPTIONS, PERMISSION_OPTIONS } from '@osf/shared/constants';
 import { AddContributorType, ContributorPermission } from '@osf/shared/enums';
-import { ContributorDialogAddModel, ContributorModel, SelectOption } from '@osf/shared/models';
+import {
+  ContributorDialogAddModel,
+  ContributorModel,
+  SelectOption,
+  ViewOnlyLinkJsonApi,
+  ViewOnlyLinkModel,
+} from '@osf/shared/models';
 import { CustomConfirmationService, ToastService } from '@osf/shared/services';
 import {
   AddContributor,
   ContributorsSelectors,
+  CreateViewOnlyLink,
   DeleteContributor,
+  DeleteViewOnlyLink,
+  FetchViewOnlyLinks,
   GetAllContributors,
   UpdateBibliographyFilter,
   UpdateContributor,
   UpdatePermissionFilter,
   UpdateSearchValue,
+  ViewOnlyLinkSelectors,
 } from '@osf/shared/stores';
 import { findChangedItems } from '@osf/shared/utils';
 
-import { ViewOnlyLink, ViewOnlyLinkModel } from '../settings/models';
-import {
-  CreateViewOnlyLink,
-  DeleteViewOnlyLink,
-  GetProjectDetails,
-  GetViewOnlyLinksTable,
-  SettingsSelectors,
-} from '../settings/store';
+import { GetProjectDetails, SettingsSelectors } from '../settings/store';
 
 import { CreateViewLinkDialogComponent } from './components';
 
@@ -76,7 +79,7 @@ export class ContributorsComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly projectId = toSignal(this.route.parent?.params.pipe(map((params) => params['id'])) ?? of(undefined));
 
-  protected viewOnlyLinks = select(SettingsSelectors.getViewOnlyLinks);
+  protected viewOnlyLinks = select(ViewOnlyLinkSelectors.getViewOnlyLinks);
   protected projectDetails = select(SettingsSelectors.getProjectDetails);
 
   protected readonly selectedPermission = signal<ContributorPermission | null>(null);
@@ -87,10 +90,10 @@ export class ContributorsComponent implements OnInit {
   protected initialContributors = select(ContributorsSelectors.getContributors);
   protected contributors = signal([]);
   protected readonly isContributorsLoading = select(ContributorsSelectors.isContributorsLoading);
-  protected readonly isViewOnlyLinksLoading = select(SettingsSelectors.isViewOnlyLinksLoading);
+  protected readonly isViewOnlyLinksLoading = select(ViewOnlyLinkSelectors.isViewOnlyLinksLoading);
 
   protected actions = createDispatchMap({
-    getViewOnlyLinks: GetViewOnlyLinksTable,
+    getViewOnlyLinks: FetchViewOnlyLinks,
     getProjectDetails: GetProjectDetails,
     getContributors: GetAllContributors,
     updateSearchValue: UpdateSearchValue,
@@ -260,7 +263,7 @@ export class ContributorsComponent implements OnInit {
       })
       .onClose.pipe(
         filter((res) => !!res),
-        switchMap((result) => this.actions.createViewOnlyLink(this.projectId(), result as ViewOnlyLink)),
+        switchMap((result) => this.actions.createViewOnlyLink(this.projectId(), result as ViewOnlyLinkJsonApi)),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();

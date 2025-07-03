@@ -4,9 +4,10 @@ import { Routes } from '@angular/router';
 
 import { CONTRIBUTORS_SERVICE } from '@osf/shared/constants';
 import { ProjectContributorsService } from '@osf/shared/services';
-import { ContributorsState } from '@osf/shared/stores';
+import { ContributorsState, ViewOnlyLinkState } from '@osf/shared/stores';
 
 import { ProjectFilesState } from './files/store';
+import { SettingsState } from './settings/store';
 
 export const projectRoutes: Routes = [
   {
@@ -41,13 +42,14 @@ export const projectRoutes: Routes = [
       {
         path: 'settings',
         loadComponent: () => import('../project/settings/settings.component').then((mod) => mod.SettingsComponent),
+        providers: [provideStates([SettingsState, ViewOnlyLinkState])],
       },
       {
         path: 'contributors',
         loadComponent: () =>
           import('../project/contributors/contributors.component').then((mod) => mod.ContributorsComponent),
         providers: [
-          provideStates([ContributorsState]),
+          provideStates([ContributorsState, ViewOnlyLinkState]),
           {
             provide: CONTRIBUTORS_SERVICE,
             useClass: ProjectContributorsService,

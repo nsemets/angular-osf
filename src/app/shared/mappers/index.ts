@@ -5,3 +5,4 @@ export * from './institutions';
 export * from './licenses.mapper';
 export * from './resource-card';
 export * from './subjects';
+export * from './view-only-links.mapper';

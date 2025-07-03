@@ -6,7 +6,11 @@ import { JsonApiResponse } from '@core/models';
 import { JsonApiService } from '@core/services';
 
 import { ViewOnlyLinksMapper } from '../mappers';
-import { PaginatedViewOnlyLinksModel, ViewOnlyLink, ViewOnlyLinksResponseModel } from '../models';
+import {
+  PaginatedViewOnlyLinksModel,
+  ViewOnlyLinkJsonApi,
+  ViewOnlyLinksResponseJsonApi,
+} from '../models/view-only-links';
 
 import { environment } from 'src/environments/environment';
 
@@ -20,17 +24,17 @@ export class ViewOnlyLinksService {
     const params: Record<string, unknown> = { embed: 'creator' };
 
     return this.jsonApiService
-      .get<ViewOnlyLinksResponseModel>(`${environment.apiUrl}/nodes/${projectId}/view_only_links`, params)
+      .get<ViewOnlyLinksResponseJsonApi>(`${environment.apiUrl}/nodes/${projectId}/view_only_links`, params)
       .pipe(map((response) => ViewOnlyLinksMapper.fromResponse(response, projectId)));
   }
 
-  createViewOnlyLink(projectId: string, payload: ViewOnlyLink): Observable<PaginatedViewOnlyLinksModel> {
+  createViewOnlyLink(projectId: string, payload: ViewOnlyLinkJsonApi): Observable<PaginatedViewOnlyLinksModel> {
     const data = { data: { ...payload } };
     const params: Record<string, unknown> = { embed: 'creator' };
 
     return this.jsonApiService
       .post<
-        JsonApiResponse<ViewOnlyLink, null>
+        JsonApiResponse<ViewOnlyLinkJsonApi, null>
       >(`${environment.apiUrl}/nodes/${projectId}/view_only_links/`, data, params)
       .pipe(map((response) => ViewOnlyLinksMapper.fromSingleResponse(response.data, projectId)));
   }

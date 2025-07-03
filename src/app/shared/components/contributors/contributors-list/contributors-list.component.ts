@@ -30,6 +30,7 @@ import { ContributorModel, SelectOption, TableParameters } from '@osf/shared/mod
 export class ContributorsListComponent {
   contributors = input<ContributorModel[]>([]);
   isLoading = input(false);
+  showCuratorColumn = input(false);
 
   remove = output<ContributorModel>();
 

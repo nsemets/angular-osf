@@ -27,14 +27,11 @@ import {
   ProjectDetailsModel,
   ProjectSettingsAttributes,
   ProjectSettingsData,
-  ViewOnlyLinkModel,
 } from '@osf/features/project/settings/models';
 import {
   DeleteProject,
-  DeleteViewOnlyLink,
   GetProjectDetails,
   GetProjectSettings,
-  GetViewOnlyLinksTable,
   SettingsSelectors,
   UpdateProjectDetails,
   UpdateProjectSettings,
@@ -45,10 +42,11 @@ import {
   UpdateNotificationSubscriptionForNodeId,
 } from '@osf/features/settings/notifications/store';
 import { CustomConfirmationService, LoaderService, ToastService } from '@osf/shared/services';
+import { DeleteViewOnlyLink, FetchViewOnlyLinks, ViewOnlyLinkSelectors } from '@osf/shared/stores';
 import { CustomValidators } from '@osf/shared/utils';
 import { SubHeaderComponent } from '@shared/components';
 import { ProjectFormControls, SubscriptionEvent, SubscriptionFrequency } from '@shared/enums';
-import { UpdateNodeRequestModel } from '@shared/models';
+import { UpdateNodeRequestModel, ViewOnlyLinkModel } from '@shared/models';
 
 @Component({
   selector: 'osf-settings',
@@ -85,14 +83,14 @@ export class SettingsComponent implements OnInit {
   protected settings = select(SettingsSelectors.getSettings);
   protected notifications = select(NotificationSubscriptionSelectors.getNotificationSubscriptionsByNodeId);
   protected projectDetails = select(SettingsSelectors.getProjectDetails);
-  protected viewOnlyLinks = select(SettingsSelectors.getViewOnlyLinks);
-  protected isViewOnlyLinksLoading = select(SettingsSelectors.isViewOnlyLinksLoading);
+  protected viewOnlyLinks = select(ViewOnlyLinkSelectors.getViewOnlyLinks);
+  protected isViewOnlyLinksLoading = select(ViewOnlyLinkSelectors.isViewOnlyLinksLoading);
 
   protected actions = createDispatchMap({
     getSettings: GetProjectSettings,
     getNotifications: GetNotificationSubscriptionsByNodeId,
     getProjectDetails: GetProjectDetails,
-    getViewOnlyLinks: GetViewOnlyLinksTable,
+    getViewOnlyLinks: FetchViewOnlyLinks,
     updateProjectDetails: UpdateProjectDetails,
     updateProjectSettings: UpdateProjectSettings,
     updateNotificationSubscriptionForNodeId: UpdateNotificationSubscriptionForNodeId,

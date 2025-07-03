@@ -326,6 +326,12 @@
         "createdBy": "Created By",
         "anonymous": "Anonymous"
       },
+      "anonymizeContributorList": "Anonymize contributor list for this link (e.g., for blind peer review).",
+      "ensureNoInformation": "Ensure the wiki pages, files, registration forms and add-ons do not contain identifying information.",
+      "linkName": "Link name",
+      "typeLinkName": "Type link name",
+      "whichComponentLink": "Which components would you like to associate with this link?",
+      "anyonePrivateLink": "Anyone with the private link can view—but not edit—the components associated with the link.",
       "accessRequests": "Access Requests",
       "accessRequestsText": "Allow users to request access to this project",
       "wiki": "Wiki",
