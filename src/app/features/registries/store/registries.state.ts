@@ -4,7 +4,7 @@ import { catchError, tap } from 'rxjs/operators';
 
 import { inject, Injectable } from '@angular/core';
 
-import { handleSectionError } from '@osf/core/handlers/state-error.handler';
+import { handleSectionError } from '@osf/core/handlers';
 import { ResourceTab } from '@osf/shared/enums';
 import { SearchService } from '@osf/shared/services';
 import { getResourceTypes } from '@osf/shared/utils';
