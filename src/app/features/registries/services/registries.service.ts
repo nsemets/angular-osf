@@ -46,14 +46,14 @@ export class RegistriesService {
       },
     };
     return this.jsonApiService
-      .post<RegistrationDataJsonApi>(`${this.apiUrl}/draft_registrations/`, payload)
+      .post<RegistrationResponseJsonApi>(`${this.apiUrl}/draft_registrations/`, payload)
       .pipe(map((response) => RegistrationMapper.fromRegistrationResponse(response)));
   }
 
   getDraft(draftId: string): Observable<Registration> {
     return this.jsonApiService
       .get<RegistrationResponseJsonApi>(`${this.apiUrl}/draft_registrations/${draftId}/`)
-      .pipe(map((response) => RegistrationMapper.fromRegistrationResponse(response.data)));
+      .pipe(map((response) => RegistrationMapper.fromRegistrationResponse(response)));
   }
 
   updateDraft(draftId: string, data: Registration): Observable<RegistrationDataJsonApi> {
