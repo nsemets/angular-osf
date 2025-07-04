@@ -10,17 +10,10 @@ import { TableModule } from 'primeng/table';
 
 import { filter, forkJoin } from 'rxjs';
 
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 
-import {
-  AddContributor,
-  DeleteContributor,
-  FetchContributors,
-  SubmitPreprintSelectors,
-  UpdateContributor,
-} from '@osf/features/preprints/store/submit-preprint';
 import {
   AddContributorDialogComponent,
   AddUnregisteredContributorDialogComponent,
@@ -29,6 +22,13 @@ import {
 import { AddContributorType } from '@osf/shared/enums';
 import { ContributorDialogAddModel, ContributorModel } from '@osf/shared/models';
 import { CustomConfirmationService, ToastService } from '@osf/shared/services';
+import {
+  AddContributor,
+  ContributorsSelectors,
+  DeleteContributor,
+  GetAllContributors,
+  UpdateContributor,
+} from '@osf/shared/stores';
 import { findChangedItems } from '@osf/shared/utils';
 
 @Component({
@@ -40,19 +40,21 @@ import { findChangedItems } from '@osf/shared/utils';
   providers: [DialogService],
 })
 export class ContributorsComponent implements OnInit {
+  preprintId = input<string | undefined>('');
+
   readonly destroyRef = inject(DestroyRef);
   readonly translateService = inject(TranslateService);
   readonly dialogService = inject(DialogService);
   readonly toastService = inject(ToastService);
   readonly customConfirmationService = inject(CustomConfirmationService);
 
-  protected initialContributors = select(SubmitPreprintSelectors.getContributors);
+  protected initialContributors = select(ContributorsSelectors.getContributors);
   protected contributors = signal([]);
 
-  protected readonly isContributorsLoading = select(SubmitPreprintSelectors.areContributorsLoading);
+  protected readonly isContributorsLoading = select(ContributorsSelectors.isContributorsLoading);
 
   protected actions = createDispatchMap({
-    getContributors: FetchContributors,
+    getContributors: GetAllContributors,
     deleteContributor: DeleteContributor,
     updateContributor: UpdateContributor,
     addContributor: AddContributor,
@@ -69,7 +71,7 @@ export class ContributorsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.actions.getContributors();
+    this.actions.getContributors(this.preprintId());
   }
 
   cancel() {
@@ -79,7 +81,9 @@ export class ContributorsComponent implements OnInit {
   save() {
     const updatedContributors = findChangedItems(this.initialContributors(), this.contributors(), 'id');
 
-    const updateRequests = updatedContributors.map((payload) => this.actions.updateContributor(payload));
+    const updateRequests = updatedContributors.map((payload) =>
+      this.actions.updateContributor(this.preprintId(), payload)
+    );
 
     forkJoin(updateRequests).subscribe(() => {
       this.toastService.showSuccess('project.contributors.toastMessages.multipleUpdateSuccessMessage');
@@ -107,7 +111,7 @@ export class ContributorsComponent implements OnInit {
         if (res.type === AddContributorType.Unregistered) {
           this.openAddUnregisteredContributorDialog();
         } else {
-          const addRequests = res.data.map((payload) => this.actions.addContributor(payload));
+          const addRequests = res.data.map((payload) => this.actions.addContributor(this.preprintId(), payload));
 
           forkJoin(addRequests).subscribe(() => {
             this.toastService.showSuccess('project.contributors.toastMessages.multipleAddSuccessMessage');
@@ -137,7 +141,7 @@ export class ContributorsComponent implements OnInit {
           const successMessage = this.translateService.instant('project.contributors.toastMessages.addSuccessMessage');
           const params = { name: res.data[0].fullName };
 
-          this.actions.addContributor(res.data[0]).subscribe({
+          this.actions.addContributor(this.preprintId(), res.data[0]).subscribe({
             next: () => this.toastService.showSuccess(successMessage, params),
           });
         }
@@ -152,7 +156,7 @@ export class ContributorsComponent implements OnInit {
       acceptLabelKey: 'common.buttons.remove',
       onConfirm: () => {
         this.actions
-          .deleteContributor(contributor.userId)
+          .deleteContributor(this.preprintId(), contributor.userId)
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             next: () =>

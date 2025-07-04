@@ -3,7 +3,7 @@ import { ContributorAddModel, ContributorModel } from '@osf/shared/models';
 export class GetAllContributors {
   static readonly type = '[Contributors] Get All Contributors';
 
-  constructor(public projectId: string) {}
+  constructor(public projectId: string | undefined | null) {}
 }
 
 export class UpdateSearchValue {
@@ -28,7 +28,7 @@ export class AddContributor {
   static readonly type = '[Contributors] Add Contributor';
 
   constructor(
-    public projectId: string,
+    public projectId: string | undefined | null,
     public contributor: ContributorAddModel
   ) {}
 }
@@ -37,7 +37,7 @@ export class UpdateContributor {
   static readonly type = '[Contributors] Update Contributor';
 
   constructor(
-    public projectId: string,
+    public projectId: string | undefined | null,
     public contributor: ContributorModel
   ) {}
 }
@@ -46,7 +46,7 @@ export class DeleteContributor {
   static readonly type = '[Contributors] Delete Contributor';
 
   constructor(
-    public projectId: string,
+    public projectId: string | undefined | null,
     public contributorId: string
   ) {}
 }

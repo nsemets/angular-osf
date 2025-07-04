@@ -4,7 +4,13 @@ import { inject, Injectable } from '@angular/core';
 
 import { JsonApiResponse, JsonApiResponseWithPaging, UserGetResponse } from '@osf/core/models';
 import { JsonApiService } from '@osf/core/services';
-import { ContributorAddModel, ContributorModel, ContributorResponse, PaginatedData } from '@osf/shared/models';
+import {
+  ContributorAddModel,
+  ContributorModel,
+  ContributorResponse,
+  IContributorsService,
+  PaginatedData,
+} from '@osf/shared/models';
 
 import { AddContributorType } from '../enums';
 import { ContributorsMapper } from '../mappers/contributors';
@@ -14,7 +20,7 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root',
 })
-export class ProjectContributorsService {
+export class ProjectContributorsService implements IContributorsService {
   private readonly jsonApiService = inject(JsonApiService);
 
   getAllContributors(projectId: string): Observable<ContributorModel[]> {

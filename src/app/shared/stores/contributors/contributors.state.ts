@@ -50,6 +50,10 @@ export class ContributorsState {
       contributorsList: { ...state.contributorsList, isLoading: true, error: null },
     });
 
+    if (!action.projectId) {
+      return;
+    }
+
     return this.contributorsService.getAllContributors(action.projectId).pipe(
       tap((contributors) => {
         ctx.patchState({
@@ -71,6 +75,10 @@ export class ContributorsState {
     ctx.patchState({
       contributorsList: { ...state.contributorsList, isLoading: true, error: null },
     });
+
+    if (!action.projectId) {
+      return;
+    }
 
     return this.contributorsService.addContributor(action.projectId, action.contributor).pipe(
       tap((contributor) => {
@@ -95,6 +103,10 @@ export class ContributorsState {
     ctx.patchState({
       contributorsList: { ...state.contributorsList, isLoading: true, error: null },
     });
+
+    if (!action.projectId) {
+      return;
+    }
 
     return this.contributorsService.updateContributor(action.projectId, action.contributor).pipe(
       tap((updatedContributor) => {
@@ -121,6 +133,10 @@ export class ContributorsState {
     ctx.patchState({
       contributorsList: { ...state.contributorsList, isLoading: true, error: null },
     });
+
+    if (!action.projectId) {
+      return;
+    }
 
     return this.contributorsService.deleteContributor(action.projectId, action.contributorId).pipe(
       tap(() => {
