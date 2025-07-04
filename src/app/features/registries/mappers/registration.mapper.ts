@@ -8,6 +8,10 @@ export class RegistrationMapper {
       title: response.attributes.title,
       description: response.attributes.description,
       registrationSchemaId: response.relationships.registration_schema?.data?.id || '',
+      license: {
+        id: response.relationships.license?.data?.id || '',
+        options: response.attributes.node_license,
+      },
     };
   }
 }

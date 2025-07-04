@@ -1,39 +1,18 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
-import { TranslatePipe } from '@ngx-translate/core';
-
-import { Card } from 'primeng/card';
-import { DatePicker } from 'primeng/datepicker';
-import { Divider } from 'primeng/divider';
-import { Select } from 'primeng/select';
-
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { License } from '@osf/features/registries/models';
-import { FetchLicenses, RegistriesSelectors } from '@osf/features/registries/store';
-import { LicenseComponent, TextInputComponent, TruncatedTextComponent } from '@osf/shared/components';
+import { FetchLicenses, RegistriesSelectors, SaveLicense } from '@osf/features/registries/store';
+import { LicenseComponent } from '@osf/shared/components';
 import { InputLimits } from '@osf/shared/constants';
-import { LicenseOptions } from '@osf/shared/models';
-import { InterpolatePipe } from '@osf/shared/pipes';
+import { License, LicenseOptions } from '@osf/shared/models';
 import { CustomValidators } from '@osf/shared/utils';
 
 @Component({
   selector: 'osf-registries-license',
-  imports: [
-    Card,
-    TranslatePipe,
-    Select,
-    FormsModule,
-    Divider,
-    TruncatedTextComponent,
-    DatePicker,
-    TextInputComponent,
-    InterpolatePipe,
-    ReactiveFormsModule,
-    LicenseComponent,
-  ],
+  imports: [FormsModule, ReactiveFormsModule, LicenseComponent],
   templateUrl: './registries-license.component.html',
   styleUrl: './registries-license.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,11 +22,11 @@ export class RegistriesLicenseComponent {
   private readonly draftId = this.route.snapshot.params['id'];
   private readonly fb = inject(FormBuilder);
 
-  protected actions = createDispatchMap({ fetchLicenses: FetchLicenses });
+  protected actions = createDispatchMap({ fetchLicenses: FetchLicenses, saveLicense: SaveLicense });
   protected licenses = select(RegistriesSelectors.getLicenses);
   protected inputLimits = InputLimits;
 
-  selectedLicense: License | null = null;
+  selectedLicense = select(RegistriesSelectors.getSelectedLicense);
   currentYear = new Date();
   licenseYear = this.currentYear;
   licenseForm = this.fb.group({
@@ -59,15 +38,11 @@ export class RegistriesLicenseComponent {
     this.actions.fetchLicenses();
   }
 
-  onSelectLicense(license: License): void {
-    console.log('Selected License:', license);
-  }
-
   createLicense(licenseDetails: { id: string; licenseOptions: LicenseOptions }) {
-    // this.actions.saveLicense(licenseDetails.id, licenseDetails.licenseOptions);
+    this.actions.saveLicense(this.draftId, licenseDetails.id, licenseDetails.licenseOptions);
   }
 
   selectLicense(license: License) {
-    // this.actions.saveLicense(license.id);
+    this.actions.saveLicense(this.draftId, license.id);
   }
 }

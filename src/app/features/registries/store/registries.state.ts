@@ -30,6 +30,7 @@ import {
   GetProjects,
   GetProviders,
   GetRegistries,
+  SaveLicense,
   UpdateContributor,
   UpdateRegistrationSubjects,
 } from './registries.actions';
@@ -211,6 +212,11 @@ export class RegistriesState {
   @Action(FetchLicenses)
   fetchLicenses(ctx: StateContext<RegistriesStateModel>) {
     return this.licensesHandler.fetchLicenses(ctx);
+  }
+
+  @Action(SaveLicense)
+  saveLicense(ctx: StateContext<RegistriesStateModel>, { registrationId, licenseId, licenseOptions }: SaveLicense) {
+    return this.licensesHandler.saveLicense(ctx, { registrationId, licenseId, licenseOptions });
   }
 
   @Action(FetchRegistrationSubjects)
