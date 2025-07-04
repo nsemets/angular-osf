@@ -13,8 +13,9 @@ import { ActivatedRoute } from '@angular/router';
 
 import { License } from '@osf/features/registries/models';
 import { FetchLicenses, RegistriesSelectors } from '@osf/features/registries/store';
-import { TextInputComponent, TruncatedTextComponent } from '@osf/shared/components';
+import { LicenseComponent, TextInputComponent, TruncatedTextComponent } from '@osf/shared/components';
 import { InputLimits } from '@osf/shared/constants';
+import { LicenseOptions } from '@osf/shared/models';
 import { InterpolatePipe } from '@osf/shared/pipes';
 import { CustomValidators } from '@osf/shared/utils';
 
@@ -31,6 +32,7 @@ import { CustomValidators } from '@osf/shared/utils';
     TextInputComponent,
     InterpolatePipe,
     ReactiveFormsModule,
+    LicenseComponent,
   ],
   templateUrl: './registries-license.component.html',
   styleUrl: './registries-license.component.scss',
@@ -59,5 +61,13 @@ export class RegistriesLicenseComponent {
 
   onSelectLicense(license: License): void {
     console.log('Selected License:', license);
+  }
+
+  createLicense(licenseDetails: { id: string; licenseOptions: LicenseOptions }) {
+    // this.actions.saveLicense(licenseDetails.id, licenseDetails.licenseOptions);
+  }
+
+  selectLicense(license: License) {
+    // this.actions.saveLicense(license.id);
   }
 }

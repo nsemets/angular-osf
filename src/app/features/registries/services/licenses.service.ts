@@ -28,9 +28,7 @@ const data: any = {
   ],
 };
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class LicensesService {
   private apiUrl = environment.apiUrl;
   private readonly jsonApiService = inject(JsonApiService);

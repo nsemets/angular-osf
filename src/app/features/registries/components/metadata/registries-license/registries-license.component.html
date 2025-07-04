@@ -1,3 +1,11 @@
+<osf-license
+  [licenses]="licenses()"
+  [selectedLicenseId]="selectedLicense?.id"
+  [selectedLicenseOptions]=""
+  (createLicense)="createLicense($event)"
+  (selectLicense)="selectLicense($event)"
+/>
+
 <p-card class="w-full">
   <h2 class="mb-2">{{ 'shared.license.title' | translate }}</h2>
   <p class="mb-1">
