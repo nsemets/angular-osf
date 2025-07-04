@@ -4,5 +4,6 @@ export * from './filters';
 export * from './institutions';
 export * from './licenses.mapper';
 export * from './resource-card';
+export * from './resource-overview.mappers';
 export * from './subjects';
 export * from './view-only-links.mapper';
