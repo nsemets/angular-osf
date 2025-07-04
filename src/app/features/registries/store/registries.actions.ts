@@ -1,4 +1,4 @@
-import { ContributorAddModel, ContributorModel, Subject } from '@osf/shared/models';
+import { ContributorAddModel, ContributorModel, LicenseOptions, Subject } from '@osf/shared/models';
 
 export class GetRegistries {
   static readonly type = '[Registries] Get Registries';
@@ -67,6 +67,15 @@ export class DeleteContributor {
 
 export class FetchLicenses {
   static readonly type = '[Registries] Fetch Licenses';
+}
+
+export class SaveLicense {
+  static readonly type = '[Registries] Save License';
+  constructor(
+    public registrationId: string,
+    public licenseId: string,
+    public licenseOptions?: LicenseOptions
+  ) {}
 }
 
 export class FetchRegistrationSubjects {

@@ -1,6 +1,6 @@
-import { AsyncStateModel, ContributorModel, Resource, Subject } from '@shared/models';
+import { AsyncStateModel, ContributorModel, License, Resource, Subject } from '@shared/models';
 
-import { License, PageSchema, Project, Provider } from '../models';
+import { PageSchema, Project, Provider } from '../models';
 import { Registration } from '../models/registration.model';
 
 export interface RegistriesStateModel {

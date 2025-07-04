@@ -4,7 +4,6 @@ import { Routes } from '@angular/router';
 
 import { RegistriesComponent } from '@osf/features/registries/registries.component';
 import { RegistriesState } from '@osf/features/registries/store';
-import { RegistrationContributorsService } from '@osf/shared/services/registration-contributors.service';
 import { RegistrationViewOnlyLinksService } from '@osf/shared/services/registration-view-only-links.service';
 import { ContributorsState, SubjectsState, ViewOnlyLinkState } from '@osf/shared/stores';
 import { ANALYTICS_SERVICE, CONTRIBUTORS_SERVICE, VIEW_ONLY_LINKS_SERVICE } from '@osf/shared/tokens';
@@ -14,14 +13,29 @@ import { ModerationState } from '../moderation/store';
 import { RegistrationAnalyticsService } from '../project/analytics/services';
 import { AnalyticsState } from '../project/analytics/store';
 
-import { RegistrationSubjectsService } from './services';
+import {
+  LicensesHandlers,
+  ProjectsHandlers,
+  ProvidersHandlers,
+  RegistrationContributorsHandlers,
+  SubjectsHandlers,
+} from './store/handlers';
+import { LicensesService, RegistrationContributorsService, RegistrationSubjectsService } from './services';
 
 export const registriesRoutes: Routes = [
   {
     path: '',
     component: RegistriesComponent,
     providers: [
-      provideStates([RegistriesState, SubjectsState]),
+      provideStates([RegistriesState, ContributorsState, SubjectsState]),
+      ProvidersHandlers,
+      ProjectsHandlers,
+      LicensesHandlers,
+      RegistrationContributorsHandlers,
+      SubjectsHandlers,
+      RegistrationSubjectsService,
+      RegistrationContributorsService,
+      LicensesService,
       {
         provide: SUBJECTS_SERVICE,
         useClass: RegistrationSubjectsService,
