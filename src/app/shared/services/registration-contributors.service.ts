@@ -46,8 +46,8 @@ export class RegistrationContributorsService implements IContributorsService {
     const contributorData = { data: ContributorsMapper.toContributorAddRequest(data, type) };
 
     return this.jsonApiService
-      .post<ContributorResponse>(baseUrl, contributorData)
-      .pipe(map((contributor) => ContributorsMapper.fromContributorResponse(contributor)));
+      .post<JsonApiResponse<ContributorResponse, null>>(baseUrl, contributorData)
+      .pipe(map((contributor) => ContributorsMapper.fromContributorResponse(contributor.data)));
   }
 
   updateContributor(projectId: string, data: ContributorModel): Observable<ContributorModel> {

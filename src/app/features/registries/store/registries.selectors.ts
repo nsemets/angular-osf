@@ -39,11 +39,6 @@ export class RegistriesSelectors {
   }
 
   @Selector([RegistriesState])
-  static getContributors(state: RegistriesStateModel) {
-    return state.contributorsList.data;
-  }
-
-  @Selector([RegistriesState])
   static getRegistries(state: RegistriesStateModel): Resource[] {
     return state.registries.data;
   }

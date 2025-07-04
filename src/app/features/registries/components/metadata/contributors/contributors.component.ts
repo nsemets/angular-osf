@@ -15,13 +15,6 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import {
-  AddContributor,
-  DeleteContributor,
-  FetchContributors,
-  RegistriesSelectors,
-  UpdateContributor,
-} from '@osf/features/registries/store';
-import {
   AddContributorDialogComponent,
   AddUnregisteredContributorDialogComponent,
   ContributorsListComponent,
@@ -30,7 +23,13 @@ import { BIBLIOGRAPHY_OPTIONS, PERMISSION_OPTIONS } from '@osf/shared/constants'
 import { AddContributorType, ContributorPermission } from '@osf/shared/enums';
 import { ContributorDialogAddModel, ContributorModel, SelectOption } from '@osf/shared/models';
 import { CustomConfirmationService, ToastService } from '@osf/shared/services';
-import { ContributorsSelectors } from '@osf/shared/stores';
+import {
+  AddContributor,
+  ContributorsSelectors,
+  DeleteContributor,
+  GetAllContributors,
+  UpdateContributor,
+} from '@osf/shared/stores';
 import { findChangedItems } from '@osf/shared/utils';
 
 @Component({
@@ -56,13 +55,13 @@ export class ContributorsComponent implements OnInit {
   protected readonly permissionsOptions: SelectOption[] = PERMISSION_OPTIONS;
   protected readonly bibliographyOptions: SelectOption[] = BIBLIOGRAPHY_OPTIONS;
 
-  protected initialContributors = select(RegistriesSelectors.getContributors);
+  protected initialContributors = select(ContributorsSelectors.getContributors);
   protected contributors = signal([]);
 
   protected readonly isContributorsLoading = select(ContributorsSelectors.isContributorsLoading);
 
   protected actions = createDispatchMap({
-    getContributors: FetchContributors,
+    getContributors: GetAllContributors,
     deleteContributor: DeleteContributor,
     updateContributor: UpdateContributor,
     addContributor: AddContributor,
@@ -79,10 +78,7 @@ export class ContributorsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const draftId = this.draftId();
-    if (draftId) {
-      this.actions.getContributors(draftId);
-    }
+    this.actions.getContributors(this.draftId());
   }
 
   onFocusOut() {
