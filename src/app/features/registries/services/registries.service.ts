@@ -10,6 +10,7 @@ import {
   PageSchema,
   Registration,
   RegistrationDataJsonApi,
+  RegistrationPayloadJsonApi,
   RegistrationResponseJsonApi,
   SchemaBlocksResponseJsonApi,
 } from '../models';
@@ -56,16 +57,8 @@ export class RegistriesService {
       .pipe(map((response) => RegistrationMapper.fromRegistrationResponse(response)));
   }
 
-  updateDraft(draftId: string, data: Registration): Observable<RegistrationDataJsonApi> {
-    const payload = {
-      data: {
-        id: draftId,
-        type: 'draft_registrations',
-        attributes: { ...data },
-        relationships: {},
-      },
-    };
-    return this.jsonApiService.patch(`${this.apiUrl}/draft_registrations/${draftId}/`, payload);
+  updateDraft({ data }: RegistrationPayloadJsonApi): Observable<RegistrationDataJsonApi> {
+    return this.jsonApiService.patch(`${this.apiUrl}/draft_registrations/${data.id}/`, data);
   }
 
   deleteDraft(draftId: string): Observable<void> {

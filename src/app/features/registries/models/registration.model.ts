@@ -9,4 +9,5 @@ export interface Registration {
     id: string;
     options: LicenseOptions;
   };
+  tags: string[];
 }

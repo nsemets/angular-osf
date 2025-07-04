@@ -12,6 +12,7 @@ export class RegistrationMapper {
         id: response.data.relationships.license?.data?.id || '',
         options: response.data.attributes.node_license,
       },
+      tags: response.data.attributes.tags || [],
     };
   }
 }
