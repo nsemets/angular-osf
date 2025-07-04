@@ -2,10 +2,12 @@ import { provideStates } from '@ngxs/store';
 
 import { Routes } from '@angular/router';
 
-import { CONTRIBUTORS_SERVICE } from '@osf/shared/constants';
-import { ProjectContributorsService } from '@osf/shared/services';
+import { ProjectContributorsService, ProjectViewOnlyLinksService } from '@osf/shared/services';
 import { ContributorsState, ViewOnlyLinkState } from '@osf/shared/stores';
+import { ANALYTICS_SERVICE, CONTRIBUTORS_SERVICE, VIEW_ONLY_LINKS_SERVICE } from '@osf/shared/tokens';
 
+import { ProjectAnalyticsService } from './analytics/services';
+import { AnalyticsState } from './analytics/store';
 import { ProjectFilesState } from './files/store';
 import { SettingsState } from './settings/store';
 
@@ -54,11 +56,22 @@ export const projectRoutes: Routes = [
             provide: CONTRIBUTORS_SERVICE,
             useClass: ProjectContributorsService,
           },
+          {
+            provide: VIEW_ONLY_LINKS_SERVICE,
+            useClass: ProjectViewOnlyLinksService,
+          },
         ],
       },
       {
         path: 'analytics',
         loadComponent: () => import('../project/analytics/analytics.component').then((mod) => mod.AnalyticsComponent),
+        providers: [
+          provideStates([AnalyticsState]),
+          {
+            provide: ANALYTICS_SERVICE,
+            useClass: ProjectAnalyticsService,
+          },
+        ],
       },
       {
         path: 'wiki',

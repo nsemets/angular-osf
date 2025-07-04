@@ -13,21 +13,21 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root',
 })
-export class AnalyticsService {
-  #jsonApiService = inject(JsonApiService);
+export class RegistrationAnalyticsService {
+  private readonly jsonApiService = inject(JsonApiService);
 
   getMetrics(projectId: string, dateRange: string): Observable<AnalyticsMetricsModel> {
     const baseUrl = `${environment.apiDomainUrl}/_/metrics/query/node_analytics`;
 
-    return this.#jsonApiService
+    return this.jsonApiService
       .get<JsonApiResponse<AnalyticsMetricsGetResponse, null>>(`${baseUrl}/${projectId}/${dateRange}`)
       .pipe(map((response) => AnalyticsMetricsMapper.fromResponse(response.data)));
   }
 
   getRelatedCounts(projectId: string) {
-    const url = `${environment.apiUrl}/nodes/${projectId}/?related_counts=true`;
+    const url = `${environment.apiUrl}/registrations/${projectId}/?related_counts=true`;
 
-    return this.#jsonApiService
+    return this.jsonApiService
       .get<RelatedCountsGetResponse>(url)
       .pipe(map((response) => RelatedCountsMapper.fromResponse(response)));
   }

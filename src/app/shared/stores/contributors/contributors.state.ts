@@ -4,7 +4,7 @@ import { catchError, of, tap, throwError } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { CONTRIBUTORS_SERVICE } from '@osf/shared/constants';
+import { CONTRIBUTORS_SERVICE } from '@osf/shared/tokens';
 
 import {
   AddContributor,

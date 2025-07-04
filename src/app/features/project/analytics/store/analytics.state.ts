@@ -5,8 +5,9 @@ import { catchError, of, tap, throwError } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
+import { ANALYTICS_SERVICE } from '@osf/shared/tokens';
+
 import { AnalyticsMetricsModel, RelatedCountsModel } from '../models';
-import { AnalyticsService } from '../services';
 
 import { GetMetrics, GetRelatedCounts } from './analytics.actions';
 import { AnalyticsStateModel } from './analytics.model';
@@ -28,7 +29,7 @@ import { AnalyticsStateModel } from './analytics.model';
 })
 @Injectable()
 export class AnalyticsState {
-  #analyticsService = inject(AnalyticsService);
+  private readonly analyticsService = inject(ANALYTICS_SERVICE);
   private readonly REFRESH_INTERVAL = 5 * 60 * 1000;
 
   @Action(GetMetrics)
@@ -53,7 +54,7 @@ export class AnalyticsState {
       metrics: { ...state.metrics, isLoading: true, error: null },
     });
 
-    return this.#analyticsService.getMetrics(action.projectId, action.dateRange).pipe(
+    return this.analyticsService.getMetrics(action.projectId, action.dateRange).pipe(
       tap((metrics) => {
         const exists = state.metrics.data.some((m) => m.id === metrics.id);
         metrics.lastFetched = Date.now();
@@ -94,7 +95,7 @@ export class AnalyticsState {
       relatedCounts: { ...state.relatedCounts, isLoading: true, error: null },
     });
 
-    return this.#analyticsService.getRelatedCounts(action.projectId).pipe(
+    return this.analyticsService.getRelatedCounts(action.projectId).pipe(
       tap((relatedCounts) => {
         const exists = state.relatedCounts.data.some((rc) => rc.id === relatedCounts.id);
         relatedCounts.lastFetched = Date.now();

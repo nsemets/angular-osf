@@ -3,7 +3,6 @@ import { UserState } from '@core/store/user';
 import { CollectionsState } from '@osf/features/collections/store';
 import { MeetingsState } from '@osf/features/meetings/store';
 import { MyProjectsState } from '@osf/features/my-projects/store';
-import { AnalyticsState } from '@osf/features/project/analytics/store';
 import { ProjectMetadataState } from '@osf/features/project/metadata/store';
 import { ProjectOverviewState } from '@osf/features/project/overview/store';
 import { RegistrationsState } from '@osf/features/project/registrations/store';
@@ -24,7 +23,6 @@ export const STATES = [
   ProfileSettingsState,
   DeveloperAppsState,
   AccountSettingsState,
-  AnalyticsState,
   NotificationSubscriptionState,
   ProjectOverviewState,
   CollectionsState,

@@ -1,4 +1,5 @@
 export * from './addons';
+export * from './analytics';
 export * from './brand.model';
 export * from './charts';
 export * from './confirmation-options.model';

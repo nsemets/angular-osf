@@ -13,4 +13,9 @@ export class ViewOnlyLinkSelectors {
   static isViewOnlyLinksLoading(state: ViewOnlyLinkStateModel) {
     return state.viewOnlyLinks.isLoading;
   }
+
+  @Selector([ViewOnlyLinkState])
+  static getResourceDetails(state: ViewOnlyLinkStateModel) {
+    return state.resourceDetails.data;
+  }
 }

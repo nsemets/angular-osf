@@ -6,10 +6,15 @@ import { catchError, tap } from 'rxjs/operators';
 
 import { inject, Injectable } from '@angular/core';
 
-import { ViewOnlyLinksService } from '@osf/shared/services';
-import { PaginatedViewOnlyLinksModel } from '@shared/models';
+import { VIEW_ONLY_LINKS_SERVICE } from '@osf/shared/tokens';
+import { NodeData, PaginatedViewOnlyLinksModel } from '@shared/models';
 
-import { CreateViewOnlyLink, DeleteViewOnlyLink, FetchViewOnlyLinks } from './view-only-link.actions';
+import {
+  CreateViewOnlyLink,
+  DeleteViewOnlyLink,
+  FetchViewOnlyLinks,
+  GetResourceDetails,
+} from './view-only-link.actions';
 import { ViewOnlyLinkStateModel } from './view-only-link.model';
 
 @State<ViewOnlyLinkStateModel>({
@@ -20,21 +25,43 @@ import { ViewOnlyLinkStateModel } from './view-only-link.model';
       isLoading: false,
       error: null,
     },
+    resourceDetails: {
+      data: {} as NodeData,
+      isLoading: false,
+      error: null,
+    },
   },
 })
 @Injectable()
 export class ViewOnlyLinkState {
-  private readonly viewOnlyLinksService = inject(ViewOnlyLinksService);
+  private readonly viewOnlyLinksService = inject(VIEW_ONLY_LINKS_SERVICE);
 
-  private handleError(ctx: StateContext<ViewOnlyLinkStateModel>, section: keyof ViewOnlyLinkStateModel, error: Error) {
+  @Action(GetResourceDetails)
+  getResourceDetails(ctx: StateContext<ViewOnlyLinkStateModel>, action: GetResourceDetails) {
+    const state = ctx.getState();
+
     ctx.patchState({
-      [section]: {
-        ...ctx.getState()[section],
-        isLoading: false,
-        error: error.message,
-      },
+      resourceDetails: { ...state.resourceDetails, isLoading: true, error: null },
     });
-    return throwError(() => error);
+
+    return this.viewOnlyLinksService.getResourceById(action.projectId).pipe(
+      map((response) => response?.data as NodeData),
+      tap((details) => {
+        const updatedDetails = {
+          ...details,
+          lastFetched: Date.now(),
+        };
+
+        ctx.patchState({
+          resourceDetails: {
+            data: updatedDetails,
+            isLoading: false,
+            error: null,
+          },
+        });
+      }),
+      catchError((error) => this.handleError(ctx, 'resourceDetails', error))
+    );
   }
 
   @Action(FetchViewOnlyLinks)
@@ -110,5 +137,16 @@ export class ViewOnlyLinkState {
       }),
       catchError((error) => this.handleError(ctx, 'viewOnlyLinks', error))
     );
+  }
+
+  private handleError(ctx: StateContext<ViewOnlyLinkStateModel>, section: keyof ViewOnlyLinkStateModel, error: Error) {
+    ctx.patchState({
+      [section]: {
+        ...ctx.getState()[section],
+        isLoading: false,
+        error: error.message,
+      },
+    });
+    return throwError(() => error);
   }
 }

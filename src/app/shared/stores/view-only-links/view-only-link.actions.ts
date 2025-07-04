@@ -1,5 +1,11 @@
 import { ViewOnlyLinkJsonApi } from '@osf/shared/models';
 
+export class GetResourceDetails {
+  static readonly type = '[Project] Get Resource Details';
+
+  constructor(public projectId: string) {}
+}
+
 export class FetchViewOnlyLinks {
   static readonly type = '[Link] Fetch View Only Links';
 

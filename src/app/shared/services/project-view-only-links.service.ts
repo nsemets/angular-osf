@@ -6,6 +6,7 @@ import { JsonApiResponse } from '@core/models';
 import { JsonApiService } from '@core/services';
 
 import { ViewOnlyLinksMapper } from '../mappers';
+import { NodeResponseModel } from '../models';
 import {
   PaginatedViewOnlyLinksModel,
   ViewOnlyLinkJsonApi,
@@ -17,8 +18,12 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root',
 })
-export class ViewOnlyLinksService {
+export class ProjectViewOnlyLinksService {
   private readonly jsonApiService = inject(JsonApiService);
+
+  getResourceById(projectId: string): Observable<NodeResponseModel> {
+    return this.jsonApiService.get(`${environment.apiUrl}/nodes/${projectId}`);
+  }
 
   getViewOnlyLinksData(projectId: string): Observable<PaginatedViewOnlyLinksModel> {
     const params: Record<string, unknown> = { embed: 'creator' };
