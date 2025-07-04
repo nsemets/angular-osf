@@ -17,4 +17,8 @@ export const routes: Routes = [
     component: InstitutionsSearchComponent,
     providers: [provideStates([InstitutionsSearchState])],
   },
+  {
+    path: ':institution-id/dashboard',
+    loadChildren: () => import('./pages/admin/pages/routes').then((inst) => inst.routes),
+  },
 ];
