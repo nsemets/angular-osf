@@ -4,17 +4,19 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
+import { Message } from 'primeng/message';
 import { TextareaModule } from 'primeng/textarea';
 
 import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { TextInputComponent } from '@osf/shared/components';
-import { InputLimits } from '@osf/shared/constants';
+import { INPUT_VALIDATION_MESSAGES, InputLimits } from '@osf/shared/constants';
 import { CustomConfirmationService, ToastService } from '@osf/shared/services';
 import { CustomValidators } from '@osf/shared/utils';
 
+import { Registration } from '../../models';
 import { DeleteDraft, RegistriesSelectors } from '../../store';
 
 import { ContributorsComponent } from './contributors/contributors.component';
@@ -35,6 +37,7 @@ import { RegistriesTagsComponent } from './registries-tags/registries-tags.compo
     RegistriesSubjectsComponent,
     RegistriesTagsComponent,
     RegistriesLicenseComponent,
+    Message,
   ],
   templateUrl: './metadata.component.html',
   styleUrl: './metadata.component.scss',
@@ -54,26 +57,39 @@ export class MetadataComponent {
     deleteDraft: DeleteDraft,
   });
   protected inputLimits = InputLimits;
+  readonly INPUT_VALIDATION_MESSAGES = INPUT_VALIDATION_MESSAGES;
 
   metadataForm = this.fb.group({
     title: ['', CustomValidators.requiredTrimmed()],
     description: ['', CustomValidators.requiredTrimmed()],
+    // contributors: [[], Validators.required],
+    subjects: [[], Validators.required],
+    tags: [[]],
+    license: [null as Registration['license'] | null, Validators.required],
   });
 
   constructor() {
     effect(() => {
       const draft = this.draftRegistration();
       if (draft) {
-        this.metadataForm.patchValue({
-          title: draft.title,
-          description: draft.description,
-        });
+        this.initForm(draft);
       }
     });
   }
 
+  private initForm(data: Registration): void {
+    this.metadataForm.patchValue({
+      title: data.title,
+      description: data.description,
+      license: data.license,
+    });
+  }
+
   submitMetadata(): void {
-    console.log('Metadata submitted');
+    console.log('Metadata submitted', this.metadataForm);
+    this.router.navigate(['../1'], {
+      relativeTo: this.route,
+    });
   }
 
   deleteDraft(): void {

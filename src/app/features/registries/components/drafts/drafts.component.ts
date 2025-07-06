@@ -2,10 +2,11 @@ import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
-import { tap } from 'rxjs';
+import { filter, tap } from 'rxjs';
 
 import { ChangeDetectionStrategy, Component, computed, effect, inject, Signal, signal } from '@angular/core';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 
 import { StepperComponent, SubHeaderComponent } from '@osf/shared/components';
 import { StepOption } from '@osf/shared/models';
@@ -46,20 +47,39 @@ export class DraftsComponent {
   }));
 
   steps: Signal<StepOption[]> = computed(() => {
-    const customSteps = this.pages().map((page) => ({
+    const customSteps = this.pages().map((page, index) => ({
+      index: index + 1,
       label: page.title,
       value: page.id,
+      routeLink: `${index + 1}`,
+      invalid: false,
     }));
-    return [this.defaultSteps[0], ...customSteps, this.defaultSteps[1]];
+    return [this.defaultSteps[0], ...customSteps, { ...this.defaultSteps[1], index: customSteps.length + 1 }];
   });
 
-  currentStep = signal(
-    this.route.snapshot.children[0]?.params['step'] ? +this.route.snapshot.children[0]?.params['step'].split('-')[0] : 0
+  currentStepIndex = signal(
+    this.route.snapshot.firstChild?.params['step'] ? +this.route.snapshot.firstChild?.params['step'] : 0
   );
 
-  registrationId = this.route.snapshot.children[0]?.params['id'] || '';
+  currentStep = computed(() => {
+    return this.steps()[this.currentStepIndex()];
+  });
+
+  registrationId = this.route.snapshot.firstChild?.params['id'] || '';
 
   constructor() {
+    this.router.events
+      .pipe(
+        takeUntilDestroyed(),
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd)
+      )
+      .subscribe(() => {
+        const step = this.route.firstChild?.snapshot.params['step'];
+        if (step) {
+          this.currentStepIndex.set(+step);
+        }
+      });
+
     this.loaderService.show();
     if (!this.draftRegistration()) {
       this.actions.getDraftRegistration(this.registrationId);
@@ -79,24 +99,17 @@ export class DraftsComponent {
     });
 
     effect(() => {
-      const reviewStepNumber = this.pages().length + 1;
+      const reviewStepIndex = this.pages().length + 1;
       if (this.isReviewPage) {
-        this.currentStep.set(reviewStepNumber);
+        this.currentStepIndex.set(reviewStepIndex);
       }
     });
   }
 
-  stepChange(step: number): void {
+  stepChange(step: StepOption): void {
     // [NM] TODO: before navigating, validate the current step
-    this.currentStep.set(step);
-    const pageStep = this.steps()[step];
-
-    let pageLink = '';
-    if (!pageStep.value) {
-      pageLink = `${pageStep.routeLink}`;
-    } else {
-      pageLink = `${step}-${pageStep.value}`;
-    }
+    this.currentStepIndex.set(step.index);
+    const pageLink = this.steps()[step.index].routeLink;
     this.router.navigate([`/registries/drafts/${this.registrationId}/`, pageLink]);
   }
 }

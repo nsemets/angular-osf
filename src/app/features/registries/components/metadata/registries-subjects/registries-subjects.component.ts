@@ -1,6 +1,7 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import {
@@ -21,6 +22,7 @@ import { SubjectsSelectors } from '@osf/shared/stores/subjects/subjects.selector
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegistriesSubjectsComponent {
+  control = input.required<FormControl>();
   private readonly route = inject(ActivatedRoute);
   private readonly draftId = this.route.snapshot.params['id'];
 
@@ -52,6 +54,24 @@ export class RegistriesSubjectsComponent {
   }
 
   updateSelectedSubjects(subjects: Subject[]) {
+    this.updateControlState(subjects);
     this.actions.updateRegistrationSubjects(this.draftId, subjects);
+  }
+
+  onFocusOut() {
+    if (this.control()) {
+      this.control().markAsTouched();
+      this.control().markAsDirty();
+      this.control().updateValueAndValidity();
+    }
+  }
+
+  updateControlState(value: Subject[]) {
+    if (this.control()) {
+      this.control().setValue(value);
+      this.control().markAsTouched();
+      this.control().markAsDirty();
+      this.control().updateValueAndValidity();
+    }
   }
 }

@@ -1,5 +1,9 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
+import { TranslatePipe } from '@ngx-translate/core';
+
+import { Card } from 'primeng/card';
+
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -12,7 +16,7 @@ import { CustomValidators } from '@osf/shared/utils';
 
 @Component({
   selector: 'osf-registries-license',
-  imports: [FormsModule, ReactiveFormsModule, LicenseComponent],
+  imports: [FormsModule, ReactiveFormsModule, LicenseComponent, Card, TranslatePipe],
   templateUrl: './registries-license.component.html',
   styleUrl: './registries-license.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
