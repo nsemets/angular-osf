@@ -80,7 +80,7 @@ export class ResourceCardComponent {
     if (item.resourceType === ResourceType.Registration) {
       const parts = item.id.split('/');
       const uri = parts[parts.length - 1];
-      this.router.navigate(['/registries/my-registrations', uri]);
+      this.router.navigate(['/registries', uri]);
     }
   }
 }

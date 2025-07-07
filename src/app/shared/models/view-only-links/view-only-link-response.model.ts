@@ -1,14 +1,14 @@
 import { UserGetResponse } from '@osf/core/models';
 
-export interface ViewOnlyLinksResponseModel {
-  data: ViewOnlyLink[];
-  links: PaginationLinks;
+export interface ViewOnlyLinksResponseJsonApi {
+  data: ViewOnlyLinkJsonApi[];
+  links: PaginationLinksJsonApi;
   meta: {
     version: string;
   };
 }
 
-export interface ViewOnlyLink {
+export interface ViewOnlyLinkJsonApi {
   id: string;
   type: 'view_only_links';
   attributes: {
@@ -25,7 +25,7 @@ export interface ViewOnlyLink {
   relationships: {
     creator: {
       links: {
-        related: LinkWithMeta;
+        related: LinkWithMetaJsonApi;
       };
       data: {
         id: string;
@@ -34,8 +34,8 @@ export interface ViewOnlyLink {
     };
     nodes: {
       links: {
-        related: LinkWithMeta;
-        self: LinkWithMeta;
+        related: LinkWithMetaJsonApi;
+        self: LinkWithMetaJsonApi;
       };
     };
   };
@@ -44,12 +44,12 @@ export interface ViewOnlyLink {
   };
 }
 
-export interface LinkWithMeta {
+export interface LinkWithMetaJsonApi {
   href: string;
   meta: Record<string, unknown>;
 }
 
-export interface PaginationLinks {
+export interface PaginationLinksJsonApi {
   first: string | null;
   last: string | null;
   prev: string | null;

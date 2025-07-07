@@ -1,9 +1,13 @@
-import { ContributorAddModel, ContributorModel } from '../models';
+import { ResourceType } from '@osf/shared/enums';
+import { ContributorAddModel, ContributorModel } from '@osf/shared/models';
 
 export class GetAllContributors {
   static readonly type = '[Contributors] Get All Contributors';
 
-  constructor(public projectId: string) {}
+  constructor(
+    public resourceId: string | undefined | null,
+    public resourceType: ResourceType | undefined
+  ) {}
 }
 
 export class UpdateSearchValue {
@@ -28,7 +32,8 @@ export class AddContributor {
   static readonly type = '[Contributors] Add Contributor';
 
   constructor(
-    public projectId: string,
+    public resourceId: string | undefined | null,
+    public resourceType: ResourceType | undefined,
     public contributor: ContributorAddModel
   ) {}
 }
@@ -37,7 +42,8 @@ export class UpdateContributor {
   static readonly type = '[Contributors] Update Contributor';
 
   constructor(
-    public projectId: string,
+    public resourceId: string | undefined | null,
+    public resourceType: ResourceType | undefined,
     public contributor: ContributorModel
   ) {}
 }
@@ -46,7 +52,8 @@ export class DeleteContributor {
   static readonly type = '[Contributors] Delete Contributor';
 
   constructor(
-    public projectId: string,
+    public resourceId: string | undefined | null,
+    public resourceType: ResourceType | undefined,
     public contributorId: string
   ) {}
 }

@@ -1,7 +1,12 @@
-import { PaginatedViewOnlyLinksModel, ViewOnlyLink, ViewOnlyLinkModel, ViewOnlyLinksResponseModel } from '../models/';
+import {
+  PaginatedViewOnlyLinksModel,
+  ViewOnlyLinkJsonApi,
+  ViewOnlyLinkModel,
+  ViewOnlyLinksResponseJsonApi,
+} from '../models';
 
 export class ViewOnlyLinksMapper {
-  static fromResponse(response: ViewOnlyLinksResponseModel, projectId: string): PaginatedViewOnlyLinksModel {
+  static fromResponse(response: ViewOnlyLinksResponseJsonApi, projectId: string): PaginatedViewOnlyLinksModel {
     const items: ViewOnlyLinkModel[] = response.data.map((item) => ({
       id: item.id,
       link: `${document.baseURI}my-projects/${projectId}/overview?view_only=${item.attributes.key}`,
@@ -25,7 +30,7 @@ export class ViewOnlyLinksMapper {
     };
   }
 
-  static fromSingleResponse(response: ViewOnlyLink, projectId: string): PaginatedViewOnlyLinksModel {
+  static fromSingleResponse(response: ViewOnlyLinkJsonApi, projectId: string): PaginatedViewOnlyLinksModel {
     const item = response;
 
     const mappedItem: ViewOnlyLinkModel = {

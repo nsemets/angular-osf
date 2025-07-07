@@ -4,7 +4,7 @@ import { catchError, of, tap, throwError } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { ContributorsService } from '../services';
+import { ContributorsService } from '@osf/shared/services';
 
 import {
   AddContributor,
@@ -50,7 +50,11 @@ export class ContributorsState {
       contributorsList: { ...state.contributorsList, isLoading: true, error: null },
     });
 
-    return this.contributorsService.getAllContributors(action.projectId).pipe(
+    if (!action.resourceId || !action.resourceType) {
+      return;
+    }
+
+    return this.contributorsService.getAllContributors(action.resourceType, action.resourceId).pipe(
       tap((contributors) => {
         ctx.patchState({
           contributorsList: {
@@ -72,7 +76,11 @@ export class ContributorsState {
       contributorsList: { ...state.contributorsList, isLoading: true, error: null },
     });
 
-    return this.contributorsService.addContributor(action.projectId, action.contributor).pipe(
+    if (!action.resourceId || !action.resourceType) {
+      return;
+    }
+
+    return this.contributorsService.addContributor(action.resourceType, action.resourceId, action.contributor).pipe(
       tap((contributor) => {
         const currentState = ctx.getState();
 
@@ -96,7 +104,11 @@ export class ContributorsState {
       contributorsList: { ...state.contributorsList, isLoading: true, error: null },
     });
 
-    return this.contributorsService.updateContributor(action.projectId, action.contributor).pipe(
+    if (!action.resourceId || !action.resourceType) {
+      return;
+    }
+
+    return this.contributorsService.updateContributor(action.resourceType, action.resourceId, action.contributor).pipe(
       tap((updatedContributor) => {
         const currentState = ctx.getState();
 
@@ -122,18 +134,24 @@ export class ContributorsState {
       contributorsList: { ...state.contributorsList, isLoading: true, error: null },
     });
 
-    return this.contributorsService.deleteContributor(action.projectId, action.contributorId).pipe(
-      tap(() => {
-        ctx.patchState({
-          contributorsList: {
-            ...state.contributorsList,
-            data: state.contributorsList.data.filter((contributor) => contributor.userId !== action.contributorId),
-            isLoading: false,
-          },
-        });
-      }),
-      catchError((error) => this.handleError(ctx, 'contributorsList', error))
-    );
+    if (!action.resourceId || !action.resourceType) {
+      return;
+    }
+
+    return this.contributorsService
+      .deleteContributor(action.resourceType, action.resourceId, action.contributorId)
+      .pipe(
+        tap(() => {
+          ctx.patchState({
+            contributorsList: {
+              ...state.contributorsList,
+              data: state.contributorsList.data.filter((contributor) => contributor.userId !== action.contributorId),
+              isLoading: false,
+            },
+          });
+        }),
+        catchError((error) => this.handleError(ctx, 'contributorsList', error))
+      );
   }
 
   @Action(UpdateSearchValue)

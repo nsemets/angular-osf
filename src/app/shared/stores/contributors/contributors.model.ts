@@ -1,6 +1,5 @@
+import { ContributorAddModel, ContributorModel } from '@osf/shared/models';
 import { AsyncStateModel } from '@osf/shared/models/store';
-
-import { ContributorAddModel, ContributorModel } from '../models';
 
 export interface ContributorsStateModel {
   contributorsList: AsyncStateModel<ContributorModel[]> & {
