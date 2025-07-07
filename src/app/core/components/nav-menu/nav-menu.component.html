@@ -1,13 +1,11 @@
 <nav class="nav-menu">
-  <p-panelMenu [model]="mainMenuItems()" [multiple]="false">
+  <p-panelMenu [model]="menuItems" [multiple]="false">
     <ng-template #item let-item>
       @if (item.label !== 'navigation.registriesSubRoutes.registryDetails') {
         <a
           [routerLink]="item.routerLink"
           routerLinkActive="active"
-          [routerLinkActiveOptions]="{
-            exact: item.label !== 'navigation.myProjects' ? item.useExactMatch : true,
-          }"
+          [routerLinkActiveOptions]="item.routerLinkActiveOptions"
           class="nav-link flex align-items-center"
           [class.mt-5]="item.label === 'navigation.settings' || item.label === 'navigation.myProjects'"
           (click)="goToLink(item)"
@@ -15,7 +13,9 @@
           @if (item.icon) {
             <osf-icon [iconClass]="`nav-icon ${item.icon}`"></osf-icon>
           }
+
           <span>{{ item.label | translate }}</span>
+
           @if (item.items) {
             <osf-icon
               class="ml-auto pt-1"
