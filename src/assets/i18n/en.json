@@ -65,7 +65,8 @@
       "public": "Public",
       "title": "Title",
       "description": "Description",
-      "year": "Year"
+      "year": "Year",
+      "optional": "Optional"
     },
     "deleteConfirmation": {
       "header": "Delete",

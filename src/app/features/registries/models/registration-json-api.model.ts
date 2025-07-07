@@ -1,5 +1,5 @@
 import { ApiData, MetaJsonApi, PaginationLinksJsonApi } from '@osf/core/models';
-import { LicenseOptions, LicenseRecordJsonApi } from '@osf/shared/models';
+import { LicenseRecordJsonApi } from '@osf/shared/models';
 
 export interface RegistrationResponseJsonApi {
   data: RegistrationDataJsonApi;
@@ -14,21 +14,21 @@ export type RegistrationDataJsonApi = ApiData<
   null
 >;
 
-interface RegistrationAttributesJsonApi {
+export interface RegistrationAttributesJsonApi {
   category: string;
   current_user_permissions: string[];
   date_created: string;
   datetime_updated: string;
   description: string;
   has_project: boolean;
-  node_license: LicenseOptions;
+  node_license: LicenseRecordJsonApi;
   registration_metadata: Record<string, unknown>;
   registration_responses: Record<string, unknown>;
   tags: string[];
   title: string;
 }
 
-interface RegistrationRelationshipsJsonApi {
+export interface RegistrationRelationshipsJsonApi {
   registration_schema?: {
     data: {
       id: string;
@@ -47,12 +47,7 @@ export interface RegistrationPayloadJsonApi {
   data: {
     type: 'draft_registrations';
     id: string;
-    relationships: RegistrationRelationshipsJsonApi;
-    attributes: {
-      title?: string;
-      description?: string;
-      node_license?: LicenseRecordJsonApi;
-      tags?: string[];
-    };
+    relationships?: RegistrationRelationshipsJsonApi;
+    attributes?: Partial<RegistrationAttributesJsonApi>;
   };
 }

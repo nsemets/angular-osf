@@ -1,6 +1,8 @@
 import { ContributorAddModel, ContributorModel } from '@osf/shared/components/contributors/models';
 import { LicenseOptions, Subject } from '@osf/shared/models';
 
+import { RegistrationAttributesJsonApi, RegistrationRelationshipsJsonApi } from '../models';
+
 export class GetRegistries {
   static readonly type = '[Registries] Get Registries';
 }
@@ -21,6 +23,15 @@ export class CreateDraft {
 export class FetchDraft {
   static readonly type = '[Registries]  Fetch Draft';
   constructor(public draftId: string) {}
+}
+
+export class UpdateDraft {
+  static readonly type = '[Registries] Update Registration Tags';
+  constructor(
+    public draftId: string,
+    public attributes: Partial<RegistrationAttributesJsonApi>,
+    public relationships?: Partial<RegistrationRelationshipsJsonApi>
+  ) {}
 }
 
 export class DeleteDraft {
@@ -89,5 +100,13 @@ export class UpdateRegistrationSubjects {
   constructor(
     public registrationId: string,
     public subjects: Subject[]
+  ) {}
+}
+
+export class UpdateStepValidation {
+  static readonly type = '[Registries] Update Step Validation';
+  constructor(
+    public step: string,
+    public invalid: boolean
   ) {}
 }

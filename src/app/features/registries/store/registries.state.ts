@@ -32,7 +32,9 @@ import {
   GetRegistries,
   SaveLicense,
   UpdateContributor,
+  UpdateDraft,
   UpdateRegistrationSubjects,
+  UpdateStepValidation,
 } from './registries.actions';
 import { RegistriesStateModel } from './registries.model';
 
@@ -169,6 +171,30 @@ export class RegistriesState {
     );
   }
 
+  @Action(UpdateDraft)
+  updateDraft(ctx: StateContext<RegistriesStateModel>, { draftId, attributes, relationships }: UpdateDraft) {
+    ctx.patchState({
+      draftRegistration: {
+        ...ctx.getState().draftRegistration,
+        isSubmitting: true,
+      },
+    });
+
+    return this.registriesService.updateDraft(draftId, attributes, relationships).pipe(
+      tap((updatedDraft) => {
+        ctx.patchState({
+          draftRegistration: {
+            data: { ...updatedDraft },
+            isLoading: false,
+            isSubmitting: false,
+            error: null,
+          },
+        });
+      }),
+      catchError((error) => handleSectionError(ctx, 'draftRegistration', error))
+    );
+  }
+
   @Action(FetchSchemaBlocks)
   fetchSchemaBlocks(ctx: StateContext<RegistriesStateModel>, action: FetchSchemaBlocks) {
     const state = ctx.getState();
@@ -187,6 +213,17 @@ export class RegistriesState {
       }),
       catchError((error) => handleSectionError(ctx, 'pagesSchema', error))
     );
+  }
+
+  @Action(UpdateStepValidation)
+  updateStepValidation(ctx: StateContext<RegistriesStateModel>, { step, invalid }: UpdateStepValidation) {
+    const state = ctx.getState();
+    ctx.patchState({
+      stepsValidation: {
+        ...state.stepsValidation,
+        [step]: { invalid },
+      },
+    });
   }
 
   @Action(FetchContributors)

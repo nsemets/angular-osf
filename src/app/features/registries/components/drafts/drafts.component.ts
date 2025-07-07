@@ -31,6 +31,7 @@ export class DraftsComponent {
 
   protected readonly pages = select(RegistriesSelectors.getPagesSchema);
   protected readonly draftRegistration = select(RegistriesSelectors.getDraftRegistration);
+  protected stepsValidation = select(RegistriesSelectors.getStepsValidation);
 
   private readonly actions = createDispatchMap({
     getSchemaBlocks: FetchSchemaBlocks,
@@ -41,20 +42,29 @@ export class DraftsComponent {
     return this.router.url.includes('/review');
   }
 
-  defaultSteps: StepOption[] = defaultSteps.map((step) => ({
-    ...step,
-    label: this.translateService.instant(step.label),
-  }));
+  defaultSteps: StepOption[] = [];
 
   steps: Signal<StepOption[]> = computed(() => {
-    const customSteps = this.pages().map((page, index) => ({
-      index: index + 1,
-      label: page.title,
-      value: page.id,
-      routeLink: `${index + 1}`,
-      invalid: false,
+    this.defaultSteps = defaultSteps.map((step) => ({
+      ...step,
+      label: this.translateService.instant(step.label),
+      invalid: this.stepsValidation()?.[step.index]?.invalid || false,
     }));
-    return [this.defaultSteps[0], ...customSteps, { ...this.defaultSteps[1], index: customSteps.length + 1 }];
+
+    const customSteps = this.pages().map((page, index) => {
+      return {
+        index: index + 1,
+        label: page.title,
+        value: page.id,
+        routeLink: `${index + 1}`,
+        invalid: this.stepsValidation()?.[index + 1]?.invalid || false,
+      };
+    });
+    return [
+      this.defaultSteps[0],
+      ...customSteps,
+      { ...this.defaultSteps[1], index: customSteps.length + 1, invalid: false },
+    ];
   });
 
   currentStepIndex = signal(
@@ -77,6 +87,11 @@ export class DraftsComponent {
         const step = this.route.firstChild?.snapshot.params['step'];
         if (step) {
           this.currentStepIndex.set(+step);
+        } else if (this.isReviewPage) {
+          const reviewStepIndex = this.pages().length + 1;
+          this.currentStepIndex.set(reviewStepIndex);
+        } else {
+          this.currentStepIndex.set(0);
         }
       });
 
