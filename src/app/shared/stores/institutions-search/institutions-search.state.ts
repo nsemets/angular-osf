@@ -1,4 +1,4 @@
-import { Action, NgxsOnInit, State, StateContext, Store } from '@ngxs/store';
+import { Action, NgxsOnInit, State, StateContext } from '@ngxs/store';
 import { patch } from '@ngxs/store/operators';
 
 import { BehaviorSubject, catchError, EMPTY, forkJoin, of, switchMap, tap, throwError } from 'rxjs';
@@ -46,7 +46,6 @@ import { InstitutionsSearchModel } from './institutions-search.model';
 export class InstitutionsSearchState implements NgxsOnInit {
   private readonly institutionsService = inject(InstitutionsService);
   private readonly searchService = inject(SearchService);
-  private readonly store = inject(Store);
 
   private loadRequests = new BehaviorSubject<{ type: GetResourcesRequestTypeEnum; link?: string } | null>(null);
   private filterOptionsRequests = new BehaviorSubject<string | null>(null);

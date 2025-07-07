@@ -19,6 +19,6 @@ export const routes: Routes = [
   },
   {
     path: ':institution-id/dashboard',
-    loadChildren: () => import('./pages/admin/pages/routes').then((inst) => inst.routes),
+    loadChildren: () => import('./pages/admin/routes').then((inst) => inst.routes),
   },
 ];

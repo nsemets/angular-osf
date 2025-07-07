@@ -5,7 +5,7 @@ export interface InstitutionSearchResultCount {
     cardSearchResultCount: number;
   };
   id: string;
-  type: 'search-result';
+  type: string;
   relationships: {
     indexCard: {
       data: {
@@ -22,10 +22,11 @@ export interface InstitutionIndexCardFilter {
     resourceMetadata: {
       displayLabel: { '@value': string }[];
       '@id': string;
+      name: { '@value': string }[];
     };
   };
   id: string;
-  type: 'index-card';
+  type: string;
 }
 
 export type InstitutionIndexValueSearchIncludedJsonApi = InstitutionSearchResultCount | InstitutionIndexCardFilter;
@@ -39,6 +40,6 @@ export interface InstitutionIndexValueSearchJsonApi
 export interface InstitutionSearchFilter {
   id: string;
   label: string;
-  value: string;
+  value: string | number;
   count?: number;
 }

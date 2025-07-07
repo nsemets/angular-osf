@@ -1,6 +1,6 @@
 import { Selector } from '@ngxs/store';
 
-import { InstitutionDepartmentsJsonApi, InstitutionSearchFilter, InstitutionSummaryMetricsJsonApi } from '../models';
+import { InstitutionDepartmentsJsonApi, InstitutionSearchFilter, InstitutionSummaryMetrics } from '../models';
 
 import { InstitutionsAdminModel } from './institutions-admin.model';
 import { InstitutionsAdminState } from './institutions-admin.state';
@@ -22,7 +22,7 @@ export class InstitutionsAdminSelectors {
   }
 
   @Selector([InstitutionsAdminState])
-  static getSummaryMetrics(state: InstitutionsAdminModel): InstitutionSummaryMetricsJsonApi {
+  static getSummaryMetrics(state: InstitutionsAdminModel): InstitutionSummaryMetrics {
     return state.summaryMetrics.data;
   }
 

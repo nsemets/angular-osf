@@ -1,5 +1,6 @@
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { Accordion, AccordionContent, AccordionHeader, AccordionPanel } from 'primeng/accordion';
 import { ChartModule } from 'primeng/chart';
 
 import { isPlatformBrowser } from '@angular/common';
@@ -22,43 +23,57 @@ import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.comp
 import { ChartData, ChartOptions } from 'chart.js';
 
 @Component({
-  selector: 'osf-pie-chart',
-  imports: [ChartModule, TranslatePipe, LoadingSpinnerComponent],
+  selector: 'osf-doughnut-chart',
+  imports: [
+    ChartModule,
+    TranslatePipe,
+    LoadingSpinnerComponent,
+    Accordion,
+    AccordionHeader,
+    AccordionPanel,
+    AccordionContent,
+  ],
   templateUrl: './doughnut-chart.component.html',
   styleUrl: './doughnut-chart.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class DoughnutChartComponent implements OnInit {
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly cd = inject(ChangeDetectorRef);
+
   isLoading = input<boolean>(false);
   title = input<string>('');
   labels = input<string[]>([]);
   datasets = input<DatasetInput[]>([]);
   showLegend = input<boolean>(false);
+  showExpandedSection = input<boolean>(false);
 
   protected options = signal<ChartOptions>({});
   protected data = signal<ChartData>({} as ChartData);
-
-  #platformId = inject(PLATFORM_ID);
-  #cd = inject(ChangeDetectorRef);
 
   ngOnInit() {
     this.initChart();
   }
 
   initChart() {
-    if (isPlatformBrowser(this.#platformId)) {
+    if (isPlatformBrowser(this.platformId)) {
       this.setChartData();
       this.setChartOptions();
 
-      this.#cd.markForCheck();
+      this.cd.markForCheck();
     }
+  }
+
+  getColor(index: number): string {
+    return PIE_CHART_PALETTE[index % PIE_CHART_PALETTE.length];
   }
 
   private setChartData() {
     const chartDatasets = this.datasets().map((dataset) => ({
       label: dataset.label,
       data: dataset.data,
-      backgroundColor: PIE_CHART_PALETTE,
+      backgroundColor: dataset?.color || PIE_CHART_PALETTE,
       borderWidth: 0,
     }));
 

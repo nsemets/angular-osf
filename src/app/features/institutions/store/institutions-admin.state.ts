@@ -4,17 +4,20 @@ import { catchError, tap, throwError } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { InstitutionDepartmentsJsonApi, InstitutionSearchFilter, InstitutionSummaryMetricsJsonApi } from '../models';
+import {
+  InstitutionDepartmentsJsonApi,
+  InstitutionSearchFilter,
+  InstitutionSummaryMetrics,
+  InstitutionSummaryMetricsJsonApi,
+} from '../models';
 import { InstitutionsAdminService } from '../services/institutions-admin.service';
 
 import {
-  ClearInstitutionsAdminData,
   FetchHasOsfAddonSearch,
   FetchInstitutionDepartments,
   FetchInstitutionSearchResults,
   FetchInstitutionSummaryMetrics,
   FetchStorageRegionSearch,
-  SetSelectedInstitutionId,
 } from './institutions-admin.actions';
 import { InstitutionsAdminModel } from './institutions-admin.model';
 
@@ -69,7 +72,7 @@ const createEmptySearchFilters = (): InstitutionSearchFilter[] => [];
   name: 'institutionsAdmin',
   defaults: {
     departments: { data: createEmptyDepartments(), isLoading: false, error: null },
-    summaryMetrics: { data: createEmptySummaryMetrics(), isLoading: false, error: null },
+    summaryMetrics: { data: {} as InstitutionSummaryMetrics, isLoading: false, error: null },
     hasOsfAddonSearch: { data: createEmptySearchFilters(), isLoading: false, error: null },
     storageRegionSearch: { data: createEmptySearchFilters(), isLoading: false, error: null },
     searchResults: { data: createEmptySearchFilters(), isLoading: false, error: null },
@@ -99,7 +102,7 @@ export class InstitutionsAdminState {
           departments: {
             ...state.departments,
             isLoading: false,
-            error: error.message || 'Failed to fetch departments',
+            error: error.message,
           },
         });
         return throwError(() => error);
@@ -125,7 +128,7 @@ export class InstitutionsAdminState {
           summaryMetrics: {
             ...state.summaryMetrics,
             isLoading: false,
-            error: error.message || 'Failed to fetch summary metrics',
+            error: error.message,
           },
         });
         return throwError(() => error);
@@ -154,7 +157,7 @@ export class InstitutionsAdminState {
             searchResults: {
               ...state.searchResults,
               isLoading: false,
-              error: error.message || 'Failed to fetch search results',
+              error: error.message,
             },
           });
           return throwError(() => error);
@@ -180,7 +183,7 @@ export class InstitutionsAdminState {
           hasOsfAddonSearch: {
             ...state.hasOsfAddonSearch,
             isLoading: false,
-            error: error.message || 'Failed to fetch has OSF addon search',
+            error: error.message,
           },
         });
         return throwError(() => error);
@@ -206,31 +209,11 @@ export class InstitutionsAdminState {
           storageRegionSearch: {
             ...state.storageRegionSearch,
             isLoading: false,
-            error: error.message || 'Failed to fetch storage region search',
+            error: error.message,
           },
         });
         return throwError(() => error);
       })
     );
-  }
-
-  @Action(SetSelectedInstitutionId)
-  setSelectedInstitutionId(ctx: StateContext<InstitutionsAdminModel>, action: SetSelectedInstitutionId) {
-    ctx.patchState({
-      selectedInstitutionId: action.institutionId,
-    });
-  }
-
-  @Action(ClearInstitutionsAdminData)
-  clearData(ctx: StateContext<InstitutionsAdminModel>) {
-    ctx.patchState({
-      departments: { data: createEmptyDepartments(), isLoading: false, error: null },
-      summaryMetrics: { data: createEmptySummaryMetrics(), isLoading: false, error: null },
-      hasOsfAddonSearch: { data: createEmptySearchFilters(), isLoading: false, error: null },
-      storageRegionSearch: { data: createEmptySearchFilters(), isLoading: false, error: null },
-      searchResults: { data: createEmptySearchFilters(), isLoading: false, error: null },
-      selectedInstitutionId: null,
-      currentSearchPropertyPath: null,
-    });
   }
 }

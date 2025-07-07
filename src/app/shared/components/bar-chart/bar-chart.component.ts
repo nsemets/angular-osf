@@ -1,5 +1,6 @@
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { Accordion, AccordionContent, AccordionHeader, AccordionPanel } from 'primeng/accordion';
 import { ChartModule } from 'primeng/chart';
 
 import { isPlatformBrowser } from '@angular/common';
@@ -15,6 +16,7 @@ import {
 } from '@angular/core';
 
 import { DatasetInput } from '@osf/shared/models';
+import { PIE_CHART_PALETTE } from '@shared/utils';
 
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 
@@ -22,10 +24,19 @@ import { ChartData, ChartOptions } from 'chart.js';
 
 @Component({
   selector: 'osf-bar-chart',
-  imports: [ChartModule, TranslatePipe, LoadingSpinnerComponent],
+  imports: [
+    ChartModule,
+    TranslatePipe,
+    LoadingSpinnerComponent,
+    AccordionContent,
+    AccordionHeader,
+    AccordionPanel,
+    Accordion,
+  ],
   templateUrl: './bar-chart.component.html',
   styleUrl: './bar-chart.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class BarChartComponent implements OnInit {
   isLoading = input<boolean>(false);
@@ -34,7 +45,10 @@ export class BarChartComponent implements OnInit {
   datasets = input<DatasetInput[]>([]);
   showLegend = input<boolean>(false);
   showGrid = input<boolean>(false);
+  showTicks = input<boolean>(true);
+
   orientation = input<'horizontal' | 'vertical'>('horizontal');
+  showExpandedSection = input<boolean>(false);
 
   protected options = signal<ChartOptions>({});
   protected data = signal<ChartData>({} as ChartData);
@@ -75,6 +89,10 @@ export class BarChartComponent implements OnInit {
     });
   }
 
+  getColor(index: number): string {
+    return PIE_CHART_PALETTE[index % PIE_CHART_PALETTE.length];
+  }
+
   private setChartOptions(textColorSecondary: string, surfaceBorder: string) {
     this.options.set({
       indexAxis: this.orientation() === 'horizontal' ? 'y' : 'x',
@@ -89,6 +107,7 @@ export class BarChartComponent implements OnInit {
       scales: {
         x: {
           ticks: {
+            display: this.showTicks(),
             color: textColorSecondary,
           },
           grid: {
@@ -98,6 +117,7 @@ export class BarChartComponent implements OnInit {
         },
         y: {
           ticks: {
+            display: this.showTicks(),
             color: textColorSecondary,
           },
           grid: {
