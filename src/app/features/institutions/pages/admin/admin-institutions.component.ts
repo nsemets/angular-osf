@@ -23,7 +23,6 @@ interface TabOption {
   templateUrl: './admin-institutions.component.html',
   styleUrl: './admin-institutions.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class AdminInstitutionsComponent implements OnInit {
   private readonly router = inject(Router);

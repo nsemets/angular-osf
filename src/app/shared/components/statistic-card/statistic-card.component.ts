@@ -7,7 +7,6 @@ import { Primitive } from '@core/helpers';
   templateUrl: './statistic-card.component.html',
   styleUrl: './statistic-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class StatisticCardComponent {
   value = input<Primitive>();

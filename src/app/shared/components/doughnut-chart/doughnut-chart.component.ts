@@ -36,7 +36,6 @@ import { ChartData, ChartOptions } from 'chart.js';
   templateUrl: './doughnut-chart.component.html',
   styleUrl: './doughnut-chart.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class DoughnutChartComponent implements OnInit {
   private readonly platformId = inject(PLATFORM_ID);

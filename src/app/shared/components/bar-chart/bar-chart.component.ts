@@ -36,7 +36,6 @@ import { ChartData, ChartOptions } from 'chart.js';
   templateUrl: './bar-chart.component.html',
   styleUrl: './bar-chart.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class BarChartComponent implements OnInit {
   isLoading = input<boolean>(false);

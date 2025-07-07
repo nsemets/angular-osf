@@ -28,6 +28,7 @@ export class InstitutionsAdminService {
     return this.jsonApiService
       .get<InstitutionDepartmentsJsonApi>(`${this.hardcodedUrl}/institutions/${institutionId}/metrics/departments/`)
       .pipe(
+        //todo: remove mock data
         catchError((err) => {
           console.warn('Departments API error, returning mock data:', err);
           return of({
@@ -87,6 +88,7 @@ export class InstitutionsAdminService {
     return this.jsonApiService
       .get<InstitutionSummaryMetricsJsonApi>(`${this.hardcodedUrl}/institutions/${institutionId}/metrics/summary/`)
       .pipe(
+        //todo: remove mock data
         catchError((err) => {
           console.warn('Summary API error, returning mock data:', err);
           return of({
@@ -140,6 +142,7 @@ export class InstitutionsAdminService {
     additionalParams?: Record<string, string>
   ): Observable<InstitutionSearchFilter[]> {
     const params: Record<string, string> = {
+      //todo: change here https://test.osf.io to current environment
       'cardSearchFilter[affiliation]': `https://ror.org/05d5mza29,https://test.osf.io/institutions/${institutionId}/`,
       valueSearchPropertyPath,
       'page[size]': '10',

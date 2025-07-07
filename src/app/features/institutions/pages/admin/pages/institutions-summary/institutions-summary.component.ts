@@ -24,7 +24,6 @@ import {
   templateUrl: './institutions-summary.component.html',
   styleUrl: './institutions-summary.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class InstitutionsSummaryComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
