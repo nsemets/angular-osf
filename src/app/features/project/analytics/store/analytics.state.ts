@@ -5,9 +5,8 @@ import { catchError, of, tap, throwError } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { ANALYTICS_SERVICE } from '@osf/shared/tokens';
-
 import { AnalyticsMetricsModel, RelatedCountsModel } from '../models';
+import { AnalyticsService } from '../services';
 
 import { GetMetrics, GetRelatedCounts } from './analytics.actions';
 import { AnalyticsStateModel } from './analytics.model';
@@ -29,13 +28,13 @@ import { AnalyticsStateModel } from './analytics.model';
 })
 @Injectable()
 export class AnalyticsState {
-  private readonly analyticsService = inject(ANALYTICS_SERVICE);
+  private readonly analyticsService = inject(AnalyticsService);
   private readonly REFRESH_INTERVAL = 5 * 60 * 1000;
 
   @Action(GetMetrics)
   getMetrics(ctx: StateContext<AnalyticsStateModel>, action: GetMetrics) {
     const state = ctx.getState();
-    const metricsId = `${action.projectId}:${action.dateRange}`;
+    const metricsId = `${action.resourceId}:${action.dateRange}`;
 
     const cachedData = state.metrics.data.find((m) => m.id === metricsId);
     const shouldRefresh = this.shouldRefresh(cachedData?.lastFetched);
@@ -54,7 +53,7 @@ export class AnalyticsState {
       metrics: { ...state.metrics, isLoading: true, error: null },
     });
 
-    return this.analyticsService.getMetrics(action.projectId, action.dateRange).pipe(
+    return this.analyticsService.getMetrics(action.resourceId, action.dateRange).pipe(
       tap((metrics) => {
         const exists = state.metrics.data.some((m) => m.id === metrics.id);
         metrics.lastFetched = Date.now();
@@ -76,7 +75,7 @@ export class AnalyticsState {
   @Action(GetRelatedCounts)
   getRelatedCounts(ctx: StateContext<AnalyticsStateModel>, action: GetRelatedCounts) {
     const state = ctx.getState();
-    const relatedCountsId = action.projectId;
+    const relatedCountsId = action.resourceId;
 
     const cachedData = state.relatedCounts.data.find((rc) => rc.id === relatedCountsId);
     const shouldRefresh = this.shouldRefresh(cachedData?.lastFetched);
@@ -95,7 +94,11 @@ export class AnalyticsState {
       relatedCounts: { ...state.relatedCounts, isLoading: true, error: null },
     });
 
-    return this.analyticsService.getRelatedCounts(action.projectId).pipe(
+    if (!action.resourceType) {
+      return;
+    }
+
+    return this.analyticsService.getRelatedCounts(action.resourceId, action.resourceType).pipe(
       tap((relatedCounts) => {
         const exists = state.relatedCounts.data.some((rc) => rc.id === relatedCounts.id);
         relatedCounts.lastFetched = Date.now();

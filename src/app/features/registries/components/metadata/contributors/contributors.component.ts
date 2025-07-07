@@ -20,7 +20,7 @@ import {
   ContributorsListComponent,
 } from '@osf/shared/components/contributors';
 import { BIBLIOGRAPHY_OPTIONS, PERMISSION_OPTIONS } from '@osf/shared/constants';
-import { AddContributorType, ContributorPermission } from '@osf/shared/enums';
+import { AddContributorType, ContributorPermission, ResourceType } from '@osf/shared/enums';
 import { ContributorDialogAddModel, ContributorModel, SelectOption } from '@osf/shared/models';
 import { CustomConfirmationService, ToastService } from '@osf/shared/services';
 import {
@@ -78,7 +78,7 @@ export class ContributorsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.actions.getContributors(this.draftId());
+    this.actions.getContributors(this.draftId(), ResourceType.DraftRegistration);
   }
 
   onFocusOut() {
@@ -94,7 +94,7 @@ export class ContributorsComponent implements OnInit {
     const updatedContributors = findChangedItems(this.initialContributors(), this.contributors(), 'id');
 
     const updateRequests = updatedContributors.map((payload) =>
-      this.actions.updateContributor(this.draftId(), payload)
+      this.actions.updateContributor(this.draftId(), ResourceType.DraftRegistration, payload)
     );
 
     forkJoin(updateRequests).subscribe(() => {
@@ -123,7 +123,9 @@ export class ContributorsComponent implements OnInit {
         if (res.type === AddContributorType.Unregistered) {
           this.openAddUnregisteredContributorDialog();
         } else {
-          const addRequests = res.data.map((payload) => this.actions.addContributor(this.draftId(), payload));
+          const addRequests = res.data.map((payload) =>
+            this.actions.addContributor(this.draftId(), ResourceType.DraftRegistration, payload)
+          );
 
           forkJoin(addRequests).subscribe(() => {
             this.toastService.showSuccess('project.contributors.toastMessages.multipleAddSuccessMessage');
@@ -153,7 +155,7 @@ export class ContributorsComponent implements OnInit {
           const successMessage = this.translateService.instant('project.contributors.toastMessages.addSuccessMessage');
           const params = { name: res.data[0].fullName };
 
-          this.actions.addContributor(this.draftId(), res.data[0]).subscribe({
+          this.actions.addContributor(this.draftId(), ResourceType.DraftRegistration, res.data[0]).subscribe({
             next: () => this.toastService.showSuccess(successMessage, params),
           });
         }
@@ -168,7 +170,7 @@ export class ContributorsComponent implements OnInit {
       acceptLabelKey: 'common.buttons.remove',
       onConfirm: () => {
         this.actions
-          .deleteContributor(this.draftId(), contributor.userId)
+          .deleteContributor(this.draftId(), ResourceType.DraftRegistration, contributor.userId)
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             next: () =>

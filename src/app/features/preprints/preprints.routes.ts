@@ -9,9 +9,6 @@ import { PreprintsResourcesFiltersState } from '@osf/features/preprints/store/pr
 import { PreprintsResourcesFiltersOptionsState } from '@osf/features/preprints/store/preprints-resources-filters-options';
 import { SubmitPreprintState } from '@osf/features/preprints/store/submit-preprint';
 import { ContributorsState } from '@osf/shared/stores';
-import { CONTRIBUTORS_SERVICE } from '@osf/shared/tokens';
-
-import { PreprintContributorsService } from './services';
 
 export const preprintsRoutes: Routes = [
   {
@@ -26,10 +23,6 @@ export const preprintsRoutes: Routes = [
         SubmitPreprintState,
         ContributorsState,
       ]),
-      {
-        provide: CONTRIBUTORS_SERVICE,
-        useClass: PreprintContributorsService,
-      },
     ],
     children: [
       {

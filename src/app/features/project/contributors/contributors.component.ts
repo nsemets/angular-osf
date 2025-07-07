@@ -9,7 +9,7 @@ import { TableModule } from 'primeng/table';
 
 import { debounceTime, distinctUntilChanged, filter, forkJoin, map, of, switchMap } from 'rxjs';
 
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, OnInit, Signal, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -21,7 +21,7 @@ import {
   ContributorsListComponent,
 } from '@osf/shared/components/contributors';
 import { BIBLIOGRAPHY_OPTIONS, PERMISSION_OPTIONS } from '@osf/shared/constants';
-import { AddContributorType, ContributorPermission } from '@osf/shared/enums';
+import { AddContributorType, ContributorPermission, ResourceType } from '@osf/shared/enums';
 import {
   ContributorDialogAddModel,
   ContributorModel,
@@ -79,6 +79,9 @@ export class ContributorsComponent implements OnInit {
   private readonly resourceId = toSignal(
     this.route.parent?.params.pipe(map((params) => params['id'])) ?? of(undefined)
   );
+  readonly resourceType: Signal<ResourceType | undefined> = toSignal(
+    this.route.data.pipe(map((params) => params['resourceType'])) ?? of(undefined)
+  );
 
   protected viewOnlyLinks = select(ViewOnlyLinkSelectors.getViewOnlyLinks);
   protected projectDetails = select(ViewOnlyLinkSelectors.getResourceDetails);
@@ -127,9 +130,9 @@ export class ContributorsComponent implements OnInit {
     const id = this.resourceId();
 
     if (id) {
-      this.actions.getViewOnlyLinks(id);
-      this.actions.getResourceDetails(id);
-      this.actions.getContributors(this.resourceId());
+      this.actions.getViewOnlyLinks(id, this.resourceType());
+      this.actions.getResourceDetails(id, this.resourceType());
+      this.actions.getContributors(id, this.resourceType());
     }
 
     this.setSearchSubscription();
@@ -157,7 +160,7 @@ export class ContributorsComponent implements OnInit {
     const updatedContributors = findChangedItems(this.initialContributors(), this.contributors(), 'id');
 
     const updateRequests = updatedContributors.map((payload) =>
-      this.actions.updateContributor(this.resourceId(), payload)
+      this.actions.updateContributor(this.resourceId(), ResourceType.Project, payload)
     );
 
     forkJoin(updateRequests).subscribe(() => {
@@ -186,7 +189,9 @@ export class ContributorsComponent implements OnInit {
         if (res.type === AddContributorType.Unregistered) {
           this.openAddUnregisteredContributorDialog();
         } else {
-          const addRequests = res.data.map((payload) => this.actions.addContributor(this.resourceId(), payload));
+          const addRequests = res.data.map((payload) =>
+            this.actions.addContributor(this.resourceId(), ResourceType.Project, payload)
+          );
 
           forkJoin(addRequests).subscribe(() => {
             this.toastService.showSuccess('project.contributors.toastMessages.multipleAddSuccessMessage');
@@ -216,7 +221,7 @@ export class ContributorsComponent implements OnInit {
           const successMessage = this.translateService.instant('project.contributors.toastMessages.addSuccessMessage');
           const params = { name: res.data[0].fullName };
 
-          this.actions.addContributor(this.resourceId(), res.data[0]).subscribe({
+          this.actions.addContributor(this.resourceId(), ResourceType.Project, res.data[0]).subscribe({
             next: () => this.toastService.showSuccess(successMessage, params),
           });
         }
@@ -231,7 +236,7 @@ export class ContributorsComponent implements OnInit {
       acceptLabelKey: 'common.buttons.remove',
       onConfirm: () => {
         this.actions
-          .deleteContributor(this.resourceId(), contributor.userId)
+          .deleteContributor(this.resourceId(), ResourceType.Project, contributor.userId)
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             next: () =>
@@ -264,7 +269,9 @@ export class ContributorsComponent implements OnInit {
       })
       .onClose.pipe(
         filter((res) => !!res),
-        switchMap((result) => this.actions.createViewOnlyLink(this.resourceId(), result as ViewOnlyLinkJsonApi)),
+        switchMap((result) =>
+          this.actions.createViewOnlyLink(this.resourceId(), this.resourceType(), result as ViewOnlyLinkJsonApi)
+        ),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(() => this.toastService.showSuccess('myProjects.settings.viewOnlyLinkCreated'));
@@ -277,7 +284,7 @@ export class ContributorsComponent implements OnInit {
       messageKey: 'myProjects.settings.delete.message',
       onConfirm: () =>
         this.actions
-          .deleteViewOnlyLink(this.resourceId(), link.id)
+          .deleteViewOnlyLink(this.resourceId(), this.resourceType(), link.id)
           .subscribe(() => this.toastService.showSuccess('myProjects.settings.delete.success')),
     });
   }

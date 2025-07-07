@@ -45,7 +45,7 @@ import { CustomConfirmationService, LoaderService, ToastService } from '@osf/sha
 import { DeleteViewOnlyLink, FetchViewOnlyLinks, ViewOnlyLinkSelectors } from '@osf/shared/stores';
 import { CustomValidators } from '@osf/shared/utils';
 import { SubHeaderComponent } from '@shared/components';
-import { ProjectFormControls, SubscriptionEvent, SubscriptionFrequency } from '@shared/enums';
+import { ProjectFormControls, ResourceType, SubscriptionEvent, SubscriptionFrequency } from '@shared/enums';
 import { UpdateNodeRequestModel, ViewOnlyLinkModel } from '@shared/models';
 
 @Component({
@@ -122,7 +122,7 @@ export class SettingsComponent implements OnInit {
       this.actions.getSettings(id);
       this.actions.getNotifications(id);
       this.actions.getProjectDetails(id);
-      this.actions.getViewOnlyLinks(id);
+      this.actions.getViewOnlyLinks(id, ResourceType.Project);
     }
   }
 
@@ -189,7 +189,7 @@ export class SettingsComponent implements OnInit {
       headerParams: { name: link.name },
       messageKey: 'myProjects.settings.delete.message',
       onConfirm: () => {
-        this.actions.deleteViewOnlyLink(this.projectId(), link.id).subscribe(() => {
+        this.actions.deleteViewOnlyLink(this.projectId(), ResourceType.Project, link.id).subscribe(() => {
           this.toastService.showSuccess('myProjects.settings.delete.success');
           this.loaderService.hide();
         });

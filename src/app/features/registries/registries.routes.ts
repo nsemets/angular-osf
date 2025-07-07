@@ -4,16 +4,15 @@ import { Routes } from '@angular/router';
 
 import { RegistriesComponent } from '@osf/features/registries/registries.component';
 import { RegistriesState } from '@osf/features/registries/store';
-import { RegistrationViewOnlyLinksService } from '@osf/shared/services/registration-view-only-links.service';
-import { ContributorsState, SubjectsState, ViewOnlyLinkState } from '@osf/shared/stores';
-import { ANALYTICS_SERVICE, CONTRIBUTORS_SERVICE, SUBJECTS_SERVICE, VIEW_ONLY_LINKS_SERVICE } from '@osf/shared/tokens';
+import { ResourceType } from '@osf/shared/enums';
+import { ContributorsState, SubjectsState } from '@osf/shared/stores';
+import { SUBJECTS_SERVICE } from '@osf/shared/tokens';
 
 import { ModerationState } from '../moderation/store';
-import { RegistrationAnalyticsService } from '../project/analytics/services';
 import { AnalyticsState } from '../project/analytics/store';
 
 import { LicensesHandlers, ProjectsHandlers, ProvidersHandlers, SubjectsHandlers } from './store/handlers';
-import { DraftRegistrationContributorsService, LicensesService, RegistrationSubjectsService } from './services';
+import { LicensesService, RegistrationSubjectsService } from './services';
 
 export const registriesRoutes: Routes = [
   {
@@ -30,10 +29,6 @@ export const registriesRoutes: Routes = [
       {
         provide: SUBJECTS_SERVICE,
         useClass: RegistrationSubjectsService,
-      },
-      {
-        provide: CONTRIBUTORS_SERVICE,
-        useClass: DraftRegistrationContributorsService,
       },
     ],
     children: [
@@ -88,29 +83,15 @@ export const registriesRoutes: Routes = [
             path: 'contributors',
             loadComponent: () =>
               import('../project/contributors/contributors.component').then((mod) => mod.ContributorsComponent),
-            providers: [
-              provideStates([ContributorsState, ViewOnlyLinkState]),
-              {
-                provide: CONTRIBUTORS_SERVICE,
-                useClass: DraftRegistrationContributorsService,
-              },
-              {
-                provide: VIEW_ONLY_LINKS_SERVICE,
-                useClass: RegistrationViewOnlyLinksService,
-              },
-            ],
+            data: { resourceType: ResourceType.Registration },
+            providers: [provideStates([ContributorsState])],
           },
           {
             path: 'analytics',
             loadComponent: () =>
               import('../project/analytics/analytics.component').then((mod) => mod.AnalyticsComponent),
-            providers: [
-              provideStates([AnalyticsState]),
-              {
-                provide: ANALYTICS_SERVICE,
-                useClass: RegistrationAnalyticsService,
-              },
-            ],
+            data: { resourceType: ResourceType.Registration },
+            providers: [provideStates([AnalyticsState])],
           },
         ],
       },

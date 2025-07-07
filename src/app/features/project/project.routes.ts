@@ -2,11 +2,9 @@ import { provideStates } from '@ngxs/store';
 
 import { Routes } from '@angular/router';
 
-import { ProjectContributorsService, ProjectViewOnlyLinksService } from '@osf/shared/services';
+import { ResourceType } from '@osf/shared/enums';
 import { ContributorsState, ViewOnlyLinkState } from '@osf/shared/stores';
-import { ANALYTICS_SERVICE, CONTRIBUTORS_SERVICE, VIEW_ONLY_LINKS_SERVICE } from '@osf/shared/tokens';
 
-import { ProjectAnalyticsService } from './analytics/services';
 import { AnalyticsState } from './analytics/store';
 import { ProjectFilesState } from './files/store';
 import { SettingsState } from './settings/store';
@@ -30,6 +28,7 @@ export const projectRoutes: Routes = [
         path: 'metadata',
         loadChildren: () =>
           import('../project/metadata/project-metadata.routes').then((mod) => mod.projectMetadataRoutes),
+        providers: [provideStates([ContributorsState])],
       },
       {
         path: 'files',
@@ -50,28 +49,14 @@ export const projectRoutes: Routes = [
         path: 'contributors',
         loadComponent: () =>
           import('../project/contributors/contributors.component').then((mod) => mod.ContributorsComponent),
-        providers: [
-          provideStates([ContributorsState, ViewOnlyLinkState]),
-          {
-            provide: CONTRIBUTORS_SERVICE,
-            useClass: ProjectContributorsService,
-          },
-          {
-            provide: VIEW_ONLY_LINKS_SERVICE,
-            useClass: ProjectViewOnlyLinksService,
-          },
-        ],
+        data: { resourceType: ResourceType.Project },
+        providers: [provideStates([ContributorsState, ViewOnlyLinkState])],
       },
       {
         path: 'analytics',
         loadComponent: () => import('../project/analytics/analytics.component').then((mod) => mod.AnalyticsComponent),
-        providers: [
-          provideStates([AnalyticsState]),
-          {
-            provide: ANALYTICS_SERVICE,
-            useClass: ProjectAnalyticsService,
-          },
-        ],
+        data: { resourceType: ResourceType.Project },
+        providers: [provideStates([AnalyticsState])],
       },
       {
         path: 'wiki',

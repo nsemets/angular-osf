@@ -6,7 +6,7 @@ import { catchError, tap } from 'rxjs/operators';
 
 import { inject, Injectable } from '@angular/core';
 
-import { VIEW_ONLY_LINKS_SERVICE } from '@osf/shared/tokens';
+import { ViewOnlyLinksService } from '@osf/shared/services';
 import { NodeData, PaginatedViewOnlyLinksModel } from '@shared/models';
 
 import {
@@ -34,7 +34,7 @@ import { ViewOnlyLinkStateModel } from './view-only-link.model';
 })
 @Injectable()
 export class ViewOnlyLinkState {
-  private readonly viewOnlyLinksService = inject(VIEW_ONLY_LINKS_SERVICE);
+  private readonly viewOnlyLinksService = inject(ViewOnlyLinksService);
 
   @Action(GetResourceDetails)
   getResourceDetails(ctx: StateContext<ViewOnlyLinkStateModel>, action: GetResourceDetails) {
@@ -44,7 +44,11 @@ export class ViewOnlyLinkState {
       resourceDetails: { ...state.resourceDetails, isLoading: true, error: null },
     });
 
-    return this.viewOnlyLinksService.getResourceById(action.projectId).pipe(
+    if (!action.resourceType) {
+      return;
+    }
+
+    return this.viewOnlyLinksService.getResourceById(action.resourceId, action.resourceType).pipe(
       map((response) => response?.data as NodeData),
       tap((details) => {
         const updatedDetails = {
@@ -72,7 +76,11 @@ export class ViewOnlyLinkState {
       viewOnlyLinks: { ...state.viewOnlyLinks, isLoading: true, error: null },
     });
 
-    return this.viewOnlyLinksService.getViewOnlyLinksData(action.projectId).pipe(
+    if (!action.resourceType) {
+      return;
+    }
+
+    return this.viewOnlyLinksService.getViewOnlyLinksData(action.resourceId, action.resourceType).pipe(
       map((response) => response),
       tap((links) => {
         ctx.patchState({
@@ -95,7 +103,11 @@ export class ViewOnlyLinkState {
       viewOnlyLinks: { ...state.viewOnlyLinks, isLoading: true, error: null },
     });
 
-    return this.viewOnlyLinksService.createViewOnlyLink(action.projectId, action.payload).pipe(
+    if (!action.resourceType) {
+      return;
+    }
+
+    return this.viewOnlyLinksService.createViewOnlyLink(action.resourceId, action.resourceType, action.payload).pipe(
       tap((data: PaginatedViewOnlyLinksModel) => {
         ctx.patchState({
           viewOnlyLinks: {
@@ -120,7 +132,11 @@ export class ViewOnlyLinkState {
       viewOnlyLinks: { ...state.viewOnlyLinks, isLoading: true, error: null },
     });
 
-    return this.viewOnlyLinksService.deleteLink(action.projectId, action.linkId).pipe(
+    if (!action.resourceType) {
+      return;
+    }
+
+    return this.viewOnlyLinksService.deleteLink(action.resourceId, action.resourceType, action.linkId).pipe(
       tap(() => {
         ctx.setState(
           patch({

@@ -1,2 +1,1 @@
-export { ProjectAnalyticsService } from './project-analytics.service';
-export { RegistrationAnalyticsService } from './registration-analytics.service';
+export { AnalyticsService } from './analytics.service';

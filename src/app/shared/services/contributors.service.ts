@@ -4,27 +4,38 @@ import { inject, Injectable } from '@angular/core';
 
 import { JsonApiResponse, JsonApiResponseWithPaging, UserGetResponse } from '@osf/core/models';
 import { JsonApiService } from '@osf/core/services';
-import {
-  ContributorAddModel,
-  ContributorModel,
-  ContributorResponse,
-  IContributorsService,
-  PaginatedData,
-} from '@osf/shared/models';
-
-import { AddContributorType } from '../enums';
-import { ContributorsMapper } from '../mappers/contributors';
+import { AddContributorType, ResourceType } from '@osf/shared/enums';
+import { ContributorsMapper } from '@osf/shared/mappers/contributors';
+import { ContributorAddModel, ContributorModel, ContributorResponse, PaginatedData } from '@osf/shared/models';
 
 import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ProjectContributorsService implements IContributorsService {
+export class ContributorsService {
   private readonly jsonApiService = inject(JsonApiService);
 
-  getAllContributors(projectId: string): Observable<ContributorModel[]> {
-    const baseUrl = `${environment.apiUrl}/nodes/${projectId}/contributors`;
+  private readonly urlMap = new Map<ResourceType, string>([
+    [ResourceType.Project, 'nodes'],
+    [ResourceType.Registration, 'registrations'],
+    [ResourceType.Preprint, 'preprints'],
+    [ResourceType.DraftRegistration, 'draft_registrations'],
+  ]);
+
+  private getBaseUrl(resourceType: ResourceType, resourceId: string): string {
+    const baseUrl = `${environment.apiUrl}`;
+    const resourcePath = this.urlMap.get(resourceType);
+
+    if (!resourcePath) {
+      throw new Error(`Unsupported resource type: ${resourceType}`);
+    }
+
+    return `${baseUrl}/${resourcePath}/${resourceId}/contributors`;
+  }
+
+  getAllContributors(resourceType: ResourceType, resourceId: string): Observable<ContributorModel[]> {
+    const baseUrl = this.getBaseUrl(resourceType, resourceId);
 
     return this.jsonApiService
       .get<JsonApiResponse<ContributorResponse[], null>>(baseUrl)
@@ -39,8 +50,12 @@ export class ProjectContributorsService implements IContributorsService {
       .pipe(map((response) => ContributorsMapper.fromUsersWithPaginationGetResponse(response)));
   }
 
-  addContributor(projectId: string, data: ContributorAddModel): Observable<ContributorModel> {
-    const baseUrl = `${environment.apiUrl}/nodes/${projectId}/contributors/`;
+  addContributor(
+    resourceType: ResourceType,
+    resourceId: string,
+    data: ContributorAddModel
+  ): Observable<ContributorModel> {
+    const baseUrl = `${this.getBaseUrl(resourceType, resourceId)}/`;
     const type = data.id ? AddContributorType.Registered : AddContributorType.Unregistered;
 
     const contributorData = { data: ContributorsMapper.toContributorAddRequest(data, type) };
@@ -50,8 +65,12 @@ export class ProjectContributorsService implements IContributorsService {
       .pipe(map((contributor) => ContributorsMapper.fromContributorResponse(contributor.data)));
   }
 
-  updateContributor(projectId: string, data: ContributorModel): Observable<ContributorModel> {
-    const baseUrl = `${environment.apiUrl}/nodes/${projectId}/contributors/${data.userId}`;
+  updateContributor(
+    resourceType: ResourceType,
+    resourceId: string,
+    data: ContributorModel
+  ): Observable<ContributorModel> {
+    const baseUrl = `${this.getBaseUrl(resourceType, resourceId)}/${data.userId}`;
 
     const contributorData = { data: ContributorsMapper.toContributorAddRequest(data) };
 
@@ -60,8 +79,8 @@ export class ProjectContributorsService implements IContributorsService {
       .pipe(map((contributor) => ContributorsMapper.fromContributorResponse(contributor)));
   }
 
-  deleteContributor(projectId: string, userId: string): Observable<void> {
-    const baseUrl = `${environment.apiUrl}/nodes/${projectId}/contributors/${userId}`;
+  deleteContributor(resourceType: ResourceType, resourceId: string, userId: string): Observable<void> {
+    const baseUrl = `${this.getBaseUrl(resourceType, resourceId)}/${userId}`;
 
     return this.jsonApiService.delete(baseUrl);
   }
