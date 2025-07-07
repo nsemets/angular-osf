@@ -7,24 +7,25 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { GetBookmarksCollectionId } from '@osf/features/collections/store';
 import { OverviewToolbarComponent } from '@osf/features/project/overview/components';
-import { RegistryRevisionsComponent, RegistryStatusesComponent } from '@osf/features/registry/components';
-import { MapViewSchemaBlock } from '@osf/features/registry/mappers';
-import { RegistrationQuestions } from '@osf/features/registry/models';
-import {
-  GetRegistryById,
-  GetRegistryInstitutions,
-  GetRegistrySubjects,
-  RegistryOverviewSelectors,
-} from '@osf/features/registry/store/registry-overview';
 import {
   DataResourcesComponent,
   LoadingSpinnerComponent,
   ResourceMetadataComponent,
   SubHeaderComponent,
-} from '@shared/components';
-import { ResourceType } from '@shared/enums';
-import { MapRegistryOverview } from '@shared/mappers';
-import { ToolbarResource } from '@shared/models';
+} from '@osf/shared/components';
+import { ResourceType } from '@osf/shared/enums';
+import { MapRegistryOverview } from '@osf/shared/mappers';
+import { ToolbarResource } from '@osf/shared/models';
+
+import { RegistryRevisionsComponent, RegistryStatusesComponent } from '../../components';
+import { MapViewSchemaBlock } from '../../mappers';
+import { RegistrationQuestions } from '../../models';
+import {
+  GetRegistryById,
+  GetRegistryInstitutions,
+  GetRegistrySubjects,
+  RegistryOverviewSelectors,
+} from '../../store/registry-overview';
 
 @Component({
   selector: 'osf-registry-overview',
@@ -107,7 +108,7 @@ export class RegistryOverviewComponent {
 
   constructor() {
     this.route.parent?.params.subscribe((params) => {
-      const id = params['registrationId'];
+      const id = params['id'];
       if (id) {
         this.actions.getRegistryById(id);
         this.actions.getSubjects(id);

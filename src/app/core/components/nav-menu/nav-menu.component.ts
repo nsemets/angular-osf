@@ -38,8 +38,8 @@ export class NavMenuComponent {
     }
   );
 
-  protected readonly currentProjectId = computed(() => this.currentRoute().projectId);
-  protected readonly isProjectRoute = computed(() => !!this.currentProjectId());
+  protected readonly currentResourceId = computed(() => this.currentRoute().resourceId);
+  protected readonly isProjectRoute = computed(() => !!this.currentResourceId());
   protected readonly isCollectionsRoute = computed(() => this.currentRoute().isCollectionsWithId);
   protected readonly isRegistryRoute = computed(() => this.currentRoute().isRegistryRoute);
 
@@ -71,15 +71,14 @@ export class NavMenuComponent {
     const url = this.router.url;
     const urlSegments = url.split('/').filter((segment) => segment);
 
-    const projectId = this.route.firstChild?.snapshot.params['id'] || null;
+    const resourceId = this.route.firstChild?.snapshot.params['id'] || null;
     const section = this.route.firstChild?.firstChild?.snapshot.url[0]?.path || 'overview';
 
     const isCollectionsWithId = urlSegments[0] === 'collections' && urlSegments[1] && urlSegments[1] !== '';
-    const isRegistryRoute =
-      urlSegments[0] === 'registries' && urlSegments[1] === 'my-registrations' && !!urlSegments[2];
+    const isRegistryRoute = urlSegments[0] === 'registries' && !!urlSegments[2];
 
     return {
-      projectId,
+      resourceId,
       section,
       isCollectionsWithId,
       isRegistryRoute,

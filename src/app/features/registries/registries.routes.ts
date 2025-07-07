@@ -4,12 +4,10 @@ import { Routes } from '@angular/router';
 
 import { RegistriesComponent } from '@osf/features/registries/registries.component';
 import { RegistriesState } from '@osf/features/registries/store';
-import { ResourceType } from '@osf/shared/enums';
 import { ContributorsState, SubjectsState } from '@osf/shared/stores';
 import { SUBJECTS_SERVICE } from '@osf/shared/tokens';
 
 import { ModerationState } from '../moderation/store';
-import { AnalyticsState } from '../project/analytics/store';
 
 import { LicensesHandlers, ProjectsHandlers, ProvidersHandlers, SubjectsHandlers } from './store/handlers';
 import { LicensesService, RegistrationSubjectsService } from './services';
@@ -73,25 +71,6 @@ export const registriesRoutes: Routes = [
             path: ':id/:step',
             loadComponent: () =>
               import('./components/custom-step/custom-step.component').then((mod) => mod.CustomStepComponent),
-          },
-        ],
-      },
-      {
-        path: ':id',
-        children: [
-          {
-            path: 'contributors',
-            loadComponent: () =>
-              import('../project/contributors/contributors.component').then((mod) => mod.ContributorsComponent),
-            data: { resourceType: ResourceType.Registration },
-            providers: [provideStates([ContributorsState])],
-          },
-          {
-            path: 'analytics',
-            loadComponent: () =>
-              import('../project/analytics/analytics.component').then((mod) => mod.AnalyticsComponent),
-            data: { resourceType: ResourceType.Registration },
-            providers: [provideStates([AnalyticsState])],
           },
         ],
       },

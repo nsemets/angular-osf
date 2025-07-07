@@ -15,13 +15,6 @@ export const NAV_ITEMS: NavItem[] = [
     icon: 'search',
     useExactMatch: true,
   },
-  // [NS] TODO: Hidden until development
-  // {
-  //   path: '/support',
-  //   label: 'navigation.support',
-  //   icon: 'support',
-  //   useExactMatch: true,
-  // },
   {
     path: '/my-projects',
     label: 'navigation.myProjects',
@@ -83,7 +76,6 @@ export const NAV_ITEMS: NavItem[] = [
     icon: 'institutions',
     useExactMatch: true,
   },
-
   {
     path: '/collections',
     label: 'navigation.collections',
@@ -135,14 +127,6 @@ export const NAV_ITEMS: NavItem[] = [
       },
     ],
   },
-
-  //[NS] TODO: Hidden until development
-  // {
-  //   path: '/donate',
-  //   label: 'navigation.donate',
-  //   icon: 'donate',
-  //   useExactMatch: true,
-  // },
 ];
 
 export const PROJECT_MENU_ITEMS: MenuItem[] = [
@@ -188,6 +172,7 @@ export const REGISTRATION_MENU_ITEMS: MenuItem[] = [
       { label: 'navigation.registration.resources', routerLink: 'resources' },
       { label: 'navigation.registration.wiki', routerLink: 'wiki' },
       { label: 'navigation.registration.components', routerLink: 'components' },
+      { label: 'navigation.registration.contributors', routerLink: 'contributors' },
       { label: 'navigation.registration.links', routerLink: 'links' },
       { label: 'navigation.registration.analytics', routerLink: 'analytics' },
     ],

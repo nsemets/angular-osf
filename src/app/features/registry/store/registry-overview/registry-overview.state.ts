@@ -5,7 +5,8 @@ import { catchError } from 'rxjs/operators';
 
 import { inject, Injectable } from '@angular/core';
 
-import { RegistryOverviewService } from '@osf/features/registry/services';
+import { RegistryOverviewService } from '../../services';
+
 import {
   GetRegistryById,
   GetRegistryInstitutions,
@@ -13,8 +14,7 @@ import {
   GetSchemaBlocks,
   MakePublic,
   WithdrawRegistration,
-} from '@osf/features/registry/store/registry-overview';
-
+} from './registry-overview.actions';
 import { RegistryOverviewStateModel } from './registry-overview.model';
 
 @Injectable()
