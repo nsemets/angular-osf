@@ -38,6 +38,15 @@ export class DeleteDraft {
   constructor(public draftId: string) {}
 }
 
+export class RegisterDraft {
+  static readonly type = '[Registries]  Register Draft Registration';
+  constructor(
+    public draftId: string,
+    public embargoDate: string,
+    public projectId?: string
+  ) {}
+}
+
 export class FetchSchemaBlocks {
   static readonly type = '[Registries] Fetch Schema Blocks';
   constructor(public registrationSchemaId: string) {}

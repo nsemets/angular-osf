@@ -26,6 +26,7 @@ import {
   GetProjects,
   GetProviders,
   GetRegistries,
+  RegisterDraft,
   SaveLicense,
   UpdateDraft,
   UpdateRegistrationSubjects,
@@ -179,6 +180,30 @@ export class RegistriesState {
         ctx.patchState({
           draftRegistration: {
             data: { ...updatedDraft },
+            isLoading: false,
+            isSubmitting: false,
+            error: null,
+          },
+        });
+      }),
+      catchError((error) => handleSectionError(ctx, 'draftRegistration', error))
+    );
+  }
+
+  @Action(RegisterDraft)
+  registerDraft(ctx: StateContext<RegistriesStateModel>, { draftId, embargoDate, projectId }: RegisterDraft) {
+    ctx.patchState({
+      draftRegistration: {
+        ...ctx.getState().draftRegistration,
+        isSubmitting: true,
+      },
+    });
+
+    return this.registriesService.registerDraft(draftId, embargoDate, projectId).pipe(
+      tap((registration) => {
+        ctx.patchState({
+          draftRegistration: {
+            data: { ...registration },
             isLoading: false,
             isSubmitting: false,
             error: null,

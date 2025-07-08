@@ -69,7 +69,9 @@
       "description": "Description",
       "year": "Year",
       "optional": "Optional",
-      "makePublic": "Make Public"
+      "makePublic": "Make Public",
+      "noData": "No data",
+      "noFiles": "No files selected"
     },
     "deleteConfirmation": {
       "header": "Delete",
@@ -1636,7 +1638,8 @@
     },
     "review": {
       "step": "Review",
-      "title": "Review Registration"
+      "title": "Review Registration",
+      "register": "Register"
     }
   },
   "registry": {
@@ -1759,6 +1762,9 @@
       "noSelected": "No subjects selected",
       "searchSubjects": "Search subjects",
       "noSubject": "No subjects found"
+    },
+    "tags": {
+      "title": "Tags"
     }
   },
   "resourceCard": {
