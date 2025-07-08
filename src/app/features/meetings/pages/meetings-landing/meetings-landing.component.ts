@@ -3,7 +3,6 @@ import { createDispatchMap, select } from '@ngxs/store';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { SortEvent } from 'primeng/api';
-import { Card } from 'primeng/card';
 import { Skeleton } from 'primeng/skeleton';
 import { TableModule, TablePageEvent } from 'primeng/table';
 
@@ -34,9 +33,20 @@ import { SortOrder } from '@shared/enums';
 import { QueryParams, TableParameters } from '@shared/models';
 import { SearchFilters } from '@shared/models/filters';
 
+import { MeetingsFeatureCardComponent } from '../../components';
+import { MEETINGS_FEATURE_CARDS, PARTNER_ORGANIZATIONS } from '../../constants';
+
 @Component({
   selector: 'osf-meetings-landing',
-  imports: [SubHeaderComponent, Card, SearchInputComponent, DatePipe, TableModule, TranslatePipe, Skeleton],
+  imports: [
+    SubHeaderComponent,
+    SearchInputComponent,
+    MeetingsFeatureCardComponent,
+    DatePipe,
+    TableModule,
+    TranslatePipe,
+    Skeleton,
+  ],
   templateUrl: './meetings-landing.component.html',
   styleUrl: './meetings-landing.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -60,6 +70,9 @@ export class MeetingsLandingComponent {
     ...TABLE_PARAMS,
     firstRowIndex: 0,
   });
+
+  partnerOrganizations = PARTNER_ORGANIZATIONS;
+  meetingsFeatureCards = MEETINGS_FEATURE_CARDS;
 
   meetings = select(MeetingsSelectors.getAllMeetings);
   totalMeetingsCount = select(MeetingsSelectors.getMeetingsTotalCount);
