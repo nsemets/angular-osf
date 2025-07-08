@@ -1,6 +1,5 @@
+import { ContributorPermission } from '@osf/shared/enums';
 import { SelectOption } from '@osf/shared/models';
-
-import { ContributorPermission } from '../enums';
 
 export const PERMISSION_OPTIONS: SelectOption[] = [
   {

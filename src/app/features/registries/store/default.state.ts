@@ -17,11 +17,6 @@ export const DefaultState: RegistriesStateModel = {
     isSubmitting: false,
     error: null,
   },
-  contributorsList: {
-    data: [],
-    isLoading: false,
-    error: null,
-  },
   registries: {
     data: [],
     isLoading: false,

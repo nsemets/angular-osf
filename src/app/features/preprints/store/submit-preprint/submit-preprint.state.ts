@@ -1,5 +1,5 @@
 import { Action, State, StateContext } from '@ngxs/store';
-import { insertItem, patch, removeItem, updateItem } from '@ngxs/store/operators';
+import { patch } from '@ngxs/store/operators';
 
 import { EMPTY, filter, switchMap, tap, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -9,21 +9,13 @@ import { inject, Injectable } from '@angular/core';
 
 import { PreprintFileSource } from '@osf/features/preprints/enums';
 import { Preprint } from '@osf/features/preprints/models';
-import {
-  PreprintContributorsService,
-  PreprintFilesService,
-  PreprintLicensesService,
-  PreprintsService,
-} from '@osf/features/preprints/services';
+import { PreprintFilesService, PreprintLicensesService, PreprintsService } from '@osf/features/preprints/services';
 import { OsfFile } from '@shared/models';
 import { FilesService } from '@shared/services';
 
 import {
-  AddContributor,
   CopyFileFromProject,
   CreatePreprint,
-  DeleteContributor,
-  FetchContributors,
   FetchLicenses,
   GetAvailableProjects,
   GetPreprintFiles,
@@ -36,7 +28,6 @@ import {
   SetSelectedPreprintFileSource,
   SetSelectedPreprintProviderId,
   SubmitPreprintStateModel,
-  UpdateContributor,
   UpdatePreprint,
   UploadFile,
 } from './';
@@ -72,11 +63,6 @@ import {
       isLoading: false,
       error: null,
     },
-    contributors: {
-      data: [],
-      isLoading: false,
-      error: null,
-    },
     licenses: {
       data: [],
       isLoading: false,
@@ -89,7 +75,6 @@ export class SubmitPreprintState {
   private preprintsService = inject(PreprintsService);
   private preprintFilesService = inject(PreprintFilesService);
   private fileService = inject(FilesService);
-  private contributorsService = inject(PreprintContributorsService);
   private licensesService = inject(PreprintLicensesService);
 
   @Action(SetSelectedPreprintProviderId)
@@ -310,11 +295,6 @@ export class SubmitPreprintState {
         isLoading: false,
         error: null,
       },
-      contributors: {
-        data: [],
-        isLoading: false,
-        error: null,
-      },
       licenses: {
         data: [],
         isLoading: false,
@@ -368,88 +348,6 @@ export class SubmitPreprintState {
         }),
         catchError((error) => this.handleError(ctx, 'preprintFiles', error))
       );
-  }
-
-  @Action(FetchContributors)
-  fetchContributors(ctx: StateContext<SubmitPreprintStateModel>) {
-    const createdPreprint = ctx.getState().createdPreprint.data;
-    if (!createdPreprint) {
-      return;
-    }
-
-    ctx.setState(patch({ contributors: patch({ isLoading: true }) }));
-
-    return this.contributorsService.getContributors(createdPreprint.id).pipe(
-      tap((contributors) => {
-        ctx.setState(patch({ contributors: patch({ isLoading: false, data: contributors }) }));
-      }),
-      catchError((error) => this.handleError(ctx, 'contributors', error))
-    );
-  }
-
-  @Action(AddContributor)
-  addContributor(ctx: StateContext<SubmitPreprintStateModel>, action: AddContributor) {
-    const createdPreprint = ctx.getState().createdPreprint.data;
-    if (!createdPreprint) {
-      return;
-    }
-
-    ctx.setState(patch({ contributors: patch({ isLoading: true }) }));
-
-    return this.contributorsService.addContributor(createdPreprint.id, action.contributor).pipe(
-      tap((contributor) => {
-        ctx.setState(patch({ contributors: patch({ isLoading: false, data: insertItem(contributor) }) }));
-      }),
-      catchError((error) => this.handleError(ctx, 'contributors', error))
-    );
-  }
-
-  @Action(UpdateContributor)
-  updateContributor(ctx: StateContext<SubmitPreprintStateModel>, action: UpdateContributor) {
-    const createdPreprint = ctx.getState().createdPreprint.data;
-    if (!createdPreprint) {
-      return;
-    }
-
-    ctx.setState(patch({ contributors: patch({ isLoading: true }) }));
-
-    return this.contributorsService.updateContributor(createdPreprint.id, action.contributor).pipe(
-      tap((contributor) => {
-        ctx.setState(
-          patch({
-            contributors: patch({
-              isLoading: false,
-              data: updateItem((item) => item.id === action.contributor.id, contributor),
-            }),
-          })
-        );
-      }),
-      catchError((error) => this.handleError(ctx, 'contributors', error))
-    );
-  }
-
-  @Action(DeleteContributor)
-  deleteContributor(ctx: StateContext<SubmitPreprintStateModel>, action: DeleteContributor) {
-    const createdPreprint = ctx.getState().createdPreprint.data;
-    if (!createdPreprint) {
-      return;
-    }
-
-    ctx.setState(patch({ contributors: patch({ isLoading: true }) }));
-
-    return this.contributorsService.deleteContributor(createdPreprint.id, action.userId).pipe(
-      tap(() => {
-        ctx.setState(
-          patch({
-            contributors: patch({
-              isLoading: false,
-              data: removeItem((item) => action.userId === item.userId),
-            }),
-          })
-        );
-      }),
-      catchError((error) => this.handleError(ctx, 'contributors', error))
-    );
   }
 
   @Action(FetchLicenses)

@@ -1,4 +1,4 @@
-import { AddContributorType } from '../enums';
+import { AddContributorType } from '@osf/shared/enums';
 
 import { ContributorAddModel } from './contributor-add.model';
 
