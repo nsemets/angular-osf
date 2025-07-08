@@ -1,3 +1,5 @@
+import { select } from '@ngxs/store';
+
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { TreeNode } from 'primeng/api';
@@ -15,6 +17,7 @@ import { FormControl } from '@angular/forms';
 
 import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants';
 import { Subject } from '@osf/shared/models';
+import { SubjectsSelectors } from '@shared/stores';
 
 import { SearchInputComponent } from '../search-input/search-input.component';
 
@@ -26,17 +29,18 @@ import { SearchInputComponent } from '../search-input/search-input.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubjectsComponent {
+  subjects = select(SubjectsSelectors.getSubjects);
+  subjectsLoading = select(SubjectsSelectors.getSubjectsLoading);
+  searchedSubjects = select(SubjectsSelectors.getSearchedSubjects);
+  areSubjectsUpdating = input<boolean>(false);
+  isSearching = select(SubjectsSelectors.getSearchedSubjectsLoading);
   control = input<FormControl<Subject[]>>();
-  list = input<Subject[]>([]);
-  searchedSubjects = input<Subject[]>([]);
-  loading = input<boolean>(false);
-  isSearching = input<boolean>(false);
   selected = input<Subject[]>([]);
   searchChanged = output<string>();
   loadChildren = output<string>();
   updateSelection = output<Subject[]>();
 
-  subjectsTree = computed(() => this.list().map((subject: Subject) => this.mapSubjectToTreeNode(subject)));
+  subjectsTree = computed(() => this.subjects().map((subject: Subject) => this.mapSubjectToTreeNode(subject)));
   selectedTree = computed(() => this.selected().map((subject: Subject) => this.mapSubjectToTreeNode(subject)));
   searchedList = computed(() => this.searchedSubjects().map((subject: Subject) => this.mapParentsSubject(subject)));
   expanded: Record<string, boolean> = {};
