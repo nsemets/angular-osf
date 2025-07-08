@@ -68,6 +68,9 @@ export class DeveloperAppsState {
 
   @Action(CreateDeveloperApp)
   createDeveloperApp(ctx: StateContext<DeveloperAppsStateModel>, action: CreateDeveloperApp) {
+    const state = ctx.getState();
+    ctx.patchState({ ...state.data, isLoading: true, error: null });
+
     return this.developerAppsService.createApplication(action.developerAppCreate).pipe(
       tap((newApp) => {
         ctx.setState(
@@ -84,6 +87,9 @@ export class DeveloperAppsState {
 
   @Action(UpdateDeveloperApp)
   updateDeveloperApp(ctx: StateContext<DeveloperAppsStateModel>, action: UpdateDeveloperApp) {
+    const state = ctx.getState();
+    ctx.patchState({ ...state.data, isLoading: true, error: null });
+
     return this.developerAppsService.updateApp(action.clientId, action.developerAppUpdate).pipe(
       tap((updatedApp) => {
         ctx.setState(
@@ -116,6 +122,9 @@ export class DeveloperAppsState {
 
   @Action(DeleteDeveloperApp)
   deleteDeveloperApp(ctx: StateContext<DeveloperAppsStateModel>, action: DeleteDeveloperApp) {
+    const state = ctx.getState();
+    ctx.patchState({ ...state.data, isLoading: true, error: null });
+
     return this.developerAppsService.deleteApplication(action.clientId).pipe(
       tap(() => {
         ctx.setState(

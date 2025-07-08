@@ -53,7 +53,8 @@
       <p-button
         [label]="'settings.developerApps.form.buttons.create' | translate"
         type="submit"
-        [disabled]="!appForm.valid"
+        [disabled]="!appForm.valid || isLoading()"
+        [loading]="isLoading()"
       />
     }
   </div>

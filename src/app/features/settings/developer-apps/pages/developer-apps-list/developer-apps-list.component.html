@@ -10,25 +10,25 @@
           <p-skeleton class="w-full" height="3rem"> </p-skeleton>
         </p-card>
       }
-    }
+    } @else {
+      @for (developerApp of developerApplications(); track $index) {
+        <p-card>
+          <section class="flex flex-column gap-3 md:flex-row md:align-items-center md:justify-content-between">
+            <a [routerLink]="[developerApp.clientId, 'details']" class="app-link">
+              <h2>{{ developerApp.name }}</h2>
+            </a>
 
-    @for (developerApp of developerApplications(); track $index) {
-      <p-card>
-        <section class="flex flex-column gap-3 md:flex-row md:align-items-center md:justify-content-between">
-          <a [routerLink]="[developerApp.clientId, 'details']" class="app-link">
-            <h2>{{ developerApp.name }}</h2>
-          </a>
-
-          <div class="align-self-end w-6 md:w-auto">
-            <p-button
-              class="btn-full-width"
-              [label]="'settings.developerApps.list.deleteButton' | translate"
-              severity="danger"
-              (onClick)="deleteApp(developerApp)"
-            />
-          </div>
-        </section>
-      </p-card>
+            <div class="align-self-end w-6 md:w-auto">
+              <p-button
+                class="btn-full-width"
+                [label]="'settings.developerApps.list.deleteButton' | translate"
+                severity="danger"
+                (onClick)="deleteApp(developerApp)"
+              />
+            </div>
+          </section>
+        </p-card>
+      }
     }
   </section>
 </section>

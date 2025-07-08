@@ -1,20 +1,21 @@
-import { createDispatchMap } from '@ngxs/store';
+import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
-import { ChangeDetectionStrategy, Component, inject, input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { TextInputComponent } from '@osf/shared/components';
 import { InputLimits } from '@osf/shared/constants';
+import { ToastService } from '@osf/shared/services';
 import { CustomValidators } from '@osf/shared/utils';
 
 import { DeveloperApp, DeveloperAppCreateUpdate, DeveloperAppForm, DeveloperAppFormFormControls } from '../../models';
-import { CreateDeveloperApp, UpdateDeveloperApp } from '../../store';
+import { CreateDeveloperApp, DeveloperAppsSelectors, UpdateDeveloperApp } from '../../store';
 
 @Component({
   selector: 'osf-developer-app-add-edit-form',
@@ -28,14 +29,16 @@ export class DeveloperAppAddEditFormComponent implements OnInit {
   readonly initialValues = input<DeveloperApp | null>(null);
 
   private readonly router = inject(Router);
+  private readonly toastService = inject(ToastService);
   private readonly actions = createDispatchMap({
     createDeveloperApp: CreateDeveloperApp,
     updateDeveloperApp: UpdateDeveloperApp,
   });
 
-  inputLimits = InputLimits;
-
+  protected readonly inputLimits = InputLimits;
   protected readonly dialogRef = inject(DynamicDialogRef);
+  protected readonly isLoading = select(DeveloperAppsSelectors.isLoading);
+
   protected readonly DeveloperAppFormFormControls = DeveloperAppFormFormControls;
   protected readonly appForm: DeveloperAppForm = new FormGroup({
     [DeveloperAppFormFormControls.AppName]: new FormControl('', {
@@ -64,6 +67,12 @@ export class DeveloperAppAddEditFormComponent implements OnInit {
     }),
   });
 
+  constructor() {
+    effect(() => {
+      return this.isLoading() ? this.appForm.disable() : this.appForm.enable();
+    });
+  }
+
   ngOnInit(): void {
     if (this.initialValues()) {
       this.appForm.patchValue({
@@ -84,6 +93,7 @@ export class DeveloperAppAddEditFormComponent implements OnInit {
 
     if (!this.isEditMode()) {
       this.actions.createDeveloperApp({ ...this.appForm.value } as DeveloperAppCreateUpdate).subscribe({
+        next: () => this.toastService.showSuccess('settings.developerApps.form.createSuccess'),
         complete: () => this.dialogRef.close(),
       });
     } else {
@@ -92,7 +102,10 @@ export class DeveloperAppAddEditFormComponent implements OnInit {
           ...this.appForm.value,
           id: this.initialValues()!.id,
         } as DeveloperAppCreateUpdate)
-        .subscribe({ complete: () => this.router.navigate(['settings/developer-apps']) });
+        .subscribe({
+          next: () => this.toastService.showSuccess('settings.developerApps.form.createSuccess'),
+          complete: () => this.router.navigate(['settings/developer-apps']),
+        });
     }
   }
 }
