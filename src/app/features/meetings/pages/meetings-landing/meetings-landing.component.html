@@ -4,7 +4,7 @@
   [description]="'meetings.landing.description' | translate"
 />
 
-<section class="flex-1 flex flex-column bg-white p-4">
+<section class="flex-1 flex flex-column bg-white px-3 md:px-5 xl:px-4">
   <section class="mt-2">
     <p>{{ 'meetings.landing.submissionsNote' | translate }}</p>
   </section>
@@ -73,6 +73,11 @@
         </tr>
       }
     </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="4" class="text-center">{{ 'common.search.noResultsFound' | translate }}</td>
+      </tr>
+    </ng-template>
   </p-table>
 
   <section class="flex flex-column gap-3 w-full mt-6 lg:flex-row">
@@ -93,7 +98,7 @@
 
     <section class="flex flex-row justify-content-center align-items-start gap-7 flex-wrap">
       @for (org of partnerOrganizations; track $index) {
-        <a [href]="org.url">
+        <a class="custom-light-hover" [href]="org.url">
           <img [src]="org.imageSrc" [alt]="org.alt" [height]="org.height" />
         </a>
       }
