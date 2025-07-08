@@ -1,4 +1,6 @@
 <osf-subjects
+  [control]="control()"
+  (focusout)="onFocusOut()"
   [loading]="subjectsLoading() || isSubjectsUpdating()"
   [isSearching]="isSearching()"
   [list]="subjects()"
