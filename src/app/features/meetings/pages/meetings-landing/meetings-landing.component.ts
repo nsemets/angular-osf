@@ -26,7 +26,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { parseQueryFilterParams } from '@core/helpers';
 import { Meeting } from '@osf/features/meetings/models';
 import { GetAllMeetings, MeetingsSelectors } from '@osf/features/meetings/store';
-import { IS_XSMALL } from '@osf/shared/utils';
 import { SearchInputComponent, SubHeaderComponent } from '@shared/components';
 import { TABLE_PARAMS } from '@shared/constants';
 import { SortOrder } from '@shared/enums';
@@ -53,7 +52,6 @@ import { MEETINGS_FEATURE_CARDS, PARTNER_ORGANIZATIONS } from '../../constants';
 })
 export class MeetingsLandingComponent {
   @HostBinding('class') classes = 'flex-1 flex flex-column w-full h-full';
-  readonly isXSmall = toSignal(inject(IS_XSMALL));
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
