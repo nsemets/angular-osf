@@ -1,6 +1,6 @@
-import { JsonApiResponse } from '@osf/core/models';
+import { JsonApiResponse } from '@core/models';
 
-export interface InstitutionSearchResultCount {
+export interface InstitutionSearchResultCountJsonApi {
   attributes: {
     cardSearchResultCount: number;
   };
@@ -16,7 +16,7 @@ export interface InstitutionSearchResultCount {
   };
 }
 
-export interface InstitutionIndexCardFilter {
+export interface InstitutionIndexCardFilterJsonApi {
   attributes: {
     resourceIdentifier: string[];
     resourceMetadata: {
@@ -29,17 +29,12 @@ export interface InstitutionIndexCardFilter {
   type: string;
 }
 
-export type InstitutionIndexValueSearchIncludedJsonApi = InstitutionSearchResultCount | InstitutionIndexCardFilter;
+export type InstitutionIndexValueSearchIncludedJsonApi =
+  | InstitutionSearchResultCountJsonApi
+  | InstitutionIndexCardFilterJsonApi;
 
 export interface InstitutionIndexValueSearchJsonApi
   extends JsonApiResponse<null, InstitutionIndexValueSearchIncludedJsonApi[]> {
   data: null;
   included: InstitutionIndexValueSearchIncludedJsonApi[];
-}
-
-export interface InstitutionSearchFilter {
-  id: string;
-  label: string;
-  value: string | number;
-  count?: number;
 }

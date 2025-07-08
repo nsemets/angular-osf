@@ -1,9 +1,9 @@
 import {
-  InstitutionIndexCardFilter,
+  InstitutionIndexCardFilterJsonApi,
   InstitutionIndexValueSearchIncludedJsonApi,
   InstitutionSearchFilter,
-  InstitutionSearchResultCount,
-} from '@osf/features/institutions/models';
+  InstitutionSearchResultCountJsonApi,
+} from '@osf/features/admin-institutions/models';
 
 export function mapIndexCardResults(included: InstitutionIndexValueSearchIncludedJsonApi[]): InstitutionSearchFilter[] {
   const indexCardMap = included.reduce(
@@ -12,8 +12,8 @@ export function mapIndexCardResults(included: InstitutionIndexValueSearchInclude
         acc[item.id] = {
           id: item.id,
           label:
-            (item as InstitutionIndexCardFilter)?.attributes?.resourceMetadata?.displayLabel?.[0]?.['@value'] ||
-            (item as InstitutionIndexCardFilter)?.attributes?.resourceMetadata?.name?.[0]?.['@value'] ||
+            (item as InstitutionIndexCardFilterJsonApi)?.attributes?.resourceMetadata?.displayLabel?.[0]?.['@value'] ||
+            (item as InstitutionIndexCardFilterJsonApi)?.attributes?.resourceMetadata?.name?.[0]?.['@value'] ||
             item.id,
         };
       }
@@ -24,8 +24,8 @@ export function mapIndexCardResults(included: InstitutionIndexValueSearchInclude
 
   return included.reduce((result, item) => {
     if (item.type === 'search-result') {
-      const indexCardId = (item as InstitutionSearchResultCount).relationships?.indexCard?.data?.id;
-      const count = (item as InstitutionSearchResultCount).attributes?.cardSearchResultCount ?? 0;
+      const indexCardId = (item as InstitutionSearchResultCountJsonApi).relationships?.indexCard?.data?.id;
+      const count = (item as InstitutionSearchResultCountJsonApi).attributes?.cardSearchResultCount ?? 0;
       const indexCard = indexCardMap[indexCardId];
       if (indexCard) {
         result.push({

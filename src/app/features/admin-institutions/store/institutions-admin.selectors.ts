@@ -1,13 +1,13 @@
 import { Selector } from '@ngxs/store';
 
-import { InstitutionDepartmentsJsonApi, InstitutionSearchFilter, InstitutionSummaryMetrics } from '../models';
+import { InstitutionDepartment, InstitutionSearchFilter, InstitutionSummaryMetrics } from '../models';
 
 import { InstitutionsAdminModel } from './institutions-admin.model';
 import { InstitutionsAdminState } from './institutions-admin.state';
 
 export class InstitutionsAdminSelectors {
   @Selector([InstitutionsAdminState])
-  static getDepartments(state: InstitutionsAdminModel): InstitutionDepartmentsJsonApi {
+  static getDepartments(state: InstitutionsAdminModel): InstitutionDepartment[] {
     return state.departments.data;
   }
 

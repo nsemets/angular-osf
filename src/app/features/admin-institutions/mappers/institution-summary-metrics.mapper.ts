@@ -1,7 +1,10 @@
-import { InstitutionSummaryMetrics, InstitutionSummaryMetricsAttributes } from '@osf/features/institutions/models';
+import {
+  InstitutionSummaryMetrics,
+  InstitutionSummaryMetricsAttributesJsonApi,
+} from '@osf/features/admin-institutions/models';
 
 export function mapInstitutionSummaryMetrics(
-  attributes: InstitutionSummaryMetricsAttributes
+  attributes: InstitutionSummaryMetricsAttributesJsonApi
 ): InstitutionSummaryMetrics {
   return {
     reportYearmonth: attributes.report_yearmonth,

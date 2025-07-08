@@ -1,4 +1,4 @@
-export interface InstitutionSummaryMetricsAttributes {
+export interface InstitutionSummaryMetricsAttributesJsonApi {
   report_yearmonth: string;
   user_count: number;
   public_project_count: number;
@@ -12,7 +12,7 @@ export interface InstitutionSummaryMetricsAttributes {
   monthly_active_user_count: number;
 }
 
-export interface InstitutionSummaryMetricsRelationships {
+export interface InstitutionSummaryMetricsRelationshipsJsonApi {
   user: {
     data: null;
   };
@@ -30,16 +30,16 @@ export interface InstitutionSummaryMetricsRelationships {
   };
 }
 
-export interface InstitutionSummaryMetricsData {
+export interface InstitutionSummaryMetricsDataJsonApi {
   id: string;
   type: 'institution-summary-metrics';
-  attributes: InstitutionSummaryMetricsAttributes;
-  relationships: InstitutionSummaryMetricsRelationships;
+  attributes: InstitutionSummaryMetricsAttributesJsonApi;
+  relationships: InstitutionSummaryMetricsRelationshipsJsonApi;
   links: Record<string, unknown>;
 }
 
 export interface InstitutionSummaryMetricsJsonApi {
-  data: InstitutionSummaryMetricsData;
+  data: InstitutionSummaryMetricsDataJsonApi;
   meta: {
     version: string;
   };

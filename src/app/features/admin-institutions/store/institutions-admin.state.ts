@@ -4,12 +4,7 @@ import { catchError, tap, throwError } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import {
-  InstitutionDepartmentsJsonApi,
-  InstitutionSearchFilter,
-  InstitutionSummaryMetrics,
-  InstitutionSummaryMetricsJsonApi,
-} from '../models';
+import { InstitutionSummaryMetrics } from '../models';
 import { InstitutionsAdminService } from '../services/institutions-admin.service';
 
 import {
@@ -21,61 +16,14 @@ import {
 } from './institutions-admin.actions';
 import { InstitutionsAdminModel } from './institutions-admin.model';
 
-const createEmptyDepartments = (): InstitutionDepartmentsJsonApi => ({
-  data: [],
-});
-
-const createEmptySummaryMetrics = (): InstitutionSummaryMetricsJsonApi => ({
-  data: {
-    id: '',
-    type: 'institution-summary-metrics',
-    attributes: {
-      report_yearmonth: '',
-      user_count: 0,
-      public_project_count: 0,
-      private_project_count: 0,
-      public_registration_count: 0,
-      embargoed_registration_count: 0,
-      published_preprint_count: 0,
-      public_file_count: 0,
-      storage_byte_count: 0,
-      monthly_logged_in_user_count: 0,
-      monthly_active_user_count: 0,
-    },
-    relationships: {
-      user: {
-        data: null,
-      },
-      institution: {
-        links: {
-          related: {
-            href: '',
-            meta: {},
-          },
-        },
-        data: {
-          id: '',
-          type: 'institutions',
-        },
-      },
-    },
-    links: {},
-  },
-  meta: {
-    version: '',
-  },
-});
-
-const createEmptySearchFilters = (): InstitutionSearchFilter[] => [];
-
 @State<InstitutionsAdminModel>({
   name: 'institutionsAdmin',
   defaults: {
-    departments: { data: createEmptyDepartments(), isLoading: false, error: null },
+    departments: { data: [], isLoading: false, error: null },
     summaryMetrics: { data: {} as InstitutionSummaryMetrics, isLoading: false, error: null },
-    hasOsfAddonSearch: { data: createEmptySearchFilters(), isLoading: false, error: null },
-    storageRegionSearch: { data: createEmptySearchFilters(), isLoading: false, error: null },
-    searchResults: { data: createEmptySearchFilters(), isLoading: false, error: null },
+    hasOsfAddonSearch: { data: [], isLoading: false, error: null },
+    storageRegionSearch: { data: [], isLoading: false, error: null },
+    searchResults: { data: [], isLoading: false, error: null },
     selectedInstitutionId: null,
     currentSearchPropertyPath: null,
   },

@@ -1,9 +1,9 @@
 import { AsyncStateModel } from '@shared/models';
 
-import { InstitutionDepartmentsJsonApi, InstitutionSearchFilter, InstitutionSummaryMetrics } from '../models';
+import { InstitutionDepartment, InstitutionSearchFilter, InstitutionSummaryMetrics } from '../models';
 
 export interface InstitutionsAdminModel {
-  departments: AsyncStateModel<InstitutionDepartmentsJsonApi>;
+  departments: AsyncStateModel<InstitutionDepartment[]>;
   summaryMetrics: AsyncStateModel<InstitutionSummaryMetrics>;
   hasOsfAddonSearch: AsyncStateModel<InstitutionSearchFilter[]>;
   storageRegionSearch: AsyncStateModel<InstitutionSearchFilter[]>;

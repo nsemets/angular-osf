@@ -16,7 +16,7 @@ import {
   FetchInstitutionSummaryMetrics,
   FetchStorageRegionSearch,
   InstitutionsAdminSelectors,
-} from '../../../../store';
+} from '../../store';
 
 @Component({
   selector: 'osf-institutions-summary',
@@ -142,8 +142,8 @@ export class InstitutionsSummaryComponent implements OnInit {
     const licenses = this.rightsSearch();
     const addons = this.hasOsfAddonSearch();
 
-    this.departmentLabels = departments.data.map((item) => item.attributes.name || '');
-    this.departmentDataset = [{ label: '', data: departments.data.map((item) => item.attributes.number_of_users) }];
+    this.departmentLabels = departments.map((item) => item.name || '');
+    this.departmentDataset = [{ label: '', data: departments.map((item) => item.numberOfUsers) }];
 
     this.projectsLabels = ['resourceCard.labels.publicProjects', 'adminInstitutions.summary.privateProjects'].map(
       (el) => this.translateService.instant(el)

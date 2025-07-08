@@ -8,14 +8,9 @@ import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 
+import { resourceTabOptions } from '@osf/features/admin-institutions/constants/resource-tab-option.constant';
 import { LoadingSpinnerComponent } from '@shared/components';
 import { FetchInstitutionById, InstitutionsSearchSelectors } from '@shared/stores';
-
-interface TabOption {
-  label: string;
-  value: string;
-  route: string;
-}
 
 @Component({
   selector: 'osf-admin-institutions',
@@ -37,13 +32,7 @@ export class AdminInstitutionsComponent implements OnInit {
 
   selectedTab = 'summary';
 
-  resourceTabOptions: TabOption[] = [
-    { label: 'Summary', value: 'summary', route: 'summary' },
-    { label: 'Users', value: 'users', route: 'users' },
-    { label: 'Projects', value: 'projects', route: 'projects' },
-    { label: 'Registrations', value: 'registrations', route: 'registrations' },
-    { label: 'Preprints', value: 'preprints', route: 'preprints' },
-  ];
+  resourceTabOptions = resourceTabOptions;
 
   ngOnInit() {
     const institutionId = this.route.snapshot.params['institution-id'];
@@ -60,7 +49,7 @@ export class AdminInstitutionsComponent implements OnInit {
     this.selectedTab = value;
     const selectedTab = this.resourceTabOptions.find((tab) => tab.value === value);
     if (selectedTab) {
-      this.router.navigate([selectedTab.route], { relativeTo: this.route });
+      this.router.navigate([selectedTab.value], { relativeTo: this.route });
     }
   }
 }

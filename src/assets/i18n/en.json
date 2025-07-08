@@ -1769,6 +1769,7 @@
   },
   "adminInstitutions": {
     "summary": {
+      "title": "Summary",
       "totalUsersByDepartment": "Total Users by Department",
       "publicPrivateProjects": "Public vs Private Projects",
       "publicEmbargoedRegistrations": "Public vs Embargoed Registrations",
