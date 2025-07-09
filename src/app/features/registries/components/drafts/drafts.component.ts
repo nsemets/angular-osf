@@ -102,7 +102,7 @@ export class DraftsComponent {
     }
     effect(() => {
       const registrationSchemaId = this.draftRegistration()?.registrationSchemaId;
-      if (registrationSchemaId && !this.pages().length) {
+      if (registrationSchemaId) {
         this.actions
           .getSchemaBlocks(registrationSchemaId || '')
           .pipe(

@@ -33,4 +33,10 @@ export const DefaultState: RegistriesStateModel = {
     error: null,
   },
   stepsValidation: {},
+  registration: {
+    data: null,
+    isLoading: false,
+    isSubmitting: false,
+    error: null,
+  },
 };

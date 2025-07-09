@@ -1,8 +1,9 @@
+import { DraftRegistrationModel, RegistrationModel } from '@osf/shared/models/registration';
+
 import { RegistrationDataJsonApi } from '../models';
-import { Registration } from '../models/registration.model';
 
 export class RegistrationMapper {
-  static fromRegistrationResponse(response: RegistrationDataJsonApi): Registration {
+  static fromDraftRegistrationResponse(response: RegistrationDataJsonApi): DraftRegistrationModel {
     return {
       id: response.id,
       title: response.attributes.title,
@@ -19,6 +20,14 @@ export class RegistrationMapper {
       },
       tags: response.attributes.tags || [],
       stepsData: response.attributes.registration_responses || {},
+      branchedFrom: response.relationships.branched_from?.data?.id,
     };
+  }
+
+  static fromRegistrationResponse(response: RegistrationDataJsonApi): RegistrationModel {
+    return {
+      id: response.id,
+      type: 'registration',
+    } as RegistrationModel;
   }
 }
