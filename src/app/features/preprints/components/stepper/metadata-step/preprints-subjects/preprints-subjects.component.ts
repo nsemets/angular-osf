@@ -1,38 +1,45 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Card } from 'primeng/card';
 
-import {
-  FetchPreprintsSubjects,
-  SubmitPreprintSelectors,
-  UpdatePreprintsSubjects,
-} from '@osf/features/preprints/store/submit-preprint';
+import { ChangeDetectionStrategy, Component, input, OnInit } from '@angular/core';
+
+import { SubmitPreprintSelectors } from '@osf/features/preprints/store/submit-preprint';
 import { SubjectsComponent } from '@osf/shared/components';
-import { Subject } from '@osf/shared/models';
-import { FetchChildrenSubjects, FetchSubjects } from '@osf/shared/stores';
+import { ResourceType } from '@osf/shared/enums';
+import { SubjectModel } from '@osf/shared/models';
+import {
+  FetchChildrenSubjects,
+  FetchSelectedSubjects,
+  FetchSubjects,
+  SubjectsSelectors,
+  UpdateResourceSubjects,
+} from '@osf/shared/stores';
 
 @Component({
   selector: 'osf-preprints-subjects',
-  imports: [SubjectsComponent],
+  imports: [SubjectsComponent, Card],
   templateUrl: './preprints-subjects.component.html',
   styleUrl: './preprints-subjects.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PreprintsSubjectsComponent implements OnInit {
+  preprintId = input<string>();
+
   private readonly selectedProviderId = select(SubmitPreprintSelectors.getSelectedProviderId);
-  protected selectedSubjects = select(SubmitPreprintSelectors.getSelectedSubjects);
-  protected isSubjectsUpdating = select(SubmitPreprintSelectors.isSubjectsUpdating);
+  protected selectedSubjects = select(SubjectsSelectors.getSelectedSubjects);
+  protected isSubjectsUpdating = select(SubjectsSelectors.areSelectedSubjectsLoading);
 
   protected actions = createDispatchMap({
     fetchSubjects: FetchSubjects,
-    fetchPreprintsSubjects: FetchPreprintsSubjects,
+    fetchSelectedSubjects: FetchSelectedSubjects,
     fetchChildrenSubjects: FetchChildrenSubjects,
-    updatePreprintsSubjects: UpdatePreprintsSubjects,
+    updateResourceSubjects: UpdateResourceSubjects,
   });
 
   ngOnInit(): void {
-    this.actions.fetchSubjects(this.selectedProviderId()!);
-    this.actions.fetchPreprintsSubjects();
+    this.actions.fetchSubjects(ResourceType.Preprint, this.selectedProviderId()!);
+    this.actions.fetchSelectedSubjects(this.preprintId()!, ResourceType.Preprint);
   }
 
   getSubjectChildren(parentId: string) {
@@ -40,10 +47,10 @@ export class PreprintsSubjectsComponent implements OnInit {
   }
 
   searchSubjects(search: string) {
-    this.actions.fetchSubjects(search);
+    this.actions.fetchSubjects(ResourceType.Preprint, this.selectedProviderId()!, search);
   }
 
-  updateSelectedSubjects(subjects: Subject[]) {
-    this.actions.updatePreprintsSubjects(subjects);
+  updateSelectedSubjects(subjects: SubjectModel[]) {
+    this.actions.updateResourceSubjects(this.preprintId()!, ResourceType.Preprint, subjects);
   }
 }
