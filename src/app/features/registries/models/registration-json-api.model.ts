@@ -41,6 +41,12 @@ export interface RegistrationRelationshipsJsonApi {
       type: 'licenses';
     };
   };
+  branched_from?: {
+    data: {
+      id: string;
+      type: 'nodes';
+    };
+  };
 }
 
 export interface RegistrationPayloadJsonApi {

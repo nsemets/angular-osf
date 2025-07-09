@@ -189,8 +189,8 @@ export class RegistriesState {
   @Action(RegisterDraft)
   registerDraft(ctx: StateContext<RegistriesStateModel>, { draftId, embargoDate, projectId }: RegisterDraft) {
     ctx.patchState({
-      draftRegistration: {
-        ...ctx.getState().draftRegistration,
+      registration: {
+        ...ctx.getState().registration,
         isSubmitting: true,
       },
     });
@@ -198,7 +198,7 @@ export class RegistriesState {
     return this.registriesService.registerDraft(draftId, embargoDate, projectId).pipe(
       tap((registration) => {
         ctx.patchState({
-          draftRegistration: {
+          registration: {
             data: { ...registration },
             isLoading: false,
             isSubmitting: false,
