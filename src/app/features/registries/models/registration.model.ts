@@ -7,6 +7,9 @@ export interface Registration {
   registrationSchemaId: string;
   license: {
     id: string;
-    options: LicenseOptions;
+    options: LicenseOptions | null;
   };
+  tags: string[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  stepsData?: Record<string, any>;
 }

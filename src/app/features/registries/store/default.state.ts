@@ -27,14 +27,10 @@ export const DefaultState: RegistriesStateModel = {
     isLoading: false,
     error: null,
   },
-  registrationSubjects: {
-    data: [],
-    isLoading: false,
-    error: null,
-  },
   pagesSchema: {
     data: [],
     isLoading: false,
     error: null,
   },
+  stepsValidation: {},
 };

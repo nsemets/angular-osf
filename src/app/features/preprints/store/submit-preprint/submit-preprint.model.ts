@@ -13,4 +13,5 @@ export interface SubmitPreprintStateModel {
   availableProjects: AsyncStateModel<IdName[]>;
   projectFiles: AsyncStateModel<OsfFile[]>;
   licenses: AsyncStateModel<License[]>;
+  preprintProject: AsyncStateModel<IdName | null>;
 }
