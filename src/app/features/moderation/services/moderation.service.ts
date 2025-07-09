@@ -1,13 +1,15 @@
-import { map, Observable, of } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { JsonApiResponseWithPaging, UserGetResponse } from '@osf/core/models';
+import { JsonApiResponse, JsonApiResponseWithPaging, UserGetResponse } from '@osf/core/models';
 import { JsonApiService } from '@osf/core/services';
+import { ResourceType } from '@osf/shared/enums';
 import { PaginatedData } from '@osf/shared/models';
 
+import { AddModeratorType } from '../enums';
 import { ModerationMapper } from '../mappers';
-import { ModeratorAddModel, ModeratorModel, ModeratorResponseJsonApi } from '../models';
+import { ModeratorAddModel, ModeratorDataJsonApi, ModeratorModel, ModeratorResponseJsonApi } from '../models';
 
 import { environment } from 'src/environments/environment';
 
@@ -15,28 +17,44 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class ModerationService {
-  private readonly tesModeratorsUrl = 'assets/collection-moderators.json';
   private readonly jsonApiService = inject(JsonApiService);
 
-  getCollectionModerators(providerId: string): Observable<ModeratorModel[]> {
-    return (
-      this.jsonApiService
-        // .get<ModeratorResponseJsonApi>(`${this.baseUrl}/providers/collections/${providerId}/moderators/`)
-        .get<ModeratorResponseJsonApi>(this.tesModeratorsUrl)
-        .pipe(map((response) => response.data.map((moderator) => ModerationMapper.fromModeratorResponse(moderator))))
-    );
+  private readonly urlMap = new Map<ResourceType, string>([
+    [ResourceType.Collection, 'providers/collections'],
+    [ResourceType.Registration, 'providers/registrations'],
+    [ResourceType.Preprint, 'preprint_providers'],
+  ]);
+
+  getModerators(resourceId: string, resourceType: ResourceType): Observable<ModeratorModel[]> {
+    const baseUrl = `${environment.apiUrl}/${this.urlMap.get(resourceType)}/${resourceId}/moderators`;
+
+    return this.jsonApiService
+      .get<ModeratorResponseJsonApi>(baseUrl)
+      .pipe(map((response) => response.data.map((moderator) => ModerationMapper.fromModeratorResponse(moderator))));
   }
 
-  addCollectionModerator(providerId: string, data: ModeratorAddModel): Observable<ModeratorModel> {
-    return of({} as ModeratorModel);
+  addModerator(resourceId: string, resourceType: ResourceType, data: ModeratorAddModel): Observable<ModeratorModel> {
+    const baseUrl = `${environment.apiUrl}/${this.urlMap.get(resourceType)}/${resourceId}/moderators/`;
+    const type = data.id ? AddModeratorType.Search : AddModeratorType.Invite;
+
+    const moderatorData = { data: ModerationMapper.toModeratorAddRequest(data, type) };
+
+    return this.jsonApiService
+      .post<JsonApiResponse<ModeratorDataJsonApi, null>>(baseUrl, moderatorData)
+      .pipe(map((moderator) => ModerationMapper.fromModeratorResponse(moderator.data)));
   }
 
-  updateCollectionModerator(providerId: string, data: ModeratorAddModel): Observable<ModeratorModel> {
-    return of({} as ModeratorModel);
+  updateModerator(resourceId: string, resourceType: ResourceType, data: ModeratorAddModel): Observable<ModeratorModel> {
+    const baseUrl = `${environment.apiUrl}/${this.urlMap.get(resourceType)}/${resourceId}/moderators/${data.id}`;
+    const moderatorData = { data: ModerationMapper.toModeratorAddRequest(data) };
+
+    return this.jsonApiService
+      .patch<ModeratorDataJsonApi>(baseUrl, moderatorData)
+      .pipe(map((moderator) => ModerationMapper.fromModeratorResponse(moderator)));
   }
 
-  deleteCollectionModerator(providerId: string, userId: string): Observable<void> {
-    const baseUrl = ``;
+  deleteModerator(resourceId: string, resourceType: ResourceType, userId: string): Observable<void> {
+    const baseUrl = `${environment.apiUrl}/${this.urlMap.get(resourceType)}/${resourceId}/moderators/${userId}`;
 
     return this.jsonApiService.delete(baseUrl);
   }

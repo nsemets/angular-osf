@@ -11,6 +11,6 @@ interface UsersDataStateModel extends AsyncStateModel<ModeratorAddModel[]> {
 }
 
 export interface ModerationStateModel {
-  collectionModerators: ModerationDataStateModel;
+  moderators: ModerationDataStateModel;
   users: UsersDataStateModel;
 }

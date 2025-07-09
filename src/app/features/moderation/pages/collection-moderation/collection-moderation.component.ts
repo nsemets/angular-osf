@@ -7,12 +7,13 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 
 import { SelectComponent, SubHeaderComponent } from '@osf/shared/components';
+import { ResourceType } from '@osf/shared/enums';
 import { IS_MEDIUM } from '@osf/shared/utils';
 
 import {
   CollectionModerationSettingsComponent,
   CollectionModerationSubmissionsComponent,
-  CollectionModeratorsComponent,
+  ModeratorsListComponent,
 } from '../../components';
 import { COLLECTION_MODERATION_TABS } from '../../constants';
 import { CollectionModerationTab } from '../../enums';
@@ -30,7 +31,7 @@ import { CollectionModerationTab } from '../../enums';
     FormsModule,
     SelectComponent,
     CollectionModerationSettingsComponent,
-    CollectionModeratorsComponent,
+    ModeratorsListComponent,
     CollectionModerationSubmissionsComponent,
   ],
   templateUrl: './collection-moderation.component.html',
@@ -38,6 +39,8 @@ import { CollectionModerationTab } from '../../enums';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionModerationComponent {
+  readonly resourceType = ResourceType.Collection;
+
   readonly tabOptions = COLLECTION_MODERATION_TABS;
   readonly tabs = CollectionModerationTab;
   readonly isMedium = toSignal(inject(IS_MEDIUM));

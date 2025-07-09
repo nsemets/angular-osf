@@ -1,42 +1,50 @@
-import { ModeratorModel } from '../models';
+import { ResourceType } from '@osf/shared/enums';
+
+import { ModeratorAddModel, ModeratorModel } from '../models';
 
 const ACTION_SCOPE = '[Moderation]';
 
-export class LoadCollectionModerators {
-  static readonly type = `${ACTION_SCOPE} Load Collection Moderators`;
-
-  constructor(public collectionId: string) {}
-}
-
-export class AddCollectionModerator {
-  static readonly type = `${ACTION_SCOPE} Add Collection Moderator`;
+export class LoadModerators {
+  static readonly type = `${ACTION_SCOPE} Load Moderators`;
 
   constructor(
-    public collectionId: string,
+    public resourceId: string,
+    public resourceType: ResourceType | undefined
+  ) {}
+}
+
+export class AddModerator {
+  static readonly type = `${ACTION_SCOPE} Add Moderator`;
+
+  constructor(
+    public resourceId: string,
+    public resourceType: ResourceType | undefined,
+    public moderator: ModeratorAddModel
+  ) {}
+}
+
+export class UpdateModerator {
+  static readonly type = `${ACTION_SCOPE} Update Moderator`;
+
+  constructor(
+    public resourceId: string,
+    public resourceType: ResourceType | undefined,
     public moderator: ModeratorModel
   ) {}
 }
 
-export class UpdateCollectionModerator {
-  static readonly type = `${ACTION_SCOPE} Update Collection Moderator`;
+export class DeleteModerator {
+  static readonly type = `${ACTION_SCOPE} Delete Moderator`;
 
   constructor(
-    public collectionId: string,
-    public moderator: ModeratorModel
-  ) {}
-}
-
-export class DeleteCollectionModerator {
-  static readonly type = `${ACTION_SCOPE} Delete Collection Moderator`;
-
-  constructor(
-    public collectionId: string,
+    public resourceId: string,
+    public resourceType: ResourceType | undefined,
     public moderatorId: string
   ) {}
 }
 
-export class UpdateCollectionSearchValue {
-  static readonly type = `${ACTION_SCOPE} Update Collection Search Value`;
+export class UpdateSearchValue {
+  static readonly type = `${ACTION_SCOPE} Update Search Value`;
 
   constructor(public searchValue: string | null) {}
 }

@@ -7,22 +7,22 @@ import { ModerationState } from './moderation.state';
 
 export class ModerationSelectors {
   @Selector([ModerationState])
-  static getCollectionModerators(state: ModerationStateModel) {
-    return state.collectionModerators.data.filter((moderator) => {
-      return state.collectionModerators.searchValue
-        ? moderator.fullName.toLowerCase().includes(state.collectionModerators.searchValue.toLowerCase())
+  static getModerators(state: ModerationStateModel) {
+    return state.moderators.data.filter((moderator) => {
+      return state.moderators.searchValue
+        ? moderator.fullName.toLowerCase().includes(state.moderators.searchValue.toLowerCase())
         : true;
     });
   }
 
   @Selector([ModerationState])
   static isModeratorsLoading(state: ModerationStateModel) {
-    return state.collectionModerators.isLoading || false;
+    return state.moderators.isLoading || false;
   }
 
   @Selector([ModerationState])
   static isModeratorsError(state: ModerationStateModel) {
-    return !!state.collectionModerators.error?.length;
+    return !!state.moderators.error?.length;
   }
 
   @Selector([ModerationState])

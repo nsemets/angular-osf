@@ -9,17 +9,16 @@
       styleClass="w-full"
       [label]="'moderation.addModerator' | translate"
       (click)="openAddModeratorDialog()"
+      [disabled]="isModeratorsLoading()"
     ></p-button>
   </div>
 </div>
 
 <div class="block w-full my-5">
-  <osf-collection-moderators-list
+  <osf-moderators-table
     [items]="moderators()"
     [isLoading]="isModeratorsLoading()"
     (update)="updateModerator($event)"
     (remove)="removeModerator($event)"
-    (showEducationHistory)="openEducationHistory($event)"
-    (showEmploymentHistory)="openEmploymentHistory($event)"
-  ></osf-collection-moderators-list>
+  ></osf-moderators-table>
 </div>

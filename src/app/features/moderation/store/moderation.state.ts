@@ -8,20 +8,20 @@ import { ModeratorModel } from '../models';
 import { ModerationService } from '../services';
 
 import {
-  AddCollectionModerator,
+  AddModerator,
   ClearUsers,
-  DeleteCollectionModerator,
-  LoadCollectionModerators,
+  DeleteModerator,
+  LoadModerators,
   SearchUsers,
-  UpdateCollectionModerator,
-  UpdateCollectionSearchValue,
+  UpdateModerator,
+  UpdateSearchValue,
 } from './moderation.actions';
 import { ModerationStateModel } from './moderation.model';
 
 @State<ModerationStateModel>({
   name: 'moderation',
   defaults: {
-    collectionModerators: {
+    moderators: {
       data: [],
       isLoading: false,
       error: null,
@@ -39,104 +39,120 @@ import { ModerationStateModel } from './moderation.model';
 export class ModerationState {
   private readonly moderationService = inject(ModerationService);
 
-  @Action(LoadCollectionModerators)
-  loadCollectionModerators(ctx: StateContext<ModerationStateModel>, action: LoadCollectionModerators) {
+  @Action(LoadModerators)
+  loadModerators(ctx: StateContext<ModerationStateModel>, action: LoadModerators) {
     const state = ctx.getState();
 
+    if (!action.resourceType) {
+      return;
+    }
+
     ctx.patchState({
-      collectionModerators: { ...state.collectionModerators, isLoading: true, error: null },
+      moderators: { ...state.moderators, isLoading: true, error: null },
     });
 
-    return this.moderationService.getCollectionModerators(action.collectionId).pipe(
+    return this.moderationService.getModerators(action.resourceId, action.resourceType).pipe(
       tap((moderators: ModeratorModel[]) => {
         ctx.patchState({
-          collectionModerators: {
-            ...state.collectionModerators,
+          moderators: {
+            ...state.moderators,
             data: moderators,
             isLoading: false,
           },
         });
       }),
-      catchError((error) => this.handleError(ctx, 'collectionModerators', error))
+      catchError((error) => this.handleError(ctx, 'moderators', error))
     );
   }
 
-  @Action(UpdateCollectionSearchValue)
-  updateSearchValue(ctx: StateContext<ModerationStateModel>, action: UpdateCollectionSearchValue) {
+  @Action(UpdateSearchValue)
+  updateSearchValue(ctx: StateContext<ModerationStateModel>, action: UpdateSearchValue) {
     ctx.patchState({
-      collectionModerators: { ...ctx.getState().collectionModerators, searchValue: action.searchValue },
+      moderators: { ...ctx.getState().moderators, searchValue: action.searchValue },
     });
   }
 
-  @Action(AddCollectionModerator)
-  addCollectionModerator(ctx: StateContext<ModerationStateModel>, action: AddCollectionModerator) {
+  @Action(AddModerator)
+  addModerator(ctx: StateContext<ModerationStateModel>, action: AddModerator) {
     const state = ctx.getState();
 
+    if (!action.resourceType) {
+      return;
+    }
+
     ctx.patchState({
-      collectionModerators: { ...state.collectionModerators, isLoading: true, error: null },
+      moderators: { ...state.moderators, isLoading: true, error: null },
     });
 
-    return this.moderationService.addCollectionModerator(action.collectionId, action.moderator).pipe(
+    return this.moderationService.addModerator(action.resourceId, action.resourceType, action.moderator).pipe(
       tap((moderator) => {
         const currentState = ctx.getState();
 
         ctx.patchState({
-          collectionModerators: {
-            ...currentState.collectionModerators,
-            data: [...currentState.collectionModerators.data, moderator],
+          moderators: {
+            ...currentState.moderators,
+            data: [...currentState.moderators.data, moderator],
             isLoading: false,
           },
         });
       }),
-      catchError((error) => this.handleError(ctx, 'collectionModerators', error))
+      catchError((error) => this.handleError(ctx, 'moderators', error))
     );
   }
 
-  @Action(UpdateCollectionModerator)
-  updateCollectionModerator(ctx: StateContext<ModerationStateModel>, action: UpdateCollectionModerator) {
+  @Action(UpdateModerator)
+  updateCollectionModerator(ctx: StateContext<ModerationStateModel>, action: UpdateModerator) {
     const state = ctx.getState();
 
+    if (!action.resourceType) {
+      return;
+    }
+
     ctx.patchState({
-      collectionModerators: { ...state.collectionModerators, isLoading: true, error: null },
+      moderators: { ...state.moderators, isLoading: true, error: null },
     });
 
-    return this.moderationService.updateCollectionModerator(action.collectionId, action.moderator).pipe(
+    return this.moderationService.updateModerator(action.resourceId, action.resourceType, action.moderator).pipe(
       tap((updatedModerator) => {
         const currentState = ctx.getState();
 
         ctx.patchState({
-          collectionModerators: {
-            ...currentState.collectionModerators,
-            data: currentState.collectionModerators.data.map((moderator) =>
+          moderators: {
+            ...currentState.moderators,
+            data: currentState.moderators.data.map((moderator) =>
               moderator.id === updatedModerator.id ? updatedModerator : moderator
             ),
             isLoading: false,
           },
         });
       }),
-      catchError((error) => this.handleError(ctx, 'collectionModerators', error))
+      catchError((error) => this.handleError(ctx, 'moderators', error))
     );
   }
 
-  @Action(DeleteCollectionModerator)
-  deleteCollectionModerator(ctx: StateContext<ModerationStateModel>, action: DeleteCollectionModerator) {
+  @Action(DeleteModerator)
+  deleteCollectionModerator(ctx: StateContext<ModerationStateModel>, action: DeleteModerator) {
     const state = ctx.getState();
 
+    if (!action.resourceType) {
+      return;
+    }
+
     ctx.patchState({
-      collectionModerators: { ...state.collectionModerators, isLoading: true, error: null },
+      moderators: { ...state.moderators, isLoading: true, error: null },
     });
 
-    return this.moderationService.deleteCollectionModerator(action.collectionId, action.moderatorId).pipe(
+    return this.moderationService.deleteModerator(action.resourceId, action.resourceType, action.moderatorId).pipe(
       tap(() => {
         ctx.patchState({
-          collectionModerators: {
-            ...state.collectionModerators,
-            data: state.collectionModerators.data.filter((moderator) => moderator.userId !== action.moderatorId),
+          moderators: {
+            ...state.moderators,
+            data: state.moderators.data.filter((moderator) => moderator.userId !== action.moderatorId),
             isLoading: false,
           },
         });
       }),
-      catchError((error) => this.handleError(ctx, 'collectionModerators', error))
+      catchError((error) => this.handleError(ctx, 'moderators', error))
     );
   }
 
@@ -148,7 +164,7 @@ export class ModerationState {
       users: { ...state.users, isLoading: true, error: null },
     });
 
-    const addedModeratorsIds = state.collectionModerators.data.map((moderator) => moderator.userId);
+    const addedModeratorsIds = state.moderators.data.map((moderator) => moderator.userId);
 
     if (!action.searchValue) {
       return of([]);
