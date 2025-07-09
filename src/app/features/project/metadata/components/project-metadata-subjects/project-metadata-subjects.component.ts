@@ -1,5 +1,7 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
+import { Card } from 'primeng/card';
+
 import { ChangeDetectionStrategy, Component, input, OnInit } from '@angular/core';
 
 import { ResourceType } from '@osf/shared/enums';
@@ -15,7 +17,7 @@ import { SubjectsComponent } from '@shared/components';
 
 @Component({
   selector: 'osf-project-metadata-subjects',
-  imports: [SubjectsComponent],
+  imports: [SubjectsComponent, Card],
   templateUrl: './project-metadata-subjects.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

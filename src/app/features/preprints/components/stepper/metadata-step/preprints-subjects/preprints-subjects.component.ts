@@ -1,5 +1,7 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
+import { Card } from 'primeng/card';
+
 import { ChangeDetectionStrategy, Component, input, OnInit } from '@angular/core';
 
 import { SubmitPreprintSelectors } from '@osf/features/preprints/store/submit-preprint';
@@ -16,7 +18,7 @@ import {
 
 @Component({
   selector: 'osf-preprints-subjects',
-  imports: [SubjectsComponent],
+  imports: [SubjectsComponent, Card],
   templateUrl: './preprints-subjects.component.html',
   styleUrl: './preprints-subjects.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

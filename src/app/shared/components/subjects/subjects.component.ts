@@ -6,7 +6,6 @@ import { TreeNode } from 'primeng/api';
 import { Card } from 'primeng/card';
 import { Checkbox, CheckboxChangeEvent } from 'primeng/checkbox';
 import { Chip } from 'primeng/chip';
-import { Message } from 'primeng/message';
 import { Skeleton } from 'primeng/skeleton';
 import { Tree, TreeModule } from 'primeng/tree';
 
@@ -15,7 +14,6 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
-import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants';
 import { SubjectModel } from '@osf/shared/models';
 import { SubjectsSelectors } from '@shared/stores';
 
@@ -23,7 +21,7 @@ import { SearchInputComponent } from '../search-input/search-input.component';
 
 @Component({
   selector: 'osf-subjects',
-  imports: [Card, TranslatePipe, Chip, SearchInputComponent, Tree, TreeModule, Checkbox, Skeleton, Message],
+  imports: [Card, TranslatePipe, Chip, SearchInputComponent, Tree, TreeModule, Checkbox, Skeleton],
   templateUrl: './subjects.component.html',
   styleUrl: './subjects.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,7 +32,6 @@ export class SubjectsComponent {
   searchedSubjects = select(SubjectsSelectors.getSearchedSubjects);
   areSubjectsUpdating = input<boolean>(false);
   isSearching = select(SubjectsSelectors.getSearchedSubjectsLoading);
-  control = input<FormControl<SubjectModel[]>>();
   selected = input<SubjectModel[]>([]);
   searchChanged = output<string>();
   loadChildren = output<string>();
@@ -48,7 +45,6 @@ export class SubjectsComponent {
   expanded: Record<string, boolean> = {};
 
   protected searchControl = new FormControl<string>('');
-  readonly INPUT_VALIDATION_MESSAGES = INPUT_VALIDATION_MESSAGES;
 
   constructor() {
     this.searchControl.valueChanges.pipe(debounceTime(300), distinctUntilChanged()).subscribe((value) => {

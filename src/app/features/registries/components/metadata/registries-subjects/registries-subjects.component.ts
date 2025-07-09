@@ -1,10 +1,16 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
+import { TranslatePipe } from '@ngx-translate/core';
+
+import { Card } from 'primeng/card';
+import { Message } from 'primeng/message';
+
 import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { SubjectsComponent } from '@osf/shared/components';
+import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants';
 import { ResourceType } from '@osf/shared/enums';
 import { SubjectModel } from '@osf/shared/models';
 import {
@@ -17,7 +23,7 @@ import {
 
 @Component({
   selector: 'osf-registries-subjects',
-  imports: [SubjectsComponent],
+  imports: [SubjectsComponent, Card, Message, TranslatePipe],
   templateUrl: './registries-subjects.component.html',
   styleUrl: './registries-subjects.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,6 +43,8 @@ export class RegistriesSubjectsComponent {
     fetchChildrenSubjects: FetchChildrenSubjects,
     updateResourceSubjects: UpdateResourceSubjects,
   });
+
+  readonly INPUT_VALIDATION_MESSAGES = INPUT_VALIDATION_MESSAGES;
 
   constructor() {
     this.actions.fetchSubjects(ResourceType.Registration, this.OSF_PROVIDER_ID);
