@@ -12,7 +12,6 @@ import {
 import { SubjectsComponent } from '@osf/shared/components';
 import { Subject } from '@osf/shared/models';
 import { FetchChildrenSubjects, FetchSubjects } from '@osf/shared/stores';
-import { SubjectsSelectors } from '@osf/shared/stores/subjects/subjects.selectors';
 
 @Component({
   selector: 'osf-registries-subjects',
@@ -25,11 +24,8 @@ export class RegistriesSubjectsComponent {
   control = input.required<FormControl>();
   private readonly route = inject(ActivatedRoute);
   private readonly draftId = this.route.snapshot.params['id'];
+  private readonly OSF_PROVIDER_ID = 'osf';
 
-  protected subjects = select(SubjectsSelectors.getSubjects);
-  protected subjectsLoading = select(SubjectsSelectors.getSubjectsLoading);
-  protected searchedSubjects = select(SubjectsSelectors.getSearchedSubjects);
-  protected isSearching = select(SubjectsSelectors.getSearchedSubjectsLoading);
   protected selectedSubjects = select(RegistriesSelectors.getSelectedSubjects);
   protected isSubjectsUpdating = select(RegistriesSelectors.isSubjectsUpdating);
 
@@ -41,7 +37,7 @@ export class RegistriesSubjectsComponent {
   });
 
   constructor() {
-    this.actions.fetchSubjects();
+    this.actions.fetchSubjects(this.OSF_PROVIDER_ID);
     this.actions.fetchRegistrationSubjects(this.draftId);
   }
 
