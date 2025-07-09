@@ -1,8 +1,9 @@
 import { Observable } from 'rxjs';
 
-import { Subject } from './subject.model';
+import { SubjectModel } from './subject.model';
 
 export interface ISubjectsService {
-  getSubjects(search?: string): Observable<Subject[]>;
-  getChildrenSubjects(parentId: string): Observable<Subject[]>;
+  getSubjects(providerId: string, search?: string): Observable<SubjectModel[]>;
+
+  getChildrenSubjects(parentId: string): Observable<SubjectModel[]>;
 }

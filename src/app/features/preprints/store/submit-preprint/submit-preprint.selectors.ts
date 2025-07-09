@@ -62,4 +62,14 @@ export class SubmitPreprintSelectors {
   static getLicenses(state: SubmitPreprintStateModel) {
     return state.licenses.data;
   }
+
+  @Selector([SubmitPreprintState])
+  static getPreprintProject(state: SubmitPreprintStateModel) {
+    return state.preprintProject.data;
+  }
+
+  @Selector([SubmitPreprintState])
+  static isPreprintProjectLoading(state: SubmitPreprintStateModel) {
+    return state.preprintProject.isLoading;
+  }
 }

@@ -14,14 +14,12 @@ import { RegistriesService } from '../services';
 import { LicensesHandlers } from './handlers/licenses.handlers';
 import { ProjectsHandlers } from './handlers/projects.handlers';
 import { ProvidersHandlers } from './handlers/providers.handlers';
-import { SubjectsHandlers } from './handlers/subjects.handlers';
 import { DefaultState } from './default.state';
 import {
   CreateDraft,
   DeleteDraft,
   FetchDraft,
   FetchLicenses,
-  FetchRegistrationSubjects,
   FetchSchemaBlocks,
   GetProjects,
   GetProviders,
@@ -29,7 +27,6 @@ import {
   RegisterDraft,
   SaveLicense,
   UpdateDraft,
-  UpdateRegistrationSubjects,
   UpdateStepValidation,
 } from './registries.actions';
 import { RegistriesStateModel } from './registries.model';
@@ -46,7 +43,6 @@ export class RegistriesState {
   providersHandler = inject(ProvidersHandlers);
   projectsHandler = inject(ProjectsHandlers);
   licensesHandler = inject(LicensesHandlers);
-  subjectsHandler = inject(SubjectsHandlers);
 
   @Action(GetRegistries)
   getRegistries(ctx: StateContext<RegistriesStateModel>) {
@@ -253,18 +249,5 @@ export class RegistriesState {
   @Action(SaveLicense)
   saveLicense(ctx: StateContext<RegistriesStateModel>, { registrationId, licenseId, licenseOptions }: SaveLicense) {
     return this.licensesHandler.saveLicense(ctx, { registrationId, licenseId, licenseOptions });
-  }
-
-  @Action(FetchRegistrationSubjects)
-  fetchRegistrationSubjects(ctx: StateContext<RegistriesStateModel>, { registrationId }: FetchRegistrationSubjects) {
-    return this.subjectsHandler.fetchRegistrationSubjects(ctx, { registrationId });
-  }
-
-  @Action(UpdateRegistrationSubjects)
-  updateRegistrationSubjects(
-    ctx: StateContext<RegistriesStateModel>,
-    { registrationId, subjects }: UpdateRegistrationSubjects
-  ) {
-    return this.subjectsHandler.updateRegistrationSubjects(ctx, { registrationId, subjects });
   }
 }
