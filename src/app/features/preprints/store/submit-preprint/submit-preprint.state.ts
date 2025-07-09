@@ -15,7 +15,6 @@ import {
   PreprintLicensesService,
   PreprintsProjectsService,
   PreprintsService,
-  PreprintSubjectsService,
 } from '@osf/features/preprints/services';
 import { OsfFile } from '@shared/models';
 import { FilesService } from '@shared/services';
@@ -28,7 +27,6 @@ import {
   DisconnectProject,
   FetchLicenses,
   FetchPreprintProject,
-  FetchPreprintsSubjects,
   GetAvailableProjects,
   GetPreprintFiles,
   GetPreprintFilesLinks,
@@ -41,7 +39,6 @@ import {
   SetSelectedPreprintProviderId,
   SubmitPreprintStateModel,
   UpdatePreprint,
-  UpdatePreprintsSubjects,
   UploadFile,
 } from './';
 
@@ -79,11 +76,6 @@ const DefaultState: SubmitPreprintStateModel = {
     isLoading: false,
     error: null,
   },
-  subjects: {
-    data: [],
-    isLoading: false,
-    error: null,
-  },
   preprintProject: {
     data: null,
     isLoading: false,
@@ -101,7 +93,6 @@ export class SubmitPreprintState {
   private preprintFilesService = inject(PreprintFilesService);
   private fileService = inject(FilesService);
   private licensesService = inject(PreprintLicensesService);
-  private subjectsService = inject(PreprintSubjectsService);
   private preprintProjectsService = inject(PreprintsProjectsService);
 
   @Action(SetSelectedPreprintProviderId)
@@ -367,48 +358,6 @@ export class SubmitPreprintState {
         ctx.setState(patch({ createdPreprint: patch({ isSubmitting: false, data: preprint }) }));
       }),
       catchError((error) => this.handleError(ctx, 'createdPreprint', error))
-    );
-  }
-
-  @Action(FetchPreprintsSubjects)
-  fetchPreprintsSubjects(ctx: StateContext<SubmitPreprintStateModel>) {
-    const createdPreprintId = ctx.getState().createdPreprint.data!.id;
-    if (!createdPreprintId) return EMPTY;
-
-    ctx.setState(patch({ subjects: patch({ isLoading: true }) }));
-
-    return this.subjectsService.getPreprintSubjects(createdPreprintId).pipe(
-      tap((subjects) => {
-        ctx.patchState({
-          subjects: {
-            data: subjects,
-            isLoading: false,
-            error: null,
-          },
-        });
-      }),
-      catchError((error) => handleSectionError(ctx, 'subjects', error))
-    );
-  }
-
-  @Action(UpdatePreprintsSubjects)
-  updatePreprintsSubjects(ctx: StateContext<SubmitPreprintStateModel>, { subjects }: UpdatePreprintsSubjects) {
-    const createdPreprintId = ctx.getState().createdPreprint.data?.id;
-    if (!createdPreprintId) return EMPTY;
-
-    ctx.setState(patch({ subjects: patch({ isLoading: true }) }));
-
-    return this.subjectsService.updatePreprintSubjects(createdPreprintId, subjects).pipe(
-      tap(() => {
-        ctx.patchState({
-          subjects: {
-            data: subjects,
-            isLoading: false,
-            error: null,
-          },
-        });
-      }),
-      catchError((error) => handleSectionError(ctx, 'subjects', error))
     );
   }
 
