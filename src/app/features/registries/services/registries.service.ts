@@ -87,7 +87,7 @@ export class RegistriesService {
         type: 'registrations',
         attributes: {
           embargo_end_date: embargoDate,
-          draft_registration_id: draftId,
+          draft_registration: draftId,
         },
         relationships: {
           registered_from: projectId
@@ -108,7 +108,7 @@ export class RegistriesService {
       },
     };
     return this.jsonApiService
-      .post<RegistrationResponseJsonApi>(`${this.apiUrl}/registrations`, payload)
+      .post<RegistrationResponseJsonApi>(`${this.apiUrl}/registrations/`, payload)
       .pipe(map((response) => RegistrationMapper.fromRegistrationResponse(response.data)));
   }
 

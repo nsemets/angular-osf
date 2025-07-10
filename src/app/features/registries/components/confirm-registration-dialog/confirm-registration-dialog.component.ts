@@ -64,7 +64,7 @@ export class ConfirmRegistrationDialogComponent {
     this.actions
       .registerDraft(this.config.data.draftId, this.form.value.embargoDate, this.config.data.projectId)
       .subscribe({
-        next: () => {
+        complete: () => {
           this.dialogRef.close();
         },
       });

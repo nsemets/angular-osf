@@ -10,7 +10,7 @@ import { Tag } from 'primeng/tag';
 
 import { map, of } from 'rxjs';
 
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -47,7 +47,7 @@ export class ReviewComponent {
   protected readonly pages = select(RegistriesSelectors.getPagesSchema);
   protected readonly draftRegistration = select(RegistriesSelectors.getDraftRegistration);
   protected readonly stepsData = select(RegistriesSelectors.getStepsData);
-  readonly INPUT_VALIDATION_MESSAGES = INPUT_VALIDATION_MESSAGES;
+  protected readonly INPUT_VALIDATION_MESSAGES = INPUT_VALIDATION_MESSAGES;
   protected readonly contributors = select(ContributorsSelectors.getContributors);
   protected readonly subjects = select(SubjectsSelectors.getSelectedSubjects);
   protected readonly FieldType = FieldType;
@@ -58,7 +58,32 @@ export class ReviewComponent {
     deleteDraft: DeleteDraft,
     registerDraft: RegisterDraft,
   });
+
   private readonly draftId = toSignal(this.route.params.pipe(map((params) => params['id'])) ?? of(undefined));
+  protected stepsValidation = select(RegistriesSelectors.getStepsValidation);
+
+  isMetaDataInvalid = computed(() => {
+    return (
+      !this.draftRegistration()?.title ||
+      !this.draftRegistration()?.description ||
+      !this.draftRegistration()?.license ||
+      !this.subjects()?.length ||
+      !this.contributors()?.length
+    );
+  });
+
+  isStepsInvalid = computed(() => {
+    return this.pages().some((page) => {
+      return page.questions?.some((question) => {
+        const questionData = this.stepsData()[question.responseKey!];
+        return question.required && (Array.isArray(questionData) ? !questionData.length : !questionData);
+      });
+    });
+  });
+
+  isDraftInvalid = computed(() => {
+    return this.isMetaDataInvalid() || this.isStepsInvalid();
+  });
 
   constructor() {
     if (!this.contributors()?.length) {
