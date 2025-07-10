@@ -26,6 +26,7 @@ import {
   CreatePreprint,
   DisconnectProject,
   FetchLicenses,
+  FetchPreprintById,
   FetchPreprintProject,
   GetAvailableProjects,
   GetPreprintFiles,
@@ -37,6 +38,7 @@ import {
   SaveLicense,
   SetSelectedPreprintFileSource,
   SetSelectedPreprintProviderId,
+  SubmitPreprint,
   SubmitPreprintStateModel,
   UpdatePreprint,
   UploadFile,
@@ -81,6 +83,7 @@ const DefaultState: SubmitPreprintStateModel = {
     isLoading: false,
     error: null,
   },
+  hasBeenSubmitted: false,
 };
 
 @State<SubmitPreprintStateModel>({
@@ -121,6 +124,18 @@ export class SubmitPreprintState {
     return this.preprintsService.updatePreprint(action.id, action.payload).pipe(
       tap((preprint) => {
         ctx.setState(patch({ createdPreprint: patch({ isSubmitting: false, data: preprint }) }));
+      }),
+      catchError((error) => this.handleError(ctx, 'createdPreprint', error))
+    );
+  }
+
+  @Action(FetchPreprintById)
+  getPreprintById(ctx: StateContext<SubmitPreprintStateModel>, action: FetchPreprintById) {
+    ctx.setState(patch({ createdPreprint: patch({ isLoading: true }) }));
+
+    return this.preprintsService.getById(action.id).pipe(
+      tap((preprint) => {
+        ctx.setState(patch({ createdPreprint: patch({ isLoading: false, data: preprint }) }));
       }),
       catchError((error) => this.handleError(ctx, 'createdPreprint', error))
     );
@@ -285,7 +300,7 @@ export class SubmitPreprintState {
     const state = ctx.getState();
     const createdPreprintId = state.createdPreprint.data?.id;
     ctx.setState({ ...DefaultState });
-    if (createdPreprintId) {
+    if (createdPreprintId && !state.hasBeenSubmitted) {
       return this.preprintsService.deletePreprint(createdPreprintId);
     }
 
@@ -467,6 +482,18 @@ export class SubmitPreprintState {
         }),
         catchError((error) => this.handleError(ctx, 'preprintProject', error))
       );
+  }
+
+  @Action(SubmitPreprint)
+  submitPreprint(ctx: StateContext<SubmitPreprintStateModel>) {
+    const createdPreprintId = ctx.getState().createdPreprint.data!.id;
+    ctx.setState(patch({ createdPreprint: patch({ isSubmitting: true }) }));
+    return this.preprintsService.submitPreprint(createdPreprintId).pipe(
+      tap(() => {
+        ctx.setState(patch({ createdPreprint: patch({ isSubmitting: false }), hasBeenSubmitted: true }));
+      }),
+      catchError((error) => this.handleError(ctx, 'createdPreprint', error))
+    );
   }
 
   private handleError(

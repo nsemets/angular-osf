@@ -5,7 +5,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Card } from 'primeng/card';
 import { Message } from 'primeng/message';
 
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
@@ -47,6 +47,10 @@ export class RegistriesSubjectsComponent {
   readonly INPUT_VALIDATION_MESSAGES = INPUT_VALIDATION_MESSAGES;
 
   constructor() {
+    effect(() => {
+      this.updateControlState(this.selectedSubjects());
+    });
+
     this.actions.fetchSubjects(ResourceType.Registration, this.OSF_PROVIDER_ID);
     this.actions.fetchSelectedSubjects(this.draftId, ResourceType.DraftRegistration);
   }
