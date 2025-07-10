@@ -10,6 +10,8 @@ import { PreprintsResourcesFiltersOptionsState } from '@osf/features/preprints/s
 import { SubmitPreprintState } from '@osf/features/preprints/store/submit-preprint';
 import { ContributorsState, SubjectsState } from '@shared/stores';
 
+import { ModerationState } from '../moderation/store';
+
 export const preprintsRoutes: Routes = [
   {
     path: '',
@@ -65,6 +67,14 @@ export const preprintsRoutes: Routes = [
           import('@osf/features/preprints/pages/submit-preprint-stepper/submit-preprint-stepper.component').then(
             (c) => c.SubmitPreprintStepperComponent
           ),
+      },
+      {
+        path: ':id/moderation',
+        loadComponent: () =>
+          import('@osf/features/moderation/pages/preprint-moderation/preprint-moderation.component').then(
+            (m) => m.PreprintModerationComponent
+          ),
+        providers: [provideStates([ModerationState])],
       },
     ],
   },

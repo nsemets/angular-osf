@@ -4,10 +4,10 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'osf-collection-moderation-settings',
+  selector: 'osf-notification-settings',
   imports: [TranslatePipe, RouterLink],
-  templateUrl: './collection-moderation-settings.component.html',
-  styleUrl: './collection-moderation-settings.component.scss',
+  templateUrl: './notification-settings.component.html',
+  styleUrl: './notification-settings.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CollectionModerationSettingsComponent {}
+export class NotificationSettingsComponent {}

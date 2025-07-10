@@ -11,9 +11,9 @@ import { ResourceType } from '@osf/shared/enums';
 import { IS_MEDIUM } from '@osf/shared/utils';
 
 import {
-  CollectionModerationSettingsComponent,
   CollectionModerationSubmissionsComponent,
   ModeratorsListComponent,
+  NotificationSettingsComponent,
 } from '../../components';
 import { COLLECTION_MODERATION_TABS } from '../../constants';
 import { CollectionModerationTab } from '../../enums';
@@ -30,7 +30,7 @@ import { CollectionModerationTab } from '../../enums';
     TranslatePipe,
     FormsModule,
     SelectComponent,
-    CollectionModerationSettingsComponent,
+    NotificationSettingsComponent,
     ModeratorsListComponent,
     CollectionModerationSubmissionsComponent,
   ],

@@ -78,7 +78,7 @@ export class ModeratorsListComponent implements OnInit {
 
   ngOnInit(): void {
     this.setSearchSubscription();
-    this.actions.loadModerators(this.providerId(), ResourceType.Collection);
+    this.actions.loadModerators(this.providerId(), this.resourceType());
   }
 
   openAddModeratorDialog() {
