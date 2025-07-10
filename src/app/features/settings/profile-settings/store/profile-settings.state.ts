@@ -1,9 +1,10 @@
 import { Action, State, StateContext, Store } from '@ngxs/store';
 
-import { tap } from 'rxjs';
+import { catchError, tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
+import { handleSectionError } from '@osf/core/handlers';
 import { UserSelectors } from '@osf/core/store/user';
 import { removeNullable } from '@osf/shared/constants';
 import { Social } from '@osf/shared/models';
@@ -30,13 +31,13 @@ import {
 })
 @Injectable()
 export class ProfileSettingsState {
-  readonly #store = inject(Store);
-  readonly #profileSettingsService = inject(ProfileSettingsApiService);
+  private readonly store = inject(Store);
+  private readonly profileSettingsService = inject(ProfileSettingsApiService);
 
   @Action(SetupProfileSettings)
   setupProfileSettings(ctx: StateContext<ProfileSettingsStateModel>): void {
     const state = ctx.getState();
-    const profileSettings = this.#store.selectSnapshot(UserSelectors.getProfileSettings);
+    const profileSettings = this.store.selectSnapshot(UserSelectors.getProfileSettings);
 
     ctx.patchState({
       ...state,
@@ -56,11 +57,9 @@ export class ProfileSettingsState {
       return;
     }
 
-    const withoutNulls = payload.employment.map((item) => {
-      return removeNullable(item);
-    });
+    const withoutNulls = payload.employment.map((item) => removeNullable(item));
 
-    return this.#profileSettingsService.patchUserSettings(userId, 'employment', withoutNulls).pipe(
+    return this.profileSettingsService.patchUserSettings(userId, 'employment', withoutNulls).pipe(
       tap((response) => {
         ctx.patchState({
           ...state,
@@ -82,17 +81,16 @@ export class ProfileSettingsState {
       return;
     }
 
-    const withoutNulls = payload.education.map((item) => {
-      return removeNullable(item);
-    });
+    const withoutNulls = payload.education.map((item) => removeNullable(item));
 
-    return this.#profileSettingsService.patchUserSettings(userId, 'education', withoutNulls).pipe(
+    return this.profileSettingsService.patchUserSettings(userId, 'education', withoutNulls).pipe(
       tap((response) => {
         ctx.patchState({
           ...state,
           education: response.data.attributes.education,
         });
-      })
+      }),
+      catchError((error) => handleSectionError(ctx, 'education', error))
     );
   }
 
@@ -107,7 +105,7 @@ export class ProfileSettingsState {
 
     const withoutNulls = mapNameToDto(removeNullable(payload.user));
 
-    return this.#profileSettingsService.patchUserSettings(userId, 'user', withoutNulls).pipe(
+    return this.profileSettingsService.patchUserSettings(userId, 'user', withoutNulls).pipe(
       tap((response) => {
         ctx.patchState({
           ...state,
@@ -138,7 +136,7 @@ export class ProfileSettingsState {
       };
     });
 
-    return this.#profileSettingsService.patchUserSettings(userId, 'social', social).pipe(
+    return this.profileSettingsService.patchUserSettings(userId, 'social', social).pipe(
       tap((response) => {
         ctx.patchState({
           ...state,
