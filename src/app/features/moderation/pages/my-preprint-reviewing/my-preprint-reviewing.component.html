@@ -1,0 +1,21 @@
+<section>
+  <osf-sub-header [title]="'navigation.preprintsSubRoutes.myReviewing' | translate" />
+
+  <div class="flex bg-white p-3 flex-1 md:p-5 xl:p-4">
+    <p-card class="col-7">
+      <h2>{{ 'project.overview.recentActivity.title' | translate }}</h2>
+
+      <div class="mt-4">
+        <osf-recent-activity-list></osf-recent-activity-list>
+      </div>
+    </p-card>
+
+    <p-card class="col-5">
+      <h2>{{ 'navigation.preprintsSubRoutes.myReviewing' | translate }}</h2>
+
+      <div class="mt-4">
+        <osf-my-reviewing-navigation></osf-my-reviewing-navigation>
+      </div>
+    </p-card>
+  </div>
+</section>

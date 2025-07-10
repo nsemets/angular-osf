@@ -4,8 +4,10 @@ export { CollectionModerationSubmissionsComponent } from './collection-moderatio
 export { InviteModeratorDialogComponent } from './invite-moderator-dialog/invite-moderator-dialog.component';
 export { ModeratorsListComponent } from './moderators-list/moderators-list.component';
 export { ModeratorsTableComponent } from './moderators-table/moderators-table.component';
+export { MyReviewingNavigationComponent } from './my-reviewing-navigation/my-reviewing-navigation.component';
 export { NotificationSettingsComponent } from './notification-settings/notification-settings.component';
 export { PreprintModerationSettingsComponent } from './preprint-moderation-settings/preprint-moderation-settings.component';
+export { RecentActivityListComponent } from './recent-activity-list/recent-activity-list.component';
 export { RegistrySettingsComponent } from './registry-settings/registry-settings.component';
 export { RegistrySubmissionsComponent } from './registry-submissions/registry-submissions.component';
 export { SubmissionItemComponent } from './submission-item/submission-item.component';

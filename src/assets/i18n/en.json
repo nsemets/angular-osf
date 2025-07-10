@@ -106,7 +106,8 @@
     "preprints": "Preprints",
     "preprintsSubRoutes": {
       "overview": "Overview",
-      "myPreprints": "My Preprints"
+      "myPreprints": "My Preprints",
+      "myReviewing": "My Reviewing"
     },
     "collections": "Collections",
     "moderation": "Moderation",

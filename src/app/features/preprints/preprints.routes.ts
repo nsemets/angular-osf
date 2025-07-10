@@ -76,6 +76,13 @@ export const preprintsRoutes: Routes = [
           ),
         providers: [provideStates([ModerationState])],
       },
+      {
+        path: 'my-reviewing',
+        loadComponent: () =>
+          import('@osf/features/moderation/pages/my-preprint-reviewing/my-preprint-reviewing.component').then(
+            (m) => m.MyPreprintReviewingComponent
+          ),
+      },
     ],
   },
 ];
