@@ -1,8 +1,8 @@
 import { ResourceType } from '@osf/shared/enums';
 
-import { ModeratorAddModel, ModeratorModel } from '../models';
+import { ModeratorAddModel, ModeratorModel } from '../../models';
 
-const ACTION_SCOPE = '[Moderation]';
+const ACTION_SCOPE = '[Moderators]';
 
 export class LoadModerators {
   static readonly type = `${ACTION_SCOPE} Load Moderators`;

@@ -16,7 +16,7 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root',
 })
-export class ModerationService {
+export class ModeratorsService {
   private readonly jsonApiService = inject(JsonApiService);
 
   private readonly urlMap = new Map<ResourceType, string>([

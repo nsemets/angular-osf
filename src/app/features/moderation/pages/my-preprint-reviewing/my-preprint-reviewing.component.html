@@ -6,7 +6,12 @@
       <h2>{{ 'project.overview.recentActivity.title' | translate }}</h2>
 
       <div class="mt-4">
-        <osf-recent-activity-list></osf-recent-activity-list>
+        <osf-recent-activity-list
+          [reviews]="preprintReviews()"
+          [isLoading]="isReviewsLoading()"
+          [totalCount]="preprintReviewsTotalCount()"
+          (pageChanged)="pageChanged($event)"
+        ></osf-recent-activity-list>
       </div>
     </p-card>
 
@@ -14,7 +19,19 @@
       <h2>{{ 'navigation.preprintsSubRoutes.myReviewing' | translate }}</h2>
 
       <div class="mt-4">
-        <osf-my-reviewing-navigation></osf-my-reviewing-navigation>
+        @if (isPreprintProvidersLoading()) {
+          <div class="flex flex-column gap-2">
+            <p-skeleton height="1.5rem"></p-skeleton>
+            <p-skeleton height="1.5rem"></p-skeleton>
+            <p-skeleton height="1.5rem"></p-skeleton>
+            <p-skeleton height="1.5rem"></p-skeleton>
+            <p-skeleton height="1.5rem"></p-skeleton>
+          </div>
+        } @else {
+          @for (provider of preprintProviders(); track provider.id) {
+            <osf-my-reviewing-navigation [provider]="provider"></osf-my-reviewing-navigation>
+          }
+        }
       </div>
     </p-card>
   </div>

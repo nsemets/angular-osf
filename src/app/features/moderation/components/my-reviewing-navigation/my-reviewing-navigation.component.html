@@ -1,4 +1,4 @@
-<h4>{{ 'Provider name' }}</h4>
+<h4>{{ provider().name }}</h4>
 
 <div class="flex flex-column gap-2 mt-2">
   @for (tab of tabOptions; track $index) {
@@ -9,7 +9,7 @@
       [link]="true"
       [label]="tab.label | translate"
       [badge]="badge"
-      [routerLink]="['/preprints', 'lawarchive', 'moderation']"
+      [routerLink]="['/preprints', provider().id, 'moderation']"
     ></p-button>
   }
 </div>

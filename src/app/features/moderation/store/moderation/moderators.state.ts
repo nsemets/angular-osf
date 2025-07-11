@@ -1,11 +1,13 @@
 import { Action, State, StateContext } from '@ngxs/store';
 
-import { catchError, of, tap, throwError } from 'rxjs';
+import { catchError, of, tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { ModeratorModel } from '../models';
-import { ModerationService } from '../services';
+import { handleSectionError } from '@osf/core/handlers';
+
+import { ModeratorModel } from '../../models';
+import { ModeratorsService } from '../../services';
 
 import {
   AddModerator,
@@ -15,32 +17,19 @@ import {
   SearchUsers,
   UpdateModerator,
   UpdateSearchValue,
-} from './moderation.actions';
-import { ModerationStateModel } from './moderation.model';
+} from './moderators.actions';
+import { MODERATORS_STATE_DEFAULTS, ModeratorsStateModel } from './moderators.model';
 
-@State<ModerationStateModel>({
+@State<ModeratorsStateModel>({
   name: 'moderation',
-  defaults: {
-    moderators: {
-      data: [],
-      isLoading: false,
-      error: null,
-      searchValue: null,
-    },
-    users: {
-      data: [],
-      isLoading: false,
-      error: null,
-      totalCount: 0,
-    },
-  },
+  defaults: MODERATORS_STATE_DEFAULTS,
 })
 @Injectable()
-export class ModerationState {
-  private readonly moderationService = inject(ModerationService);
+export class ModeratorsState {
+  private readonly moderatorsService = inject(ModeratorsService);
 
   @Action(LoadModerators)
-  loadModerators(ctx: StateContext<ModerationStateModel>, action: LoadModerators) {
+  loadModerators(ctx: StateContext<ModeratorsStateModel>, action: LoadModerators) {
     const state = ctx.getState();
 
     if (!action.resourceType) {
@@ -51,7 +40,7 @@ export class ModerationState {
       moderators: { ...state.moderators, isLoading: true, error: null },
     });
 
-    return this.moderationService.getModerators(action.resourceId, action.resourceType).pipe(
+    return this.moderatorsService.getModerators(action.resourceId, action.resourceType).pipe(
       tap((moderators: ModeratorModel[]) => {
         ctx.patchState({
           moderators: {
@@ -61,19 +50,19 @@ export class ModerationState {
           },
         });
       }),
-      catchError((error) => this.handleError(ctx, 'moderators', error))
+      catchError((error) => handleSectionError(ctx, 'moderators', error))
     );
   }
 
   @Action(UpdateSearchValue)
-  updateSearchValue(ctx: StateContext<ModerationStateModel>, action: UpdateSearchValue) {
+  updateSearchValue(ctx: StateContext<ModeratorsStateModel>, action: UpdateSearchValue) {
     ctx.patchState({
       moderators: { ...ctx.getState().moderators, searchValue: action.searchValue },
     });
   }
 
   @Action(AddModerator)
-  addModerator(ctx: StateContext<ModerationStateModel>, action: AddModerator) {
+  addModerator(ctx: StateContext<ModeratorsStateModel>, action: AddModerator) {
     const state = ctx.getState();
 
     if (!action.resourceType) {
@@ -84,7 +73,7 @@ export class ModerationState {
       moderators: { ...state.moderators, isLoading: true, error: null },
     });
 
-    return this.moderationService.addModerator(action.resourceId, action.resourceType, action.moderator).pipe(
+    return this.moderatorsService.addModerator(action.resourceId, action.resourceType, action.moderator).pipe(
       tap((moderator) => {
         const currentState = ctx.getState();
 
@@ -96,12 +85,12 @@ export class ModerationState {
           },
         });
       }),
-      catchError((error) => this.handleError(ctx, 'moderators', error))
+      catchError((error) => handleSectionError(ctx, 'moderators', error))
     );
   }
 
   @Action(UpdateModerator)
-  updateCollectionModerator(ctx: StateContext<ModerationStateModel>, action: UpdateModerator) {
+  updateCollectionModerator(ctx: StateContext<ModeratorsStateModel>, action: UpdateModerator) {
     const state = ctx.getState();
 
     if (!action.resourceType) {
@@ -112,7 +101,7 @@ export class ModerationState {
       moderators: { ...state.moderators, isLoading: true, error: null },
     });
 
-    return this.moderationService.updateModerator(action.resourceId, action.resourceType, action.moderator).pipe(
+    return this.moderatorsService.updateModerator(action.resourceId, action.resourceType, action.moderator).pipe(
       tap((updatedModerator) => {
         const currentState = ctx.getState();
 
@@ -126,12 +115,12 @@ export class ModerationState {
           },
         });
       }),
-      catchError((error) => this.handleError(ctx, 'moderators', error))
+      catchError((error) => handleSectionError(ctx, 'moderators', error))
     );
   }
 
   @Action(DeleteModerator)
-  deleteCollectionModerator(ctx: StateContext<ModerationStateModel>, action: DeleteModerator) {
+  deleteCollectionModerator(ctx: StateContext<ModeratorsStateModel>, action: DeleteModerator) {
     const state = ctx.getState();
 
     if (!action.resourceType) {
@@ -142,7 +131,7 @@ export class ModerationState {
       moderators: { ...state.moderators, isLoading: true, error: null },
     });
 
-    return this.moderationService.deleteModerator(action.resourceId, action.resourceType, action.moderatorId).pipe(
+    return this.moderatorsService.deleteModerator(action.resourceId, action.resourceType, action.moderatorId).pipe(
       tap(() => {
         ctx.patchState({
           moderators: {
@@ -152,12 +141,12 @@ export class ModerationState {
           },
         });
       }),
-      catchError((error) => this.handleError(ctx, 'moderators', error))
+      catchError((error) => handleSectionError(ctx, 'moderators', error))
     );
   }
 
   @Action(SearchUsers)
-  searchUsers(ctx: StateContext<ModerationStateModel>, action: SearchUsers) {
+  searchUsers(ctx: StateContext<ModeratorsStateModel>, action: SearchUsers) {
     const state = ctx.getState();
 
     ctx.patchState({
@@ -170,7 +159,7 @@ export class ModerationState {
       return of([]);
     }
 
-    return this.moderationService.searchUsers(action.searchValue, action.page).pipe(
+    return this.moderatorsService.searchUsers(action.searchValue, action.page).pipe(
       tap((users) => {
         ctx.patchState({
           users: {
@@ -181,24 +170,12 @@ export class ModerationState {
           },
         });
       }),
-      catchError((error) => this.handleError(ctx, 'users', error))
+      catchError((error) => handleSectionError(ctx, 'users', error))
     );
   }
 
   @Action(ClearUsers)
-  clearUsers(ctx: StateContext<ModerationStateModel>) {
+  clearUsers(ctx: StateContext<ModeratorsStateModel>) {
     ctx.patchState({ users: { data: [], isLoading: false, error: null, totalCount: 0 } });
-  }
-
-  private handleError(ctx: StateContext<ModerationStateModel>, key: keyof ModerationStateModel, error: Error) {
-    const state = ctx.getState();
-    ctx.patchState({
-      [key]: {
-        ...state[key],
-        isLoading: false,
-        error: error.message,
-      },
-    });
-    return throwError(() => error);
   }
 }

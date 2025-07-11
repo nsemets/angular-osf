@@ -18,10 +18,10 @@ import {
   AddModerator,
   DeleteModerator,
   LoadModerators,
-  ModerationSelectors,
+  ModeratorsSelectors,
   UpdateModerator,
   UpdateSearchValue,
-} from '@osf/features/moderation/store';
+} from '@osf/features/moderation/store/moderation';
 import { SearchInputComponent } from '@osf/shared/components';
 import { ResourceType } from '@osf/shared/enums';
 import { CustomConfirmationService, ToastService } from '@osf/shared/services';
@@ -53,8 +53,8 @@ export class ModeratorsListComponent implements OnInit {
   providerId = toSignal(this.route.params.pipe(map((params) => params['id'])) ?? of(undefined));
 
   moderators = signal([]);
-  initialModerators = select(ModerationSelectors.getModerators);
-  isModeratorsLoading = select(ModerationSelectors.isModeratorsLoading);
+  initialModerators = select(ModeratorsSelectors.getModerators);
+  isModeratorsLoading = select(ModeratorsSelectors.isModeratorsLoading);
 
   protected actions = createDispatchMap({
     loadModerators: LoadModerators,
