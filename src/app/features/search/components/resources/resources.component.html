@@ -18,8 +18,9 @@
       <p>{{ 'collections.filters.sortBy' | translate }}:</p>
 
       <osf-select
-        class="no-border-dropdown font-bold"
+        class="ml-1 font-bold"
         [options]="searchSortingOptions"
+        [noBorder]="true"
         appendTo="body"
         [(selectedValue)]="selectedSort"
       ></osf-select>

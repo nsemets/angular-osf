@@ -1,8 +1,8 @@
-import { select } from '@ngxs/store';
+import { Store } from '@ngxs/store';
 
 import { Accordion, AccordionContent, AccordionHeader, AccordionPanel } from 'primeng/accordion';
 
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { SearchSelectors } from '../../store';
@@ -42,42 +42,57 @@ import { ResourceFiltersOptionsSelectors } from '../filters/store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceFiltersComponent {
+  readonly store = inject(Store);
+
   readonly datesOptionsCount = computed(() => {
-    return select(ResourceFiltersOptionsSelectors.getDatesCreated)().reduce(
-      (accumulator, date) => accumulator + date.count,
-      0
-    );
+    return this.store
+      .selectSignal(ResourceFiltersOptionsSelectors.getDatesCreated)()
+      .reduce((accumulator, date) => accumulator + date.count, 0);
   });
 
   readonly funderOptionsCount = computed(() =>
-    select(ResourceFiltersOptionsSelectors.getFunders)().reduce((acc, item) => acc + item.count, 0)
+    this.store
+      .selectSignal(ResourceFiltersOptionsSelectors.getFunders)()
+      .reduce((acc, item) => acc + item.count, 0)
   );
 
   readonly subjectOptionsCount = computed(() =>
-    select(ResourceFiltersOptionsSelectors.getSubjects)().reduce((acc, item) => acc + item.count, 0)
+    this.store
+      .selectSignal(ResourceFiltersOptionsSelectors.getSubjects)()
+      .reduce((acc, item) => acc + item.count, 0)
   );
 
   readonly licenseOptionsCount = computed(() =>
-    select(ResourceFiltersOptionsSelectors.getLicenses)().reduce((acc, item) => acc + item.count, 0)
+    this.store
+      .selectSignal(ResourceFiltersOptionsSelectors.getLicenses)()
+      .reduce((acc, item) => acc + item.count, 0)
   );
 
   readonly resourceTypeOptionsCount = computed(() =>
-    select(ResourceFiltersOptionsSelectors.getResourceTypes)().reduce((acc, item) => acc + item.count, 0)
+    this.store
+      .selectSignal(ResourceFiltersOptionsSelectors.getResourceTypes)()
+      .reduce((acc, item) => acc + item.count, 0)
   );
 
   readonly institutionOptionsCount = computed(() =>
-    select(ResourceFiltersOptionsSelectors.getInstitutions)().reduce((acc, item) => acc + item.count, 0)
+    this.store
+      .selectSignal(ResourceFiltersOptionsSelectors.getInstitutions)()
+      .reduce((acc, item) => acc + item.count, 0)
   );
 
   readonly providerOptionsCount = computed(() =>
-    select(ResourceFiltersOptionsSelectors.getProviders)().reduce((acc, item) => acc + item.count, 0)
+    this.store
+      .selectSignal(ResourceFiltersOptionsSelectors.getProviders)()
+      .reduce((acc, item) => acc + item.count, 0)
   );
 
   readonly partOfCollectionOptionsCount = computed(() =>
-    select(ResourceFiltersOptionsSelectors.getPartOfCollection)().reduce((acc, item) => acc + item.count, 0)
+    this.store
+      .selectSignal(ResourceFiltersOptionsSelectors.getPartOfCollection)()
+      .reduce((acc, item) => acc + item.count, 0)
   );
 
-  readonly isMyProfilePage = select(SearchSelectors.getIsMyProfile);
+  readonly isMyProfilePage = this.store.selectSignal(SearchSelectors.getIsMyProfile);
 
   readonly anyOptionsCount = computed(() => {
     return (

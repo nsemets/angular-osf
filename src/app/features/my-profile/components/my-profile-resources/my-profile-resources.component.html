@@ -17,8 +17,9 @@
     @if (isWeb()) {
       <h3>{{ 'collections.filters.sortBy' | translate }}:</h3>
       <osf-select
-        class="no-border-dropdown font-bold"
+        class="ml-1 font-bold"
         [options]="searchSortingOptions"
+        [noBorder]="true"
         appendTo="body"
         [(selectedValue)]="selectedSort"
       ></osf-select>

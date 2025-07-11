@@ -1,10 +1,9 @@
 import { Action, State, StateContext, Store } from '@ngxs/store';
 
-import { catchError, tap } from 'rxjs';
+import { tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { handleSectionError } from '@osf/core/handlers';
 import { UserSelectors } from '@osf/core/store/user';
 import { removeNullable } from '@osf/shared/constants';
 import { Social } from '@osf/shared/models';
@@ -89,8 +88,7 @@ export class ProfileSettingsState {
           ...state,
           education: response.data.attributes.education,
         });
-      }),
-      catchError((error) => handleSectionError(ctx, 'education', error))
+      })
     );
   }
 
