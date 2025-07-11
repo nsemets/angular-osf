@@ -83,13 +83,6 @@ export class MetadataComponent implements OnDestroy {
         this.initForm(draft);
       }
     });
-
-    effect(() => {
-      const subjects = this.selectedSubjects();
-      if (subjects) {
-        this.metadataForm.patchValue({ subjects });
-      }
-    });
   }
 
   private initForm(data: Registration): void {
