@@ -11,7 +11,7 @@
         [src]="preprintProvider()!.brand.heroLogoImageUrl"
       />
       <h1 class="preprint-provider-name">
-        {{ 'preprints.addPreprint' | translate: { preprintWord: preprintProvider()!.preprintWord } }}
+        {{ 'preprints.updatePreprint' | translate: { preprintWord: preprintProvider()!.preprintWord } }}
       </h1>
     }
   </section>
@@ -22,7 +22,7 @@
     } @else {
       <osf-stepper
         class="m-t-48"
-        [steps]="submitPreprintSteps()"
+        [steps]="updateSteps()"
         [currentStep]="currentStep()"
         (currentStepChange)="stepChange($event)"
       />
@@ -32,26 +32,19 @@
 
 <section class="flex-1 bg-white px-3 py-4 md:py-4 md:px-4">
   @switch (currentStep().value) {
-    @case (SubmitStepsEnum.TitleAndAbstract) {
+    @case (PreprintSteps.TitleAndAbstract) {
       <osf-title-and-abstract-step (nextClicked)="moveToNextStep()" />
     }
-    @case (SubmitStepsEnum.File) {
-      <osf-file-step
-        [provider]="preprintProvider()"
-        (nextClicked)="moveToNextStep()"
-        (backClicked)="moveToPreviousStep()"
-      />
-    }
-    @case (SubmitStepsEnum.Metadata) {
+    @case (PreprintSteps.Metadata) {
       <osf-preprint-metadata (nextClicked)="moveToNextStep()" (backClicked)="moveToPreviousStep()" />
     }
-    @case (SubmitStepsEnum.AuthorAssertions) {
+    @case (PreprintSteps.AuthorAssertions) {
       <osf-author-assertions-step (nextClicked)="moveToNextStep()" (backClicked)="moveToPreviousStep()" />
     }
-    @case (SubmitStepsEnum.Supplements) {
+    @case (PreprintSteps.Supplements) {
       <osf-supplements-step (nextClicked)="moveToNextStep()" (backClicked)="moveToPreviousStep()" />
     }
-    @case (SubmitStepsEnum.Review) {
+    @case (PreprintSteps.Review) {
       <osf-review-step [provider]="preprintProvider()" />
     }
   }
