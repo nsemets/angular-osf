@@ -1,6 +1,8 @@
-import { LicenseOptions } from '@osf/shared/models';
-
-import { RegistrationAttributesJsonApi, RegistrationRelationshipsJsonApi } from '../models';
+import {
+  DraftRegistrationAttributesJsonApi,
+  DraftRegistrationRelationshipsJsonApi,
+  LicenseOptions,
+} from '@osf/shared/models';
 
 export class GetRegistries {
   static readonly type = '[Registries] Get Registries';
@@ -28,8 +30,8 @@ export class UpdateDraft {
   static readonly type = '[Registries] Update Registration Tags';
   constructor(
     public draftId: string,
-    public attributes: Partial<RegistrationAttributesJsonApi>,
-    public relationships?: Partial<RegistrationRelationshipsJsonApi>
+    public attributes: Partial<DraftRegistrationAttributesJsonApi>,
+    public relationships?: Partial<DraftRegistrationRelationshipsJsonApi>
   ) {}
 }
 
@@ -71,4 +73,12 @@ export class UpdateStepValidation {
     public step: string,
     public invalid: boolean
   ) {}
+}
+
+export class FetchDraftRegistrations {
+  static readonly type = '[Registries] Fetch Draft Registrations';
+}
+
+export class FetchSubmittedRegistrations {
+  static readonly type = '[Registries] Fetch Submitted Registrations';
 }

@@ -4,9 +4,9 @@ import { inject, Injectable } from '@angular/core';
 
 import { JsonApiResponse } from '@osf/core/models';
 import { JsonApiService } from '@osf/core/services';
+import { RegistrationModel } from '@osf/shared/models';
 
-import { submittedRegistrations } from '../mock-data';
-import { RegistrationModel, RegistrationsGetResponse } from '../models';
+import { RegistrationsGetResponse } from '../models';
 
 import { RegistrationsMapper } from './../mappers';
 
@@ -26,9 +26,7 @@ export class RegistrationsService {
 
     return this.#jsonApiService.get<JsonApiResponse<RegistrationsGetResponse[], null>>(url, params).pipe(
       map((response) => {
-        return response.data.length
-          ? response.data.map((registration) => RegistrationsMapper.fromResponse(registration))
-          : submittedRegistrations;
+        return response.data.map((registration) => RegistrationsMapper.fromResponse(registration));
       })
     );
   }

@@ -1,5 +1,11 @@
-import { DraftRegistrationModel, RegistrationModel } from '@osf/shared/models/registration';
-import { AsyncStateModel, License, Resource } from '@shared/models';
+import {
+  AsyncStateModel,
+  DraftRegistrationModel,
+  License,
+  RegistrationCard,
+  RegistrationModel,
+  Resource,
+} from '@shared/models';
 
 import { PageSchema, Project, Provider } from '../models';
 
@@ -12,4 +18,10 @@ export interface RegistriesStateModel {
   licenses: AsyncStateModel<License[]>;
   pagesSchema: AsyncStateModel<PageSchema[]>;
   stepsValidation: Record<string, { invalid: boolean }>;
+  draftRegistrations: AsyncStateModel<RegistrationCard[]> & {
+    totalCount: number;
+  };
+  submittedRegistrations: AsyncStateModel<RegistrationCard[]> & {
+    totalCount: number;
+  };
 }

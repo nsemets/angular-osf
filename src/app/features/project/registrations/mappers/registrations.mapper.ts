@@ -1,4 +1,7 @@
-import { RegistrationModel, RegistrationsGetResponse, RegistrationStatus } from '../models';
+import { RegistryStatus } from '@osf/shared/enums';
+import { RegistrationModel } from '@osf/shared/models';
+
+import { RegistrationsGetResponse } from '../models';
 
 export class RegistrationsMapper {
   static fromResponse(response: RegistrationsGetResponse): RegistrationModel {
@@ -8,16 +11,16 @@ export class RegistrationsMapper {
       title: response.attributes?.title,
       dateRegistered: response.attributes?.date_registered,
       dateModified: response.attributes?.date_modified,
-      registrationSupplement: response.attributes?.registration_supplement,
-      registry: '',
+      // registrationSupplement: response.attributes?.registration_supplement,
+      // registry: '',
       description: response.attributes?.description,
-      withdrawn: response.attributes?.withdrawn,
-      lastFetched: Date.now(),
+      // withdrawn: response.attributes?.withdrawn,
+      // lastFetched: Date.now(),
       status: response.attributes?.withdrawn
-        ? RegistrationStatus.WITHDRAWN
+        ? RegistryStatus.PendingWithdraw
         : response.attributes?.date_modified
-          ? RegistrationStatus.IN_PROGRESS
-          : RegistrationStatus.DRAFT,
-    };
+          ? RegistryStatus.InProgress
+          : RegistryStatus.Pending,
+    } as RegistrationModel;
   }
 }

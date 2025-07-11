@@ -31,7 +31,9 @@
       "update": "Update",
       "continue update": "Continue update",
       "withdraw": "Withdraw",
-      "submit": "Submit"
+      "submit": "Submit",
+      "view": "View",
+      "review": "Review"
     },
     "search": {
       "title": "Search",
@@ -72,7 +74,9 @@
       "optional": "Optional",
       "makePublic": "Make Public",
       "noData": "No data",
-      "noFiles": "No files selected"
+      "noFiles": "No files selected",
+      "drafts": "Drafts",
+      "submitted": "Submitted"
     },
     "deleteConfirmation": {
       "header": "Delete",
@@ -706,6 +710,8 @@
       "addRegistration": "Add a Registration",
       "emptyState": "There have been no completed registrations of this project.",
       "card": {
+        "noTitle": "(Untitled)",
+        "noDescription": "No description",
         "registrationTemplate": "Registration template:",
         "registry": "Registry:",
         "registered": "Registered:",

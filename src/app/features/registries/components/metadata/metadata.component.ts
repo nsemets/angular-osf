@@ -15,8 +15,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { TextInputComponent } from '@osf/shared/components';
 import { INPUT_VALIDATION_MESSAGES, InputLimits } from '@osf/shared/constants';
-import { SubjectModel } from '@osf/shared/models';
-import { DraftRegistrationModel } from '@osf/shared/models/registration';
+import { DraftRegistrationModel, SubjectModel } from '@osf/shared/models';
 import { CustomConfirmationService } from '@osf/shared/services';
 import { SubjectsSelectors } from '@osf/shared/stores';
 import { CustomValidators, findChangedFields } from '@osf/shared/utils';
