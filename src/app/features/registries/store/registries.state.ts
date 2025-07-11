@@ -22,7 +22,7 @@ import {
   FetchLicenses,
   FetchSchemaBlocks,
   GetProjects,
-  GetProviders,
+  GetProviderSchemas,
   GetRegistries,
   RegisterDraft,
   SaveLicense,
@@ -75,9 +75,9 @@ export class RegistriesState {
     return this.projectsHandler.getProjects(ctx);
   }
 
-  @Action(GetProviders)
-  getProviders(ctx: StateContext<RegistriesStateModel>) {
-    return this.providersHandler.getProviders(ctx);
+  @Action(GetProviderSchemas)
+  getProviders(ctx: StateContext<RegistriesStateModel>, { providerId }: GetProviderSchemas) {
+    return this.providersHandler.getProviderSchemas(ctx, providerId);
   }
 
   @Action(CreateDraft)

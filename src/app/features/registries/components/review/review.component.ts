@@ -60,6 +60,8 @@ export class ReviewComponent {
   });
 
   private readonly draftId = toSignal(this.route.params.pipe(map((params) => params['id'])) ?? of(undefined));
+  protected readonly providerId = this.route.snapshot.params['providerId'];
+
   protected stepsValidation = select(RegistriesSelectors.getStepsValidation);
 
   isMetaDataInvalid = computed(() => {
@@ -106,7 +108,7 @@ export class ReviewComponent {
       onConfirm: () => {
         this.actions.deleteDraft(this.draftId()).subscribe({
           next: () => {
-            this.router.navigateByUrl('/registries/new');
+            this.router.navigateByUrl(`/registries/${this.providerId}new`);
           },
         });
       },

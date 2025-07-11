@@ -54,6 +54,7 @@ export class MetadataComponent implements OnDestroy {
   private readonly customConfirmationService = inject(CustomConfirmationService);
 
   private readonly draftId = this.route.snapshot.params['id'];
+  protected readonly providerId = this.route.snapshot.params['providerId'];
   protected readonly draftRegistration = select(RegistriesSelectors.getDraftRegistration);
   protected selectedSubjects = select(SubjectsSelectors.getSelectedSubjects);
 
@@ -118,7 +119,7 @@ export class MetadataComponent implements OnDestroy {
       onConfirm: () => {
         this.actions.deleteDraft(this.draftId).subscribe({
           next: () => {
-            this.router.navigateByUrl('/registries/new');
+            this.router.navigateByUrl(`/registries/${this.providerId}/new`);
           },
         });
       },

@@ -53,11 +53,11 @@
         <div class="flex">
           <p-select
             formControlName="provider"
-            [options]="providers()"
+            [options]="providerSchemas()"
             optionLabel="name"
             optionValue="id"
             [loading]="isProvidersLoading()"
-            (onChange)="onSelectProvider($event.value)"
+            (onChange)="onSelectProviderSchema($event.value)"
             class="w-6"
           />
         </div>

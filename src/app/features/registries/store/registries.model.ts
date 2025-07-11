@@ -1,10 +1,10 @@
 import { DraftRegistrationModel, RegistrationModel } from '@osf/shared/models/registration';
 import { AsyncStateModel, License, Resource } from '@shared/models';
 
-import { PageSchema, Project, Provider } from '../models';
+import { PageSchema, Project, ProviderSchema } from '../models';
 
 export interface RegistriesStateModel {
-  providers: AsyncStateModel<Provider[]>;
+  providerSchemas: AsyncStateModel<ProviderSchema[]>;
   projects: AsyncStateModel<Project[]>;
   draftRegistration: AsyncStateModel<DraftRegistrationModel | null>;
   registration: AsyncStateModel<RegistrationModel | null>;
