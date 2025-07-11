@@ -49,7 +49,7 @@ export class ConfirmRegistrationDialogComponent {
 
       if (this.showDateControl) {
         dateControl!.enable();
-        dateControl!.setValidators(Validators.required); // make date required
+        dateControl!.setValidators(Validators.required);
       } else {
         dateControl!.disable();
         dateControl!.clearValidators();
@@ -62,7 +62,12 @@ export class ConfirmRegistrationDialogComponent {
 
   submit(): void {
     this.actions
-      .registerDraft(this.config.data.draftId, this.form.value.embargoDate, this.config.data.projectId)
+      .registerDraft(
+        this.config.data.draftId,
+        this.form.value.embargoDate,
+        this.config.data.providerId,
+        this.config.data.projectId
+      )
       .subscribe({
         complete: () => {
           this.dialogRef.close();

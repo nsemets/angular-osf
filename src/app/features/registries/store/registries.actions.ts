@@ -44,6 +44,7 @@ export class RegisterDraft {
   constructor(
     public draftId: string,
     public embargoDate: string,
+    public providerId: string,
     public projectId?: string
   ) {}
 }

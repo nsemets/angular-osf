@@ -21,6 +21,7 @@ export class RegistrationMapper {
       tags: response.attributes.tags || [],
       stepsData: response.attributes.registration_responses || {},
       branchedFrom: response.relationships.branched_from?.data?.id,
+      providerId: response.relationships.provider?.data?.id || '',
     };
   }
 
@@ -29,5 +30,34 @@ export class RegistrationMapper {
       id: response.id,
       type: 'registration',
     } as RegistrationModel;
+  }
+
+  static toRegistrationPayload(draftId: string, embargoDate: string, providerId: string, projectId?: string) {
+    return {
+      data: {
+        type: 'registrations',
+        attributes: {
+          embargo_end_date: embargoDate,
+          draft_registration: draftId,
+        },
+        relationships: {
+          registered_from: projectId
+            ? {
+                data: {
+                  type: 'nodes',
+                  id: projectId,
+                },
+              }
+            : undefined,
+
+          provider: {
+            data: {
+              type: 'registration-providers',
+              id: providerId,
+            },
+          },
+        },
+      },
+    };
   }
 }

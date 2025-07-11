@@ -81,32 +81,13 @@ export class RegistriesService {
     return this.jsonApiService.delete(`${this.apiUrl}/draft_registrations/${draftId}/`);
   }
 
-  registerDraft(draftId: string, embargoDate: string, projectId?: string): Observable<RegistrationModel> {
-    const payload = {
-      data: {
-        type: 'registrations',
-        attributes: {
-          embargo_end_date: embargoDate,
-          draft_registration: draftId,
-        },
-        relationships: {
-          registered_from: projectId
-            ? {
-                data: {
-                  type: 'nodes',
-                  id: projectId,
-                },
-              }
-            : undefined,
-        },
-        provider: {
-          data: {
-            type: 'registration-providers',
-            id: 'osf', // Assuming 'osf' is the default provider
-          },
-        },
-      },
-    };
+  registerDraft(
+    draftId: string,
+    embargoDate: string,
+    providerId: string,
+    projectId?: string
+  ): Observable<RegistrationModel> {
+    const payload = RegistrationMapper.toRegistrationPayload(draftId, embargoDate, providerId, projectId);
     return this.jsonApiService
       .post<RegistrationResponseJsonApi>(`${this.apiUrl}/registrations/`, payload)
       .pipe(map((response) => RegistrationMapper.fromRegistrationResponse(response.data)));

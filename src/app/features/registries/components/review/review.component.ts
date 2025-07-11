@@ -60,7 +60,6 @@ export class ReviewComponent {
   });
 
   private readonly draftId = toSignal(this.route.params.pipe(map((params) => params['id'])) ?? of(undefined));
-  protected readonly providerId = this.route.snapshot.params['providerId'];
 
   protected stepsValidation = select(RegistriesSelectors.getStepsValidation);
 
@@ -108,7 +107,7 @@ export class ReviewComponent {
       onConfirm: () => {
         this.actions.deleteDraft(this.draftId()).subscribe({
           next: () => {
-            this.router.navigateByUrl(`/registries/${this.providerId}new`);
+            this.router.navigateByUrl(`/registries/${this.draftRegistration()?.providerId}new`);
           },
         });
       },
@@ -126,6 +125,7 @@ export class ReviewComponent {
         data: {
           draftId: this.draftId(),
           projectId: this.draftRegistration()?.branchedFrom,
+          providerId: this.draftRegistration()?.providerId,
         },
       })
       .onClose.subscribe(() => {
