@@ -14,4 +14,5 @@ export interface SubmitPreprintStateModel {
   projectFiles: AsyncStateModel<OsfFile[]>;
   licenses: AsyncStateModel<License[]>;
   preprintProject: AsyncStateModel<IdName | null>;
+  hasBeenSubmitted: boolean;
 }
