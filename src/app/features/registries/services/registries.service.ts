@@ -4,6 +4,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { JsonApiResponseWithPaging } from '@osf/core/models';
 import { JsonApiService } from '@osf/core/services';
+import { RegistrationMapper } from '@osf/shared/mappers/registration';
 import {
   DraftRegistrationDataJsonApi,
   DraftRegistrationModel,
@@ -17,7 +18,6 @@ import {
 } from '@osf/shared/models';
 
 import { PageSchemaMapper } from '../mappers';
-import { RegistrationMapper } from '../mappers/registration.mapper';
 import { PageSchema, SchemaBlocksResponseJsonApi } from '../models';
 
 import { environment } from 'src/environments/environment';
