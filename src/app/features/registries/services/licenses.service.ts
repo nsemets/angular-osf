@@ -34,9 +34,9 @@ export class LicensesService {
   private apiUrl = environment.apiUrl;
   private readonly jsonApiService = inject(JsonApiService);
 
-  getLicenses(): Observable<License[]> {
+  getLicenses(providerId: string): Observable<License[]> {
     return this.jsonApiService
-      .get<LicensesResponseJsonApi>(`${this.apiUrl}/providers/registrations/osf/licenses/`, {
+      .get<LicensesResponseJsonApi>(`${this.apiUrl}/providers/registrations/${providerId}/licenses/`, {
         params: {
           'page[size]': 100,
         },

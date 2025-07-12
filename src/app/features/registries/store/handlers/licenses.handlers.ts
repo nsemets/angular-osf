@@ -14,7 +14,7 @@ import { RegistriesStateModel } from '../registries.model';
 export class LicensesHandlers {
   licensesService = inject(LicensesService);
 
-  fetchLicenses(ctx: StateContext<RegistriesStateModel>) {
+  fetchLicenses(ctx: StateContext<RegistriesStateModel>, providerId: string) {
     ctx.patchState({
       licenses: {
         ...ctx.getState().licenses,
@@ -22,7 +22,7 @@ export class LicensesHandlers {
       },
     });
 
-    return this.licensesService.getLicenses().pipe(
+    return this.licensesService.getLicenses(providerId).pipe(
       tap((licenses) => {
         ctx.patchState({
           licenses: {

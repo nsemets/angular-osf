@@ -45,6 +45,8 @@ export class DraftsComponent {
 
   defaultSteps: StepOption[] = [];
 
+  isLoaded = false;
+
   steps: Signal<StepOption[]> = computed(() => {
     this.defaultSteps = defaultSteps.map((step) => ({
       ...step,
@@ -102,11 +104,12 @@ export class DraftsComponent {
     }
     effect(() => {
       const registrationSchemaId = this.draftRegistration()?.registrationSchemaId;
-      if (registrationSchemaId) {
+      if (registrationSchemaId && !this.isLoaded) {
         this.actions
           .getSchemaBlocks(registrationSchemaId || '')
           .pipe(
             tap(() => {
+              this.isLoaded = true;
               this.loaderService.hide();
             })
           )

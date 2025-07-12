@@ -56,6 +56,7 @@ export class FetchSchemaBlocks {
 
 export class FetchLicenses {
   static readonly type = '[Registries] Fetch Licenses';
+  constructor(public providerId: string) {}
 }
 
 export class SaveLicense {
