@@ -78,16 +78,20 @@ export class MetadataComponent implements OnDestroy {
     }),
   });
 
+  isDraftDeleted = false;
+  isFormUpdated = false;
+
   constructor() {
     effect(() => {
       const draft = this.draftRegistration();
-      if (draft) {
-        this.initForm(draft);
+      if (draft && !this.isFormUpdated) {
+        this.updateFormValue(draft);
+        this.isFormUpdated = true;
       }
     });
   }
 
-  private initForm(data: DraftRegistrationModel): void {
+  private updateFormValue(data: DraftRegistrationModel): void {
     this.metadataForm.patchValue({
       title: data.title,
       description: data.description,
@@ -123,9 +127,12 @@ export class MetadataComponent implements OnDestroy {
       headerKey: 'registries.deleteDraft',
       messageKey: 'registries.confirmDeleteDraft',
       onConfirm: () => {
+        const providerId = this.draftRegistration()?.providerId;
         this.actions.deleteDraft(this.draftId).subscribe({
           next: () => {
-            this.router.navigateByUrl(`/registries/${this.draftRegistration()?.providerId}/new`);
+            // [NM] TODO: clear validation state
+            this.isDraftDeleted = true;
+            this.router.navigateByUrl(`/registries/${providerId}/new`);
           },
         });
       },
@@ -133,14 +140,16 @@ export class MetadataComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.actions.updateStepValidation('0', this.metadataForm.invalid);
-    const changedFields = findChangedFields(
-      { title: this.metadataForm.value.title!, description: this.metadataForm.value.description! },
-      { title: this.draftRegistration()?.title, description: this.draftRegistration()?.description }
-    );
-    if (Object.keys(changedFields).length > 0) {
-      this.metadataForm.markAllAsTouched();
-      this.actions.updateDraft(this.draftId, changedFields);
+    if (!this.isDraftDeleted) {
+      this.actions.updateStepValidation('0', this.metadataForm.invalid);
+      const changedFields = findChangedFields(
+        { title: this.metadataForm.value.title!, description: this.metadataForm.value.description! },
+        { title: this.draftRegistration()?.title, description: this.draftRegistration()?.description }
+      );
+      if (Object.keys(changedFields).length > 0) {
+        this.actions.updateDraft(this.draftId, changedFields);
+        this.metadataForm.markAllAsTouched();
+      }
     }
   }
 }

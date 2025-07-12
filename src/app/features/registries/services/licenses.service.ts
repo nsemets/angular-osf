@@ -4,8 +4,10 @@ import { inject, Injectable } from '@angular/core';
 
 import { JsonApiService } from '@osf/core/services';
 import { License, LicenseOptions, LicensesResponseJsonApi } from '@osf/shared/models';
+import { DraftRegistrationModel } from '@osf/shared/models/registration';
 
 import { LicensesMapper } from '../mappers';
+import { RegistrationMapper } from '../mappers/registration.mapper';
 import { RegistrationDataJsonApi, RegistrationPayloadJsonApi } from '../models';
 
 import { environment } from 'src/environments/environment';
@@ -49,7 +51,11 @@ export class LicensesService {
       );
   }
 
-  updateLicense(registrationId: string, licenseId: string, licenseOptions?: LicenseOptions) {
+  updateLicense(
+    registrationId: string,
+    licenseId: string,
+    licenseOptions?: LicenseOptions
+  ): Observable<DraftRegistrationModel> {
     const payload: RegistrationPayloadJsonApi = {
       data: {
         type: 'draft_registrations',
@@ -73,9 +79,8 @@ export class LicensesService {
       },
     };
 
-    return this.jsonApiService.patch<RegistrationDataJsonApi>(
-      `${this.apiUrl}/draft_registrations/${registrationId}/`,
-      payload
-    );
+    return this.jsonApiService
+      .patch<RegistrationDataJsonApi>(`${this.apiUrl}/draft_registrations/${registrationId}/`, payload)
+      .pipe(map((response) => RegistrationMapper.fromDraftRegistrationResponse(response)));
   }
 }

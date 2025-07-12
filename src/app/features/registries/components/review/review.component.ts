@@ -63,27 +63,8 @@ export class ReviewComponent {
 
   protected stepsValidation = select(RegistriesSelectors.getStepsValidation);
 
-  isMetaDataInvalid = computed(() => {
-    return (
-      !this.draftRegistration()?.title ||
-      !this.draftRegistration()?.description ||
-      !this.draftRegistration()?.license ||
-      !this.subjects()?.length ||
-      !this.contributors()?.length
-    );
-  });
-
-  isStepsInvalid = computed(() => {
-    return this.pages().some((page) => {
-      return page.questions?.some((question) => {
-        const questionData = this.stepsData()[question.responseKey!];
-        return question.required && (Array.isArray(questionData) ? !questionData.length : !questionData);
-      });
-    });
-  });
-
   isDraftInvalid = computed(() => {
-    return this.isMetaDataInvalid() || this.isStepsInvalid();
+    return Object.values(this.stepsValidation()).some((step) => step.invalid);
   });
 
   constructor() {
@@ -107,6 +88,7 @@ export class ReviewComponent {
       onConfirm: () => {
         this.actions.deleteDraft(this.draftId()).subscribe({
           next: () => {
+            // [NM] TODO: clear validation state
             this.router.navigateByUrl(`/registries/${this.draftRegistration()?.providerId}new`);
           },
         });

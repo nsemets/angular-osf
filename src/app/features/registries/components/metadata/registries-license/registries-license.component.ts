@@ -5,8 +5,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Card } from 'primeng/card';
 import { Message } from 'primeng/message';
 
-import { tap } from 'rxjs';
-
 import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -75,15 +73,12 @@ export class RegistriesLicenseComponent {
   }
 
   selectLicense(license: License) {
-    this.actions
-      .saveLicense(this.draftId, license.id)
-      .pipe(
-        tap(() => {
-          this.control().markAsDirty();
-          this.control().updateValueAndValidity();
-        })
-      )
-      .subscribe();
+    this.control().patchValue({
+      id: license.id,
+    });
+    this.control().markAsTouched();
+    this.control().updateValueAndValidity();
+    this.actions.saveLicense(this.draftId, license.id);
   }
 
   onFocusOut() {
