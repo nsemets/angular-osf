@@ -4,9 +4,9 @@ import { inject, Injectable } from '@angular/core';
 
 import { JsonApiService } from '@core/services';
 import { mapIndexCardResults } from '@osf/features/admin-institutions/mappers/institution-summary-index.mapper';
+import { sendMessageRequestMapper } from '@osf/features/admin-institutions/mappers/send-message-request.mapper';
 import { departmens, summaryMetrics, users } from '@osf/features/admin-institutions/services/mock';
 
-import { environment } from '../../../../environments/environment';
 import {
   InstitutionDepartment,
   InstitutionDepartmentsJsonApi,
@@ -17,7 +17,7 @@ import {
   InstitutionUser,
   InstitutionUsersJsonApi,
   SendMessageRequest,
-  SendMessageResponse,
+  SendMessageResponseJsonApi,
 } from '../models';
 
 import {
@@ -25,6 +25,7 @@ import {
   mapInstitutionSummaryMetrics,
   mapInstitutionUsers,
 } from 'src/app/features/admin-institutions/mappers';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -104,28 +105,10 @@ export class InstitutionsAdminService {
       .pipe(map((response) => mapIndexCardResults(response?.included)));
   }
 
-  sendMessage(request: SendMessageRequest): Observable<SendMessageResponse> {
-    const payload = {
-      data: {
-        attributes: {
-          message_text: request.messageText,
-          message_type: 'institutional_request',
-          bcc_sender: request.bccSender,
-          reply_to: request.replyTo,
-        },
-        relationships: {
-          institution: {
-            data: {
-              type: 'institutions',
-              id: request.institutionId,
-            },
-          },
-        },
-        type: 'user_messages',
-      },
-    };
+  sendMessage(request: SendMessageRequest): Observable<SendMessageResponseJsonApi> {
+    const payload = sendMessageRequestMapper(request);
 
-    return this.jsonApiService.post<SendMessageResponse>(
+    return this.jsonApiService.post<SendMessageResponseJsonApi>(
       `${this.hardcodedUrl}/users/${request.userId}/messages/`,
       payload
     );

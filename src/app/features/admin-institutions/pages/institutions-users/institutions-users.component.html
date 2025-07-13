@@ -14,9 +14,6 @@
     (iconClicked)="onIconClick($event)"
     [downloadLink]="'/admin/institutions/' + institutionId + '/users/export'"
     [reportsLink]="'/admin/institutions/' + institutionId + '/reports'"
-    [customizeLabel]="'Select Columns'"
-    [downloadLabel]="'Export Users'"
-    [reportsLabel]="'User Reports'"
   >
     <div slot="amount" class="flex items-center">
       <h3 class="title">{{ amountText() }}</h3>
@@ -31,7 +28,9 @@
           inputId="orcid-filter"
         >
         </p-checkbox>
-        <label class="text-sm font-medium cursor-pointer m-0" for="orcid-filter">Has ORCID</label>
+        <label class="text-sm font-medium cursor-pointer m-0" for="orcid-filter">{{
+          'adminInstitutions.institutionUsers.hasOrcid' | translate
+        }}</label>
       </div>
 
       <div class="flex align-items-center gap-2">

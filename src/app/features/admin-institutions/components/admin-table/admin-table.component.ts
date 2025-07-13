@@ -2,9 +2,11 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { SortEvent } from 'primeng/api';
 import { Button, ButtonDirective } from 'primeng/button';
+import { Menu } from 'primeng/menu';
 import { MultiSelect } from 'primeng/multiselect';
 import { PaginatorState } from 'primeng/paginator';
 import { TableModule } from 'primeng/table';
+import { Tooltip } from 'primeng/tooltip';
 
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -21,7 +23,17 @@ import { QueryParams } from '@shared/models';
 
 @Component({
   selector: 'osf-admin-table',
-  imports: [MultiSelect, TableModule, FormsModule, ButtonDirective, CustomPaginatorComponent, TranslatePipe, Button],
+  imports: [
+    MultiSelect,
+    TableModule,
+    FormsModule,
+    ButtonDirective,
+    CustomPaginatorComponent,
+    Tooltip,
+    TranslatePipe,
+    Button,
+    Menu,
+  ],
   templateUrl: './admin-table.component.html',
   styleUrl: './admin-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,7 +51,7 @@ export class AdminTableComponent {
   first = input<number>(0);
 
   sortField = input<string>('');
-  sortOrder = input<number>(1); // 1 for asc, -1 for desc
+  sortOrder = input<number>(1);
 
   pageChanged = output<PaginatorState>();
   sortChanged = output<QueryParams>();
@@ -48,11 +60,30 @@ export class AdminTableComponent {
   downloadLink = input<string>('');
   reportsLink = input<string>('');
 
-  downloadLabel = input<string>('Download');
-  reportsLabel = input<string>('Previous Reports');
-  customizeLabel = input<string>('Customize');
-
   selectedColumns = signal<TableColumn[]>([]);
+
+  downloadMenuItems = computed(() => {
+    const baseUrl = this.downloadLink();
+    if (!baseUrl) return [];
+
+    return [
+      {
+        label: 'CSV',
+        icon: 'fa fa-file-csv',
+        link: this.createUrl(baseUrl, 'csv'),
+      },
+      {
+        label: 'TSV',
+        icon: 'fa fa-file-alt',
+        link: this.createUrl(baseUrl, 'tsv'),
+      },
+      {
+        label: 'JSON',
+        icon: 'fa fa-file-code',
+        link: this.createUrl(baseUrl, 'json'),
+      },
+    ];
+  });
 
   selectedColumnsComputed = computed(() => {
     const selected = this.selectedColumns();
@@ -113,6 +144,38 @@ export class AdminTableComponent {
       return this.translateService.instant(value.text);
     }
     return this.translateService.instant(String(value)) || '';
+  }
+
+  getCellValueWithFormatting(value: string | number | TableCellLink | undefined, column: TableColumn): string {
+    if (this.isLink(value)) {
+      return this.translateService.instant(value.text);
+    }
+
+    const stringValue = String(value);
+
+    if (column.dateFormat && stringValue) {
+      return this.formatDate(stringValue, column.dateFormat);
+    }
+
+    return this.translateService.instant(stringValue) || '';
+  }
+
+  private formatDate(value: string, format: string): string {
+    if (format === 'yyyy-mm-to-mm/yyyy') {
+      const yearMonthRegex = /^(\d{4})-(\d{2})$/;
+      const match = value.match(yearMonthRegex);
+
+      if (match) {
+        const [, year, month] = match;
+        return `${month}/${year}`;
+      }
+    }
+
+    return value;
+  }
+
+  private createUrl(baseUrl: string, format: string): string {
+    return `${baseUrl}?format=${format}`;
   }
 
   getLinkUrl(value: string | number | TableCellLink | undefined): string {

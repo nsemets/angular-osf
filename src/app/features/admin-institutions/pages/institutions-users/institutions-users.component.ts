@@ -1,6 +1,6 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { CheckboxModule } from 'primeng/checkbox';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -51,7 +51,7 @@ import {
 
 @Component({
   selector: 'osf-institutions-users',
-  imports: [AdminTableComponent, FormsModule, SelectComponent, CheckboxModule],
+  imports: [AdminTableComponent, FormsModule, SelectComponent, CheckboxModule, TranslatePipe],
   templateUrl: './institutions-users.component.html',
   styleUrl: './institutions-users.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

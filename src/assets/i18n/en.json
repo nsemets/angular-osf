@@ -8,6 +8,7 @@
       "addMore": "Add More",
       "cancel": "Cancel",
       "save": "Save",
+      "send": "Send",
       "create": "Create",
       "close": "Close",
       "download": "Download",
@@ -1804,7 +1805,11 @@
       "writeEmailText": "Please write the text of your email here",
       "sincerelyYours": "Sincerely Yours",
       "ccSender": "CC sender",
-      "allowReplyToSenderAddress": "Allow reply to sender address"
+      "allowReplyToSenderAddress": "Allow reply to sender address",
+      "hasOrcid": "Has ORCID",
+      "sendMessage": "Send message",
+      "osfLink": "OSF Link",
+      "orcid": "ORCID"
     }
   }
 }

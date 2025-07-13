@@ -3,13 +3,14 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
 import { Checkbox } from 'primeng/checkbox';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { Textarea } from 'primeng/textarea';
 
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'osf-send-email-dialog',
-  imports: [FormsModule, Button, Checkbox, TranslatePipe],
+  imports: [FormsModule, Button, Checkbox, TranslatePipe, Textarea],
   templateUrl: './send-email-dialog.component.html',
   styleUrl: './send-email-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

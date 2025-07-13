@@ -1,7 +1,17 @@
-<div class="flex justify-content-between align-items-center p-3 border-bottom-1 surface-border">
-  <div class="amount-section">
+<div class="flex justify-content-between align-items-center p-3">
+  <div>
     <ng-content select="[slot=amount]"></ng-content>
   </div>
+
+  <p-menu #downloadMenu [model]="downloadMenuItems()" appendTo="body" popup>
+    <ng-template #item let-item>
+      <a class="p-menu-item-link ml-1" target="_blank" [href]="item.link">
+        <i [class]="item.icon"></i>
+
+        {{ item.label }}
+      </a>
+    </ng-template>
+  </p-menu>
 
   <div class="filters-section flex align-items-center gap-2">
     <ng-content select="[slot=otherFilters]"></ng-content>
@@ -11,38 +21,39 @@
       [(ngModel)]="selectedColumns"
       (onChange)="onColumnSelectionChange($event.value)"
       optionLabel="header"
-      [placeholder]="customizeLabel()"
       [showToggleAll]="false"
       [showClear]="false"
       [dropdownIcon]="'hidden'"
     >
       <ng-template let-values pTemplate="selectedItems">
         <div class="flex align-items-center gap-2">
-          <i class="pi pi-table text-primary font-bold text-xl"></i>
-          <span class="text-lg">{{ 'adminInstitutions.institutionUsers.customize' | translate }}</span>
+          <i class="fa fa-table-columns text-primary font-bold"></i>
+          <span>{{ 'adminInstitutions.institutionUsers.customize' | translate }}</span>
         </div>
+      </ng-template>
+
+      <ng-template #item let-item>
+        {{ item.header | translate }}
       </ng-template>
     </p-multiselect>
 
     @if (downloadLink()) {
-      <a
-        pButton
-        [href]="downloadLink()"
-        class="p-button p-button-outlined p-button-sm p-08 font-bold no-underline grey-border-color"
-        target="_blank"
-      >
-        <i class="pi pi-download text-primary text-xl"></i>
-      </a>
+      <p-button
+        icon="fa fa-download text-primary text-xl"
+        class="p-button p-button-outlined p-button-sm p-06 font-bold grey-border-color child-button-0-padding"
+        severity="info"
+        (click)="downloadMenu.toggle($event)"
+      />
     }
 
     @if (reportsLink()) {
       <a
         pButton
         [href]="reportsLink()"
-        class="p-button p-button-outlined p-button-sm p-08 font-bold no-underline grey-border-color"
+        class="p-button p-button-outlined p-button-sm p-06 font-bold grey-border-color child-button-0-padding"
         target="_blank"
       >
-        <i class="pi pi-chart-pie text-primary text-xl"></i>
+        <i class="fa fa-chart-pie text-primary border-1 border-transparent text-xl"></i>
       </a>
     }
   </div>
@@ -87,17 +98,17 @@
                 [target]="getLinkTarget(rowData[col.field], col)"
                 class="text-primary no-underline hover:underline"
               >
-                {{ getCellValue(rowData[col.field]) }}
+                {{ getCellValueWithFormatting(rowData[col.field], col) }}
               </a>
             } @else {
-              {{ getCellValue(rowData[col.field]) }}
+              {{ getCellValueWithFormatting(rowData[col.field], col) }}
             }
 
             @if (col.showIcon) {
               <p-button
-                class="cursor-pointer icon-button pl-3"
+                [pTooltip]="col.iconTooltip | translate"
+                class="icon-button pl-3"
                 [icon]="col.iconClass"
-                iconPos="right"
                 variant="text"
                 severity="info"
                 (click)="onIconClick(rowData, col)"

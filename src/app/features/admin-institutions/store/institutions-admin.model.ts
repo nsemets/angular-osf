@@ -5,7 +5,7 @@ import {
   InstitutionSearchFilter,
   InstitutionSummaryMetrics,
   InstitutionUser,
-  SendMessageResponse,
+  SendMessageResponseJsonApi,
 } from '../models';
 
 export interface InstitutionsAdminModel {
@@ -15,7 +15,7 @@ export interface InstitutionsAdminModel {
   storageRegionSearch: AsyncStateModel<InstitutionSearchFilter[]>;
   searchResults: AsyncStateModel<InstitutionSearchFilter[]>;
   users: AsyncStateWithTotalCount<InstitutionUser[]>;
-  sendMessage: AsyncStateModel<SendMessageResponse | null>;
+  sendMessage: AsyncStateModel<SendMessageResponseJsonApi | null>;
   selectedInstitutionId: string | null;
   currentSearchPropertyPath: string | null;
 }

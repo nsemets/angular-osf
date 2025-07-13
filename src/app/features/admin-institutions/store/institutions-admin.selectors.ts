@@ -5,7 +5,7 @@ import {
   InstitutionSearchFilter,
   InstitutionSummaryMetrics,
   InstitutionUser,
-  SendMessageResponse,
+  SendMessageResponseJsonApi,
 } from '../models';
 
 import { InstitutionsAdminModel } from './institutions-admin.model';
@@ -118,7 +118,7 @@ export class InstitutionsAdminSelectors {
   }
 
   @Selector([InstitutionsAdminState])
-  static getSendMessageResponse(state: InstitutionsAdminModel): SendMessageResponse | null {
+  static getSendMessageResponse(state: InstitutionsAdminModel): SendMessageResponseJsonApi | null {
     return state.sendMessage.data;
   }
 

@@ -1,8 +1,10 @@
 import { Action, State, StateContext } from '@ngxs/store';
 
-import { catchError, tap, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
+
+import { handleSectionError } from '@core/handlers';
 
 import { InstitutionSummaryMetrics } from '../models';
 import { InstitutionsAdminService } from '../services/institutions-admin.service';
@@ -49,16 +51,8 @@ export class InstitutionsAdminState {
           departments: { data: response, isLoading: false, error: null },
         });
       }),
-      catchError((error) => {
-        ctx.patchState({
-          departments: {
-            ...state.departments,
-            isLoading: false,
-            error: error.message,
-          },
-        });
-        return throwError(() => error);
-      })
+
+      catchError((error) => handleSectionError(ctx, 'departments', error))
     );
   }
 
@@ -75,16 +69,7 @@ export class InstitutionsAdminState {
           summaryMetrics: { data: response, isLoading: false, error: null },
         });
       }),
-      catchError((error) => {
-        ctx.patchState({
-          summaryMetrics: {
-            ...state.summaryMetrics,
-            isLoading: false,
-            error: error.message,
-          },
-        });
-        return throwError(() => error);
-      })
+      catchError((error) => handleSectionError(ctx, 'summaryMetrics', error))
     );
   }
 
@@ -104,16 +89,7 @@ export class InstitutionsAdminState {
             searchResults: { data: response, isLoading: false, error: null },
           });
         }),
-        catchError((error) => {
-          ctx.patchState({
-            searchResults: {
-              ...state.searchResults,
-              isLoading: false,
-              error: error.message,
-            },
-          });
-          return throwError(() => error);
-        })
+        catchError((error) => handleSectionError(ctx, 'searchResults', error))
       );
   }
 
@@ -130,16 +106,7 @@ export class InstitutionsAdminState {
           hasOsfAddonSearch: { data: response, isLoading: false, error: null },
         });
       }),
-      catchError((error) => {
-        ctx.patchState({
-          hasOsfAddonSearch: {
-            ...state.hasOsfAddonSearch,
-            isLoading: false,
-            error: error.message,
-          },
-        });
-        return throwError(() => error);
-      })
+      catchError((error) => handleSectionError(ctx, 'hasOsfAddonSearch', error))
     );
   }
 
@@ -156,16 +123,7 @@ export class InstitutionsAdminState {
           storageRegionSearch: { data: response, isLoading: false, error: null },
         });
       }),
-      catchError((error) => {
-        ctx.patchState({
-          storageRegionSearch: {
-            ...state.storageRegionSearch,
-            isLoading: false,
-            error: error.message,
-          },
-        });
-        return throwError(() => error);
-      })
+      catchError((error) => handleSectionError(ctx, 'storageRegionSearch', error))
     );
   }
 
@@ -184,16 +142,7 @@ export class InstitutionsAdminState {
             users: { data: response.users, totalCount: response.totalCount, isLoading: false, error: null },
           });
         }),
-        catchError((error) => {
-          ctx.patchState({
-            users: {
-              ...state.users,
-              isLoading: false,
-              error: error.message,
-            },
-          });
-          return throwError(() => error);
-        })
+        catchError((error) => handleSectionError(ctx, 'users', error))
       );
   }
 
@@ -218,16 +167,7 @@ export class InstitutionsAdminState {
             sendMessage: { data: response, isLoading: false, error: null },
           });
         }),
-        catchError((error) => {
-          ctx.patchState({
-            sendMessage: {
-              ...state.sendMessage,
-              isLoading: false,
-              error: error.message,
-            },
-          });
-          return throwError(() => error);
-        })
+        catchError((error) => handleSectionError(ctx, 'sendMessage', error))
       );
   }
 }

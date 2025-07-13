@@ -8,5 +8,6 @@ export * from './institution-user.model';
 export * from './institution-users-json-api.model';
 export * from './institution-users-query-params.model';
 export * from './send-email-dialog-data.model';
-export * from './send-message.model';
+export * from './send-message-json-api.model';
+export * from './send-message-request.model';
 export * from './table.model';
