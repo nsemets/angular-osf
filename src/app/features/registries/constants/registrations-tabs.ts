@@ -1,12 +1,14 @@
 import { TabOption } from '@osf/shared/models';
 
+import { RegistrationTab } from '../enums';
+
 export const REGISTRATIONS_TABS: TabOption[] = [
   {
     label: 'common.labels.drafts',
-    value: 0,
+    value: RegistrationTab.Drafts,
   },
   {
     label: 'common.labels.submitted',
-    value: 1,
+    value: RegistrationTab.Submitted,
   },
 ];

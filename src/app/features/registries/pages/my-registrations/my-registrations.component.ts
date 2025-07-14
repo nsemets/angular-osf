@@ -1,6 +1,6 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { PaginatorState } from 'primeng/paginator';
@@ -15,10 +15,11 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { CustomPaginatorComponent, SelectComponent, SubHeaderComponent } from '@osf/shared/components';
 import { RegistrationCardComponent } from '@osf/shared/components/registration-card/registration-card.component';
-import { CustomConfirmationService } from '@osf/shared/services';
+import { CustomConfirmationService, ToastService } from '@osf/shared/services';
 import { IS_XSMALL } from '@osf/shared/utils';
 
 import { REGISTRATIONS_TABS } from '../../constants/registrations-tabs';
+import { RegistrationTab } from '../../enums';
 import { DeleteDraft, FetchDraftRegistrations, FetchSubmittedRegistrations, RegistriesSelectors } from '../../store';
 
 @Component({
@@ -44,8 +45,8 @@ export class MyRegistrationsComponent {
   private router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
-  private readonly translateService = inject(TranslateService);
   private readonly customConfirmationService = inject(CustomConfirmationService);
+  private readonly toastService = inject(ToastService);
 
   protected readonly isMobile = toSignal(inject(IS_XSMALL));
   protected readonly tabOptions = REGISTRATIONS_TABS;
@@ -63,9 +64,11 @@ export class MyRegistrationsComponent {
     deleteDraft: DeleteDraft,
   });
 
+  protected readonly RegistrationTab = RegistrationTab;
+
   readonly provider = 'osf';
 
-  selectedTab = signal(1);
+  selectedTab = signal(RegistrationTab.Submitted);
   itemsPerPage = 10;
   skeletons = [...Array(8)];
   draftFirst = 0;
@@ -74,9 +77,9 @@ export class MyRegistrationsComponent {
   constructor() {
     const initialTab = this.route.snapshot.queryParams['tab'];
     if (initialTab == 'drafts') {
-      this.selectedTab.set(0);
+      this.selectedTab.set(RegistrationTab.Drafts);
     } else {
-      this.selectedTab.set(1);
+      this.selectedTab.set(RegistrationTab.Submitted);
     }
 
     effect(() => {
@@ -89,7 +92,7 @@ export class MyRegistrationsComponent {
       }
       this.router.navigate([], {
         relativeTo: this.route,
-        queryParams: { tab: tab === 0 ? 'drafts' : 'submitted' },
+        queryParams: { tab: tab === RegistrationTab.Drafts ? 'drafts' : 'submitted' },
         queryParamsHandling: 'merge',
       });
     });
@@ -106,6 +109,7 @@ export class MyRegistrationsComponent {
       onConfirm: () => {
         this.actions.deleteDraft(id).subscribe({
           next: () => {
+            this.toastService.showSuccess('registries.successDeleteDraft');
             this.actions.getDraftRegistrations();
           },
         });

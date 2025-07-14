@@ -1,5 +1,6 @@
 import {
   AsyncStateModel,
+  AsyncStateWithTotalCount,
   DraftRegistrationModel,
   License,
   RegistrationCard,
@@ -18,10 +19,6 @@ export interface RegistriesStateModel {
   licenses: AsyncStateModel<License[]>;
   pagesSchema: AsyncStateModel<PageSchema[]>;
   stepsValidation: Record<string, { invalid: boolean }>;
-  draftRegistrations: AsyncStateModel<RegistrationCard[]> & {
-    totalCount: number;
-  };
-  submittedRegistrations: AsyncStateModel<RegistrationCard[]> & {
-    totalCount: number;
-  };
+  draftRegistrations: AsyncStateWithTotalCount<RegistrationCard[]>;
+  submittedRegistrations: AsyncStateWithTotalCount<RegistrationCard[]>;
 }

@@ -28,7 +28,7 @@
           ></osf-select>
         }
         <!--Drafts-->
-        <p-tabpanel [value]="0" class="flex flex-column gap-4 flex-1">
+        <p-tabpanel [value]="RegistrationTab.Drafts" class="flex flex-column gap-4 flex-1">
           @if (isDraftRegistrationsLoading()) {
             @for (item of skeletons; track $index) {
               <p-skeleton width="100%" height="1.5rem" borderRadius="0" />
@@ -51,7 +51,7 @@
         </p-tabpanel>
 
         <!--Submitted-->
-        <p-tabpanel [value]="1" class="flex flex-column gap-4 flex-1">
+        <p-tabpanel [value]="RegistrationTab.Submitted" class="flex flex-column gap-4 flex-1">
           @if (isSubmittedRegistrationsLoading()) {
             @for (item of skeletons; track $index) {
               <p-skeleton width="100%" height="1.5rem" borderRadius="0" />
