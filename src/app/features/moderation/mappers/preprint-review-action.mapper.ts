@@ -8,11 +8,21 @@ export class PreprintReviewActionMapper {
   static fromResponse(response: ReviewActionJsonApi): PreprintReviewActionModel {
     return {
       id: response.id,
-      dateCreated: response.attributes.date_created,
       dateModified: response.attributes.date_modified,
       fromState: response.attributes.from_state,
       toState: response.attributes.to_state,
-      trigger: response.attributes.trigger,
+      creator: {
+        id: response.embeds.creator.data.id,
+        name: response.embeds.creator.data.attributes.full_name,
+      },
+      preprint: {
+        id: response.embeds.target.data.id,
+        name: response.embeds.target.data.attributes.title,
+      },
+      provider: {
+        id: response.embeds.provider.data.id,
+        name: response.embeds.provider.data.attributes.name,
+      },
     };
   }
 

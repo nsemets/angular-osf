@@ -28,7 +28,7 @@ export class PreprintModerationService {
   }
 
   getPreprintReviews(page = 1): Observable<PaginatedData<PreprintReviewActionModel[]>> {
-    const baseUrl = `${environment.apiUrl}/actions/reviews/?embed[]=target&page=${page}`;
+    const baseUrl = `${environment.apiUrl}/actions/reviews/?embed=provider&embed=target&page=${page}`;
 
     return this.jsonApiService
       .get<JsonApiResponseWithPaging<ReviewActionJsonApi[], null>>(baseUrl)
