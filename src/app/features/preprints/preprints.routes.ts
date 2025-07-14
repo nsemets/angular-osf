@@ -9,6 +9,7 @@ import { PreprintStepperState } from '@osf/features/preprints/store/preprint-ste
 import { PreprintsDiscoverState } from '@osf/features/preprints/store/preprints-discover';
 import { PreprintsResourcesFiltersState } from '@osf/features/preprints/store/preprints-resources-filters';
 import { PreprintsResourcesFiltersOptionsState } from '@osf/features/preprints/store/preprints-resources-filters-options';
+import { ResourceType } from '@shared/enums';
 import { ContributorsState, SubjectsState } from '@shared/stores';
 
 import { ModeratorsState } from '../moderation/store/moderation';
@@ -69,6 +70,9 @@ export const preprintsRoutes: Routes = [
           import('@osf/features/preprints/pages/submit-preprint-stepper/submit-preprint-stepper.component').then(
             (c) => c.SubmitPreprintStepperComponent
           ),
+        data: {
+          context: ResourceType.Preprint,
+        },
         canDeactivate: [ConfirmLeavingGuard],
       },
       {
