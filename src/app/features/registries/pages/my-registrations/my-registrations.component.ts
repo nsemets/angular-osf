@@ -2,18 +2,20 @@ import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
+import { Button } from 'primeng/button';
+import { PaginatorState } from 'primeng/paginator';
+import { Skeleton } from 'primeng/skeleton';
 import { TabsModule } from 'primeng/tabs';
 
-import { tap } from 'rxjs';
-
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import { SelectComponent, SubHeaderComponent } from '@osf/shared/components';
+import { CustomPaginatorComponent, SelectComponent, SubHeaderComponent } from '@osf/shared/components';
 import { RegistrationCardComponent } from '@osf/shared/components/registration-card/registration-card.component';
-import { CustomConfirmationService, LoaderService } from '@osf/shared/services';
+import { CustomConfirmationService } from '@osf/shared/services';
 import { IS_XSMALL } from '@osf/shared/utils';
 
 import { REGISTRATIONS_TABS } from '../../constants/registrations-tabs';
@@ -21,7 +23,19 @@ import { DeleteDraft, FetchDraftRegistrations, FetchSubmittedRegistrations, Regi
 
 @Component({
   selector: 'osf-my-registrations',
-  imports: [SubHeaderComponent, TranslatePipe, TabsModule, FormsModule, SelectComponent, RegistrationCardComponent],
+  imports: [
+    SubHeaderComponent,
+    TranslatePipe,
+    TabsModule,
+    FormsModule,
+    SelectComponent,
+    RegistrationCardComponent,
+    CustomPaginatorComponent,
+    Skeleton,
+    Button,
+    RouterLink,
+    NgTemplateOutlet,
+  ],
   templateUrl: './my-registrations.component.html',
   styleUrl: './my-registrations.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,7 +43,6 @@ import { DeleteDraft, FetchDraftRegistrations, FetchSubmittedRegistrations, Regi
 export class MyRegistrationsComponent {
   private router = inject(Router);
   private readonly route = inject(ActivatedRoute);
-  private readonly loaderService = inject(LoaderService);
 
   private readonly translateService = inject(TranslateService);
   private readonly customConfirmationService = inject(CustomConfirmationService);
@@ -38,7 +51,11 @@ export class MyRegistrationsComponent {
   protected readonly tabOptions = REGISTRATIONS_TABS;
 
   protected draftRegistrations = select(RegistriesSelectors.getDraftRegistrations);
+  protected draftRegistrationsTotalCount = select(RegistriesSelectors.getDraftRegistrationsTotalCount);
+  protected isDraftRegistrationsLoading = select(RegistriesSelectors.isDraftRegistrationsLoading);
   protected submittedRegistrations = select(RegistriesSelectors.getSubmittedRegistrations);
+  protected submittedRegistrationsTotalCount = select(RegistriesSelectors.getSubmittedRegistrationsTotalCount);
+  protected isSubmittedRegistrationsLoading = select(RegistriesSelectors.isSubmittedRegistrationsLoading);
 
   protected actions = createDispatchMap({
     getDraftRegistrations: FetchDraftRegistrations,
@@ -46,7 +63,11 @@ export class MyRegistrationsComponent {
     deleteDraft: DeleteDraft,
   });
 
+  readonly provider = 'osf';
+
   selectedTab = signal(1);
+  itemsPerPage = 10;
+  skeletons = [...Array(8)];
 
   constructor() {
     const initialTab = this.route.snapshot.queryParams['tab'];
@@ -58,18 +79,11 @@ export class MyRegistrationsComponent {
 
     effect(() => {
       const tab = this.selectedTab();
-      this.loaderService.show();
 
       if (tab === 0) {
-        this.actions
-          .getDraftRegistrations()
-          .pipe(tap(() => this.loaderService.hide()))
-          .subscribe();
+        this.actions.getDraftRegistrations();
       } else {
-        this.actions
-          .getSubmittedRegistrations()
-          .pipe(tap(() => this.loaderService.hide()))
-          .subscribe();
+        this.actions.getSubmittedRegistrations();
       }
       this.router.navigate([], {
         relativeTo: this.route,
@@ -95,5 +109,13 @@ export class MyRegistrationsComponent {
         });
       },
     });
+  }
+
+  onDraftsPageChange(event: PaginatorState): void {
+    this.actions.getDraftRegistrations(event.page! + 1);
+  }
+
+  onSubmittedPageChange(event: PaginatorState): void {
+    this.actions.getSubmittedRegistrations(event.page! + 1);
   }
 }

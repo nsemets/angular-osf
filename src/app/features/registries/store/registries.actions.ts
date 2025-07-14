@@ -77,8 +77,16 @@ export class UpdateStepValidation {
 
 export class FetchDraftRegistrations {
   static readonly type = '[Registries] Fetch Draft Registrations';
+  constructor(
+    public page = 1,
+    public pageSize = 10
+  ) {}
 }
 
 export class FetchSubmittedRegistrations {
   static readonly type = '[Registries] Fetch Submitted Registrations';
+  constructor(
+    public page = 1,
+    public pageSize = 10
+  ) {}
 }

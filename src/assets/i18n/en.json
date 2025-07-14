@@ -1809,6 +1809,7 @@
   "registries": {
     "title": "Registries",
     "addRegistration": "Add a Registration",
+    "noRegistrations": "You don't have any registrations. Create one with the button below.",
     "description": "The open registries network",
     "searchPlaceholder": "Search Registrations",
     "services": {

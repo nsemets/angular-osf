@@ -122,9 +122,10 @@ export class RegistriesService {
       .pipe(map((response) => PageSchemaMapper.fromSchemaBlocksResponse(response)));
   }
 
-  getDraftRegistrations(): Observable<{ data: RegistrationCard[]; totalCount: number }> {
+  getDraftRegistrations(page: number, pageSize: number): Observable<{ data: RegistrationCard[]; totalCount: number }> {
     const params = {
-      'page[size]': 10,
+      page,
+      'page[size]': pageSize,
       embed: ['bibliographic_contributors', 'registration_schema', 'provider'],
     };
     return this.jsonApiService
@@ -144,12 +145,17 @@ export class RegistriesService {
       );
   }
 
-  getSubmittedRegistrations(): Observable<{ data: RegistrationCard[]; totalCount: number }> {
+  getSubmittedRegistrations(
+    page: number,
+    pageSize: number
+  ): Observable<{ data: RegistrationCard[]; totalCount: number }> {
+    const params = {
+      page,
+      'page[size]': pageSize,
+      embed: ['bibliographic_contributors', 'registration_schema', 'provider'],
+    };
     return this.jsonApiService
-      .get<JsonApiResponseWithPaging<RegistrationDataJsonApi[], null>>(`${this.apiUrl}/registrations/`, {
-        'page[size]': 10,
-        embed: ['bibliographic_contributors', 'registration_schema', 'provider'],
-      })
+      .get<JsonApiResponseWithPaging<RegistrationDataJsonApi[], null>>(`${this.apiUrl}/registrations/`, params)
       .pipe(
         map((response) => {
           const data = response.data.map((registration: RegistrationDataJsonApi) =>

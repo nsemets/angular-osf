@@ -254,7 +254,7 @@ export class RegistriesState {
   }
 
   @Action(FetchDraftRegistrations)
-  fetchDraftRegistrations(ctx: StateContext<RegistriesStateModel>) {
+  fetchDraftRegistrations(ctx: StateContext<RegistriesStateModel>, { page, pageSize }: FetchDraftRegistrations) {
     const state = ctx.getState();
     ctx.patchState({
       draftRegistrations: {
@@ -264,7 +264,7 @@ export class RegistriesState {
       },
     });
 
-    return this.registriesService.getDraftRegistrations().pipe(
+    return this.registriesService.getDraftRegistrations(page, pageSize).pipe(
       tap((draftRegistrations) => {
         ctx.patchState({
           draftRegistrations: {
@@ -280,13 +280,16 @@ export class RegistriesState {
   }
 
   @Action(FetchSubmittedRegistrations)
-  fetchSubmittedRegistrations(ctx: StateContext<RegistriesStateModel>) {
+  fetchSubmittedRegistrations(
+    ctx: StateContext<RegistriesStateModel>,
+    { page, pageSize }: FetchSubmittedRegistrations
+  ) {
     const state = ctx.getState();
     ctx.patchState({
       submittedRegistrations: { ...state.submittedRegistrations, isLoading: true, error: null },
     });
 
-    return this.registriesService.getSubmittedRegistrations().pipe(
+    return this.registriesService.getSubmittedRegistrations(page, pageSize).pipe(
       tap((submittedRegistrations) => {
         ctx.patchState({
           submittedRegistrations: {
