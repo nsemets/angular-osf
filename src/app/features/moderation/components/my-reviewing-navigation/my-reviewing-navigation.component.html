@@ -2,7 +2,7 @@
 
 <div class="flex flex-column gap-2 mt-2">
   @for (tab of tabOptions; track $index) {
-    @let badge = tab.value === tabOption.Submissions ? submissionsCount : undefined;
+    @let badge = tab.value === tabOption.Submissions ? `${provider().submissionCount}` : undefined;
 
     <p-button
       class="link-btn"

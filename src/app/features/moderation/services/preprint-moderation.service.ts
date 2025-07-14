@@ -9,7 +9,7 @@ import { PreprintProviderDetailsJsonApi, PreprintProviderShortInfo } from '@osf/
 import { PaginatedData } from '@osf/shared/models';
 
 import { PreprintReviewActionMapper } from '../mappers';
-import { PreprintReviewActionModel, ReviewActionJsonApi } from '../models';
+import { PreprintRelatedCountJsonApi, PreprintReviewActionModel, ReviewActionJsonApi } from '../models';
 
 import { environment } from 'src/environments/environment';
 
@@ -25,6 +25,14 @@ export class PreprintModerationService {
     return this.jsonApiService
       .get<JsonApiResponse<PreprintProviderDetailsJsonApi[], null>>(baseUrl)
       .pipe(map((response) => PreprintProvidersMapper.toPreprintProviderShortInfoFromGetResponse(response.data)));
+  }
+
+  getPreprintProvider(id: string): Observable<number> {
+    const baseUrl = `${environment.apiUrl}/providers/preprints/${id}/?related_counts=true`;
+
+    return this.jsonApiService
+      .get<JsonApiResponse<PreprintRelatedCountJsonApi, null>>(baseUrl)
+      .pipe(map((response) => PreprintReviewActionMapper.fromRelatedCounts(response.data)));
   }
 
   getPreprintReviews(page = 1): Observable<PaginatedData<PreprintReviewActionModel[]>> {
