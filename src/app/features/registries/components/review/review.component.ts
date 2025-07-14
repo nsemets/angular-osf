@@ -60,29 +60,11 @@ export class ReviewComponent {
   });
 
   private readonly draftId = toSignal(this.route.params.pipe(map((params) => params['id'])) ?? of(undefined));
+
   protected stepsValidation = select(RegistriesSelectors.getStepsValidation);
 
-  isMetaDataInvalid = computed(() => {
-    return (
-      !this.draftRegistration()?.title ||
-      !this.draftRegistration()?.description ||
-      !this.draftRegistration()?.license ||
-      !this.subjects()?.length ||
-      !this.contributors()?.length
-    );
-  });
-
-  isStepsInvalid = computed(() => {
-    return this.pages().some((page) => {
-      return page.questions?.some((question) => {
-        const questionData = this.stepsData()[question.responseKey!];
-        return question.required && (Array.isArray(questionData) ? !questionData.length : !questionData);
-      });
-    });
-  });
-
   isDraftInvalid = computed(() => {
-    return this.isMetaDataInvalid() || this.isStepsInvalid();
+    return Object.values(this.stepsValidation()).some((step) => step.invalid);
   });
 
   constructor() {
@@ -106,7 +88,8 @@ export class ReviewComponent {
       onConfirm: () => {
         this.actions.deleteDraft(this.draftId()).subscribe({
           next: () => {
-            this.router.navigateByUrl('/registries/new');
+            // [NM] TODO: clear validation state
+            this.router.navigateByUrl(`/registries/${this.draftRegistration()?.providerId}new`);
           },
         });
       },
@@ -124,6 +107,7 @@ export class ReviewComponent {
         data: {
           draftId: this.draftId(),
           projectId: this.draftRegistration()?.branchedFrom,
+          providerId: this.draftRegistration()?.providerId,
         },
       })
       .onClose.subscribe(() => {

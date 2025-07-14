@@ -13,4 +13,5 @@ export interface DraftRegistrationModel {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   stepsData?: Record<string, any>;
   branchedFrom?: string;
+  providerId: string;
 }

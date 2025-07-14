@@ -24,7 +24,7 @@ import {
   FetchSchemaBlocks,
   FetchSubmittedRegistrations,
   GetProjects,
-  GetProviders,
+  GetProviderSchemas,
   GetRegistries,
   RegisterDraft,
   SaveLicense,
@@ -77,9 +77,9 @@ export class RegistriesState {
     return this.projectsHandler.getProjects(ctx);
   }
 
-  @Action(GetProviders)
-  getProviders(ctx: StateContext<RegistriesStateModel>) {
-    return this.providersHandler.getProviders(ctx);
+  @Action(GetProviderSchemas)
+  getProviders(ctx: StateContext<RegistriesStateModel>, { providerId }: GetProviderSchemas) {
+    return this.providersHandler.getProviderSchemas(ctx, providerId);
   }
 
   @Action(CreateDraft)
@@ -189,7 +189,10 @@ export class RegistriesState {
   }
 
   @Action(RegisterDraft)
-  registerDraft(ctx: StateContext<RegistriesStateModel>, { draftId, embargoDate, projectId }: RegisterDraft) {
+  registerDraft(
+    ctx: StateContext<RegistriesStateModel>,
+    { draftId, embargoDate, providerId, projectId }: RegisterDraft
+  ) {
     ctx.patchState({
       registration: {
         ...ctx.getState().registration,
@@ -197,7 +200,7 @@ export class RegistriesState {
       },
     });
 
-    return this.registriesService.registerDraft(draftId, embargoDate, projectId).pipe(
+    return this.registriesService.registerDraft(draftId, embargoDate, providerId, projectId).pipe(
       tap((registration) => {
         ctx.patchState({
           registration: {
@@ -244,8 +247,8 @@ export class RegistriesState {
   }
 
   @Action(FetchLicenses)
-  fetchLicenses(ctx: StateContext<RegistriesStateModel>) {
-    return this.licensesHandler.fetchLicenses(ctx);
+  fetchLicenses(ctx: StateContext<RegistriesStateModel>, { providerId }: FetchLicenses) {
+    return this.licensesHandler.fetchLicenses(ctx, providerId);
   }
 
   @Action(SaveLicense)

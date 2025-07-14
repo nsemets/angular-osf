@@ -42,6 +42,7 @@
             }
             @if (draftRegistrationsTotalCount() > itemsPerPage) {
               <osf-custom-paginator
+                [first]="draftFirst"
                 [totalCount]="draftRegistrationsTotalCount()"
                 (pageChanged)="onDraftsPageChange($event)"
               />
@@ -64,6 +65,7 @@
             }
             @if (submittedRegistrationsTotalCount() > itemsPerPage) {
               <osf-custom-paginator
+                [first]="submittedFirst"
                 [totalCount]="draftRegistrationsTotalCount()"
                 (pageChanged)="onSubmittedPageChange($event)"
               />

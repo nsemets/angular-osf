@@ -52,12 +52,12 @@
         <p class="mb-4 text-lg font-bold">{{ 'registries.new.steps.step3' | translate }}</p>
         <div class="flex">
           <p-select
-            formControlName="provider"
-            [options]="providers()"
+            formControlName="providerSchema"
+            [options]="providerSchemas()"
             optionLabel="name"
             optionValue="id"
             [loading]="isProvidersLoading()"
-            (onChange)="onSelectProvider($event.value)"
+            (onChange)="onSelectProviderSchema($event.value)"
             class="w-6"
           />
         </div>

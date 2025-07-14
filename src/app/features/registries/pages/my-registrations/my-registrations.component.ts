@@ -68,6 +68,8 @@ export class MyRegistrationsComponent {
   selectedTab = signal(1);
   itemsPerPage = 10;
   skeletons = [...Array(8)];
+  draftFirst = 0;
+  submittedFirst = 0;
 
   constructor() {
     const initialTab = this.route.snapshot.queryParams['tab'];
@@ -94,7 +96,7 @@ export class MyRegistrationsComponent {
   }
 
   goToCreateRegistration(): void {
-    this.router.navigate(['/registries/new']);
+    this.router.navigate([`/registries/${this.provider}/new`]);
   }
 
   onDeleteDraft(id: string): void {
@@ -113,9 +115,11 @@ export class MyRegistrationsComponent {
 
   onDraftsPageChange(event: PaginatorState): void {
     this.actions.getDraftRegistrations(event.page! + 1);
+    this.draftFirst = event.first!;
   }
 
   onSubmittedPageChange(event: PaginatorState): void {
     this.actions.getSubmittedRegistrations(event.page! + 1);
+    this.submittedFirst = event.first!;
   }
 }

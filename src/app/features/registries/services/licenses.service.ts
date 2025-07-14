@@ -3,9 +3,11 @@ import { map, Observable } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { JsonApiService } from '@osf/core/services';
+import { RegistrationMapper } from '@osf/shared/mappers/registration';
 import {
   CreateRegistrationPayloadJsonApi,
   DraftRegistrationDataJsonApi,
+  DraftRegistrationModel,
   License,
   LicenseOptions,
   LicensesResponseJsonApi,
@@ -39,9 +41,9 @@ export class LicensesService {
   private apiUrl = environment.apiUrl;
   private readonly jsonApiService = inject(JsonApiService);
 
-  getLicenses(): Observable<License[]> {
+  getLicenses(providerId: string): Observable<License[]> {
     return this.jsonApiService
-      .get<LicensesResponseJsonApi>(`${this.apiUrl}/providers/registrations/osf/licenses/`, {
+      .get<LicensesResponseJsonApi>(`${this.apiUrl}/providers/registrations/${providerId}/licenses/`, {
         params: {
           'page[size]': 100,
         },
@@ -54,7 +56,11 @@ export class LicensesService {
       );
   }
 
-  updateLicense(registrationId: string, licenseId: string, licenseOptions?: LicenseOptions) {
+  updateLicense(
+    registrationId: string,
+    licenseId: string,
+    licenseOptions?: LicenseOptions
+  ): Observable<DraftRegistrationModel> {
     const payload: CreateRegistrationPayloadJsonApi = {
       data: {
         type: 'draft_registrations',
@@ -78,9 +84,8 @@ export class LicensesService {
       },
     };
 
-    return this.jsonApiService.patch<DraftRegistrationDataJsonApi>(
-      `${this.apiUrl}/draft_registrations/${registrationId}/`,
-      payload
-    );
+    return this.jsonApiService
+      .patch<DraftRegistrationDataJsonApi>(`${this.apiUrl}/draft_registrations/${registrationId}/`, payload)
+      .pipe(map((response) => RegistrationMapper.fromDraftRegistrationResponse(response)));
   }
 }
