@@ -12,7 +12,6 @@ import { ResourceType } from '@shared/enums';
 import { ConfirmLeavingGuard } from '@shared/guards';
 import { ContributorsState, SubjectsState } from '@shared/stores';
 
-import { ModeratorsState } from '../moderation/store/moderation';
 import { PreprintModerationState } from '../moderation/store/preprint-moderation';
 
 export const preprintsRoutes: Routes = [
@@ -76,12 +75,17 @@ export const preprintsRoutes: Routes = [
         canDeactivate: [ConfirmLeavingGuard],
       },
       {
-        path: ':id/moderation',
+        path: ':providerId/edit/:preprintId',
         loadComponent: () =>
-          import('@osf/features/moderation/pages/preprint-moderation/preprint-moderation.component').then(
-            (m) => m.PreprintModerationComponent
+          import('@osf/features/preprints/pages/update-preprint-stepper/update-preprint-stepper.component').then(
+            (c) => c.UpdatePreprintStepperComponent
           ),
-        providers: [provideStates([ModeratorsState])],
+        canDeactivate: [ConfirmLeavingGuard],
+      },
+      {
+        path: ':id/moderation',
+        loadChildren: () =>
+          import('@osf/features/moderation/preprint-moderation.routes').then((mod) => mod.preprintModerationRoutes),
       },
       {
         path: 'my-reviewing',
@@ -89,15 +93,8 @@ export const preprintsRoutes: Routes = [
           import('@osf/features/moderation/pages/my-preprint-reviewing/my-preprint-reviewing.component').then(
             (m) => m.MyPreprintReviewingComponent
           ),
+        data: { skipBreadcrumbs: true },
         providers: [provideStates([PreprintModerationState])],
-      },
-      {
-        path: ':providerId/edit/:preprintId',
-        loadComponent: () =>
-          import('@osf/features/preprints/pages/update-preprint-stepper/update-preprint-stepper.component').then(
-            (c) => c.UpdatePreprintStepperComponent
-          ),
-        canDeactivate: [ConfirmLeavingGuard],
       },
     ],
   },
