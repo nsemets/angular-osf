@@ -19,13 +19,13 @@ export const projectTableColumns: TableColumn[] = [
     field: 'dateCreated',
     header: 'adminInstitutions.projects.dateCreated',
     sortable: true,
-    dateFormat: 'yyyy-mm-dd-to-dd/mm/yyyy',
+    dateFormat: 'dd/MM/yyyy',
   },
   {
     field: 'dateModified',
     header: 'adminInstitutions.projects.dateModified',
     sortable: true,
-    dateFormat: 'yyyy-mm-dd-to-dd/mm/yyyy',
+    dateFormat: 'dd/MM/yyyy',
   },
   {
     field: 'doi',

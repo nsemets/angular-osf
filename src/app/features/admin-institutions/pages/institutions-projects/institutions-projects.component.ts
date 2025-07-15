@@ -1,17 +1,8 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  DestroyRef,
-  effect,
-  inject,
-  signal,
-  untracked,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal, untracked } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
@@ -32,7 +23,7 @@ import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'osf-institutions-projects',
-  imports: [AdminTableComponent],
+  imports: [AdminTableComponent, TranslatePipe],
   templateUrl: './institutions-projects.component.html',
   styleUrl: './institutions-projects.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,8 +31,6 @@ import { environment } from 'src/environments/environment';
 export class InstitutionsProjectsComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly translate = inject(TranslateService);
-  private readonly destroyRef = inject(DestroyRef);
 
   private readonly actions = createDispatchMap({
     fetchProjects: FetchProjects,
@@ -58,9 +47,6 @@ export class InstitutionsProjectsComponent {
   sortField = signal<string>('-dateModified');
   sortOrder = signal<number>(1);
 
-  private lastFetchKey = '';
-  private lastQueryParams = signal<InstitutionProjectsQueryParamsModel | null>(null);
-
   tableColumns = projectTableColumns;
 
   projects = select(InstitutionsAdminSelectors.getProjects);
@@ -71,11 +57,6 @@ export class InstitutionsProjectsComponent {
 
   tableData = computed(() => {
     return this.projects().map((project: InstitutionProject): TableCellData => mapProjectToTableCellData(project));
-  });
-
-  amountText = computed(() => {
-    const count = this.totalCount();
-    return count + ' ' + this.translate.instant('adminInstitutions.projects.totalProjects').toLowerCase();
   });
 
   downloadUrl = computed(() => {
@@ -128,7 +109,6 @@ export class InstitutionsProjectsComponent {
     effect(() => {
       const institutionId = this.route.parent?.snapshot.params['institution-id'];
       const rawQueryParams = this.queryParams();
-      console.log(rawQueryParams);
       if (!rawQueryParams && !institutionId) return;
 
       this.institutionId = institutionId;
@@ -142,14 +122,8 @@ export class InstitutionsProjectsComponent {
       const cursor = parsedQueryParams.cursor;
       const size = parsedQueryParams.size;
 
-      // Get institution IRIs for affiliation filter
       const institution = this.institution() as Institution;
       const institutionIris = institution.iris || [];
-
-      // const key = `${size}|${sortParam}|${cursor}`;
-      // if (key === this.lastFetchKey) return;
-      //
-      // this.lastFetchKey = key;
 
       this.actions.fetchProjects(this.institutionId, institutionIris, size, sortParam, cursor);
     });

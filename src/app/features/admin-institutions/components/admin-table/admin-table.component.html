@@ -42,7 +42,8 @@
       @if (downloadLink()) {
         <p-button
           icon="fa fa-download text-primary text-xl"
-          class="p-button p-button-outlined p-button-sm p-06 font-bold grey-border-color child-button-0-padding"
+          outlined
+          class="download-button"
           severity="info"
           (click)="downloadMenu.toggle($event)"
         />
@@ -52,10 +53,10 @@
         <a
           pButton
           [href]="reportsLink()"
-          class="p-button p-button-outlined p-button-sm p-06 font-bold grey-border-color child-button-0-padding"
+          class="p-button p-button-outlined p-button-sm p-06 font-bold grey-border-color child-button-0-padding no-underline"
           target="_blank"
         >
-          <i class="fa fa-chart-pie text-primary border-1 border-transparent text-xl"></i>
+          <i class="fa fa-chart-pie border-1 border-transparent text-xl"></i>
         </a>
       }
     </div>
@@ -101,10 +102,18 @@
                 [target]="getLinkTarget(rowData[col.field], col)"
                 class="text-primary no-underline hover:underline"
               >
-                {{ getCellValueWithFormatting(rowData[col.field], col) }}
+                @if (col.dateFormat) {
+                  {{ getCellValue(rowData[col.field]) | date: col.dateFormat }}
+                } @else {
+                  {{ getCellValue(rowData[col.field]) }}
+                }
               </a>
             } @else {
-              {{ getCellValueWithFormatting(rowData[col.field], col) }}
+              @if (col.dateFormat) {
+                {{ getCellValue(rowData[col.field]) | date: col.dateFormat }}
+              } @else {
+                {{ getCellValue(rowData[col.field]) }}
+              }
             }
 
             @if (col.showIcon) {
@@ -127,16 +136,11 @@
 @if (isNextPreviousPagination()) {
   <div class="flex column-gap-2 w-full justify-content-center pt-2">
     @if (firstLink() && prevLink()) {
-      <p-button
-        icon="fas fa-angles-left paginator-icon-gray-color"
-        severity="contrast"
-        text
-        (click)="switchPage(firstLink())"
-      ></p-button>
+      <p-button icon="fas fa-angles-left" severity="contrast" text (click)="switchPage(firstLink())"></p-button>
     }
 
     <p-button
-      icon="fas fa-angle-left paginator-icon-gray-color"
+      icon="fas fa-angle-left"
       severity="contrast"
       text
       [disabled]="!prevLink()"
@@ -145,7 +149,7 @@
     </p-button>
 
     <p-button
-      icon="fas fa-angle-right paginator-icon-gray-color"
+      icon="fas fa-angle-right"
       severity="contrast"
       text
       [disabled]="!nextLink()"

@@ -1,5 +1,7 @@
 import { Selector } from '@ngxs/store';
 
+import { PaginationLinksModel } from '@shared/models';
+
 import {
   InstitutionDepartment,
   InstitutionProject,
@@ -129,21 +131,12 @@ export class InstitutionsAdminSelectors {
   }
 
   @Selector([InstitutionsAdminState])
-  static getProjectsError(state: InstitutionsAdminModel): string | null {
-    return state.projects.error;
-  }
-
-  @Selector([InstitutionsAdminState])
   static getProjectsTotalCount(state: InstitutionsAdminModel): number {
     return state.projects.totalCount;
   }
 
   @Selector([InstitutionsAdminState])
-  static getProjectsLinks(
-    state: InstitutionsAdminModel
-  ):
-    | { first?: { href: string }; next?: { href: string }; prev?: { href: string }; last?: { href: string } }
-    | undefined {
+  static getProjectsLinks(state: InstitutionsAdminModel): PaginationLinksModel | undefined {
     return state.projects.links;
   }
 

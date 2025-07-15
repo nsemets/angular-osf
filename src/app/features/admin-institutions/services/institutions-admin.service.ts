@@ -5,6 +5,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { JsonApiService } from '@core/services';
 import { departmens, summaryMetrics, users } from '@osf/features/admin-institutions/services/mock';
+import { PaginationLinksModel } from '@shared/models';
 
 import {
   mapIndexCardResults,
@@ -100,7 +101,7 @@ export class InstitutionsAdminService {
   ): Observable<{
     projects: InstitutionProject[];
     totalCount: number;
-    links?: { first?: { href: string }; next?: { href: string }; prev?: { href: string }; last?: { href: string } };
+    links?: PaginationLinksModel;
   }> {
     const url = `${environment.shareDomainUrl}/index-card-search`;
     let params: Record<string, string> = {};

@@ -8,6 +8,7 @@ import { PaginatorState } from 'primeng/paginator';
 import { TableModule } from 'primeng/table';
 import { Tooltip } from 'primeng/tooltip';
 
+import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
@@ -35,6 +36,7 @@ import { QueryParams } from '@shared/models';
     Button,
     Menu,
     StopPropagationDirective,
+    DatePipe,
   ],
   templateUrl: './admin-table.component.html',
   styleUrl: './admin-table.component.scss',
@@ -42,6 +44,7 @@ import { QueryParams } from '@shared/models';
 })
 export class AdminTableComponent {
   private readonly translateService = inject(TranslateService);
+
   private userInitiatedSort = false;
 
   tableColumns = input.required<TableColumn[]>();
@@ -173,46 +176,8 @@ export class AdminTableComponent {
     return this.translateService.instant(String(value)) || '';
   }
 
-  getCellValueWithFormatting(value: string | number | TableCellLink | undefined, column: TableColumn): string {
-    if (this.isLink(value)) {
-      return this.translateService.instant(value.text);
-    }
-
-    const stringValue = String(value);
-
-    if (column.dateFormat && stringValue) {
-      return this.formatDate(stringValue, column.dateFormat);
-    }
-
-    return this.translateService.instant(stringValue) || '';
-  }
-
   switchPage(link: string) {
     this.linkPageChanged.emit(link);
-  }
-
-  private formatDate(value: string, format: string): string {
-    if (format === 'yyyy-mm-to-mm/yyyy') {
-      const yearMonthRegex = /^(\d{4})-(\d{2})$/;
-      const match = value.match(yearMonthRegex);
-
-      if (match) {
-        const [, year, month] = match;
-        return `${month}/${year}`;
-      }
-    }
-
-    if (format === 'yyyy-mm-dd-to-dd/mm/yyyy') {
-      const yearMonthDayRegex = /^(\d{4})-(\d{2})-(\d{2})$/;
-      const match = value.match(yearMonthDayRegex);
-
-      if (match) {
-        const [, year, month, day] = match;
-        return `${day}/${month}/${year}`;
-      }
-    }
-
-    return value;
   }
 
   private createUrl(baseUrl: string, mediaType: string): string {
