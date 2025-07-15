@@ -9,6 +9,10 @@
 .width-33 {
   width: calc(33% - 1rem);
 
+  @media (max-width: 992px) {
+    width: calc(50% - 1rem);
+  }
+
   @media (max-width: 576px) {
     width: 100%;
   }

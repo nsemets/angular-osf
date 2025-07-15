@@ -107,14 +107,10 @@ export class InstitutionsAdminService {
 
     const affiliationParam = institutionIris.join(',');
 
-    // TODO: uncomment after demo
     params = {
-      'cardSearchFilter[affiliation][]': `https://ror.org/05d5mza29,https://test.osf.io/institutions/${institutionId}/`,
-      'cardSearchFilter[accessService]': 'https://test.osf.io/',
-
-      // 'cardSearchFilter[affiliation][]': affiliationParam,
+      'cardSearchFilter[affiliation][]': affiliationParam,
       'cardSearchFilter[resourceType]': 'Project',
-      // 'cardSearchFilter[accessService]': environment.webUrl,
+      'cardSearchFilter[accessService]': environment.webUrl,
       'page[cursor]': cursor,
       'page[size]': pageSize.toString(),
       sort,
