@@ -1,0 +1,14 @@
+<osf-admin-table
+  [tableColumns]="tableColumns()"
+  [tableData]="tableData()"
+  [isNextPreviousPagination]="true"
+  [paginationLinks]="registrationsLinks()"
+  [downloadLink]="downloadLink()"
+  [reportsLink]="reportsLink"
+  (sortChanged)="onSortChange($event)"
+  (linkPageChanged)="onLinkPageChange($event)"
+>
+  <div slot="amount">
+    <h3 class="title">{{ totalCount() }} {{ 'adminInstitutions.registrations.totalRegistrations' | translate }}</h3>
+  </div>
+</osf-admin-table>

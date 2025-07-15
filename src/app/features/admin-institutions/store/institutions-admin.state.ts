@@ -6,7 +6,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { handleSectionError } from '@core/handlers';
 
-import { InstitutionSummaryMetrics } from '../models';
+import { InstitutionProject, InstitutionRegistration, InstitutionSummaryMetrics } from '../models';
 import { InstitutionsAdminService } from '../services/institutions-admin.service';
 
 import {
@@ -16,6 +16,7 @@ import {
   FetchInstitutionSummaryMetrics,
   FetchInstitutionUsers,
   FetchProjects,
+  FetchRegistrations,
   FetchStorageRegionSearch,
   SendUserMessage,
 } from './institutions-admin.actions';
@@ -31,6 +32,7 @@ import { InstitutionsAdminModel } from './institutions-admin.model';
     searchResults: { data: [], isLoading: false, error: null },
     users: { data: [], totalCount: 0, isLoading: false, error: null },
     projects: { data: [], totalCount: 0, isLoading: false, error: null, links: undefined },
+    registrations: { data: [], totalCount: 0, isLoading: false, error: null, links: undefined },
     sendMessage: { data: null, isLoading: false, error: null },
     selectedInstitutionId: null,
     currentSearchPropertyPath: null,
@@ -161,7 +163,7 @@ export class InstitutionsAdminState {
         tap((response) => {
           ctx.patchState({
             projects: {
-              data: response.projects,
+              data: response.items as InstitutionProject[],
               totalCount: response.totalCount,
               isLoading: false,
               error: null,
@@ -170,6 +172,31 @@ export class InstitutionsAdminState {
           });
         }),
         catchError((error) => handleSectionError(ctx, 'projects', error))
+      );
+  }
+
+  @Action(FetchRegistrations)
+  fetchRegistrations(ctx: StateContext<InstitutionsAdminModel>, action: FetchRegistrations) {
+    const state = ctx.getState();
+    ctx.patchState({
+      registrations: { ...state.registrations, isLoading: true, error: null },
+    });
+
+    return this.institutionsAdminService
+      .fetchRegistrations(action.institutionId, action.institutionIris, action.pageSize, action.sort, action.cursor)
+      .pipe(
+        tap((response) => {
+          ctx.patchState({
+            registrations: {
+              data: response.items as InstitutionRegistration[],
+              totalCount: response.totalCount,
+              isLoading: false,
+              error: null,
+              links: response.links,
+            },
+          });
+        }),
+        catchError((error) => handleSectionError(ctx, 'registrations', error))
       );
   }
 

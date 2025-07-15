@@ -3,6 +3,7 @@ import { AsyncStateModel, AsyncStateWithLinksModel, AsyncStateWithTotalCount } f
 import {
   InstitutionDepartment,
   InstitutionProject,
+  InstitutionRegistration,
   InstitutionSearchFilter,
   InstitutionSummaryMetrics,
   InstitutionUser,
@@ -17,6 +18,7 @@ export interface InstitutionsAdminModel {
   searchResults: AsyncStateModel<InstitutionSearchFilter[]>;
   users: AsyncStateWithTotalCount<InstitutionUser[]>;
   projects: AsyncStateWithLinksModel<InstitutionProject[]>;
+  registrations: AsyncStateWithLinksModel<InstitutionRegistration[]>;
   sendMessage: AsyncStateModel<SendMessageResponseJsonApi | null>;
   selectedInstitutionId: string | null;
   currentSearchPropertyPath: string | null;

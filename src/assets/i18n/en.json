@@ -2164,6 +2164,13 @@
       "addOns": "Add-ons",
       "funderName": "Funder Name",
       "totalProjects": "Total Projects"
+    },
+    "registrations": {
+      "doi": "DOI",
+      "storageLocation": "Storage Location",
+      "funderName": "Funder Name",
+      "registrationSchema": "Registration Schema",
+      "totalRegistrations": "Total Registrations"
     }
   }
 }

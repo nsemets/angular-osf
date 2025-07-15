@@ -1,6 +1,6 @@
 import { TableColumn } from '@osf/features/admin-institutions/models';
 
-export const projectTableColumns: TableColumn[] = [
+export const registrationTableColumns: TableColumn[] = [
   {
     field: 'title',
     header: 'adminInstitutions.projects.title',
@@ -29,12 +29,14 @@ export const projectTableColumns: TableColumn[] = [
   },
   {
     field: 'doi',
-    header: 'adminInstitutions.projects.doi',
+    header: 'adminInstitutions.registrations.doi',
     sortable: false,
+    isLink: true,
+    linkTarget: '_blank',
   },
   {
     field: 'storageLocation',
-    header: 'adminInstitutions.projects.storageLocation',
+    header: 'adminInstitutions.registrations.storageLocation',
     sortable: false,
   },
   {
@@ -43,7 +45,7 @@ export const projectTableColumns: TableColumn[] = [
     sortable: false,
   },
   {
-    field: 'creator',
+    field: 'contributorName',
     header: 'adminInstitutions.projects.contributorName',
     sortable: true,
     isLink: true,
@@ -65,13 +67,13 @@ export const projectTableColumns: TableColumn[] = [
     sortable: false,
   },
   {
-    field: 'addOns',
-    header: 'adminInstitutions.projects.addOns',
+    field: 'funderName',
+    header: 'adminInstitutions.registrations.funderName',
     sortable: false,
   },
   {
-    field: 'funderName',
-    header: 'adminInstitutions.projects.funderName',
+    field: 'registrationSchema',
+    header: 'adminInstitutions.registrations.registrationSchema',
     sortable: false,
   },
 ];

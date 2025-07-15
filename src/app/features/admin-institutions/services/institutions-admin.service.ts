@@ -11,6 +11,7 @@ import {
   mapIndexCardResults,
   mapInstitutionDepartments,
   mapInstitutionProjects,
+  mapInstitutionRegistrations,
   mapInstitutionSummaryMetrics,
   mapInstitutionUsers,
   sendMessageRequestMapper,
@@ -20,6 +21,7 @@ import {
   InstitutionDepartmentsJsonApi,
   InstitutionIndexValueSearchJsonApi,
   InstitutionProject,
+  InstitutionRegistration,
   InstitutionRegistrationsJsonApi,
   InstitutionSearchFilter,
   InstitutionSummaryMetrics,
@@ -92,43 +94,89 @@ export class InstitutionsAdminService {
       );
   }
 
-  fetchProjects(
-    institutionId: string,
-    institutionIris: string[],
-    pageSize = 10,
-    sort = '-dateModified',
-    cursor = ''
-  ): Observable<{
-    projects: InstitutionProject[];
-    totalCount: number;
-    links?: PaginationLinksModel;
-  }> {
-    const url = `${environment.shareDomainUrl}/index-card-search`;
-    let params: Record<string, string> = {};
-
-    const affiliationParam = institutionIris.join(',');
-
-    params = {
-      'cardSearchFilter[affiliation][]': affiliationParam,
-      'cardSearchFilter[resourceType]': 'Project',
-      'cardSearchFilter[accessService]': environment.webUrl,
-      'page[cursor]': cursor,
-      'page[size]': pageSize.toString(),
-      sort,
-    };
-
-    return this.jsonApiService.get<InstitutionRegistrationsJsonApi>(url, params).pipe(
-      map((response: InstitutionRegistrationsJsonApi) => {
-        const projects = mapInstitutionProjects(response);
-        const links = response.data.relationships.searchResultPage.links;
-        return {
-          projects,
-          totalCount: response.data.attributes.totalResultCount,
-          links,
-        };
-      })
-    );
+  fetchProjects(institutionId: string, iris: string[], pageSize = 10, sort = '-dateModified', cursor = '') {
+    return this.fetchIndexCards('Project', iris, pageSize, sort, cursor);
   }
+
+  fetchRegistrations(institutionId: string, iris: string[], pageSize = 10, sort = '-dateModified', cursor = '') {
+    return this.fetchIndexCards('Registration', iris, pageSize, sort, cursor);
+  }
+
+  // fetchProjects(
+  //   institutionId: string,
+  //   institutionIris: string[],
+  //   pageSize = 10,
+  //   sort = '-dateModified',
+  //   cursor = ''
+  // ): Observable<{
+  //   projects: InstitutionProject[];
+  //   totalCount: number;
+  //   links?: PaginationLinksModel;
+  // }> {
+  //   const url = `${environment.shareDomainUrl}/index-card-search`;
+  //   let params: Record<string, string> = {};
+  //
+  //   const affiliationParam = institutionIris.join(',');
+  //
+  //   params = {
+  //     'cardSearchFilter[affiliation][]': affiliationParam,
+  //     'cardSearchFilter[resourceType]': 'Project',
+  //     'cardSearchFilter[accessService]': environment.webUrl,
+  //     'page[cursor]': cursor,
+  //     'page[size]': pageSize.toString(),
+  //     sort,
+  //   };
+  //
+  //   return this.jsonApiService.get<InstitutionRegistrationsJsonApi>(url, params).pipe(
+  //     map((response: InstitutionRegistrationsJsonApi) => {
+  //       const projects = mapInstitutionProjects(response);
+  //       const links = response.data.relationships.searchResultPage.links;
+  //       return {
+  //         projects,
+  //         totalCount: response.data.attributes.totalResultCount,
+  //         links,
+  //       };
+  //     })
+  //   );
+  // }
+  //
+  // fetchRegistrations(
+  //   institutionId: string,
+  //   institutionIris: string[],
+  //   pageSize = 10,
+  //   sort = '-dateModified',
+  //   cursor = ''
+  // ): Observable<{
+  //   registrations: InstitutionRegistration[];
+  //   totalCount: number;
+  //   links?: PaginationLinksModel;
+  // }> {
+  //   const url = `${environment.shareDomainUrl}/index-card-search`;
+  //   let params: Record<string, string> = {};
+  //
+  //   const affiliationParam = institutionIris.join(',');
+  //
+  //   params = {
+  //     'cardSearchFilter[affiliation][]': affiliationParam,
+  //     'cardSearchFilter[resourceType]': 'Registration',
+  //     'cardSearchFilter[accessService]': environment.webUrl,
+  //     'page[cursor]': cursor,
+  //     'page[size]': pageSize.toString(),
+  //     sort,
+  //   };
+  //
+  //   return this.jsonApiService.get<InstitutionRegistrationsJsonApi>(url, params).pipe(
+  //     map((response: InstitutionRegistrationsJsonApi) => {
+  //       const registrations = mapInstitutionRegistrations(response);
+  //       const links = response.data.relationships.searchResultPage.links;
+  //       return {
+  //         registrations,
+  //         totalCount: response.data.attributes.totalResultCount,
+  //         links,
+  //       };
+  //     })
+  //   );
+  // }
 
   fetchIndexValueSearch(
     institutionId: string,
@@ -152,5 +200,41 @@ export class InstitutionsAdminService {
     const payload = sendMessageRequestMapper(request);
 
     return this.jsonApiService.post<SendMessageResponseJsonApi>(`${this.hardcodedUrl}/institutions/messages/`, payload);
+  }
+
+  private fetchIndexCards(
+    resourceType: 'Project' | 'Registration',
+    institutionIris: string[],
+    pageSize = 10,
+    sort = '-dateModified',
+    cursor = ''
+  ): Observable<{
+    items: InstitutionProject[] | InstitutionRegistration[];
+    totalCount: number;
+    links?: PaginationLinksModel;
+  }> {
+    const url = `${environment.shareDomainUrl}/index-card-search`;
+    const affiliationParam = institutionIris.join(',');
+
+    const params: Record<string, string> = {
+      'cardSearchFilter[affiliation][]': affiliationParam,
+      'cardSearchFilter[resourceType]': resourceType, // ← різниця
+      'cardSearchFilter[accessService]': environment.webUrl,
+      'page[cursor]': cursor,
+      'page[size]': pageSize.toString(),
+      sort,
+    };
+
+    return this.jsonApiService.get<InstitutionRegistrationsJsonApi>(url, params).pipe(
+      map((res) => {
+        const mapper = resourceType === 'Project' ? mapInstitutionProjects : mapInstitutionRegistrations;
+
+        return {
+          items: mapper(res),
+          totalCount: res.data.attributes.totalResultCount,
+          links: res.data.relationships.searchResultPage.links,
+        };
+      })
+    );
   }
 }
