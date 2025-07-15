@@ -8,7 +8,7 @@ export interface PreprintModerationStateModel {
   reviewActions: AsyncStateWithTotalCount<PreprintReviewActionModel[]>;
 }
 
-export const PREPRINT_MODERATION_STATE_DEFAULTS = {
+export const PREPRINT_MODERATION_STATE_DEFAULTS: PreprintModerationStateModel = {
   preprintProviders: {
     data: [],
     isLoading: false,

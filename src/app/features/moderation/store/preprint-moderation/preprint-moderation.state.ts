@@ -1,7 +1,7 @@
 import { Action, State, StateContext } from '@ngxs/store';
 import { patch } from '@ngxs/store/operators';
 
-import { catchError, tap } from 'rxjs';
+import { catchError, forkJoin, map, switchMap, tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
@@ -25,6 +25,18 @@ export class PreprintModerationState {
     ctx.setState(patch({ preprintProviders: patch({ isLoading: true }) }));
 
     return this.preprintModerationService.getPreprintProvidersToModerate().pipe(
+      switchMap((items) =>
+        forkJoin(
+          items.map((item) =>
+            this.preprintModerationService.getPreprintProvider(item.id).pipe(
+              map((totalCount) => ({
+                ...item,
+                submissionCount: totalCount,
+              }))
+            )
+          )
+        )
+      ),
       tap((data) => {
         ctx.setState(
           patch({

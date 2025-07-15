@@ -106,6 +106,9 @@
     },
     "placeholder": {
       "addTag": "Add tags"
+    },
+    "hint": {
+      "tagSeparators": "Use enter or comma to create a tag."
     }
   },
   "navigation": {
@@ -1129,6 +1132,12 @@
       "rejected": "Rejected",
       "by": "by"
     },
+    "preprintReviewStatus": {
+      "submitted": "submitted a preprint \"{{name}}\" to",
+      "accepted": "accepted a preprint \"{{name}}\" in",
+      "withdrawn": "withdrawn a preprint \"{{name}}\" from",
+      "rejected": "rejected a preprint \"{{name}}\" from"
+    },
     "preprintSettings": {
       "warning": "Notice: Moderation settings can only be  changed by an OSF administrator. Contact",
       "warningForAssistance": "for assistance.",
@@ -1836,7 +1845,8 @@
           }
         }
       }
-    }
+    },
+    "providers": "Providers"
   },
   "registries": {
     "title": "Registries",
@@ -2120,7 +2130,7 @@
       "publicRegistrations": "Public Registrations"
     },
     "institutionUsers": {
-     "allDepartments": "All departments",
+      "allDepartments": "All departments",
       "lastLogin": "Last Login",
       "lastActive": "Last Active",
       "accountCreated": "Account Created",
