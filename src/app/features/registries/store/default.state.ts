@@ -1,7 +1,7 @@
 import { RegistriesStateModel } from './registries.model';
 
 export const DefaultState: RegistriesStateModel = {
-  providers: {
+  providerSchemas: {
     data: [],
     isLoading: false,
     error: null,
@@ -17,11 +17,6 @@ export const DefaultState: RegistriesStateModel = {
     isSubmitting: false,
     error: null,
   },
-  contributorsList: {
-    data: [],
-    isLoading: false,
-    error: null,
-  },
   registries: {
     data: [],
     isLoading: false,
@@ -32,14 +27,28 @@ export const DefaultState: RegistriesStateModel = {
     isLoading: false,
     error: null,
   },
-  registrationSubjects: {
-    data: [],
-    isLoading: false,
-    error: null,
-  },
   pagesSchema: {
     data: [],
     isLoading: false,
     error: null,
+  },
+  stepsValidation: {},
+  registration: {
+    data: null,
+    isLoading: false,
+    isSubmitting: false,
+    error: null,
+  },
+  draftRegistrations: {
+    data: [],
+    isLoading: false,
+    error: null,
+    totalCount: 0,
+  },
+  submittedRegistrations: {
+    data: [],
+    isLoading: false,
+    error: null,
+    totalCount: 0,
   },
 };

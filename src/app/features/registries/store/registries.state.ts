@@ -11,28 +11,25 @@ import { getResourceTypes } from '@osf/shared/utils';
 
 import { RegistriesService } from '../services';
 
-import { RegistrationContributorsHandlers } from './handlers/contributors.handlers';
 import { LicensesHandlers } from './handlers/licenses.handlers';
 import { ProjectsHandlers } from './handlers/projects.handlers';
 import { ProvidersHandlers } from './handlers/providers.handlers';
-import { SubjectsHandlers } from './handlers/subjects.handlers';
 import { DefaultState } from './default.state';
 import {
-  AddContributor,
   CreateDraft,
-  DeleteContributor,
   DeleteDraft,
-  FetchContributors,
   FetchDraft,
+  FetchDraftRegistrations,
   FetchLicenses,
-  FetchRegistrationSubjects,
   FetchSchemaBlocks,
+  FetchSubmittedRegistrations,
   GetProjects,
-  GetProviders,
+  GetProviderSchemas,
   GetRegistries,
+  RegisterDraft,
   SaveLicense,
-  UpdateContributor,
-  UpdateRegistrationSubjects,
+  UpdateDraft,
+  UpdateStepValidation,
 } from './registries.actions';
 import { RegistriesStateModel } from './registries.model';
 
@@ -48,8 +45,6 @@ export class RegistriesState {
   providersHandler = inject(ProvidersHandlers);
   projectsHandler = inject(ProjectsHandlers);
   licensesHandler = inject(LicensesHandlers);
-  subjectsHandler = inject(SubjectsHandlers);
-  contributorsHandler = inject(RegistrationContributorsHandlers);
 
   @Action(GetRegistries)
   getRegistries(ctx: StateContext<RegistriesStateModel>) {
@@ -82,9 +77,9 @@ export class RegistriesState {
     return this.projectsHandler.getProjects(ctx);
   }
 
-  @Action(GetProviders)
-  getProviders(ctx: StateContext<RegistriesStateModel>) {
-    return this.providersHandler.getProviders(ctx);
+  @Action(GetProviderSchemas)
+  getProviders(ctx: StateContext<RegistriesStateModel>, { providerId }: GetProviderSchemas) {
+    return this.providersHandler.getProviderSchemas(ctx, providerId);
   }
 
   @Action(CreateDraft)
@@ -169,6 +164,57 @@ export class RegistriesState {
     );
   }
 
+  @Action(UpdateDraft)
+  updateDraft(ctx: StateContext<RegistriesStateModel>, { draftId, attributes, relationships }: UpdateDraft) {
+    ctx.patchState({
+      draftRegistration: {
+        ...ctx.getState().draftRegistration,
+        isSubmitting: true,
+      },
+    });
+
+    return this.registriesService.updateDraft(draftId, attributes, relationships).pipe(
+      tap((updatedDraft) => {
+        ctx.patchState({
+          draftRegistration: {
+            data: { ...updatedDraft },
+            isLoading: false,
+            isSubmitting: false,
+            error: null,
+          },
+        });
+      }),
+      catchError((error) => handleSectionError(ctx, 'draftRegistration', error))
+    );
+  }
+
+  @Action(RegisterDraft)
+  registerDraft(
+    ctx: StateContext<RegistriesStateModel>,
+    { draftId, embargoDate, providerId, projectId }: RegisterDraft
+  ) {
+    ctx.patchState({
+      registration: {
+        ...ctx.getState().registration,
+        isSubmitting: true,
+      },
+    });
+
+    return this.registriesService.registerDraft(draftId, embargoDate, providerId, projectId).pipe(
+      tap((registration) => {
+        ctx.patchState({
+          registration: {
+            data: { ...registration },
+            isLoading: false,
+            isSubmitting: false,
+            error: null,
+          },
+        });
+      }),
+      catchError((error) => handleSectionError(ctx, 'draftRegistration', error))
+    );
+  }
+
   @Action(FetchSchemaBlocks)
   fetchSchemaBlocks(ctx: StateContext<RegistriesStateModel>, action: FetchSchemaBlocks) {
     const state = ctx.getState();
@@ -189,29 +235,20 @@ export class RegistriesState {
     );
   }
 
-  @Action(FetchContributors)
-  fetchContributors(ctx: StateContext<RegistriesStateModel>, action: FetchContributors) {
-    return this.contributorsHandler.fetchContributors(ctx, action);
-  }
-
-  @Action(AddContributor)
-  addContributor(ctx: StateContext<RegistriesStateModel>, action: AddContributor) {
-    return this.contributorsHandler.addContributor(ctx, action);
-  }
-
-  @Action(UpdateContributor)
-  updateContributor(ctx: StateContext<RegistriesStateModel>, action: UpdateContributor) {
-    return this.contributorsHandler.updateContributor(ctx, action);
-  }
-
-  @Action(DeleteContributor)
-  deleteContributor(ctx: StateContext<RegistriesStateModel>, action: DeleteContributor) {
-    return this.contributorsHandler.deleteContributor(ctx, action);
+  @Action(UpdateStepValidation)
+  updateStepValidation(ctx: StateContext<RegistriesStateModel>, { step, invalid }: UpdateStepValidation) {
+    const state = ctx.getState();
+    ctx.patchState({
+      stepsValidation: {
+        ...state.stepsValidation,
+        [step]: { invalid },
+      },
+    });
   }
 
   @Action(FetchLicenses)
-  fetchLicenses(ctx: StateContext<RegistriesStateModel>) {
-    return this.licensesHandler.fetchLicenses(ctx);
+  fetchLicenses(ctx: StateContext<RegistriesStateModel>, { providerId }: FetchLicenses) {
+    return this.licensesHandler.fetchLicenses(ctx, providerId);
   }
 
   @Action(SaveLicense)
@@ -219,16 +256,54 @@ export class RegistriesState {
     return this.licensesHandler.saveLicense(ctx, { registrationId, licenseId, licenseOptions });
   }
 
-  @Action(FetchRegistrationSubjects)
-  fetchRegistrationSubjects(ctx: StateContext<RegistriesStateModel>, { registrationId }: FetchRegistrationSubjects) {
-    return this.subjectsHandler.fetchRegistrationSubjects(ctx, { registrationId });
+  @Action(FetchDraftRegistrations)
+  fetchDraftRegistrations(ctx: StateContext<RegistriesStateModel>, { page, pageSize }: FetchDraftRegistrations) {
+    const state = ctx.getState();
+    ctx.patchState({
+      draftRegistrations: {
+        ...state.draftRegistrations,
+        isLoading: true,
+        error: null,
+      },
+    });
+
+    return this.registriesService.getDraftRegistrations(page, pageSize).pipe(
+      tap((draftRegistrations) => {
+        ctx.patchState({
+          draftRegistrations: {
+            data: draftRegistrations.data,
+            totalCount: draftRegistrations.totalCount,
+            isLoading: false,
+            error: null,
+          },
+        });
+      }),
+      catchError((error) => handleSectionError(ctx, 'draftRegistrations', error))
+    );
   }
 
-  @Action(UpdateRegistrationSubjects)
-  updateRegistrationSubjects(
+  @Action(FetchSubmittedRegistrations)
+  fetchSubmittedRegistrations(
     ctx: StateContext<RegistriesStateModel>,
-    { registrationId, subjects }: UpdateRegistrationSubjects
+    { page, pageSize }: FetchSubmittedRegistrations
   ) {
-    return this.subjectsHandler.updateRegistrationSubjects(ctx, { registrationId, subjects });
+    const state = ctx.getState();
+    ctx.patchState({
+      submittedRegistrations: { ...state.submittedRegistrations, isLoading: true, error: null },
+    });
+
+    return this.registriesService.getSubmittedRegistrations(page, pageSize).pipe(
+      tap((submittedRegistrations) => {
+        ctx.patchState({
+          submittedRegistrations: {
+            data: submittedRegistrations.data,
+            totalCount: submittedRegistrations.totalCount,
+            isLoading: false,
+            error: null,
+          },
+        });
+      }),
+      catchError((error) => handleSectionError(ctx, 'submittedRegistrations', error))
+    );
   }
 }

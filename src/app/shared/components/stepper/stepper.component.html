@@ -1,30 +1,32 @@
 <div class="stepper-container">
   <div class="stepper-circles-lines-row">
-    @for (step of steps(); track step.value; let i = $index) {
-      <button
-        class="step-circle"
-        [class.active]="i <= this.currentStep()"
-        [class.invalid]="step.invalid"
-        [class.current]="i === this.currentStep()"
-        (click)="onStepClick(i)"
-      >
-        @if (i < this.currentStep()) {
-          @if (step.invalid) {
+    @for (step of steps(); track $index; let i = $index) {
+      @if (currentStep()) {
+        <button
+          class="step-circle"
+          [class.active]="i <= currentStep().index"
+          [class.invalid]="step.invalid"
+          [class.current]="i === currentStep().index"
+          (click)="onStepClick(step)"
+        >
+          @if (step.invalid && i !== currentStep().index) {
             <osf-icon iconClass="fas fa-exclamation" />
           } @else {
-            <osf-icon iconClass="fas fa-check" />
+            @if (i < currentStep().index) {
+              <osf-icon iconClass="fas fa-check" />
+            } @else {
+              <span>{{ i + 1 }}</span>
+            }
           }
-        } @else {
-          <span>{{ i + 1 }}</span>
+        </button>
+        @if (i < steps().length - 1) {
+          <div class="step-line" [class.active]="i <= currentStep().index"></div>
         }
-      </button>
-      @if (i < steps().length - 1) {
-        <div class="step-line" [class.active]="i <= this.currentStep()"></div>
       }
     }
   </div>
   <div class="stepper-labels-row">
-    @for (step of steps(); track step.value) {
+    @for (step of steps(); track $index) {
       <div class="step-label">{{ step.label | translate }}</div>
     }
   </div>

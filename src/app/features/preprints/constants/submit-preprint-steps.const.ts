@@ -1,33 +1,35 @@
-import { SubmitSteps } from '@osf/features/preprints/enums';
-import { CustomOption } from '@shared/models';
+import { PreprintSteps } from '@osf/features/preprints/enums';
+import { StepOption } from '@shared/models';
 
-export const submitPreprintSteps: CustomOption<SubmitSteps>[] = Object.entries(SubmitSteps)
-  .filter(([, value]) => typeof value === 'number')
-  .map(([, value]) => {
-    let label = '';
-    switch (value) {
-      case SubmitSteps.TitleAndAbstract:
-        label = 'Title and Abstract';
-        break;
-      case SubmitSteps.File:
-        label = 'File';
-        break;
-      case SubmitSteps.Metadata:
-        label = 'Metadata';
-        break;
-      case SubmitSteps.AuthorAssertions:
-        label = 'Author Assertions';
-        break;
-      case SubmitSteps.Supplements:
-        label = 'Supplements';
-        break;
-      case SubmitSteps.Review:
-        label = 'Review';
-        break;
-    }
-
-    return {
-      label,
-      value: value as SubmitSteps,
-    };
-  });
+export const submitPreprintSteps: StepOption[] = [
+  {
+    index: 0,
+    label: 'preprints.preprintStepper.steps.titleAndAbstract',
+    value: PreprintSteps.TitleAndAbstract,
+  },
+  {
+    index: 1,
+    label: 'preprints.preprintStepper.steps.file',
+    value: PreprintSteps.File,
+  },
+  {
+    index: 2,
+    label: 'preprints.preprintStepper.steps.metadata',
+    value: PreprintSteps.Metadata,
+  },
+  {
+    index: 3,
+    label: 'preprints.preprintStepper.steps.authorAssertions',
+    value: PreprintSteps.AuthorAssertions,
+  },
+  {
+    index: 4,
+    label: 'preprints.preprintStepper.steps.supplements',
+    value: PreprintSteps.Supplements,
+  },
+  {
+    index: 5,
+    label: 'preprints.preprintStepper.steps.review',
+    value: PreprintSteps.Review,
+  },
+];

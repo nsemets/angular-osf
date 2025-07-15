@@ -9,30 +9,27 @@ import { TableModule } from 'primeng/table';
 
 import { filter, forkJoin, map, of } from 'rxjs';
 
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import {
-  AddContributor,
-  DeleteContributor,
-  FetchContributors,
-  RegistriesSelectors,
-  UpdateContributor,
-} from '@osf/features/registries/store';
-import { EducationHistoryDialogComponent, EmploymentHistoryDialogComponent } from '@osf/shared/components';
 import {
   AddContributorDialogComponent,
   AddUnregisteredContributorDialogComponent,
   ContributorsListComponent,
 } from '@osf/shared/components/contributors';
-import { BIBLIOGRAPHY_OPTIONS, PERMISSION_OPTIONS } from '@osf/shared/components/contributors/constants';
-import { AddContributorType, ContributorPermission } from '@osf/shared/components/contributors/enums';
-import { ContributorDialogAddModel, ContributorModel } from '@osf/shared/components/contributors/models';
-import { ContributorsSelectors } from '@osf/shared/components/contributors/store';
-import { SelectOption } from '@osf/shared/models';
+import { BIBLIOGRAPHY_OPTIONS, PERMISSION_OPTIONS } from '@osf/shared/constants';
+import { AddContributorType, ContributorPermission, ResourceType } from '@osf/shared/enums';
+import { ContributorDialogAddModel, ContributorModel, SelectOption } from '@osf/shared/models';
 import { CustomConfirmationService, ToastService } from '@osf/shared/services';
+import {
+  AddContributor,
+  ContributorsSelectors,
+  DeleteContributor,
+  GetAllContributors,
+  UpdateContributor,
+} from '@osf/shared/stores';
 import { findChangedItems } from '@osf/shared/utils';
 
 @Component({
@@ -44,6 +41,8 @@ import { findChangedItems } from '@osf/shared/utils';
   providers: [DialogService],
 })
 export class ContributorsComponent implements OnInit {
+  control = input.required<FormControl>();
+
   readonly destroyRef = inject(DestroyRef);
   readonly translateService = inject(TranslateService);
   readonly dialogService = inject(DialogService);
@@ -58,13 +57,13 @@ export class ContributorsComponent implements OnInit {
   protected readonly permissionsOptions: SelectOption[] = PERMISSION_OPTIONS;
   protected readonly bibliographyOptions: SelectOption[] = BIBLIOGRAPHY_OPTIONS;
 
-  protected initialContributors = select(RegistriesSelectors.getContributors);
+  protected initialContributors = select(ContributorsSelectors.getContributors);
   protected contributors = signal([]);
 
   protected readonly isContributorsLoading = select(ContributorsSelectors.isContributorsLoading);
 
   protected actions = createDispatchMap({
-    getContributors: FetchContributors,
+    getContributors: GetAllContributors,
     deleteContributor: DeleteContributor,
     updateContributor: UpdateContributor,
     addContributor: AddContributor,
@@ -81,15 +80,17 @@ export class ContributorsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const draftId = this.draftId();
-    if (draftId) {
-      this.actions.getContributors(draftId);
-    }
+    this.actions.getContributors(this.draftId(), ResourceType.DraftRegistration);
   }
 
   onFocusOut() {
     // [NM] TODO: make request to update contributor if changed
     console.log('Focus out event:', 'Changed:', this.hasChanges);
+    if (this.control()) {
+      this.control().markAsTouched();
+      this.control().markAsDirty();
+      this.control().updateValueAndValidity();
+    }
   }
 
   cancel() {
@@ -100,35 +101,11 @@ export class ContributorsComponent implements OnInit {
     const updatedContributors = findChangedItems(this.initialContributors(), this.contributors(), 'id');
 
     const updateRequests = updatedContributors.map((payload) =>
-      this.actions.updateContributor(this.draftId(), payload)
+      this.actions.updateContributor(this.draftId(), ResourceType.DraftRegistration, payload)
     );
 
     forkJoin(updateRequests).subscribe(() => {
       this.toastService.showSuccess('project.contributors.toastMessages.multipleUpdateSuccessMessage');
-    });
-  }
-
-  openEmploymentHistory(contributor: ContributorModel) {
-    this.dialogService.open(EmploymentHistoryDialogComponent, {
-      width: '552px',
-      data: contributor.employment,
-      focusOnShow: false,
-      header: this.translateService.instant('project.contributors.table.headers.employment'),
-      closeOnEscape: true,
-      modal: true,
-      closable: true,
-    });
-  }
-
-  openEducationHistory(contributor: ContributorModel) {
-    this.dialogService.open(EducationHistoryDialogComponent, {
-      width: '552px',
-      data: contributor.education,
-      focusOnShow: false,
-      header: this.translateService.instant('project.contributors.table.headers.education'),
-      closeOnEscape: true,
-      modal: true,
-      closable: true,
     });
   }
 
@@ -153,7 +130,9 @@ export class ContributorsComponent implements OnInit {
         if (res.type === AddContributorType.Unregistered) {
           this.openAddUnregisteredContributorDialog();
         } else {
-          const addRequests = res.data.map((payload) => this.actions.addContributor(this.draftId(), payload));
+          const addRequests = res.data.map((payload) =>
+            this.actions.addContributor(this.draftId(), ResourceType.DraftRegistration, payload)
+          );
 
           forkJoin(addRequests).subscribe(() => {
             this.toastService.showSuccess('project.contributors.toastMessages.multipleAddSuccessMessage');
@@ -183,7 +162,7 @@ export class ContributorsComponent implements OnInit {
           const successMessage = this.translateService.instant('project.contributors.toastMessages.addSuccessMessage');
           const params = { name: res.data[0].fullName };
 
-          this.actions.addContributor(this.draftId(), res.data[0]).subscribe({
+          this.actions.addContributor(this.draftId(), ResourceType.DraftRegistration, res.data[0]).subscribe({
             next: () => this.toastService.showSuccess(successMessage, params),
           });
         }
@@ -198,7 +177,7 @@ export class ContributorsComponent implements OnInit {
       acceptLabelKey: 'common.buttons.remove',
       onConfirm: () => {
         this.actions
-          .deleteContributor(this.draftId(), contributor.userId)
+          .deleteContributor(this.draftId(), ResourceType.DraftRegistration, contributor.userId)
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             next: () =>

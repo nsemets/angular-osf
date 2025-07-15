@@ -1,16 +1,24 @@
-import { ContributorModel } from '@osf/shared/components/contributors/models';
-import { AsyncStateModel, License, Resource, Subject } from '@shared/models';
+import {
+  AsyncStateModel,
+  AsyncStateWithTotalCount,
+  DraftRegistrationModel,
+  License,
+  RegistrationCard,
+  RegistrationModel,
+  Resource,
+} from '@shared/models';
 
-import { PageSchema, Project, Provider } from '../models';
-import { Registration } from '../models/registration.model';
+import { PageSchema, Project, ProviderSchema } from '../models';
 
 export interface RegistriesStateModel {
-  providers: AsyncStateModel<Provider[]>;
+  providerSchemas: AsyncStateModel<ProviderSchema[]>;
   projects: AsyncStateModel<Project[]>;
-  draftRegistration: AsyncStateModel<Registration | null>;
-  contributorsList: AsyncStateModel<ContributorModel[]>;
+  draftRegistration: AsyncStateModel<DraftRegistrationModel | null>;
+  registration: AsyncStateModel<RegistrationModel | null>;
   registries: AsyncStateModel<Resource[]>;
   licenses: AsyncStateModel<License[]>;
-  registrationSubjects: AsyncStateModel<Subject[]>;
   pagesSchema: AsyncStateModel<PageSchema[]>;
+  stepsValidation: Record<string, { invalid: boolean }>;
+  draftRegistrations: AsyncStateWithTotalCount<RegistrationCard[]>;
+  submittedRegistrations: AsyncStateWithTotalCount<RegistrationCard[]>;
 }

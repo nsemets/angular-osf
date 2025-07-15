@@ -11,10 +11,13 @@ export interface PreprintProviderDetails {
   footerLinksHtml: string;
   preprintWord: string;
   allowSubmissions: boolean;
+  assertionsEnabled: boolean;
+  reviewsWorkflow: StringOrNull;
   brand: Brand;
   lastFetched?: number;
   iri: string;
   faviconUrl: string;
+  squareColorNoTransparentImageUrl: string;
 }
 
 export interface PreprintProviderShortInfo {
@@ -23,4 +26,5 @@ export interface PreprintProviderShortInfo {
   descriptionHtml: string;
   whiteWideImageUrl: string;
   squareColorNoTransparentImageUrl: string;
+  submissionCount?: number;
 }

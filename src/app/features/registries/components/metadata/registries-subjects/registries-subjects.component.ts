@@ -1,46 +1,62 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
+
+import { Card } from 'primeng/card';
+import { Message } from 'primeng/message';
+
+import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import {
-  FetchRegistrationSubjects,
-  RegistriesSelectors,
-  UpdateRegistrationSubjects,
-} from '@osf/features/registries/store';
+import { RegistriesSelectors } from '@osf/features/registries/store';
 import { SubjectsComponent } from '@osf/shared/components';
-import { Subject } from '@osf/shared/models';
-import { FetchChildrenSubjects, FetchSubjects } from '@osf/shared/stores';
-import { SubjectsSelectors } from '@osf/shared/stores/subjects/subjects.selectors';
+import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants';
+import { ResourceType } from '@osf/shared/enums';
+import { SubjectModel } from '@osf/shared/models';
+import {
+  FetchChildrenSubjects,
+  FetchSelectedSubjects,
+  FetchSubjects,
+  SubjectsSelectors,
+  UpdateResourceSubjects,
+} from '@osf/shared/stores';
 
 @Component({
   selector: 'osf-registries-subjects',
-  imports: [SubjectsComponent],
+  imports: [SubjectsComponent, Card, Message, TranslatePipe],
   templateUrl: './registries-subjects.component.html',
   styleUrl: './registries-subjects.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegistriesSubjectsComponent {
+  control = input.required<FormControl>();
   private readonly route = inject(ActivatedRoute);
   private readonly draftId = this.route.snapshot.params['id'];
 
-  protected subjects = select(SubjectsSelectors.getSubjects);
-  protected subjectsLoading = select(SubjectsSelectors.getSubjectsLoading);
-  protected searchedSubjects = select(SubjectsSelectors.getSearchedSubjects);
-  protected isSearching = select(SubjectsSelectors.getSearchedSubjectsLoading);
-  protected selectedSubjects = select(RegistriesSelectors.getSelectedSubjects);
-  protected isSubjectsUpdating = select(RegistriesSelectors.isSubjectsUpdating);
+  protected selectedSubjects = select(SubjectsSelectors.getSelectedSubjects);
+  protected isSubjectsUpdating = select(SubjectsSelectors.areSelectedSubjectsLoading);
+  protected draftRegistration = select(RegistriesSelectors.getDraftRegistration);
 
   protected actions = createDispatchMap({
     fetchSubjects: FetchSubjects,
-    fetchRegistrationSubjects: FetchRegistrationSubjects,
+    fetchSelectedSubjects: FetchSelectedSubjects,
     fetchChildrenSubjects: FetchChildrenSubjects,
-    updateRegistrationSubjects: UpdateRegistrationSubjects,
+    updateResourceSubjects: UpdateResourceSubjects,
   });
 
+  readonly INPUT_VALIDATION_MESSAGES = INPUT_VALIDATION_MESSAGES;
+
+  private isLoaded = false;
+
   constructor() {
-    this.actions.fetchSubjects();
-    this.actions.fetchRegistrationSubjects(this.draftId);
+    effect(() => {
+      if (this.draftRegistration() && !this.isLoaded) {
+        this.actions.fetchSubjects(ResourceType.Registration, this.draftRegistration()?.providerId);
+        this.actions.fetchSelectedSubjects(this.draftId, ResourceType.DraftRegistration);
+        this.isLoaded = true;
+      }
+    });
   }
 
   getSubjectChildren(parentId: string) {
@@ -48,10 +64,28 @@ export class RegistriesSubjectsComponent {
   }
 
   searchSubjects(search: string) {
-    this.actions.fetchSubjects(search);
+    this.actions.fetchSubjects(ResourceType.Registration, this.draftRegistration()?.providerId, search);
   }
 
-  updateSelectedSubjects(subjects: Subject[]) {
-    this.actions.updateRegistrationSubjects(this.draftId, subjects);
+  updateSelectedSubjects(subjects: SubjectModel[]) {
+    this.updateControlState(subjects);
+    this.actions.updateResourceSubjects(this.draftId, ResourceType.DraftRegistration, subjects);
+  }
+
+  onFocusOut() {
+    if (this.control()) {
+      this.control().markAsTouched();
+      this.control().markAsDirty();
+      this.control().updateValueAndValidity();
+    }
+  }
+
+  updateControlState(value: SubjectModel[]) {
+    if (this.control()) {
+      this.control().setValue(value);
+      this.control().markAsTouched();
+      this.control().markAsDirty();
+      this.control().updateValueAndValidity();
+    }
   }
 }

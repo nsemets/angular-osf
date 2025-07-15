@@ -1,12 +1,16 @@
-import { ContributorAddModel, ContributorModel } from '@osf/shared/components/contributors/models';
-import { LicenseOptions, Subject } from '@osf/shared/models';
+import {
+  DraftRegistrationAttributesJsonApi,
+  DraftRegistrationRelationshipsJsonApi,
+  LicenseOptions,
+} from '@osf/shared/models';
 
 export class GetRegistries {
   static readonly type = '[Registries] Get Registries';
 }
 
-export class GetProviders {
-  static readonly type = '[Registries]  Get Providers';
+export class GetProviderSchemas {
+  static readonly type = '[Registries]  Get Provider Schemas';
+  constructor(public providerId: string) {}
 }
 
 export class GetProjects {
@@ -23,9 +27,28 @@ export class FetchDraft {
   constructor(public draftId: string) {}
 }
 
+export class UpdateDraft {
+  static readonly type = '[Registries] Update Registration Tags';
+  constructor(
+    public draftId: string,
+    public attributes: Partial<DraftRegistrationAttributesJsonApi>,
+    public relationships?: Partial<DraftRegistrationRelationshipsJsonApi>
+  ) {}
+}
+
 export class DeleteDraft {
   static readonly type = '[Registries]  Delete Draft';
   constructor(public draftId: string) {}
+}
+
+export class RegisterDraft {
+  static readonly type = '[Registries]  Register Draft Registration';
+  constructor(
+    public draftId: string,
+    public embargoDate: string,
+    public providerId: string,
+    public projectId?: string
+  ) {}
 }
 
 export class FetchSchemaBlocks {
@@ -33,41 +56,9 @@ export class FetchSchemaBlocks {
   constructor(public registrationSchemaId: string) {}
 }
 
-export class FetchContributors {
-  static readonly type = '[Registries] Fetch Contributors';
-
-  constructor(public draftId: string) {}
-}
-
-export class AddContributor {
-  static readonly type = '[Registries] Add Contributor';
-
-  constructor(
-    public draftId: string,
-    public contributor: ContributorAddModel
-  ) {}
-}
-
-export class UpdateContributor {
-  static readonly type = '[Registries] Update Contributor';
-
-  constructor(
-    public draftId: string,
-    public contributor: ContributorModel
-  ) {}
-}
-
-export class DeleteContributor {
-  static readonly type = '[Registries] Delete Contributor';
-
-  constructor(
-    public draftId: string,
-    public contributorId: string
-  ) {}
-}
-
 export class FetchLicenses {
   static readonly type = '[Registries] Fetch Licenses';
+  constructor(public providerId: string) {}
 }
 
 export class SaveLicense {
@@ -79,15 +70,26 @@ export class SaveLicense {
   ) {}
 }
 
-export class FetchRegistrationSubjects {
-  static readonly type = '[Registries] Fetch Registration Subjects';
-  constructor(public registrationId: string) {}
+export class UpdateStepValidation {
+  static readonly type = '[Registries] Update Step Validation';
+  constructor(
+    public step: string,
+    public invalid: boolean
+  ) {}
 }
 
-export class UpdateRegistrationSubjects {
-  static readonly type = '[Registries] Update Registration Subject';
+export class FetchDraftRegistrations {
+  static readonly type = '[Registries] Fetch Draft Registrations';
   constructor(
-    public registrationId: string,
-    public subjects: Subject[]
+    public page = 1,
+    public pageSize = 10
+  ) {}
+}
+
+export class FetchSubmittedRegistrations {
+  static readonly type = '[Registries] Fetch Submitted Registrations';
+  constructor(
+    public page = 1,
+    public pageSize = 10
   ) {}
 }

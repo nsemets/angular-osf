@@ -4,18 +4,23 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
+import { Message } from 'primeng/message';
 import { TextareaModule } from 'primeng/textarea';
 
-import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { tap } from 'rxjs';
+
+import { ChangeDetectionStrategy, Component, effect, inject, OnDestroy } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { TextInputComponent } from '@osf/shared/components';
-import { InputLimits } from '@osf/shared/constants';
-import { CustomConfirmationService, ToastService } from '@osf/shared/services';
-import { CustomValidators } from '@osf/shared/utils';
+import { INPUT_VALIDATION_MESSAGES, InputLimits } from '@osf/shared/constants';
+import { ContributorModel, DraftRegistrationModel, SubjectModel } from '@osf/shared/models';
+import { CustomConfirmationService } from '@osf/shared/services';
+import { ContributorsSelectors, SubjectsSelectors } from '@osf/shared/stores';
+import { CustomValidators, findChangedFields } from '@osf/shared/utils';
 
-import { DeleteDraft, RegistriesSelectors } from '../../store';
+import { DeleteDraft, RegistriesSelectors, UpdateDraft, UpdateStepValidation } from '../../store';
 
 import { ContributorsComponent } from './contributors/contributors.component';
 import { RegistriesLicenseComponent } from './registries-license/registries-license.component';
@@ -35,45 +40,85 @@ import { RegistriesTagsComponent } from './registries-tags/registries-tags.compo
     RegistriesSubjectsComponent,
     RegistriesTagsComponent,
     RegistriesLicenseComponent,
+    Message,
   ],
   templateUrl: './metadata.component.html',
   styleUrl: './metadata.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MetadataComponent {
+export class MetadataComponent implements OnDestroy {
   private readonly fb = inject(FormBuilder);
-  private readonly toastService = inject(ToastService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly customConfirmationService = inject(CustomConfirmationService);
 
   private readonly draftId = this.route.snapshot.params['id'];
   protected readonly draftRegistration = select(RegistriesSelectors.getDraftRegistration);
+  protected selectedSubjects = select(SubjectsSelectors.getSelectedSubjects);
+  protected initialContributors = select(ContributorsSelectors.getContributors);
+  protected stepsValidation = select(RegistriesSelectors.getStepsValidation);
 
   protected actions = createDispatchMap({
     deleteDraft: DeleteDraft,
+    updateDraft: UpdateDraft,
+    updateStepValidation: UpdateStepValidation,
   });
   protected inputLimits = InputLimits;
+  readonly INPUT_VALIDATION_MESSAGES = INPUT_VALIDATION_MESSAGES;
 
   metadataForm = this.fb.group({
     title: ['', CustomValidators.requiredTrimmed()],
     description: ['', CustomValidators.requiredTrimmed()],
+    contributors: [[] as ContributorModel[], Validators.required],
+    subjects: [[] as SubjectModel[], Validators.required],
+    tags: [[]],
+    license: this.fb.group({
+      id: ['', Validators.required],
+    }),
   });
+
+  isDraftDeleted = false;
+  isFormUpdated = false;
 
   constructor() {
     effect(() => {
       const draft = this.draftRegistration();
-      if (draft) {
-        this.metadataForm.patchValue({
-          title: draft.title,
-          description: draft.description,
-        });
+      if (draft && !this.isFormUpdated) {
+        this.updateFormValue(draft);
+        this.isFormUpdated = true;
       }
     });
   }
 
+  private updateFormValue(data: DraftRegistrationModel): void {
+    this.metadataForm.patchValue({
+      title: data.title,
+      description: data.description,
+      license: data.license,
+      contributors: this.initialContributors(),
+      subjects: this.selectedSubjects(),
+    });
+    if (this.stepsValidation()?.[0]?.invalid) {
+      this.metadataForm.markAllAsTouched();
+    }
+  }
+
   submitMetadata(): void {
-    console.log('Metadata submitted');
+    this.actions
+      .updateDraft(this.draftId, {
+        title: this.metadataForm.value.title?.trim(),
+        description: this.metadataForm.value.description?.trim(),
+      })
+      .pipe(
+        tap(() => {
+          this.metadataForm.markAllAsTouched();
+          this.router.navigate(['../1'], {
+            relativeTo: this.route,
+            onSameUrlNavigation: 'reload',
+          });
+        })
+      )
+      .subscribe();
   }
 
   deleteDraft(): void {
@@ -81,12 +126,29 @@ export class MetadataComponent {
       headerKey: 'registries.deleteDraft',
       messageKey: 'registries.confirmDeleteDraft',
       onConfirm: () => {
+        const providerId = this.draftRegistration()?.providerId;
         this.actions.deleteDraft(this.draftId).subscribe({
           next: () => {
-            this.router.navigateByUrl('/registries/new');
+            // [NM] TODO: clear validation state
+            this.isDraftDeleted = true;
+            this.router.navigateByUrl(`/registries/${providerId}/new`);
           },
         });
       },
     });
+  }
+
+  ngOnDestroy(): void {
+    if (!this.isDraftDeleted) {
+      this.actions.updateStepValidation('0', this.metadataForm.invalid);
+      const changedFields = findChangedFields(
+        { title: this.metadataForm.value.title!, description: this.metadataForm.value.description! },
+        { title: this.draftRegistration()?.title, description: this.draftRegistration()?.description }
+      );
+      if (Object.keys(changedFields).length > 0) {
+        this.actions.updateDraft(this.draftId, changedFields);
+        this.metadataForm.markAllAsTouched();
+      }
+    }
   }
 }

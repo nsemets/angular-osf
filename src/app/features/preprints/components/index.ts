@@ -8,10 +8,13 @@ export { PreprintProviderFooterComponent } from './preprint-provider-footer/prep
 export { PreprintProviderHeroComponent } from './preprint-provider-hero/preprint-provider-hero.component';
 export { PreprintServicesComponent } from './preprint-services/preprint-services.component';
 export { PreprintsHelpDialogComponent } from './preprints-help-dialog/preprints-help-dialog.component';
+export { AuthorAssertionsStepComponent } from './stepper/author-assertion-step/author-assertions-step.component';
+export { SupplementsStepComponent } from './stepper/supplements-step/supplements-step.component';
 export { PreprintsFilterChipsComponent } from '@osf/features/preprints/components/filters/preprints-filter-chips/preprints-filter-chips.component';
 export { PreprintsResourcesComponent } from '@osf/features/preprints/components/filters/preprints-resources/preprints-resources.component';
 export { PreprintsResourcesFiltersComponent } from '@osf/features/preprints/components/filters/preprints-resources-filters/preprints-resources-filters.component';
 export { PreprintsSubjectFilterComponent } from '@osf/features/preprints/components/filters/preprints-subject-filter/preprints-subject-filter.component';
 export { FileStepComponent } from '@osf/features/preprints/components/stepper/file-step/file-step.component';
 export { MetadataStepComponent } from '@osf/features/preprints/components/stepper/metadata-step/metadata-step.component';
+export { ReviewStepComponent } from '@osf/features/preprints/components/stepper/review-step/review-step.component';
 export { TitleAndAbstractStepComponent } from '@osf/features/preprints/components/stepper/title-and-abstract-step/title-and-abstract-step.component';

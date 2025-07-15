@@ -2,17 +2,19 @@ import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
-import { tap } from 'rxjs';
+import { filter, tap } from 'rxjs';
 
 import { ChangeDetectionStrategy, Component, computed, effect, inject, Signal, signal } from '@angular/core';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 
 import { StepperComponent, SubHeaderComponent } from '@osf/shared/components';
 import { StepOption } from '@osf/shared/models';
 import { LoaderService } from '@osf/shared/services';
+import { ContributorsSelectors, SubjectsSelectors } from '@osf/shared/stores';
 
-import { defaultSteps } from '../../constants';
-import { FetchDraft, FetchSchemaBlocks, RegistriesSelectors } from '../../store';
+import { DEFAULT_STEPS } from '../../constants';
+import { FetchDraft, FetchSchemaBlocks, RegistriesSelectors, UpdateStepValidation } from '../../store';
 
 @Component({
   selector: 'osf-drafts',
@@ -30,47 +32,98 @@ export class DraftsComponent {
 
   protected readonly pages = select(RegistriesSelectors.getPagesSchema);
   protected readonly draftRegistration = select(RegistriesSelectors.getDraftRegistration);
+  protected stepsValidation = select(RegistriesSelectors.getStepsValidation);
+  protected readonly stepsData = select(RegistriesSelectors.getStepsData);
+  protected selectedSubjects = select(SubjectsSelectors.getSelectedSubjects);
+  protected initialContributors = select(ContributorsSelectors.getContributors);
 
   private readonly actions = createDispatchMap({
     getSchemaBlocks: FetchSchemaBlocks,
     getDraftRegistration: FetchDraft,
+    updateStepValidation: UpdateStepValidation,
   });
 
   get isReviewPage(): boolean {
     return this.router.url.includes('/review');
   }
 
-  defaultSteps: StepOption[] = defaultSteps.map((step) => ({
-    ...step,
-    label: this.translateService.instant(step.label),
-  }));
-
-  steps: Signal<StepOption[]> = computed(() => {
-    const customSteps = this.pages().map((page) => ({
-      label: page.title,
-      value: page.id,
-    }));
-    return [this.defaultSteps[0], ...customSteps, this.defaultSteps[1]];
+  isMetaDataInvalid = computed(() => {
+    return (
+      !this.draftRegistration()?.title ||
+      !this.draftRegistration()?.description ||
+      !this.draftRegistration()?.license?.id ||
+      !this.selectedSubjects()?.length ||
+      !this.initialContributors()?.length
+    );
   });
 
-  currentStep = signal(
-    this.route.snapshot.children[0]?.params['step'] ? +this.route.snapshot.children[0]?.params['step'].split('-')[0] : 0
+  defaultSteps: StepOption[] = [];
+
+  isLoaded = false;
+
+  steps: Signal<StepOption[]> = computed(() => {
+    this.defaultSteps = DEFAULT_STEPS.map((step) => ({
+      ...step,
+      label: this.translateService.instant(step.label),
+      invalid: this.stepsValidation()?.[step.index]?.invalid || false,
+    }));
+
+    const customSteps = this.pages().map((page, index) => {
+      return {
+        index: index + 1,
+        label: page.title,
+        value: page.id,
+        routeLink: `${index + 1}`,
+        invalid: this.stepsValidation()?.[index + 1]?.invalid || false,
+      };
+    });
+    return [
+      this.defaultSteps[0],
+      ...customSteps,
+      { ...this.defaultSteps[1], index: customSteps.length + 1, invalid: false },
+    ];
+  });
+
+  currentStepIndex = signal(
+    this.route.snapshot.firstChild?.params['step'] ? +this.route.snapshot.firstChild?.params['step'] : 0
   );
 
-  registrationId = this.route.snapshot.children[0]?.params['id'] || '';
+  currentStep = computed(() => {
+    return this.steps()[this.currentStepIndex()];
+  });
+
+  registrationId = this.route.snapshot.firstChild?.params['id'] || '';
 
   constructor() {
+    this.router.events
+      .pipe(
+        takeUntilDestroyed(),
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd)
+      )
+      .subscribe(() => {
+        const step = this.route.firstChild?.snapshot.params['step'];
+        if (step) {
+          this.currentStepIndex.set(+step);
+        } else if (this.isReviewPage) {
+          const reviewStepIndex = this.pages().length + 1;
+          this.currentStepIndex.set(reviewStepIndex);
+        } else {
+          this.currentStepIndex.set(0);
+        }
+      });
+
     this.loaderService.show();
     if (!this.draftRegistration()) {
       this.actions.getDraftRegistration(this.registrationId);
     }
     effect(() => {
       const registrationSchemaId = this.draftRegistration()?.registrationSchemaId;
-      if (registrationSchemaId) {
+      if (registrationSchemaId && !this.isLoaded) {
         this.actions
           .getSchemaBlocks(registrationSchemaId || '')
           .pipe(
             tap(() => {
+              this.isLoaded = true;
               this.loaderService.hide();
             })
           )
@@ -79,24 +132,34 @@ export class DraftsComponent {
     });
 
     effect(() => {
-      const reviewStepNumber = this.pages().length + 1;
+      const reviewStepIndex = this.pages().length + 1;
       if (this.isReviewPage) {
-        this.currentStep.set(reviewStepNumber);
+        this.currentStepIndex.set(reviewStepIndex);
+      }
+    });
+
+    effect(() => {
+      if (this.currentStepIndex() > 0) {
+        this.actions.updateStepValidation('0', this.isMetaDataInvalid());
+      }
+      if (this.pages().length && this.currentStepIndex() > 0 && this.stepsData()) {
+        for (let i = 1; i < this.currentStepIndex(); i++) {
+          const pageStep = this.pages()[i - 1];
+          const isStepInvalid =
+            pageStep?.questions?.some((question) => {
+              const questionData = this.stepsData()[question.responseKey!];
+              return question.required && (Array.isArray(questionData) ? !questionData.length : !questionData);
+            }) || false;
+          this.actions.updateStepValidation(i.toString(), isStepInvalid);
+        }
       }
     });
   }
 
-  stepChange(step: number): void {
+  stepChange(step: StepOption): void {
     // [NM] TODO: before navigating, validate the current step
-    this.currentStep.set(step);
-    const pageStep = this.steps()[step];
-
-    let pageLink = '';
-    if (!pageStep.value) {
-      pageLink = `${pageStep.routeLink}`;
-    } else {
-      pageLink = `${step}-${pageStep.value}`;
-    }
+    this.currentStepIndex.set(step.index);
+    const pageLink = this.steps()[step.index].routeLink;
     this.router.navigate([`/registries/drafts/${this.registrationId}/`, pageLink]);
   }
 }

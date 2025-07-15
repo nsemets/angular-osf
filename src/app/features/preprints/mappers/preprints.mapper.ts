@@ -37,7 +37,8 @@ export class PreprintsMapper {
       isPublic: response.attributes.public,
       version: response.attributes.version,
       isLatestVersion: response.attributes.is_latest_version,
-      primaryFileId: response.relationships.primary_file?.links?.related?.href || null,
+      primaryFileId: response.relationships.primary_file?.data?.id || null,
+      nodeId: response.relationships.node?.data?.id,
       licenseId: response.relationships.license?.data?.id || null,
       licenseOptions: response.attributes.license_record
         ? {
@@ -54,6 +55,25 @@ export class PreprintsMapper {
       whyNoPrereg: response.attributes.why_no_prereg,
       preregLinks: response.attributes.prereg_links,
       preregLinkInfo: response.attributes.prereg_link_info,
+    };
+  }
+
+  static toSubmitPreprintPayload(preprintId: string) {
+    return {
+      data: {
+        type: 'review_actions',
+        attributes: {
+          trigger: 'submit',
+        },
+        relationships: {
+          target: {
+            data: {
+              type: 'preprints',
+              id: preprintId,
+            },
+          },
+        },
+      },
     };
   }
 }
