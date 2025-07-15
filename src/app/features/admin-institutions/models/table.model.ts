@@ -8,7 +8,7 @@ export interface TableColumn {
   iconClass?: string;
   iconTooltip?: string;
   iconAction?: string;
-  dateFormat?: 'yyyy-mm-to-mm/yyyy' | 'default';
+  dateFormat?: 'yyyy-mm-to-mm/yyyy' | 'yyyy-mm-dd-to-dd/mm/yyyy' | 'default';
 }
 
 export interface TableCellLink {

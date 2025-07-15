@@ -1,16 +1,25 @@
-import { catchError, map, Observable, of } from 'rxjs';
+import { catchError, Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { inject, Injectable } from '@angular/core';
 
 import { JsonApiService } from '@core/services';
-import { mapIndexCardResults } from '@osf/features/admin-institutions/mappers/institution-summary-index.mapper';
-import { sendMessageRequestMapper } from '@osf/features/admin-institutions/mappers/send-message-request.mapper';
 import { departmens, summaryMetrics, users } from '@osf/features/admin-institutions/services/mock';
 
+import {
+  mapIndexCardResults,
+  mapInstitutionDepartments,
+  mapInstitutionProjects,
+  mapInstitutionSummaryMetrics,
+  mapInstitutionUsers,
+  sendMessageRequestMapper,
+} from '../mappers';
 import {
   InstitutionDepartment,
   InstitutionDepartmentsJsonApi,
   InstitutionIndexValueSearchJsonApi,
+  InstitutionProject,
+  InstitutionRegistrationsJsonApi,
   InstitutionSearchFilter,
   InstitutionSummaryMetrics,
   InstitutionSummaryMetricsJsonApi,
@@ -20,11 +29,6 @@ import {
   SendMessageResponseJsonApi,
 } from '../models';
 
-import {
-  mapInstitutionDepartments,
-  mapInstitutionSummaryMetrics,
-  mapInstitutionUsers,
-} from 'src/app/features/admin-institutions/mappers';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -87,6 +91,48 @@ export class InstitutionsAdminService {
       );
   }
 
+  fetchProjects(
+    institutionId: string,
+    institutionIris: string[],
+    pageSize = 10,
+    sort = '-dateModified',
+    cursor = ''
+  ): Observable<{
+    projects: InstitutionProject[];
+    totalCount: number;
+    links?: { first?: { href: string }; next?: { href: string }; prev?: { href: string }; last?: { href: string } };
+  }> {
+    const url = `${environment.shareDomainUrl}/index-card-search`;
+    let params: Record<string, string> = {};
+
+    const affiliationParam = institutionIris.join(',');
+
+    // TODO: uncomment after demo
+    params = {
+      'cardSearchFilter[affiliation][]': `https://ror.org/05d5mza29,https://test.osf.io/institutions/${institutionId}/`,
+      'cardSearchFilter[accessService]': 'https://test.osf.io/',
+
+      // 'cardSearchFilter[affiliation][]': affiliationParam,
+      'cardSearchFilter[resourceType]': 'Project',
+      // 'cardSearchFilter[accessService]': environment.webUrl,
+      'page[cursor]': cursor,
+      'page[size]': pageSize.toString(),
+      sort,
+    };
+
+    return this.jsonApiService.get<InstitutionRegistrationsJsonApi>(url, params).pipe(
+      map((response: InstitutionRegistrationsJsonApi) => {
+        const projects = mapInstitutionProjects(response);
+        const links = response.data.relationships.searchResultPage.links;
+        return {
+          projects,
+          totalCount: response.data.attributes.totalResultCount,
+          links,
+        };
+      })
+    );
+  }
+
   fetchIndexValueSearch(
     institutionId: string,
     valueSearchPropertyPath: string,
@@ -108,9 +154,6 @@ export class InstitutionsAdminService {
   sendMessage(request: SendMessageRequest): Observable<SendMessageResponseJsonApi> {
     const payload = sendMessageRequestMapper(request);
 
-    return this.jsonApiService.post<SendMessageResponseJsonApi>(
-      `${this.hardcodedUrl}/users/${request.userId}/messages/`,
-      payload
-    );
+    return this.jsonApiService.post<SendMessageResponseJsonApi>(`${this.hardcodedUrl}/institutions/messages/`, payload);
   }
 }
