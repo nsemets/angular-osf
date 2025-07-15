@@ -5,6 +5,7 @@ import { Routes } from '@angular/router';
 import { ResourceType } from '@osf/shared/enums';
 
 import { ModeratorsState } from './store/moderation';
+import { PreprintModerationState } from './store/preprint-moderation';
 import { PreprintModerationTab } from './enums';
 
 export const preprintModerationRoutes: Routes = [
@@ -14,6 +15,7 @@ export const preprintModerationRoutes: Routes = [
       import('@osf/features/moderation/pages/preprint-moderation/preprint-moderation.component').then(
         (m) => m.PreprintModerationComponent
       ),
+    providers: [provideStates([PreprintModerationState])],
     children: [
       {
         path: '',

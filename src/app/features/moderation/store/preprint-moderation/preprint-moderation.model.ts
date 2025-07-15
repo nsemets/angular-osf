@@ -1,10 +1,9 @@
-import { PreprintProviderShortInfo } from '@osf/features/preprints/models';
 import { AsyncStateModel, AsyncStateWithTotalCount } from '@osf/shared/models';
 
-import { PreprintReviewActionModel } from '../../models';
+import { PreprintProviderModerationInfo, PreprintReviewActionModel } from '../../models';
 
 export interface PreprintModerationStateModel {
-  preprintProviders: AsyncStateModel<PreprintProviderShortInfo[]>;
+  preprintProviders: AsyncStateModel<PreprintProviderModerationInfo[]>;
   reviewActions: AsyncStateWithTotalCount<PreprintReviewActionModel[]>;
 }
 

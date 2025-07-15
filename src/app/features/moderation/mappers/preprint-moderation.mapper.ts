@@ -1,10 +1,10 @@
 import { JsonApiResponseWithPaging } from '@osf/core/models';
 import { PaginatedData } from '@osf/shared/models';
 
-import { PreprintRelatedCountJsonApi, ReviewActionJsonApi } from '../models';
+import { PreprintProviderModerationInfo, PreprintRelatedCountJsonApi, ReviewActionJsonApi } from '../models';
 import { PreprintReviewActionModel } from '../models/preprint-review-action.model';
 
-export class PreprintReviewActionMapper {
+export class PreprintModerationMapper {
   static fromResponse(response: ReviewActionJsonApi): PreprintReviewActionModel {
     return {
       id: response.id,
@@ -35,7 +35,15 @@ export class PreprintReviewActionMapper {
     };
   }
 
-  static fromRelatedCounts(response: PreprintRelatedCountJsonApi) {
-    return response.relationships.preprints.links.related.meta.pending;
+  static fromPreprintRelatedCounts(response: PreprintRelatedCountJsonApi): PreprintProviderModerationInfo {
+    return {
+      id: response.id,
+      name: response.attributes.name,
+      reviewsCommentsAnonymous: response.attributes.reviews_comments_anonymous,
+      reviewsCommentsPrivate: response.attributes.reviews_comments_private,
+      reviewsWorkflow: response.attributes.reviews_workflow,
+      submissionCount: response.relationships.preprints.links.related.meta.pending ?? 0,
+      supportEmail: response.attributes.email_support,
+    };
   }
 }
