@@ -88,7 +88,8 @@
       "available": "Available",
       "unavailable": "Unavailable",
       "notApplicable": "Not Applicable",
-      "none": "None"
+      "none": "None",
+      "learnMore": "Learn More"
     },
     "deleteConfirmation": {
       "header": "Delete",
@@ -1878,13 +1879,16 @@
       "step": "Review",
       "title": "Review Registration",
       "register": "Register",
+      "selectComponents": {
+        "title": "Select Components",
+        "description": "Contributor changes for included components must be done on the component contributor page before submitting this registration."
+      },
       "confirmation": {
         "title": "Almost done...",
-        "remember": "Remember:",
-        "text1": "Do not edit any files until the registration has completely archived.",
-        "text2": "This will be permanent and cannot be deleted once submitted.",
-        "text3": "This registration will be copied to Internet Archive as a backup.",
-        "text4": "Title and contributors cannot be updated once submitted.",
+        "text1": "Embargo your registration if you plan to submit to a journal that requires",
+        "text2": "blind peer review",
+        "text3": "Do not edit any files until the registration archives.",
+        "text4": "Registrations can't be deleted, but you can withdraw.",
         "options": {
           "public": "Make registration public immediately",
           "embargo": "Enter registration into embargo"
@@ -2120,7 +2124,7 @@
       "publicRegistrations": "Public Registrations"
     },
     "institutionUsers": {
-     "allDepartments": "All departments",
+      "allDepartments": "All departments",
       "lastLogin": "Last Login",
       "lastActive": "Last Active",
       "accountCreated": "Account Created",

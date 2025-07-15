@@ -93,3 +93,12 @@ export class FetchSubmittedRegistrations {
     public pageSize = 10
   ) {}
 }
+
+export class FetchProjectChildren {
+  static readonly type = '[Registries] Fetch Project Children';
+  constructor(public projectId: string) {}
+}
+
+export class ClearState {
+  static readonly type = '[Registries] Clear State';
+}

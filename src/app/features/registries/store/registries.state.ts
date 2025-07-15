@@ -16,11 +16,13 @@ import { ProjectsHandlers } from './handlers/projects.handlers';
 import { ProvidersHandlers } from './handlers/providers.handlers';
 import { DefaultState } from './default.state';
 import {
+  ClearState,
   CreateDraft,
   DeleteDraft,
   FetchDraft,
   FetchDraftRegistrations,
   FetchLicenses,
+  FetchProjectChildren,
   FetchSchemaBlocks,
   FetchSubmittedRegistrations,
   GetProjects,
@@ -75,6 +77,11 @@ export class RegistriesState {
   @Action(GetProjects)
   getProjects(ctx: StateContext<RegistriesStateModel>) {
     return this.projectsHandler.getProjects(ctx);
+  }
+
+  @Action(FetchProjectChildren)
+  fetchProjectChildren(ctx: StateContext<RegistriesStateModel>, { projectId }: FetchProjectChildren) {
+    return this.projectsHandler.fetchProjectChildren(ctx, projectId);
   }
 
   @Action(GetProviderSchemas)
@@ -305,5 +312,10 @@ export class RegistriesState {
       }),
       catchError((error) => handleSectionError(ctx, 'submittedRegistrations', error))
     );
+  }
+
+  @Action(ClearState)
+  clearState(ctx: StateContext<RegistriesStateModel>) {
+    ctx.setState({ ...DefaultState });
   }
 }

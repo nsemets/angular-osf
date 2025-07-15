@@ -1,4 +1,5 @@
 import { LicenseOptions } from '../license.model';
+import { Project } from '../projects';
 
 export interface DraftRegistrationModel {
   id: string;
@@ -14,4 +15,6 @@ export interface DraftRegistrationModel {
   stepsData?: Record<string, any>;
   branchedFrom?: string;
   providerId: string;
+  hasProject: boolean;
+  components: Partial<Project>[];
 }

@@ -26,7 +26,9 @@ export class RegistrationMapper {
       tags: response.attributes.tags || [],
       stepsData: response.attributes.registration_responses || {},
       branchedFrom: response.relationships.branched_from?.data?.id,
-      providerId: response.relationships.registration_schema?.data?.id || '',
+      providerId: response.relationships.provider?.data?.id || '',
+      hasProject: !!response.attributes.has_project,
+      components: [],
     };
   }
 

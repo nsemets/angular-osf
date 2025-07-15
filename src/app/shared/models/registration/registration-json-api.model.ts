@@ -58,6 +58,12 @@ export interface DraftRegistrationRelationshipsJsonApi {
       type: 'registration-schemas';
     };
   };
+  provider?: {
+    data: {
+      id: string;
+      type: 'providers';
+    };
+  };
   license?: {
     data: {
       id: string;

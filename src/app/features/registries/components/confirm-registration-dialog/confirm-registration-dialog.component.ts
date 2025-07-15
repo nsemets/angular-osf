@@ -70,7 +70,7 @@ export class ConfirmRegistrationDialogComponent {
       )
       .subscribe({
         complete: () => {
-          this.dialogRef.close();
+          this.dialogRef.close(true);
         },
       });
   }

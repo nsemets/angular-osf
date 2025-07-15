@@ -4,7 +4,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { filter, tap } from 'rxjs';
 
-import { ChangeDetectionStrategy, Component, computed, effect, inject, Signal, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, OnDestroy, Signal, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 
@@ -14,7 +14,7 @@ import { LoaderService } from '@osf/shared/services';
 import { ContributorsSelectors, SubjectsSelectors } from '@osf/shared/stores';
 
 import { DEFAULT_STEPS } from '../../constants';
-import { FetchDraft, FetchSchemaBlocks, RegistriesSelectors, UpdateStepValidation } from '../../store';
+import { ClearState, FetchDraft, FetchSchemaBlocks, RegistriesSelectors, UpdateStepValidation } from '../../store';
 
 @Component({
   selector: 'osf-drafts',
@@ -24,7 +24,7 @@ import { FetchDraft, FetchSchemaBlocks, RegistriesSelectors, UpdateStepValidatio
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [TranslateService],
 })
-export class DraftsComponent {
+export class DraftsComponent implements OnDestroy {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly loaderService = inject(LoaderService);
@@ -41,6 +41,7 @@ export class DraftsComponent {
     getSchemaBlocks: FetchSchemaBlocks,
     getDraftRegistration: FetchDraft,
     updateStepValidation: UpdateStepValidation,
+    clearState: ClearState,
   });
 
   get isReviewPage(): boolean {
@@ -161,5 +162,9 @@ export class DraftsComponent {
     this.currentStepIndex.set(step.index);
     const pageLink = this.steps()[step.index].routeLink;
     this.router.navigate([`/registries/drafts/${this.registrationId}/`, pageLink]);
+  }
+
+  ngOnDestroy(): void {
+    this.actions.clearState();
   }
 }
