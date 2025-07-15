@@ -26,7 +26,7 @@ export const preprintModerationRoutes: Routes = [
           import('./components/registry-submissions/registry-submissions.component').then(
             (m) => m.RegistrySubmissionsComponent
           ),
-        data: { tab: PreprintModerationTab.Submissions, skipBreadcrumbs: true },
+        data: { tab: PreprintModerationTab.Submissions },
       },
       {
         path: 'withdrawals',
@@ -34,13 +34,13 @@ export const preprintModerationRoutes: Routes = [
           import('./components/collection-moderation-submissions/collection-moderation-submissions.component').then(
             (m) => m.CollectionModerationSubmissionsComponent
           ),
-        data: { tab: PreprintModerationTab.WithdrawalRequests, skipBreadcrumbs: true },
+        data: { tab: PreprintModerationTab.WithdrawalRequests },
       },
       {
         path: 'moderators',
         loadComponent: () =>
           import('./components/moderators-list/moderators-list.component').then((m) => m.ModeratorsListComponent),
-        data: { resourceType: ResourceType.Preprint, tab: PreprintModerationTab.Moderators, skipBreadcrumbs: true },
+        data: { resourceType: ResourceType.Preprint, tab: PreprintModerationTab.Moderators },
         providers: [provideStates([ModeratorsState])],
       },
       {
@@ -49,7 +49,7 @@ export const preprintModerationRoutes: Routes = [
           import('./components/notification-settings/notification-settings.component').then(
             (m) => m.NotificationSettingsComponent
           ),
-        data: { tab: PreprintModerationTab.Notifications, skipBreadcrumbs: true },
+        data: { tab: PreprintModerationTab.Notifications },
       },
       {
         path: 'settings',
@@ -57,7 +57,7 @@ export const preprintModerationRoutes: Routes = [
           import('./components/preprint-moderation-settings/preprint-moderation-settings.component').then(
             (m) => m.PreprintModerationSettingsComponent
           ),
-        data: { tab: PreprintModerationTab.Settings, skipBreadcrumbs: true },
+        data: { tab: PreprintModerationTab.Settings },
       },
     ],
   },

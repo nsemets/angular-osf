@@ -106,6 +106,9 @@
     },
     "placeholder": {
       "addTag": "Add tags"
+    },
+    "hint": {
+      "tagSeparators": "Use enter or comma to create a tag."
     }
   },
   "navigation": {
@@ -1842,7 +1845,8 @@
           }
         }
       }
-    }
+    },
+    "providers": "Providers"
   },
   "registries": {
     "title": "Registries",

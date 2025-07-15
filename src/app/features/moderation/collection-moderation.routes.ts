@@ -26,13 +26,13 @@ export const collectionModerationRoutes: Routes = [
           import('./components/collection-moderation-submissions/collection-moderation-submissions.component').then(
             (m) => m.CollectionModerationSubmissionsComponent
           ),
-        data: { tab: CollectionModerationTab.AllItems, skipBreadcrumbs: true },
+        data: { tab: CollectionModerationTab.AllItems },
       },
       {
         path: 'moderators',
         loadComponent: () =>
           import('./components/moderators-list/moderators-list.component').then((m) => m.ModeratorsListComponent),
-        data: { resourceType: ResourceType.Collection, tab: CollectionModerationTab.Moderators, skipBreadcrumbs: true },
+        data: { resourceType: ResourceType.Collection, tab: CollectionModerationTab.Moderators },
         providers: [provideStates([ModeratorsState])],
       },
       {
@@ -41,7 +41,7 @@ export const collectionModerationRoutes: Routes = [
           import('./components/notification-settings/notification-settings.component').then(
             (m) => m.NotificationSettingsComponent
           ),
-        data: { tab: CollectionModerationTab.Settings, skipBreadcrumbs: true },
+        data: { tab: CollectionModerationTab.Settings },
       },
     ],
   },

@@ -26,7 +26,7 @@ export const registryModerationRoutes: Routes = [
           import('./components/registry-submissions/registry-submissions.component').then(
             (m) => m.RegistrySubmissionsComponent
           ),
-        data: { tab: RegistryModerationTab.Submitted, skipBreadcrumbs: true },
+        data: { tab: RegistryModerationTab.Submitted },
       },
       {
         path: 'pending',
@@ -34,20 +34,20 @@ export const registryModerationRoutes: Routes = [
           import('./components/collection-moderation-submissions/collection-moderation-submissions.component').then(
             (m) => m.CollectionModerationSubmissionsComponent
           ),
-        data: { tab: RegistryModerationTab.Pending, skipBreadcrumbs: true },
+        data: { tab: RegistryModerationTab.Pending },
       },
       {
         path: 'moderators',
         loadComponent: () =>
           import('./components/moderators-list/moderators-list.component').then((m) => m.ModeratorsListComponent),
-        data: { resourceType: ResourceType.Registration, tab: RegistryModerationTab.Moderators, skipBreadcrumbs: true },
+        data: { resourceType: ResourceType.Registration, tab: RegistryModerationTab.Moderators },
         providers: [provideStates([ModeratorsState])],
       },
       {
         path: 'settings',
         loadComponent: () =>
           import('./components/registry-settings/registry-settings.component').then((m) => m.RegistrySettingsComponent),
-        data: { tab: RegistryModerationTab.Settings, skipBreadcrumbs: true },
+        data: { tab: RegistryModerationTab.Settings },
       },
     ],
   },

@@ -93,7 +93,6 @@ export const preprintsRoutes: Routes = [
           import('@osf/features/moderation/pages/my-preprint-reviewing/my-preprint-reviewing.component').then(
             (m) => m.MyPreprintReviewingComponent
           ),
-        data: { skipBreadcrumbs: true },
         providers: [provideStates([PreprintModerationState])],
       },
     ],
