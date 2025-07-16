@@ -60,6 +60,11 @@ export const MENU_ITEMS: MenuItem[] = [
         label: 'navigation.preprintsSubRoutes.myPreprints',
         routerLinkActiveOptions: { exact: false },
       },
+      {
+        routerLink: '/preprints/my-reviewing',
+        label: 'navigation.preprintsSubRoutes.myReviewing',
+        routerLinkActiveOptions: { exact: true },
+      },
     ],
   },
   {
