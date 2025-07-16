@@ -1,3 +1,5 @@
+import { extractPathAfterDomain } from '@osf/features/admin-institutions/helpers';
+
 import { InstitutionRegistration, TableCellData, TableCellLink } from '../models';
 
 export function mapRegistrationToTableData(registration: InstitutionRegistration): TableCellData {
@@ -17,9 +19,8 @@ export function mapRegistrationToTableData(registration: InstitutionRegistration
     dateModified: registration.dateModified,
     doi: registration.doi
       ? ({
-          text: registration.doi?.split('org/')[1],
+          text: extractPathAfterDomain(registration.doi),
           url: registration.doi,
-          target: '_blank',
         } as TableCellLink)
       : '-',
     storageLocation: registration.storageLocation || '-',

@@ -1,6 +1,7 @@
 export * from './institution-department.model';
 export * from './institution-departments-json-api.model';
 export * from './institution-index-value-search-json-api.model';
+export * from './institution-preprint.model';
 export * from './institution-project.model';
 export * from './institution-project.model';
 export * from './institution-projects-json-api.model';

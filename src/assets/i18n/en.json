@@ -2147,7 +2147,8 @@
       "hasOrcid": "Has ORCID",
       "sendMessage": "Send message",
       "osfLink": "OSF Link",
-      "orcid": "ORCID"
+      "orcid": "ORCID",
+      "noData": "No users found"
     },
     "projects": {
       "title": "Title",
@@ -2163,14 +2164,19 @@
       "license": "License",
       "addOns": "Add-ons",
       "funderName": "Funder Name",
-      "totalProjects": "Total Projects"
+      "totalProjects": "Total Projects",
+      "noData": "No projects found"
     },
     "registrations": {
-      "doi": "DOI",
-      "storageLocation": "Storage Location",
       "funderName": "Funder Name",
       "registrationSchema": "Registration Schema",
-      "totalRegistrations": "Total Registrations"
+      "totalRegistrations": "Total Registrations",
+      "noData": "No registrations found"
+    },
+    "preprints": {
+      "totalPreprints": "Total Preprints",
+      "downloadsLastDays": "Downloads (last 30 days)",
+      "noData": "No preprints found"
     }
   }
 }

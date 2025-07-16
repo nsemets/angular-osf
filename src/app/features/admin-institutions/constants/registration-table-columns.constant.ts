@@ -29,14 +29,14 @@ export const registrationTableColumns: TableColumn[] = [
   },
   {
     field: 'doi',
-    header: 'adminInstitutions.registrations.doi',
+    header: 'adminInstitutions.projects.doi',
     sortable: false,
     isLink: true,
     linkTarget: '_blank',
   },
   {
     field: 'storageLocation',
-    header: 'adminInstitutions.registrations.storageLocation',
+    header: 'adminInstitutions.projects.storageLocation',
     sortable: false,
   },
   {

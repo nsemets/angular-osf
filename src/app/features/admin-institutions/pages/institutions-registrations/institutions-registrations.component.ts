@@ -3,17 +3,20 @@ import { createDispatchMap, select } from '@ngxs/store';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal, untracked } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { parseQueryFilterParams } from '@core/helpers';
 import { AdminTableComponent } from '@osf/features/admin-institutions/components';
 import { registrationTableColumns } from '@osf/features/admin-institutions/constants';
-import { mapRegistrationToTableData } from '@osf/features/admin-institutions/mappers/institution-registration-to-table-data.mapper';
+import { mapRegistrationToTableData } from '@osf/features/admin-institutions/mappers';
+import { InstitutionProjectsQueryParamsModel, TableCellData } from '@osf/features/admin-institutions/models';
 import { InstitutionsAdminSelectors } from '@osf/features/admin-institutions/store';
+import { LoadingSpinnerComponent } from '@osf/shared/components';
+import { TABLE_PARAMS } from '@shared/constants';
 import { SortOrder } from '@shared/enums';
-import { QueryParams } from '@shared/models';
+import { Institution, QueryParams } from '@shared/models';
 import { InstitutionsSearchSelectors } from '@shared/stores';
 
 import { FetchRegistrations } from '../../store/institutions-admin.actions';
@@ -28,18 +31,20 @@ interface RegistrationQueryParams {
 
 @Component({
   selector: 'osf-institutions-registrations',
-  imports: [CommonModule, AdminTableComponent, TranslatePipe],
+  imports: [CommonModule, AdminTableComponent, TranslatePipe, LoadingSpinnerComponent],
   templateUrl: './institutions-registrations.component.html',
   styleUrl: './institutions-registrations.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InstitutionsRegistrationsComponent implements OnInit {
+export class InstitutionsRegistrationsComponent {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
   private readonly actions = createDispatchMap({
     fetchRegistrations: FetchRegistrations,
   });
+
+  private institutionId = '';
 
   institution = select(InstitutionsSearchSelectors.getInstitution);
   registrations = select(InstitutionsAdminSelectors.getRegistrations);
@@ -50,15 +55,15 @@ export class InstitutionsRegistrationsComponent implements OnInit {
   tableColumns = signal(registrationTableColumns);
   reportsLink = 'https://drive.google.com/drive/folders/1_aFmeJwLp5xBS3-8clZ4xA9L3UFxdzDd';
 
-  currentPageSize = signal(10);
+  queryParams = toSignal(this.route.queryParams);
+  currentPageSize = signal(TABLE_PARAMS.rows);
   currentSort = signal('-dateModified');
-  currentCursor = signal('');
-
-  private queryParams = signal<RegistrationQueryParams>({});
+  sortField = signal<string>('-dateModified');
+  sortOrder = signal<number>(1);
 
   tableData = computed(() => {
     const registrationsData = this.registrations();
-    return registrationsData.map(mapRegistrationToTableData);
+    return registrationsData.map(mapRegistrationToTableData) as TableCellData[];
   });
 
   downloadLink = computed(() => {
@@ -71,16 +76,19 @@ export class InstitutionsRegistrationsComponent implements OnInit {
 
     const institutionIris = institution.iris.join(',');
     const baseUrl = `${environment.shareDomainUrl}/index-card-search`;
-    const params = new URLSearchParams({
-      'cardSearchFilter[affiliation][]': institutionIris,
-      'cardSearchFilter[resourceType]': 'Registration',
-      'cardSearchFilter[accessService]': environment.webUrl,
-      'page[size]': String(queryParams.size || this.currentPageSize()),
-      sort: queryParams.sort || this.currentSort(),
-    });
+    let params = new URLSearchParams();
+    if (queryParams) {
+      params = new URLSearchParams({
+        'cardSearchFilter[affiliation][]': institutionIris,
+        'cardSearchFilter[resourceType]': 'Registration',
+        'cardSearchFilter[accessService]': environment.webUrl,
+        'page[size]': String(queryParams['size'] || this.currentPageSize()),
+        sort: queryParams['sort'] || this.currentSort(),
+      });
+    }
 
-    if (queryParams.cursor) {
-      params.append('page[cursor]', queryParams.cursor);
+    if (queryParams && queryParams['cursor']) {
+      params.append('page[cursor]', queryParams['cursor']);
     }
 
     return `${baseUrl}?${params.toString()}`;
@@ -88,10 +96,6 @@ export class InstitutionsRegistrationsComponent implements OnInit {
 
   constructor() {
     this.setupQueryParamsEffect();
-  }
-
-  ngOnInit() {
-    this.loadRegistrations();
   }
 
   onSortChange(params: QueryParams): void {
@@ -113,46 +117,46 @@ export class InstitutionsRegistrationsComponent implements OnInit {
 
   private setupQueryParamsEffect(): void {
     effect(() => {
-      this.route.queryParams.pipe(takeUntilDestroyed()).subscribe((params) => {
-        const queryParams = parseQueryFilterParams(params);
-        this.queryParams.set({
-          size: queryParams.size,
-          sort:
-            queryParams.sortColumn && queryParams.sortOrder
-              ? queryParams.sortOrder === SortOrder.Desc
-                ? `-${queryParams.sortColumn}`
-                : queryParams.sortColumn
-              : undefined,
-          cursor: params['cursor'] || '',
-        });
-        this.currentPageSize.set(queryParams.size || 10);
-        this.currentSort.set(
-          queryParams.sortColumn && queryParams.sortOrder
-            ? queryParams.sortOrder === SortOrder.Desc
-              ? `-${queryParams.sortColumn}`
-              : queryParams.sortColumn
-            : '-dateModified'
-        );
-        this.currentCursor.set(params['cursor'] || '');
-      });
+      const institutionId = this.route.parent?.snapshot.params['institution-id'];
+      const rawQueryParams = this.queryParams();
+      if (!rawQueryParams && !institutionId) return;
+
+      this.institutionId = institutionId;
+      const parsedQueryParams = this.parseQueryParams(rawQueryParams as Params);
+
+      this.updateComponentState(parsedQueryParams);
+
+      const sortField = parsedQueryParams.sortColumn;
+      const sortOrder = parsedQueryParams.sortOrder;
+      const sortParam = sortOrder === SortOrder.Desc ? `-${sortField}` : sortField;
+      const cursor = parsedQueryParams.cursor;
+      const size = parsedQueryParams.size;
+
+      const institution = this.institution() as Institution;
+      const institutionIris = institution.iris || [];
+
+      this.actions.fetchRegistrations(this.institutionId, institutionIris, size, sortParam, cursor);
     });
   }
 
-  private loadRegistrations(): void {
-    const institution = this.institution();
-    const institutionId = this.route.parent?.snapshot.params['institution-id'];
+  private parseQueryParams(params: Params): InstitutionProjectsQueryParamsModel {
+    const parsed = parseQueryFilterParams(params);
+    return {
+      ...parsed,
+      cursor: params['cursor'] || '',
+    };
+  }
 
-    if (!institutionId || !institution?.iris?.length) {
-      return;
-    }
+  private updateComponentState(params: InstitutionProjectsQueryParamsModel): void {
+    untracked(() => {
+      this.currentPageSize.set(params.size);
 
-    this.actions.fetchRegistrations(
-      institutionId,
-      institution.iris,
-      this.currentPageSize(),
-      this.currentSort(),
-      this.currentCursor()
-    );
+      if (params.sortColumn) {
+        this.sortField.set(params.sortColumn);
+        const order = params.sortOrder === SortOrder.Desc ? -1 : 1;
+        this.sortOrder.set(order);
+      }
+    });
   }
 
   private updateQueryParams(params: RegistrationQueryParams): void {

@@ -1,10 +1,9 @@
 import { TableColumn } from '@osf/features/admin-institutions/models';
 
-export const projectTableColumns: TableColumn[] = [
+export const preprintsTableColumns: TableColumn[] = [
   {
     field: 'title',
     header: 'adminInstitutions.projects.title',
-    sortable: true,
     isLink: true,
     linkTarget: '_blank',
   },
@@ -30,33 +29,8 @@ export const projectTableColumns: TableColumn[] = [
   {
     field: 'doi',
     header: 'adminInstitutions.projects.doi',
-    sortable: false,
-  },
-  {
-    field: 'storageLocation',
-    header: 'adminInstitutions.projects.storageLocation',
-    sortable: false,
-  },
-  {
-    field: 'totalDataStored',
-    header: 'adminInstitutions.projects.totalDataStored',
-    sortable: false,
-  },
-  {
-    field: 'creator',
-    header: 'adminInstitutions.projects.contributorName',
-    sortable: true,
     isLink: true,
     linkTarget: '_blank',
-  },
-  {
-    field: 'views',
-    header: 'adminInstitutions.projects.views',
-    sortable: false,
-  },
-  {
-    field: 'resourceType',
-    header: 'adminInstitutions.projects.resourceType',
     sortable: false,
   },
   {
@@ -65,13 +39,20 @@ export const projectTableColumns: TableColumn[] = [
     sortable: false,
   },
   {
-    field: 'addOns',
-    header: 'adminInstitutions.projects.addOns',
+    field: 'contributorName',
+    header: 'adminInstitutions.projects.contributorName',
+    sortable: true,
+    isLink: true,
+    linkTarget: '_blank',
+  },
+  {
+    field: 'viewsLast30Days',
+    header: 'adminInstitutions.projects.views',
     sortable: false,
   },
   {
-    field: 'funderName',
-    header: 'adminInstitutions.projects.funderName',
+    field: 'downloadsLast30Days',
+    header: 'adminInstitutions.preprints.downloadsLastDays',
     sortable: false,
   },
 ];
