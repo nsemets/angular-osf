@@ -86,7 +86,10 @@ export class PreprintsMapper {
   }
 
   static fromMyPreprintJsonApi(
-    response: JsonApiResponseWithPaging<ApiData<PreprintAttributesJsonApi, PreprintEmbedsJsonApi, null, null>[], null>
+    response: JsonApiResponseWithPaging<
+      ApiData<PreprintAttributesJsonApi, PreprintEmbedsJsonApi, PreprintRelationshipsJsonApi, null>[],
+      null
+    >
   ): PreprintShortInfoWithTotalCount {
     return {
       data: response.data.map((preprintData) => {
@@ -100,6 +103,7 @@ export class PreprintsMapper {
               name: contrData.embeds.users.data.attributes.full_name,
             };
           }),
+          providerId: preprintData.relationships.provider.data.id,
         };
       }),
       totalCount: response.links.meta.total,

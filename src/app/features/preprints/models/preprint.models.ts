@@ -41,6 +41,7 @@ export interface PreprintShortInfo {
   title: string;
   dateModified: string;
   contributors: IdName[];
+  providerId: string;
 }
 
 export interface PreprintShortInfoWithTotalCount {

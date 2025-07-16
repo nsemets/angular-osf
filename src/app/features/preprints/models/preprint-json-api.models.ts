@@ -53,6 +53,12 @@ export interface PreprintRelationshipsJsonApi {
       type: 'nodes';
     };
   };
+  provider: {
+    data: {
+      id: string;
+      type: 'preprint-providers';
+    };
+  };
 }
 
 export interface PreprintEmbedsJsonApi {

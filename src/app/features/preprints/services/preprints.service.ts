@@ -114,14 +114,17 @@ export class PreprintsService {
     const params: Record<string, unknown> = {
       'embed[]': ['bibliographic_contributors'],
       'fields[users]': 'family_name,full_name,given_name,middle_name',
-      'fields[preprints]': 'title,date_modified,public,bibliographic_contributors',
+      'fields[preprints]': 'title,date_modified,public,bibliographic_contributors,provider',
     };
 
     searchPreferencesToJsonApiQueryParams(params, pageNumber, pageSize, filters, preprintSortFieldMap);
 
     return this.jsonApiService
       .get<
-        JsonApiResponseWithPaging<ApiData<PreprintAttributesJsonApi, PreprintEmbedsJsonApi, null, null>[], null>
+        JsonApiResponseWithPaging<
+          ApiData<PreprintAttributesJsonApi, PreprintEmbedsJsonApi, PreprintRelationshipsJsonApi, null>[],
+          null
+        >
       >(`${environment.apiUrl}/users/me/preprints/`, params)
       .pipe(map((response) => PreprintsMapper.fromMyPreprintJsonApi(response)));
   }
