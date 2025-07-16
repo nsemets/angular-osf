@@ -11,7 +11,11 @@ import { parseQueryFilterParams } from '@core/helpers';
 import { AdminTableComponent } from '@osf/features/admin-institutions/components';
 import { preprintsTableColumns } from '@osf/features/admin-institutions/constants';
 import { mapPreprintToTableData } from '@osf/features/admin-institutions/mappers';
-import { InstitutionProjectsQueryParamsModel, TableCellData } from '@osf/features/admin-institutions/models';
+import {
+  IndexSearchQueryParamsModel,
+  InstitutionProjectsQueryParamsModel,
+  TableCellData,
+} from '@osf/features/admin-institutions/models';
 import { InstitutionsAdminSelectors } from '@osf/features/admin-institutions/store';
 import { LoadingSpinnerComponent } from '@osf/shared/components';
 import { TABLE_PARAMS } from '@shared/constants';
@@ -22,12 +26,6 @@ import { InstitutionsSearchSelectors } from '@shared/stores';
 import { FetchPreprints } from '../../store/institutions-admin.actions';
 
 import { environment } from 'src/environments/environment';
-
-interface PreprintQueryParams {
-  size?: number;
-  sort?: string;
-  cursor?: string;
-}
 
 @Component({
   selector: 'osf-institutions-preprints',
@@ -161,7 +159,7 @@ export class InstitutionsPreprintsComponent {
     });
   }
 
-  private updateQueryParams(params: PreprintQueryParams): void {
+  private updateQueryParams(params: IndexSearchQueryParamsModel): void {
     const queryParams: Record<string, string | undefined> = {};
 
     if (params.sort) {

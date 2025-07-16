@@ -1,3 +1,4 @@
+export * from './index-search-query-params.model';
 export * from './institution-department.model';
 export * from './institution-departments-json-api.model';
 export * from './institution-index-value-search-json-api.model';
