@@ -25,7 +25,7 @@ import {
 } from '@osf/shared/stores';
 
 import { FieldType } from '../../enums';
-import { DeleteDraft, FetchProjectChildren, RegisterDraft, RegistriesSelectors } from '../../store';
+import { DeleteDraft, FetchProjectChildren, RegistriesSelectors } from '../../store';
 import { ConfirmRegistrationDialogComponent } from '../confirm-registration-dialog/confirm-registration-dialog.component';
 import { SelectComponentsDialogComponent } from '../select-components-dialog/select-components-dialog.component';
 
@@ -48,6 +48,7 @@ export class ReviewComponent {
   protected readonly pages = select(RegistriesSelectors.getPagesSchema);
   protected readonly draftRegistration = select(RegistriesSelectors.getDraftRegistration);
   protected readonly isDraftSubmitting = select(RegistriesSelectors.isDraftSubmitting);
+  protected readonly isDraftLoading = select(RegistriesSelectors.isDraftLoading);
   protected readonly stepsData = select(RegistriesSelectors.getStepsData);
   protected readonly INPUT_VALIDATION_MESSAGES = INPUT_VALIDATION_MESSAGES;
   protected readonly contributors = select(ContributorsSelectors.getContributors);
@@ -59,7 +60,6 @@ export class ReviewComponent {
     getContributors: GetAllContributors,
     getSubjects: FetchSelectedSubjects,
     deleteDraft: DeleteDraft,
-    registerDraft: RegisterDraft,
     getProjectsComponents: FetchProjectChildren,
   });
 
@@ -81,13 +81,11 @@ export class ReviewComponent {
 
     let componentsLoaded = false;
     effect(() => {
-      console.log('components effect triggered', this.components(), this.isDraftSubmitting());
       if (!this.isDraftSubmitting()) {
         const draftRegistrations = this.draftRegistration();
         if (draftRegistrations?.hasProject) {
-          console.log('Fetching project children for draft registration', draftRegistrations.branchedFrom);
           if (!componentsLoaded) {
-            this.actions.getProjectsComponents(draftRegistrations.branchedFrom!);
+            this.actions.getProjectsComponents(draftRegistrations?.branchedFrom?.id ?? '');
             componentsLoaded = true;
           }
         }
@@ -132,18 +130,16 @@ export class ReviewComponent {
         closeOnEscape: true,
         modal: true,
         data: {
+          parent: this.draftRegistration()?.branchedFrom,
           components: this.components(),
         },
       })
       .onClose.subscribe((selectedComponents) => {
-        console.log('Selected components for registration:', selectedComponents);
-        if (selectedComponents) {
-          this.openConfirmRegistrationDialog();
-        }
+        this.openConfirmRegistrationDialog(selectedComponents);
       });
   }
 
-  openConfirmRegistrationDialog(): void {
+  openConfirmRegistrationDialog(components?: string[]): void {
     this.dialogService
       .open(ConfirmRegistrationDialogComponent, {
         width: '552px',
@@ -153,8 +149,9 @@ export class ReviewComponent {
         modal: true,
         data: {
           draftId: this.draftId(),
-          projectId: this.draftRegistration()?.branchedFrom,
+          projectId: this.draftRegistration()?.branchedFrom?.id,
           providerId: this.draftRegistration()?.providerId,
+          components,
         },
       })
       .onClose.subscribe((res) => {

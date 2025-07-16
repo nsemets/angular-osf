@@ -9,9 +9,15 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 
 import { StepperComponent, SubHeaderComponent } from '@osf/shared/components';
+import { ResourceType } from '@osf/shared/enums';
 import { StepOption } from '@osf/shared/models';
 import { LoaderService } from '@osf/shared/services';
-import { ContributorsSelectors, SubjectsSelectors } from '@osf/shared/stores';
+import {
+  ContributorsSelectors,
+  FetchSelectedSubjects,
+  GetAllContributors,
+  SubjectsSelectors,
+} from '@osf/shared/stores';
 
 import { DEFAULT_STEPS } from '../../constants';
 import { ClearState, FetchDraft, FetchSchemaBlocks, RegistriesSelectors, UpdateStepValidation } from '../../store';
@@ -36,12 +42,16 @@ export class DraftsComponent implements OnDestroy {
   protected readonly stepsData = select(RegistriesSelectors.getStepsData);
   protected selectedSubjects = select(SubjectsSelectors.getSelectedSubjects);
   protected initialContributors = select(ContributorsSelectors.getContributors);
+  protected readonly contributors = select(ContributorsSelectors.getContributors);
+  protected readonly subjects = select(SubjectsSelectors.getSelectedSubjects);
 
   private readonly actions = createDispatchMap({
     getSchemaBlocks: FetchSchemaBlocks,
     getDraftRegistration: FetchDraft,
     updateStepValidation: UpdateStepValidation,
     clearState: ClearState,
+    getContributors: GetAllContributors,
+    getSubjects: FetchSelectedSubjects,
   });
 
   get isReviewPage(): boolean {
@@ -116,6 +126,12 @@ export class DraftsComponent implements OnDestroy {
     this.loaderService.show();
     if (!this.draftRegistration()) {
       this.actions.getDraftRegistration(this.registrationId);
+    }
+    if (!this.contributors()?.length) {
+      this.actions.getContributors(this.registrationId, ResourceType.DraftRegistration);
+    }
+    if (!this.subjects()?.length) {
+      this.actions.getSubjects(this.registrationId, ResourceType.DraftRegistration);
     }
     effect(() => {
       const registrationSchemaId = this.draftRegistration()?.registrationSchemaId;

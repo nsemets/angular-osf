@@ -66,7 +66,8 @@ export class ConfirmRegistrationDialogComponent {
         this.config.data.draftId,
         this.form.value.embargoDate,
         this.config.data.providerId,
-        this.config.data.projectId
+        this.config.data.projectId,
+        this.config.data.components
       )
       .subscribe({
         complete: () => {

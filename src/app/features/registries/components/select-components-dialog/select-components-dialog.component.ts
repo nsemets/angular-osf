@@ -20,11 +20,21 @@ export class SelectComponentsDialogComponent {
   protected readonly dialogRef = inject(DynamicDialogRef);
   readonly config = inject(DynamicDialogConfig);
   selectedComponents: TreeNode[] = [];
+  parent: Project = this.config.data.parent;
   components: TreeNode[] = [];
 
   constructor() {
-    this.components = this.config.data.components.map(this.mapProjectToTreeNode);
-    console.log('SelectComponentsDialogComponent initialized with components:', this.components);
+    this.components = [
+      {
+        label: this.parent.title,
+        selectable: false,
+        expanded: true,
+        key: this.parent.id,
+        data: this.parent.id,
+        children: this.config.data.components.map(this.mapProjectToTreeNode),
+      },
+    ];
+    this.selectedComponents.push({ key: this.parent.id });
   }
 
   private mapProjectToTreeNode = (project: Project): TreeNode => {
@@ -35,13 +45,13 @@ export class SelectComponentsDialogComponent {
       label: project.title,
       data: project.id,
       key: project.id,
-      selectable: true,
       expanded: true,
       children: project.children?.map(this.mapProjectToTreeNode) ?? [],
     };
   };
 
   continue() {
-    this.dialogRef.close(this.selectedComponents);
+    const selectedComponentsSet = new Set<string>([...this.selectedComponents.map((c) => c.key!), this.parent.id]);
+    this.dialogRef.close([...selectedComponentsSet]);
   }
 }

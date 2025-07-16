@@ -198,7 +198,7 @@ export class RegistriesState {
   @Action(RegisterDraft)
   registerDraft(
     ctx: StateContext<RegistriesStateModel>,
-    { draftId, embargoDate, providerId, projectId }: RegisterDraft
+    { draftId, embargoDate, providerId, projectId, components }: RegisterDraft
   ) {
     ctx.patchState({
       registration: {
@@ -207,7 +207,7 @@ export class RegistriesState {
       },
     });
 
-    return this.registriesService.registerDraft(draftId, embargoDate, providerId, projectId).pipe(
+    return this.registriesService.registerDraft(draftId, embargoDate, providerId, projectId, components).pipe(
       tap((registration) => {
         ctx.patchState({
           registration: {

@@ -125,7 +125,7 @@
     <p-button
       type="button"
       [label]="'registries.review.register' | translate"
-      [disabled]="isDraftInvalid()"
+      [disabled]="isDraftLoading() || isDraftInvalid()"
       (click)="confirmRegistration()"
     ></p-button>
   </div>

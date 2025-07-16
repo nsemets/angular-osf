@@ -47,7 +47,8 @@ export class RegisterDraft {
     public draftId: string,
     public embargoDate: string,
     public providerId: string,
-    public projectId?: string
+    public projectId?: string,
+    public components?: string[]
   ) {}
 }
 

@@ -29,6 +29,11 @@ export class RegistriesSelectors {
   }
 
   @Selector([RegistriesState])
+  static isDraftLoading(state: RegistriesStateModel): boolean {
+    return state.draftRegistration.isLoading;
+  }
+
+  @Selector([RegistriesState])
   static getDraftRegistration(state: RegistriesStateModel): DraftRegistrationModel | null {
     return state.draftRegistration.data;
   }
