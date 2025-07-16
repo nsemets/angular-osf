@@ -3,6 +3,7 @@ import { provideStates } from '@ngxs/store';
 import { Routes } from '@angular/router';
 
 import { PreprintsComponent } from '@osf/features/preprints/preprints.component';
+import { PreprintState } from '@osf/features/preprints/store/preprint';
 import { PreprintProvidersState } from '@osf/features/preprints/store/preprint-providers';
 import { PreprintStepperState } from '@osf/features/preprints/store/preprint-stepper';
 import { PreprintsDiscoverState } from '@osf/features/preprints/store/preprints-discover';
@@ -26,6 +27,7 @@ export const preprintsRoutes: Routes = [
         PreprintStepperState,
         ContributorsState,
         SubjectsState,
+        PreprintState,
       ]),
     ],
     children: [
@@ -77,6 +79,13 @@ export const preprintsRoutes: Routes = [
             (c) => c.UpdatePreprintStepperComponent
           ),
         canDeactivate: [ConfirmLeavingGuard],
+      },
+      {
+        path: 'my-preprints',
+        loadComponent: () =>
+          import('@osf/features/preprints/pages/my-preprints/my-preprints.component').then(
+            (m) => m.MyPreprintsComponent
+          ),
       },
       {
         path: ':id/moderation',
