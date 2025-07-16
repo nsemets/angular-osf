@@ -1,6 +1,7 @@
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
+import { Card } from 'primeng/card';
 import { Password } from 'primeng/password';
 
 import { CommonModule } from '@angular/common';
@@ -20,7 +21,7 @@ import { AccountSettingsService } from '../../services';
 
 @Component({
   selector: 'osf-change-password',
-  imports: [ReactiveFormsModule, Password, CommonModule, Button, TranslatePipe],
+  imports: [Card, ReactiveFormsModule, Password, CommonModule, Button, TranslatePipe],
   templateUrl: './change-password.component.html',
   styleUrl: './change-password.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

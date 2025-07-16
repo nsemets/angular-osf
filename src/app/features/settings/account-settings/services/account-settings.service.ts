@@ -80,9 +80,9 @@ export class AccountSettingsService {
 
     return this.jsonApiService
       .post<
-        ApiData<AccountEmailResponseJsonApi, null, null, null>
+        JsonApiResponse<ApiData<AccountEmailResponseJsonApi, null, null, null>, null>
       >(`${environment.apiUrl}/users/${this.currentUser()?.id}/settings/emails/`, body)
-      .pipe(map((response) => MapEmail(response)));
+      .pipe(map((response) => MapEmail(response.data)));
   }
 
   deleteEmail(emailId: string): Observable<void> {
