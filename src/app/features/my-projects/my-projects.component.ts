@@ -1,4 +1,4 @@
-import { createDispatchMap, select, Store } from '@ngxs/store';
+import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
@@ -66,7 +66,6 @@ import {
 export class MyProjectsComponent implements OnInit {
   readonly destroyRef = inject(DestroyRef);
   readonly dialogService = inject(DialogService);
-  readonly store = inject(Store);
   readonly router = inject(Router);
   readonly route = inject(ActivatedRoute);
   readonly translateService = inject(TranslateService);
@@ -118,7 +117,7 @@ export class MyProjectsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.store.dispatch(new GetBookmarksCollectionId());
+    this.actions.getBookmarksCollectionId();
   }
 
   setupCleanup(): void {
