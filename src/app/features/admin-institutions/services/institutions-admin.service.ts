@@ -1,22 +1,36 @@
-import { catchError, map, Observable, of } from 'rxjs';
+import { catchError, Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { inject, Injectable } from '@angular/core';
 
 import { JsonApiService } from '@core/services';
-import { mapIndexCardResults } from '@osf/features/admin-institutions/mappers/institution-summary-index.mapper';
-import { departmens, summaryMetrics } from '@osf/features/admin-institutions/services/mock';
+import { departmens, summaryMetrics, users } from '@osf/features/admin-institutions/services/mock';
+import { PaginationLinksModel } from '@shared/models';
 
-import { environment } from '../../../../environments/environment';
+import {
+  mapIndexCardResults,
+  mapInstitutionDepartments,
+  mapInstitutionProjects,
+  mapInstitutionSummaryMetrics,
+  mapInstitutionUsers,
+  sendMessageRequestMapper,
+} from '../mappers';
 import {
   InstitutionDepartment,
   InstitutionDepartmentsJsonApi,
   InstitutionIndexValueSearchJsonApi,
+  InstitutionProject,
+  InstitutionRegistrationsJsonApi,
   InstitutionSearchFilter,
   InstitutionSummaryMetrics,
   InstitutionSummaryMetricsJsonApi,
+  InstitutionUser,
+  InstitutionUsersJsonApi,
+  SendMessageRequest,
+  SendMessageResponseJsonApi,
 } from '../models';
 
-import { mapInstitutionDepartments, mapInstitutionSummaryMetrics } from 'src/app/features/admin-institutions/mappers';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -50,6 +64,72 @@ export class InstitutionsAdminService {
       );
   }
 
+  fetchUsers(
+    institutionId: string,
+    page = 1,
+    pageSize = 10,
+    sort = 'user_name',
+    filters?: Record<string, string>
+  ): Observable<{ users: InstitutionUser[]; totalCount: number }> {
+    const params: Record<string, string> = {
+      page: page.toString(),
+      'page[size]': pageSize.toString(),
+      sort,
+      ...filters,
+    };
+
+    return this.jsonApiService
+      .get<InstitutionUsersJsonApi>(`${this.hardcodedUrl}/institutions/${institutionId}/metrics/users/`, params)
+      .pipe(
+        //TODO: remove mock data
+        catchError(() => {
+          return of(users);
+        }),
+        map((response) => ({
+          users: mapInstitutionUsers(response as InstitutionUsersJsonApi),
+          totalCount: response.meta.total,
+        }))
+      );
+  }
+
+  fetchProjects(
+    institutionId: string,
+    institutionIris: string[],
+    pageSize = 10,
+    sort = '-dateModified',
+    cursor = ''
+  ): Observable<{
+    projects: InstitutionProject[];
+    totalCount: number;
+    links?: PaginationLinksModel;
+  }> {
+    const url = `${environment.shareDomainUrl}/index-card-search`;
+    let params: Record<string, string> = {};
+
+    const affiliationParam = institutionIris.join(',');
+
+    params = {
+      'cardSearchFilter[affiliation][]': affiliationParam,
+      'cardSearchFilter[resourceType]': 'Project',
+      'cardSearchFilter[accessService]': environment.webUrl,
+      'page[cursor]': cursor,
+      'page[size]': pageSize.toString(),
+      sort,
+    };
+
+    return this.jsonApiService.get<InstitutionRegistrationsJsonApi>(url, params).pipe(
+      map((response: InstitutionRegistrationsJsonApi) => {
+        const projects = mapInstitutionProjects(response);
+        const links = response.data.relationships.searchResultPage.links;
+        return {
+          projects,
+          totalCount: response.data.attributes.totalResultCount,
+          links,
+        };
+      })
+    );
+  }
+
   fetchIndexValueSearch(
     institutionId: string,
     valueSearchPropertyPath: string,
@@ -66,5 +146,11 @@ export class InstitutionsAdminService {
     return this.jsonApiService
       .get<InstitutionIndexValueSearchJsonApi>(`${environment.shareDomainUrl}/index-value-search`, params)
       .pipe(map((response) => mapIndexCardResults(response?.included)));
+  }
+
+  sendMessage(request: SendMessageRequest): Observable<SendMessageResponseJsonApi> {
+    const payload = sendMessageRequestMapper(request);
+
+    return this.jsonApiService.post<SendMessageResponseJsonApi>(`${this.hardcodedUrl}/institutions/messages/`, payload);
   }
 }

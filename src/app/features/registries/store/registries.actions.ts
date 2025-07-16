@@ -1,13 +1,16 @@
-import { LicenseOptions } from '@osf/shared/models';
-
-import { RegistrationAttributesJsonApi, RegistrationRelationshipsJsonApi } from '../models';
+import {
+  DraftRegistrationAttributesJsonApi,
+  DraftRegistrationRelationshipsJsonApi,
+  LicenseOptions,
+} from '@osf/shared/models';
 
 export class GetRegistries {
   static readonly type = '[Registries] Get Registries';
 }
 
-export class GetProviders {
-  static readonly type = '[Registries]  Get Providers';
+export class GetProviderSchemas {
+  static readonly type = '[Registries]  Get Provider Schemas';
+  constructor(public providerId: string) {}
 }
 
 export class GetProjects {
@@ -28,14 +31,25 @@ export class UpdateDraft {
   static readonly type = '[Registries] Update Registration Tags';
   constructor(
     public draftId: string,
-    public attributes: Partial<RegistrationAttributesJsonApi>,
-    public relationships?: Partial<RegistrationRelationshipsJsonApi>
+    public attributes: Partial<DraftRegistrationAttributesJsonApi>,
+    public relationships?: Partial<DraftRegistrationRelationshipsJsonApi>
   ) {}
 }
 
 export class DeleteDraft {
   static readonly type = '[Registries]  Delete Draft';
   constructor(public draftId: string) {}
+}
+
+export class RegisterDraft {
+  static readonly type = '[Registries]  Register Draft Registration';
+  constructor(
+    public draftId: string,
+    public embargoDate: string,
+    public providerId: string,
+    public projectId?: string,
+    public components?: string[]
+  ) {}
 }
 
 export class FetchSchemaBlocks {
@@ -45,6 +59,7 @@ export class FetchSchemaBlocks {
 
 export class FetchLicenses {
   static readonly type = '[Registries] Fetch Licenses';
+  constructor(public providerId: string) {}
 }
 
 export class SaveLicense {
@@ -62,4 +77,29 @@ export class UpdateStepValidation {
     public step: string,
     public invalid: boolean
   ) {}
+}
+
+export class FetchDraftRegistrations {
+  static readonly type = '[Registries] Fetch Draft Registrations';
+  constructor(
+    public page = 1,
+    public pageSize = 10
+  ) {}
+}
+
+export class FetchSubmittedRegistrations {
+  static readonly type = '[Registries] Fetch Submitted Registrations';
+  constructor(
+    public page = 1,
+    public pageSize = 10
+  ) {}
+}
+
+export class FetchProjectChildren {
+  static readonly type = '[Registries] Fetch Project Children';
+  constructor(public projectId: string) {}
+}
+
+export class ClearState {
+  static readonly type = '[Registries] Clear State';
 }

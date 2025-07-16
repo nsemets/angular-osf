@@ -1,6 +1,15 @@
 import { Selector } from '@ngxs/store';
 
-import { InstitutionDepartment, InstitutionSearchFilter, InstitutionSummaryMetrics } from '../models';
+import { PaginationLinksModel } from '@shared/models';
+
+import {
+  InstitutionDepartment,
+  InstitutionProject,
+  InstitutionSearchFilter,
+  InstitutionSummaryMetrics,
+  InstitutionUser,
+  SendMessageResponseJsonApi,
+} from '../models';
 
 import { InstitutionsAdminModel } from './institutions-admin.model';
 import { InstitutionsAdminState } from './institutions-admin.state';
@@ -89,5 +98,60 @@ export class InstitutionsAdminSelectors {
   @Selector([InstitutionsAdminState])
   static getCurrentSearchPropertyPath(state: InstitutionsAdminModel): string | null {
     return state.currentSearchPropertyPath;
+  }
+
+  @Selector([InstitutionsAdminState])
+  static getUsers(state: InstitutionsAdminModel): InstitutionUser[] {
+    return state.users.data;
+  }
+
+  @Selector([InstitutionsAdminState])
+  static getUsersLoading(state: InstitutionsAdminModel): boolean {
+    return state.users.isLoading;
+  }
+
+  @Selector([InstitutionsAdminState])
+  static getUsersError(state: InstitutionsAdminModel): string | null {
+    return state.users.error;
+  }
+
+  @Selector([InstitutionsAdminState])
+  static getUsersTotalCount(state: InstitutionsAdminModel): number {
+    return state.users.totalCount;
+  }
+
+  @Selector([InstitutionsAdminState])
+  static getProjects(state: InstitutionsAdminModel): InstitutionProject[] {
+    return state.projects.data;
+  }
+
+  @Selector([InstitutionsAdminState])
+  static getProjectsLoading(state: InstitutionsAdminModel): boolean {
+    return state.projects.isLoading;
+  }
+
+  @Selector([InstitutionsAdminState])
+  static getProjectsTotalCount(state: InstitutionsAdminModel): number {
+    return state.projects.totalCount;
+  }
+
+  @Selector([InstitutionsAdminState])
+  static getProjectsLinks(state: InstitutionsAdminModel): PaginationLinksModel | undefined {
+    return state.projects.links;
+  }
+
+  @Selector([InstitutionsAdminState])
+  static getSendMessageResponse(state: InstitutionsAdminModel): SendMessageResponseJsonApi | null {
+    return state.sendMessage.data;
+  }
+
+  @Selector([InstitutionsAdminState])
+  static getSendMessageLoading(state: InstitutionsAdminModel): boolean {
+    return state.sendMessage.isLoading;
+  }
+
+  @Selector([InstitutionsAdminState])
+  static getSendMessageError(state: InstitutionsAdminModel): string | null {
+    return state.sendMessage.error;
   }
 }

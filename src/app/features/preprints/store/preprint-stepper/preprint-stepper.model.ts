@@ -6,13 +6,14 @@ import { License } from '@shared/models/license.model';
 
 export interface PreprintStepperStateModel {
   selectedProviderId: StringOrNull;
-  createdPreprint: AsyncStateModel<Preprint | null>;
+  preprint: AsyncStateModel<Preprint | null>;
   fileSource: PreprintFileSource;
   preprintFilesLinks: AsyncStateModel<PreprintFilesLinks | null>;
   preprintFiles: AsyncStateModel<OsfFile[]>;
   availableProjects: AsyncStateModel<IdName[]>;
   projectFiles: AsyncStateModel<OsfFile[]>;
   licenses: AsyncStateModel<License[]>;
+  currentFolder: OsfFile | null;
   preprintProject: AsyncStateModel<IdName | null>;
   hasBeenSubmitted: boolean;
 }

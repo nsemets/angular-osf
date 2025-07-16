@@ -1,4 +1,4 @@
-import { select, Store } from '@ngxs/store';
+import { createDispatchMap, select, Store } from '@ngxs/store';
 
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
@@ -29,9 +29,8 @@ import { CreateProjectDialogComponent } from '@osf/features/my-projects/componen
 import { MyProjectsTableComponent, SelectComponent, SubHeaderComponent } from '@osf/shared/components';
 import { ResourceType, SortOrder } from '@osf/shared/enums';
 import { QueryParams, TableParameters } from '@osf/shared/models';
+import { BookmarksSelectors, GetBookmarksCollectionId } from '@osf/shared/stores';
 import { IS_MEDIUM } from '@osf/shared/utils';
-
-import { CollectionsSelectors, GetBookmarksCollectionId } from '../collections/store';
 
 import { MY_PROJECTS_TABS } from './constants';
 import { MyProjectsTab } from './enums';
@@ -100,7 +99,16 @@ export class MyProjectsComponent implements OnInit {
   protected readonly totalPreprintsCount = select(MyProjectsSelectors.getTotalPreprints);
   protected readonly totalBookmarksCount = select(MyProjectsSelectors.getTotalBookmarks);
 
-  protected readonly bookmarksCollectionId = select(CollectionsSelectors.getBookmarksCollectionId);
+  protected readonly bookmarksCollectionId = select(BookmarksSelectors.getBookmarksCollectionId);
+
+  protected readonly actions = createDispatchMap({
+    getBookmarksCollectionId: GetBookmarksCollectionId,
+    clearMyProjects: ClearMyProjects,
+    getMyProjects: GetMyProjects,
+    getMyRegistrations: GetMyRegistrations,
+    getMyPreprints: GetMyPreprints,
+    getMyBookmarks: GetMyBookmarks,
+  });
 
   constructor() {
     this.setupQueryParamsEffect();
@@ -115,7 +123,7 @@ export class MyProjectsComponent implements OnInit {
 
   setupCleanup(): void {
     this.destroyRef.onDestroy(() => {
-      this.store.dispatch(new ClearMyProjects());
+      this.actions.clearMyProjects();
     });
   }
 
@@ -202,18 +210,22 @@ export class MyProjectsComponent implements OnInit {
     let action$;
     switch (this.selectedTab()) {
       case MyProjectsTab.Projects:
-        action$ = this.store.dispatch(new GetMyProjects(pageNumber, pageSize, filters));
+        action$ = this.actions.getMyProjects(pageNumber, pageSize, filters);
         break;
       case MyProjectsTab.Registrations:
-        action$ = this.store.dispatch(new GetMyRegistrations(pageNumber, pageSize, filters));
+        action$ = this.actions.getMyRegistrations(pageNumber, pageSize, filters);
         break;
       case MyProjectsTab.Preprints:
-        action$ = this.store.dispatch(new GetMyPreprints(pageNumber, pageSize, filters));
+        action$ = this.actions.getMyPreprints(pageNumber, pageSize, filters);
         break;
       case MyProjectsTab.Bookmarks:
         if (this.bookmarksCollectionId()) {
-          action$ = this.store.dispatch(
-            new GetMyBookmarks(this.bookmarksCollectionId(), pageNumber, pageSize, filters, ResourceType.Null)
+          action$ = this.actions.getMyBookmarks(
+            this.bookmarksCollectionId(),
+            pageNumber,
+            pageSize,
+            filters,
+            ResourceType.Null
           );
         }
         break;
@@ -304,7 +316,7 @@ export class MyProjectsComponent implements OnInit {
   }
 
   protected onTabChange(tabIndex: number): void {
-    this.store.dispatch(new ClearMyProjects());
+    this.actions.clearMyProjects();
     this.selectedTab.set(tabIndex);
     const currentParams = this.queryParams() || {};
 
@@ -333,5 +345,10 @@ export class MyProjectsComponent implements OnInit {
   protected navigateToProject(project: MyProjectsItem): void {
     this.activeProject.set(project);
     this.router.navigate(['/my-projects', project.id]);
+  }
+
+  protected navigateToRegistry(registry: MyProjectsItem): void {
+    this.activeProject.set(registry);
+    this.router.navigate(['/registries', registry.id]);
   }
 }

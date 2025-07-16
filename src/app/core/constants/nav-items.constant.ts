@@ -22,6 +22,7 @@ export const MENU_ITEMS: MenuItem[] = [
     styleClass: 'mt-5',
   },
   {
+    id: 'registries',
     label: 'navigation.registries',
     icon: 'osf-icon-registries',
     routerLinkActiveOptions: { exact: true },
@@ -32,7 +33,7 @@ export const MENU_ITEMS: MenuItem[] = [
         routerLinkActiveOptions: { exact: true },
       },
       {
-        routerLink: '/my-registrations',
+        routerLink: '/registries/my-registrations',
         label: 'navigation.registriesSubRoutes.myRegistrations',
         routerLinkActiveOptions: { exact: true },
       },
@@ -55,9 +56,14 @@ export const MENU_ITEMS: MenuItem[] = [
         routerLinkActiveOptions: { exact: false },
       },
       {
-        routerLink: '/my-preprints',
+        routerLink: 'preprints/my-preprints',
         label: 'navigation.preprintsSubRoutes.myPreprints',
         routerLinkActiveOptions: { exact: false },
+      },
+      {
+        routerLink: '/preprints/my-reviewing',
+        label: 'navigation.preprintsSubRoutes.myReviewing',
+        routerLinkActiveOptions: { exact: true },
       },
     ],
   },

@@ -4,16 +4,23 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { filter, tap } from 'rxjs';
 
-import { ChangeDetectionStrategy, Component, computed, effect, inject, Signal, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, OnDestroy, Signal, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 
 import { StepperComponent, SubHeaderComponent } from '@osf/shared/components';
+import { ResourceType } from '@osf/shared/enums';
 import { StepOption } from '@osf/shared/models';
 import { LoaderService } from '@osf/shared/services';
+import {
+  ContributorsSelectors,
+  FetchSelectedSubjects,
+  GetAllContributors,
+  SubjectsSelectors,
+} from '@osf/shared/stores';
 
-import { defaultSteps } from '../../constants';
-import { FetchDraft, FetchSchemaBlocks, RegistriesSelectors } from '../../store';
+import { DEFAULT_STEPS } from '../../constants';
+import { ClearState, FetchDraft, FetchSchemaBlocks, RegistriesSelectors, UpdateStepValidation } from '../../store';
 
 @Component({
   selector: 'osf-drafts',
@@ -23,7 +30,7 @@ import { FetchDraft, FetchSchemaBlocks, RegistriesSelectors } from '../../store'
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [TranslateService],
 })
-export class DraftsComponent {
+export class DraftsComponent implements OnDestroy {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly loaderService = inject(LoaderService);
@@ -33,20 +40,40 @@ export class DraftsComponent {
   protected readonly draftRegistration = select(RegistriesSelectors.getDraftRegistration);
   protected stepsValidation = select(RegistriesSelectors.getStepsValidation);
   protected readonly stepsData = select(RegistriesSelectors.getStepsData);
+  protected selectedSubjects = select(SubjectsSelectors.getSelectedSubjects);
+  protected initialContributors = select(ContributorsSelectors.getContributors);
+  protected readonly contributors = select(ContributorsSelectors.getContributors);
+  protected readonly subjects = select(SubjectsSelectors.getSelectedSubjects);
 
   private readonly actions = createDispatchMap({
     getSchemaBlocks: FetchSchemaBlocks,
     getDraftRegistration: FetchDraft,
+    updateStepValidation: UpdateStepValidation,
+    clearState: ClearState,
+    getContributors: GetAllContributors,
+    getSubjects: FetchSelectedSubjects,
   });
 
   get isReviewPage(): boolean {
     return this.router.url.includes('/review');
   }
 
+  isMetaDataInvalid = computed(() => {
+    return (
+      !this.draftRegistration()?.title ||
+      !this.draftRegistration()?.description ||
+      !this.draftRegistration()?.license?.id ||
+      !this.selectedSubjects()?.length ||
+      !this.initialContributors()?.length
+    );
+  });
+
   defaultSteps: StepOption[] = [];
 
+  isLoaded = false;
+
   steps: Signal<StepOption[]> = computed(() => {
-    this.defaultSteps = defaultSteps.map((step) => ({
+    this.defaultSteps = DEFAULT_STEPS.map((step) => ({
       ...step,
       label: this.translateService.instant(step.label),
       invalid: this.stepsValidation()?.[step.index]?.invalid || false,
@@ -100,13 +127,20 @@ export class DraftsComponent {
     if (!this.draftRegistration()) {
       this.actions.getDraftRegistration(this.registrationId);
     }
+    if (!this.contributors()?.length) {
+      this.actions.getContributors(this.registrationId, ResourceType.DraftRegistration);
+    }
+    if (!this.subjects()?.length) {
+      this.actions.getSubjects(this.registrationId, ResourceType.DraftRegistration);
+    }
     effect(() => {
       const registrationSchemaId = this.draftRegistration()?.registrationSchemaId;
-      if (registrationSchemaId && !this.pages().length) {
+      if (registrationSchemaId && !this.isLoaded) {
         this.actions
           .getSchemaBlocks(registrationSchemaId || '')
           .pipe(
             tap(() => {
+              this.isLoaded = true;
               this.loaderService.hide();
             })
           )
@@ -120,6 +154,23 @@ export class DraftsComponent {
         this.currentStepIndex.set(reviewStepIndex);
       }
     });
+
+    effect(() => {
+      if (this.currentStepIndex() > 0) {
+        this.actions.updateStepValidation('0', this.isMetaDataInvalid());
+      }
+      if (this.pages().length && this.currentStepIndex() > 0 && this.stepsData()) {
+        for (let i = 1; i < this.currentStepIndex(); i++) {
+          const pageStep = this.pages()[i - 1];
+          const isStepInvalid =
+            pageStep?.questions?.some((question) => {
+              const questionData = this.stepsData()[question.responseKey!];
+              return question.required && (Array.isArray(questionData) ? !questionData.length : !questionData);
+            }) || false;
+          this.actions.updateStepValidation(i.toString(), isStepInvalid);
+        }
+      }
+    });
   }
 
   stepChange(step: StepOption): void {
@@ -127,5 +178,9 @@ export class DraftsComponent {
     this.currentStepIndex.set(step.index);
     const pageLink = this.steps()[step.index].routeLink;
     this.router.navigate([`/registries/drafts/${this.registrationId}/`, pageLink]);
+  }
+
+  ngOnDestroy(): void {
+    this.actions.clearState();
   }
 }

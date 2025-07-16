@@ -90,7 +90,7 @@
         [currentFolder]="currentFolder()"
         [files]="projectFiles()"
         [isLoading]="areProjectFilesLoading()"
-        [projectId]="selectedProjectId()!"
+        [resourceId]="selectedProjectId()!"
         [actions]="filesTreeActions"
         (entryFileClicked)="selectProjectFile($event)"
       />
@@ -129,6 +129,6 @@
     styleClass="w-full"
     [label]="'common.buttons.next' | translate"
     (click)="nextButtonClicked()"
-    [disabled]="!createdPreprint()?.primaryFileId || versionFileMode()"
+    [disabled]="!preprint()?.primaryFileId || versionFileMode()"
   />
 </section>
