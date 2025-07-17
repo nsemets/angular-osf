@@ -1,4 +1,8 @@
 .file-section-height {
+  border: 1px solid var(--grey-2);
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+
   min-height: 400px;
 
   &.medium {

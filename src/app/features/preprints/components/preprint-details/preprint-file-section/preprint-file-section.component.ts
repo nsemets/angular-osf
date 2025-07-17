@@ -32,7 +32,7 @@ export class PreprintFileSectionComponent {
   isFileLoading = select(PreprintSelectors.isPreprintFileLoading);
   safeLink = computed(() => {
     const link = this.file()?.links.render;
-    if (!link) return;
+    if (!link) return null;
 
     return this.sanitizer.bypassSecurityTrustResourceUrl(link);
   });
