@@ -1,45 +1,55 @@
-<osf-admin-table
-  [tableColumns]="tableColumns"
-  [tableData]="tableData()"
-  [enablePagination]="true"
-  [totalCount]="totalCount()"
-  [currentPage]="currentPage()"
-  [pageSize]="currentPageSize()"
-  [first]="first()"
-  [sortField]="sortField()"
-  [sortOrder]="sortOrder()"
-  (pageChanged)="onPageChange($event)"
-  (sortChanged)="onSortChange($event)"
-  (iconClicked)="onIconClick($event)"
-  [downloadLink]="'/admin/institutions/' + institutionId + '/users/export'"
-  [reportsLink]="reportsLink"
->
-  <div slot="amount" class="flex items-center">
-    <h3 class="title">{{ amountText() }}</h3>
+@if (isLoading()) {
+  <div class="flex justify-content-center align-items-center p-6">
+    <osf-loading-spinner />
   </div>
-
-  <div slot="otherFilters" class="flex gap-3 align-items-center flex-wrap w-full md:w-fit">
-    <div class="flex align-items-center gap-2 w-full md:w-fit">
-      <p-checkbox
-        [(ngModel)]="hasOrcidFilter"
-        (onChange)="onOrcidFilterChange($event.checked)"
-        binary="true"
-        inputId="orcid-filter"
-      >
-      </p-checkbox>
-      <label class="text-sm font-medium cursor-pointer m-0" for="orcid-filter">{{
-        'adminInstitutions.institutionUsers.hasOrcid' | translate
-      }}</label>
+} @else if (tableData().length > 0) {
+  <osf-admin-table
+    [tableColumns]="tableColumns"
+    [tableData]="tableData()"
+    [enablePagination]="true"
+    [totalCount]="totalCount()"
+    [currentPage]="currentPage()"
+    [pageSize]="currentPageSize()"
+    [first]="first()"
+    [sortField]="sortField()"
+    [sortOrder]="sortOrder()"
+    (pageChanged)="onPageChange($event)"
+    (sortChanged)="onSortChange($event)"
+    (iconClicked)="onIconClick($event)"
+    [downloadLink]="'/admin/institutions/' + institutionId + '/users/export'"
+    [reportsLink]="reportsLink"
+  >
+    <div slot="amount" class="flex items-center">
+      <h3 class="title">{{ amountText() }}</h3>
     </div>
 
-    <div class="w-full md:w-fit">
-      <osf-select
-        class="w-full md:w-fit"
-        [options]="departmentOptions"
-        [(selectedValue)]="selectedDepartment"
-        (changeValue)="onDepartmentChange($event)"
-        [fullWidth]="true"
-      />
+    <div slot="otherFilters" class="flex gap-3 align-items-center flex-wrap w-full md:w-fit">
+      <div class="flex align-items-center gap-2 w-full md:w-fit">
+        <p-checkbox
+          [(ngModel)]="hasOrcidFilter"
+          (onChange)="onOrcidFilterChange($event.checked)"
+          binary="true"
+          inputId="orcid-filter"
+        >
+        </p-checkbox>
+        <label class="text-sm font-medium cursor-pointer m-0" for="orcid-filter">{{
+          'adminInstitutions.institutionUsers.hasOrcid' | translate
+        }}</label>
+      </div>
+
+      <div class="w-full md:w-fit">
+        <osf-select
+          class="w-full md:w-fit"
+          [options]="departmentOptions"
+          [(selectedValue)]="selectedDepartment"
+          (changeValue)="onDepartmentChange($event)"
+          [fullWidth]="true"
+        />
+      </div>
     </div>
+  </osf-admin-table>
+} @else {
+  <div class="flex justify-content-center align-items-center p-6">
+    <p class="text-center text-gray-500">{{ 'adminInstitutions.institutionUsers.noData' | translate }}</p>
   </div>
-</osf-admin-table>
+}
