@@ -66,3 +66,10 @@ export interface PreprintEmbedsJsonApi {
     data: ContributorResponse[];
   };
 }
+
+export interface PreprintMetaJsonApi {
+  metrics: {
+    downloads: number;
+    views: number;
+  };
+}

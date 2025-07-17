@@ -3,13 +3,14 @@ import { map, Observable } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { JsonApiService } from '@core/services';
-import { ApiData, JsonApiResponse, JsonApiResponseWithPaging } from '@osf/core/models';
+import { ApiData, JsonApiResponse, JsonApiResponseWithMeta, JsonApiResponseWithPaging } from '@osf/core/models';
 import { preprintSortFieldMap } from '@osf/features/preprints/constants';
 import { PreprintsMapper } from '@osf/features/preprints/mappers';
 import {
   Preprint,
   PreprintAttributesJsonApi,
   PreprintEmbedsJsonApi,
+  PreprintMetaJsonApi,
   PreprintRelationshipsJsonApi,
 } from '@osf/features/preprints/models';
 import { SearchFilters } from '@shared/models';
@@ -62,6 +63,26 @@ export class PreprintsService {
       .pipe(
         map((response) => {
           return PreprintsMapper.fromPreprintJsonApi(response.data);
+        })
+      );
+  }
+
+  getByIdWithEmbeds(id: string) {
+    const params = {
+      'metrics[views]': 'total',
+      'metrics[downloads]': 'total',
+    };
+    return this.jsonApiService
+      .get<
+        JsonApiResponseWithMeta<
+          ApiData<PreprintAttributesJsonApi, null, PreprintRelationshipsJsonApi, null>,
+          PreprintMetaJsonApi,
+          null
+        >
+      >(`${environment.apiUrl}/preprints/${id}/`, params)
+      .pipe(
+        map((response) => {
+          return PreprintsMapper.fromPreprintWithEmbedsJsonApi(response);
         })
       );
   }

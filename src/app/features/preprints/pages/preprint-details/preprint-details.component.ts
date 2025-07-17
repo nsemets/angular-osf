@@ -11,13 +11,14 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PreprintFileSectionComponent } from '@osf/features/preprints/components/preprint-details/preprint-file-section/preprint-file-section.component';
-import { FetchPreprintById, PreprintSelectors } from '@osf/features/preprints/store/preprint';
+import { ShareAndDownloadComponent } from '@osf/features/preprints/components/preprint-details/share-and-downlaod/share-and-download.component';
+import { FetchPreprintById, PreprintSelectors, ResetState } from '@osf/features/preprints/store/preprint';
 import { GetPreprintProviderById, PreprintProvidersSelectors } from '@osf/features/preprints/store/preprint-providers';
-import { CreateNewVersion, PreprintStepperSelectors, ResetState } from '@osf/features/preprints/store/preprint-stepper';
+import { CreateNewVersion, PreprintStepperSelectors } from '@osf/features/preprints/store/preprint-stepper';
 
 @Component({
   selector: 'osf-preprint-details',
-  imports: [Skeleton, PreprintFileSectionComponent, Card, Button],
+  imports: [Skeleton, PreprintFileSectionComponent, Card, Button, ShareAndDownloadComponent],
   templateUrl: './preprint-details.component.html',
   styleUrl: './preprint-details.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

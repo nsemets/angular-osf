@@ -50,10 +50,10 @@ export class PreprintState {
   }
 
   @Action(FetchPreprintById)
-  getPreprintById(ctx: StateContext<PreprintStateModel>, action: FetchPreprintById) {
+  fetchPreprintById(ctx: StateContext<PreprintStateModel>, action: FetchPreprintById) {
     ctx.setState(patch({ preprint: patch({ isLoading: true }) }));
 
-    return this.preprintsService.getById(action.id).pipe(
+    return this.preprintsService.getByIdWithEmbeds(action.id).pipe(
       tap((preprint) => {
         ctx.setState(patch({ preprint: patch({ isLoading: false, data: preprint }) }));
         this.store.dispatch(new FetchPreprintFile());

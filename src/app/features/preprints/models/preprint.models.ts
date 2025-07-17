@@ -29,6 +29,7 @@ export interface Preprint {
   whyNoPrereg: StringOrNull;
   preregLinks: string[];
   preregLinkInfo: PreregLinkInfo | null;
+  metrics?: PreprintMetrics | null;
 }
 
 export interface PreprintFilesLinks {
@@ -47,4 +48,9 @@ export interface PreprintShortInfo {
 export interface PreprintShortInfoWithTotalCount {
   data: PreprintShortInfo[];
   totalCount: number;
+}
+
+export interface PreprintMetrics {
+  downloads: number;
+  views: number;
 }

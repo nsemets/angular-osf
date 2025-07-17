@@ -1,8 +1,9 @@
-import { ApiData, JsonApiResponseWithPaging } from '@core/models';
+import { ApiData, JsonApiResponseWithMeta, JsonApiResponseWithPaging } from '@core/models';
 import {
   Preprint,
   PreprintAttributesJsonApi,
   PreprintEmbedsJsonApi,
+  PreprintMetaJsonApi,
   PreprintRelationshipsJsonApi,
   PreprintShortInfoWithTotalCount,
 } from '@osf/features/preprints/models';
@@ -63,6 +64,54 @@ export class PreprintsMapper {
       whyNoPrereg: response.attributes.why_no_prereg,
       preregLinks: response.attributes.prereg_links,
       preregLinkInfo: response.attributes.prereg_link_info,
+    };
+  }
+
+  static fromPreprintWithEmbedsJsonApi(
+    response: JsonApiResponseWithMeta<
+      ApiData<PreprintAttributesJsonApi, null, PreprintRelationshipsJsonApi, null>,
+      PreprintMetaJsonApi,
+      null
+    >
+  ): Preprint {
+    const data = response.data;
+    const meta = response.meta;
+    return {
+      id: data.id,
+      dateCreated: data.attributes.date_created,
+      dateModified: data.attributes.date_modified,
+      title: data.attributes.title,
+      description: data.attributes.description,
+      doi: data.attributes.doi,
+      customPublicationCitation: data.attributes.custom_publication_citation,
+      originalPublicationDate: data.attributes.original_publication_date,
+      isPublished: data.attributes.is_published,
+      tags: data.attributes.tags,
+      isPublic: data.attributes.public,
+      version: data.attributes.version,
+      isLatestVersion: data.attributes.is_latest_version,
+      primaryFileId: data.relationships.primary_file?.data?.id || null,
+      nodeId: data.relationships.node?.data?.id,
+      licenseId: data.relationships.license?.data?.id || null,
+      licenseOptions: data.attributes.license_record
+        ? {
+            year: data.attributes.license_record.year,
+            copyrightHolders: data.attributes.license_record.copyright_holders.join(','),
+          }
+        : null,
+      hasCoi: data.attributes.has_coi,
+      coiStatement: data.attributes.conflict_of_interest_statement,
+      hasDataLinks: data.attributes.has_data_links,
+      dataLinks: data.attributes.data_links,
+      whyNoData: data.attributes.why_no_data,
+      hasPreregLinks: data.attributes.has_prereg_links,
+      whyNoPrereg: data.attributes.why_no_prereg,
+      preregLinks: data.attributes.prereg_links,
+      preregLinkInfo: data.attributes.prereg_link_info,
+      metrics: {
+        downloads: meta.metrics.downloads,
+        views: meta.metrics.views,
+      },
     };
   }
 
