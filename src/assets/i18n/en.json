@@ -1291,7 +1291,7 @@
             "description": "Receive helpful tips on how to make the most of the OSF, up to once per week."
           }
         },
-        "saveButton": "Save"
+        "successUpdate": "Email preferences successfully updated."
       },
       "notificationPreferences": {
         "title": "Configure Notification Preferences",
@@ -1302,7 +1302,8 @@
           "files": "Files updated",
           "mentions": "Mentions added",
           "preprints": "Preprint submissions updated"
-        }
+        },
+        "successUpdate": "Notification preferences successfully updated."
       }
     },
     "addons": {
