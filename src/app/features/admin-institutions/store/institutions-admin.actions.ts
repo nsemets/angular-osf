@@ -49,6 +49,28 @@ export class FetchProjects {
   ) {}
 }
 
+export class FetchRegistrations {
+  static readonly type = '[InstitutionsAdmin] Fetch Registrations';
+  constructor(
+    public institutionId: string,
+    public institutionIris: string[],
+    public pageSize = 10,
+    public sort = '-dateModified',
+    public cursor = ''
+  ) {}
+}
+
+export class FetchPreprints {
+  static readonly type = '[InstitutionsAdmin] Fetch Preprints';
+  constructor(
+    public institutionId: string,
+    public institutionIris: string[],
+    public pageSize = 10,
+    public sort = '-dateModified',
+    public cursor = ''
+  ) {}
+}
+
 export class SendUserMessage {
   static readonly type = '[InstitutionsAdmin] Send User Message';
   constructor(
