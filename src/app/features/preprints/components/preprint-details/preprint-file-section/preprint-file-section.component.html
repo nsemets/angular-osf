@@ -1,4 +1,9 @@
-<section class="flex flex-column gap-4 file-section-height" [class.medium]="isMedium()" [class.large]="isLarge()">
+<section
+  class="p-card p-card-body card gap-4 file-section-height"
+  [class.medium]="isMedium()"
+  [class.large]="isLarge()"
+  [class.small]="!isMedium() && !isLarge()"
+>
   @if (safeLink()) {
     <iframe
       [src]="safeLink()"
@@ -15,7 +20,7 @@
   }
 
   <section class="flex flex-column gap-2">
-    @if (fileVersions()?.length) {
+    @if (fileVersions().length) {
       @let fileVersionsValue = fileVersions();
 
       <div class="flex flex-row align-items-center">

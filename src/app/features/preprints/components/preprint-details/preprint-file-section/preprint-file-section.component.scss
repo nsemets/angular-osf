@@ -1,8 +1,4 @@
 .file-section-height {
-  border: 1px solid var(--grey-2);
-  border-radius: 0.5rem;
-  padding: 1.25rem;
-
   min-height: 400px;
 
   &.medium {
@@ -11,5 +7,11 @@
 
   &.large {
     min-height: 1100px;
+  }
+}
+
+.card {
+  &.small {
+    --p-card-body-padding: 0.75rem;
   }
 }
