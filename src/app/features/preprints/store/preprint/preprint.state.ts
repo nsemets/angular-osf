@@ -10,7 +10,13 @@ import { handleSectionError } from '@core/handlers';
 import { PreprintsService } from '@osf/features/preprints/services';
 import { FilesService } from '@shared/services';
 
-import { FetchMyPreprints, FetchPreprintById, FetchPreprintFile, FetchPreprintFileVersions } from './preprint.actions';
+import {
+  FetchMyPreprints,
+  FetchPreprintById,
+  FetchPreprintFile,
+  FetchPreprintFileVersions,
+  ResetState,
+} from './preprint.actions';
 import { DefaultState, PreprintStateModel } from './preprint.model';
 
 @State<PreprintStateModel>({
@@ -84,5 +90,10 @@ export class PreprintState {
       }),
       catchError((error) => handleSectionError(ctx, 'fileVersions', error))
     );
+  }
+
+  @Action(ResetState)
+  resetState(ctx: StateContext<PreprintStateModel>) {
+    ctx.setState(patch({ ...DefaultState }));
   }
 }
