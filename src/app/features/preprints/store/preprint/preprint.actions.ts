@@ -15,3 +15,11 @@ export class FetchPreprintById {
 
   constructor(public id: string) {}
 }
+
+export class FetchPreprintFile {
+  static readonly type = '[Preprint] Fetch Preprint File';
+}
+
+export class FetchPreprintFileVersions {
+  static readonly type = '[Preprint] Fetch Preprint File Versions';
+}

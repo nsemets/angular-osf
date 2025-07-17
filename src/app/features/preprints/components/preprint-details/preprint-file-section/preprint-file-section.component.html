@@ -1,0 +1,44 @@
+<section class="flex flex-column gap-4 file-section-height" [class.medium]="isMedium()" [class.large]="isLarge()">
+  @if (safeLink()) {
+    <iframe
+      [src]="safeLink()"
+      (load)="isIframeLoading = false"
+      [hidden]="isIframeLoading"
+      title="Rendering of document"
+      allowfullscreen=""
+      width="100%"
+      class="flex-1"
+    ></iframe>
+  }
+  @if (isIframeLoading || isFileLoading()) {
+    <osf-loading-spinner />
+  }
+
+  <section class="flex flex-column gap-2">
+    @if (!areFileVersionsLoading()) {
+      @let fileVersionsValue = fileVersions();
+
+      <div class="flex flex-row align-items-center">
+        <p>{{ fileVersionsValue[0].name }}</p>
+        <p class="m-auto">Version: {{ fileVersionsValue[0].id }}</p>
+        <p-button severity="info" label="Download previous versions" (click)="versionsMenu.toggle($event)" />
+
+        <p-menu #versionsMenu [model]="versionMenuItems()" appendTo="body" popup />
+      </div>
+    } @else {
+      <p-skeleton width="100%" height="1rem" />
+    }
+
+    @if (!isFileLoading()) {
+      @let fileValue = file()!;
+
+      <div class="flex flex-row gap-1 justify-content-start">
+        <span>Submitted: {{ fileValue.dateCreated | date: 'longDate' }}</span>
+        <span>|</span>
+        <span>Last edited: {{ fileValue.dateModified | date: 'longDate' }}</span>
+      </div>
+    } @else {
+      <p-skeleton width="100%" height="1rem" />
+    }
+  </section>
+</section>

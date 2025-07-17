@@ -1,0 +1,11 @@
+.file-section-height {
+  min-height: 400px;
+
+  &.medium {
+    min-height: 700px;
+  }
+
+  &.large {
+    min-height: 1100px;
+  }
+}
