@@ -12,6 +12,7 @@ import { projectTableColumns } from '@osf/features/admin-institutions/constants'
 import { mapProjectToTableCellData } from '@osf/features/admin-institutions/mappers';
 import { FetchProjects } from '@osf/features/admin-institutions/store/institutions-admin.actions';
 import { InstitutionsAdminSelectors } from '@osf/features/admin-institutions/store/institutions-admin.selectors';
+import { LoadingSpinnerComponent } from '@osf/shared/components';
 import { TABLE_PARAMS } from '@shared/constants';
 import { SortOrder } from '@shared/enums';
 import { Institution, QueryParams } from '@shared/models';
@@ -23,7 +24,7 @@ import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'osf-institutions-projects',
-  imports: [AdminTableComponent, TranslatePipe],
+  imports: [AdminTableComponent, TranslatePipe, LoadingSpinnerComponent],
   templateUrl: './institutions-projects.component.html',
   styleUrl: './institutions-projects.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,7 +41,6 @@ export class InstitutionsProjectsComponent {
   reportsLink = 'https://drive.google.com/drive/folders/1_aFmeJwLp5xBS3-8clZ4xA9L3UFxdzDd';
 
   queryParams = toSignal(this.route.queryParams);
-  currentPage = signal(1);
   currentPageSize = signal(TABLE_PARAMS.rows);
   first = signal(0);
 
@@ -175,7 +175,6 @@ export class InstitutionsProjectsComponent {
 
   private updateComponentState(params: InstitutionProjectsQueryParamsModel): void {
     untracked(() => {
-      this.currentPage.set(params.page);
       this.currentPageSize.set(params.size);
       this.first.set((params.page - 1) * params.size);
 
