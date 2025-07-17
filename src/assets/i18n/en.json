@@ -1528,13 +1528,18 @@
         "title": "Change Password",
         "form": {
           "oldPassword": "Old password",
+          "oldPasswordPlaceholder": "Enter your current password",
           "newPassword": "New password",
+          "newPasswordPlaceholder": "Enter your new password",
           "confirmPassword": "Confirm password",
+          "confirmPasswordPlaceholder": "Confirm your new password",
           "passwordRequirements": "Your password needs to be at least 8 characters long, include both lower- and upper-case characters, and have at least one number or special character"
         },
         "validation": {
           "oldPasswordRequired": "Old password is required",
           "newPasswordRequired": "New password is required",
+          "newPasswordMinLength": "Password must be at least 8 characters long.",
+          "newPasswordPattern": "Password must include lowercase, uppercase, and at least one number or special character.",
           "confirmPasswordRequired": "Please confirm your password",
           "passwordsDoNotMatch": "Passwords do not match",
           "sameAsOldPassword": "New password must be different from old password"
@@ -1543,6 +1548,7 @@
           "update": "Update"
         },
         "messages": {
+          "success": "Password updated successfully.",
           "error": "Failed to update password. Please try again."
         }
       },
