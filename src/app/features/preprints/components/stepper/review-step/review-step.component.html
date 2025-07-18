@@ -234,11 +234,13 @@
     [label]="'common.buttons.cancel' | translate"
     severity="info"
     (click)="cancelSubmission()"
+    [disabled]="isPreprintSubmitting()"
   />
   <p-button
     class="w-6 md:w-9rem"
     styleClass="w-full"
     [label]="'common.buttons.submit' | translate"
     (click)="submitPreprint()"
+    [loading]="isPreprintSubmitting()"
   />
 </section>
