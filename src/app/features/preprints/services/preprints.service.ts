@@ -132,6 +132,14 @@ export class PreprintsService {
     return apiPayload;
   }
 
+  getPreprintVersionIds(preprintId: string): Observable<string[]> {
+    return this.jsonApiService
+      .get<
+        JsonApiResponseWithPaging<ApiData<PreprintAttributesJsonApi, null, null, null>[], null>
+      >(`${environment.apiUrl}/preprints/${preprintId}/versions/`)
+      .pipe(map((response) => response.data.map((data) => data.id)));
+  }
+
   getMyPreprints(pageNumber: number, pageSize: number, filters: SearchFilters) {
     const params: Record<string, unknown> = {
       'embed[]': ['bibliographic_contributors'],

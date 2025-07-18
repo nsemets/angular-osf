@@ -59,15 +59,12 @@ export class AdditionalInfoComponent {
   });
 
   skeletonData = Array.from({ length: 5 }, () => null);
-  initSubjectsFlag = true;
 
   constructor() {
     effect(() => {
-      if (!this.initSubjectsFlag) return;
       const preprint = this.preprint();
       if (!preprint) return;
 
-      this.initSubjectsFlag = false;
       this.actions.fetchSubjects(this.preprint()!.id, ResourceType.Preprint);
     });
   }

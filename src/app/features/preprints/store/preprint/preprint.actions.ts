@@ -24,6 +24,10 @@ export class FetchPreprintFileVersions {
   static readonly type = '[Preprint] Fetch Preprint File Versions';
 }
 
+export class FetchPreprintVersionIds {
+  static readonly type = '[Preprint] Fetch Preprint Version Ids';
+}
+
 export class ResetState {
   static readonly type = '[Preprint] Reset State';
 }

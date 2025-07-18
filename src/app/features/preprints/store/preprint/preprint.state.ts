@@ -15,6 +15,7 @@ import {
   FetchPreprintById,
   FetchPreprintFile,
   FetchPreprintFileVersions,
+  FetchPreprintVersionIds,
   ResetState,
 } from './preprint.actions';
 import { DefaultState, PreprintStateModel } from './preprint.model';
@@ -51,12 +52,19 @@ export class PreprintState {
 
   @Action(FetchPreprintById)
   fetchPreprintById(ctx: StateContext<PreprintStateModel>, action: FetchPreprintById) {
-    ctx.setState(patch({ preprint: patch({ isLoading: true }) }));
+    ctx.setState(
+      patch({
+        preprint: patch({ isLoading: true, data: null }),
+        preprintFile: patch({ isLoading: true, data: null }),
+        fileVersions: patch({ isLoading: true, data: [] }),
+      })
+    );
 
     return this.preprintsService.getByIdWithEmbeds(action.id).pipe(
       tap((preprint) => {
         ctx.setState(patch({ preprint: patch({ isLoading: false, data: preprint }) }));
         this.store.dispatch(new FetchPreprintFile());
+        this.store.dispatch(new FetchPreprintVersionIds());
       }),
       catchError((error) => handleSectionError(ctx, 'preprint', error))
     );
@@ -89,6 +97,21 @@ export class PreprintState {
         ctx.setState(patch({ fileVersions: patch({ isLoading: false, data: fileVersions }) }));
       }),
       catchError((error) => handleSectionError(ctx, 'fileVersions', error))
+    );
+  }
+
+  @Action(FetchPreprintVersionIds)
+  fetchPreprintVersionIds(ctx: StateContext<PreprintStateModel>) {
+    const preprintId = ctx.getState().preprint.data?.id;
+    if (!preprintId) return;
+
+    ctx.setState(patch({ preprintVersionIds: patch({ isLoading: true }) }));
+
+    return this.preprintsService.getPreprintVersionIds(preprintId).pipe(
+      tap((versionIds) => {
+        ctx.setState(patch({ preprintVersionIds: patch({ isLoading: false, data: versionIds }) }));
+      }),
+      catchError((error) => handleSectionError(ctx, 'preprintVersionIds', error))
     );
   }
 

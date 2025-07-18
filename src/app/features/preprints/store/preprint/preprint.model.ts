@@ -6,6 +6,7 @@ export interface PreprintStateModel {
   preprint: AsyncStateModel<Preprint | null>;
   preprintFile: AsyncStateModel<OsfFile | null>;
   fileVersions: AsyncStateModel<OsfFileVersion[]>;
+  preprintVersionIds: AsyncStateModel<string[]>;
 }
 
 export const DefaultState: PreprintStateModel = {
@@ -28,6 +29,11 @@ export const DefaultState: PreprintStateModel = {
     isSubmitting: false,
   },
   fileVersions: {
+    data: [],
+    isLoading: false,
+    error: null,
+  },
+  preprintVersionIds: {
     data: [],
     isLoading: false,
     error: null,

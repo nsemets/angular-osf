@@ -33,7 +33,7 @@ export class ContributorsState {
     const state = ctx.getState();
 
     ctx.patchState({
-      contributorsList: { ...state.contributorsList, isLoading: true, error: null },
+      contributorsList: { ...state.contributorsList, data: [], isLoading: true, error: null },
     });
 
     if (!action.resourceId || !action.resourceType) {

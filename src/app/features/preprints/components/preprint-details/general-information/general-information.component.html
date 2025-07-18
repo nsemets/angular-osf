@@ -22,7 +22,7 @@
       <section class="flex flex-column gap-2">
         <h3>{{ 'Authors' | translate }}</h3>
 
-        <div class="flex gap-1 line-height-2">
+        <div class="flex flex-column gap-1 line-height-2 md:flex-row">
           @for (contributor of bibliographicContributors(); track contributor.id) {
             <div>
               <a class="font-bold"> {{ contributor.fullName }}</a>
@@ -103,11 +103,19 @@
         }
       </section>
 
-      <!-- [RNi] TODO: Implement preprint versions switching -->
-      <section>
+      <section class="flex flex-column gap-2">
         <h3>Preprint DOI</h3>
 
-        <p-select />
+        <p-select
+          class="w-full"
+          appendTo="body"
+          optionLabel="label"
+          optionValue="value"
+          [ngModel]="preprintValue.id"
+          [options]="versionsDropdownOptions()"
+          [loading]="arePreprintVersionIdsLoading()"
+          (onChange)="selectPreprintVersion($event.value)"
+        />
       </section>
     </div>
   }
