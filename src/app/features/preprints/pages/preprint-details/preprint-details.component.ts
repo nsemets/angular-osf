@@ -1,7 +1,6 @@
 import { createDispatchMap, select, Store } from '@ngxs/store';
 
 import { Button } from 'primeng/button';
-import { Card } from 'primeng/card';
 import { Skeleton } from 'primeng/skeleton';
 
 import { map, of } from 'rxjs';
@@ -10,6 +9,8 @@ import { ChangeDetectionStrategy, Component, HostBinding, inject, OnDestroy, OnI
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { AdditionalInfoComponent } from '@osf/features/preprints/components/preprint-details/additional-info/additional-info.component';
+import { GeneralInformationComponent } from '@osf/features/preprints/components/preprint-details/general-information/general-information.component';
 import { PreprintFileSectionComponent } from '@osf/features/preprints/components/preprint-details/preprint-file-section/preprint-file-section.component';
 import { ShareAndDownloadComponent } from '@osf/features/preprints/components/preprint-details/share-and-downlaod/share-and-download.component';
 import { FetchPreprintById, PreprintSelectors, ResetState } from '@osf/features/preprints/store/preprint';
@@ -18,7 +19,14 @@ import { CreateNewVersion, PreprintStepperSelectors } from '@osf/features/prepri
 
 @Component({
   selector: 'osf-preprint-details',
-  imports: [Skeleton, PreprintFileSectionComponent, Card, Button, ShareAndDownloadComponent],
+  imports: [
+    Skeleton,
+    PreprintFileSectionComponent,
+    Button,
+    ShareAndDownloadComponent,
+    GeneralInformationComponent,
+    AdditionalInfoComponent,
+  ],
   templateUrl: './preprint-details.component.html',
   styleUrl: './preprint-details.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

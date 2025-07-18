@@ -7,6 +7,7 @@ import {
   PreprintRelationshipsJsonApi,
   PreprintShortInfoWithTotalCount,
 } from '@osf/features/preprints/models';
+import { LicensesMapper } from '@shared/mappers';
 
 export class PreprintsMapper {
   static toCreatePayload(title: string, abstract: string, providerId: string) {
@@ -69,7 +70,7 @@ export class PreprintsMapper {
 
   static fromPreprintWithEmbedsJsonApi(
     response: JsonApiResponseWithMeta<
-      ApiData<PreprintAttributesJsonApi, null, PreprintRelationshipsJsonApi, null>,
+      ApiData<PreprintAttributesJsonApi, PreprintEmbedsJsonApi, PreprintRelationshipsJsonApi, null>,
       PreprintMetaJsonApi,
       null
     >
@@ -112,6 +113,7 @@ export class PreprintsMapper {
         downloads: meta.metrics.downloads,
         views: meta.metrics.views,
       },
+      embeddedLicense: LicensesMapper.fromLicenseDataJsonApi(data.embeds.license.data),
     };
   }
 

@@ -71,11 +71,12 @@ export class PreprintsService {
     const params = {
       'metrics[views]': 'total',
       'metrics[downloads]': 'total',
+      'embed[]': 'license',
     };
     return this.jsonApiService
       .get<
         JsonApiResponseWithMeta<
-          ApiData<PreprintAttributesJsonApi, null, PreprintRelationshipsJsonApi, null>,
+          ApiData<PreprintAttributesJsonApi, PreprintEmbedsJsonApi, PreprintRelationshipsJsonApi, null>,
           PreprintMetaJsonApi,
           null
         >

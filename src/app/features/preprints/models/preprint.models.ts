@@ -1,6 +1,6 @@
 import { BooleanOrNull, StringOrNull } from '@core/helpers';
 import { ApplicabilityStatus, PreregLinkInfo } from '@osf/features/preprints/enums';
-import { IdName, LicenseOptions } from '@shared/models';
+import { IdName, License, LicenseOptions } from '@shared/models';
 
 export interface Preprint {
   id: string;
@@ -29,7 +29,8 @@ export interface Preprint {
   whyNoPrereg: StringOrNull;
   preregLinks: string[];
   preregLinkInfo: PreregLinkInfo | null;
-  metrics?: PreprintMetrics | null;
+  metrics?: PreprintMetrics;
+  embeddedLicense?: License;
 }
 
 export interface PreprintFilesLinks {

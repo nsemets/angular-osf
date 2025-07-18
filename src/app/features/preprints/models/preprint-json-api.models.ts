@@ -1,6 +1,6 @@
 import { BooleanOrNull, StringOrNull } from '@core/helpers';
 import { ApplicabilityStatus, PreregLinkInfo } from '@osf/features/preprints/enums';
-import { ContributorResponse, LicenseRecordJsonApi } from '@shared/models';
+import { ContributorResponse, LicenseRecordJsonApi, LicenseResponseJsonApi } from '@shared/models';
 
 export interface PreprintAttributesJsonApi {
   date_created: string;
@@ -65,6 +65,7 @@ export interface PreprintEmbedsJsonApi {
   bibliographic_contributors: {
     data: ContributorResponse[];
   };
+  license: LicenseResponseJsonApi;
 }
 
 export interface PreprintMetaJsonApi {
