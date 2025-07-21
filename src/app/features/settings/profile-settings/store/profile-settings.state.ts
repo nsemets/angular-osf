@@ -62,7 +62,7 @@ export class ProfileSettingsState {
       tap((response) => {
         ctx.patchState({
           ...state,
-          employment: response.data.attributes.employment,
+          employment: response.attributes.employment,
         });
       })
     );
@@ -86,7 +86,7 @@ export class ProfileSettingsState {
       tap((response) => {
         ctx.patchState({
           ...state,
-          education: response.data.attributes.education,
+          education: response.attributes.education,
         });
       })
     );
@@ -107,7 +107,7 @@ export class ProfileSettingsState {
       tap((response) => {
         ctx.patchState({
           ...state,
-          user: response.data.attributes,
+          user: response.attributes,
         });
       })
     );
@@ -138,7 +138,7 @@ export class ProfileSettingsState {
       tap((response) => {
         ctx.patchState({
           ...state,
-          social: response.data.attributes.social,
+          social: response.attributes.social,
         });
       })
     );

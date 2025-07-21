@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 
-import { JsonApiResponse, UserGetResponse } from '@osf/core/models';
+import { UserGetResponse } from '@osf/core/models';
 import { JsonApiService } from '@osf/core/services';
 
 import { ProfileSettingsStateModel, ProfileSettingsUpdate } from '../store';
@@ -16,7 +16,7 @@ export class ProfileSettingsApiService {
   patchUserSettings(userId: string, key: keyof ProfileSettingsStateModel, data: ProfileSettingsUpdate) {
     const patchedData = { [key]: data };
 
-    return this.jsonApiService.patch<JsonApiResponse<UserGetResponse, null>>(`${environment.apiUrl}/users/${userId}/`, {
+    return this.jsonApiService.patch<UserGetResponse>(`${environment.apiUrl}/users/${userId}/`, {
       data: { type: 'users', id: userId, attributes: patchedData },
     });
   }

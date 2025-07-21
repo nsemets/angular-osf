@@ -1415,14 +1415,17 @@
         "fullName": "Full Name",
         "autoFill": "Auto-Fill",
         "givenName": "Given Name",
-        "middleNames": "Middle Name(S) (Optional)",
+        "middleNames": "Middle Name(s) (Optional)",
         "familyName": "Family Name",
         "suffix": "Suffix (Optional)",
         "citationPreview": {
           "title": "Citation Preview",
           "style": "Style:",
-          "citationFormat": "Citation format:"
-        }
+          "citationFormat": "Citation format:",
+          "apa": "APA",
+          "mla": "MLA"
+        },
+        "successUpdate": "Settings successfully updated."
       },
       "social": {
         "title": "Social Link {{index}}",
