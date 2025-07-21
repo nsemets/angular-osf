@@ -134,6 +134,15 @@ export interface DraftRegistrationEmbedsJsonApi extends RegistrationEmbedsJsonAp
       attributes: {
         title: string;
       };
+      relationships?: {
+        files?: {
+          links: {
+            related: {
+              href: string;
+            };
+          };
+        };
+      };
     };
   };
 }

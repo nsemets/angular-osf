@@ -7,6 +7,7 @@ import { RegistriesState } from '@osf/features/registries/store';
 import { ContributorsState, SubjectsState } from '@osf/shared/stores';
 
 import { LicensesHandlers, ProjectsHandlers, ProvidersHandlers } from './store/handlers';
+import { FilesHandlers } from './store/handlers/files.handlers';
 import { LicensesService } from './services';
 
 export const registriesRoutes: Routes = [
@@ -18,6 +19,7 @@ export const registriesRoutes: Routes = [
       ProvidersHandlers,
       ProjectsHandlers,
       LicensesHandlers,
+      FilesHandlers,
       LicensesService,
     ],
     children: [

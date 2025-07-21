@@ -28,6 +28,7 @@ export class RegistrationMapper {
       branchedFrom: {
         id: response.embeds?.branched_from?.data.id,
         title: response.embeds?.branched_from?.data.attributes.title,
+        filesLink: response.embeds?.branched_from?.data.relationships?.files?.links?.related?.href,
       },
       providerId: response.relationships.provider?.data?.id || '',
       hasProject: !!response.attributes.has_project,
