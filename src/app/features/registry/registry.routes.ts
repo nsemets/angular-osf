@@ -28,6 +28,11 @@ export const registryRoutes: Routes = [
           import('./pages/registry-overview/registry-overview.component').then((c) => c.RegistryOverviewComponent),
       },
       {
+        path: 'metadata',
+        loadComponent: () =>
+          import('./pages/registry-metadata/registry-metadata.component').then((c) => c.RegistryMetadataComponent),
+      },
+      {
         path: 'contributors',
         loadComponent: () =>
           import('../project/contributors/contributors.component').then((mod) => mod.ContributorsComponent),
