@@ -3,6 +3,7 @@ import { provideStates } from '@ngxs/store';
 import { Routes } from '@angular/router';
 
 import { RegistryFilesState } from '@osf/features/registry/store/registry-files';
+import { RegistryMetadataState } from '@osf/features/registry/store/registry-metadata';
 import { RegistryOverviewState } from '@osf/features/registry/store/registry-overview';
 import { ResourceType } from '@osf/shared/enums';
 import { ContributorsState, ViewOnlyLinkState } from '@osf/shared/stores';
@@ -31,6 +32,7 @@ export const registryRoutes: Routes = [
         path: 'metadata',
         loadComponent: () =>
           import('./pages/registry-metadata/registry-metadata.component').then((c) => c.RegistryMetadataComponent),
+        providers: [provideStates([RegistryMetadataState])],
       },
       {
         path: 'contributors',

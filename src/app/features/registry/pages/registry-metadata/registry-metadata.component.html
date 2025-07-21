@@ -1,1 +1,49 @@
-<p>registry-metadata works!</p>
+<section class="flex flex-column flex-1">
+  <osf-sub-header
+    [showButton]="true"
+    [buttonLabel]="'project.metadata.addCommunityMetadataRecord.title' | translate"
+    (buttonClick)="openAddRecord()"
+    [title]="'project.overview.metadata.title' | translate"
+  />
+  @if (!tabs().length) {
+    <div class="flex-1">
+      <osf-loading-spinner />
+    </div>
+  }
+
+  @if (tabs().length) {
+    <p-tabs class="flex-1" [value]="selectedTab()" [lazy]="true" scrollable>
+      <p-tablist class="pr-5 pl-5">
+        @for (item of tabs(); track $index) {
+          <p-tab [value]="item.id">{{ item.label | translate }}</p-tab>
+        }
+      </p-tablist>
+
+      <p-tabpanels class="p-3 flex-1 md:p-5 xl:p-4">
+        @for (tab of tabs(); track $index) {
+          <p-tabpanel [value]="tab.id">
+            @if (tab.type === 'registry') {
+              <osf-shared-metadata
+                [selectedSubjects]="selectedSubjects()"
+                [isSubjectsUpdating]="isSubjectsUpdating()"
+                [currentInstance]="getCurrentInstanceForTemplate()"
+                [customItemMetadata]="getCustomMetadataForTemplate()"
+                (openEditContributorDialog)="openEditContributorDialog()"
+                (openEditDescriptionDialog)="openEditDescriptionDialog()"
+                (openEditResourceInformationDialog)="openEditResourceInformationDialog()"
+                (openEditFundingDialog)="openEditFundingDialog()"
+                (openEditAffiliatedInstitutionsDialog)="openEditAffiliatedInstitutionsDialog()"
+                (openEditLicenseDialog)="openEditLicenseDialog()"
+                (handleEditDoi)="handleEditDoi()"
+                (tagsChanged)="onTagsChanged($event)"
+                (getSubjectChildren)="getSubjectChildren($event)"
+                (searchSubjects)="searchSubjects($event)"
+                (updateSelectedSubjects)="updateSelectedSubjects($event)"
+              />
+            }
+          </p-tabpanel>
+        }
+      </p-tabpanels>
+    </p-tabs>
+  }
+</section>

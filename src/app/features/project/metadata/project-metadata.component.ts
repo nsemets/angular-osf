@@ -2,29 +2,17 @@ import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
-import { Card } from 'primeng/card';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
 
 import { EMPTY, filter, switchMap } from 'rxjs';
 
-import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { UserSelectors } from '@osf/core/store/user';
-import {
-  CedarTemplateFormComponent,
-  ProjectMetadataAffiliatedInstitutionsComponent,
-  ProjectMetadataContributorsComponent,
-  ProjectMetadataDescriptionComponent,
-  ProjectMetadataFundingComponent,
-  ProjectMetadataLicenseComponent,
-  ProjectMetadataPublicationDoiComponent,
-  ProjectMetadataResourceInformationComponent,
-  ProjectMetadataSubjectsComponent,
-} from '@osf/features/project/metadata/components';
+import { CedarTemplateFormComponent } from '@osf/features/project/metadata/components';
 import {
   AffiliatedInstitutionsDialogComponent,
   ContributorsDialogComponent,
@@ -62,7 +50,7 @@ import {
   SubjectsSelectors,
   UpdateResourceSubjects,
 } from '@osf/shared/stores';
-import { LoadingSpinnerComponent, SubHeaderComponent, TagsInputComponent } from '@shared/components';
+import { LoadingSpinnerComponent, SubHeaderComponent } from '@shared/components';
 import { SharedMetadataComponent } from '@shared/components/shared-metadata/shared-metadata.component';
 import { SubjectModel } from '@shared/models';
 import { CustomConfirmationService, LoaderService, ToastService } from '@shared/services';
@@ -71,16 +59,6 @@ import { CustomConfirmationService, LoaderService, ToastService } from '@shared/
   selector: 'osf-project-metadata',
   imports: [
     SubHeaderComponent,
-    Card,
-    DatePipe,
-    ProjectMetadataContributorsComponent,
-    ProjectMetadataDescriptionComponent,
-    ProjectMetadataResourceInformationComponent,
-    ProjectMetadataLicenseComponent,
-    ProjectMetadataPublicationDoiComponent,
-    ProjectMetadataSubjectsComponent,
-    ProjectMetadataFundingComponent,
-    ProjectMetadataAffiliatedInstitutionsComponent,
     CedarTemplateFormComponent,
     TranslatePipe,
     Tab,
@@ -89,7 +67,6 @@ import { CustomConfirmationService, LoaderService, ToastService } from '@shared/
     TabPanels,
     Tabs,
     LoadingSpinnerComponent,
-    TagsInputComponent,
     SharedMetadataComponent,
   ],
   templateUrl: './project-metadata.component.html',
