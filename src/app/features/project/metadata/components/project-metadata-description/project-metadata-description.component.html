@@ -9,8 +9,8 @@
     ></p-button>
   </div>
 
-  @if (currentProject()?.description) {
-    <p>{{ currentProject()?.description }}</p>
+  @if (description()) {
+    <p>{{ description() }}</p>
   } @else {
     <p class="text-color-secondary">{{ 'project.overview.metadata.noDescription' | translate }}</p>
   }

@@ -5,16 +5,17 @@ import { Card } from 'primeng/card';
 
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
-import { ProjectOverview } from '@osf/features/project/overview/models';
+import { ProjectIdentifiers } from '@osf/features/project/overview/models';
 
 @Component({
   selector: 'osf-project-metadata-publication-doi',
   imports: [Button, Card, TranslatePipe],
   templateUrl: './project-metadata-publication-doi.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class ProjectMetadataPublicationDoiComponent {
   openEditPublicationDoiDialog = output<void>();
 
-  currentProject = input.required<ProjectOverview | null>();
+  identifiers = input<ProjectIdentifiers[]>([]);
 }

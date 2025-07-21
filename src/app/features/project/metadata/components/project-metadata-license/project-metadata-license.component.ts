@@ -5,7 +5,7 @@ import { Card } from 'primeng/card';
 
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
-import { ProjectOverview } from '@osf/features/project/overview/models';
+import { License } from '@shared/models';
 
 @Component({
   selector: 'osf-project-metadata-license',
@@ -16,5 +16,5 @@ import { ProjectOverview } from '@osf/features/project/overview/models';
 export class ProjectMetadataLicenseComponent {
   openEditLicenseDialog = output<void>();
 
-  currentProject = input.required<ProjectOverview | null>();
+  license = input<License>({} as License);
 }

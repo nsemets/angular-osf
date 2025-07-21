@@ -53,8 +53,18 @@ import {
   UpdateProjectDetails,
 } from '@osf/features/project/metadata/store';
 import { ResourceType } from '@osf/shared/enums';
-import { ContributorsSelectors, GetAllContributors } from '@osf/shared/stores';
+import {
+  ContributorsSelectors,
+  FetchChildrenSubjects,
+  FetchSelectedSubjects,
+  FetchSubjects,
+  GetAllContributors,
+  SubjectsSelectors,
+  UpdateResourceSubjects,
+} from '@osf/shared/stores';
 import { LoadingSpinnerComponent, SubHeaderComponent, TagsInputComponent } from '@shared/components';
+import { SharedMetadataComponent } from '@shared/components/shared-metadata/shared-metadata.component';
+import { SubjectModel } from '@shared/models';
 import { CustomConfirmationService, LoaderService, ToastService } from '@shared/services';
 
 @Component({
@@ -80,11 +90,13 @@ import { CustomConfirmationService, LoaderService, ToastService } from '@shared/
     Tabs,
     LoadingSpinnerComponent,
     TagsInputComponent,
+    SharedMetadataComponent,
   ],
   templateUrl: './project-metadata.component.html',
   styleUrl: './project-metadata.component.scss',
   providers: [DialogService],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class ProjectMetadataComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
@@ -95,6 +107,8 @@ export class ProjectMetadataComponent implements OnInit {
   private readonly toastService = inject(ToastService);
   private readonly loaderService = inject(LoaderService);
   private readonly customConfirmationService = inject(CustomConfirmationService);
+
+  private projectId = '';
 
   tabs = signal<{ id: string; label: string; type: 'project' | 'cedar' }[]>([]);
   protected readonly selectedTab = signal('project');
@@ -115,6 +129,11 @@ export class ProjectMetadataComponent implements OnInit {
     getCedarTemplates: GetCedarMetadataTemplates,
     createCedarRecord: CreateCedarMetadataRecord,
     updateCedarRecord: UpdateCedarMetadataRecord,
+
+    fetchSubjects: FetchSubjects,
+    fetchSelectedSubjects: FetchSelectedSubjects,
+    fetchChildrenSubjects: FetchChildrenSubjects,
+    updateResourceSubjects: UpdateResourceSubjects,
   });
 
   protected currentProject = select(ProjectMetadataSelectors.getProject);
@@ -126,6 +145,8 @@ export class ProjectMetadataComponent implements OnInit {
   protected currentUser = select(UserSelectors.getCurrentUser);
   protected cedarRecords = select(ProjectMetadataSelectors.getCedarRecords);
   protected cedarTemplates = select(ProjectMetadataSelectors.getCedarTemplates);
+  protected selectedSubjects = select(SubjectsSelectors.getSelectedSubjects);
+  protected isSubjectsUpdating = select(SubjectsSelectors.areSelectedSubjectsLoading);
 
   constructor() {
     effect(() => {
@@ -135,11 +156,12 @@ export class ProjectMetadataComponent implements OnInit {
 
       const baseTabs = [{ id: 'project', label: project.title, type: 'project' as const }];
 
-      const cedarTabs = records.map((record) => ({
-        id: record.id || '',
-        label: record.embeds?.template?.data?.attributes?.schema_name || `Record ${record.id}`,
-        type: 'cedar' as const,
-      }));
+      const cedarTabs =
+        records?.map((record) => ({
+          id: record.id || '',
+          label: record.embeds?.template?.data?.attributes?.schema_name || `Record ${record.id}`,
+          type: 'cedar' as const,
+        })) || [];
 
       this.tabs.set([...baseTabs, ...cedarTabs]);
 
@@ -163,39 +185,20 @@ export class ProjectMetadataComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const projectId = this.route.parent?.parent?.snapshot.params['id'];
+    this.projectId = this.route.parent?.parent?.snapshot.params['id'];
 
-    if (projectId) {
-      this.actions.getProject(projectId);
-      this.actions.getCustomItemMetadata(projectId);
-      this.actions.getContributors(projectId, ResourceType.Project);
-      this.actions.getCedarRecords(projectId);
+    if (this.projectId) {
+      this.actions.getProject(this.projectId);
+      this.actions.getCustomItemMetadata(this.projectId);
+      this.actions.getContributors(this.projectId, ResourceType.Project);
+      this.actions.getCedarRecords(this.projectId);
       this.actions.getCedarTemplates();
+      this.actions.fetchSubjects(ResourceType.Project);
+      this.actions.fetchSelectedSubjects(this.projectId!, ResourceType.Project);
 
       const user = this.currentUser();
       if (user?.id) {
         this.actions.getUserInstitutions(user.id);
-      }
-    }
-  }
-
-  private handleRouteBasedTabSelection(): void {
-    const recordId = this.route.snapshot.paramMap.get('recordId');
-
-    if (!recordId) {
-      this.selectedTab.set('project');
-      this.selectedCedarRecord.set(null);
-      this.selectedCedarTemplate.set(null);
-      return;
-    }
-
-    const tab = this.tabs().find((tab) => tab.id === recordId);
-
-    if (tab) {
-      this.selectedTab.set('project');
-
-      if (tab.type === 'cedar') {
-        this.loadCedarRecord(tab.id);
       }
     }
   }
@@ -232,13 +235,6 @@ export class ProjectMetadataComponent implements OnInit {
         this.toastService.showSuccess('project.metadata.contributors.updateSucceed');
       },
     });
-  }
-
-  private refreshContributorsData(): void {
-    const projectId = this.route.parent?.parent?.snapshot.params['id'];
-    if (projectId) {
-      this.actions.getContributors(projectId, ResourceType.Project);
-    }
   }
 
   openEditDescriptionDialog(): void {
@@ -459,18 +455,20 @@ export class ProjectMetadataComponent implements OnInit {
   }
 
   onTabChange(tabId: string | number): void {
-    const tab = this.tabs().find((x) => x.id === tabId);
+    const tab = this.tabs().find((x) => x.id === tabId.toString());
 
     if (!tab) {
       return;
     }
+
+    this.selectedTab.set(tab.id);
 
     if (tab.type === 'cedar') {
       this.loadCedarRecord(tab.id);
 
       const currentRecordId = this.route.snapshot.paramMap.get('recordId');
       if (currentRecordId !== tab.id) {
-        this.router.navigate(['..', tab.id], { relativeTo: this.route });
+        this.router.navigate(['metadata', tab.id], { relativeTo: this.route.parent?.parent });
       }
     } else {
       this.selectedCedarRecord.set(null);
@@ -478,35 +476,8 @@ export class ProjectMetadataComponent implements OnInit {
 
       const currentRecordId = this.route.snapshot.paramMap.get('recordId');
       if (currentRecordId) {
-        this.router.navigate(['.'], { relativeTo: this.route });
+        this.router.navigate(['metadata'], { relativeTo: this.route.parent?.parent });
       }
-    }
-  }
-
-  private loadCedarRecord(recordId: string): void {
-    const records = this.cedarRecords();
-    const templates = this.cedarTemplates();
-
-    const record = records.find((r) => r.id === recordId);
-    if (!record) {
-      return;
-    }
-
-    this.selectedCedarRecord.set(record);
-    this.cedarFormReadonly.set(true);
-
-    const templateId = record.relationships?.template?.data?.id;
-    if (templateId && templates?.data) {
-      const template = templates.data.find((t) => t.id === templateId);
-      if (template) {
-        this.selectedCedarTemplate.set(template);
-      } else {
-        this.selectedCedarTemplate.set(null);
-        this.actions.getCedarTemplates();
-      }
-    } else {
-      this.selectedCedarTemplate.set(null);
-      this.actions.getCedarTemplates();
     }
   }
 
@@ -560,5 +531,75 @@ export class ProjectMetadataComponent implements OnInit {
 
   onCedarFormChangeTemplate(): void {
     this.router.navigate(['add'], { relativeTo: this.route });
+  }
+
+  getSubjectChildren(parentId: string) {
+    this.actions.fetchChildrenSubjects(parentId);
+  }
+
+  searchSubjects(search: string) {
+    this.actions.fetchSubjects(ResourceType.Project, this.projectId, search);
+  }
+
+  updateSelectedSubjects(subjects: SubjectModel[]) {
+    this.actions.updateResourceSubjects(this.projectId, ResourceType.Project, subjects);
+  }
+
+  private refreshContributorsData(): void {
+    if (this.projectId) {
+      this.actions.getContributors(this.projectId, ResourceType.Project);
+    }
+  }
+
+  private loadCedarRecord(recordId: string): void {
+    const records = this.cedarRecords();
+    const templates = this.cedarTemplates();
+
+    if (!records) {
+      return;
+    }
+
+    const record = records.find((r) => r.id === recordId);
+    if (!record) {
+      return;
+    }
+
+    this.selectedCedarRecord.set(record);
+    this.cedarFormReadonly.set(true);
+
+    const templateId = record.relationships?.template?.data?.id;
+    if (templateId && templates?.data) {
+      const template = templates.data.find((t) => t.id === templateId);
+      if (template) {
+        this.selectedCedarTemplate.set(template);
+      } else {
+        this.selectedCedarTemplate.set(null);
+        this.actions.getCedarTemplates();
+      }
+    } else {
+      this.selectedCedarTemplate.set(null);
+      this.actions.getCedarTemplates();
+    }
+  }
+
+  private handleRouteBasedTabSelection(): void {
+    const recordId = this.route.snapshot.paramMap.get('recordId');
+
+    if (!recordId) {
+      this.selectedTab.set('project');
+      this.selectedCedarRecord.set(null);
+      this.selectedCedarTemplate.set(null);
+      return;
+    }
+
+    const tab = this.tabs().find((tab) => tab.id === recordId);
+
+    if (tab) {
+      this.selectedTab.set(tab.id);
+
+      if (tab.type === 'cedar') {
+        this.loadCedarRecord(tab.id);
+      }
+    }
   }
 }

@@ -9,9 +9,9 @@
     ></p-button>
   </div>
 
-  @if (currentProject()?.identifiers?.length) {
+  @if (identifiers() && identifiers().length) {
     <div class="pt-4">
-      @for (identifier of currentProject()!.identifiers!; track identifier.id) {
+      @for (identifier of identifiers()!; track identifier.id) {
         @if (identifier.category === 'doi') {
           <p>{{ identifier.value }}</p>
         }

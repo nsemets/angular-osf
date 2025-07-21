@@ -1,3 +1,5 @@
+import { License } from '@shared/models';
+
 import {
   ComponentGetResponseJsoApi,
   ComponentOverview,
@@ -28,7 +30,7 @@ export class ProjectOverviewMapper {
             year: response.attributes.node_license.year,
           }
         : undefined,
-      license: response.embeds.license?.data?.attributes,
+      license: response.embeds.license?.data?.attributes as unknown as License,
       doi: response.attributes.doi,
       publicationDoi: response.attributes.publication_doi,
       analyticsKey: response.attributes.analytics_key,

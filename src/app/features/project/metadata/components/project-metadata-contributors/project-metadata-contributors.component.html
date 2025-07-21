@@ -9,9 +9,9 @@
     ></p-button>
   </div>
 
-  @if (currentProject()?.contributors) {
+  @if (contributors()) {
     <div class="inline-flex gap-1 line-height-2 pt-4">
-      @for (contributor of currentProject()?.contributors; track contributor.id) {
+      @for (contributor of contributors(); track contributor.id) {
         <div>
           <a class="font-bold"> {{ contributor.fullName }}</a>
           <span>{{ $last ? '' : ',' }}</span>

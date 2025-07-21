@@ -6,7 +6,7 @@ import { Card } from 'primeng/card';
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
-import { ProjectOverview } from '@osf/features/project/overview/models';
+import { ProjectSupplements } from '@osf/features/project/overview/models';
 
 @Component({
   selector: 'osf-project-metadata-funding',
@@ -17,5 +17,5 @@ import { ProjectOverview } from '@osf/features/project/overview/models';
 export class ProjectMetadataFundingComponent {
   openEditFundingDialog = output<void>();
 
-  currentProject = input.required<ProjectOverview | null>();
+  supplements = input<ProjectSupplements[]>([]);
 }

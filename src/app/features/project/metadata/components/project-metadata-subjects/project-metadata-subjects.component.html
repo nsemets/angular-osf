@@ -2,8 +2,8 @@
   <osf-subjects
     [areSubjectsUpdating]="isSubjectsUpdating()"
     [selected]="selectedSubjects()"
-    (loadChildren)="getSubjectChildren($event)"
-    (searchChanged)="searchSubjects($event)"
-    (updateSelection)="updateSelectedSubjects($event)"
+    (loadChildren)="getSubjectChildren.emit($event)"
+    (searchChanged)="searchSubjects.emit($event)"
+    (updateSelection)="updateSelectedSubjects.emit($event)"
   />
 </p-card>

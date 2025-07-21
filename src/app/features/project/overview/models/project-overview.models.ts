@@ -1,4 +1,5 @@
 import { JsonApiResponse } from '@osf/core/models';
+import { License } from '@shared/models';
 
 export interface ProjectOverviewContributor {
   familyName: string;
@@ -67,11 +68,7 @@ export interface ProjectOverview {
     copyrightHolders: string[];
     year: string;
   };
-  license?: {
-    name: string;
-    text: string;
-    url: string;
-  };
+  license?: License;
   doi?: string;
   publicationDoi?: string;
   storage?: {
@@ -80,19 +77,8 @@ export interface ProjectOverview {
     storageLimitStatus: string;
     storageUsage: string;
   };
-  identifiers?: {
-    id: string;
-    type: string;
-    category: string;
-    value: string;
-  }[];
-  supplements?: {
-    id: string;
-    type: string;
-    title: string;
-    dateCreated: string;
-    url: string;
-  }[];
+  identifiers?: ProjectIdentifiers[];
+  supplements?: ProjectSupplements[];
   analyticsKey: string;
   currentUserCanComment: boolean;
   currentUserPermissions: string[];
@@ -105,13 +91,7 @@ export interface ProjectOverview {
     id: string;
     type: string;
   };
-  affiliatedInstitutions?: {
-    id: string;
-    type: string;
-    name: string;
-    description: string;
-    logo: string;
-  }[];
+  affiliatedInstitutions?: ProjectAffiliatedInstitutions[];
   forksCount: number;
   viewOnlyLinksCount: number;
   links: {
@@ -275,4 +255,27 @@ export interface ProjectOverviewGetResponseJsoApi {
 
 export interface ProjectOverviewResponseJsonApi extends JsonApiResponse<ProjectOverviewGetResponseJsoApi, null> {
   data: ProjectOverviewGetResponseJsoApi;
+}
+
+export interface ProjectIdentifiers {
+  id: string;
+  type: string;
+  category: string;
+  value: string;
+}
+
+export interface ProjectAffiliatedInstitutions {
+  id: string;
+  type: string;
+  name: string;
+  description: string;
+  logo: string;
+}
+
+export interface ProjectSupplements {
+  id: string;
+  type: string;
+  title: string;
+  dateCreated: string;
+  url: string;
 }

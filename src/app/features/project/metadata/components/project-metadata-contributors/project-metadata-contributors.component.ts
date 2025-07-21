@@ -5,7 +5,7 @@ import { Card } from 'primeng/card';
 
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
-import { ProjectOverview } from '@osf/features/project/overview/models';
+import { ProjectOverviewContributor } from '@osf/features/project/overview/models';
 
 @Component({
   selector: 'osf-project-metadata-contributors',
@@ -16,5 +16,5 @@ import { ProjectOverview } from '@osf/features/project/overview/models';
 export class ProjectMetadataContributorsComponent {
   openEditContributorDialog = output<void>();
 
-  currentProject = input.required<ProjectOverview | null>();
+  contributors = input.required<ProjectOverviewContributor[] | null>();
 }

@@ -5,7 +5,7 @@ import { Card } from 'primeng/card';
 
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
-import { ProjectOverview } from '@osf/features/project/overview/models';
+import { ProjectAffiliatedInstitutions } from '@osf/features/project/overview/models';
 
 @Component({
   selector: 'osf-project-metadata-affiliated-institutions',
@@ -16,5 +16,5 @@ import { ProjectOverview } from '@osf/features/project/overview/models';
 export class ProjectMetadataAffiliatedInstitutionsComponent {
   openEditAffiliatedInstitutionsDialog = output<void>();
 
-  currentProject = input.required<ProjectOverview | null>();
+  affiliatedInstitutions = input<ProjectAffiliatedInstitutions[]>([]);
 }

@@ -9,9 +9,9 @@
     ></p-button>
   </div>
 
-  @if (currentProject()?.affiliatedInstitutions?.length) {
+  @if (affiliatedInstitutions()) {
     <div class="pt-4">
-      @for (institution of currentProject()!.affiliatedInstitutions!; track institution.id) {
+      @for (institution of affiliatedInstitutions(); track institution.id) {
         <div class="flex align-items-center gap-3 mb-3">
           @if (institution.logo) {
             <img [src]="institution.logo" [alt]="institution.name" class="w-3rem h-3rem border-round" />

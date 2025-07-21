@@ -9,9 +9,9 @@
     ></p-button>
   </div>
 
-  @if (currentProject()?.license) {
+  @if (license()) {
     <div class="pt-4">
-      <p class="m-0">{{ currentProject()?.license }}</p>
+      <p class="m-0">{{ license().name }}</p>
     </div>
   } @else {
     <div class="pt-4">
