@@ -1,3 +1,5 @@
+import { CedarMetadataRecord, CedarMetadataRecordData } from '@osf/features/project/metadata/models';
+
 import { CustomItemMetadataRecord, RegistryMetadata } from '../../models/registry-metadata.models';
 
 export class GetRegistryForMetadata {
@@ -56,4 +58,32 @@ export class GetRegistrySubjects {
     public page?: number,
     public pageSize?: number
   ) {}
+}
+
+export class GetCedarMetadataTemplates {
+  static readonly type = '[RegistryMetadata] Get Cedar Metadata Templates';
+  constructor(public url?: string) {}
+}
+
+export class GetRegistryCedarMetadataRecords {
+  static readonly type = '[RegistryMetadata] Get Registry Cedar Metadata Records';
+  constructor(public registryId: string) {}
+}
+
+export class CreateCedarMetadataRecord {
+  static readonly type = '[RegistryMetadata] Create Cedar Metadata Record';
+  constructor(public record: CedarMetadataRecord) {}
+}
+
+export class UpdateCedarMetadataRecord {
+  static readonly type = '[RegistryMetadata] Update Cedar Metadata Record';
+  constructor(
+    public record: CedarMetadataRecord,
+    public recordId: string
+  ) {}
+}
+
+export class AddCedarMetadataRecordToState {
+  static readonly type = '[RegistryMetadata] Add Cedar Metadata Record To State';
+  constructor(public record: CedarMetadataRecordData) {}
 }

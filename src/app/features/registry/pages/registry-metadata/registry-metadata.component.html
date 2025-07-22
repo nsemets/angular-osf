@@ -5,6 +5,7 @@
     (buttonClick)="openAddRecord()"
     [title]="'project.overview.metadata.title' | translate"
   />
+
   @if (!tabs().length) {
     <div class="flex-1">
       <osf-loading-spinner />
@@ -12,7 +13,7 @@
   }
 
   @if (tabs().length) {
-    <p-tabs class="flex-1" [value]="selectedTab()" [lazy]="true" scrollable>
+    <p-tabs class="flex-1" [value]="selectedTab()" [lazy]="true" scrollable (valueChange)="onTabChange($event)">
       <p-tablist class="pr-5 pl-5">
         @for (item of tabs(); track $index) {
           <p-tab [value]="item.id">{{ item.label | translate }}</p-tab>
@@ -40,6 +41,25 @@
                 (searchSubjects)="searchSubjects($event)"
                 (updateSelectedSubjects)="updateSelectedSubjects($event)"
               />
+            } @else {
+              <div class="p-6">
+                @if (selectedCedarTemplate() && selectedCedarRecord()) {
+                  <osf-cedar-template-form
+                    [template]="selectedCedarTemplate()!"
+                    [existingRecord]="selectedCedarRecord()!"
+                    [readonly]="cedarFormReadonly()"
+                    [showEditButton]="true"
+                    (emitData)="onCedarFormSubmit($event)"
+                    (changeTemplate)="onCedarFormChangeTemplate()"
+                    (editMode)="onCedarFormEdit()"
+                  />
+                } @else {
+                  <div class="text-center py-8">
+                    <p class="text-lg mb-4">{{ 'project.metadata.addMetadata.loadingCedar' | translate }}</p>
+                    <p class="text-sm text-gray-600">{{ tab.label }}</p>
+                  </div>
+                }
+              </div>
             }
           </p-tabpanel>
         }

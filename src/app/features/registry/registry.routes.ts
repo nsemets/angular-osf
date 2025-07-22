@@ -35,6 +35,20 @@ export const registryRoutes: Routes = [
         providers: [provideStates([RegistryMetadataState])],
       },
       {
+        path: 'metadata/add',
+        loadComponent: () =>
+          import('./pages/registry-metadata-add/registry-metadata-add.component').then(
+            (c) => c.RegistryMetadataAddComponent
+          ),
+        providers: [provideStates([RegistryMetadataState])],
+      },
+      {
+        path: 'metadata/:recordId',
+        loadComponent: () =>
+          import('./pages/registry-metadata/registry-metadata.component').then((c) => c.RegistryMetadataComponent),
+        providers: [provideStates([RegistryMetadataState])],
+      },
+      {
         path: 'contributors',
         loadComponent: () =>
           import('../project/contributors/contributors.component').then((mod) => mod.ContributorsComponent),

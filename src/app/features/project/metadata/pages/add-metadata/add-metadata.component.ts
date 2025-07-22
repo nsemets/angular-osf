@@ -57,10 +57,6 @@ export class AddMetadataComponent implements OnInit {
     updateCedarMetadataRecord: UpdateCedarMetadataRecord,
   });
 
-  get isEditingExistingRecord(): boolean {
-    return !!this.activatedRoute.snapshot.params['record-id'];
-  }
-
   constructor() {
     effect(() => {
       const records = this.cedarRecords();

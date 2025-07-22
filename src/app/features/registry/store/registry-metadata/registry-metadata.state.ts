@@ -4,16 +4,23 @@ import { finalize, tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
+import { CedarMetadataRecord, CedarMetadataRecordJsonApi } from '@osf/features/project/metadata/models';
+
 import { RegistryMetadataMapper } from '../../mappers';
 import { RegistryMetadataService } from '../../services/registry-metadata.service';
 
 import {
+  AddCedarMetadataRecordToState,
+  CreateCedarMetadataRecord,
   GetBibliographicContributors,
+  GetCedarMetadataTemplates,
   GetCustomItemMetadata,
   GetFundersList,
+  GetRegistryCedarMetadataRecords,
   GetRegistryForMetadata,
   GetRegistrySubjects,
   GetUserInstitutions,
+  UpdateCedarMetadataRecord,
   UpdateCustomItemMetadata,
   UpdateRegistryDetails,
 } from './registry-metadata.actions';
@@ -26,6 +33,9 @@ const initialState: RegistryMetadataStateModel = {
   fundersList: { data: [], isLoading: false, error: null },
   userInstitutions: { data: [], isLoading: false, error: null },
   subjects: { data: [], isLoading: false, error: null },
+  cedarTemplates: { data: null, isLoading: false, error: null },
+  cedarRecord: { data: null, isLoading: false, error: null },
+  cedarRecords: { data: [], isLoading: false, error: null },
 };
 
 @State<RegistryMetadataStateModel>({
@@ -342,5 +352,115 @@ export class RegistryMetadataState {
         })
       )
     );
+  }
+
+  @Action(GetCedarMetadataTemplates)
+  getCedarMetadataTemplates(ctx: StateContext<RegistryMetadataStateModel>, action: GetCedarMetadataTemplates) {
+    ctx.patchState({
+      cedarTemplates: {
+        data: null,
+        isLoading: true,
+        error: null,
+      },
+    });
+
+    return this.registryMetadataService.getCedarMetadataTemplates(action.url).pipe(
+      tap({
+        next: (response) => {
+          ctx.patchState({
+            cedarTemplates: {
+              data: response,
+              error: null,
+              isLoading: false,
+            },
+          });
+        },
+        error: (error) => {
+          ctx.patchState({
+            cedarTemplates: {
+              ...ctx.getState().cedarTemplates,
+              error: error.message,
+              isLoading: false,
+            },
+          });
+        },
+      }),
+      finalize(() =>
+        ctx.patchState({
+          cedarTemplates: {
+            ...ctx.getState().cedarTemplates,
+            isLoading: false,
+          },
+        })
+      )
+    );
+  }
+
+  @Action(GetRegistryCedarMetadataRecords)
+  getRegistryCedarMetadataRecords(
+    ctx: StateContext<RegistryMetadataStateModel>,
+    action: GetRegistryCedarMetadataRecords
+  ) {
+    ctx.patchState({
+      cedarRecords: {
+        data: [],
+        isLoading: true,
+        error: null,
+      },
+    });
+    return this.registryMetadataService.getRegistryCedarMetadataRecords(action.registryId).pipe(
+      tap((response: CedarMetadataRecordJsonApi) => {
+        ctx.patchState({
+          cedarRecords: {
+            data: response.data,
+            error: null,
+            isLoading: false,
+          },
+        });
+      })
+    );
+  }
+
+  @Action(CreateCedarMetadataRecord)
+  createCedarMetadataRecord(ctx: StateContext<RegistryMetadataStateModel>, action: CreateCedarMetadataRecord) {
+    return this.registryMetadataService.createCedarMetadataRecord(action.record).pipe(
+      tap((response: CedarMetadataRecord) => {
+        ctx.dispatch(new AddCedarMetadataRecordToState(response.data));
+      })
+    );
+  }
+
+  @Action(UpdateCedarMetadataRecord)
+  updateCedarMetadataRecord(ctx: StateContext<RegistryMetadataStateModel>, action: UpdateCedarMetadataRecord) {
+    return this.registryMetadataService.updateCedarMetadataRecord(action.record, action.recordId).pipe(
+      tap((response: CedarMetadataRecord) => {
+        const state = ctx.getState();
+        const updatedRecords = state.cedarRecords.data.map((record) =>
+          record.id === action.recordId ? response.data : record
+        );
+        ctx.patchState({
+          cedarRecords: {
+            data: updatedRecords,
+            isLoading: false,
+            error: null,
+          },
+        });
+      })
+    );
+  }
+
+  @Action(AddCedarMetadataRecordToState)
+  addCedarMetadataRecordToState(ctx: StateContext<RegistryMetadataStateModel>, action: AddCedarMetadataRecordToState) {
+    const state = ctx.getState();
+    const updatedCedarRecords = [...state.cedarRecords.data, action.record];
+
+    ctx.setState({
+      ...state,
+      cedarRecords: {
+        data: updatedCedarRecords,
+        error: null,
+        isLoading: false,
+      },
+    });
   }
 }

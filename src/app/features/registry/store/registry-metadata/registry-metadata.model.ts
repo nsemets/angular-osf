@@ -1,3 +1,8 @@
+import {
+  CedarMetadataRecord,
+  CedarMetadataRecordData,
+  CedarMetadataTemplateJsonApi,
+} from '@osf/features/project/metadata/models';
 import { AsyncStateModel } from '@shared/models';
 
 import { RegistryOverview } from '../../models';
@@ -16,4 +21,7 @@ export interface RegistryMetadataStateModel {
   fundersList: AsyncStateModel<CrossRefFunder[]>;
   userInstitutions: AsyncStateModel<UserInstitution[]>;
   subjects: AsyncStateModel<RegistrySubjectData[]>;
+  cedarTemplates: AsyncStateModel<CedarMetadataTemplateJsonApi | null>;
+  cedarRecord: AsyncStateModel<CedarMetadataRecord | null>;
+  cedarRecords: AsyncStateModel<CedarMetadataRecordData[]>;
 }

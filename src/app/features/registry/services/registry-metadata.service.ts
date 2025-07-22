@@ -4,6 +4,11 @@ import { map } from 'rxjs/operators';
 import { inject, Injectable } from '@angular/core';
 
 import { JsonApiService } from '@osf/core/services';
+import {
+  CedarMetadataRecord,
+  CedarMetadataRecordJsonApi,
+  CedarMetadataTemplateJsonApi,
+} from '@osf/features/project/metadata/models';
 
 import { RegistryMetadataMapper } from '../mappers';
 import {
@@ -113,6 +118,35 @@ export class RegistryMetadataService {
     return this.jsonApiService.get<RegistrySubjectsJsonApi>(
       `${this.apiUrl}/registrations/${registryId}/subjects/`,
       params
+    );
+  }
+
+  getRegistryCedarMetadataRecords(registryId: string): Observable<CedarMetadataRecordJsonApi> {
+    const params: Record<string, unknown> = {
+      embed: 'template',
+      'page[size]': 20,
+    };
+
+    return this.jsonApiService.get<CedarMetadataRecordJsonApi>(
+      `${this.apiUrl}/registrations/${registryId}/cedar_metadata_records/`,
+      params
+    );
+  }
+
+  getCedarMetadataTemplates(url?: string): Observable<CedarMetadataTemplateJsonApi> {
+    return this.jsonApiService.get<CedarMetadataTemplateJsonApi>(
+      url || `${environment.apiDomainUrl}/_/cedar_metadata_templates/?adapterOptions[sort]=schema_name`
+    );
+  }
+
+  createCedarMetadataRecord(data: CedarMetadataRecord): Observable<CedarMetadataRecord> {
+    return this.jsonApiService.post<CedarMetadataRecord>(`${environment.apiDomainUrl}/_/cedar_metadata_records/`, data);
+  }
+
+  updateCedarMetadataRecord(data: CedarMetadataRecord, recordId: string): Observable<CedarMetadataRecord> {
+    return this.jsonApiService.patch<CedarMetadataRecord>(
+      `${environment.apiDomainUrl}/_/cedar_metadata_records/${recordId}/`,
+      data
     );
   }
 }

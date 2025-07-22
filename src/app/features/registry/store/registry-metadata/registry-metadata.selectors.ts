@@ -65,6 +65,36 @@ export class RegistryMetadataSelectors {
   }
 
   @Selector([RegistryMetadataState])
+  static getCedarTemplates(state: RegistryMetadataStateModel) {
+    return state.cedarTemplates.data;
+  }
+
+  @Selector([RegistryMetadataState])
+  static getCedarTemplatesLoading(state: RegistryMetadataStateModel) {
+    return state.cedarTemplates.isLoading;
+  }
+
+  @Selector([RegistryMetadataState])
+  static getCedarRecord(state: RegistryMetadataStateModel) {
+    return state.cedarRecord.data;
+  }
+
+  @Selector([RegistryMetadataState])
+  static getCedarRecordLoading(state: RegistryMetadataStateModel) {
+    return state.cedarRecord.isLoading;
+  }
+
+  @Selector([RegistryMetadataState])
+  static getCedarRecords(state: RegistryMetadataStateModel) {
+    return state.cedarRecords.data;
+  }
+
+  @Selector([RegistryMetadataState])
+  static getCedarRecordsLoading(state: RegistryMetadataStateModel) {
+    return state.cedarRecords.isLoading;
+  }
+
+  @Selector([RegistryMetadataState])
   static getError(state: RegistryMetadataStateModel) {
     return state.registry.error;
   }
