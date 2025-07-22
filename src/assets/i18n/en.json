@@ -2063,6 +2063,10 @@
     },
     "tags": {
       "title": "Tags"
+    },
+    "files": {
+      "limitText": "You may attach up to 5 file(s) to this question. Files cannot total over 5GB in size.",
+      "description": "Uploaded files will automatically be archived in this registration. They will also be added to a related project that will be created for this registration."
     }
   },
   "resourceCard": {

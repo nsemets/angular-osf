@@ -126,6 +126,7 @@ export class PageSchemaMapper {
         case BlockType.FileInput:
           if (currentQuestion) {
             currentQuestion.fieldType = FieldType.File;
+            currentQuestion.required = item.attributes.required;
             currentQuestion.responseKey = item.attributes.registration_response_key || undefined;
           }
           break;

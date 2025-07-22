@@ -7,7 +7,7 @@ import { Button } from 'primeng/button';
 import { Dialog } from 'primeng/dialog';
 import { DialogService } from 'primeng/dynamicdialog';
 
-import { EMPTY, filter, finalize, Observable, take } from 'rxjs';
+import { EMPTY, filter, finalize, Observable, shareReplay, take } from 'rxjs';
 
 import { HttpEventType } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, output, signal } from '@angular/core';
@@ -87,9 +87,12 @@ export class FilesControlComponent {
     effect(() => {
       const filesLink = this.draftRegistration()?.branchedFrom?.filesLink;
       if (filesLink) {
-        this.actions.getRootFolders(filesLink).subscribe(() => {
-          this.dataLoaded.set(true);
-        });
+        this.actions
+          .getRootFolders(filesLink)
+          .pipe(shareReplay(), takeUntilDestroyed(this.destroyRef))
+          .subscribe(() => {
+            this.dataLoaded.set(true);
+          });
       }
     });
   }
@@ -104,7 +107,6 @@ export class FilesControlComponent {
 
   createFolder(): void {
     const currentFolder = this.currentFolder();
-    console.log('Current folder:', currentFolder);
     const newFolderLink = currentFolder?.links.newFolder;
 
     if (!newFolderLink) return;
@@ -178,15 +180,10 @@ export class FilesControlComponent {
   }
 
   selectFile(file: OsfFile): void {
-    console.log('File selected:', file);
     this.attachFile.emit(file);
   }
 
   folderIsOpening(value: boolean): void {
     this.isFolderOpening.set(value);
-    // if (value) {
-    //   this.fileName.set('');
-    //   this.progress.set(0);
-    // }
   }
 }

@@ -36,7 +36,6 @@ export class FilesHandlers {
 
   getProjectFiles(ctx: StateContext<RegistriesStateModel>, { filesLink }: GetFiles) {
     const state = ctx.getState();
-    console.log('Fetching project files from:', filesLink);
     ctx.patchState({
       files: {
         ...state.files,

@@ -75,6 +75,11 @@ export interface DraftRegistrationRelationshipsJsonApi {
       id: string;
       type: 'nodes';
     };
+    links?: {
+      related: {
+        href: string;
+      };
+    };
   };
 }
 

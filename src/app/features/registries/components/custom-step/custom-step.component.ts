@@ -20,10 +20,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { InfoIconComponent } from '@osf/shared/components';
 import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants';
-import { OsfFile } from '@osf/shared/models';
+import { FilePayloadJsonApi, OsfFile } from '@osf/shared/models';
 import { CustomValidators, findChangedFields } from '@osf/shared/utils';
 
 import { FieldType } from '../../enums';
+import { FilesMapper } from '../../mappers/files.mapper';
 import { PageSchema } from '../../models';
 import { RegistriesSelectors, UpdateDraft, UpdateStepValidation } from '../../store';
 import { FilesControlComponent } from '../files-control/files-control.component';
@@ -123,6 +124,14 @@ export class CustomStepComponent implements OnDestroy {
           });
           break;
 
+        case FieldType.File:
+          control = this.fb.control(this.stepsData()[controlName] || [], {
+            validators: q.required ? [Validators.required] : [],
+          });
+          this.attachedFiles[controlName] =
+            this.stepsData()[controlName]?.map((file: FilePayloadJsonApi) => ({ ...file, name: file.file_name })) || [];
+          break;
+
         default:
           console.warn(`Unsupported field type: ${q.fieldType}`);
           return;
@@ -158,8 +167,13 @@ export class CustomStepComponent implements OnDestroy {
     this.attachedFiles[questionKey] = this.attachedFiles[questionKey] || [];
     if (!this.attachedFiles[questionKey].some((f) => f.id === file.id)) {
       this.attachedFiles[questionKey].push(file);
+      this.stepForm.patchValue({
+        [questionKey]: [...(this.attachedFiles[questionKey] || []), file],
+      });
       this.actions.updateDraft(this.route.snapshot.params['id'], {
-        registration_responses: { attachedFiles: this.attachedFiles },
+        registration_responses: {
+          [questionKey]: [...this.attachedFiles[questionKey].map((f) => FilesMapper.toFilePayload(f as OsfFile))],
+        },
       });
     }
   }
@@ -167,8 +181,13 @@ export class CustomStepComponent implements OnDestroy {
   removeFromAttachedFiles(file: Partial<OsfFile>, questionKey: string): void {
     if (this.attachedFiles[questionKey]) {
       this.attachedFiles[questionKey] = this.attachedFiles[questionKey].filter((f) => f.id !== file.id);
+      this.stepForm.patchValue({
+        [questionKey]: this.attachedFiles[questionKey],
+      });
       this.actions.updateDraft(this.route.snapshot.params['id'], {
-        registration_responses: { attachedFiles: this.attachedFiles },
+        registration_responses: {
+          [questionKey]: [...this.attachedFiles[questionKey].map((f) => FilesMapper.toFilePayload(f as OsfFile))],
+        },
       });
     }
   }
