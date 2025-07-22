@@ -75,6 +75,11 @@ export interface DraftRegistrationRelationshipsJsonApi {
       id: string;
       type: 'nodes';
     };
+    links?: {
+      related: {
+        href: string;
+      };
+    };
   };
 }
 
@@ -133,6 +138,15 @@ export interface DraftRegistrationEmbedsJsonApi extends RegistrationEmbedsJsonAp
       type: 'nodes';
       attributes: {
         title: string;
+      };
+      relationships?: {
+        files?: {
+          links: {
+            related: {
+              href: string;
+            };
+          };
+        };
       };
     };
   };

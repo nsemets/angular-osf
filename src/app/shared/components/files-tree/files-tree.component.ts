@@ -26,11 +26,11 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { MoveFileDialogComponent, RenameFileDialogComponent } from '@osf/features/project/files/components';
-import { embedDynamicJs, embedStaticHtml, FilesTreeActions } from '@osf/features/project/files/models';
+import { embedDynamicJs, embedStaticHtml } from '@osf/features/project/files/models';
 import { FileMenuType } from '@osf/shared/enums';
 import { FileMenuComponent, LoadingSpinnerComponent } from '@shared/components';
 import { StopPropagationDirective } from '@shared/directives';
-import { FileMenuAction, OsfFile } from '@shared/models';
+import { FileMenuAction, FilesTreeActions, OsfFile } from '@shared/models';
 import { FileSizePipe } from '@shared/pipes';
 import { CustomConfirmationService, FilesService, ToastService } from '@shared/services';
 
