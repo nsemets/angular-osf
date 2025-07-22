@@ -11,7 +11,7 @@
               {{ 'settings.profileSettings.social.title' | translate: { index: index + 1 } }}
             </h2>
             @if (index !== 0) {
-              <div class="ml-auto remove-button">
+              <div class="ml-auto">
                 <p-button
                   class="ml-auto"
                   [label]="'settings.profileSettings.social.remove' | translate"
@@ -41,7 +41,7 @@
               </p>
 
               <p-inputgroup class="addon-input flex-wrap">
-                <p-inputgroup-addon class="border-1 surface-border md:border-0">
+                <p-inputgroup-addon class="border-1 grey-border-color md:border-0">
                   {{ getDomain(index) }}
                 </p-inputgroup-addon>
                 <input pInputText [placeholder]="getPlaceholder(index)" formControlName="webAddress" />

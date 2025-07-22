@@ -33,4 +33,14 @@ export class UserService {
       .patch<UserSettingsGetResponse>(`${environment.apiUrl}/users/${userId}/settings/`, request)
       .pipe(map((response) => UserMapper.fromUserSettingsGetResponse(response)));
   }
+
+  updateUserProfile(userId: string, key: string, data: unknown): Observable<User> {
+    const patchedData = { [key]: data };
+
+    return this.jsonApiService
+      .patch<UserGetResponse>(`${environment.apiUrl}/users/${userId}/`, {
+        data: { type: 'users', id: userId, attributes: patchedData },
+      })
+      .pipe(map((response) => UserMapper.fromUserGetResponse(response)));
+  }
 }

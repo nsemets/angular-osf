@@ -1411,7 +1411,7 @@
         "education": "Education"
       },
       "name": {
-        "description": "Your full name is the name that will be displayed in your profile. To control the way your name will appear in citations, you can use the \"Auto-fill\" button to automatically infer your first name, last name, etc., or edit the fields directly below.",
+        "description": "Your full name is the name that will be displayed in your profile. To control the way your name will appear in citations, you can edit the fields directly below.",
         "fullName": "Full Name",
         "autoFill": "Auto-Fill",
         "givenName": "Given Name",
@@ -1432,7 +1432,8 @@
         "remove": "Remove",
         "socialOutput": "Social output",
         "webAddress": "Web Address",
-        "addMore": "Add One More"
+        "addMore": "Add One More",
+        "successUpdate": "Social successfully updated."
       },
       "employment": {
         "title": "Position {{index}}",
@@ -1443,7 +1444,8 @@
         "startDate": "Start Date",
         "endDate": "End Date",
         "presentlyEmployed": "Presently employed",
-        "addPosition": "Add Position"
+        "addPosition": "Add Position",
+        "successUpdate": "Employment successfully updated."
       },
       "education": {
         "title": "Education {{index}}",
@@ -1454,7 +1456,8 @@
         "startDate": "Start Date",
         "endDate": "End Date",
         "ongoing": "Ongoing",
-        "addMore": "Add One More"
+        "addMore": "Add One More",
+        "successUpdate": "Education successfully updated."
       },
       "common": {
         "discardChanges": "Discard Changes",

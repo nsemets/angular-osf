@@ -9,11 +9,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder } from '@angular/forms';
 
 import { User } from '@osf/core/models';
+import { UpdateProfileSettingsUser, UserSelectors } from '@osf/core/store/user';
 import { LoaderService, ToastService } from '@osf/shared/services';
 import { CustomValidators } from '@osf/shared/utils';
 
 import { NameForm } from '../../models';
-import { ProfileSettingsSelectors, UpdateProfileSettingsUser } from '../../store';
 import { CitationPreviewComponent } from '../citation-preview/citation-preview.component';
 import { NameFormComponent } from '../name-form/name-form.component';
 
@@ -32,7 +32,7 @@ export class NameComponent {
   private readonly destroyRef = inject(DestroyRef);
 
   readonly actions = createDispatchMap({ updateProfileSettingsUser: UpdateProfileSettingsUser });
-  readonly currentUser = select(ProfileSettingsSelectors.user);
+  readonly currentUser = select(UserSelectors.getUserNames);
   readonly previewUser = signal<Partial<User>>({});
 
   readonly fb = inject(FormBuilder);
@@ -47,8 +47,12 @@ export class NameComponent {
   constructor() {
     effect(() => {
       const user = this.currentUser();
+
+      if (!user) {
+        return;
+      }
+
       this.updateForm(user);
-      this.updatePreviewUser();
     });
 
     this.form.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
@@ -82,6 +86,11 @@ export class NameComponent {
 
   discardChanges() {
     const user = this.currentUser();
+
+    if (!user) {
+      return;
+    }
+
     this.updateForm(user);
   }
 

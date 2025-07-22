@@ -11,11 +11,12 @@ import { SelectModule } from 'primeng/select';
 import { ChangeDetectionStrategy, Component, effect, HostBinding, inject } from '@angular/core';
 import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
+import { UpdateProfileSettingsSocialLinks, UserSelectors } from '@osf/core/store/user';
 import { Social } from '@osf/shared/models';
+import { LoaderService, ToastService } from '@osf/shared/services';
 
 import { socials } from '../../constants/data';
 import { SOCIAL_KEYS, SocialLinksForm, SocialLinksKeys, UserSocialLink } from '../../models';
-import { ProfileSettingsSelectors, UpdateProfileSettingsSocialLinks } from '../../store';
 
 @Component({
   selector: 'osf-social',
@@ -30,8 +31,11 @@ export class SocialComponent {
   protected readonly socials = socials;
   readonly userSocialLinks: UserSocialLink[] = [];
 
+  private readonly loaderService = inject(LoaderService);
+  private readonly toastService = inject(ToastService);
+
   readonly actions = createDispatchMap({ updateProfileSettingsSocialLinks: UpdateProfileSettingsSocialLinks });
-  readonly socialLinks = select(ProfileSettingsSelectors.socialLinks);
+  readonly socialLinks = select(UserSelectors.getSocialLinks);
 
   readonly fb = inject(FormBuilder);
   readonly socialLinksForm = this.fb.group({ links: this.fb.array<SocialLinksForm>([]) });
@@ -91,6 +95,11 @@ export class SocialComponent {
       };
     }) satisfies Partial<Social>[];
 
-    this.actions.updateProfileSettingsSocialLinks({ socialLinks: mappedLinks });
+    this.loaderService.show();
+
+    this.actions.updateProfileSettingsSocialLinks({ socialLinks: mappedLinks }).subscribe(() => {
+      this.loaderService.hide();
+      this.toastService.showSuccess('settings.profileSettings.social.successUpdate');
+    });
   }
 }

@@ -5,28 +5,28 @@ import { tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { SetupProfileSettings } from '@osf/features/settings/profile-settings/store/profile-settings.actions';
+import { mapNameToDto } from '@osf/features/settings/profile-settings/models';
+import { removeNullable } from '@osf/shared/constants';
+import { Social } from '@osf/shared/models';
 
 import { UserService } from '../../services';
 
-import { GetCurrentUser, GetCurrentUserSettings, SetCurrentUser, UpdateUserSettings } from './user.actions';
-import { UserStateModel } from './user.model';
+import {
+  GetCurrentUser,
+  GetCurrentUserSettings,
+  SetCurrentUser,
+  UpdateProfileSettingsEducation,
+  UpdateProfileSettingsEmployment,
+  UpdateProfileSettingsSocialLinks,
+  UpdateProfileSettingsUser,
+  UpdateUserProfile,
+  UpdateUserSettings,
+} from './user.actions';
+import { USER_STATE_INITIAL, UserStateModel } from './user.model';
 
 @State<UserStateModel>({
   name: 'user',
-  defaults: {
-    currentUser: {
-      data: null,
-      isLoading: false,
-      error: null,
-    },
-    currentUserSettings: {
-      data: null,
-      isLoading: false,
-      isSubmitting: false,
-      error: '',
-    },
-  },
+  defaults: USER_STATE_INITIAL,
 })
 @Injectable()
 export class UserState {
@@ -50,7 +50,6 @@ export class UserState {
             error: null,
           },
         });
-        ctx.dispatch(new SetupProfileSettings());
       })
     );
   }
@@ -98,6 +97,128 @@ export class UserState {
             }),
           })
         );
+      })
+    );
+  }
+
+  @Action(UpdateUserProfile)
+  updateUserProfile(ctx: StateContext<UserStateModel>, { payload }: UpdateUserProfile) {
+    const state = ctx.getState();
+    const userId = state.currentUser.data?.id;
+
+    if (!userId) {
+      return;
+    }
+
+    // const withoutNulls = payload.data.map((item) => removeNullable(item));
+
+    return this.userService.updateUserProfile(userId, payload.key, payload.data).pipe(
+      tap((user) => {
+        ctx.patchState({
+          currentUser: {
+            ...state.currentUser,
+            data: user,
+          },
+        });
+      })
+    );
+  }
+
+  @Action(UpdateProfileSettingsEmployment)
+  updateProfileSettingsEmployment(ctx: StateContext<UserStateModel>, { payload }: UpdateProfileSettingsEmployment) {
+    const state = ctx.getState();
+    const userId = state.currentUser.data?.id;
+
+    if (!userId) {
+      return;
+    }
+
+    const withoutNulls = payload.employment.map((item) => removeNullable(item));
+
+    return this.userService.updateUserProfile(userId, 'employment', withoutNulls).pipe(
+      tap((user) => {
+        ctx.patchState({
+          currentUser: {
+            ...state.currentUser,
+            data: user,
+          },
+        });
+      })
+    );
+  }
+
+  @Action(UpdateProfileSettingsEducation)
+  updateProfileSettingsEducation(ctx: StateContext<UserStateModel>, { payload }: UpdateProfileSettingsEducation) {
+    const state = ctx.getState();
+    const userId = state.currentUser.data?.id;
+
+    if (!userId) {
+      return;
+    }
+
+    const withoutNulls = payload.education.map((item) => removeNullable(item));
+
+    return this.userService.updateUserProfile(userId, 'education', withoutNulls).pipe(
+      tap((user) => {
+        ctx.patchState({
+          currentUser: {
+            ...state.currentUser,
+            data: user,
+          },
+        });
+      })
+    );
+  }
+
+  @Action(UpdateProfileSettingsUser)
+  updateProfileSettingsUser(ctx: StateContext<UserStateModel>, { payload }: UpdateProfileSettingsUser) {
+    const state = ctx.getState();
+    const userId = state.currentUser.data?.id;
+
+    if (!userId) {
+      return;
+    }
+
+    const withoutNulls = mapNameToDto(removeNullable(payload.user));
+
+    return this.userService.updateUserProfile(userId, 'user', withoutNulls).pipe(
+      tap((user) => {
+        ctx.patchState({
+          currentUser: {
+            ...state.currentUser,
+            data: user,
+          },
+        });
+      })
+    );
+  }
+
+  @Action(UpdateProfileSettingsSocialLinks)
+  updateProfileSettingsSocialLinks(ctx: StateContext<UserStateModel>, { payload }: UpdateProfileSettingsSocialLinks) {
+    const state = ctx.getState();
+    const userId = state.currentUser.data?.id;
+
+    if (!userId) {
+      return;
+    }
+
+    let social = {} as Partial<Social>;
+
+    payload.socialLinks.forEach((item) => {
+      social = {
+        ...social,
+        ...item,
+      };
+    });
+
+    return this.userService.updateUserProfile(userId, 'social', social).pipe(
+      tap((user) => {
+        ctx.patchState({
+          currentUser: {
+            ...state.currentUser,
+            data: user,
+          },
+        });
       })
     );
   }

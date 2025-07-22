@@ -10,11 +10,13 @@ import { InputText } from 'primeng/inputtext';
 import { ChangeDetectionStrategy, Component, effect, HostBinding, inject } from '@angular/core';
 import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
+import { UpdateProfileSettingsEmployment, UserSelectors } from '@osf/core/store/user';
 import { Employment } from '@osf/shared/models';
+import { LoaderService, ToastService } from '@osf/shared/services';
 import { CustomValidators } from '@osf/shared/utils';
 
+import { MAX_DATE, MIN_DATE } from '../../constants';
 import { EmploymentForm } from '../../models';
-import { ProfileSettingsSelectors, UpdateProfileSettingsEmployment } from '../../store';
 
 @Component({
   selector: 'osf-employment',
@@ -26,8 +28,14 @@ import { ProfileSettingsSelectors, UpdateProfileSettingsEmployment } from '../..
 export class EmploymentComponent {
   @HostBinding('class') classes = 'flex flex-column gap-5';
 
+  maxDate = MAX_DATE;
+  minDate = MIN_DATE;
+
+  private readonly loaderService = inject(LoaderService);
+  private readonly toastService = inject(ToastService);
+
   readonly actions = createDispatchMap({ updateProfileSettingsEmployment: UpdateProfileSettingsEmployment });
-  readonly employment = select(ProfileSettingsSelectors.employment);
+  readonly employment = select(UserSelectors.getEmployment);
 
   readonly fb = inject(FormBuilder);
   readonly employmentForm = this.fb.group({ positions: this.fb.array<EmploymentForm>([]) });
@@ -94,7 +102,12 @@ export class EmploymentComponent {
       ongoing: !employment.ongoing,
     })) satisfies Employment[];
 
-    this.actions.updateProfileSettingsEmployment({ employment: formattedEmployments });
+    this.loaderService.show();
+
+    this.actions.updateProfileSettingsEmployment({ employment: formattedEmployments }).subscribe(() => {
+      this.loaderService.hide();
+      this.toastService.showSuccess('settings.profileSettings.employment.successUpdate');
+    });
   }
 
   private setupDates(

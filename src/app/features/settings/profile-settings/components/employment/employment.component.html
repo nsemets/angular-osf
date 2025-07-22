@@ -10,7 +10,7 @@
               {{ 'settings.profileSettings.employment.title' | translate: { index: index + 1 } }}
             </h2>
             @if (index !== 0) {
-              <div class="ml-auto remove-button">
+              <div class="ml-auto">
                 <p-button
                   class="ml-auto"
                   [label]="'settings.profileSettings.employment.remove' | translate"
@@ -26,6 +26,7 @@
               <label for="job-title-{{ index }}" class="mb-1">
                 {{ 'settings.profileSettings.employment.jobTitle' | translate }}
               </label>
+
               <input pInputText [id]="'job-title-' + index" class="w-full" formControlName="title" />
             </div>
 
@@ -34,12 +35,15 @@
                 <label for="department-{{ index }}" class="mb-1">
                   {{ 'settings.profileSettings.employment.department' | translate }}
                 </label>
+
                 <input pInputText [id]="'department-' + index" class="w-full" formControlName="department" />
               </div>
+
               <div class="w-full lg:w-6">
                 <label for="institution-{{ index }}" class="mb-1">
                   {{ 'settings.profileSettings.employment.institution' | translate }}
                 </label>
+
                 <input pInputText [id]="'institution-' + index" class="w-full" formControlName="institution" />
               </div>
             </div>
@@ -52,24 +56,31 @@
                   <label for="start-date-{{ index }}" class="mb-1">
                     {{ 'settings.profileSettings.employment.startDate' | translate }}
                   </label>
+
                   <p-datepicker
                     [id]="'start-date-' + index"
                     formControlName="startDate"
                     dateFormat="mm/dd/yy"
                     [iconDisplay]="'input'"
                     [showIcon]="true"
+                    [maxDate]="maxDate"
+                    [minDate]="minDate"
                   ></p-datepicker>
                 </div>
+
                 <div class="w-full lg:w-6">
                   <label for="end-date-{{ index }}" class="mb-1">
                     {{ 'settings.profileSettings.employment.endDate' | translate }}
                   </label>
+
                   <p-datepicker
                     [id]="'end-date-' + index"
                     formControlName="endDate"
                     dateFormat="mm/dd/yy"
                     [iconDisplay]="'input'"
                     [showIcon]="true"
+                    [maxDate]="maxDate"
+                    [minDate]="minDate"
                   ></p-datepicker>
                 </div>
               </div>
@@ -81,6 +92,7 @@
                   [inputId]="'presently-employed-' + index"
                   name="presently-employed"
                 ></p-checkbox>
+
                 <label [for]="'presently-employed-' + index" class="ml-2 mb-0 cursor-pointer">
                   {{ 'settings.profileSettings.employment.presentlyEmployed' | translate }}
                 </label>
