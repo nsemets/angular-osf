@@ -101,6 +101,10 @@
       "header": "You Might Loose Unsaved Changes",
       "message": "Are you sure you want to proceed?"
     },
+    "discardChangesDialog": {
+      "header": "Discard changes",
+      "message": "Are you sure you want to discard your unsaved changes?"
+    },
     "links": {
       "clickHere": "Click here",
       "helpGuide": "Help Guide",
