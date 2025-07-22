@@ -37,6 +37,7 @@ import {
   GetRootFolders,
   ProjectFilesSelectors,
   RenameEntry,
+  ResetState,
   SetCurrentFolder,
   SetFilesIsLoading,
   SetMoveFileCurrentFolder,
@@ -100,6 +101,7 @@ export class ProjectFilesComponent {
     getProject: GetProjectById,
     getRootFolders: GetRootFolders,
     getConfiguredStorageAddons: GetConfiguredStorageAddons,
+    resetState: ResetState,
   });
 
   protected readonly files = select(ProjectFilesSelectors.getFiles);
@@ -209,6 +211,12 @@ export class ProjectFilesComponent {
       if (!this.isFolderOpening()) {
         this.updateFilesList();
       }
+    });
+
+    effect(() => {
+      this.destroyRef.onDestroy(() => {
+        this.actions.resetState();
+      });
     });
   }
 

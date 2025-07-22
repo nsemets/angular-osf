@@ -28,15 +28,24 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MoveFileDialogComponent, RenameFileDialogComponent } from '@osf/features/project/files/components';
 import { embedDynamicJs, embedStaticHtml } from '@osf/features/project/files/models';
 import { FileMenuType } from '@osf/shared/enums';
-import { FileMenuAction, FilesTreeActions } from '@osf/shared/models/files';
 import { FileMenuComponent, LoadingSpinnerComponent } from '@shared/components';
-import { OsfFile } from '@shared/models';
+import { StopPropagationDirective } from '@shared/directives';
+import { FileMenuAction, FilesTreeActions, OsfFile } from '@shared/models';
 import { FileSizePipe } from '@shared/pipes';
 import { CustomConfirmationService, FilesService, ToastService } from '@shared/services';
 
 @Component({
   selector: 'osf-files-tree',
-  imports: [DatePipe, FileSizePipe, PrimeTemplate, TranslatePipe, Tree, LoadingSpinnerComponent, FileMenuComponent],
+  imports: [
+    DatePipe,
+    FileSizePipe,
+    PrimeTemplate,
+    TranslatePipe,
+    Tree,
+    LoadingSpinnerComponent,
+    FileMenuComponent,
+    StopPropagationDirective,
+  ],
   templateUrl: './files-tree.component.html',
   styleUrl: './files-tree.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
