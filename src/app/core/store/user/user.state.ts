@@ -5,8 +5,9 @@ import { tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { mapNameToDto } from '@osf/features/settings/profile-settings/models';
+import { UserMapper } from '@osf/core/models';
 import { removeNullable } from '@osf/shared/constants';
+import { ProfileSettingsKey } from '@osf/shared/enums';
 import { Social } from '@osf/shared/models';
 
 import { UserService } from '../../services';
@@ -19,7 +20,6 @@ import {
   UpdateProfileSettingsEmployment,
   UpdateProfileSettingsSocialLinks,
   UpdateProfileSettingsUser,
-  UpdateUserProfile,
   UpdateUserSettings,
 } from './user.actions';
 import { USER_STATE_INITIAL, UserStateModel } from './user.model';
@@ -101,29 +101,6 @@ export class UserState {
     );
   }
 
-  @Action(UpdateUserProfile)
-  updateUserProfile(ctx: StateContext<UserStateModel>, { payload }: UpdateUserProfile) {
-    const state = ctx.getState();
-    const userId = state.currentUser.data?.id;
-
-    if (!userId) {
-      return;
-    }
-
-    // const withoutNulls = payload.data.map((item) => removeNullable(item));
-
-    return this.userService.updateUserProfile(userId, payload.key, payload.data).pipe(
-      tap((user) => {
-        ctx.patchState({
-          currentUser: {
-            ...state.currentUser,
-            data: user,
-          },
-        });
-      })
-    );
-  }
-
   @Action(UpdateProfileSettingsEmployment)
   updateProfileSettingsEmployment(ctx: StateContext<UserStateModel>, { payload }: UpdateProfileSettingsEmployment) {
     const state = ctx.getState();
@@ -135,7 +112,7 @@ export class UserState {
 
     const withoutNulls = payload.employment.map((item) => removeNullable(item));
 
-    return this.userService.updateUserProfile(userId, 'employment', withoutNulls).pipe(
+    return this.userService.updateUserProfile(userId, ProfileSettingsKey.Employment, withoutNulls).pipe(
       tap((user) => {
         ctx.patchState({
           currentUser: {
@@ -158,7 +135,7 @@ export class UserState {
 
     const withoutNulls = payload.education.map((item) => removeNullable(item));
 
-    return this.userService.updateUserProfile(userId, 'education', withoutNulls).pipe(
+    return this.userService.updateUserProfile(userId, ProfileSettingsKey.Education, withoutNulls).pipe(
       tap((user) => {
         ctx.patchState({
           currentUser: {
@@ -179,9 +156,9 @@ export class UserState {
       return;
     }
 
-    const withoutNulls = mapNameToDto(removeNullable(payload.user));
+    const withoutNulls = UserMapper.toNamesRequest(removeNullable(payload.user));
 
-    return this.userService.updateUserProfile(userId, 'user', withoutNulls).pipe(
+    return this.userService.updateUserProfile(userId, ProfileSettingsKey.User, withoutNulls).pipe(
       tap((user) => {
         ctx.patchState({
           currentUser: {
@@ -211,7 +188,7 @@ export class UserState {
       };
     });
 
-    return this.userService.updateUserProfile(userId, 'social', social).pipe(
+    return this.userService.updateUserProfile(userId, ProfileSettingsKey.Social, social).pipe(
       tap((user) => {
         ctx.patchState({
           currentUser: {

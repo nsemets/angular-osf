@@ -2,6 +2,9 @@ import { map, Observable } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
+import { ProfileSettingsKey } from '@osf/shared/enums';
+import { ProfileSettingsUpdate } from '@osf/shared/models';
+
 import { JsonApiResponse, User, UserGetResponse, UserMapper, UserSettings, UserSettingsGetResponse } from '../models';
 
 import { JsonApiService } from './json-api.service';
@@ -34,8 +37,8 @@ export class UserService {
       .pipe(map((response) => UserMapper.fromUserSettingsGetResponse(response)));
   }
 
-  updateUserProfile(userId: string, key: string, data: unknown): Observable<User> {
-    const patchedData = { [key]: data };
+  updateUserProfile(userId: string, key: string, data: ProfileSettingsUpdate): Observable<User> {
+    const patchedData = key === ProfileSettingsKey.User ? data : { [key]: data };
 
     return this.jsonApiService
       .patch<UserGetResponse>(`${environment.apiUrl}/users/${userId}/`, {

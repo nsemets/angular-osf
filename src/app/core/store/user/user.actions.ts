@@ -23,11 +23,6 @@ export class UpdateUserSettings {
   ) {}
 }
 
-export class UpdateUserProfile {
-  static readonly type = '[User] Update User Profile';
-  constructor(public payload: { key: string; data: Partial<User> | Education[] }) {}
-}
-
 export class UpdateProfileSettingsEmployment {
   static readonly type = '[Profile Settings] Update Employment';
 
