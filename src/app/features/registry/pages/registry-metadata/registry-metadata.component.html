@@ -25,6 +25,7 @@
           <p-tabpanel [value]="tab.id">
             @if (tab.type === 'registry') {
               <osf-shared-metadata
+                [hideEditDoi]="true"
                 [selectedSubjects]="selectedSubjects()"
                 [isSubjectsUpdating]="isSubjectsUpdating()"
                 [currentInstance]="getCurrentInstanceForTemplate()"

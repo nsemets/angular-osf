@@ -2,11 +2,13 @@
   <div class="flex justify-content-between align-items-center">
     <h2>{{ 'project.overview.metadata.publication' | translate }}</h2>
 
-    <p-button
-      severity="secondary"
-      [label]="'common.buttons.edit' | translate"
-      (click)="openEditPublicationDoiDialog.emit()"
-    ></p-button>
+    @if (!hideEditDoi()) {
+      <p-button
+        severity="secondary"
+        [label]="'common.buttons.edit' | translate"
+        (click)="openEditPublicationDoiDialog.emit()"
+      ></p-button>
+    }
   </div>
 
   @if (identifiers() && identifiers().length) {

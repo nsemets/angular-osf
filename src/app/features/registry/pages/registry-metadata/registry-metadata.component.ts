@@ -10,7 +10,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { UserSelectors } from '@osf/core/store/user';
-import { CedarTemplateFormComponent } from '@osf/features/project/metadata/components';
 import {
   CedarMetadataDataTemplateJsonApi,
   CedarMetadataRecord,
@@ -29,6 +28,7 @@ import {
   UpdateResourceSubjects,
 } from '@osf/shared/stores';
 import { LoadingSpinnerComponent, SubHeaderComponent } from '@shared/components';
+import { CedarTemplateFormComponent } from '@shared/components/shared-metadata/components';
 import { SharedMetadataComponent } from '@shared/components/shared-metadata/shared-metadata.component';
 import { ResourceType } from '@shared/enums';
 import { SubjectModel } from '@shared/models';

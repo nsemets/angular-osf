@@ -18,4 +18,5 @@ export class ProjectMetadataPublicationDoiComponent {
   openEditPublicationDoiDialog = output<void>();
 
   identifiers = input<ProjectIdentifiers[]>([]);
+  hideEditDoi = input<boolean>(false);
 }

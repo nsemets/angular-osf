@@ -13,9 +13,6 @@ import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, OnInit,
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { ProjectMetadataSelectors } from '@osf/features/project/metadata/store';
-import { ProjectOverview } from '@osf/features/project/overview/models';
-
 import {
   FunderOption,
   FundingDialogResult,
@@ -23,8 +20,9 @@ import {
   FundingEntryForm,
   FundingForm,
   SupplementData,
-} from '../../models';
-import { GetFundersList } from '../../store/project-metadata.actions';
+} from '@osf/features/project/metadata/models';
+import { GetFundersList, ProjectMetadataSelectors } from '@osf/features/project/metadata/store';
+import { ProjectOverview } from '@osf/features/project/overview/models';
 
 @Component({
   selector: 'osf-funding-dialog',

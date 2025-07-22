@@ -12,15 +12,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { UserSelectors } from '@osf/core/store/user';
-import { CedarTemplateFormComponent } from '@osf/features/project/metadata/components';
-import {
-  AffiliatedInstitutionsDialogComponent,
-  ContributorsDialogComponent,
-  DescriptionDialogComponent,
-  FundingDialogComponent,
-  LicenseDialogComponent,
-  ResourceInformationDialogComponent,
-} from '@osf/features/project/metadata/dialogs';
 import {
   CedarMetadataDataTemplateJsonApi,
   CedarMetadataRecord,
@@ -51,6 +42,15 @@ import {
   UpdateResourceSubjects,
 } from '@osf/shared/stores';
 import { LoadingSpinnerComponent, SubHeaderComponent } from '@shared/components';
+import { CedarTemplateFormComponent } from '@shared/components/shared-metadata/components';
+import {
+  AffiliatedInstitutionsDialogComponent,
+  ContributorsDialogComponent,
+  DescriptionDialogComponent,
+  FundingDialogComponent,
+  LicenseDialogComponent,
+  ResourceInformationDialogComponent,
+} from '@shared/components/shared-metadata/dialogs';
 import { SharedMetadataComponent } from '@shared/components/shared-metadata/shared-metadata.component';
 import { SubjectModel } from '@shared/models';
 import { CustomConfirmationService, LoaderService, ToastService } from '@shared/services';

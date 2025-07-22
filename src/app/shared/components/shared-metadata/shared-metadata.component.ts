@@ -5,6 +5,11 @@ import { Card } from 'primeng/card';
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
+import { CustomItemMetadataRecord } from '@osf/features/project/metadata/models';
+import { ProjectOverview } from '@osf/features/project/overview/models';
+import { TagsInputComponent } from '@shared/components';
+import { SubjectModel } from '@shared/models';
+
 import {
   ProjectMetadataAffiliatedInstitutionsComponent,
   ProjectMetadataContributorsComponent,
@@ -14,11 +19,7 @@ import {
   ProjectMetadataPublicationDoiComponent,
   ProjectMetadataResourceInformationComponent,
   ProjectMetadataSubjectsComponent,
-} from '@osf/features/project/metadata/components';
-import { CustomItemMetadataRecord } from '@osf/features/project/metadata/models';
-import { ProjectOverview } from '@osf/features/project/overview/models';
-import { TagsInputComponent } from '@shared/components';
-import { SubjectModel } from '@shared/models';
+} from './components';
 
 @Component({
   selector: 'osf-shared-metadata',
@@ -45,6 +46,7 @@ export class SharedMetadataComponent {
   customItemMetadata = input.required<CustomItemMetadataRecord>();
   selectedSubjects = input.required<SubjectModel[]>();
   isSubjectsUpdating = input.required<boolean>();
+  hideEditDoi = input<boolean>(false);
 
   openEditContributorDialog = output<void>();
   openEditDescriptionDialog = output<void>();

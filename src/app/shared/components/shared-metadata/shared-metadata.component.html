@@ -58,6 +58,7 @@
 
     <osf-project-metadata-publication-doi
       (openEditPublicationDoiDialog)="handleEditDoi.emit()"
+      [hideEditDoi]="hideEditDoi()"
       [identifiers]="currentInstance().identifiers!"
     />
 
