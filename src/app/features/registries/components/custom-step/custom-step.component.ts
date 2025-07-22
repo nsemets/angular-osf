@@ -91,9 +91,6 @@ export class CustomStepComponent implements OnDestroy {
         this.initStepForm(page);
       }
     });
-    setTimeout(() => {
-      console.log('CustomStepComponent initialized with step:', this.attachedFiles);
-    }, 5000);
   }
 
   private initStepForm(page: PageSchema): void {

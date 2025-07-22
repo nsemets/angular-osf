@@ -95,7 +95,7 @@
 
       @if (!files().length) {
         <div class="flex justify-content-center p-4 m-auto">
-          @if (!viewOnly()) {
+          @if (viewOnly()) {
             <h3 class="font-normal text-no-transform">{{ 'project.files.emptyState' | translate }}</h3>
           } @else {
             <div class="text-center">
