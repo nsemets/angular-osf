@@ -10,6 +10,7 @@ export * from './file-menu-type.enum';
 export * from './filter-type.enum';
 export * from './get-resources-request-type.enum';
 export * from './profile-addons-stepper.enum';
+export * from './profile-settings-key.enum';
 export * from './registration-review-states.enum';
 export * from './registry-status.enum';
 export * from './resource-tab.enum';

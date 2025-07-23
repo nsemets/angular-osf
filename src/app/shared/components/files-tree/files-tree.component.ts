@@ -143,12 +143,6 @@ export class FilesTreeComponent implements OnDestroy, AfterViewInit {
         this.updateFilesList().subscribe(() => this.folderIsOpening.emit(false));
       }
     });
-
-    effect(() => {
-      const isLoading = this.isLoading();
-
-      console.log(isLoading);
-    });
   }
 
   openEntry(file: OsfFile) {
