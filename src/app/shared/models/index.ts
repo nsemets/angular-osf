@@ -30,6 +30,7 @@ export * from './search';
 export * from './select-option.model';
 export * from './severity.type';
 export * from './social-icon.model';
+export * from './status-info.model';
 export * from './step-option.model';
 export * from './store';
 export * from './subject';

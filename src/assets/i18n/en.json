@@ -2042,6 +2042,7 @@
   },
   "shared": {
     "resources": {
+      "title": "Open resources",
       "data": "Data",
       "analyticCode": "Analytic Code",
       "materials": "Materials",
