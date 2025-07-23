@@ -13,6 +13,6 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 })
 export class ProjectMetadataDescriptionComponent {
   openEditDescriptionDialog = output<void>();
-
-  description = input.required<string | null>();
+  description = input.required<string>();
+  readonly = input<boolean>(false);
 }

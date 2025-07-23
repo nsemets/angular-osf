@@ -10,11 +10,11 @@ import { SubjectsComponent } from '@shared/components';
   imports: [SubjectsComponent, Card],
   templateUrl: './project-metadata-subjects.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class ProjectMetadataSubjectsComponent {
   selectedSubjects = input.required<SubjectModel[]>();
   isSubjectsUpdating = input.required<boolean>();
+  readonly = input<boolean>(false);
 
   getSubjectChildren = output<string>();
   searchSubjects = output<string>();

@@ -55,10 +55,13 @@ export class ContributorsDialogComponent implements OnInit {
     addContributor: AddContributor,
   });
 
+  private readonly resourceType: ResourceType;
   private readonly projectId: string;
 
   constructor() {
     this.projectId = this.config.data?.projectId;
+
+    this.resourceType = this.config.data?.['isRegistry'] ? ResourceType.Registration : ResourceType.Project;
 
     this.contributors.set(this.config.data?.contributors || []);
     this.isContributorsLoading.set(this.config.data?.isLoading || false);
@@ -91,7 +94,7 @@ export class ContributorsDialogComponent implements OnInit {
       .subscribe((res: ContributorDialogAddModel) => {
         if (res?.type === AddContributorType.Registered) {
           const addRequests = res.data.map((payload) =>
-            this.actions.addContributor(this.projectId, ResourceType.Project, payload)
+            this.actions.addContributor(this.projectId, this.resourceType, payload)
           );
 
           forkJoin(addRequests).subscribe(() => {
@@ -104,7 +107,7 @@ export class ContributorsDialogComponent implements OnInit {
 
   removeContributor(contributor: ContributorModel): void {
     this.actions
-      .deleteContributor(this.projectId, ResourceType.Project, contributor.userId)
+      .deleteContributor(this.projectId, this.resourceType, contributor.userId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {

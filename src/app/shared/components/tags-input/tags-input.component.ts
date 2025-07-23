@@ -25,6 +25,7 @@ import { FormsModule } from '@angular/forms';
 export class TagsInputComponent {
   tags = input<string[]>([]);
   required = input<boolean>(false);
+  readonly = input<boolean>(false);
   tagsChanged = output<string[]>();
 
   inputValue = signal<string>('');
@@ -82,6 +83,8 @@ export class TagsInputComponent {
   }
 
   private addTag(tagValue: string): void {
+    if (this.readonly()) return;
+
     const currentTags = this.localTags();
     const normalizedValue = tagValue.replace(/[,\s]+/g, ' ').trim();
 
@@ -96,6 +99,8 @@ export class TagsInputComponent {
   }
 
   removeTag(index: number): void {
+    if (this.readonly()) return;
+
     const currentTags = this.localTags();
     const updatedTags = currentTags.filter((_, i) => i !== index);
 

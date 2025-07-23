@@ -37,11 +37,6 @@ export class UpdateRegistryDetails {
   ) {}
 }
 
-export class GetFundersList {
-  static readonly type = '[RegistryMetadata] Get Funders List';
-  constructor(public search?: string) {}
-}
-
 export class GetUserInstitutions {
   static readonly type = '[RegistryMetadata] Get User Institutions';
   constructor(
@@ -57,6 +52,57 @@ export class GetRegistrySubjects {
     public registryId: string,
     public page?: number,
     public pageSize?: number
+  ) {}
+}
+
+export class UpdateRegistrySubjects {
+  static readonly type = '[RegistryMetadata] Update Registry Subjects';
+  constructor(
+    public registryId: string,
+    public subjects: { type: string; id: string }[]
+  ) {}
+}
+
+export class UpdateRegistryInstitutions {
+  static readonly type = '[RegistryMetadata] Update Registry Institutions';
+  constructor(
+    public registryId: string,
+    public institutions: { type: string; id: string }[]
+  ) {}
+}
+
+export class GetRegistryInstitutions {
+  static readonly type = '[RegistryMetadata] Get Registry Institutions';
+  constructor(
+    public registryId: string,
+    public page?: number,
+    public pageSize?: number
+  ) {}
+}
+
+export class UpdateRegistryContributor {
+  static readonly type = '[RegistryMetadata] Update Registry Contributor';
+  constructor(
+    public registryId: string,
+    public contributorId: string,
+    public updateData: {
+      id: string;
+      type: 'contributors';
+      attributes: Record<string, unknown>;
+      relationships: Record<string, unknown>;
+    }
+  ) {}
+}
+
+export class AddRegistryContributor {
+  static readonly type = '[RegistryMetadata] Add Registry Contributor';
+  constructor(
+    public registryId: string,
+    public contributorData: {
+      type: 'contributors';
+      attributes: Record<string, unknown>;
+      relationships: Record<string, unknown>;
+    }
   ) {}
 }
 
@@ -86,4 +132,9 @@ export class UpdateCedarMetadataRecord {
 export class AddCedarMetadataRecordToState {
   static readonly type = '[RegistryMetadata] Add Cedar Metadata Record To State';
   constructor(public record: CedarMetadataRecordData) {}
+}
+
+export class GetLicenseFromUrl {
+  static readonly type = '[RegistryMetadata] Get License From URL';
+  constructor(public licenseUrl: string) {}
 }

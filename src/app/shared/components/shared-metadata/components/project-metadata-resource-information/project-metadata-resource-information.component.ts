@@ -19,7 +19,8 @@ import { LanguageCodeModel } from '@shared/models';
 export class ProjectMetadataResourceInformationComponent {
   openEditResourceInformationDialog = output<void>();
 
-  customItemMetadata = input.required<CustomItemMetadataRecord | null>();
+  customItemMetadata = input.required<CustomItemMetadataRecord>();
+  readonly = input<boolean>(false);
   protected readonly languageCodes = languageCodes;
 
   getLanguageName(languageCode: string): string {

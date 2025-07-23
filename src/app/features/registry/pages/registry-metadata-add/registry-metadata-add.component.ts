@@ -32,7 +32,6 @@ import {
   templateUrl: './registry-metadata-add.component.html',
   styleUrl: './registry-metadata-add.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class RegistryMetadataAddComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);

@@ -9,13 +9,17 @@ import {
   CedarMetadataRecordJsonApi,
   CedarMetadataTemplateJsonApi,
 } from '@osf/features/project/metadata/models';
+import { License } from '@shared/models';
 
 import { RegistryMetadataMapper } from '../mappers';
 import {
   BibliographicContributorsJsonApi,
-  CrossRefFundersResponse,
   CustomItemMetadataRecord,
   CustomItemMetadataResponse,
+  RegistryContributorAddRequest,
+  RegistryContributorJsonApiResponse,
+  RegistryContributorUpdateRequest,
+  RegistryInstitutionsJsonApiResponse,
   RegistryOverview,
   RegistrySubjectsJsonApi,
   UserInstitutionsResponse,
@@ -53,22 +57,17 @@ export class RegistryMetadataService {
   }
 
   updateCustomItemMetadata(guid: string, metadata: CustomItemMetadataRecord): Observable<CustomItemMetadataResponse> {
-    return this.jsonApiService.put<CustomItemMetadataResponse>(`${this.apiUrl}/custom_item_metadata_records/${guid}/`, {
-      data: {
-        type: 'custom-item-metadata-records',
-        attributes: metadata,
-      },
-    });
-  }
-
-  getFundersList(searchQuery?: string): Observable<CrossRefFundersResponse> {
-    let url = environment.funderApiUrl;
-
-    if (searchQuery && searchQuery.trim()) {
-      url += `&query=${encodeURIComponent(searchQuery.trim())}`;
-    }
-
-    return this.jsonApiService.get<CrossRefFundersResponse>(url);
+    return this.jsonApiService.patch<CustomItemMetadataResponse>(
+      `${this.apiUrl}/custom_item_metadata_records/${guid}/`,
+      {
+        data: {
+          id: guid,
+          type: 'custom-item-metadata-records',
+          attributes: metadata,
+          relationships: {},
+        },
+      }
+    );
   }
 
   getRegistryForMetadata(registryId: string): Observable<RegistryOverview> {
@@ -147,6 +146,82 @@ export class RegistryMetadataService {
     return this.jsonApiService.patch<CedarMetadataRecord>(
       `${environment.apiDomainUrl}/_/cedar_metadata_records/${recordId}/`,
       data
+    );
+  }
+
+  updateRegistrySubjects(
+    registryId: string,
+    subjects: { type: string; id: string }[]
+  ): Observable<{ data: { type: string; id: string }[] }> {
+    return this.jsonApiService.patch<{ data: { type: string; id: string }[] }>(
+      `${this.apiUrl}/registrations/${registryId}/relationships/subjects/`,
+      {
+        data: subjects,
+      }
+    );
+  }
+
+  updateRegistryInstitutions(
+    registryId: string,
+    institutions: { type: string; id: string }[]
+  ): Observable<{ data: { type: string; id: string }[] }> {
+    return this.jsonApiService.patch<{ data: { type: string; id: string }[] }>(
+      `${this.apiUrl}/registrations/${registryId}/relationships/institutions/`,
+      {
+        data: institutions,
+      }
+    );
+  }
+
+  getLicenseFromUrl(licenseUrl: string): Observable<License> {
+    return this.jsonApiService.get<{ data: Record<string, unknown> }>(licenseUrl).pipe(
+      map((response) => {
+        const licenseData = response.data;
+        const attributes = licenseData['attributes'] as Record<string, unknown>;
+
+        return {
+          id: licenseData['id'] as string,
+          name: attributes['name'] as string,
+          text: attributes['text'] as string,
+          url: attributes['url'] as string,
+          requiredFields: (attributes['required_fields'] as string[]) || [],
+        } as License;
+      })
+    );
+  }
+
+  getRegistryInstitutions(
+    registryId: string,
+    page = 1,
+    pageSize = 100
+  ): Observable<RegistryInstitutionsJsonApiResponse> {
+    const params: Record<string, unknown> = {
+      'fields[institutions]': 'name',
+      page: page,
+      'page[size]': pageSize,
+    };
+
+    return this.jsonApiService.get(`${this.apiUrl}/registrations/${registryId}/institutions/`, params);
+  }
+
+  updateRegistryContributor(
+    registryId: string,
+    contributorId: string,
+    updateData: RegistryContributorUpdateRequest
+  ): Observable<RegistryContributorJsonApiResponse> {
+    return this.jsonApiService.patch<RegistryContributorJsonApiResponse>(
+      `${this.apiUrl}/registrations/${registryId}/contributors/${contributorId}/`,
+      updateData
+    );
+  }
+
+  addRegistryContributor(
+    registryId: string,
+    contributorData: RegistryContributorAddRequest
+  ): Observable<RegistryContributorJsonApiResponse> {
+    return this.jsonApiService.post<RegistryContributorJsonApiResponse>(
+      `${this.apiUrl}/registrations/${registryId}/contributors/`,
+      contributorData
     );
   }
 }

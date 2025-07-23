@@ -1,5 +1,6 @@
 import { ProjectOverviewContributor } from '@osf/features/project/overview/models';
 import { RegistryStatus, RevisionReviewStates } from '@shared/enums';
+import { License } from '@shared/models';
 
 import {
   BibliographicContributor,
@@ -12,6 +13,7 @@ export class RegistryMetadataMapper {
   static fromMetadataApiResponse(response: Record<string, unknown>): RegistryOverview {
     const attributes = response['attributes'] as Record<string, unknown>;
     const embeds = response['embeds'] as Record<string, unknown>;
+    const relationships = response['relationships'] as Record<string, unknown>;
 
     const contributors: ProjectOverviewContributor[] = [];
     if (embeds && embeds['contributors']) {
@@ -32,6 +34,41 @@ export class RegistryMetadataMapper {
           });
         }
       });
+    }
+
+    let license: License | undefined;
+    let licenseUrl: string | undefined;
+
+    if (embeds && embeds['license']) {
+      const licenseData = (embeds['license'] as Record<string, unknown>)['data'] as Record<string, unknown>;
+      if (licenseData) {
+        const licenseAttributes = licenseData['attributes'] as Record<string, unknown>;
+        license = {
+          id: licenseData['id'] as string,
+          name: licenseAttributes['name'] as string,
+          text: licenseAttributes['text'] as string,
+          url: licenseAttributes['url'] as string,
+          requiredFields: (licenseAttributes['required_fields'] as string[]) || [],
+        };
+      }
+    } else if (relationships && relationships['license']) {
+      const licenseRelationship = relationships['license'] as Record<string, unknown>;
+      if (licenseRelationship['links']) {
+        const licenseLinks = licenseRelationship['links'] as Record<string, unknown>;
+        if (licenseLinks['related'] && typeof licenseLinks['related'] === 'object') {
+          const relatedLinks = licenseLinks['related'] as Record<string, unknown>;
+          licenseUrl = relatedLinks['href'] as string;
+        }
+      }
+    }
+
+    let nodeLicense: { copyrightHolders: string[]; year: string } | undefined;
+    if (attributes['node_license']) {
+      const nodeLicenseData = attributes['node_license'] as Record<string, unknown>;
+      nodeLicense = {
+        copyrightHolders: (nodeLicenseData['copyright_holders'] as string[]) || [],
+        year: (nodeLicenseData['year'] as string) || new Date().getFullYear().toString(),
+      };
     }
 
     return {
@@ -57,6 +94,9 @@ export class RegistryMetadataMapper {
       analyticsKey: (attributes['analytics_key'] as string) || '',
       contributors: contributors,
       subjects: Array.isArray(attributes['subjects']) ? attributes['subjects'].flat() : attributes['subjects'],
+      license: license,
+      nodeLicense: nodeLicense,
+      licenseUrl: licenseUrl,
       forksCount: 0,
       citation: '',
       hasData: false,

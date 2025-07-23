@@ -73,7 +73,6 @@ import { CustomConfirmationService, LoaderService, ToastService } from '@shared/
   styleUrl: './project-metadata.component.scss',
   providers: [DialogService],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class ProjectMetadataComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
@@ -285,7 +284,6 @@ export class ProjectMetadataComponent implements OnInit {
       )
       .subscribe({
         next: () => this.toastService.showSuccess('project.metadata.resourceInformation.updated'),
-        error: () => this.toastService.showError('project.metadata.resourceInformation.updateFailed'),
       });
   }
 

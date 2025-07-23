@@ -25,26 +25,31 @@
     </p-card>
 
     <osf-project-metadata-contributors
+      [readonly]="readonly()"
       (openEditContributorDialog)="openEditContributorDialog.emit()"
       [contributors]="currentInstance().contributors!"
     />
 
     <osf-project-metadata-description
+      [readonly]="readonly()"
       (openEditDescriptionDialog)="openEditDescriptionDialog.emit()"
       [description]="currentInstance().description!"
     />
 
     <osf-project-metadata-resource-information
+      [readonly]="readonly()"
       (openEditResourceInformationDialog)="openEditResourceInformationDialog.emit()"
-      [customItemMetadata]="customItemMetadata()"
+      [customItemMetadata]="customItemMetadata()!"
     />
 
     <osf-project-metadata-funding
+      [readonly]="readonly()"
       (openEditFundingDialog)="openEditFundingDialog.emit()"
-      [supplements]="currentInstance().supplements!"
+      [funders]="customItemMetadata().funders!"
     />
 
     <osf-project-metadata-affiliated-institutions
+      [readonly]="readonly()"
       (openEditAffiliatedInstitutionsDialog)="openEditAffiliatedInstitutionsDialog.emit()"
       [affiliatedInstitutions]="currentInstance().affiliatedInstitutions!"
     />
@@ -53,12 +58,13 @@
   <div class="col-12 lg:col-6 flex flex-column gap-4">
     <osf-project-metadata-license
       (openEditLicenseDialog)="openEditLicenseDialog.emit()"
+      [hideEditLicense]="hideEditDoiAndLicence() || readonly()"
       [license]="currentInstance().license!"
     />
 
     <osf-project-metadata-publication-doi
       (openEditPublicationDoiDialog)="handleEditDoi.emit()"
-      [hideEditDoi]="hideEditDoi()"
+      [hideEditDoi]="hideEditDoiAndLicence() || readonly()"
       [identifiers]="currentInstance().identifiers!"
     />
 
@@ -66,11 +72,16 @@
       <div class="flex flex-column gap-3">
         <h2>{{ 'project.overview.metadata.tags' | translate }}</h2>
 
-        <osf-tags-input (tagsChanged)="tagsChanged.emit($event)" [tags]="currentInstance().tags || []"></osf-tags-input>
+        <osf-tags-input
+          [readonly]="readonly()"
+          (tagsChanged)="tagsChanged.emit($event)"
+          [tags]="currentInstance().tags || []"
+        />
       </div>
     </p-card>
 
     <osf-project-metadata-subjects
+      [readonly]="readonly()"
       (getSubjectChildren)="getSubjectChildren.emit($event)"
       (searchSubjects)="searchSubjects.emit($event)"
       (updateSelectedSubjects)="updateSelectedSubjects.emit($event)"

@@ -38,7 +38,6 @@ import {
     Card,
   ],
   templateUrl: './shared-metadata.component.html',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SharedMetadataComponent {
@@ -46,7 +45,8 @@ export class SharedMetadataComponent {
   customItemMetadata = input.required<CustomItemMetadataRecord>();
   selectedSubjects = input.required<SubjectModel[]>();
   isSubjectsUpdating = input.required<boolean>();
-  hideEditDoi = input<boolean>(false);
+  hideEditDoiAndLicence = input<boolean>(false);
+  readonly = input<boolean>(false);
 
   openEditContributorDialog = output<void>();
   openEditDescriptionDialog = output<void>();

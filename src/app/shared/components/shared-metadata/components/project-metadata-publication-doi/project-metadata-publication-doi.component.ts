@@ -12,7 +12,6 @@ import { ProjectIdentifiers } from '@osf/features/project/overview/models';
   imports: [Button, Card, TranslatePipe],
   templateUrl: './project-metadata-publication-doi.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class ProjectMetadataPublicationDoiComponent {
   openEditPublicationDoiDialog = output<void>();

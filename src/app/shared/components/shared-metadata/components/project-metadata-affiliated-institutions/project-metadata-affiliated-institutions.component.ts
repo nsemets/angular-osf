@@ -17,4 +17,5 @@ export class ProjectMetadataAffiliatedInstitutionsComponent {
   openEditAffiliatedInstitutionsDialog = output<void>();
 
   affiliatedInstitutions = input<ProjectAffiliatedInstitutions[]>([]);
+  readonly = input<boolean>(false);
 }

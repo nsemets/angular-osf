@@ -15,6 +15,6 @@ import { ProjectOverviewContributor } from '@osf/features/project/overview/model
 })
 export class ProjectMetadataContributorsComponent {
   openEditContributorDialog = output<void>();
-
-  contributors = input.required<ProjectOverviewContributor[] | null>();
+  contributors = input<ProjectOverviewContributor[]>([]);
+  readonly = input<boolean>(false);
 }

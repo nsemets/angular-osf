@@ -1,41 +1,51 @@
 import { Action, State, StateContext } from '@ngxs/store';
 
-import { finalize, tap } from 'rxjs';
+import { catchError, tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
+import { handleSectionError } from '@core/handlers';
 import { CedarMetadataRecord, CedarMetadataRecordJsonApi } from '@osf/features/project/metadata/models';
+import { ResourceType } from '@shared/enums';
+import { GetAllContributors } from '@shared/stores';
 
 import { RegistryMetadataMapper } from '../../mappers';
+import { CustomItemMetadataRecord } from '../../models';
 import { RegistryMetadataService } from '../../services/registry-metadata.service';
 
 import {
   AddCedarMetadataRecordToState,
+  AddRegistryContributor,
   CreateCedarMetadataRecord,
   GetBibliographicContributors,
   GetCedarMetadataTemplates,
   GetCustomItemMetadata,
-  GetFundersList,
+  GetLicenseFromUrl,
   GetRegistryCedarMetadataRecords,
   GetRegistryForMetadata,
+  GetRegistryInstitutions,
   GetRegistrySubjects,
   GetUserInstitutions,
   UpdateCedarMetadataRecord,
   UpdateCustomItemMetadata,
+  UpdateRegistryContributor,
   UpdateRegistryDetails,
+  UpdateRegistryInstitutions,
+  UpdateRegistrySubjects,
 } from './registry-metadata.actions';
 import { RegistryMetadataStateModel } from './registry-metadata.model';
 
 const initialState: RegistryMetadataStateModel = {
   registry: { data: null, isLoading: false, error: null },
   bibliographicContributors: { data: [], isLoading: false, error: null },
-  customItemMetadata: { data: null, isLoading: false, error: null },
-  fundersList: { data: [], isLoading: false, error: null },
+  customItemMetadata: { data: {}, isLoading: false, error: null },
   userInstitutions: { data: [], isLoading: false, error: null },
+  institutions: { data: [], isLoading: false, error: null },
   subjects: { data: [], isLoading: false, error: null },
   cedarTemplates: { data: null, isLoading: false, error: null },
   cedarRecord: { data: null, isLoading: false, error: null },
   cedarRecords: { data: [], isLoading: false, error: null },
+  license: { data: null, isLoading: false, error: null },
 };
 
 @State<RegistryMetadataStateModel>({
@@ -57,35 +67,20 @@ export class RegistryMetadataState {
     });
 
     return this.registryMetadataService.getRegistryForMetadata(action.registryId).pipe(
-      tap({
-        next: (registry) => {
-          ctx.patchState({
-            registry: {
-              data: registry,
-              isLoading: false,
-              error: null,
-            },
-          });
-        },
-        error: (error) => {
-          ctx.patchState({
-            registry: {
-              data: ctx.getState().registry.data,
-              error: error.message,
-              isLoading: false,
-            },
-          });
-        },
-      }),
-      finalize(() =>
+      tap((registry) => {
         ctx.patchState({
           registry: {
-            data: ctx.getState().registry.data,
-            error: null,
+            data: registry,
             isLoading: false,
+            error: null,
           },
-        })
-      )
+        });
+
+        if (registry.licenseUrl) {
+          ctx.dispatch(new GetLicenseFromUrl(registry.licenseUrl));
+        }
+      }),
+      catchError((error) => handleSectionError(ctx, 'registry', error))
     );
   }
 
@@ -102,35 +97,17 @@ export class RegistryMetadataState {
     return this.registryMetadataService
       .getBibliographicContributors(action.registryId, action.page, action.pageSize)
       .pipe(
-        tap({
-          next: (response) => {
-            const contributors = RegistryMetadataMapper.mapBibliographicContributors(response);
-            ctx.patchState({
-              bibliographicContributors: {
-                data: contributors,
-                isLoading: false,
-                error: null,
-              },
-            });
-          },
-          error: (error) => {
-            ctx.patchState({
-              bibliographicContributors: {
-                data: [],
-                isLoading: false,
-                error: error.message,
-              },
-            });
-          },
-        }),
-        finalize(() =>
+        tap((response) => {
+          const contributors = RegistryMetadataMapper.mapBibliographicContributors(response);
           ctx.patchState({
             bibliographicContributors: {
-              ...ctx.getState().bibliographicContributors,
+              data: contributors,
               isLoading: false,
+              error: null,
             },
-          })
-        )
+          });
+        }),
+        catchError((error) => handleSectionError(ctx, 'bibliographicContributors', error))
       );
   }
 
@@ -145,87 +122,79 @@ export class RegistryMetadataState {
     });
 
     return this.registryMetadataService.getRegistrySubjects(action.registryId, action.page, action.pageSize).pipe(
-      tap({
-        next: (response) => {
-          ctx.patchState({
-            subjects: {
-              data: response.data,
-              isLoading: false,
-              error: null,
-            },
-          });
-        },
-        error: (error) => {
-          ctx.patchState({
-            subjects: {
-              data: [],
-              isLoading: false,
-              error: error.message,
-            },
-          });
-        },
-      }),
-      finalize(() =>
+      tap((response) => {
         ctx.patchState({
           subjects: {
-            ...ctx.getState().subjects,
+            data: response.data,
             isLoading: false,
+            error: null,
           },
-        })
-      )
+        });
+      }),
+      catchError((error) => handleSectionError(ctx, 'subjects', error))
+    );
+  }
+
+  @Action(GetRegistryInstitutions)
+  getRegistryInstitutions(ctx: StateContext<RegistryMetadataStateModel>, action: GetRegistryInstitutions) {
+    ctx.patchState({
+      institutions: {
+        data: [],
+        isLoading: true,
+        error: null,
+      },
+    });
+
+    return this.registryMetadataService.getRegistryInstitutions(action.registryId, action.page, action.pageSize).pipe(
+      tap((response) => {
+        ctx.patchState({
+          institutions: {
+            data: response.data,
+            isLoading: false,
+            error: null,
+          },
+        });
+      }),
+      catchError((error) => handleSectionError(ctx, 'institutions', error))
     );
   }
 
   @Action(GetCustomItemMetadata)
   getCustomItemMetadata(ctx: StateContext<RegistryMetadataStateModel>, action: GetCustomItemMetadata) {
     ctx.patchState({
-      customItemMetadata: { data: null, isLoading: true, error: null },
+      customItemMetadata: { data: {}, isLoading: true, error: null },
     });
 
     return this.registryMetadataService.getCustomItemMetadata(action.guid).pipe(
-      tap({
-        next: (response) => {
-          ctx.patchState({
-            customItemMetadata: { data: response.data.attributes, isLoading: false, error: null },
-          });
-        },
-        error: (error) => {
-          ctx.patchState({
-            customItemMetadata: { data: null, isLoading: false, error: error.message },
-          });
-        },
-      }),
-      finalize(() =>
+      tap((response) => {
+        const metadataAttributes = response?.data?.attributes || (response as unknown as CustomItemMetadataRecord);
+
         ctx.patchState({
-          customItemMetadata: {
-            ...ctx.getState().customItemMetadata,
-            isLoading: false,
-          },
-        })
-      )
+          customItemMetadata: { data: metadataAttributes, isLoading: false, error: null },
+        });
+      }),
+      catchError((error) => handleSectionError(ctx, 'customItemMetadata', error))
     );
   }
 
   @Action(UpdateCustomItemMetadata)
   updateCustomItemMetadata(ctx: StateContext<RegistryMetadataStateModel>, action: UpdateCustomItemMetadata) {
     ctx.patchState({
-      customItemMetadata: { data: null, isLoading: true, error: null },
+      customItemMetadata: { data: {} as CustomItemMetadataRecord, isLoading: true, error: null },
     });
 
     return this.registryMetadataService.updateCustomItemMetadata(action.guid, action.metadata).pipe(
-      tap({
-        next: (response) => {
-          ctx.patchState({
-            customItemMetadata: { data: response.data.attributes, isLoading: false, error: null },
-          });
-        },
-        error: (error) => {
-          ctx.patchState({
-            customItemMetadata: { ...ctx.getState().customItemMetadata, isLoading: false, error: error.message },
-          });
-        },
+      tap((response) => {
+        const metadataAttributes = response?.data?.attributes || (response as unknown as CustomItemMetadataRecord);
+        ctx.patchState({
+          customItemMetadata: {
+            data: { ...ctx.getState().customItemMetadata.data, ...metadataAttributes },
+            isLoading: false,
+            error: null,
+          },
+        });
       }),
-      finalize(() => ctx.patchState({ customItemMetadata: { ...ctx.getState().customItemMetadata, isLoading: false } }))
+      catchError((error) => handleSectionError(ctx, 'customItemMetadata', error))
     );
   }
 
@@ -240,74 +209,21 @@ export class RegistryMetadataState {
     });
 
     return this.registryMetadataService.updateRegistryDetails(action.registryId, action.updates).pipe(
-      tap({
-        next: (updatedRegistry) => {
-          const currentRegistry = ctx.getState().registry.data;
+      tap((updatedRegistry) => {
+        const currentRegistry = ctx.getState().registry.data;
 
-          ctx.patchState({
-            registry: {
-              data: {
-                ...currentRegistry,
-                ...updatedRegistry,
-              },
-              error: null,
-              isLoading: false,
-            },
-          });
-        },
-        error: (error) => {
-          ctx.patchState({
-            registry: {
-              ...ctx.getState().registry,
-              error: error.message,
-              isLoading: false,
-            },
-          });
-        },
-      }),
-      finalize(() =>
         ctx.patchState({
           registry: {
-            ...ctx.getState().registry,
+            data: {
+              ...currentRegistry,
+              ...updatedRegistry,
+            },
             error: null,
             isLoading: false,
           },
-        })
-      )
-    );
-  }
-
-  @Action(GetFundersList)
-  getFundersList(ctx: StateContext<RegistryMetadataStateModel>, action: GetFundersList) {
-    ctx.patchState({
-      fundersList: { data: [], isLoading: true, error: null },
-    });
-
-    return this.registryMetadataService.getFundersList(action.search).pipe(
-      tap({
-        next: (response) => {
-          ctx.patchState({
-            fundersList: { data: response.message.items, isLoading: false, error: null },
-          });
-        },
-        error: (error) => {
-          ctx.patchState({
-            fundersList: {
-              ...ctx.getState().fundersList,
-              isLoading: false,
-              error: error.message,
-            },
-          });
-        },
+        });
       }),
-      finalize(() =>
-        ctx.patchState({
-          fundersList: {
-            ...ctx.getState().fundersList,
-            isLoading: false,
-          },
-        })
-      )
+      catchError((error) => handleSectionError(ctx, 'registry', error))
     );
   }
 
@@ -322,35 +238,16 @@ export class RegistryMetadataState {
     });
 
     return this.registryMetadataService.getUserInstitutions(action.userId, action.page, action.pageSize).pipe(
-      tap({
-        next: (response) => {
-          ctx.patchState({
-            userInstitutions: {
-              data: response.data,
-              isLoading: false,
-              error: null,
-            },
-          });
-        },
-        error: (error) => {
-          ctx.patchState({
-            userInstitutions: {
-              ...ctx.getState().userInstitutions,
-              error: error.message,
-              isLoading: false,
-            },
-          });
-        },
-      }),
-      finalize(() =>
+      tap((response) => {
         ctx.patchState({
           userInstitutions: {
-            ...ctx.getState().userInstitutions,
-            error: null,
+            data: response.data,
             isLoading: false,
+            error: null,
           },
-        })
-      )
+        });
+      }),
+      catchError((error) => handleSectionError(ctx, 'userInstitutions', error))
     );
   }
 
@@ -365,34 +262,16 @@ export class RegistryMetadataState {
     });
 
     return this.registryMetadataService.getCedarMetadataTemplates(action.url).pipe(
-      tap({
-        next: (response) => {
-          ctx.patchState({
-            cedarTemplates: {
-              data: response,
-              error: null,
-              isLoading: false,
-            },
-          });
-        },
-        error: (error) => {
-          ctx.patchState({
-            cedarTemplates: {
-              ...ctx.getState().cedarTemplates,
-              error: error.message,
-              isLoading: false,
-            },
-          });
-        },
-      }),
-      finalize(() =>
+      tap((response) => {
         ctx.patchState({
           cedarTemplates: {
-            ...ctx.getState().cedarTemplates,
+            data: response,
+            error: null,
             isLoading: false,
           },
-        })
-      )
+        });
+      }),
+      catchError((error) => handleSectionError(ctx, 'cedarTemplates', error))
     );
   }
 
@@ -417,7 +296,8 @@ export class RegistryMetadataState {
             isLoading: false,
           },
         });
-      })
+      }),
+      catchError((error) => handleSectionError(ctx, 'cedarRecords', error))
     );
   }
 
@@ -462,5 +342,94 @@ export class RegistryMetadataState {
         isLoading: false,
       },
     });
+  }
+
+  @Action(UpdateRegistrySubjects)
+  updateRegistrySubjects(ctx: StateContext<RegistryMetadataStateModel>, action: UpdateRegistrySubjects) {
+    return this.registryMetadataService.updateRegistrySubjects(action.registryId, action.subjects);
+  }
+
+  @Action(UpdateRegistryInstitutions)
+  updateRegistryInstitutions(ctx: StateContext<RegistryMetadataStateModel>, action: UpdateRegistryInstitutions) {
+    return this.registryMetadataService.updateRegistryInstitutions(action.registryId, action.institutions).pipe(
+      tap({
+        next: () => {
+          ctx.dispatch(new GetRegistryInstitutions(action.registryId));
+        },
+      })
+    );
+  }
+
+  @Action(UpdateRegistryContributor)
+  updateRegistryContributor(ctx: StateContext<RegistryMetadataStateModel>, action: UpdateRegistryContributor) {
+    const updateRequest = {
+      data: action.updateData,
+    };
+
+    return this.registryMetadataService
+      .updateRegistryContributor(action.registryId, action.contributorId, updateRequest)
+      .pipe(
+        tap({
+          next: () => {
+            ctx.dispatch(new GetBibliographicContributors(action.registryId));
+            ctx.dispatch(new GetAllContributors(action.registryId, ResourceType.Registration));
+            ctx.dispatch(new GetRegistryForMetadata(action.registryId));
+          },
+        })
+      );
+  }
+
+  @Action(AddRegistryContributor)
+  addRegistryContributor(ctx: StateContext<RegistryMetadataStateModel>, action: AddRegistryContributor) {
+    const addRequest = {
+      data: action.contributorData,
+    };
+
+    return this.registryMetadataService.addRegistryContributor(action.registryId, addRequest).pipe(
+      tap({
+        next: () => {
+          ctx.dispatch(new GetBibliographicContributors(action.registryId));
+          ctx.dispatch(new GetAllContributors(action.registryId, ResourceType.Registration));
+          ctx.dispatch(new GetRegistryForMetadata(action.registryId));
+        },
+      })
+    );
+  }
+
+  @Action(GetLicenseFromUrl)
+  getLicenseFromUrl(ctx: StateContext<RegistryMetadataStateModel>, action: GetLicenseFromUrl) {
+    ctx.patchState({
+      license: {
+        data: null,
+        isLoading: true,
+        error: null,
+      },
+    });
+
+    return this.registryMetadataService.getLicenseFromUrl(action.licenseUrl).pipe(
+      tap((license) => {
+        ctx.patchState({
+          license: {
+            data: license,
+            isLoading: false,
+            error: null,
+          },
+        });
+
+        const currentRegistry = ctx.getState().registry.data;
+        if (currentRegistry) {
+          ctx.patchState({
+            registry: {
+              ...ctx.getState().registry,
+              data: {
+                ...currentRegistry,
+                license: license,
+              },
+            },
+          });
+        }
+      }),
+      catchError((error) => handleSectionError(ctx, 'license', error))
+    );
   }
 }

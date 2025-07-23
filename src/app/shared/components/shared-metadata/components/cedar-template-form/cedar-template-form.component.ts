@@ -35,7 +35,6 @@ interface CedarEditorElement extends HTMLElement {
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class CedarTemplateFormComponent implements OnInit {
   emitData = output<CedarRecordDataBinding>();

@@ -11,15 +11,19 @@ export const authInterceptor: HttpInterceptorFn = (
   // 2rjFZwmdDG4rtKj7hGkEMO6XyHBM2lN7XBbsA1e8OqcFhOWu6Z7fQZiheu9RXtzSeVrgOt roman nastyuk
 
   if (authToken) {
-    const authReq = req.clone({
-      setHeaders: {
-        Authorization: `Bearer ${authToken}`,
-        Accept: req.responseType === 'text' ? '*/*' : 'application/vnd.api+json',
-        'Content-Type': 'application/vnd.api+json',
-      },
-    });
+    if (!req.url.includes('/api.crossref.org/funders')) {
+      const authReq = req.clone({
+        setHeaders: {
+          Authorization: `Bearer ${authToken}`,
+          Accept: req.responseType === 'text' ? '*/*' : 'application/vnd.api+json',
+          'Content-Type': 'application/vnd.api+json',
+        },
+      });
 
-    return next(authReq);
+      return next(authReq);
+    } else {
+      return next(req);
+    }
   }
 
   return next(req);

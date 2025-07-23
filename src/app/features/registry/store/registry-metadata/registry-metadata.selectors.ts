@@ -10,6 +10,16 @@ export class RegistryMetadataSelectors {
   }
 
   @Selector([RegistryMetadataState])
+  static getLicense(state: RegistryMetadataStateModel) {
+    return state.license.data;
+  }
+
+  @Selector([RegistryMetadataState])
+  static getLicenseLoading(state: RegistryMetadataStateModel) {
+    return state.license.isLoading;
+  }
+
+  @Selector([RegistryMetadataState])
   static getRegistryLoading(state: RegistryMetadataStateModel) {
     return state.registry.isLoading;
   }
@@ -30,18 +40,18 @@ export class RegistryMetadataSelectors {
   }
 
   @Selector([RegistryMetadataState])
+  static getInstitutions(state: RegistryMetadataStateModel) {
+    return state.institutions.data;
+  }
+
+  @Selector([RegistryMetadataState])
+  static getInstitutionsLoading(state: RegistryMetadataStateModel) {
+    return state.institutions.isLoading;
+  }
+
+  @Selector([RegistryMetadataState])
   static getCustomItemMetadataLoading(state: RegistryMetadataStateModel) {
     return state.customItemMetadata.isLoading;
-  }
-
-  @Selector([RegistryMetadataState])
-  static getFundersList(state: RegistryMetadataStateModel) {
-    return state.fundersList.data;
-  }
-
-  @Selector([RegistryMetadataState])
-  static getFundersLoading(state: RegistryMetadataStateModel) {
-    return state.fundersList.isLoading;
   }
 
   @Selector([RegistryMetadataState])

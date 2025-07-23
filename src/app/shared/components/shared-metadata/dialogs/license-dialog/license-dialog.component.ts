@@ -4,36 +4,23 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { Select } from 'primeng/select';
 
-import { ChangeDetectionStrategy, Component, effect, inject, OnInit, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal, viewChild } from '@angular/core';
 
 import { ProjectOverview } from '@osf/features/project/overview/models';
-import { LoadingSpinnerComponent } from '@osf/shared/components';
-import { License, SelectOption } from '@shared/models';
+import { LicenseComponent, LoadingSpinnerComponent } from '@osf/shared/components';
+import { License, LicenseOptions } from '@shared/models';
 import { LicensesSelectors, LoadAllLicenses } from '@shared/stores/licenses';
-
-interface LicenseForm {
-  licenseName: FormControl<string>;
-}
 
 @Component({
   selector: 'osf-license-dialog',
-  imports: [Button, Select, TranslatePipe, ReactiveFormsModule, LoadingSpinnerComponent],
+  imports: [Button, TranslatePipe, LoadingSpinnerComponent, LicenseComponent],
   templateUrl: './license-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LicenseDialogComponent implements OnInit {
   protected dialogRef = inject(DynamicDialogRef);
   protected config = inject(DynamicDialogConfig);
-
-  licenseForm = new FormGroup<LicenseForm>({
-    licenseName: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-  });
 
   protected actions = createDispatchMap({
     loadLicenses: LoadAllLicenses,
@@ -42,60 +29,75 @@ export class LicenseDialogComponent implements OnInit {
   licenses = select(LicensesSelectors.getLicenses);
   licensesLoading = select(LicensesSelectors.getLoading);
 
-  selectedLicenseText = signal<string>('');
-  licenseOptions: SelectOption[] = [];
+  selectedLicenseId = signal<string | null>(null);
+  selectedLicenseOptions = signal<LicenseOptions | null>(null);
   currentProject: ProjectOverview | null = null;
+  isSubmitting = signal<boolean>(false);
 
-  constructor() {
-    effect(() => {
-      const currentLicenses = this.licenses();
-
-      if (currentLicenses) {
-        this.licenseOptions = currentLicenses.map((license: License) => ({
-          label: license.name,
-          value: license.id,
-        }));
-      }
-    });
-  }
+  licenseComponent = viewChild<LicenseComponent>('licenseComponent');
 
   ngOnInit(): void {
     this.actions.loadLicenses();
-
+    this.currentProject = this.config.data?.currentProject || null;
     if (this.currentProject?.license) {
-      this.licenseForm.patchValue({
-        licenseName: this.currentProject.license.name || '',
+      this.selectedLicenseId.set(this.currentProject.license.id || null);
+      if (this.currentProject.nodeLicense) {
+        this.selectedLicenseOptions.set({
+          copyrightHolders: this.currentProject.nodeLicense.copyrightHolders?.join(', ') || '',
+          year: this.currentProject.nodeLicense.year || new Date().getFullYear().toString(),
+        });
+      }
+    }
+  }
+
+  onSelectLicense(license: License): void {
+    this.selectedLicenseId.set(license.id);
+  }
+
+  onCreateLicense(event: { id: string; licenseOptions: LicenseOptions }): void {
+    const selectedLicense = this.licenses().find((license) => license.id === event.id);
+
+    if (selectedLicense) {
+      this.dialogRef.close({
+        licenseName: selectedLicense.name,
+        licenseId: selectedLicense.id,
+        licenseOptions: event.licenseOptions,
+        projectId: this.currentProject?.id,
       });
     }
 
-    this.licenseForm.get('licenseName')?.valueChanges.subscribe((licenseName) => {
-      this.updateSelectedLicenseText(licenseName);
-    });
-  }
-
-  private updateSelectedLicenseText(licenseId: string): void {
-    const selectedLicense = this.licenses().find((license: License) => license.id === licenseId);
-
-    if (selectedLicense) {
-      this.selectedLicenseText.set(selectedLicense.text);
-    } else {
-      this.selectedLicenseText.set('');
-    }
+    this.isSubmitting.set(false);
   }
 
   save(): void {
-    if (this.licenseForm.valid) {
-      const formValue = this.licenseForm.getRawValue();
-      const selectedLicense = this.licenses().find((license) => license.id === formValue.licenseName);
+    if (
+      this.licenseComponent()?.selectedLicense()!.requiredFields.length &&
+      this.licenseComponent()?.licenseForm.invalid
+    ) {
+      return;
+    }
+
+    const selectedLicenseId = this.selectedLicenseId();
+    if (!selectedLicenseId) return;
+
+    const selectedLicense = this.licenses().find((license) => license.id === selectedLicenseId);
+    if (!selectedLicense) return;
+
+    this.isSubmitting.set(true);
+
+    if (selectedLicense.requiredFields?.length) {
+      this.licenseComponent()?.saveLicense();
+    } else {
       this.dialogRef.close({
-        licenseName: formValue.licenseName,
-        licenseId: selectedLicense?.id,
+        licenseName: selectedLicense.name,
+        licenseId: selectedLicense.id,
         projectId: this.currentProject?.id,
       });
     }
   }
 
   cancel(): void {
+    this.licenseComponent()?.cancel();
     this.dialogRef.close();
   }
 }

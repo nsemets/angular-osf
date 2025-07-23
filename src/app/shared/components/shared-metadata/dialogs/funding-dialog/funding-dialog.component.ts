@@ -14,6 +14,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import {
+  Funder,
   FunderOption,
   FundingDialogResult,
   FundingEntryData,
@@ -22,7 +23,6 @@ import {
   SupplementData,
 } from '@osf/features/project/metadata/models';
 import { GetFundersList, ProjectMetadataSelectors } from '@osf/features/project/metadata/store';
-import { ProjectOverview } from '@osf/features/project/overview/models';
 
 @Component({
   selector: 'osf-funding-dialog',
@@ -69,10 +69,6 @@ export class FundingDialogComponent implements OnInit {
     });
   }
 
-  get currentProject(): ProjectOverview | null {
-    return this.config.data ? this.config.data.currentProject || null : null;
-  }
-
   get fundingEntries() {
     return this.fundingForm.get('fundingEntries') as FormArray<FormGroup<FundingEntryForm>>;
   }
@@ -80,7 +76,21 @@ export class FundingDialogComponent implements OnInit {
   ngOnInit(): void {
     this.actions.getFundersList();
 
-    this.addFundingEntry();
+    const configFunders = this.config.data?.funders;
+    if (configFunders && configFunders.length > 0) {
+      configFunders.forEach((funder: Funder) => {
+        this.addFundingEntry({
+          funderName: funder.funder_name || '',
+          funderIdentifier: funder.funder_identifier || '',
+          funderIdentifierType: funder.funder_identifier_type || 'DOI',
+          awardTitle: funder.award_title || '',
+          awardUri: funder.award_uri || '',
+          awardNumber: funder.award_number || '',
+        });
+      });
+    } else {
+      this.addFundingEntry();
+    }
 
     this.searchSubject
       .pipe(debounceTime(300), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
@@ -136,8 +146,8 @@ export class FundingDialogComponent implements OnInit {
       const entry = this.fundingEntries.at(index);
       entry.patchValue({
         funderName: selectedFunder.name,
-        funderIdentifier: selectedFunder.id,
-        funderIdentifierType: 'DOI',
+        funderIdentifier: selectedFunder.uri,
+        funderIdentifierType: 'Crossref Funder ID',
       });
     }
   }
@@ -150,7 +160,6 @@ export class FundingDialogComponent implements OnInit {
 
       const result: FundingDialogResult = {
         fundingEntries: fundingData,
-        projectId: this.currentProject ? this.currentProject.id : undefined,
       };
 
       this.dialogRef.close(result);
