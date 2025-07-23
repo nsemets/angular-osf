@@ -12,19 +12,18 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, OnInit, 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
+import { MAX_DATE, MIN_DATE } from '@osf/features/settings/profile-settings/constants';
 import { TextInputComponent } from '@osf/shared/components';
 import { InputLimits } from '@osf/shared/constants';
 
-import { MAX_DATE, MIN_DATE } from '../../constants';
-
 @Component({
-  selector: 'osf-education-form',
+  selector: 'osf-employment-form',
   imports: [ReactiveFormsModule, Button, InputText, DatePicker, Checkbox, Message, TranslatePipe, TextInputComponent],
-  templateUrl: './education-form.component.html',
-  styleUrl: './education-form.component.scss',
+  templateUrl: './employment-form.component.html',
+  styleUrl: './employment-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EducationFormComponent implements OnInit {
+export class EmploymentFormComponent implements OnInit {
   readonly maxDate = MAX_DATE;
   readonly minDate = MIN_DATE;
   readonly institutionMaxLength = InputLimits.fullName.maxLength;
@@ -36,8 +35,8 @@ export class EducationFormComponent implements OnInit {
   index = input.required<number>();
   remove = output<void>();
 
-  get institutionControl() {
-    return this.group().controls['institution'] as FormControl;
+  get titleControl() {
+    return this.group().controls['title'] as FormControl;
   }
 
   get isDateError() {

@@ -119,14 +119,17 @@ export class EducationComponent {
   }
 
   private createEducationFormGroup(education?: Partial<EducationForm>): FormGroup {
-    return this.fb.group({
-      institution: [education?.institution ?? '', CustomValidators.requiredTrimmed()],
-      department: [education?.department ?? ''],
-      degree: [education?.degree ?? ''],
-      startDate: [education?.startDate ?? null],
-      endDate: [education?.endDate ?? null],
-      ongoing: [education?.ongoing ?? false],
-    });
+    return this.fb.group(
+      {
+        institution: [education?.institution ?? '', CustomValidators.requiredTrimmed()],
+        department: [education?.department ?? ''],
+        degree: [education?.degree ?? ''],
+        startDate: [education?.startDate ?? null],
+        endDate: [education?.endDate ?? null],
+        ongoing: [education?.ongoing ?? false],
+      },
+      { validators: CustomValidators.dateRangeValidator }
+    );
   }
 
   private setInitialData(): void {
@@ -137,6 +140,8 @@ export class EducationComponent {
     educations
       .map((education) => this.mapEducationToForm(education))
       .forEach((education) => this.educations.push(this.createEducationFormGroup(education)));
+
+    this.cd.markForCheck();
   }
 
   private mapFormToEducation(education: EducationForm): Education {

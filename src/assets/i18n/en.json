@@ -1441,7 +1441,6 @@
       },
       "employment": {
         "title": "Position {{index}}",
-        "remove": "Remove",
         "jobTitle": "Job Title",
         "department": "Department / Institute (Optional)",
         "institution": "Institution / Employer",
@@ -1453,7 +1452,6 @@
       },
       "education": {
         "title": "Education {{index}}",
-        "remove": "Remove",
         "institution": "Institution",
         "department": "Department",
         "degree": "Degree",
@@ -1463,10 +1461,7 @@
         "addMore": "Add One More",
         "successUpdate": "Education successfully updated."
       },
-      "common": {
-        "discardChanges": "Discard Changes",
-        "save": "Save"
-      }
+      "endDateError": "End date must be greater than start date."
     },
     "accountSettings": {
       "title": "Account Settings",

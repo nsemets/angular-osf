@@ -3,6 +3,6 @@ export interface EmploymentForm {
   ongoing: boolean;
   department: string;
   institution: string;
-  startDate: Date | string;
-  endDate: Date | string | null;
+  startDate: Date;
+  endDate: Date | null;
 }

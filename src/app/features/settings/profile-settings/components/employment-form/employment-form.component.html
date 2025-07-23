@@ -1,7 +1,7 @@
 <div [formGroup]="group()" class="flex flex-column border-1 border-round-lg p-4 grey-border-color row-gap-4">
   <div class="flex flex-row">
     <h2>
-      {{ 'settings.profileSettings.education.title' | translate: { index: index() + 1 } }}
+      {{ 'settings.profileSettings.employment.title' | translate: { index: index() + 1 } }}
     </h2>
 
     @if (index() !== 0) {
@@ -14,8 +14,8 @@
   <div class="flex flex-column row-gap-4">
     <div class="w-full">
       <osf-text-input
-        [control]="institutionControl"
-        [label]="'settings.profileSettings.education.institution'"
+        [control]="titleControl"
+        [label]="'settings.profileSettings.employment.jobTitle'"
         [maxLength]="institutionMaxLength"
       ></osf-text-input>
     </div>
@@ -23,16 +23,18 @@
     <div class="flex w-full column-gap-3 row-gap-4 flex-wrap lg:flex-nowrap">
       <div class="w-full lg:w-6">
         <label for="department-{{ index() }}" class="mb-1">
-          {{ 'settings.profileSettings.education.department' | translate }}
+          {{ 'settings.profileSettings.employment.department' | translate }}
         </label>
-        <input pInputText [id]="'department-' + index" class="w-full" formControlName="department" />
+
+        <input pInputText [id]="'department-' + index()" class="w-full" formControlName="department" />
       </div>
 
       <div class="w-full lg:w-6">
-        <label for="degree-{{ index() }}" class="mb-1">
-          {{ 'settings.profileSettings.education.degree' | translate }}
+        <label for="institution-{{ index() }}" class="mb-1">
+          {{ 'settings.profileSettings.employment.institution' | translate }}
         </label>
-        <input pInputText [id]="'degree-' + index" class="w-full" formControlName="degree" />
+
+        <input pInputText [id]="'institution-' + index()" class="w-full" formControlName="institution" />
       </div>
     </div>
 
@@ -40,7 +42,7 @@
       <div class="flex column-gap-3 row-gap-4 flex-wrap w-full md:w-6 lg:flex-nowrap">
         <div class="w-full lg:w-6">
           <label for="start-date-{{ index() }}" class="mb-1">
-            {{ 'settings.profileSettings.education.startDate' | translate }}
+            {{ 'settings.profileSettings.employment.startDate' | translate }}
           </label>
 
           <p-datepicker
@@ -57,7 +59,7 @@
         @if (!group().controls['ongoing'].value) {
           <div class="w-full lg:w-6">
             <label for="end-date-{{ index() }}" class="mb-1">
-              {{ 'settings.profileSettings.education.endDate' | translate }}
+              {{ 'settings.profileSettings.employment.endDate' | translate }}
             </label>
 
             <p-datepicker
@@ -82,7 +84,7 @@
         ></p-checkbox>
 
         <label [for]="'ongoing-' + index" class="ml-2 mb-0 cursor-pointer">
-          {{ 'settings.profileSettings.education.ongoing' | translate }}
+          {{ 'settings.profileSettings.employment.presentlyEmployed' | translate }}
         </label>
       </div>
     </div>
