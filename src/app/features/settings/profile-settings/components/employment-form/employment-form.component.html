@@ -1,12 +1,17 @@
 <div [formGroup]="group()" class="flex flex-column border-1 border-round-lg p-4 grey-border-color row-gap-4">
-  <div class="flex flex-row">
+  <div class="flex flex-row justify-content-between">
     <h2>
       {{ 'settings.profileSettings.employment.title' | translate: { index: index() + 1 } }}
     </h2>
 
     @if (index() !== 0) {
-      <div class="ml-auto">
-        <p-button class="ml-auto" [label]="'common.buttons.remove' | translate" (click)="remove.emit()"> </p-button>
+      <div>
+        <p-button
+          [label]="'common.buttons.remove' | translate"
+          severity="danger"
+          variant="text"
+          (click)="remove.emit()"
+        />
       </div>
     }
   </div>
