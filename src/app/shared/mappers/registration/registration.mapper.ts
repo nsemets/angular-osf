@@ -25,10 +25,17 @@ export class RegistrationMapper {
       },
       tags: response.attributes.tags || [],
       stepsData: response.attributes.registration_responses || {},
-      branchedFrom: {
-        id: response.embeds?.branched_from?.data.id,
-        title: response.embeds?.branched_from?.data.attributes.title,
-      },
+      branchedFrom: response.embeds?.branched_from?.data
+        ? {
+            id: response.embeds.branched_from.data.id,
+            title: response.embeds.branched_from.data.attributes.title,
+            filesLink: response.embeds?.branched_from?.data.relationships?.files?.links?.related?.href,
+          }
+        : {
+            id: response.relationships.branched_from?.data?.id || '',
+            title: response.attributes.title,
+            filesLink: response.relationships.branched_from?.links?.related.href + 'files/',
+          },
       providerId: response.relationships.provider?.data?.id || '',
       hasProject: !!response.attributes.has_project,
       components: [],
