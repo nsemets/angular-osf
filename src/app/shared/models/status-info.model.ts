@@ -1,4 +1,6 @@
+import { SeverityType } from './severity.type';
+
 export interface StatusInfo {
   label: string;
-  severity: 'info' | 'success' | 'warn' | 'danger' | null;
+  severity: SeverityType | null;
 }

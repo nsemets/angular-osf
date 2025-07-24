@@ -3,6 +3,7 @@ import { Tag } from 'primeng/tag';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 import { RegistryStatus } from '@osf/shared/enums';
+import { SeverityType } from '@osf/shared/models';
 
 import { RegistryStatusMap } from './default-statuses';
 
@@ -19,7 +20,7 @@ export class StatusBadgeComponent {
     return RegistryStatusMap[this.status()]?.label ?? 'Unknown';
   }
 
-  get severity(): 'info' | 'success' | 'warn' | 'danger' | null {
+  get severity(): SeverityType | null {
     return RegistryStatusMap[this.status()]?.severity ?? null;
   }
 }

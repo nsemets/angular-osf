@@ -11,15 +11,6 @@
           <h2 class="align-self-center">
             {{ registrationData().title || 'project.registrations.card.noTitle' | translate }}
           </h2>
-          <!--
-          @if (registrationData().status === RegistrationStatus.InProgress) {
-            <p-tag severity="warn" value="Update In Progress" />
-          }
-
-          @if (registrationData().status === RegistrationStatus.PendingWithdraw) {
-            <p-tag severity="secondary" value="Withdrawn" />
-          } 
-          -->
           @if (!isDraft()) {
             <osf-status-badge [status]="registrationData().status" />
           }
