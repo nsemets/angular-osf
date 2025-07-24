@@ -15,14 +15,6 @@
 
         <div class="flex gap-2 flex-wrap sm:gap-4">
           @for (meta of cedarTemplates()?.data; track meta.id) {
-            <!--            <p-button-->
-            <!--              severity="info"-->
-            <!--              class="metadata border-1 grey-border-color border-round-xl p-4 align-items-center"-->
-            <!--              styleClass="flex justify-content-between flex-column gap-4 hover:border-0"-->
-            <!--              [class.cursor-pointer]="!hasExistingRecord(meta.id)"-->
-            <!--              [class.cursor-not-allowed]="hasExistingRecord(meta.id)"-->
-            <!--              (click)="onTemplateSelected(meta)"-->
-            <!--            >-->
             <div
               class="flex flex-column gap-4 metadata border-1 grey-border-color border-round-xl p-4 align-items-center"
             >
@@ -49,8 +41,6 @@
                 ></p-button>
               }
             </div>
-
-            <!--            </p-button>-->
           }
         </div>
 
