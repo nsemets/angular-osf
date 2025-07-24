@@ -1,3 +1,5 @@
+import { License } from '@shared/models';
+
 import { ProjectOverview, ProjectOverviewGetResponseJsoApi } from '../models';
 
 export class ProjectOverviewMapper {
@@ -77,6 +79,6 @@ export class ProjectOverviewMapper {
         rootFolder: response.relationships?.files?.links?.related?.href,
         iri: response.links?.iri,
       },
-    };
+    } as ProjectOverview;
   }
 }
