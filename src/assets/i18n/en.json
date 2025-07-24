@@ -2075,6 +2075,7 @@
   },
   "shared": {
     "resources": {
+      "title": "Open resources",
       "data": "Data",
       "analyticCode": "Analytic Code",
       "materials": "Materials",
@@ -2100,6 +2101,19 @@
     "files": {
       "limitText": "You may attach up to 5 file(s) to this question. Files cannot total over 5GB in size.",
       "description": "Uploaded files will automatically be archived in this registration. They will also be added to a related project that will be created for this registration."
+    },
+    "statuses": {
+      "pendingRegistrationApproval": "Pending registration approval",
+      "pendingEmbargoApproval": "Pending embargo approval",
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "embargo": "Embargo",
+      "pendingEmbargoTerminationApproval": "Pending embargo termination approval",
+      "pendingWithdrawRequest": "Pending withdraw request",
+      "pendingWithdraw": "Pending withdrawal",
+      "unapproved": "Unapproved",
+      "inProgress": "In progress",
+      "pendingModeration": "Pending moderation"
     }
   },
   "resourceCard": {
