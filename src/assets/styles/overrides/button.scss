@@ -50,3 +50,15 @@
     --p-button-text-danger-color: var(--red-3);
   }
 }
+
+.widen-buttons {
+  p-button {
+    width: 100%;
+    .p-button {
+      width: 100%;
+    }
+    button {
+      width: 100%;
+    }
+  }
+}

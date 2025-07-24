@@ -39,7 +39,8 @@
       "submit": "Submit",
       "view": "View",
       "review": "Review",
-      "upload": "Upload"
+      "upload": "Upload",
+      "preview": "Preview"
     },
     "search": {
       "title": "Search",
@@ -2222,6 +2223,19 @@
     "add": "Add Resource",
     "delete": "Delete Resource",
     "check": "Check your DOI for accuracy",
-    "deleteText": "Are you sure you want to delete resource"
+    "deleteText": "Are you sure you want to delete resource",
+    "selectAResourceType": "Select A Resource Type",
+    "descriptionLabel": "Description(Optional)",
+    "typeOptions": {
+      "data": "Data",
+      "code": "Analytic Code",
+      "materials": "Materials",
+      "papers": "Papers",
+      "supplements": "Supplements"
+    },
+    "toastMessages": {
+      "addResourceSuccess": "Added new resource",
+      "addResourceError": "Error occurred while adding new resource"
+    }
   }
 }

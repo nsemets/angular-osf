@@ -7,7 +7,12 @@ import { inject, Injectable } from '@angular/core';
 
 import { handleSectionError } from '@core/handlers';
 import { RegistryResourcesService } from '@osf/features/registry/services/registry-resources.service';
-import { GetRegistryResources, RegistryResourcesStateModel } from '@osf/features/registry/store/registry-resources';
+import {
+  AddRegistryResource,
+  ConfirmAddRegistryResource,
+  GetRegistryResources,
+  RegistryResourcesStateModel,
+} from '@osf/features/registry/store/registry-resources';
 
 @Injectable()
 @State<RegistryResourcesStateModel>({
@@ -39,6 +44,65 @@ export class RegistryResourcesState {
           ctx.patchState({
             resources: {
               data: resources,
+              isLoading: false,
+              error: null,
+            },
+          });
+        },
+      }),
+      catchError((err) => handleSectionError(ctx, 'resources', err))
+    );
+  }
+
+  @Action(AddRegistryResource)
+  addRegistryResource(ctx: StateContext<RegistryResourcesStateModel>, action: AddRegistryResource) {
+    const state = ctx.getState();
+    ctx.patchState({
+      resources: {
+        ...state.resources,
+        isLoading: true,
+      },
+    });
+
+    return this.registryResourcesService.addRegistryResource(action.resource).pipe(
+      tap({
+        next: (resource) => {
+          const { resources } = ctx.getState();
+
+          const oldData = resources.data ?? [];
+
+          ctx.patchState({
+            resources: {
+              data: [...oldData, resource],
+              isLoading: false,
+              error: null,
+            },
+          });
+        },
+      }),
+      catchError((err) => handleSectionError(ctx, 'resources', err))
+    );
+  }
+  @Action(ConfirmAddRegistryResource)
+  confirmAddRegistryResource(ctx: StateContext<RegistryResourcesStateModel>, action: ConfirmAddRegistryResource) {
+    const state = ctx.getState();
+    ctx.patchState({
+      resources: {
+        ...state.resources,
+        isLoading: true,
+      },
+    });
+
+    return this.registryResourcesService.confirmAddingResource(action.resource).pipe(
+      tap({
+        next: (resource) => {
+          const { resources } = ctx.getState();
+
+          const oldData = resources.data ?? [];
+
+          ctx.patchState({
+            resources: {
+              data: [...oldData, resource],
               isLoading: false,
               error: null,
             },

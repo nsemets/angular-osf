@@ -1,0 +1,65 @@
+@if (isPreviewMode()) {
+  <form class="flex flex-column gap-4" [formGroup]="form">
+    <p>Check your DOI for accuracy.</p>
+
+    @let resourceType = form.controls['resourceType'].value;
+    @let iconName = resourceType === 'analytic_code' ? 'code' : resourceType;
+    @let icon = `assets/icons/colored/${iconName}-colored.svg`;
+    @let resourceName = resourceType === 'analytic_code' ? 'Analytic Code' : resourceType;
+    @let description = form.controls['description'].value;
+
+    <div class="flex align-content-end gap-3">
+      <img [src]="icon" alt="resource-type icon" class="align-self-start" />
+      <div class="flex flex-column gap-3 mt-1">
+        <div class="flex flex-column gap-2">
+          <h2>{{ resourceName }}</h2>
+          <a [href]="'https://doi/' + form.controls['pid'].value">https://doi/{{ form.controls['pid'].value }}</a>
+        </div>
+        <p>{{ description }}</p>
+      </div>
+    </div>
+
+    <!-- Add Translation -->
+    <div class="flex justify-content-between w-full gap-1 widen-buttons">
+      <p-button [label]="'common.buttons.edit' | translate" severity="info" (click)="backToEdit()" />
+      <p-button [label]="'resources.add' | translate" severity="primary" (onClick)="onAddResource()" />
+    </div>
+  </form>
+} @else {
+  <form class="flex flex-column gap-4" [formGroup]="form" (ngSubmit)="previewResource()">
+    <!-- add translation-->
+    <osf-text-input
+      [control]="form.controls['pid']"
+      [label]="'DOI'"
+      [placeholder]="'https://doi.org/'"
+      [maxLength]="inputLimits.link.maxLength"
+    >
+    </osf-text-input>
+
+    <osf-select
+      [fullWidth]="true"
+      [options]="resourceOptions()"
+      [appendTo]="'body'"
+      [(selectedValue)]="selectedResourceType"
+      (changeValue)="changeType($event)"
+      [placeholder]="'resources.selectAResourceType'"
+    />
+
+    <div>
+      <label [for]="form.controls['description']">{{ 'resources.descriptionLabel' | translate }}</label>
+      <textarea
+        class="w-full"
+        pTextarea
+        id="coi-reason"
+        [rows]="3"
+        [formControl]="form.controls['description']"
+      ></textarea>
+    </div>
+
+    <!-- Add Translation -->
+    <div class="flex justify-content-between w-full gap-1 widen-buttons">
+      <p-button [label]="'common.buttons.cancel' | translate" severity="info" (click)="dialogRef.close()" />
+      <p-button [label]="'common.buttons.preview' | translate" (onClick)="previewResource()" />
+    </div>
+  </form>
+}

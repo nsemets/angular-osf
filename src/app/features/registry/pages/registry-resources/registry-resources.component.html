@@ -2,6 +2,7 @@
   [title]="'resources.title' | translate"
   [showButton]="true"
   [buttonLabel]="'resources.add' | translate"
+  (buttonClick)="addResource()"
 />
 
 @if (isResourcesLoading()) {
