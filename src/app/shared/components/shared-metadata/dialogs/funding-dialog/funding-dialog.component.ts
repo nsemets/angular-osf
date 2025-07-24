@@ -117,6 +117,7 @@ export class FundingDialogComponent implements OnInit {
       }),
       awardTitle: new FormControl(supplement ? supplement.title || supplement.awardTitle || '' : '', {
         nonNullable: true,
+        validators: [Validators.required],
       }),
       awardUri: new FormControl(supplement ? supplement.url || supplement.awardUri || '' : '', {
         nonNullable: true,

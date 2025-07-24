@@ -103,9 +103,4 @@ export class RegistryMetadataSelectors {
   static getCedarRecordsLoading(state: RegistryMetadataStateModel) {
     return state.cedarRecords.isLoading;
   }
-
-  @Selector([RegistryMetadataState])
-  static getError(state: RegistryMetadataStateModel) {
-    return state.registry.error;
-  }
 }

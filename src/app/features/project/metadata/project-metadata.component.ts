@@ -31,7 +31,7 @@ import {
   UpdateCustomItemMetadata,
   UpdateProjectDetails,
 } from '@osf/features/project/metadata/store';
-import { ResourceType } from '@osf/shared/enums';
+import { MetadataProjectsEnum, ResourceType } from '@osf/shared/enums';
 import {
   ContributorsSelectors,
   FetchChildrenSubjects,
@@ -53,6 +53,7 @@ import {
 } from '@shared/components/shared-metadata/dialogs';
 import { SharedMetadataComponent } from '@shared/components/shared-metadata/shared-metadata.component';
 import { SubjectModel } from '@shared/models';
+import { MetadataTabsModel } from '@shared/models/metadata-tabs.model';
 import { CustomConfirmationService, LoaderService, ToastService } from '@shared/services';
 
 @Component({
@@ -86,7 +87,7 @@ export class ProjectMetadataComponent implements OnInit {
 
   private projectId = '';
 
-  tabs = signal<{ id: string; label: string; type: 'project' | 'cedar' }[]>([]);
+  tabs = signal<MetadataTabsModel[]>([]);
   protected readonly selectedTab = signal('project');
 
   selectedCedarRecord = signal<CedarMetadataRecordData | null>(null);
@@ -130,13 +131,13 @@ export class ProjectMetadataComponent implements OnInit {
       const project = this.currentProject();
       if (!project) return;
 
-      const baseTabs = [{ id: 'project', label: project.title, type: 'project' as const }];
+      const baseTabs = [{ id: 'project', label: project.title, type: MetadataProjectsEnum.PROJECT }];
 
       const cedarTabs =
         records?.map((record) => ({
           id: record.id || '',
           label: record.embeds?.template?.data?.attributes?.schema_name || `Record ${record.id}`,
-          type: 'cedar' as const,
+          type: MetadataProjectsEnum.CEDAR,
         })) || [];
 
       this.tabs.set([...baseTabs, ...cedarTabs]);

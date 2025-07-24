@@ -11,10 +11,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import {
   CedarMetadataDataTemplateJsonApi,
-  CedarMetadataRecord,
   CedarMetadataRecordData,
   CedarRecordDataBinding,
 } from '@osf/features/project/metadata/models';
+import { CedarFormMapper } from '@osf/features/registry/mappers';
 import { LoadingSpinnerComponent, SubHeaderComponent } from '@shared/components';
 import { CedarTemplateFormComponent } from '@shared/components/shared-metadata/components';
 import { ToastService } from '@shared/services';
@@ -127,29 +127,7 @@ export class RegistryMetadataAddComponent implements OnInit {
 
     this.isSubmitting.set(true);
 
-    const model = {
-      data: {
-        type: 'cedar_metadata_records' as const,
-        attributes: {
-          metadata: data.data,
-          is_published: false,
-        },
-        relationships: {
-          template: {
-            data: {
-              type: 'cedar-metadata-templates' as const,
-              id: data.id,
-            },
-          },
-          target: {
-            data: {
-              type: 'registrations' as const,
-              id: registryId,
-            },
-          },
-        },
-      },
-    } as unknown as CedarMetadataRecord;
+    const model = CedarFormMapper(data, registryId);
 
     this.actions
       .createCedarRecord(model)
@@ -157,12 +135,12 @@ export class RegistryMetadataAddComponent implements OnInit {
       .subscribe({
         next: () => {
           this.isSubmitting.set(false);
-          this.toastService.showSuccess('CEDAR record created successfully');
+          this.toastService.showSuccess('project.overview.metadata.cedarRecordCreatedSuccessfully');
           this.router.navigate(['../metadata', this.cedarRecord()?.data.id], { relativeTo: this.route.parent });
         },
         error: () => {
           this.isSubmitting.set(false);
-          this.toastService.showError('Failed to create CEDAR record');
+          this.toastService.showError('project.overview.metadata.failedToCreateCedarRecord');
         },
       });
   }

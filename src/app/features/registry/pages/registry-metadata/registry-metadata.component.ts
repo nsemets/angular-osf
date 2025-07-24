@@ -23,12 +23,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UserSelectors } from '@osf/core/store/user';
 import {
   CedarMetadataDataTemplateJsonApi,
-  CedarMetadataRecord,
   CedarMetadataRecordData,
   CedarRecordDataBinding,
   CustomItemMetadataRecord,
 } from '@osf/features/project/metadata/models';
 import { ProjectOverview } from '@osf/features/project/overview/models';
+import { CedarFormMapper } from '@osf/features/registry/mappers';
 import {
   ContributorsSelectors,
   FetchChildrenSubjects,
@@ -47,8 +47,9 @@ import {
   ResourceInformationDialogComponent,
 } from '@shared/components/shared-metadata/dialogs';
 import { SharedMetadataComponent } from '@shared/components/shared-metadata/shared-metadata.component';
-import { ResourceType } from '@shared/enums';
+import { MetadataProjectsEnum, ResourceType } from '@shared/enums';
 import { SubjectModel } from '@shared/models';
+import { MetadataTabsModel } from '@shared/models/metadata-tabs.model';
 import { ToastService } from '@shared/services';
 
 import {
@@ -100,7 +101,7 @@ export class RegistryMetadataComponent implements OnInit {
 
   private registryId = '';
 
-  tabs = signal<{ id: string; label: string; type: 'registry' | 'cedar' }[]>([]);
+  tabs = signal<MetadataTabsModel[]>([]);
   protected readonly selectedTab = signal('registry');
 
   selectedCedarRecord = signal<CedarMetadataRecordData | null>(null);
@@ -157,13 +158,13 @@ export class RegistryMetadataComponent implements OnInit {
       const registry = this.currentRegistry();
       if (!registry) return;
 
-      const baseTabs = [{ id: 'registry', label: registry.title, type: 'registry' as const }];
+      const baseTabs = [{ id: 'registry', label: registry.title, type: MetadataProjectsEnum.REGISTRY }];
 
       const cedarTabs =
         records?.map((record) => ({
           id: record.id || '',
           label: record.embeds?.template?.data?.attributes?.schema_name || `Record ${record.id}`,
-          type: 'cedar' as const,
+          type: MetadataProjectsEnum.CEDAR,
         })) || [];
 
       this.tabs.set([...baseTabs, ...cedarTabs]);
@@ -484,29 +485,7 @@ export class RegistryMetadataComponent implements OnInit {
 
     if (!registryId || !selectedRecord) return;
 
-    const model = {
-      data: {
-        type: 'cedar_metadata_records' as const,
-        attributes: {
-          metadata: data.data,
-          is_published: false,
-        },
-        relationships: {
-          template: {
-            data: {
-              type: 'cedar-metadata-templates' as const,
-              id: data.id,
-            },
-          },
-          target: {
-            data: {
-              type: 'registrations' as const,
-              id: registryId,
-            },
-          },
-        },
-      },
-    } as unknown as CedarMetadataRecord;
+    const model = CedarFormMapper(data, registryId);
 
     if (selectedRecord.id) {
       this.actions

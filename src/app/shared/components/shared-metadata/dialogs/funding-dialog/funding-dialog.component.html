@@ -63,6 +63,7 @@
       severity="secondary"
       [label]="'common.buttons.addMore' | translate"
       [text]="true"
+      [disabled]="fundingForm.invalid"
       (click)="addFundingEntry()"
     />
   </div>

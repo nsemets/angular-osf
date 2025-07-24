@@ -352,10 +352,8 @@ export class RegistryMetadataState {
   @Action(UpdateRegistryInstitutions)
   updateRegistryInstitutions(ctx: StateContext<RegistryMetadataStateModel>, action: UpdateRegistryInstitutions) {
     return this.registryMetadataService.updateRegistryInstitutions(action.registryId, action.institutions).pipe(
-      tap({
-        next: () => {
-          ctx.dispatch(new GetRegistryInstitutions(action.registryId));
-        },
+      tap(() => {
+        ctx.dispatch(new GetRegistryInstitutions(action.registryId));
       })
     );
   }
@@ -369,12 +367,10 @@ export class RegistryMetadataState {
     return this.registryMetadataService
       .updateRegistryContributor(action.registryId, action.contributorId, updateRequest)
       .pipe(
-        tap({
-          next: () => {
-            ctx.dispatch(new GetBibliographicContributors(action.registryId));
-            ctx.dispatch(new GetAllContributors(action.registryId, ResourceType.Registration));
-            ctx.dispatch(new GetRegistryForMetadata(action.registryId));
-          },
+        tap(() => {
+          ctx.dispatch(new GetBibliographicContributors(action.registryId));
+          ctx.dispatch(new GetAllContributors(action.registryId, ResourceType.Registration));
+          ctx.dispatch(new GetRegistryForMetadata(action.registryId));
         })
       );
   }
@@ -386,12 +382,10 @@ export class RegistryMetadataState {
     };
 
     return this.registryMetadataService.addRegistryContributor(action.registryId, addRequest).pipe(
-      tap({
-        next: () => {
-          ctx.dispatch(new GetBibliographicContributors(action.registryId));
-          ctx.dispatch(new GetAllContributors(action.registryId, ResourceType.Registration));
-          ctx.dispatch(new GetRegistryForMetadata(action.registryId));
-        },
+      tap(() => {
+        ctx.dispatch(new GetBibliographicContributors(action.registryId));
+        ctx.dispatch(new GetAllContributors(action.registryId, ResourceType.Registration));
+        ctx.dispatch(new GetRegistryForMetadata(action.registryId));
       })
     );
   }
