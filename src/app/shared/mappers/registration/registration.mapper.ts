@@ -104,7 +104,7 @@ export class RegistrationMapper {
       data: {
         type: 'registrations',
         attributes: {
-          embargo_end_date: embargoDate,
+          embargo_end_date: embargoDate || null,
           draft_registration: draftId,
           included_node_ids: components,
         },
