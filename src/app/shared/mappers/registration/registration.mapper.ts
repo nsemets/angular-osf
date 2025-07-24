@@ -83,7 +83,7 @@ export class RegistrationMapper {
       registrationTemplate: registration.embeds?.registration_schema?.data?.attributes?.name || '',
       registry: registration.embeds?.provider?.data?.attributes?.name || '',
       public: registration.attributes.public,
-      reviewsState: registration.attributes.review_state,
+      reviewsState: registration.attributes.reviews_state,
       revisionState: registration.attributes.revision_state,
       contributors:
         registration.embeds?.bibliographic_contributors?.data.map((contributor) => ({

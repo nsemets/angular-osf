@@ -39,7 +39,8 @@
       "submit": "Submit",
       "view": "View",
       "review": "Review",
-      "upload": "Upload"
+      "upload": "Upload",
+      "continueUpdate": "Continue Update"
     },
     "search": {
       "title": "Search",
@@ -1971,6 +1972,18 @@
         "embargoPlaceholder": "Choose embargo end date",
         "successMessage": "Registration successfully created."
       }
+    },
+    "justification": {
+      "step": "Justification",
+      "title": "Justification for update",
+      "description": "Justification will be provided to admins and moderators upon review. Once approved, it will be displayed at the top of the registration.",
+      "placeholder": "Explain the updates made to this registration and why the changes were necessary. Be thorough in your response. ",
+      "updatedList": "List of updated registration questions",
+      "noUpdates": "No responses updated",
+      "noData": "No justification provided.",
+      "deleteUpdates": "Delete Draft Update",
+      "submitChanges": "Submit Changes",
+      "successMessage": "Registration update successfully"
     }
   },
   "registry": {

@@ -126,4 +126,8 @@ export class MyRegistrationsComponent {
     this.actions.getSubmittedRegistrations(event.page! + 1);
     this.submittedFirst = event.first!;
   }
+
+  onUpdateRegistration(id: string): void {
+    this.router.navigate([`/registries/revisions/${id}/justification`]);
+  }
 }

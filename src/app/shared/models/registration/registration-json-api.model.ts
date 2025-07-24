@@ -53,7 +53,7 @@ export interface RegistrationAttributesJsonApi {
   public: boolean;
   title: string;
   revision_state: RevisionReviewStates;
-  review_state: RegistrationReviewStates;
+  reviews_state: RegistrationReviewStates;
   pending_registration_approval: boolean;
   pending_embargo_approval: boolean;
   pending_embargo_termination_approval: boolean;
