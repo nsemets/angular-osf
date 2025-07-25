@@ -5,6 +5,8 @@ import {
   RegistrationCard,
   RegistrationDataJsonApi,
   RegistrationModel,
+  SchemaResponse,
+  SchemaResponseDataJsonApi,
 } from '@osf/shared/models';
 
 import { MapRegistryStatus } from '../registry';
@@ -126,6 +128,23 @@ export class RegistrationMapper {
           },
         },
       },
+    };
+  }
+
+  static fromSchemaResponse(response: SchemaResponseDataJsonApi): SchemaResponse {
+    return {
+      id: response.id,
+      dateCreated: response.attributes.date_created,
+      dateSubmitted: response.attributes.date_submitted,
+      dateModified: response.attributes.date_modified,
+      revisionJustification: response.attributes.revision_justification,
+      revisionResponses: response.attributes.revision_responses,
+      updatedResponseKeys: response.attributes.updated_response_keys,
+      reviewsState: response.attributes.reviews_state,
+      isPendingCurrentUserApproval: response.attributes.is_pending_current_user_approval,
+      isOriginalResponse: response.attributes.is_original_response,
+      registrationSchemaId: response.relationships.registration_schema?.data?.id || '',
+      registrationId: response.relationships.registration?.data?.id || '',
     };
   }
 }

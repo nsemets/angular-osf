@@ -64,14 +64,16 @@ export const registriesRoutes: Routes = [
           {
             path: ':id/:step',
             loadComponent: () =>
-              import('./components/custom-step/custom-step.component').then((mod) => mod.CustomStepComponent),
+              import('./pages/draft-registration-custom-step/draft-registration-custom-step.component').then(
+                (mod) => mod.DraftRegistrationCustomStepComponent
+              ),
           },
         ],
       },
       {
         path: 'revisions',
         loadComponent: () =>
-          import('./pages//justification/justification.component').then((mod) => mod.JustificationComponent),
+          import('./pages/justification/justification.component').then((mod) => mod.JustificationComponent),
         children: [
           {
             path: ':id/justification',

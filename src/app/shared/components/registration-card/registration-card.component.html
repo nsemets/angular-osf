@@ -88,7 +88,11 @@
                     ></p-button>
                   }
                   @if (registrationData().revisionState === RevisionReviewStates.RevisionInProgress) {
-                    <p-button severity="secondary" [label]="'common.buttons.continueUpdate' | translate"></p-button>
+                    <p-button
+                      severity="secondary"
+                      (click)="continueUpdate.emit(registrationData().id)"
+                      [label]="'common.buttons.continueUpdate' | translate"
+                    ></p-button>
                   }
                 }
               }

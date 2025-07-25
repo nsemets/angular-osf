@@ -66,6 +66,7 @@
             @for (registration of submittedRegistrations(); track $index) {
               <osf-registration-card
                 (updateRegistration)="onUpdateRegistration($event)"
+                (continueUpdate)="onContinueUpdateRegistration($event)"
                 [registrationData]="registration"
               />
             }

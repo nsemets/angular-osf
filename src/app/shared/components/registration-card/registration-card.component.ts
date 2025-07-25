@@ -28,6 +28,7 @@ export class RegistrationCardComponent {
   readonly registrationData = input.required<RegistrationCard>();
   readonly deleteDraft = output<string>();
   readonly updateRegistration = output<string>();
+  readonly continueUpdate = output<string>();
   constructor() {
     setTimeout(() => {
       console.log('RegistrationCardComponent initialized', this.registrationData());

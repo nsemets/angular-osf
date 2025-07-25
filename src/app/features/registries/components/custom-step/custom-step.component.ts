@@ -13,7 +13,17 @@ import { RadioButton } from 'primeng/radiobutton';
 import { Textarea } from 'primeng/textarea';
 
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, OnDestroy, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  OnDestroy,
+  output,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -26,7 +36,7 @@ import { CustomValidators, findChangedFields } from '@osf/shared/utils';
 import { FieldType } from '../../enums';
 import { FilesMapper } from '../../mappers/files.mapper';
 import { PageSchema } from '../../models';
-import { RegistriesSelectors, UpdateDraft, UpdateStepValidation } from '../../store';
+import { RegistriesSelectors, UpdateStepValidation } from '../../store';
 import { FilesControlComponent } from '../files-control/files-control.component';
 
 @Component({
@@ -54,17 +64,21 @@ import { FilesControlComponent } from '../files-control/files-control.component'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomStepComponent implements OnDestroy {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  stepsData = input.required<Record<string, any>>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  updateAction = output<Record<string, any>>();
+  back = output<void>();
+  next = output<void>();
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
 
   protected readonly pages = select(RegistriesSelectors.getPagesSchema);
   protected readonly FieldType = FieldType;
-  protected readonly stepsData = select(RegistriesSelectors.getStepsData);
   protected stepsValidation = select(RegistriesSelectors.getStepsValidation);
 
   protected actions = createDispatchMap({
-    updateDraft: UpdateDraft,
     updateStepValidation: UpdateStepValidation,
   });
 
@@ -95,7 +109,7 @@ export class CustomStepComponent implements OnDestroy {
 
   private initStepForm(page: PageSchema): void {
     this.stepForm = this.fb.group({});
-
+    console.log('Initializing step form for page:', this.stepsData(), page);
     page.questions?.forEach((q) => {
       const controlName = q.responseKey as string;
       let control: FormControl;
@@ -144,11 +158,10 @@ export class CustomStepComponent implements OnDestroy {
   private updateDraft() {
     const changedFields = findChangedFields(this.stepForm.value, this.stepsData());
     if (Object.keys(changedFields).length > 0) {
-      const draftId = this.route.snapshot.params['id'];
       const attributes = {
         registration_responses: this.stepForm.value,
       };
-      this.actions.updateDraft(draftId, attributes);
+      this.updateAction.emit(attributes);
     }
   }
 
@@ -167,7 +180,7 @@ export class CustomStepComponent implements OnDestroy {
       this.stepForm.patchValue({
         [questionKey]: [...(this.attachedFiles[questionKey] || []), file],
       });
-      this.actions.updateDraft(this.route.snapshot.params['id'], {
+      this.updateAction.emit({
         registration_responses: {
           [questionKey]: [...this.attachedFiles[questionKey].map((f) => FilesMapper.toFilePayload(f as OsfFile))],
         },
@@ -181,7 +194,7 @@ export class CustomStepComponent implements OnDestroy {
       this.stepForm.patchValue({
         [questionKey]: this.attachedFiles[questionKey],
       });
-      this.actions.updateDraft(this.route.snapshot.params['id'], {
+      this.updateAction.emit({
         registration_responses: {
           [questionKey]: [...this.attachedFiles[questionKey].map((f) => FilesMapper.toFilePayload(f as OsfFile))],
         },
@@ -194,7 +207,7 @@ export class CustomStepComponent implements OnDestroy {
     if (previousStep > 0) {
       this.router.navigate(['../', previousStep], { relativeTo: this.route });
     } else {
-      this.router.navigate(['../', 'metadata'], { relativeTo: this.route });
+      this.back.emit();
     }
   }
 
@@ -203,7 +216,7 @@ export class CustomStepComponent implements OnDestroy {
     if (nextStep <= this.pages().length) {
       this.router.navigate(['../', nextStep], { relativeTo: this.route });
     } else {
-      this.router.navigate(['../', 'review'], { relativeTo: this.route });
+      this.next.emit();
     }
   }
 

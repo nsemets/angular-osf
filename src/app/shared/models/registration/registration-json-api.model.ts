@@ -168,3 +168,48 @@ export interface CreateRegistrationPayloadJsonApi {
     attributes?: Partial<DraftRegistrationAttributesJsonApi>;
   };
 }
+
+export interface SchemaResponsesJsonApi {
+  data: SchemaResponseDataJsonApi[];
+  meta: MetaJsonApi;
+  links: PaginationLinksJsonApi;
+}
+
+export interface SchemaResponseJsonApi {
+  data: SchemaResponseDataJsonApi;
+}
+
+export type SchemaResponseDataJsonApi = ApiData<
+  SchemaResponseAttributesJsonApi,
+  null,
+  SchemaResponseRelationshipsJsonApi,
+  null
+>;
+
+export interface SchemaResponseAttributesJsonApi {
+  id: string;
+  date_created: string;
+  date_submitted: string | null;
+  date_modified: string;
+  revision_justification: string;
+  revision_responses: Record<string, unknown>;
+  updated_response_keys: string[];
+  reviews_state: RevisionReviewStates;
+  is_pending_current_user_approval: boolean;
+  is_original_response: boolean;
+}
+
+export interface SchemaResponseRelationshipsJsonApi {
+  registration_schema: {
+    data: {
+      id: string;
+      type: 'registration-schemas';
+    };
+  };
+  registration: {
+    data: {
+      id: string;
+      type: 'registrations';
+    };
+  };
+}
