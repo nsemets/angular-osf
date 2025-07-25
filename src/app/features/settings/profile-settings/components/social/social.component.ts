@@ -79,7 +79,11 @@ export class SocialComponent {
     const mappedLinks = links.map((link) => {
       const key = link.socialOutput.key as SocialLinksKeys;
 
-      const value = SOCIAL_KEYS.includes(key) ? [link.webAddress] : link.webAddress;
+      const value = SOCIAL_KEYS.includes(key)
+        ? Array.isArray(link.webAddress)
+          ? link.webAddress
+          : [link.webAddress]
+        : link.webAddress;
 
       return {
         [key]: value,

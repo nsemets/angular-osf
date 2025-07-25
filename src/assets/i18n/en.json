@@ -590,6 +590,8 @@
         "noResourceInformation": "No resource information available",
         "notSpecified": "Not specified",
         "loading": "Loading metadata...",
+        "cedarRecordCreatedSuccessfully": "CEDAR record created successfully",
+        "failedToCreateCedarRecord": "Failed to create CEDAR record",
         "placeholders": {
           "edit": "Edit description here",
           "add": "Add description here"

@@ -1,3 +1,5 @@
+import { License } from '@shared/models';
+
 import { ProjectOverview, ProjectOverviewGetResponseJsoApi } from '../models';
 
 export class ProjectOverviewMapper {
@@ -23,7 +25,7 @@ export class ProjectOverviewMapper {
             year: response.attributes.node_license.year,
           }
         : undefined,
-      license: response.embeds.license?.data?.attributes,
+      license: response.embeds.license?.data?.attributes as License,
       doi: response.attributes.doi,
       publicationDoi: response.attributes.publication_doi,
       analyticsKey: response.attributes.analytics_key,
@@ -77,6 +79,6 @@ export class ProjectOverviewMapper {
         rootFolder: response.relationships?.files?.links?.related?.href,
         iri: response.links?.iri,
       },
-    };
+    } as ProjectOverview;
   }
 }

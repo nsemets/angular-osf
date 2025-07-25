@@ -122,8 +122,8 @@ export class EmploymentComponent {
   private createEmploymentFormGroup(employment?: Partial<EmploymentForm>): FormGroup {
     return this.fb.group(
       {
-        institution: [employment?.institution ?? '', CustomValidators.requiredTrimmed()],
-        title: [employment?.title ?? ''],
+        title: [employment?.title ?? '', CustomValidators.requiredTrimmed()],
+        institution: [employment?.institution ?? ''],
         department: [employment?.department ?? ''],
         startDate: [employment?.startDate ?? null],
         endDate: [employment?.endDate ?? null],
