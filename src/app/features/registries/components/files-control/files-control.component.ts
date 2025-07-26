@@ -49,6 +49,9 @@ import {
 export class FilesControlComponent {
   attachedFiles = input.required<Partial<OsfFile>[]>();
   attachFile = output<OsfFile>();
+  filesLink = input.required<string>();
+  projectId = input.required<string>();
+  provider = input.required<string>();
 
   private readonly filesService = inject(FilesService);
   private readonly dialogService = inject(DialogService);
@@ -58,7 +61,6 @@ export class FilesControlComponent {
   protected readonly files = select(RegistriesSelectors.getFiles);
   protected readonly isFilesLoading = select(RegistriesSelectors.isFilesLoading);
   protected readonly currentFolder = select(RegistriesSelectors.getCurrentFolder);
-  protected readonly draftRegistration = select(RegistriesSelectors.getDraftRegistration);
 
   protected readonly progress = signal(0);
   protected readonly fileName = signal('');
@@ -85,7 +87,8 @@ export class FilesControlComponent {
 
   constructor() {
     effect(() => {
-      const filesLink = this.draftRegistration()?.branchedFrom?.filesLink;
+      // const filesLink = this.draftRegistration()?.branchedFrom?.filesLink;
+      const filesLink = this.filesLink();
       if (filesLink) {
         this.actions
           .getRootFolders(filesLink)
@@ -170,7 +173,7 @@ export class FilesControlComponent {
         if (event.type === HttpEventType.Response) {
           if (event.body) {
             const fileId = event?.body?.data.id;
-            const branchedFromId = this.draftRegistration()?.branchedFrom?.id;
+            const branchedFromId = this.projectId();
             if (fileId && branchedFromId) {
               approveFile(fileId, branchedFromId);
             }

@@ -152,4 +152,9 @@ export class RegistriesSelectors {
   static getSchemaResponse(state: RegistriesStateModel): SchemaResponse | null {
     return state.schemaResponse.data;
   }
+
+  @Selector([RegistriesState])
+  static getSchemaResponseRevisionData(state: RegistriesStateModel) {
+    return state.schemaResponse.data?.revisionResponses || {};
+  }
 }

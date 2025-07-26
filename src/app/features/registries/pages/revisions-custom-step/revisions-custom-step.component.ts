@@ -1,10 +1,60 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { createDispatchMap, select } from '@ngxs/store';
+
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+
+import { CustomStepComponent } from '../../components/custom-step/custom-step.component';
+import { RegistriesSelectors, UpdateSchemaResponse } from '../../store';
 
 @Component({
   selector: 'osf-revisions-custom-step',
-  imports: [],
+  imports: [CustomStepComponent],
   templateUrl: './revisions-custom-step.component.html',
   styleUrl: './revisions-custom-step.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RevisionsCustomStepComponent {}
+export class RevisionsCustomStepComponent {
+  protected readonly schemaResponse = select(RegistriesSelectors.getSchemaResponse);
+  protected readonly schemaResponseRevisionData = select(RegistriesSelectors.getSchemaResponseRevisionData);
+
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  protected actions = createDispatchMap({
+    updateRevision: UpdateSchemaResponse,
+  });
+
+  filesLink = computed(() => {
+    return this.schemaResponse()?.registrationId || ' ';
+  });
+
+  provider = computed(() => {
+    return this.schemaResponse()?.registrationId || '';
+  });
+
+  projectId = computed(() => {
+    return this.schemaResponse()?.registrationId || '';
+  });
+
+  protected stepsData = computed(() => {
+    const schemaResponse = this.schemaResponse();
+    console.log('Steps data:', schemaResponse?.revisionResponses);
+    return schemaResponse?.revisionResponses || {};
+  });
+
+  constructor() {
+    console.log('RevisionsCustomStepComponent initialized', this.schemaResponse());
+  }
+
+  onUpdateAction(data: Record<string, unknown>): void {
+    const id: string = this.route.snapshot.params['id'] || '';
+    this.actions.updateRevision(id, this.schemaResponse()?.revisionJustification ?? '', data);
+  }
+
+  onBack(): void {
+    this.router.navigate(['../', 'justification'], { relativeTo: this.route });
+  }
+
+  onNext(): void {
+    this.router.navigate(['../', 'review'], { relativeTo: this.route });
+  }
+}

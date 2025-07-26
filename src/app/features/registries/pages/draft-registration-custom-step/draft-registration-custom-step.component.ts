@@ -1,6 +1,6 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { DraftRegistrationAttributesJsonApi } from '@osf/shared/models';
@@ -19,8 +19,21 @@ export class DraftRegistrationCustomStepComponent {
   protected readonly stepsData = select(RegistriesSelectors.getStepsData);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  protected readonly draftRegistration = select(RegistriesSelectors.getDraftRegistration);
   protected actions = createDispatchMap({
     updateDraft: UpdateDraft,
+  });
+
+  filesLink = computed(() => {
+    return this.draftRegistration()?.branchedFrom?.filesLink || '';
+  });
+
+  provider = computed(() => {
+    return this.draftRegistration()?.providerId || '';
+  });
+
+  projectId = computed(() => {
+    return this.draftRegistration()?.branchedFrom?.id || '';
   });
 
   onUpdateAction(attributes: Partial<DraftRegistrationAttributesJsonApi>): void {

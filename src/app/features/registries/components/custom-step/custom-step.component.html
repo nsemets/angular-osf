@@ -165,6 +165,9 @@
                 <div class="-ml-3 -mr-3">
                   <osf-files-control
                     [attachedFiles]="attachedFiles[question.responseKey!]"
+                    [filesLink]="filesLink()"
+                    [projectId]="projectId()"
+                    [provider]="provider()"
                     (attachFile)="onAttachFile($event, question.responseKey!)"
                   ></osf-files-control>
                 </div>

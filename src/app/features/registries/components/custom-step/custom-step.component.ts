@@ -66,6 +66,10 @@ import { FilesControlComponent } from '../files-control/files-control.component'
 export class CustomStepComponent implements OnDestroy {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   stepsData = input.required<Record<string, any>>();
+  filesLink = input.required<string>();
+  projectId = input.required<string>();
+  provider = input.required<string>();
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   updateAction = output<Record<string, any>>();
   back = output<void>();

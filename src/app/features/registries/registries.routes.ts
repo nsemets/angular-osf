@@ -83,15 +83,17 @@ export const registriesRoutes: Routes = [
               ),
           },
           {
-            path: ':id/:step',
-            loadComponent: () =>
-              import('./components/custom-step/custom-step.component').then((mod) => mod.CustomStepComponent),
-          },
-          {
             path: ':id/review',
             loadComponent: () =>
               import('./components/justification-review/justification-review.component').then(
                 (mod) => mod.JustificationReviewComponent
+              ),
+          },
+          {
+            path: ':id/:step',
+            loadComponent: () =>
+              import('./pages/revisions-custom-step/revisions-custom-step.component').then(
+                (mod) => mod.RevisionsCustomStepComponent
               ),
           },
         ],

@@ -35,9 +35,9 @@ export class JustificationComponent implements OnDestroy {
   private readonly loaderService = inject(LoaderService);
   private readonly translateService = inject(TranslateService);
   protected readonly pages = select(RegistriesSelectors.getPagesSchema);
-  protected readonly stepsData = select(RegistriesSelectors.getStepsData);
   protected readonly stepsValidation = select(RegistriesSelectors.getStepsValidation);
   protected readonly schemaResponse = select(RegistriesSelectors.getSchemaResponse);
+  protected readonly schemaResponseRevisionData = select(RegistriesSelectors.getSchemaResponseRevisionData);
 
   private readonly actions = createDispatchMap({
     getSchemaBlocks: FetchSchemaBlocks,
@@ -96,7 +96,6 @@ export class JustificationComponent implements OnDestroy {
   });
 
   constructor() {
-    // this.actions.getSchemaBlocks(this.revisionId);
     this.router.events
       .pipe(
         takeUntilDestroyed(),
@@ -137,15 +136,17 @@ export class JustificationComponent implements OnDestroy {
     });
 
     effect(() => {
+      console.log('Current step index:', this.currentStepIndex());
       if (this.currentStepIndex() > 0) {
         this.actions.updateStepValidation('0', true);
       }
-      if (this.pages().length && this.currentStepIndex() > 0 && this.stepsData()) {
+      if (this.pages().length && this.currentStepIndex() > 0 && this.schemaResponseRevisionData()) {
         for (let i = 1; i < this.currentStepIndex(); i++) {
+          console.log('Updating step validation for step:', this.schemaResponseRevisionData());
           const pageStep = this.pages()[i - 1];
           const isStepInvalid =
             pageStep?.questions?.some((question) => {
-              const questionData = this.stepsData()[question.responseKey!];
+              const questionData = this.schemaResponseRevisionData()[question.responseKey!];
               return question.required && (Array.isArray(questionData) ? !questionData.length : !questionData);
             }) || false;
           this.actions.updateStepValidation(i.toString(), isStepInvalid);
