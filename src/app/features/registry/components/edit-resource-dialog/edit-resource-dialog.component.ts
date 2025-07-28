@@ -13,44 +13,40 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 
 import { Primitive } from '@core/helpers';
 import { resourceTypeOptions } from '@osf/features/registry/constants/resource-type-options.constant';
+import { RegistryResource } from '@osf/features/registry/models';
 import { AddResource } from '@osf/features/registry/models/resources/add-resource.model';
 import { AddResourceRequest } from '@osf/features/registry/models/resources/add-resource-request.model';
-import { ConfirmAddResource } from '@osf/features/registry/models/resources/confirm-add-resource.model';
-import {
-  ConfirmAddRegistryResource,
-  PreviewRegistryResource,
-  RegistryResourcesSelectors,
-} from '@osf/features/registry/store/registry-resources';
+import { RegistryResourcesSelectors, UpdateResource } from '@osf/features/registry/store/registry-resources';
 import { LoadingSpinnerComponent, SelectComponent, TextInputComponent } from '@shared/components';
 import { InputLimits } from '@shared/constants';
 import { RegistryResourceType } from '@shared/enums';
 import { SelectOption } from '@shared/models';
 
 @Component({
-  selector: 'osf-add-resource-dialog',
+  selector: 'osf-edit-resource-dialog',
   imports: [
-    Button,
-    TextInputComponent,
-    TranslatePipe,
-    ReactiveFormsModule,
-    Textarea,
-    SelectComponent,
     LoadingSpinnerComponent,
+    TextInputComponent,
+    SelectComponent,
+    Textarea,
+    ReactiveFormsModule,
+    Button,
+    TranslatePipe,
   ],
-  templateUrl: './add-resource-dialog.component.html',
-  styleUrl: './add-resource-dialog.component.scss',
+  templateUrl: './edit-resource-dialog.component.html',
+  styleUrl: './edit-resource-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddResourceDialogComponent {
+export class EditResourceDialogComponent {
   protected readonly dialogRef = inject(DynamicDialogRef);
-  protected readonly currentResource = select(RegistryResourcesSelectors.getCurrentResource);
   protected readonly isCurrentResourceLoading = select(RegistryResourcesSelectors.isCurrentResourceLoading);
 
   private dialogConfig = inject(DynamicDialogConfig);
   private registryId: string = this.dialogConfig.data.id;
-
+  private resource: RegistryResource = this.dialogConfig.data.resource as RegistryResource;
   protected inputLimits = InputLimits;
-  protected isResourceConfirming = signal(false);
+  public selectedResourceType = signal<RegistryResourceType | null>(null);
+  public resourceOptions = signal<SelectOption[]>(resourceTypeOptions);
 
   protected form = new FormGroup({
     pid: new FormControl('', [Validators.required]),
@@ -59,15 +55,20 @@ export class AddResourceDialogComponent {
   });
 
   private readonly actions = createDispatchMap({
-    previewResource: PreviewRegistryResource,
-    confirmAddResource: ConfirmAddRegistryResource,
+    updateResource: UpdateResource,
   });
 
-  public selectedResourceType = signal<RegistryResourceType | null>(null);
-  public resourceOptions = signal<SelectOption[]>(resourceTypeOptions);
-  public isPreviewMode = signal<boolean>(false);
+  constructor() {
+    this.form.patchValue({
+      pid: this.resource.pid || '',
+      resourceType: this.resource.type || '',
+      description: this.resource.description || '',
+    });
 
-  previewResource(): void {
+    this.selectedResourceType.set(this.resource.type || null);
+  }
+
+  save() {
     if (this.form.invalid) {
       return;
     }
@@ -78,60 +79,30 @@ export class AddResourceDialogComponent {
       description: this.form.controls['description'].value ?? '',
     };
 
-    const currentResource = this.currentResource();
-    if (!currentResource) {
-      throw new Error('No current resource.');
+    if (!this.resource.id) {
+      throw new Error('No current resource id.');
     }
 
     const request: AddResourceRequest<AddResource> = {
       attributes: addResource,
-      id: currentResource?.id,
+      id: this.resource.id,
       relationships: {},
       type: 'resources',
     };
 
-    this.actions.previewResource(request).subscribe(() => {
-      this.isPreviewMode.set(true);
-    });
-  }
-
-  backToEdit() {
-    this.isPreviewMode.set(false);
-  }
-
-  onAddResource() {
-    const addResource: ConfirmAddResource = {
-      finalized: true,
-    };
-    const currentResource = this.currentResource();
-    if (!currentResource) {
-      throw new Error('No current resource.');
-    }
-
-    this.isResourceConfirming.set(true);
-    const request: AddResourceRequest<ConfirmAddResource> = {
-      attributes: addResource,
-      id: currentResource.id,
-      relationships: {},
-      type: 'resources',
-    };
     this.actions
-      .confirmAddResource(request, this.registryId)
+      .updateResource(this.registryId, request)
       .pipe(
         take(1),
         finalize(() => {
           this.dialogRef.close(true);
-          this.isResourceConfirming.set(false);
         })
       )
-      .subscribe({});
+      .subscribe();
   }
-
   changeType($event: Primitive) {
     this.form.patchValue({
       resourceType: $event?.toString(),
     });
   }
-
-  protected readonly RegistryResourceType = RegistryResourceType;
 }

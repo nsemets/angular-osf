@@ -15,4 +15,14 @@ export class RegistryResourcesSelectors {
   static isResourcesLoading(state: RegistryResourcesStateModel): boolean {
     return state.resources.isLoading;
   }
+
+  @Selector([RegistryResourcesState])
+  static getCurrentResource(state: RegistryResourcesStateModel): RegistryResource | null {
+    return state.currentResource.data;
+  }
+
+  @Selector([RegistryResourcesState])
+  static isCurrentResourceLoading(state: RegistryResourcesStateModel): boolean {
+    return state.currentResource.isLoading ?? false;
+  }
 }

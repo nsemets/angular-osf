@@ -3,4 +3,5 @@ import { AsyncStateModel } from '@shared/models';
 
 export interface RegistryResourcesStateModel {
   resources: AsyncStateModel<RegistryResource[] | null>;
+  currentResource: AsyncStateModel<RegistryResource | null>;
 }

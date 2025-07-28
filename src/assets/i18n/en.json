@@ -2221,6 +2221,7 @@
     "title": "Resources",
     "description": "Link a DOI from a repository to your registration by clicking “Add resource” button. Contributors affirmed to adhere to the criteria for each badge.",
     "add": "Add Resource",
+    "edit": "Edit Resource",
     "delete": "Delete Resource",
     "check": "Check your DOI for accuracy",
     "deleteText": "Are you sure you want to delete resource",
@@ -2235,7 +2236,9 @@
     },
     "toastMessages": {
       "addResourceSuccess": "Added new resource",
-      "addResourceError": "Error occurred while adding new resource"
+      "addResourceError": "Error occurred while adding new resource",
+      "updatedResourceSuccess": "Updated new resource",
+      "updateResourceError": "Error occurred while updating new resource"
     }
   }
 }

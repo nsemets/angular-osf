@@ -1,21 +1,22 @@
-@if (isPreviewMode()) {
+@if (isCurrentResourceLoading() || isResourceConfirming()) {
+  <osf-loading-spinner></osf-loading-spinner>
+} @else if (isPreviewMode() && currentResource()) {
   <form class="flex flex-column gap-4" [formGroup]="form">
-    <p>Check your DOI for accuracy.</p>
+    <p>{{ 'resources.check' | translate }}</p>
 
-    @let resourceType = form.controls['resourceType'].value;
+    @let resourceType = currentResource()?.type;
     @let iconName = resourceType === 'analytic_code' ? 'code' : resourceType;
     @let icon = `assets/icons/colored/${iconName}-colored.svg`;
-    @let resourceName = resourceType === 'analytic_code' ? 'Analytic Code' : resourceType;
-    @let description = form.controls['description'].value;
+    @let resourceName = resourceType === RegistryResourceType.Code ? 'Analytic Code' : resourceType;
 
-    <div class="flex align-content-end gap-3">
+    <div class="flex align-content-end gap-3 content">
       <img [src]="icon" alt="resource-type icon" class="align-self-start" />
       <div class="flex flex-column gap-3 mt-1">
         <div class="flex flex-column gap-2">
           <h2>{{ resourceName }}</h2>
-          <a [href]="'https://doi/' + form.controls['pid'].value">https://doi/{{ form.controls['pid'].value }}</a>
+          <a [href]="'https://doi/' + currentResource()?.pid">https://doi/{{ currentResource()?.pid }}</a>
         </div>
-        <p>{{ description }}</p>
+        <p>{{ currentResource()?.description }}</p>
       </div>
     </div>
 
@@ -32,7 +33,7 @@
       [control]="form.controls['pid']"
       [label]="'DOI'"
       [placeholder]="'https://doi.org/'"
-      [maxLength]="inputLimits.link.maxLength"
+      [maxLength]="inputLimits.name.maxLength"
     >
     </osf-text-input>
 
@@ -56,7 +57,6 @@
       ></textarea>
     </div>
 
-    <!-- Add Translation -->
     <div class="flex justify-content-between w-full gap-1 widen-buttons">
       <p-button [label]="'common.buttons.cancel' | translate" severity="info" (click)="dialogRef.close()" />
       <p-button [label]="'common.buttons.preview' | translate" (onClick)="previewResource()" />

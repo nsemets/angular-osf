@@ -1,0 +1,38 @@
+@if (isCurrentResourceLoading()) {
+  <osf-loading-spinner></osf-loading-spinner>
+} @else {
+  <form class="flex flex-column gap-4" [formGroup]="form">
+    <osf-text-input
+      [control]="form.controls['pid']"
+      [label]="'DOI'"
+      [placeholder]="'https://doi.org/'"
+      [maxLength]="inputLimits.name.maxLength"
+    >
+    </osf-text-input>
+
+    <osf-select
+      [fullWidth]="true"
+      [options]="resourceOptions()"
+      [appendTo]="'body'"
+      [(selectedValue)]="selectedResourceType"
+      (changeValue)="changeType($event)"
+      [placeholder]="'resources.selectAResourceType'"
+    />
+
+    <div>
+      <label [for]="form.controls['description']">{{ 'resources.descriptionLabel' | translate }}</label>
+      <textarea
+        class="w-full"
+        pTextarea
+        id="coi-reason"
+        [rows]="3"
+        [formControl]="form.controls['description']"
+      ></textarea>
+    </div>
+
+    <div class="flex justify-content-between w-full gap-1 widen-buttons">
+      <p-button [label]="'common.buttons.cancel' | translate" severity="info" (click)="dialogRef.close()" />
+      <p-button [label]="'common.buttons.save' | translate" (click)="save()" />
+    </div>
+  </form>
+}

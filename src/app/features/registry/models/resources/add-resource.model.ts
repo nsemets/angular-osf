@@ -1,5 +1,5 @@
 export interface AddResource {
   pid: string;
-  resourceType: string;
+  resource_type: string;
   description?: string;
 }
