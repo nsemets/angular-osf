@@ -150,12 +150,16 @@ export class MyRegistrationsComponent {
       .subscribe();
   }
 
-  onContinueUpdateRegistration(id: string): void {
+  onContinueUpdateRegistration({ id, unapproved }: { id: string; unapproved: boolean }): void {
     this.actions
       .getSchemaResponse(id)
       .pipe(
         tap(() => {
-          this.navigateToJustificationPage();
+          if (unapproved) {
+            this.navigateToJustificationReview();
+          } else {
+            this.navigateToJustificationPage();
+          }
         })
       )
       .subscribe();
@@ -164,5 +168,10 @@ export class MyRegistrationsComponent {
   private navigateToJustificationPage(): void {
     const revisionId = this.schemaResponse()?.id;
     this.router.navigate([`/registries/revisions/${revisionId}/justification`]);
+  }
+
+  private navigateToJustificationReview(): void {
+    const revisionId = this.schemaResponse()?.id;
+    this.router.navigate([`/registries/revisions/${revisionId}/review`]);
   }
 }

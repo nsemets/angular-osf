@@ -181,7 +181,7 @@ export interface SchemaResponseJsonApi {
 
 export type SchemaResponseDataJsonApi = ApiData<
   SchemaResponseAttributesJsonApi,
-  null,
+  SchemaResponseEmbedsJsonApi,
   SchemaResponseRelationshipsJsonApi,
   null
 >;
@@ -210,6 +210,27 @@ export interface SchemaResponseRelationshipsJsonApi {
     data: {
       id: string;
       type: 'registrations';
+    };
+  };
+}
+
+export interface SchemaResponseEmbedsJsonApi {
+  registration: {
+    data: {
+      id: string;
+      type: 'registrations';
+      attributes: {
+        title: string;
+      };
+      relationships: {
+        files: {
+          links: {
+            related: {
+              href: string;
+            };
+          };
+        };
+      };
     };
   };
 }

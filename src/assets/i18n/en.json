@@ -1985,10 +1985,17 @@
       "noData": "No justification provided.",
       "deleteUpdates": "Delete Draft Update",
       "submitChanges": "Submit Changes",
+      "acceptChanges": "Accept Changes",
+      "continueEditing": "Continue Editing",
       "successMessage": "Registration update successfully",
       "confirmDeleteUpdate": {
         "header": "Delete this draft update",
         "message": "Are you sure you want to delete this draft update?"
+      },
+      "confirmContinueEditing": {
+        "header": "Are you sure this needs more edits?",
+        "message": "This will cancel any approvals from other admin contributors and return the registration back to its draft form for additional changes.",
+        "label": "What additional changes need to be made and why?"
       }
     }
   },

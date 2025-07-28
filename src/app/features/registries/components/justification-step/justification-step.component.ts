@@ -8,13 +8,13 @@ import { Textarea } from 'primeng/textarea';
 
 import { tap } from 'rxjs';
 
-import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, OnDestroy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { INPUT_VALIDATION_MESSAGES, InputLimits } from '@osf/shared/constants';
 import { CustomConfirmationService } from '@osf/shared/services';
-import { CustomValidators } from '@osf/shared/utils';
+import { CustomValidators, findChangedFields } from '@osf/shared/utils';
 
 import { DeleteSchemaResponse, RegistriesSelectors, UpdateSchemaResponse, UpdateStepValidation } from '../../store';
 
@@ -45,6 +45,15 @@ export class JustificationStepComponent implements OnDestroy {
   justificationForm = this.fb.group({
     justification: ['', [Validators.maxLength(InputLimits.description.maxLength), CustomValidators.requiredTrimmed()]],
   });
+
+  constructor() {
+    effect(() => {
+      const revisionJustification = this.schemaResponse()?.revisionJustification;
+      if (revisionJustification) {
+        this.justificationForm.patchValue({ justification: revisionJustification });
+      }
+    });
+  }
 
   submit(): void {
     this.actions
@@ -78,7 +87,13 @@ export class JustificationStepComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.actions.updateStepValidation('0', this.justificationForm.invalid);
-    // this.actions.updateDraft(this.draftId, changedFields);
+    const changes = findChangedFields(
+      { justification: this.justificationForm.value.justification! },
+      { justification: this.schemaResponse()?.revisionJustification }
+    );
+    if (Object.keys(changes).length > 0) {
+      this.actions.updateRevision(this.revisionId, this.justificationForm.value.justification!);
+    }
     this.justificationForm.markAllAsTouched();
   }
 }

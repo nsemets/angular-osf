@@ -37,7 +37,10 @@ export class DraftRegistrationCustomStepComponent {
   });
 
   onUpdateAction(attributes: Partial<DraftRegistrationAttributesJsonApi>): void {
-    this.actions.updateDraft(this.route.snapshot.params['id'], attributes);
+    const payload = {
+      registration_responses: { ...attributes },
+    };
+    this.actions.updateDraft(this.route.snapshot.params['id'], payload);
   }
 
   onBack(): void {

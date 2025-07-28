@@ -154,7 +154,17 @@ export class RegistriesSelectors {
   }
 
   @Selector([RegistriesState])
+  static getSchemaResponseLoading(state: RegistriesStateModel): boolean {
+    return state.schemaResponse.isLoading || !!state.schemaResponse.isSubmitting;
+  }
+
+  @Selector([RegistriesState])
   static getSchemaResponseRevisionData(state: RegistriesStateModel) {
     return state.schemaResponse.data?.revisionResponses || {};
+  }
+
+  @Selector([RegistriesState])
+  static getUpdatedFields(state: RegistriesStateModel): Record<string, unknown> {
+    return state.updatedFields;
   }
 }

@@ -24,7 +24,7 @@ export class RevisionsCustomStepComponent {
   });
 
   filesLink = computed(() => {
-    return this.schemaResponse()?.registrationId || ' ';
+    return this.schemaResponse()?.filesLink || ' ';
   });
 
   provider = computed(() => {

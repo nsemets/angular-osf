@@ -8,14 +8,16 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { Message } from 'primeng/message';
 import { Tag } from 'primeng/tag';
 
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants';
+import { RevisionReviewStates } from '@osf/shared/enums';
 import { CustomConfirmationService, ToastService } from '@osf/shared/services';
 
-import { FieldType } from '../../enums';
-import { DeleteSchemaResponse, RegistriesSelectors } from '../../store';
+import { FieldType, SchemaActionTrigger } from '../../enums';
+import { DeleteSchemaResponse, HandleSchemaResponse, RegistriesSelectors } from '../../store';
+import { ConfirmContinueEditingDialogComponent } from '../confirm-continue-editing-dialog/confirm-continue-editing-dialog.component';
 
 @Component({
   selector: 'osf-justification-review',
@@ -36,19 +38,31 @@ export class JustificationReviewComponent {
   protected readonly pages = select(RegistriesSelectors.getPagesSchema);
   protected readonly schemaResponse = select(RegistriesSelectors.getSchemaResponse);
   protected readonly schemaResponseRevisionData = select(RegistriesSelectors.getSchemaResponseRevisionData);
+  protected readonly updatedFields = select(RegistriesSelectors.getUpdatedFields);
+  protected readonly isSchemaResponseLoading = select(RegistriesSelectors.getSchemaResponseLoading);
 
   protected readonly INPUT_VALIDATION_MESSAGES = INPUT_VALIDATION_MESSAGES;
   protected readonly FieldType = FieldType;
+  protected readonly RevisionReviewStates = RevisionReviewStates;
 
   protected actions = createDispatchMap({
     deleteSchemaResponse: DeleteSchemaResponse,
+    handleSchemaResponse: HandleSchemaResponse,
   });
 
   private readonly revisionId = this.route.snapshot.params['id'];
   private readonly OSF_PROVIDER_ID = 'osf';
 
+  changes = computed(() => {
+    return Object.keys(this.updatedFields());
+  });
+
   submit(): void {
-    console.log('Submitting justification review');
+    this.actions.handleSchemaResponse(this.revisionId, SchemaActionTrigger.Submit).subscribe({
+      next: () => {
+        this.toastService.showSuccess('Justification review submitted successfully');
+      },
+    });
   }
 
   goBack(): void {
@@ -69,5 +83,28 @@ export class JustificationReviewComponent {
         });
       },
     });
+  }
+
+  acceptChanges() {
+    this.actions.handleSchemaResponse(this.revisionId, SchemaActionTrigger.Approve).subscribe({
+      next: () => {
+        this.toastService.showSuccess('Changes accepted successfully');
+        this.router.navigateByUrl(`/registries/${this.schemaResponse()?.registrationId}/overview`);
+      },
+    });
+  }
+
+  continueEditing() {
+    this.dialogService
+      .open(ConfirmContinueEditingDialogComponent, {
+        width: '552px',
+        header: this.translateService.instant('registries.justification.confirmContinueEditing.header'),
+        focusOnShow: false,
+        closeOnEscape: true,
+        modal: true,
+      })
+      .onClose.subscribe((res) => {
+        console.log('res', res);
+      });
   }
 }

@@ -21,8 +21,9 @@ import {
   SchemaResponsesJsonApi,
 } from '@osf/shared/models';
 
+import { SchemaActionTrigger } from '../enums';
 import { PageSchemaMapper } from '../mappers';
-import { PageSchema, SchemaActionTrigger, SchemaBlocksResponseJsonApi } from '../models';
+import { PageSchema, SchemaBlocksResponseJsonApi } from '../models';
 
 import { environment } from 'src/environments/environment';
 
@@ -162,14 +163,20 @@ export class RegistriesService {
   }
 
   getAllSchemaResponse(registrationId: string): Observable<SchemaResponse[]> {
+    const params = {
+      embed: ['registration'],
+    };
     return this.jsonApiService
-      .get<SchemaResponsesJsonApi>(`${this.apiUrl}/registrations/${registrationId}/schema_responses/`)
+      .get<SchemaResponsesJsonApi>(`${this.apiUrl}/registrations/${registrationId}/schema_responses/`, params)
       .pipe(map((response) => response.data.map((item) => RegistrationMapper.fromSchemaResponse(item))));
   }
 
   getSchemaResponse(schemaResponseId: string): Observable<SchemaResponse> {
+    const params = {
+      embed: ['registration'],
+    };
     return this.jsonApiService
-      .get<SchemaResponseJsonApi>(`${this.apiUrl}/schema_responses/${schemaResponseId}/`)
+      .get<SchemaResponseJsonApi>(`${this.apiUrl}/schema_responses/${schemaResponseId}/`, params)
       .pipe(map((response) => RegistrationMapper.fromSchemaResponse(response.data)));
   }
 
@@ -187,8 +194,11 @@ export class RegistriesService {
         },
       },
     };
+    const params = {
+      embed: ['registration'],
+    };
     return this.jsonApiService
-      .post<SchemaResponseJsonApi>(`${this.apiUrl}/schema_responses/`, payload)
+      .post<SchemaResponseJsonApi>(`${this.apiUrl}/schema_responses/`, payload, params)
       .pipe(map((response) => RegistrationMapper.fromSchemaResponse(response.data)));
   }
 
@@ -208,8 +218,11 @@ export class RegistriesService {
         },
       },
     };
+    const params = {
+      embed: ['registration'],
+    };
     return this.jsonApiService
-      .patch<SchemaResponseDataJsonApi>(`${this.apiUrl}/schema_responses/${schemaResponseId}/`, payload)
+      .patch<SchemaResponseDataJsonApi>(`${this.apiUrl}/schema_responses/${schemaResponseId}/`, payload, params)
       .pipe(map((response) => RegistrationMapper.fromSchemaResponse(response)));
   }
 

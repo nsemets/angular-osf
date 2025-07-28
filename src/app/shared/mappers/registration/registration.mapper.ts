@@ -145,6 +145,7 @@ export class RegistrationMapper {
       isOriginalResponse: response.attributes.is_original_response,
       registrationSchemaId: response.relationships.registration_schema?.data?.id || '',
       registrationId: response.relationships.registration?.data?.id || '',
+      filesLink: response.embeds?.registration?.data.relationships.files.links.related.href || '',
     };
   }
 }

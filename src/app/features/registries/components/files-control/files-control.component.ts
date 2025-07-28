@@ -52,6 +52,7 @@ export class FilesControlComponent {
   filesLink = input.required<string>();
   projectId = input.required<string>();
   provider = input.required<string>();
+  filesViewOnly = input<boolean>(false);
 
   private readonly filesService = inject(FilesService);
   private readonly dialogService = inject(DialogService);
@@ -87,7 +88,6 @@ export class FilesControlComponent {
 
   constructor() {
     effect(() => {
-      // const filesLink = this.draftRegistration()?.branchedFrom?.filesLink;
       const filesLink = this.filesLink();
       if (filesLink) {
         this.actions
@@ -183,6 +183,7 @@ export class FilesControlComponent {
   }
 
   selectFile(file: OsfFile): void {
+    if (this.filesViewOnly()) return;
     this.attachFile.emit(file);
   }
 

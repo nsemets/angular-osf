@@ -9,6 +9,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 
 import { StepperComponent, SubHeaderComponent } from '@osf/shared/components';
+import { RevisionReviewStates } from '@osf/shared/enums';
 import { StepOption } from '@osf/shared/models';
 import { LoaderService } from '@osf/shared/services';
 
@@ -61,6 +62,7 @@ export class JustificationComponent implements OnDestroy {
       label: this.translateService.instant('registries.justification.step'),
       invalid: false,
       routeLink: 'justification',
+      disabled: this.schemaResponse()?.reviewsState !== RevisionReviewStates.RevisionInProgress,
     };
 
     this.reviewStep = {
@@ -78,6 +80,7 @@ export class JustificationComponent implements OnDestroy {
         value: page.id,
         routeLink: `${index + 1}`,
         invalid: this.stepsValidation()?.[index + 1]?.invalid || false,
+        disabled: this.schemaResponse()?.reviewsState !== RevisionReviewStates.RevisionInProgress,
       };
     });
     return [

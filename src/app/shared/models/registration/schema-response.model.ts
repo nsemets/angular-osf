@@ -1,3 +1,5 @@
+import { RevisionReviewStates } from '@osf/shared/enums';
+
 export interface SchemaResponse {
   id: string;
   dateCreated: string;
@@ -7,9 +9,10 @@ export interface SchemaResponse {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   revisionResponses: Record<string, any>;
   updatedResponseKeys: string[];
-  reviewsState: string;
+  reviewsState: RevisionReviewStates;
   isPendingCurrentUserApproval: boolean;
   isOriginalResponse: boolean;
   registrationSchemaId: string;
   registrationId: string;
+  filesLink?: string;
 }

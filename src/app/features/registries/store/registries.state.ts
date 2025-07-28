@@ -41,6 +41,7 @@ import {
   SaveLicense,
   SetCurrentFolder,
   SetMoveFileCurrentFolder,
+  SetUpdatedFields,
   UpdateDraft,
   UpdateSchemaResponse,
   UpdateStepValidation,
@@ -459,6 +460,13 @@ export class RegistriesState {
 
   @Action(HandleSchemaResponse)
   handleSchemaResponse(ctx: StateContext<RegistriesStateModel>, { schemaResponseId, trigger }: HandleSchemaResponse) {
+    ctx.patchState({
+      schemaResponse: {
+        ...ctx.getState().schemaResponse,
+        isLoading: true,
+        error: null,
+      },
+    });
     return this.registriesService.handleSchemaResponse(schemaResponseId, trigger).pipe(
       tap(() => {
         ctx.dispatch(new FetchSchemaResponse(schemaResponseId));
@@ -489,5 +497,15 @@ export class RegistriesState {
       }),
       catchError((error) => handleSectionError(ctx, 'schemaResponse', error))
     );
+  }
+
+  @Action(SetUpdatedFields)
+  setUpdatedFields(ctx: StateContext<RegistriesStateModel>, { updatedFields }: SetUpdatedFields) {
+    ctx.patchState({
+      updatedFields: {
+        ...ctx.getState().updatedFields,
+        ...updatedFields,
+      },
+    });
   }
 }

@@ -5,7 +5,7 @@ import {
   OsfFile,
 } from '@osf/shared/models';
 
-import { SchemaActionTrigger } from '../models';
+import { SchemaActionTrigger } from '../enums';
 
 export class GetRegistries {
   static readonly type = '[Registries] Get Registries';
@@ -172,7 +172,7 @@ export class UpdateSchemaResponse {
 }
 
 export class HandleSchemaResponse {
-  static readonly type = '[Registries] Approve Schema Response';
+  static readonly type = '[Registries] Handle Schema Response';
   constructor(
     public schemaResponseId: string,
     public trigger: SchemaActionTrigger
@@ -182,4 +182,9 @@ export class HandleSchemaResponse {
 export class DeleteSchemaResponse {
   static readonly type = '[Registries] Delete Schema Response';
   constructor(public schemaResponseId: string) {}
+}
+
+export class SetUpdatedFields {
+  static readonly type = '[Registries] Set Updated Fields';
+  constructor(public updatedFields: Record<string, unknown>) {}
 }

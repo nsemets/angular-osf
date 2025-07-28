@@ -28,4 +28,5 @@ export interface RegistriesStateModel {
   moveFileCurrentFolder: OsfFile | null;
   rootFolders: AsyncStateModel<OsfFile[] | null>;
   schemaResponse: AsyncStateModel<SchemaResponse | null>;
+  updatedFields: Record<string, unknown>;
 }

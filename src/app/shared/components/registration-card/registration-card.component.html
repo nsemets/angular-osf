@@ -87,10 +87,13 @@
                       [label]="'common.buttons.update' | translate"
                     ></p-button>
                   }
-                  @if (registrationData().revisionState === RevisionReviewStates.RevisionInProgress) {
+                  @if (
+                    registrationData().revisionState === RevisionReviewStates.RevisionInProgress ||
+                    registrationData().revisionState === RevisionReviewStates.Unapproved
+                  ) {
                     <p-button
                       severity="secondary"
-                      (click)="continueUpdate.emit(registrationData().id)"
+                      (click)="continueUpdateHandler()"
                       [label]="'common.buttons.continueUpdate' | translate"
                     ></p-button>
                   }

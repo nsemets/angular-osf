@@ -28,10 +28,12 @@ export class RegistrationCardComponent {
   readonly registrationData = input.required<RegistrationCard>();
   readonly deleteDraft = output<string>();
   readonly updateRegistration = output<string>();
-  readonly continueUpdate = output<string>();
-  constructor() {
-    setTimeout(() => {
-      console.log('RegistrationCardComponent initialized', this.registrationData());
-    }, 3000);
+  readonly continueUpdate = output<{ id: string; unapproved: boolean }>();
+
+  continueUpdateHandler(): void {
+    this.continueUpdate.emit({
+      id: this.registrationData().id,
+      unapproved: this.registrationData().revisionState === RevisionReviewStates.Unapproved,
+    });
   }
 }

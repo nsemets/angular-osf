@@ -36,7 +36,7 @@ import { CustomValidators, findChangedFields } from '@osf/shared/utils';
 import { FieldType } from '../../enums';
 import { FilesMapper } from '../../mappers/files.mapper';
 import { PageSchema } from '../../models';
-import { RegistriesSelectors, UpdateStepValidation } from '../../store';
+import { RegistriesSelectors, SetUpdatedFields, UpdateStepValidation } from '../../store';
 import { FilesControlComponent } from '../files-control/files-control.component';
 
 @Component({
@@ -69,6 +69,7 @@ export class CustomStepComponent implements OnDestroy {
   filesLink = input.required<string>();
   projectId = input.required<string>();
   provider = input.required<string>();
+  filesViewOnly = input<boolean>(false);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   updateAction = output<Record<string, any>>();
@@ -84,6 +85,7 @@ export class CustomStepComponent implements OnDestroy {
 
   protected actions = createDispatchMap({
     updateStepValidation: UpdateStepValidation,
+    setUpdatedFields: SetUpdatedFields,
   });
 
   readonly INPUT_VALIDATION_MESSAGES = INPUT_VALIDATION_MESSAGES;
@@ -162,10 +164,8 @@ export class CustomStepComponent implements OnDestroy {
   private updateDraft() {
     const changedFields = findChangedFields(this.stepForm.value, this.stepsData());
     if (Object.keys(changedFields).length > 0) {
-      const attributes = {
-        registration_responses: this.stepForm.value,
-      };
-      this.updateAction.emit(attributes);
+      this.actions.setUpdatedFields(changedFields);
+      this.updateAction.emit(this.stepForm.value);
     }
   }
 
@@ -185,9 +185,7 @@ export class CustomStepComponent implements OnDestroy {
         [questionKey]: [...(this.attachedFiles[questionKey] || []), file],
       });
       this.updateAction.emit({
-        registration_responses: {
-          [questionKey]: [...this.attachedFiles[questionKey].map((f) => FilesMapper.toFilePayload(f as OsfFile))],
-        },
+        [questionKey]: [...this.attachedFiles[questionKey].map((f) => FilesMapper.toFilePayload(f as OsfFile))],
       });
     }
   }
@@ -199,9 +197,7 @@ export class CustomStepComponent implements OnDestroy {
         [questionKey]: this.attachedFiles[questionKey],
       });
       this.updateAction.emit({
-        registration_responses: {
-          [questionKey]: [...this.attachedFiles[questionKey].map((f) => FilesMapper.toFilePayload(f as OsfFile))],
-        },
+        [questionKey]: [...this.attachedFiles[questionKey].map((f) => FilesMapper.toFilePayload(f as OsfFile))],
       });
     }
   }
