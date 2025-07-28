@@ -39,7 +39,8 @@
       "submit": "Submit",
       "view": "View",
       "review": "Review",
-      "upload": "Upload"
+      "upload": "Upload",
+      "continueUpdate": "Continue Update"
     },
     "search": {
       "title": "Search",
@@ -1973,6 +1974,29 @@
         "embargoPlaceholder": "Choose embargo end date",
         "successMessage": "Registration successfully created."
       }
+    },
+    "justification": {
+      "step": "Justification",
+      "title": "Justification for update",
+      "description": "Justification will be provided to admins and moderators upon review. Once approved, it will be displayed at the top of the registration.",
+      "placeholder": "Explain the updates made to this registration and why the changes were necessary. Be thorough in your response. ",
+      "updatedList": "List of updated registration questions",
+      "noUpdates": "No responses updated",
+      "noData": "No justification provided.",
+      "deleteUpdates": "Delete Draft Update",
+      "submitChanges": "Submit Changes",
+      "acceptChanges": "Accept Changes",
+      "continueEditing": "Continue Editing",
+      "successMessage": "Registration update successfully",
+      "confirmDeleteUpdate": {
+        "header": "Delete this draft update",
+        "message": "Are you sure you want to delete this draft update?"
+      },
+      "confirmContinueEditing": {
+        "header": "Are you sure this needs more edits?",
+        "message": "This will cancel any approvals from other admin contributors and return the registration back to its draft form for additional changes.",
+        "label": "What additional changes need to be made and why?"
+      }
     }
   },
   "registry": {
@@ -2114,7 +2138,7 @@
       "pendingWithdrawRequest": "Pending withdraw request",
       "pendingWithdraw": "Pending withdrawal",
       "unapproved": "Unapproved",
-      "inProgress": "In progress",
+      "inProgress": "Update in progress",
       "pendingModeration": "Pending moderation"
     }
   },

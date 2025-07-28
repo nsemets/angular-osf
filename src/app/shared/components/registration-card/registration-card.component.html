@@ -79,8 +79,24 @@
                   routerLinkActive="router-link-active"
                   [label]="'common.buttons.view' | translate"
                 ></p-button>
-                @if (registrationData().status === RegistrationStatus.InProgress) {
-                  <p-button severity="secondary" [label]="'common.buttons.update' | translate"></p-button>
+                @if (registrationData().reviewsState === RegistrationReviewStates.Accepted) {
+                  @if (registrationData().revisionState === RevisionReviewStates.Approved) {
+                    <p-button
+                      severity="secondary"
+                      (click)="updateRegistration.emit(registrationData().id)"
+                      [label]="'common.buttons.update' | translate"
+                    ></p-button>
+                  }
+                  @if (
+                    registrationData().revisionState === RevisionReviewStates.RevisionInProgress ||
+                    registrationData().revisionState === RevisionReviewStates.Unapproved
+                  ) {
+                    <p-button
+                      severity="secondary"
+                      (click)="continueUpdateHandler()"
+                      [label]="'common.buttons.continueUpdate' | translate"
+                    ></p-button>
+                  }
                 }
               }
             </div>
