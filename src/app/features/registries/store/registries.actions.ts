@@ -175,7 +175,8 @@ export class HandleSchemaResponse {
   static readonly type = '[Registries] Handle Schema Response';
   constructor(
     public schemaResponseId: string,
-    public trigger: SchemaActionTrigger
+    public trigger: SchemaActionTrigger,
+    public comment?: string
   ) {}
 }
 

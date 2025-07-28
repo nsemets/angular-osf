@@ -226,12 +226,13 @@ export class RegistriesService {
       .pipe(map((response) => RegistrationMapper.fromSchemaResponse(response)));
   }
 
-  handleSchemaResponse(schemaResponseId: string, trigger: SchemaActionTrigger) {
+  handleSchemaResponse(schemaResponseId: string, trigger: SchemaActionTrigger, comment?: string) {
     const payload = {
       data: {
         type: 'schema_response_actions',
         attributes: {
           trigger,
+          comment: comment ? comment : undefined,
         },
         relationships: {
           target: {

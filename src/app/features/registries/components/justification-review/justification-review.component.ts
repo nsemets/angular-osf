@@ -95,16 +95,12 @@ export class JustificationReviewComponent {
   }
 
   continueEditing() {
-    this.dialogService
-      .open(ConfirmContinueEditingDialogComponent, {
-        width: '552px',
-        header: this.translateService.instant('registries.justification.confirmContinueEditing.header'),
-        focusOnShow: false,
-        closeOnEscape: true,
-        modal: true,
-      })
-      .onClose.subscribe((res) => {
-        console.log('res', res);
-      });
+    this.dialogService.open(ConfirmContinueEditingDialogComponent, {
+      width: '552px',
+      header: this.translateService.instant('registries.justification.confirmContinueEditing.header'),
+      focusOnShow: false,
+      closeOnEscape: true,
+      modal: true,
+    });
   }
 }
