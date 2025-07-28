@@ -51,14 +51,16 @@
   }
 }
 
-.widen-buttons {
-  p-button {
+link-project-button {
+  &:not(.active) {
+    opacity: 0.7;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  .p-button {
     width: 100%;
-    .p-button {
-      width: 100%;
-    }
-    button {
-      width: 100%;
-    }
   }
 }

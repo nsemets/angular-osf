@@ -1,6 +1,6 @@
 import { Selector } from '@ngxs/store';
 
-import { DraftRegistrationModel, License, RegistrationCard, Resource } from '@shared/models';
+import { DraftRegistrationModel, License, OsfFile, RegistrationCard, Resource } from '@shared/models';
 
 import { PageSchema, Project, ProviderSchema } from '../models';
 
@@ -127,8 +127,24 @@ export class RegistriesSelectors {
   static getSubmittedRegistrationsTotalCount(state: RegistriesStateModel): number {
     return state.submittedRegistrations.totalCount;
   }
+
+  @Selector([RegistriesState])
+  static getFiles(state: RegistriesStateModel): OsfFile[] {
+    return state.files.data;
+  }
+
+  @Selector([RegistriesState])
+  static isFilesLoading(state: RegistriesStateModel): boolean {
+    return state.files.isLoading;
+  }
+
   @Selector([RegistriesState])
   static getRegistrationComponents(state: RegistriesStateModel) {
     return state.draftRegistration.data?.components || [];
+  }
+
+  @Selector([RegistriesState])
+  static getCurrentFolder(state: RegistriesStateModel): OsfFile | null {
+    return state.currentFolder;
   }
 }
