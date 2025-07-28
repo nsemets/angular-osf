@@ -20,9 +20,19 @@
       </div>
     </div>
 
-    <div class="flex justify-content-between w-full gap-1 btn-full-width">
-      <p-button [label]="'common.buttons.edit' | translate" severity="info" (click)="backToEdit()" />
-      <p-button [label]="'resources.add' | translate" severity="primary" (onClick)="onAddResource()" />
+    <div class="flex justify-content-between w-full gap-1">
+      <p-button
+        class="btn-full-width"
+        [label]="'common.buttons.edit' | translate"
+        severity="info"
+        (click)="backToEdit()"
+      />
+      <p-button
+        class="btn-full-width"
+        [label]="'resources.add' | translate"
+        severity="primary"
+        (onClick)="onAddResource()"
+      />
     </div>
   </form>
 } @else {
@@ -56,9 +66,14 @@
       ></textarea>
     </div>
 
-    <div class="flex justify-content-between w-full gap-1 btn-full-width">
-      <p-button [label]="'common.buttons.cancel' | translate" severity="info" (click)="dialogRef.close()" />
-      <p-button [label]="'common.buttons.preview' | translate" (onClick)="previewResource()" />
+    <div class="flex justify-content-between w-full gap-1">
+      <p-button
+        class="btn-full-width"
+        [label]="'common.buttons.cancel' | translate"
+        severity="info"
+        (click)="dialogRef.close()"
+      />
+      <p-button class="btn-full-width" [label]="'common.buttons.preview' | translate" (onClick)="previewResource()" />
     </div>
   </form>
 }
