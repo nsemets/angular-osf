@@ -4,7 +4,7 @@ import { catchError, forkJoin, tap, throwError } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { NodeLinksService } from '@shared/services/node-links.service';
+import { NodeLinksService } from '@osf/shared/services';
 
 import {
   ClearNodeLinks,
