@@ -1,10 +1,10 @@
 <section class="flex flex-column flex-1">
-  <osf-sub-header [title]="'Links'" />
+  <osf-sub-header [title]="'navigation.registration.links' | translate" />
 
-  <div class="flex flex-column gap-6 p-4">
+  <div class="flex flex-column gap-6 p-4 bg-white">
     <section class="flex flex-column gap-4">
       <h2 class="text-xl font-semibold text-gray-800">
-        {{ 'View for Linked projects and Components' }}
+        {{ 'registry.links.viewLinksProjectsAndComponents' | translate }}
       </h2>
 
       @if (linkedNodesLoading()) {
@@ -12,150 +12,44 @@
           <osf-loading-spinner />
         </div>
       } @else if (linkedNodes().length === 0) {
-        <div class="text-center p-6 border-2 border-dashed border-gray-300 rounded-lg">
-          <p class="text-gray-500">{{ 'No linked projects or components found' }}</p>
+        <div class="text-center p-6">
+          <p class="text-gray-500">{{ 'registry.links.noLinkedProjectsOrComponentsFound' | translate }}</p>
         </div>
       } @else {
-        <div class="grid gap-4">
-          @for (node of linkedNodes(); track node.id) {
-            <p-card class="w-full">
-              <div class="flex flex-column gap-3">
-                <!-- Header with title and public/private indicator -->
-                <div class="flex align-items-start justify-content-between">
-                  <div class="flex flex-column gap-2 flex-1">
-                    <div class="flex align-items-center gap-2">
-                      <i class="pi" [class]="node.isPublic ? 'pi-globe text-green-500' : 'pi-lock text-gray-500'"></i>
-                      <h3 class="text-lg font-semibold text-gray-800 m-0">{{ node.title }}</h3>
-                    </div>
-
-                    @if (node.description) {
-                      <p class="text-gray-600 m-0 line-height-3">{{ node.description }}</p>
-                    }
-                  </div>
-                </div>
-
-                <!-- Metadata -->
-                <div class="flex flex-column gap-2 text-sm text-gray-600">
-                  <div class="flex align-items-center gap-4">
-                    <span><strong>Category:</strong> {{ node.category }}</span>
-                    <span><strong>Last Updated:</strong> {{ formatDate(node.dateModified) }}</span>
-                    <span><strong>Created:</strong> {{ formatDate(node.dateCreated) }}</span>
-                  </div>
-                </div>
-
-                <!-- Tags -->
-                @if (node.tags && node.tags.length > 0) {
-                  <div class="flex flex-wrap gap-2">
-                    @for (tag of node.tags; track tag) {
-                      <p-tag [value]="tag" severity="info" />
-                    }
-                  </div>
-                }
-
-                <!-- Actions -->
-                <div class="flex gap-2 mt-3">
-                  <p-button label="Review" severity="secondary" size="small" (click)="onViewProject(node.htmlUrl)" />
-                  <p-button label="Edit" severity="info" size="small" (click)="onViewProject(node.htmlUrl)" />
-                  <p-button label="Delete" severity="danger" size="small" />
-                </div>
-              </div>
-            </p-card>
+        <div class="flex flex-column gap-4 w-full">
+          @for (node of nodes(); track node.id) {
+            <osf-registration-links-card
+              (reviewEmitRegistrationData)="navigateToNodes($event)"
+              [registrationData]="node"
+            />
           }
         </div>
-
-        <!-- Pagination info -->
-        @if (linkedNodesMeta()) {
-          <div class="text-center text-gray-600 text-sm">
-            {{ 'Total: ' + (linkedNodesMeta()?.total || 0) + ' items' }}
-          </div>
-        }
       }
     </section>
 
-    <!-- Linked Registrations Section -->
     <section class="flex flex-column gap-4">
       <h2 class="text-xl font-semibold text-gray-800">
-        {{ 'Linked registrations' }}
+        {{ 'registry.links.linkedRegistrations' | translate }}
       </h2>
 
       @if (linkedRegistrationsLoading()) {
         <div class="flex justify-content-center p-4">
           <osf-loading-spinner />
         </div>
-      } @else if (linkedRegistrations().length === 0) {
-        <div class="text-center p-6 border-2 border-dashed border-gray-300 rounded-lg">
-          <p class="text-gray-500">{{ 'No linked registrations found' }}</p>
+      } @else if (registrations().length === 0) {
+        <div class="text-center p-6">
+          <p class="text-gray-500">{{ 'registry.links.noLinkedRegistrationsFound' | translate }}</p>
         </div>
       } @else {
-        <div class="grid gap-4">
-          @for (registration of linkedRegistrations(); track registration.id) {
-            <p-card class="w-full">
-              <div class="flex flex-column gap-3">
-                <!-- Header with title and public/private indicator -->
-                <div class="flex align-items-start justify-content-between">
-                  <div class="flex flex-column gap-2 flex-1">
-                    <div class="flex align-items-center gap-2">
-                      <i
-                        class="pi"
-                        [class]="registration.isPublic ? 'pi-globe text-green-500' : 'pi-lock text-gray-500'"
-                      ></i>
-                      <h3 class="text-lg font-semibold text-gray-800 m-0">{{ registration.title }}</h3>
-                    </div>
-
-                    @if (registration.description) {
-                      <p class="text-gray-600 m-0 line-height-3">{{ registration.description }}</p>
-                    }
-                  </div>
-                </div>
-
-                <!-- Metadata -->
-                <div class="flex flex-column gap-2 text-sm text-gray-600">
-                  <div class="flex align-items-center gap-4">
-                    <span><strong>Category:</strong> {{ registration.category }}</span>
-                    <span><strong>Last Updated:</strong> {{ formatDate(registration.dateModified) }}</span>
-                    <span><strong>Created:</strong> {{ formatDate(registration.dateCreated) }}</span>
-                    @if (registration.dateRegistered) {
-                      <span><strong>Registered:</strong> {{ formatDate(registration.dateRegistered) }}</span>
-                    }
-                  </div>
-                </div>
-
-                <!-- Tags -->
-                @if (registration.tags && registration.tags.length > 0) {
-                  <div class="flex flex-wrap gap-2">
-                    @for (tag of registration.tags; track tag) {
-                      <p-tag [value]="tag" severity="info" />
-                    }
-                  </div>
-                }
-
-                <!-- Actions -->
-                <div class="flex gap-2 mt-3">
-                  <p-button
-                    label="Review"
-                    severity="secondary"
-                    size="small"
-                    (click)="onViewRegistration(registration.htmlUrl)"
-                  />
-                  <p-button
-                    label="Edit"
-                    severity="info"
-                    size="small"
-                    (click)="onViewRegistration(registration.htmlUrl)"
-                  />
-                  <p-button label="Delete" severity="danger" size="small" />
-                </div>
-              </div>
-            </p-card>
+        <div class="flex flex-column gap-4 w-full">
+          @for (registration of registrations(); track registration.id) {
+            <osf-registration-links-card
+              (reviewEmitRegistrationData)="navigateToRegistrations($event)"
+              (updateEmitRegistrationData)="updateRegistration($event)"
+              [registrationData]="registration"
+            />
           }
         </div>
-
-        <!-- Pagination info -->
-        @if (linkedRegistrationsMeta()) {
-          <div class="text-center text-gray-600 text-sm">
-            {{ 'Total: ' + (linkedRegistrationsMeta()?.total || 0) + ' items' }}
-          </div>
-        }
       }
     </section>
   </div>

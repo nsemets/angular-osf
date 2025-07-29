@@ -43,4 +43,39 @@ export class RegistryLinksSelectors {
   static getLinkedRegistrationsLinks(state: RegistryLinksStateModel) {
     return state.linkedRegistrations.links;
   }
+
+  @Selector([RegistryLinksState])
+  static getDeleteLoading(state: RegistryLinksStateModel) {
+    return state.deleteLoading;
+  }
+
+  @Selector([RegistryLinksState])
+  static getBibliographicContributors(state: RegistryLinksStateModel) {
+    return state.bibliographicContributors.data;
+  }
+
+  @Selector([RegistryLinksState])
+  static getBibliographicContributorsLoading(state: RegistryLinksStateModel) {
+    return state.bibliographicContributors.isLoading;
+  }
+
+  @Selector([RegistryLinksState])
+  static getBibliographicContributorsNodeId(state: RegistryLinksStateModel) {
+    return state.bibliographicContributors.nodeId;
+  }
+
+  @Selector([RegistryLinksState])
+  static getBibliographicContributorsForRegistration(state: RegistryLinksStateModel) {
+    return state.bibliographicContributorsForRegistration.data;
+  }
+
+  @Selector([RegistryLinksState])
+  static getBibliographicContributorsForRegistrationLoading(state: RegistryLinksStateModel) {
+    return state.bibliographicContributorsForRegistration.isLoading;
+  }
+
+  @Selector([RegistryLinksState])
+  static getBibliographicContributorsForRegistrationId(state: RegistryLinksStateModel) {
+    return state.bibliographicContributorsForRegistration.registrationId;
+  }
 }

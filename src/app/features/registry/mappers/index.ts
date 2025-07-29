@@ -1,3 +1,4 @@
+export * from './bibliographic-contributors.mapper';
 export * from './cedar-form.mapper';
 export * from './linked-nodes.mapper';
 export * from './linked-registrations.mapper';

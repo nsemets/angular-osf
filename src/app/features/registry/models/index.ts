@@ -1,3 +1,4 @@
+export * from './bibliographic-contributors.models';
 export * from './get-registry-institutions-json-api.model';
 export * from './get-registry-overview-json-api.model';
 export * from './get-registry-schema-block-json-api.model';
