@@ -9,75 +9,69 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 
 import { StepperComponent, SubHeaderComponent } from '@osf/shared/components';
-import { ResourceType } from '@osf/shared/enums';
+import { RevisionReviewStates } from '@osf/shared/enums';
 import { StepOption } from '@osf/shared/models';
 import { LoaderService } from '@osf/shared/services';
-import {
-  ContributorsSelectors,
-  FetchSelectedSubjects,
-  GetAllContributors,
-  SubjectsSelectors,
-} from '@osf/shared/stores';
 
-import { DEFAULT_STEPS } from '../../constants';
-import { ClearState, FetchDraft, FetchSchemaBlocks, RegistriesSelectors, UpdateStepValidation } from '../../store';
+import {
+  ClearState,
+  FetchSchemaBlocks,
+  FetchSchemaResponse,
+  RegistriesSelectors,
+  UpdateStepValidation,
+} from '../../store';
 
 @Component({
-  selector: 'osf-drafts',
+  selector: 'osf-justification',
   imports: [RouterOutlet, StepperComponent, SubHeaderComponent, TranslatePipe],
-  templateUrl: './drafts.component.html',
-  styleUrl: './drafts.component.scss',
+  templateUrl: './justification.component.html',
+  styleUrl: './justification.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [TranslateService],
 })
-export class DraftsComponent implements OnDestroy {
-  private readonly router = inject(Router);
+export class JustificationComponent implements OnDestroy {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+
   private readonly loaderService = inject(LoaderService);
   private readonly translateService = inject(TranslateService);
-
   protected readonly pages = select(RegistriesSelectors.getPagesSchema);
-  protected readonly draftRegistration = select(RegistriesSelectors.getDraftRegistration);
-  protected stepsValidation = select(RegistriesSelectors.getStepsValidation);
-  protected readonly stepsData = select(RegistriesSelectors.getStepsData);
-  protected selectedSubjects = select(SubjectsSelectors.getSelectedSubjects);
-  protected initialContributors = select(ContributorsSelectors.getContributors);
-  protected readonly contributors = select(ContributorsSelectors.getContributors);
-  protected readonly subjects = select(SubjectsSelectors.getSelectedSubjects);
+  protected readonly stepsValidation = select(RegistriesSelectors.getStepsValidation);
+  protected readonly schemaResponse = select(RegistriesSelectors.getSchemaResponse);
+  protected readonly schemaResponseRevisionData = select(RegistriesSelectors.getSchemaResponseRevisionData);
 
   private readonly actions = createDispatchMap({
     getSchemaBlocks: FetchSchemaBlocks,
-    getDraftRegistration: FetchDraft,
-    updateStepValidation: UpdateStepValidation,
     clearState: ClearState,
-    getContributors: GetAllContributors,
-    getSubjects: FetchSelectedSubjects,
+    getSchemaResponse: FetchSchemaResponse,
+    updateStepValidation: UpdateStepValidation,
   });
 
   get isReviewPage(): boolean {
     return this.router.url.includes('/review');
   }
 
-  isMetaDataInvalid = computed(() => {
-    return (
-      !this.draftRegistration()?.title ||
-      !this.draftRegistration()?.description ||
-      !this.draftRegistration()?.license?.id ||
-      !this.selectedSubjects()?.length ||
-      !this.initialContributors()?.length
-    );
-  });
-
-  defaultSteps: StepOption[] = [];
-
-  isLoaded = false;
+  reviewStep!: StepOption;
+  justificationStep!: StepOption;
+  revisionId = this.route.snapshot.firstChild?.params['id'] || '';
 
   steps: Signal<StepOption[]> = computed(() => {
-    this.defaultSteps = DEFAULT_STEPS.map((step) => ({
-      ...step,
-      label: this.translateService.instant(step.label),
-      invalid: this.stepsValidation()?.[step.index]?.invalid || false,
-    }));
+    this.justificationStep = {
+      index: 0,
+      value: 'justification',
+      label: this.translateService.instant('registries.justification.step'),
+      invalid: false,
+      routeLink: 'justification',
+      disabled: this.schemaResponse()?.reviewsState !== RevisionReviewStates.RevisionInProgress,
+    };
+
+    this.reviewStep = {
+      index: 1,
+      value: 'review',
+      label: this.translateService.instant('registries.review.step'),
+      invalid: false,
+      routeLink: 'review',
+    };
 
     const customSteps = this.pages().map((page, index) => {
       return {
@@ -86,12 +80,13 @@ export class DraftsComponent implements OnDestroy {
         value: page.id,
         routeLink: `${index + 1}`,
         invalid: this.stepsValidation()?.[index + 1]?.invalid || false,
+        disabled: this.schemaResponse()?.reviewsState !== RevisionReviewStates.RevisionInProgress,
       };
     });
     return [
-      this.defaultSteps[0],
+      { ...this.justificationStep },
       ...customSteps,
-      { ...this.defaultSteps[1], index: customSteps.length + 1, invalid: false },
+      { ...this.reviewStep, index: customSteps.length + 1, invalid: false },
     ];
   });
 
@@ -102,8 +97,6 @@ export class DraftsComponent implements OnDestroy {
   currentStep = computed(() => {
     return this.steps()[this.currentStepIndex()];
   });
-
-  registrationId = this.route.snapshot.firstChild?.params['id'] || '';
 
   constructor() {
     this.router.events
@@ -124,26 +117,16 @@ export class DraftsComponent implements OnDestroy {
       });
 
     this.loaderService.show();
-    if (!this.draftRegistration()) {
-      this.actions.getDraftRegistration(this.registrationId);
+    if (!this.schemaResponse()) {
+      this.actions.getSchemaResponse(this.revisionId);
     }
-    if (!this.contributors()?.length) {
-      this.actions.getContributors(this.registrationId, ResourceType.DraftRegistration);
-    }
-    if (!this.subjects()?.length) {
-      this.actions.getSubjects(this.registrationId, ResourceType.DraftRegistration);
-    }
+
     effect(() => {
-      const registrationSchemaId = this.draftRegistration()?.registrationSchemaId;
-      if (registrationSchemaId && !this.isLoaded) {
+      const registrationSchemaId = this.schemaResponse()?.registrationSchemaId;
+      if (registrationSchemaId) {
         this.actions
-          .getSchemaBlocks(registrationSchemaId || '')
-          .pipe(
-            tap(() => {
-              this.isLoaded = true;
-              this.loaderService.hide();
-            })
-          )
+          .getSchemaBlocks(registrationSchemaId)
+          .pipe(tap(() => this.loaderService.hide()))
           .subscribe();
       }
     });
@@ -157,14 +140,14 @@ export class DraftsComponent implements OnDestroy {
 
     effect(() => {
       if (this.currentStepIndex() > 0) {
-        this.actions.updateStepValidation('0', this.isMetaDataInvalid());
+        this.actions.updateStepValidation('0', true);
       }
-      if (this.pages().length && this.currentStepIndex() > 0 && this.stepsData()) {
+      if (this.pages().length && this.currentStepIndex() > 0 && this.schemaResponseRevisionData()) {
         for (let i = 1; i < this.currentStepIndex(); i++) {
           const pageStep = this.pages()[i - 1];
           const isStepInvalid =
             pageStep?.questions?.some((question) => {
-              const questionData = this.stepsData()[question.responseKey!];
+              const questionData = this.schemaResponseRevisionData()[question.responseKey!];
               return question.required && (Array.isArray(questionData) ? !questionData.length : !questionData);
             }) || false;
           this.actions.updateStepValidation(i.toString(), isStepInvalid);
@@ -176,7 +159,7 @@ export class DraftsComponent implements OnDestroy {
   stepChange(step: StepOption): void {
     this.currentStepIndex.set(step.index);
     const pageLink = this.steps()[step.index].routeLink;
-    this.router.navigate([`/registries/drafts/${this.registrationId}/`, pageLink]);
+    this.router.navigate([`/registries/revisions/${this.revisionId}/`, pageLink]);
   }
 
   ngOnDestroy(): void {
