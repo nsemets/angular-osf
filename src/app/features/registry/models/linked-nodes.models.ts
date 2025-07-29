@@ -32,8 +32,6 @@ export interface LinkedRegistration {
   revisionState?: string;
   contributors?: NodeBibliographicContributor[];
   currentUserPermissions: string[];
-  htmlUrl: string;
-  apiUrl: string;
   hasData?: boolean;
   hasAnalyticCode?: boolean;
   hasMaterials?: boolean;

@@ -19,7 +19,6 @@ import { RegistryLinksStateModel } from './registry-links.model';
 const initialState: RegistryLinksStateModel = {
   linkedNodes: { data: [], isLoading: false, error: null },
   linkedRegistrations: { data: [], isLoading: false, error: null },
-  deleteLoading: false,
   bibliographicContributors: { data: [], isLoading: false, error: null },
   bibliographicContributorsForRegistration: { data: [], isLoading: false, error: null },
 };
@@ -47,7 +46,6 @@ export class RegistryLinksState {
             isLoading: false,
             error: null,
             meta: response.meta,
-            links: response.links,
           },
         });
       }),
@@ -70,7 +68,6 @@ export class RegistryLinksState {
             isLoading: false,
             error: null,
             meta: response.meta,
-            links: response.links,
           },
         });
       }),

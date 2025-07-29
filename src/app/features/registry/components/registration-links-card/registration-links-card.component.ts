@@ -41,9 +41,4 @@ export class RegistrationLinksCardComponent {
       regData.hasData || regData.hasAnalyticCode || regData.hasMaterials || regData.hasPapers || regData.hasSupplements
     );
   });
-
-  continueUpdateHandler(): void {
-    // Handle continue update logic
-    console.log('Continue update clicked');
-  }
 }

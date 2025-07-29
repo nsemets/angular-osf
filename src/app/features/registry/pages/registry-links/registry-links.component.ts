@@ -11,6 +11,7 @@ import { FetchAllSchemaResponses, RegistriesSelectors } from '@osf/features/regi
 import { RegistrationLinksCardComponent } from '@osf/features/registry/components';
 import { LinkedNode, LinkedRegistration } from '@osf/features/registry/models';
 import { LoadingSpinnerComponent, SubHeaderComponent } from '@shared/components';
+import { LoaderService } from '@shared/services';
 
 import {
   GetBibliographicContributors,
@@ -30,6 +31,7 @@ import {
 export class RegistryLinksComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly loaderService = inject(LoaderService);
 
   private registryId = signal('');
 
@@ -142,10 +144,12 @@ export class RegistryLinksComponent implements OnInit {
   }
 
   updateRegistration(id: string): void {
+    this.loaderService.show();
     this.actions
       .getSchemaResponse(id)
       .pipe(
         tap(() => {
+          this.loaderService.hide();
           this.navigateToJustificationPage();
         })
       )

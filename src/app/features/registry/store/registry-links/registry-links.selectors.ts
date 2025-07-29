@@ -15,16 +15,6 @@ export class RegistryLinksSelectors {
   }
 
   @Selector([RegistryLinksState])
-  static getLinkedNodesMeta(state: RegistryLinksStateModel) {
-    return state.linkedNodes.meta;
-  }
-
-  @Selector([RegistryLinksState])
-  static getLinkedNodesLinks(state: RegistryLinksStateModel) {
-    return state.linkedNodes.links;
-  }
-
-  @Selector([RegistryLinksState])
   static getLinkedRegistrations(state: RegistryLinksStateModel) {
     return state.linkedRegistrations.data;
   }
@@ -35,28 +25,8 @@ export class RegistryLinksSelectors {
   }
 
   @Selector([RegistryLinksState])
-  static getLinkedRegistrationsMeta(state: RegistryLinksStateModel) {
-    return state.linkedRegistrations.meta;
-  }
-
-  @Selector([RegistryLinksState])
-  static getLinkedRegistrationsLinks(state: RegistryLinksStateModel) {
-    return state.linkedRegistrations.links;
-  }
-
-  @Selector([RegistryLinksState])
-  static getDeleteLoading(state: RegistryLinksStateModel) {
-    return state.deleteLoading;
-  }
-
-  @Selector([RegistryLinksState])
   static getBibliographicContributors(state: RegistryLinksStateModel) {
     return state.bibliographicContributors.data;
-  }
-
-  @Selector([RegistryLinksState])
-  static getBibliographicContributorsLoading(state: RegistryLinksStateModel) {
-    return state.bibliographicContributors.isLoading;
   }
 
   @Selector([RegistryLinksState])
@@ -67,11 +37,6 @@ export class RegistryLinksSelectors {
   @Selector([RegistryLinksState])
   static getBibliographicContributorsForRegistration(state: RegistryLinksStateModel) {
     return state.bibliographicContributorsForRegistration.data;
-  }
-
-  @Selector([RegistryLinksState])
-  static getBibliographicContributorsForRegistrationLoading(state: RegistryLinksStateModel) {
-    return state.bibliographicContributorsForRegistration.isLoading;
   }
 
   @Selector([RegistryLinksState])
