@@ -1,4 +1,5 @@
 import { User } from '@osf/core/models';
+import { Meeting } from '@osf/features/meetings/models/meetings.models';
 
 export const MOCK_USER: User = {
   id: '1',
@@ -51,4 +52,13 @@ export const MOCK_USER: User = {
   link: 'https://example.com/profile',
   defaultRegionId: 'us',
   allowIndexing: true,
+};
+
+export const MOCK_MEETING: Meeting = {
+  id: '1',
+  name: 'Test Meeting',
+  submissionsCount: 10,
+  location: 'New York',
+  startDate: new Date('2024-01-15'),
+  endDate: new Date('2024-01-16'),
 };
