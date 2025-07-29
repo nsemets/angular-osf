@@ -18,6 +18,7 @@ import {
   DeleteResource,
   GetRegistryResources,
   RegistryResourcesSelectors,
+  SilentDelete,
 } from '@osf/features/registry/store/registry-resources';
 import { LoadingSpinnerComponent, SubHeaderComponent } from '@shared/components';
 import { CustomConfirmationService, ToastService } from '@shared/services';
@@ -42,11 +43,13 @@ export class RegistryResourcesComponent {
   protected readonly isResourcesLoading = select(RegistryResourcesSelectors.isResourcesLoading);
   private registryId = '';
   protected addingResource = signal(false);
+  private readonly currentResource = select(RegistryResourcesSelectors.getCurrentResource);
 
   private readonly actions = createDispatchMap({
     getResources: GetRegistryResources,
     addResource: AddRegistryResource,
     deleteResource: DeleteResource,
+    silentDelete: SilentDelete,
   });
 
   constructor() {
@@ -86,6 +89,12 @@ export class RegistryResourcesComponent {
           next: (res) => {
             if (res) {
               this.toastService.showSuccess('resources.toastMessages.addResourceSuccess');
+            } else {
+              const currentResource = this.currentResource();
+              if (!currentResource) {
+                throw new Error(this.translateService.instant('resources.errors.noCurrentResource'));
+              }
+              this.actions.silentDelete(currentResource.id);
             }
           },
           error: () => this.toastService.showError('resources.toastMessages.addResourceError'),

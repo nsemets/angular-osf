@@ -11,6 +11,7 @@ import { finalize, take } from 'rxjs';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
+import { ResourceFormComponent } from '@osf/features/registry/components';
 import { resourceTypeOptions } from '@osf/features/registry/constants';
 import { AddResource } from '@osf/features/registry/models/resources/add-resource.model';
 import { ConfirmAddResource } from '@osf/features/registry/models/resources/confirm-add-resource.model';
@@ -18,6 +19,7 @@ import {
   ConfirmAddRegistryResource,
   PreviewRegistryResource,
   RegistryResourcesSelectors,
+  SilentDelete,
 } from '@osf/features/registry/store/registry-resources';
 import { FormSelectComponent, LoadingSpinnerComponent, TextInputComponent } from '@shared/components';
 import { InputLimits } from '@shared/constants';
@@ -34,6 +36,7 @@ import { SelectOption } from '@shared/models';
     Textarea,
     LoadingSpinnerComponent,
     FormSelectComponent,
+    ResourceFormComponent,
   ],
   templateUrl: './add-resource-dialog.component.html',
   styleUrl: './add-resource-dialog.component.scss',
@@ -52,14 +55,15 @@ export class AddResourceDialogComponent {
   protected isResourceConfirming = signal(false);
 
   protected form = new FormGroup({
-    pid: new FormControl('', [Validators.required]),
-    resourceType: new FormControl('', [Validators.required]),
-    description: new FormControl(''),
+    pid: new FormControl<string | null>('', [Validators.required]),
+    resourceType: new FormControl<string | null>('', [Validators.required]),
+    description: new FormControl<string | null>(''),
   });
 
   private readonly actions = createDispatchMap({
     previewResource: PreviewRegistryResource,
     confirmAddResource: ConfirmAddRegistryResource,
+    deleteResource: SilentDelete,
   });
 
   public resourceOptions = signal<SelectOption[]>(resourceTypeOptions);
@@ -113,5 +117,14 @@ export class AddResourceDialogComponent {
         })
       )
       .subscribe({});
+  }
+
+  closeDialog(): void {
+    this.dialogRef.close();
+    const currentResource = this.currentResource();
+    if (!currentResource) {
+      throw new Error(this.translateService.instant('resources.errors.noRegistryId'));
+    }
+    this.actions.deleteResource(currentResource.id);
   }
 }

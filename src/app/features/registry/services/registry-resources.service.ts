@@ -3,7 +3,7 @@ import { map, Observable } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { JsonApiService } from '@core/services';
-import { MapAddResourceRequest, MapRegistryResource } from '@osf/features/registry/mappers';
+import { MapAddResourceRequest, MapRegistryResource, toAddResourceRequestBody } from '@osf/features/registry/mappers';
 import { GetRegistryResourcesJsonApi, RegistryResource } from '@osf/features/registry/models';
 import { AddResource } from '@osf/features/registry/models/resources/add-resource.model';
 import {
@@ -31,19 +31,7 @@ export class RegistryResourcesService {
   }
 
   addRegistryResource(registryId: string): Observable<RegistryResource> {
-    const body = {
-      data: {
-        relationships: {
-          registration: {
-            data: {
-              type: 'registrations',
-              id: registryId,
-            },
-          },
-        },
-        type: 'resources',
-      },
-    };
+    const body = toAddResourceRequestBody(registryId);
 
     return this.jsonApiService.post<AddResourceJsonApi>(`${environment.apiUrl}/resources/`, body).pipe(
       map((response) => {
@@ -56,7 +44,7 @@ export class RegistryResourcesService {
     const payload = MapAddResourceRequest(resourceId, resource);
 
     return this.jsonApiService
-      .patch<RegistryResourceDataJsonApi>(`${environment.apiUrl}/resources/${resourceId}`, payload)
+      .patch<RegistryResourceDataJsonApi>(`${environment.apiUrl}/resources/${resourceId}/`, payload)
       .pipe(
         map((response) => {
           return MapRegistryResource(response);
@@ -68,7 +56,7 @@ export class RegistryResourcesService {
     const payload = MapAddResourceRequest(resourceId, resource);
 
     return this.jsonApiService
-      .patch<RegistryResourceDataJsonApi>(`${environment.apiUrl}/resources/${resourceId}`, payload)
+      .patch<RegistryResourceDataJsonApi>(`${environment.apiUrl}/resources/${resourceId}/`, payload)
       .pipe(
         map((response) => {
           return MapRegistryResource(response);
@@ -77,7 +65,7 @@ export class RegistryResourcesService {
   }
 
   deleteResource(resourceId: string): Observable<void> {
-    return this.jsonApiService.delete(`${environment.apiUrl}/resources/${resourceId}`);
+    return this.jsonApiService.delete(`${environment.apiUrl}/resources/${resourceId}/`);
   }
 
   updateResource(resourceId: string, resource: AddResource) {

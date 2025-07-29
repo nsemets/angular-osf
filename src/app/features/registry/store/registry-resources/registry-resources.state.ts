@@ -14,6 +14,7 @@ import {
   GetRegistryResources,
   PreviewRegistryResource,
   RegistryResourcesStateModel,
+  SilentDelete,
   UpdateResource,
 } from '@osf/features/registry/store/registry-resources';
 
@@ -135,6 +136,11 @@ export class RegistryResourcesState {
       }),
       catchError((err) => handleSectionError(ctx, 'resources', err))
     );
+  }
+
+  @Action(SilentDelete)
+  silentDelete(ctx: StateContext<RegistryResourcesStateModel>, action: SilentDelete) {
+    return this.registryResourcesService.deleteResource(action.resourceId);
   }
 
   @Action(UpdateResource)

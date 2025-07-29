@@ -1,35 +1,23 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 
-import { Button } from 'primeng/button';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { Textarea } from 'primeng/textarea';
 
 import { finalize, take } from 'rxjs';
 
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { resourceTypeOptions } from '@osf/features/registry/constants';
+import { ResourceFormComponent } from '@osf/features/registry/components/resource-form/resource-form.component';
 import { RegistryResource } from '@osf/features/registry/models';
 import { AddResource } from '@osf/features/registry/models/resources/add-resource.model';
 import { RegistryResourcesSelectors, UpdateResource } from '@osf/features/registry/store/registry-resources';
-import { FormSelectComponent, LoadingSpinnerComponent, TextInputComponent } from '@shared/components';
-import { InputLimits } from '@shared/constants';
-import { SelectOption } from '@shared/models';
+import { LoadingSpinnerComponent } from '@shared/components';
 
 @Component({
   selector: 'osf-edit-resource-dialog',
-  imports: [
-    LoadingSpinnerComponent,
-    TextInputComponent,
-    Textarea,
-    ReactiveFormsModule,
-    Button,
-    TranslatePipe,
-    FormSelectComponent,
-  ],
+  imports: [LoadingSpinnerComponent, ReactiveFormsModule, ResourceFormComponent],
   templateUrl: './edit-resource-dialog.component.html',
   styleUrl: './edit-resource-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,13 +30,11 @@ export class EditResourceDialogComponent {
   private dialogConfig = inject(DynamicDialogConfig);
   private registryId: string = this.dialogConfig.data.id;
   private resource: RegistryResource = this.dialogConfig.data.resource as RegistryResource;
-  protected inputLimits = InputLimits;
-  public resourceOptions = signal<SelectOption[]>(resourceTypeOptions);
 
   protected form = new FormGroup({
-    pid: new FormControl('', [Validators.required]),
-    resourceType: new FormControl('', [Validators.required]),
-    description: new FormControl(''),
+    pid: new FormControl<string | null>('', [Validators.required]),
+    resourceType: new FormControl<string | null>('', [Validators.required]),
+    description: new FormControl<string | null>(''),
   });
 
   private readonly actions = createDispatchMap({

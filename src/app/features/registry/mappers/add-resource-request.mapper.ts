@@ -21,3 +21,19 @@ export function MapAddResourceRequest<T>(
     data: resourceData,
   };
 }
+
+export function toAddResourceRequestBody(registryId: string) {
+  return {
+    data: {
+      relationships: {
+        registration: {
+          data: {
+            type: 'registrations',
+            id: registryId,
+          },
+        },
+      },
+      type: 'resources',
+    },
+  };
+}

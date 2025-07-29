@@ -36,42 +36,13 @@
     </div>
   </form>
 } @else {
-  <form class="flex flex-column gap-4" [formGroup]="form" (ngSubmit)="previewResource()">
-    <osf-text-input
-      [control]="form.controls['pid']"
-      [label]="'DOI'"
-      [placeholder]="'https://doi.org/'"
-      [maxLength]="inputLimits.name.maxLength"
-    >
-    </osf-text-input>
-
-    <osf-form-select
-      [fullWidth]="true"
-      [options]="resourceOptions()"
-      [appendTo]="'body'"
-      [control]="form.controls['resourceType']"
-      [placeholder]="'resources.selectAResourceType'"
-    />
-
-    <div>
-      <label [for]="'coi-reason'">{{ 'resources.descriptionLabel' | translate }}</label>
-      <textarea
-        class="w-full"
-        pTextarea
-        id="coi-reason"
-        [rows]="3"
-        [formControl]="form.controls['description']"
-      ></textarea>
-    </div>
-
-    <div class="flex justify-content-between w-full gap-1">
-      <p-button
-        class="btn-full-width"
-        [label]="'common.buttons.cancel' | translate"
-        severity="info"
-        (click)="dialogRef.close()"
-      />
-      <p-button class="btn-full-width" [label]="'common.buttons.preview' | translate" (onClick)="previewResource()" />
-    </div>
-  </form>
+  <osf-resource-form
+    [formGroup]="form"
+    [showCancelButton]="true"
+    [showPreviewButton]="false"
+    [cancelButtonLabel]="'common.buttons.cancel'"
+    [primaryButtonLabel]="'common.buttons.preview'"
+    (cancelClicked)="closeDialog()"
+    (submitClicked)="previewResource()"
+  />
 }

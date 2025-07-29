@@ -41,6 +41,12 @@ export class DeleteResource {
   ) {}
 }
 
+export class SilentDelete {
+  static readonly type = '[Registry Resources] Silent Delete';
+
+  constructor(public resourceId: string) {}
+}
+
 export class UpdateResource {
   static readonly type = '[Registry Resources] Update Registry Resources';
 
