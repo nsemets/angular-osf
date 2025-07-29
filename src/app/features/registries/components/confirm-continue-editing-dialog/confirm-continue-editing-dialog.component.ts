@@ -42,7 +42,7 @@ export class ConfirmContinueEditingDialogComponent {
       .handleSchemaResponse(revisionId, SchemaActionTrigger.AdminReject, comment)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        finalize(() => this.dialogRef.close())
+        finalize(() => this.dialogRef.close(true))
       )
       .subscribe();
   }

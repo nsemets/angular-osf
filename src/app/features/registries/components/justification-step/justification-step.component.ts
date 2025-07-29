@@ -46,6 +46,11 @@ export class JustificationStepComponent implements OnDestroy {
     justification: ['', [Validators.maxLength(InputLimits.description.maxLength), CustomValidators.requiredTrimmed()]],
   });
 
+  get isJustificationValid(): boolean {
+    const control = this.justificationForm.controls['justification'];
+    return control.errors?.['required'] && (control.touched || control.dirty);
+  }
+
   constructor() {
     effect(() => {
       const revisionJustification = this.schemaResponse()?.revisionJustification;

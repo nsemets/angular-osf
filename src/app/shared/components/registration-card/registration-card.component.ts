@@ -30,6 +30,22 @@ export class RegistrationCardComponent {
   readonly updateRegistration = output<string>();
   readonly continueUpdate = output<{ id: string; unapproved: boolean }>();
 
+  get isAccepted(): boolean {
+    return this.registrationData().reviewsState === RegistrationReviewStates.Accepted;
+  }
+
+  get isApproved(): boolean {
+    return this.registrationData().revisionState === RevisionReviewStates.Approved;
+  }
+
+  get isUnapproved(): boolean {
+    return this.registrationData().revisionState === RevisionReviewStates.Unapproved;
+  }
+
+  get isInProgress(): boolean {
+    return this.registrationData().revisionState === RevisionReviewStates.RevisionInProgress;
+  }
+
   continueUpdateHandler(): void {
     this.continueUpdate.emit({
       id: this.registrationData().id,

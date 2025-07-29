@@ -79,18 +79,15 @@
                   routerLinkActive="router-link-active"
                   [label]="'common.buttons.view' | translate"
                 ></p-button>
-                @if (registrationData().reviewsState === RegistrationReviewStates.Accepted) {
-                  @if (registrationData().revisionState === RevisionReviewStates.Approved) {
+                @if (isAccepted) {
+                  @if (isApproved) {
                     <p-button
                       severity="secondary"
                       (click)="updateRegistration.emit(registrationData().id)"
                       [label]="'common.buttons.update' | translate"
                     ></p-button>
                   }
-                  @if (
-                    registrationData().revisionState === RevisionReviewStates.RevisionInProgress ||
-                    registrationData().revisionState === RevisionReviewStates.Unapproved
-                  ) {
+                  @if (isInProgress || isUnapproved) {
                     <p-button
                       severity="secondary"
                       (click)="continueUpdateHandler()"
@@ -102,7 +99,7 @@
             </div>
           </div>
 
-          @if (registrationData().revisionState === RevisionReviewStates.Approved) {
+          @if (isApproved) {
             <div class="flex flex-column min-w-max">
               <h3 class="mb-1">{{ 'shared.resources.title' | translate }}</h3>
               <osf-data-resources
