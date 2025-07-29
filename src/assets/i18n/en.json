@@ -2289,9 +2289,14 @@
     },
     "toastMessages": {
       "addResourceSuccess": "Added new resource",
-      "addResourceError": "Error occurred while adding new resource",
-      "updatedResourceSuccess": "Updated new resource",
-      "updateResourceError": "Error occurred while updating new resource"
+      "addResourceError": "Error occurred while adding new resource.",
+      "updatedResourceSuccess": "Updated resource.",
+      "updateResourceError": "Error occurred while updating new resource.",
+      "deletedResourceSuccess": "Resource is deleted successfully."
+    },
+    "errors": {
+      "noRegistryId": "No registry ID found.",
+      "noCurrentResource": "No current resource."
     }
   }
 }

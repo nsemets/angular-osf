@@ -37,7 +37,6 @@
   </form>
 } @else {
   <form class="flex flex-column gap-4" [formGroup]="form" (ngSubmit)="previewResource()">
-    <!-- add translation-->
     <osf-text-input
       [control]="form.controls['pid']"
       [label]="'DOI'"
@@ -46,17 +45,16 @@
     >
     </osf-text-input>
 
-    <osf-select
+    <osf-form-select
       [fullWidth]="true"
       [options]="resourceOptions()"
       [appendTo]="'body'"
-      [(selectedValue)]="selectedResourceType"
-      (changeValue)="changeType($event)"
+      [control]="form.controls['resourceType']"
       [placeholder]="'resources.selectAResourceType'"
     />
 
     <div>
-      <label [for]="form.controls['description']">{{ 'resources.descriptionLabel' | translate }}</label>
+      <label [for]="'coi-reason'">{{ 'resources.descriptionLabel' | translate }}</label>
       <textarea
         class="w-full"
         pTextarea

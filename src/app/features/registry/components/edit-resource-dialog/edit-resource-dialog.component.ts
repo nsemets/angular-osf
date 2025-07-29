@@ -1,6 +1,6 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -11,15 +11,12 @@ import { finalize, take } from 'rxjs';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { Primitive } from '@core/helpers';
-import { resourceTypeOptions } from '@osf/features/registry/constants/resource-type-options.constant';
+import { resourceTypeOptions } from '@osf/features/registry/constants';
 import { RegistryResource } from '@osf/features/registry/models';
 import { AddResource } from '@osf/features/registry/models/resources/add-resource.model';
-import { AddResourceRequest } from '@osf/features/registry/models/resources/add-resource-request.model';
 import { RegistryResourcesSelectors, UpdateResource } from '@osf/features/registry/store/registry-resources';
-import { LoadingSpinnerComponent, SelectComponent, TextInputComponent } from '@shared/components';
+import { FormSelectComponent, LoadingSpinnerComponent, TextInputComponent } from '@shared/components';
 import { InputLimits } from '@shared/constants';
-import { RegistryResourceType } from '@shared/enums';
 import { SelectOption } from '@shared/models';
 
 @Component({
@@ -27,11 +24,11 @@ import { SelectOption } from '@shared/models';
   imports: [
     LoadingSpinnerComponent,
     TextInputComponent,
-    SelectComponent,
     Textarea,
     ReactiveFormsModule,
     Button,
     TranslatePipe,
+    FormSelectComponent,
   ],
   templateUrl: './edit-resource-dialog.component.html',
   styleUrl: './edit-resource-dialog.component.scss',
@@ -40,12 +37,12 @@ import { SelectOption } from '@shared/models';
 export class EditResourceDialogComponent {
   protected readonly dialogRef = inject(DynamicDialogRef);
   protected readonly isCurrentResourceLoading = select(RegistryResourcesSelectors.isCurrentResourceLoading);
+  private translateService = inject(TranslateService);
 
   private dialogConfig = inject(DynamicDialogConfig);
   private registryId: string = this.dialogConfig.data.id;
   private resource: RegistryResource = this.dialogConfig.data.resource as RegistryResource;
   protected inputLimits = InputLimits;
-  public selectedResourceType = signal<RegistryResourceType | null>(null);
   public resourceOptions = signal<SelectOption[]>(resourceTypeOptions);
 
   protected form = new FormGroup({
@@ -64,8 +61,6 @@ export class EditResourceDialogComponent {
       resourceType: this.resource.type || '',
       description: this.resource.description || '',
     });
-
-    this.selectedResourceType.set(this.resource.type || null);
   }
 
   save() {
@@ -80,18 +75,11 @@ export class EditResourceDialogComponent {
     };
 
     if (!this.resource.id) {
-      throw new Error('No current resource id.');
+      throw new Error(this.translateService.instant('resources.errors.noRegistryId'));
     }
 
-    const request: AddResourceRequest<AddResource> = {
-      attributes: addResource,
-      id: this.resource.id,
-      relationships: {},
-      type: 'resources',
-    };
-
     this.actions
-      .updateResource(this.registryId, request)
+      .updateResource(this.registryId, this.resource.id, addResource)
       .pipe(
         take(1),
         finalize(() => {
@@ -99,10 +87,5 @@ export class EditResourceDialogComponent {
         })
       )
       .subscribe();
-  }
-  changeType($event: Primitive) {
-    this.form.patchValue({
-      resourceType: $event?.toString(),
-    });
   }
 }

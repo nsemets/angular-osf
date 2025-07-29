@@ -1,5 +1,4 @@
 import { AddResource } from '@osf/features/registry/models/resources/add-resource.model';
-import { AddResourceRequest } from '@osf/features/registry/models/resources/add-resource-request.model';
 import { ConfirmAddResource } from '@osf/features/registry/models/resources/confirm-add-resource.model';
 
 export class GetRegistryResources {
@@ -17,14 +16,18 @@ export class AddRegistryResource {
 export class PreviewRegistryResource {
   static readonly type = '[Registry Resources] Preview Registry Resources';
 
-  constructor(public resource: AddResourceRequest<AddResource>) {}
+  constructor(
+    public resourceId: string,
+    public resource: AddResource
+  ) {}
 }
 
 export class ConfirmAddRegistryResource {
   static readonly type = '[Registry Resources] Confirm Add Registry Resources';
 
   constructor(
-    public resource: AddResourceRequest<ConfirmAddResource>,
+    public resource: ConfirmAddResource,
+    public resourceId: string,
     public registryId: string
   ) {}
 }
@@ -43,6 +46,7 @@ export class UpdateResource {
 
   constructor(
     public registryId: string,
-    public resource: AddResourceRequest<AddResource>
+    public resourceId: string,
+    public resource: AddResource
   ) {}
 }

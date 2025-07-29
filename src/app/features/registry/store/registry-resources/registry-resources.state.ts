@@ -6,7 +6,7 @@ import { catchError } from 'rxjs/operators';
 import { inject, Injectable } from '@angular/core';
 
 import { handleSectionError } from '@core/handlers';
-import { RegistryResourcesService } from '@osf/features/registry/services/registry-resources.service';
+import { RegistryResourcesService } from '@osf/features/registry/services';
 import {
   AddRegistryResource,
   ConfirmAddRegistryResource,
@@ -47,16 +47,14 @@ export class RegistryResourcesState {
     });
 
     return this.registryResourcesService.getResources(action.registryId).pipe(
-      tap({
-        next: (resources) => {
-          ctx.patchState({
-            resources: {
-              data: resources,
-              isLoading: false,
-              error: null,
-            },
-          });
-        },
+      tap((resources) => {
+        ctx.patchState({
+          resources: {
+            data: resources,
+            isLoading: false,
+            error: null,
+          },
+        });
       }),
       catchError((err) => handleSectionError(ctx, 'resources', err))
     );
@@ -73,17 +71,15 @@ export class RegistryResourcesState {
     });
 
     return this.registryResourcesService.addRegistryResource(action.registryId).pipe(
-      tap({
-        next: (resource) => {
-          ctx.patchState({
-            currentResource: {
-              data: resource,
-              isSubmitting: false,
-              isLoading: false,
-              error: null,
-            },
-          });
-        },
+      tap((resource) => {
+        ctx.patchState({
+          currentResource: {
+            data: resource,
+            isSubmitting: false,
+            isLoading: false,
+            error: null,
+          },
+        });
       }),
       catchError((err) => handleSectionError(ctx, 'currentResource', err))
     );
@@ -99,17 +95,15 @@ export class RegistryResourcesState {
       },
     });
 
-    return this.registryResourcesService.previewRegistryResource(action.resource).pipe(
-      tap({
-        next: (resource) => {
-          ctx.patchState({
-            currentResource: {
-              data: resource,
-              isLoading: false,
-              error: null,
-            },
-          });
-        },
+    return this.registryResourcesService.previewRegistryResource(action.resourceId, action.resource).pipe(
+      tap((resource) => {
+        ctx.patchState({
+          currentResource: {
+            data: resource,
+            isLoading: false,
+            error: null,
+          },
+        });
       }),
       catchError((err) => handleSectionError(ctx, 'resources', err))
     );
@@ -117,11 +111,9 @@ export class RegistryResourcesState {
 
   @Action(ConfirmAddRegistryResource)
   confirmAddRegistryResource(ctx: StateContext<RegistryResourcesStateModel>, action: ConfirmAddRegistryResource) {
-    return this.registryResourcesService.confirmAddingResource(action.resource).pipe(
-      tap({
-        next: () => {
-          ctx.dispatch(new GetRegistryResources(action.registryId));
-        },
+    return this.registryResourcesService.confirmAddingResource(action.resourceId, action.resource).pipe(
+      tap(() => {
+        ctx.dispatch(new GetRegistryResources(action.registryId));
       }),
       catchError((err) => handleSectionError(ctx, 'resources', err))
     );
@@ -155,7 +147,7 @@ export class RegistryResourcesState {
       },
     });
 
-    return this.registryResourcesService.updateResource(action.resource).pipe(
+    return this.registryResourcesService.updateResource(action.resourceId, action.resource).pipe(
       tap(() => {
         ctx.patchState({
           currentResource: {

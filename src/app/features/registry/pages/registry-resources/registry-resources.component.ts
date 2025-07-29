@@ -60,7 +60,7 @@ export class RegistryResourcesComponent {
 
   addResource() {
     if (!this.registryId) {
-      throw new Error('No registry ID found.');
+      throw new Error(this.translateService.instant('resources.errors.noRegistryId'));
     }
 
     this.addingResource.set(true);
@@ -85,20 +85,17 @@ export class RegistryResourcesComponent {
         dialogRef.onClose.subscribe({
           next: (res) => {
             if (res) {
-              this.toastService.showSuccess(
-                this.translateService.instant('resources.toastMessages.addResourceSuccess')
-              );
+              this.toastService.showSuccess('resources.toastMessages.addResourceSuccess');
             }
           },
-          error: () =>
-            this.toastService.showError(this.translateService.instant('resources.toastMessages.addResourceError')),
+          error: () => this.toastService.showError('resources.toastMessages.addResourceError'),
         });
       });
   }
 
   updateResource(resource: RegistryResource) {
     if (!this.registryId) {
-      throw new Error('No registry ID found.');
+      throw new Error(this.translateService.instant('resources.errors.noRegistryId'));
     }
 
     const dialogRef = this.dialogService.open(EditResourceDialogComponent, {
@@ -114,13 +111,10 @@ export class RegistryResourcesComponent {
     dialogRef.onClose.subscribe({
       next: (res) => {
         if (res) {
-          this.toastService.showSuccess(
-            this.translateService.instant('resources.toastMessages.updatedResourceSuccess')
-          );
+          this.toastService.showSuccess('resources.toastMessages.updatedResourceSuccess');
         }
       },
-      error: () =>
-        this.toastService.showError(this.translateService.instant('resources.toastMessages.updateResourceError')),
+      error: () => this.toastService.showError('resources.toastMessages.updateResourceError'),
     });
   }
 
@@ -132,7 +126,12 @@ export class RegistryResourcesComponent {
       messageKey: 'resources.deleteText',
       acceptLabelKey: 'common.buttons.remove',
       onConfirm: () => {
-        this.actions.deleteResource(id, this.registryId);
+        this.actions
+          .deleteResource(id, this.registryId)
+          .pipe(take(1))
+          .subscribe(() => {
+            this.toastService.showSuccess('resources.toastMessages.deletedResourceSuccess');
+          });
       },
     });
   }

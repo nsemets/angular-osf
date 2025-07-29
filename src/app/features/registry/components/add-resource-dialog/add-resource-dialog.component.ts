@@ -1,6 +1,6 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -11,17 +11,15 @@ import { finalize, take } from 'rxjs';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { Primitive } from '@core/helpers';
-import { resourceTypeOptions } from '@osf/features/registry/constants/resource-type-options.constant';
+import { resourceTypeOptions } from '@osf/features/registry/constants';
 import { AddResource } from '@osf/features/registry/models/resources/add-resource.model';
-import { AddResourceRequest } from '@osf/features/registry/models/resources/add-resource-request.model';
 import { ConfirmAddResource } from '@osf/features/registry/models/resources/confirm-add-resource.model';
 import {
   ConfirmAddRegistryResource,
   PreviewRegistryResource,
   RegistryResourcesSelectors,
 } from '@osf/features/registry/store/registry-resources';
-import { LoadingSpinnerComponent, SelectComponent, TextInputComponent } from '@shared/components';
+import { FormSelectComponent, LoadingSpinnerComponent, TextInputComponent } from '@shared/components';
 import { InputLimits } from '@shared/constants';
 import { RegistryResourceType } from '@shared/enums';
 import { SelectOption } from '@shared/models';
@@ -34,8 +32,8 @@ import { SelectOption } from '@shared/models';
     TranslatePipe,
     ReactiveFormsModule,
     Textarea,
-    SelectComponent,
     LoadingSpinnerComponent,
+    FormSelectComponent,
   ],
   templateUrl: './add-resource-dialog.component.html',
   styleUrl: './add-resource-dialog.component.scss',
@@ -45,6 +43,7 @@ export class AddResourceDialogComponent {
   protected readonly dialogRef = inject(DynamicDialogRef);
   protected readonly currentResource = select(RegistryResourcesSelectors.getCurrentResource);
   protected readonly isCurrentResourceLoading = select(RegistryResourcesSelectors.isCurrentResourceLoading);
+  private translateService = inject(TranslateService);
 
   private dialogConfig = inject(DynamicDialogConfig);
   private registryId: string = this.dialogConfig.data.id;
@@ -63,9 +62,10 @@ export class AddResourceDialogComponent {
     confirmAddResource: ConfirmAddRegistryResource,
   });
 
-  public selectedResourceType = signal<RegistryResourceType | null>(null);
   public resourceOptions = signal<SelectOption[]>(resourceTypeOptions);
   public isPreviewMode = signal<boolean>(false);
+
+  protected readonly RegistryResourceType = RegistryResourceType;
 
   previewResource(): void {
     if (this.form.invalid) {
@@ -80,17 +80,10 @@ export class AddResourceDialogComponent {
 
     const currentResource = this.currentResource();
     if (!currentResource) {
-      throw new Error('No current resource.');
+      throw new Error(this.translateService.instant('resources.errors.noCurrentResource'));
     }
 
-    const request: AddResourceRequest<AddResource> = {
-      attributes: addResource,
-      id: currentResource?.id,
-      relationships: {},
-      type: 'resources',
-    };
-
-    this.actions.previewResource(request).subscribe(() => {
+    this.actions.previewResource(currentResource.id, addResource).subscribe(() => {
       this.isPreviewMode.set(true);
     });
   }
@@ -104,19 +97,14 @@ export class AddResourceDialogComponent {
       finalized: true,
     };
     const currentResource = this.currentResource();
+
     if (!currentResource) {
-      throw new Error('No current resource.');
+      throw new Error(this.translateService.instant('resources.errors.noRegistryId'));
     }
 
     this.isResourceConfirming.set(true);
-    const request: AddResourceRequest<ConfirmAddResource> = {
-      attributes: addResource,
-      id: currentResource.id,
-      relationships: {},
-      type: 'resources',
-    };
     this.actions
-      .confirmAddResource(request, this.registryId)
+      .confirmAddResource(addResource, currentResource.id, this.registryId)
       .pipe(
         take(1),
         finalize(() => {
@@ -126,12 +114,4 @@ export class AddResourceDialogComponent {
       )
       .subscribe({});
   }
-
-  changeType($event: Primitive) {
-    this.form.patchValue({
-      resourceType: $event?.toString(),
-    });
-  }
-
-  protected readonly RegistryResourceType = RegistryResourceType;
 }

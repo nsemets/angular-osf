@@ -1,3 +1,4 @@
+export * from './add-resource-request.mapper';
 export * from './cedar-form.mapper';
 export * from './registry-metadata.mapper';
 export * from './registry-overview.mapper';

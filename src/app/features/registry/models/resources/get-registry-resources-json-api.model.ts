@@ -1,16 +1,4 @@
-import { ApiData, JsonApiResponse } from '@core/models';
-import { RegistryResourceType } from '@shared/enums';
+import { JsonApiResponse } from '@core/models';
+import { RegistryResourceDataJsonApi } from '@osf/features/registry/models/resources/add-resource-response-json-api.model';
 
 export type GetRegistryResourcesJsonApi = JsonApiResponse<RegistryResourceDataJsonApi[], null>;
-
-export type RegistryResourceDataJsonApi = ApiData<
-  {
-    description: string;
-    finalized: true;
-    resource_type: RegistryResourceType;
-    pid: string;
-  },
-  null,
-  null,
-  null
->;
