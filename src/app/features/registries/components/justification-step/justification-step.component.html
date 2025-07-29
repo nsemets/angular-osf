@@ -12,10 +12,7 @@
         pTextarea
         formControlName="justification"
       ></textarea>
-      @if (
-        justificationForm.controls['justification'].errors?.['required'] &&
-        (justificationForm.controls['justification'].touched || justificationForm.controls['justification'].dirty)
-      ) {
+      @if (isJustificationValid) {
         <p-message class="simple-variant flex mt-1" severity="error" variant="simple" size="small">
           {{ INPUT_VALIDATION_MESSAGES.required | translate }}
         </p-message>

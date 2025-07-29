@@ -139,13 +139,11 @@ export class JustificationComponent implements OnDestroy {
     });
 
     effect(() => {
-      console.log('Current step index:', this.currentStepIndex());
       if (this.currentStepIndex() > 0) {
         this.actions.updateStepValidation('0', true);
       }
       if (this.pages().length && this.currentStepIndex() > 0 && this.schemaResponseRevisionData()) {
         for (let i = 1; i < this.currentStepIndex(); i++) {
-          console.log('Updating step validation for step:', this.schemaResponseRevisionData());
           const pageStep = this.pages()[i - 1];
           const isStepInvalid =
             pageStep?.questions?.some((question) => {

@@ -79,7 +79,6 @@
     <div class="flex justify-content-end">
       @if (schemaResponse()?.reviewsState === RevisionReviewStates.RevisionInProgress) {
         <p-button
-          type="button"
           [label]="'common.buttons.back' | translate"
           severity="info"
           class="mr-2"
@@ -93,7 +92,6 @@
         >
         </p-button>
         <p-button
-          type="button"
           [label]="'registries.justification.submitChanges' | translate"
           [disabled]="false"
           (click)="submit()"
@@ -101,7 +99,6 @@
         ></p-button>
       } @else if (schemaResponse()?.reviewsState === RevisionReviewStates.Unapproved) {
         <p-button
-          type="button"
           [label]="'registries.justification.acceptChanges' | translate"
           severity="success"
           class="mr-2"
@@ -109,7 +106,6 @@
           [loading]="isSchemaResponseLoading()"
         ></p-button>
         <p-button
-          type="button"
           [label]="'registries.justification.continueEditing' | translate"
           (click)="continueEditing()"
         ></p-button>

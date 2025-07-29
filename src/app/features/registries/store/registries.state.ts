@@ -459,7 +459,10 @@ export class RegistriesState {
   }
 
   @Action(HandleSchemaResponse)
-  handleSchemaResponse(ctx: StateContext<RegistriesStateModel>, { schemaResponseId, trigger }: HandleSchemaResponse) {
+  handleSchemaResponse(
+    ctx: StateContext<RegistriesStateModel>,
+    { schemaResponseId, trigger, comment }: HandleSchemaResponse
+  ) {
     ctx.patchState({
       schemaResponse: {
         ...ctx.getState().schemaResponse,
@@ -467,7 +470,7 @@ export class RegistriesState {
         error: null,
       },
     });
-    return this.registriesService.handleSchemaResponse(schemaResponseId, trigger).pipe(
+    return this.registriesService.handleSchemaResponse(schemaResponseId, trigger, comment).pipe(
       tap(() => {
         ctx.dispatch(new FetchSchemaResponse(schemaResponseId));
       }),

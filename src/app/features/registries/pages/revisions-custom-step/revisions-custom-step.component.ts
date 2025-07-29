@@ -37,13 +37,8 @@ export class RevisionsCustomStepComponent {
 
   protected stepsData = computed(() => {
     const schemaResponse = this.schemaResponse();
-    console.log('Steps data:', schemaResponse?.revisionResponses);
     return schemaResponse?.revisionResponses || {};
   });
-
-  constructor() {
-    console.log('RevisionsCustomStepComponent initialized', this.schemaResponse());
-  }
 
   onUpdateAction(data: Record<string, unknown>): void {
     const id: string = this.route.snapshot.params['id'] || '';

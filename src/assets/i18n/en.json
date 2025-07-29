@@ -1989,8 +1989,10 @@
       "deleteUpdates": "Delete Draft Update",
       "submitChanges": "Submit Changes",
       "acceptChanges": "Accept Changes",
+      "decisionRecorded": "Your decision has been recorded.",
       "continueEditing": "Continue Editing",
-      "successMessage": "Registration update successfully",
+      "successSubmit": "Justification update successfully submitted.",
+      "successAccept": "Changes successfully accepted.",
       "confirmDeleteUpdate": {
         "header": "Delete this draft update",
         "message": "Are you sure you want to delete this draft update?"

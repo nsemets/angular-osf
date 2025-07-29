@@ -51,7 +51,6 @@ export class JustificationReviewComponent {
   });
 
   private readonly revisionId = this.route.snapshot.params['id'];
-  private readonly OSF_PROVIDER_ID = 'osf';
 
   changes = computed(() => {
     return Object.keys(this.updatedFields());
@@ -60,7 +59,7 @@ export class JustificationReviewComponent {
   submit(): void {
     this.actions.handleSchemaResponse(this.revisionId, SchemaActionTrigger.Submit).subscribe({
       next: () => {
-        this.toastService.showSuccess('Justification review submitted successfully');
+        this.toastService.showSuccess('registries.justification.successSubmit');
       },
     });
   }
@@ -88,7 +87,7 @@ export class JustificationReviewComponent {
   acceptChanges() {
     this.actions.handleSchemaResponse(this.revisionId, SchemaActionTrigger.Approve).subscribe({
       next: () => {
-        this.toastService.showSuccess('Changes accepted successfully');
+        this.toastService.showSuccess('registries.justification.successAccept');
         this.router.navigateByUrl(`/registries/${this.schemaResponse()?.registrationId}/overview`);
       },
     });
@@ -103,8 +102,10 @@ export class JustificationReviewComponent {
         closeOnEscape: true,
         modal: true,
       })
-      .onClose.subscribe((res) => {
-        console.log('res', res);
+      .onClose.subscribe((result) => {
+        if (result) {
+          this.toastService.showSuccess('registries.justification.decisionRecorded');
+        }
       });
   }
 }

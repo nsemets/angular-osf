@@ -115,7 +115,6 @@ export class CustomStepComponent implements OnDestroy {
 
   private initStepForm(page: PageSchema): void {
     this.stepForm = this.fb.group({});
-    console.log('Initializing step form for page:', this.stepsData(), page);
     page.questions?.forEach((q) => {
       const controlName = q.responseKey as string;
       let control: FormControl;

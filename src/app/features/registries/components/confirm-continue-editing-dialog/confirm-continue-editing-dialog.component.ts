@@ -5,9 +5,13 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Textarea } from 'primeng/textarea';
 
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { finalize } from 'rxjs';
+
+import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
+import { SchemaActionTrigger } from '../../enums';
 import { HandleSchemaResponse } from '../../store';
 
 @Component({
@@ -21,6 +25,7 @@ export class ConfirmContinueEditingDialogComponent {
   protected readonly dialogRef = inject(DynamicDialogRef);
   private readonly fb = inject(FormBuilder);
   readonly config = inject(DynamicDialogConfig);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected actions = createDispatchMap({
     handleSchemaResponse: HandleSchemaResponse,
@@ -32,7 +37,13 @@ export class ConfirmContinueEditingDialogComponent {
 
   submit(): void {
     const comment = this.form.value.comment;
-    console.log('Comment:', comment);
-    // this.actions.handleSchemaResponse();
+    const revisionId = this.config.data.revisionId;
+    this.actions
+      .handleSchemaResponse(revisionId, SchemaActionTrigger.AdminReject, comment)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.dialogRef.close(true))
+      )
+      .subscribe();
   }
 }
