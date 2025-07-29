@@ -2,10 +2,6 @@ import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { Button } from 'primeng/button';
-import { Card } from 'primeng/card';
-import { Tag } from 'primeng/tag';
-
 import { tap } from 'rxjs';
 
 import { ChangeDetectionStrategy, Component, effect, inject, OnInit, signal } from '@angular/core';
@@ -26,15 +22,7 @@ import {
 
 @Component({
   selector: 'osf-registry-links',
-  imports: [
-    SubHeaderComponent,
-    TranslatePipe,
-    LoadingSpinnerComponent,
-    RegistrationLinksCardComponent,
-    Card,
-    Button,
-    Tag,
-  ],
+  imports: [SubHeaderComponent, TranslatePipe, LoadingSpinnerComponent, RegistrationLinksCardComponent],
   templateUrl: './registry-links.component.html',
   styleUrl: './registry-links.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

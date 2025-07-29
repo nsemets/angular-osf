@@ -5,15 +5,14 @@ import { Card } from 'primeng/card';
 
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
-import { RouterLink } from '@angular/router';
 
 import { LinkedNode, LinkedRegistration } from '@osf/features/registry/models';
-import { DataResourcesComponent } from '@shared/components';
+import { DataResourcesComponent, TruncatedTextComponent } from '@shared/components';
 import { RevisionReviewStates } from '@shared/enums';
 
 @Component({
   selector: 'osf-registration-links-card',
-  imports: [Card, Button, TranslatePipe, DatePipe, RouterLink, DataResourcesComponent],
+  imports: [Card, Button, TranslatePipe, DatePipe, DataResourcesComponent, TruncatedTextComponent],
   templateUrl: './registration-links-card.component.html',
   styleUrl: './registration-links-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

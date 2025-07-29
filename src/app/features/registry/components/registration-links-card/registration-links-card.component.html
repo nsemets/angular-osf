@@ -13,17 +13,17 @@
       </div>
       <div class="flex flex-wrap flex-column lg:flex-nowrap lg:flex-row justify-content-between gap-5">
         <div class="flex gap-3 flex-column w-full">
-          <div class="flex gap-2">
+          <div class="flex gap-2 align-items-baseline">
             <strong>{{ 'project.registrations.card.registered' | translate }}</strong>
             <span>{{ registrationData().dateCreated | date: 'medium' }}</span>
           </div>
 
-          <div class="flex gap-2">
+          <div class="flex gap-2 align-items-baseline">
             <strong>{{ 'project.registrations.card.lastUpdated' | translate }}</strong>
             <span>{{ registrationData().dateModified | date: 'medium' }}</span>
           </div>
 
-          <div class="flex gap-2">
+          <div class="flex gap-2 align-items-baseline">
             <strong>{{ 'project.overview.metadata.contributors' | translate }}:</strong>
             <span class="contributors">
               @for (contributor of registrationData().contributors; track contributor) {
@@ -35,9 +35,13 @@
             </span>
           </div>
 
-          <div class="flex gap-2">
+          <div class="flex gap-2 align-items-baseline">
             <strong>{{ 'project.registrations.card.description' | translate }}</strong>
-            <p>{{ registrationData().description || 'project.registrations.card.noDescription' | translate }}</p>
+
+            <osf-truncated-text
+              [maxVisibleLines]="2"
+              [text]="registrationData().description || 'project.registrations.card.noDescription' | translate"
+            />
           </div>
 
           @if (isRegistrationData()) {
