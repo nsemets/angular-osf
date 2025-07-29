@@ -762,6 +762,9 @@
       "card": {
         "noTitle": "(Untitled)",
         "noDescription": "No description",
+        "registrationSupplement": "Registration Supplement",
+        "withdrawn": "Withdrawn",
+        "embargoed": "Embargoed",
         "registrationTemplate": "Registration template:",
         "registry": "Registry:",
         "registered": "Registered:",
@@ -2073,6 +2076,12 @@
       },
       "original": "Original",
       "latest": "Latest"
+    },
+    "links": {
+      "viewLinksProjectsAndComponents": "View for Linked projects and Components",
+      "noLinkedProjectsOrComponentsFound": "No linked projects or components found",
+      "linkedRegistrations": "Linked registrations",
+      "noLinkedRegistrationsFound": "No linked registrations found"
     }
   },
   "truncatedText": {
