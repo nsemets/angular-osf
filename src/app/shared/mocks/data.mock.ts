@@ -1,5 +1,5 @@
 import { User } from '@osf/core/models';
-import { Meeting } from '@osf/features/meetings/models/meetings.models';
+import { Meeting, MeetingSubmission } from '@osf/features/meetings/models/meetings.models';
 
 export const MOCK_USER: User = {
   id: '1',
@@ -62,3 +62,24 @@ export const MOCK_MEETING: Meeting = {
   startDate: new Date('2024-01-15'),
   endDate: new Date('2024-01-16'),
 };
+
+export const MOCK_MEETING_SUBMISSIONS: MeetingSubmission[] = [
+  {
+    id: '1',
+    title: 'The Impact of Open Science on Research Collaboration',
+    authorName: 'John Doe',
+    meetingCategory: 'Open Science',
+    dateCreated: new Date('2024-01-15'),
+    downloadCount: 5,
+    downloadLink: 'https://example.com/file.pdf',
+  },
+  {
+    id: '2',
+    title: "'Data Sharing Practices in Modern Biology",
+    authorName: 'Jane Smith',
+    meetingCategory: 'Biology',
+    dateCreated: new Date('2024-01-19'),
+    downloadCount: 0,
+    downloadLink: null,
+  },
+];
