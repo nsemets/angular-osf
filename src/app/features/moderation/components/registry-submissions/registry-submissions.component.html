@@ -3,7 +3,7 @@
     <p-selectbutton
       class="review-state-select flex-wrap"
       [options]="submissionReviewOptions"
-      [ngModel]="selectedReviewOption"
+      [ngModel]="selectedReviewOption()"
       (ngModelChange)="changeReviewStatus($event)"
       [disabled]="isLoading()"
       optionLabel="label"
@@ -35,7 +35,10 @@
     <div class="submission-container mt-5">
       @for (item of submissions(); track $index) {
         <div class="submission-item">
-          <osf-registry-submission-item [submission]="item"></osf-registry-submission-item>
+          <osf-registry-submission-item
+            [submission]="item"
+            [status]="selectedReviewOption()"
+          ></osf-registry-submission-item>
         </div>
       }
     </div>
@@ -49,10 +52,10 @@
           (pageChanged)="onPageChange($event)"
         ></osf-custom-paginator>
       </div>
-    } @else {
-      <div class="flex justify-content-center align-items-center p-5">
-        <p>{{ 'moderation.noSubmissions' | translate }}</p>
-      </div>
     }
+  } @else {
+    <div class="flex justify-content-center align-items-center p-5">
+      <p>{{ 'moderation.noSubmissions' | translate }}</p>
+    </div>
   }
 }

@@ -2,6 +2,7 @@ export * from './collection-moderation-tabs.const';
 export * from './my-preprint-reviewing.const';
 export * from './preprint-moderation-tabs.const';
 export * from './preprint-settings-sections.const';
+export * from './registry-action-labels.const';
 export * from './registry-moderation-tabs.const';
 export * from './registry-sort-options.const';
 export * from './submission.const';

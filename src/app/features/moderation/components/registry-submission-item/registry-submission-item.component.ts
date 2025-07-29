@@ -8,7 +8,8 @@ import { RouterLink } from '@angular/router';
 import { IconComponent } from '@osf/shared/components';
 import { DateAgoPipe } from '@osf/shared/pipes';
 
-import { ReviewStatusIcon } from '../../constants';
+import { REGISTRY_ACTION_LABEL, ReviewStatusIcon } from '../../constants';
+import { RegistryActionState, SubmissionReviewStatus } from '../../enums';
 import { RegistryModeration } from '../../models';
 
 @Component({
@@ -19,10 +20,13 @@ import { RegistryModeration } from '../../models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegistrySubmissionItemComponent {
+  status = input.required<SubmissionReviewStatus>();
   submission = input.required<RegistryModeration>();
   selected = output<void>();
 
   readonly reviewStatusIcon = ReviewStatusIcon;
+  readonly registryActionLabel = REGISTRY_ACTION_LABEL;
+  readonly registryActionState = RegistryActionState;
 
   limitValue = 1;
   showAll = false;

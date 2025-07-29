@@ -1199,9 +1199,10 @@
         "namedDescription": "All comments will be visible to the contributors of the submission and the moderator's osf profile name will be displayed."
       }
     },
-    "registryAccepted": "Registration submission",
+    "registryAccepted": "Registration submission accepted",
     "registrySubmitted": "Registration submitted",
-    "registryWithdrawal": "Registration withdrawal request accepted",
+    "registryWithdrawalRequested": "Registration withdrawal requested",
+    "registryWithdrawalAccepted": "Registration withdrawal request accepted",
     "registryRejected": "Registration submission rejected",
     "registryEmbargoedWithEndDate": "Embargoed Registration with an end date of ",
     "withNoEmbargo": "with no embargo",

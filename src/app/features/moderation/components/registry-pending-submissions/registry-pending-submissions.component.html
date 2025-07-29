@@ -35,7 +35,10 @@
     <div class="submission-container mt-5">
       @for (item of submissions(); track item.id) {
         <div class="submission-item">
-          <osf-registry-submission-item [submission]="item"></osf-registry-submission-item>
+          <osf-registry-submission-item
+            [submission]="item"
+            [status]="selectedReviewOption()"
+          ></osf-registry-submission-item>
         </div>
       }
     </div>
