@@ -9,6 +9,7 @@ import { finalize, take } from 'rxjs';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
+import { doiValidator } from '@osf/features/registry/components';
 import { ResourceFormComponent } from '@osf/features/registry/components/resource-form/resource-form.component';
 import { RegistryResource } from '@osf/features/registry/models';
 import { AddResource } from '@osf/features/registry/models/resources/add-resource.model';
@@ -32,7 +33,7 @@ export class EditResourceDialogComponent {
   private resource: RegistryResource = this.dialogConfig.data.resource as RegistryResource;
 
   protected form = new FormGroup({
-    pid: new FormControl<string | null>('', [Validators.required]),
+    pid: new FormControl<string | null>('', [Validators.required, doiValidator]),
     resourceType: new FormControl<string | null>('', [Validators.required]),
     description: new FormControl<string | null>(''),
   });

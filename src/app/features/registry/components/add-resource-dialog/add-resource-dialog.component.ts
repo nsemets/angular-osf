@@ -4,12 +4,19 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { Textarea } from 'primeng/textarea';
 
 import { finalize, take } from 'rxjs';
 
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 
 import { ResourceFormComponent } from '@osf/features/registry/components';
 import { resourceTypeOptions } from '@osf/features/registry/constants';
@@ -21,23 +28,23 @@ import {
   RegistryResourcesSelectors,
   SilentDelete,
 } from '@osf/features/registry/store/registry-resources';
-import { FormSelectComponent, LoadingSpinnerComponent, TextInputComponent } from '@shared/components';
+import { LoadingSpinnerComponent } from '@shared/components';
 import { InputLimits } from '@shared/constants';
 import { RegistryResourceType } from '@shared/enums';
 import { SelectOption } from '@shared/models';
 
+export const doiValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  const value = control.value;
+  if (!value) return null;
+
+  const DOIRegex = /\b(10\.\d{4,}(?:\.\d+)*\/\S+(?:(?!["&'<>])\S))\b/; // value for example: 10.1234/abcd1234 or https://doi.org/10.1234/abcd1234
+  const isValid = DOIRegex.test(value);
+  return isValid ? null : { invalidDoi: true };
+};
+
 @Component({
   selector: 'osf-add-resource-dialog',
-  imports: [
-    Button,
-    TextInputComponent,
-    TranslatePipe,
-    ReactiveFormsModule,
-    Textarea,
-    LoadingSpinnerComponent,
-    FormSelectComponent,
-    ResourceFormComponent,
-  ],
+  imports: [Button, TranslatePipe, ReactiveFormsModule, LoadingSpinnerComponent, ResourceFormComponent],
   templateUrl: './add-resource-dialog.component.html',
   styleUrl: './add-resource-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -55,7 +62,7 @@ export class AddResourceDialogComponent {
   protected isResourceConfirming = signal(false);
 
   protected form = new FormGroup({
-    pid: new FormControl<string | null>('', [Validators.required]),
+    pid: new FormControl<string | null>('', [Validators.required, doiValidator]),
     resourceType: new FormControl<string | null>('', [Validators.required]),
     description: new FormControl<string | null>(''),
   });

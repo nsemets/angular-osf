@@ -5,6 +5,9 @@
     [placeholder]="'https://doi.org/'"
     [maxLength]="inputLimits.name.maxLength"
   >
+    @if (getControl('pid').hasError('invalidDoi')) {
+      <span>{{ 'resources.errors.doiValidation' | translate }}</span>
+    }
   </osf-text-input>
 
   <osf-form-select

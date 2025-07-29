@@ -2296,7 +2296,8 @@
     },
     "errors": {
       "noRegistryId": "No registry ID found.",
-      "noCurrentResource": "No current resource."
+      "noCurrentResource": "No current resource.",
+      "doiValidation": "Please enter a valid DOI in the format: 10.xxxx/xxxxx"
     }
   }
 }
