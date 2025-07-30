@@ -1,5 +1,5 @@
 import { ProjectOverviewContributor } from '@osf/features/project/overview/models';
-import { RegistryStatus, RevisionReviewStates } from '@shared/enums';
+import { RegistrationReviewStates, RegistryStatus, RevisionReviewStates } from '@shared/enums';
 import { License } from '@shared/models';
 
 import {
@@ -110,6 +110,7 @@ export class RegistryMetadataMapper {
       schemaResponses: [],
       status: attributes['status'] as RegistryStatus,
       revisionStatus: attributes['revision_status'] as RevisionReviewStates,
+      reviewsState: attributes['reviews_state'] as RegistrationReviewStates,
       links: {
         files: '',
       },

@@ -29,6 +29,7 @@ import {
 import { FieldType } from '../../enums';
 import { DeleteDraft, FetchLicenses, FetchProjectChildren, RegistriesSelectors } from '../../store';
 import { ConfirmRegistrationDialogComponent } from '../confirm-registration-dialog/confirm-registration-dialog.component';
+import { ReviewDataComponent } from '../review-data/review-data.component';
 import { SelectComponentsDialogComponent } from '../select-components-dialog/select-components-dialog.component';
 
 @Component({
@@ -45,6 +46,7 @@ import { SelectComponentsDialogComponent } from '../select-components-dialog/sel
     AccordionHeader,
     AccordionPanel,
     InterpolatePipe,
+    ReviewDataComponent,
   ],
   templateUrl: './review.component.html',
   styleUrl: './review.component.scss',

@@ -1,6 +1,6 @@
 import { ProjectOverviewContributor } from '@osf/features/project/overview/models';
 import { RegistrationQuestions, RegistrySubject } from '@osf/features/registry/models';
-import { RegistryStatus, RevisionReviewStates } from '@shared/enums';
+import { RegistrationReviewStates, RegistryStatus, RevisionReviewStates } from '@shared/enums';
 import { License } from '@shared/models';
 
 export interface RegistryOverview {
@@ -59,6 +59,7 @@ export interface RegistryOverview {
   }[];
   status: RegistryStatus;
   revisionStatus: RevisionReviewStates;
+  reviewsState?: RegistrationReviewStates;
   links: {
     files: string;
   };

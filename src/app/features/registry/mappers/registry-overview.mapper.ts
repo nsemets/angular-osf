@@ -62,6 +62,7 @@ export function MapRegistryOverview(data: RegistryOverviewJsonApiData): Registry
     })),
     status: MapRegistryStatus(data.attributes),
     revisionStatus: data.attributes.revision_state,
+    reviewsState: data.attributes.reviews_state,
     links: {
       files: data?.embeds?.files?.data?.[0]?.relationships?.files?.links?.related?.href,
     },
