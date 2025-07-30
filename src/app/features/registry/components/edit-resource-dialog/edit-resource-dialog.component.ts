@@ -9,12 +9,12 @@ import { finalize, take } from 'rxjs';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { doiValidator } from '@osf/features/registry/components';
-import { ResourceFormComponent } from '@osf/features/registry/components/resource-form/resource-form.component';
-import { RegistryResource } from '@osf/features/registry/models';
-import { AddResource } from '@osf/features/registry/models/resources/add-resource.model';
-import { RegistryResourcesSelectors, UpdateResource } from '@osf/features/registry/store/registry-resources';
-import { LoadingSpinnerComponent } from '@shared/components';
+import { LoadingSpinnerComponent } from '@osf/shared/components';
+import { CustomValidators } from '@osf/shared/utils';
+
+import { AddResource, RegistryResource } from '../../models';
+import { RegistryResourcesSelectors, UpdateResource } from '../../store/registry-resources';
+import { ResourceFormComponent } from '../resource-form/resource-form.component';
 
 @Component({
   selector: 'osf-edit-resource-dialog',
@@ -33,7 +33,7 @@ export class EditResourceDialogComponent {
   private resource: RegistryResource = this.dialogConfig.data.resource as RegistryResource;
 
   protected form = new FormGroup({
-    pid: new FormControl<string | null>('', [Validators.required, doiValidator]),
+    pid: new FormControl<string | null>('', [CustomValidators.requiredTrimmed(), CustomValidators.doiValidator]),
     resourceType: new FormControl<string | null>('', [Validators.required]),
     description: new FormControl<string | null>(''),
   });

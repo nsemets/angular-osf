@@ -8,39 +8,23 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { finalize, take } from 'rxjs';
 
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { ResourceFormComponent } from '@osf/features/registry/components';
-import { resourceTypeOptions } from '@osf/features/registry/constants';
-import { AddResource } from '@osf/features/registry/models/resources/add-resource.model';
-import { ConfirmAddResource } from '@osf/features/registry/models/resources/confirm-add-resource.model';
+import { LoadingSpinnerComponent } from '@osf/shared/components';
+import { InputLimits } from '@osf/shared/constants';
+import { RegistryResourceType } from '@osf/shared/enums';
+import { SelectOption } from '@osf/shared/models';
+import { CustomValidators } from '@osf/shared/utils';
+
+import { resourceTypeOptions } from '../../constants';
+import { AddResource, ConfirmAddResource } from '../../models';
 import {
   ConfirmAddRegistryResource,
   PreviewRegistryResource,
   RegistryResourcesSelectors,
   SilentDelete,
-} from '@osf/features/registry/store/registry-resources';
-import { LoadingSpinnerComponent } from '@shared/components';
-import { InputLimits } from '@shared/constants';
-import { RegistryResourceType } from '@shared/enums';
-import { SelectOption } from '@shared/models';
-
-export const doiValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-  const value = control.value;
-  if (!value) return null;
-
-  const DOIRegex = /\b(10\.\d{4,}(?:\.\d+)*\/\S+(?:(?!["&'<>])\S))\b/; // value for example: 10.1234/abcd1234 or https://doi.org/10.1234/abcd1234
-  const isValid = DOIRegex.test(value);
-  return isValid ? null : { invalidDoi: true };
-};
+} from '../../store/registry-resources';
+import { ResourceFormComponent } from '../resource-form/resource-form.component';
 
 @Component({
   selector: 'osf-add-resource-dialog',
@@ -62,7 +46,7 @@ export class AddResourceDialogComponent {
   protected isResourceConfirming = signal(false);
 
   protected form = new FormGroup({
-    pid: new FormControl<string | null>('', [Validators.required, doiValidator]),
+    pid: new FormControl<string | null>('', [CustomValidators.requiredTrimmed(), CustomValidators.doiValidator]),
     resourceType: new FormControl<string | null>('', [Validators.required]),
     description: new FormControl<string | null>(''),
   });

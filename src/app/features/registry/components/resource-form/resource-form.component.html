@@ -32,6 +32,11 @@
         (click)="handleCancel()"
       />
     }
-    <p-button class="btn-full-width" [label]="primaryButtonLabel() | translate" (onClick)="handleSubmit()" />
+    <p-button
+      class="btn-full-width"
+      [label]="primaryButtonLabel() | translate"
+      (onClick)="handleSubmit()"
+      [disabled]="formGroup().invalid"
+    />
   </div>
 </form>
