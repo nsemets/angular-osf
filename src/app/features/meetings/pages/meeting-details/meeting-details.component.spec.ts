@@ -4,9 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { MockComponents, MockPipe, MockProvider } from 'ng-mocks';
 
 import { SortEvent } from 'primeng/api';
-import { Button } from 'primeng/button';
-import { Skeleton } from 'primeng/skeleton';
-import { TableModule, TablePageEvent } from 'primeng/table';
+import { TablePageEvent } from 'primeng/table';
 
 import { of } from 'rxjs';
 
@@ -66,9 +64,6 @@ describe('MeetingDetailsComponent', () => {
         MeetingDetailsComponent,
         ...MockComponents(SubHeaderComponent, SearchInputComponent),
         MockPipe(TranslatePipe),
-        TableModule,
-        Button,
-        Skeleton,
         MockPipe(DatePipe),
       ],
       providers: [

@@ -1,7 +1,5 @@
 import { TranslatePipe } from '@ngx-translate/core';
-import { MockComponent, MockPipe } from 'ng-mocks';
-
-import { Card } from 'primeng/card';
+import { MockPipe } from 'ng-mocks';
 
 import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -15,7 +13,7 @@ describe('MeetingsFeatureCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MeetingsFeatureCardComponent, MockComponent(Card), MockPipe(TranslatePipe, (value) => value)],
+      imports: [MeetingsFeatureCardComponent, MockPipe(TranslatePipe, (value) => value)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MeetingsFeatureCardComponent);
