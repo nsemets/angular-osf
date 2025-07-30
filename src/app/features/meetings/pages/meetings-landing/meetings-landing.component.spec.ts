@@ -11,6 +11,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { parseQueryFilterParams } from '@core/helpers';
 import { MeetingsState } from '@osf/features/meetings/store';
 import { MOCK_MEETING } from '@osf/shared/mocks';
 import { SearchInputComponent, SubHeaderComponent } from '@shared/components';
@@ -189,5 +190,16 @@ describe('MeetingsLandingComponent', () => {
         queryParamsHandling: 'merge',
       })
     );
+  });
+
+  it('should do nothing when queryParams is undefined', () => {
+    const parseQueryFilterParamsSpy = jest.spyOn({ parseQueryFilterParams }, 'parseQueryFilterParams');
+    jest.spyOn(component, 'queryParams').mockReturnValue(undefined);
+
+    fixture.detectChanges();
+
+    expect(parseQueryFilterParamsSpy).not.toHaveBeenCalled();
+
+    parseQueryFilterParamsSpy.mockRestore();
   });
 });
