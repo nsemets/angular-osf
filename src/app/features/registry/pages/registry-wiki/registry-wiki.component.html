@@ -14,24 +14,24 @@
 </osf-sub-header>
 
 <section class="flex flex-column lg:flex-row bg-white flex-1 h-full p-5 gap-4 w-full overflow-auto wiki-page">
-  <!-- <osf-wiki-list
+  <osf-wiki-list
+    [viewOnly]="true"
     [list]="wikiList()"
-    [projectId]="projectId()"
+    [resourceId]="resourceId"
     [isLoading]="isWikiListLoading()"
-    [componentsList]="componentsWikiList()"
+    [componentsList]="[]"
     [currentWikiId]="currentWikiId()"
-    (createWiki)="onCreateWiki()"
-    (deleteWiki)="onDeleteWiki()"
-  ></osf-wiki-list> -->
-  <!-- @if (wikiModes().view) {
+  ></osf-wiki-list>
+  @if (wikiModes().view) {
     <osf-view-section
+      [viewOnly]="true"
       [versions]="wikiVersions()"
       [previewContent]="previewContent()"
       [versionContent]="versionContent()"
       [isLoading]="isWikiVersionLoading()"
       (selectVersion)="onSelectVersion($event)"
     ></osf-view-section>
-  } 
+  }
   @if (wikiModes().compare) {
     <osf-compare-section
       [versions]="wikiVersions()"
@@ -40,5 +40,5 @@
       [isLoading]="isWikiVersionLoading()"
       (selectVersion)="onSelectCompareVersion($event)"
     ></osf-compare-section>
-  } -->
+  }
 </section>

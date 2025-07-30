@@ -18,6 +18,7 @@ import { WikiVersion } from '@osf/shared/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewSectionComponent {
+  viewOnly = input<boolean>(false);
   isLoading = input<boolean>(false);
   previewContent = input.required<string>();
   versions = input.required<WikiVersion[]>();
@@ -48,8 +49,13 @@ export class ViewSectionComponent {
 
   constructor() {
     effect(() => {
-      this.versions();
-      this.selectedVersion.set(null);
+      const versions = this.versions();
+      if (versions?.length && this.viewOnly()) {
+        this.selectedVersion.set(versions[0]?.id || null);
+        this.selectVersion.emit(versions[0]?.id);
+      } else {
+        this.selectedVersion.set(null);
+      }
     });
   }
 

@@ -42,7 +42,7 @@ export class AddWikiDialogComponent {
   submitForm(): void {
     if (this.addWikiForm.valid) {
       this.actions
-        .createWiki(ResourceType.Project, this.config.data.projectId, this.addWikiForm.value.name ?? '')
+        .createWiki(ResourceType.Project, this.config.data.resourceId, this.addWikiForm.value.name ?? '')
         .subscribe({
           next: (res) => {
             this.toastService.showSuccess('project.wiki.addWikiSuccess');

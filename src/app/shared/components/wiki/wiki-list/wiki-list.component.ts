@@ -24,7 +24,8 @@ import { AddWikiDialogComponent } from '../add-wiki-dialog/add-wiki-dialog.compo
   providers: [DialogService],
 })
 export class WikiListComponent {
-  readonly projectId = input.required<string>();
+  readonly viewOnly = input<boolean>(false);
+  readonly resourceId = input.required<string>();
   readonly list = input.required<Wiki[]>();
   readonly isLoading = input<boolean>(false);
   readonly componentsList = input.required<ComponentWiki[]>();
@@ -89,7 +90,7 @@ export class WikiListComponent {
       header: this.translateService.instant('project.wiki.addNewWiki'),
       modal: true,
       data: {
-        projectId: this.projectId(),
+        resourceId: this.resourceId(),
       },
     });
     dialogRef.onClose.subscribe(() => {
