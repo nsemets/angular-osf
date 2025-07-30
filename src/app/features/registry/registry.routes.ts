@@ -12,6 +12,7 @@ import { ContributorsState, ViewOnlyLinkState } from '@osf/shared/stores';
 
 import { AnalyticsState } from '../project/analytics/store';
 
+import { RegistryResourcesState } from './store/registry-resources/registry-resources.state';
 import { RegistryComponent } from './registry.component';
 
 export const registryRoutes: Routes = [
@@ -85,6 +86,14 @@ export const registryRoutes: Routes = [
             (c) => c.RegistryComponentsComponent
           ),
         providers: [provideStates([RegistryComponentsState, RegistryLinksState])],
+      },
+      {
+        path: 'resources',
+        loadComponent: () =>
+          import('./pages/registry-resources/registry-resources.component').then(
+            (mod) => mod.RegistryResourcesComponent
+          ),
+        providers: [provideStates([RegistryResourcesState])],
       },
     ],
   },
