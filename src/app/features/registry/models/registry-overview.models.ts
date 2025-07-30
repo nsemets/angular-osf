@@ -16,6 +16,7 @@ export interface RegistryOverview {
   registrationType: string;
   doi: string;
   tags: string[];
+  registry?: string;
   contributors: ProjectOverviewContributor[];
   citation: string;
   category: string;
