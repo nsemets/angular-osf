@@ -40,6 +40,7 @@
       "view": "View",
       "review": "Review",
       "upload": "Upload",
+      "preview": "Preview",
       "continueUpdate": "Continue Update"
     },
     "search": {
@@ -92,7 +93,8 @@
       "none": "None",
       "learnMore": "Learn More",
       "and": "and",
-      "more": "more"
+      "more": "more",
+      "data": "Data"
     },
     "deleteConfirmation": {
       "header": "Delete",
@@ -762,6 +764,9 @@
       "card": {
         "noTitle": "(Untitled)",
         "noDescription": "No description",
+        "registrationSupplement": "Registration Supplement",
+        "withdrawn": "Withdrawn",
+        "embargoed": "Embargoed",
         "registrationTemplate": "Registration template:",
         "registry": "Registry:",
         "registered": "Registered:",
@@ -2073,6 +2078,12 @@
       },
       "original": "Original",
       "latest": "Latest"
+    },
+    "links": {
+      "viewLinksProjectsAndComponents": "View for Linked projects and Components",
+      "noLinkedProjectsOrComponentsFound": "No linked projects or components found",
+      "linkedRegistrations": "Linked registrations",
+      "noLinkedRegistrationsFound": "No linked registrations found"
     }
   },
   "truncatedText": {
@@ -2292,6 +2303,36 @@
       "totalPreprints": "Total Preprints",
       "downloadsLastDays": "Downloads (last 30 days)",
       "noData": "No preprints found"
+    }
+  },
+  "resources": {
+    "title": "Resources",
+    "description": "Link a DOI from a repository to your registration by clicking “Add resource” button. Contributors affirmed to adhere to the criteria for each badge.",
+    "add": "Add Resource",
+    "edit": "Edit Resource",
+    "delete": "Delete Resource",
+    "check": "Check your DOI for accuracy",
+    "deleteText": "Are you sure you want to delete resource",
+    "selectAResourceType": "Select A Resource Type",
+    "descriptionLabel": "Description(Optional)",
+    "typeOptions": {
+      "data": "Data",
+      "code": "Analytic Code",
+      "materials": "Materials",
+      "papers": "Papers",
+      "supplements": "Supplements"
+    },
+    "toastMessages": {
+      "addResourceSuccess": "Added new resource",
+      "addResourceError": "Error occurred while adding new resource.",
+      "updatedResourceSuccess": "Updated resource.",
+      "updateResourceError": "Error occurred while updating new resource.",
+      "deletedResourceSuccess": "Resource is deleted successfully."
+    },
+    "errors": {
+      "noRegistryId": "No registry ID found.",
+      "noCurrentResource": "No current resource.",
+      "doiValidation": "Please enter a valid DOI in the format: 10.xxxx/xxxxx"
     }
   }
 }
