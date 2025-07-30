@@ -86,6 +86,11 @@ export const registryRoutes: Routes = [
           ),
         providers: [provideStates([RegistryResourcesState])],
       },
+      {
+        path: 'wiki',
+        loadComponent: () =>
+          import('./pages/registry-wiki/registry-wiki.component').then((c) => c.RegistryWikiComponent),
+      },
     ],
   },
 ];

@@ -45,3 +45,4 @@ export * from './tutorial-step.model';
 export * from './user';
 export * from './validation-params.model';
 export * from './view-only-links';
+export * from './wiki';

@@ -9,3 +9,4 @@ export * from './node-links';
 export * from './projects';
 export * from './subjects';
 export * from './view-only-links';
+export * from './wiki';

@@ -10,10 +10,9 @@ import { Skeleton } from 'primeng/skeleton';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 
+import { ComponentWiki, Wiki, WikiItemType, WikiMenuItem } from '@osf/shared/models';
 import { CustomConfirmationService } from '@osf/shared/services';
 
-import { Wiki, WikiItemType, WikiMenuItem } from '../../models';
-import { ComponentWiki } from '../../store';
 import { AddWikiDialogComponent } from '../add-wiki-dialog/add-wiki-dialog.component';
 
 @Component({

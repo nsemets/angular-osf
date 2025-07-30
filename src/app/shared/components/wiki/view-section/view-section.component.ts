@@ -8,8 +8,7 @@ import { ChangeDetectionStrategy, Component, computed, effect, input, output, si
 import { FormsModule } from '@angular/forms';
 
 import { MarkdownComponent } from '@osf/shared/components';
-
-import { WikiVersion } from '../../models';
+import { WikiVersion } from '@osf/shared/models';
 
 @Component({
   selector: 'osf-view-section',
