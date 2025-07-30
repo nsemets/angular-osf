@@ -9,6 +9,7 @@ export const authInterceptor: HttpInterceptorFn = (
   const authToken = '2rjFZwmdDG4rtKj7hGkEMO6XyHBM2lN7XBbsA1e8OqcFhOWu6Z7fQZiheu9RXtzSeVrgOt';
   // UlO9O9GNKgVzJD7pUeY53jiQTKJ4U2znXVWNvh0KZQruoENuILx0IIYf9LoDz7Duq72EIm kyrylo
   // 2rjFZwmdDG4rtKj7hGkEMO6XyHBM2lN7XBbsA1e8OqcFhOWu6Z7fQZiheu9RXtzSeVrgOt roman nastyuk
+  // yZ485nN6MfhqvGrfU4Xk5BEnq0T6LM50nQ6H9VrYaMTaZUQNTuxnIwlp0Wpz879RCsK9GQ NM stage3
   const localStorageToken = localStorage.getItem('authToken');
   const token = localStorageToken || authToken;
   if (token) {
