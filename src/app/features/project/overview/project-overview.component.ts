@@ -13,9 +13,7 @@ import { ClearCollections } from '@osf/features/collections/store/collections';
 import { LoadingSpinnerComponent, ResourceMetadataComponent, SubHeaderComponent } from '@shared/components';
 import { ResourceType } from '@shared/enums';
 import { MapProjectOverview } from '@shared/mappers/resource-overview.mappers';
-import { GetAllNodeLinks, GetBookmarksCollectionId, GetLinkedResources } from '@shared/stores';
-
-import { ClearWiki, GetHomeWiki } from '../wiki/store';
+import { ClearWiki, GetAllNodeLinks, GetBookmarksCollectionId, GetHomeWiki, GetLinkedResources } from '@shared/stores';
 
 import {
   LinkedResourcesComponent,
@@ -108,7 +106,7 @@ export class ProjectOverviewComponent implements OnInit {
     if (projectId) {
       this.actions.getProject(projectId);
       this.actions.getBookmarksId();
-      this.actions.getHomeWiki(projectId);
+      this.actions.getHomeWiki(ResourceType.Project, projectId);
       this.actions.getComponents(projectId);
       this.actions.getNodeLinks(projectId);
       this.actions.getLinkedProjects(projectId);
