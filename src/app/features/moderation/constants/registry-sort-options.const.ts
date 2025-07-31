@@ -5,18 +5,18 @@ import { RegistrySort } from '../enums';
 export const REGISTRY_SORT_OPTIONS: CustomOption<string>[] = [
   {
     value: RegistrySort.TitleAZ,
-    label: 'moderation.registrySortOption.titleAZ',
+    label: 'moderation.sortOption.titleAZ',
   },
   {
     value: RegistrySort.TitleZA,
-    label: 'moderation.registrySortOption.titleZA',
+    label: 'moderation.sortOption.titleZA',
   },
   {
     value: RegistrySort.RegisteredNewest,
-    label: 'moderation.registrySortOption.registeredOldest',
+    label: 'moderation.sortOption.oldest',
   },
   {
     value: RegistrySort.RegisteredOldest,
-    label: 'moderation.registrySortOption.registeredNewest',
+    label: 'moderation.sortOption.newest',
   },
 ];

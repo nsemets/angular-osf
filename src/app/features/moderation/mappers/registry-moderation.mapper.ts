@@ -1,11 +1,11 @@
 import { PaginatedData } from '@osf/shared/models';
 
 import {
-  RegistryAction,
-  RegistryActionsDataJsonApi,
   RegistryDataJsonApi,
   RegistryModeration,
   RegistryResponseJsonApi,
+  ReviewAction,
+  ReviewActionsDataJsonApi,
 } from '../models';
 
 export class RegistryModerationMapper {
@@ -28,7 +28,7 @@ export class RegistryModerationMapper {
     };
   }
 
-  static fromActionResponse(response: RegistryActionsDataJsonApi): RegistryAction {
+  static fromActionResponse(response: ReviewActionsDataJsonApi): ReviewAction {
     return {
       id: response.id,
       fromState: response.attributes.from_state,

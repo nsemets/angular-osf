@@ -1,9 +1,9 @@
-import { RegistryActionState } from '../enums';
+import { ActionStatus } from '../enums';
 
-export const REGISTRY_ACTION_LABEL: Record<RegistryActionState | string, string> = {
-  [RegistryActionState.Accepted]: 'moderation.registryAccepted',
-  [RegistryActionState.Pending]: 'moderation.registrySubmitted',
-  [RegistryActionState.PendingWithdraw]: 'moderation.registryWithdrawalRequested',
-  [RegistryActionState.Withdrawn]: 'moderation.registryWithdrawalAccepted',
-  [RegistryActionState.Rejected]: 'moderation.registryRejected',
+export const REGISTRY_ACTION_LABEL: Record<ActionStatus | string, string> = {
+  [ActionStatus.Accepted]: 'moderation.registryAccepted',
+  [ActionStatus.Pending]: 'moderation.registrySubmitted',
+  [ActionStatus.PendingWithdraw]: 'moderation.registryWithdrawalRequested',
+  [ActionStatus.Withdrawn]: 'moderation.registryWithdrawalAccepted',
+  [ActionStatus.Rejected]: 'moderation.registryRejected',
 };

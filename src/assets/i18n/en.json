@@ -1164,6 +1164,7 @@
       "submitted": "Submitted",
       "accepted": "Accepted",
       "rejected": "Rejected",
+      "requested": "Requested",
       "by": "by"
     },
     "preprintReviewStatus": {
@@ -1207,11 +1208,11 @@
     "registryEmbargoedWithEndDate": "Embargoed Registration with an end date of ",
     "withNoEmbargo": "with no embargo",
     "showHistory": "Show history",
-    "registrySortOption": {
+    "sortOption": {
       "titleAZ": "Title: A-Z",
       "titleZA": "Title: Z-A",
-      "registeredOldest": "Date: oldest to newest",
-      "registeredNewest": "Date: newest to oldest"
+      "oldest": "Date: oldest to newest",
+      "newest": "Date: newest to oldest"
     }
   },
   "settings": {

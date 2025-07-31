@@ -7,7 +7,7 @@ import { PaginatedData } from '@osf/shared/models';
 
 import { RegistrySort, SubmissionReviewStatus } from '../enums';
 import { RegistryModerationMapper } from '../mappers';
-import { RegistryAction, RegistryActionsResponseJsonApi, RegistryModeration, RegistryResponseJsonApi } from '../models';
+import { RegistryModeration, RegistryResponseJsonApi, ReviewAction, ReviewActionsResponseJsonApi } from '../models';
 
 import { environment } from 'src/environments/environment';
 
@@ -35,11 +35,11 @@ export class RegistryModerationService {
       .pipe(map((response) => RegistryModerationMapper.fromResponseWithPagination(response)));
   }
 
-  getRegistrySubmissionHistory(id: string): Observable<RegistryAction[]> {
+  getRegistrySubmissionHistory(id: string): Observable<ReviewAction[]> {
     const baseUrl = `${environment.apiUrl}/registrations/${id}/actions/`;
 
     return this.jsonApiService
-      .get<RegistryActionsResponseJsonApi>(baseUrl)
+      .get<ReviewActionsResponseJsonApi>(baseUrl)
       .pipe(map((response) => response.data.map((x) => RegistryModerationMapper.fromActionResponse(x))));
   }
 }

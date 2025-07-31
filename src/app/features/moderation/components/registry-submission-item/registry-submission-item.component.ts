@@ -2,14 +2,14 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { IconComponent } from '@osf/shared/components';
 import { DateAgoPipe } from '@osf/shared/pipes';
 
 import { REGISTRY_ACTION_LABEL, ReviewStatusIcon } from '../../constants';
-import { RegistryActionState, SubmissionReviewStatus } from '../../enums';
+import { ActionStatus, SubmissionReviewStatus } from '../../enums';
 import { RegistryModeration } from '../../models';
 
 @Component({
@@ -22,11 +22,10 @@ import { RegistryModeration } from '../../models';
 export class RegistrySubmissionItemComponent {
   status = input.required<SubmissionReviewStatus>();
   submission = input.required<RegistryModeration>();
-  selected = output<void>();
 
   readonly reviewStatusIcon = ReviewStatusIcon;
   readonly registryActionLabel = REGISTRY_ACTION_LABEL;
-  readonly registryActionState = RegistryActionState;
+  readonly registryActionState = ActionStatus;
 
   limitValue = 1;
   showAll = false;

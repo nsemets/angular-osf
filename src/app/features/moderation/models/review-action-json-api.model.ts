@@ -1,14 +1,14 @@
 import { JsonApiResponse } from '@osf/core/models';
 
-export type RegistryActionsResponseJsonApi = JsonApiResponse<RegistryActionsDataJsonApi[], null>;
+export type ReviewActionsResponseJsonApi = JsonApiResponse<ReviewActionsDataJsonApi[], null>;
 
-export interface RegistryActionsDataJsonApi {
+export interface ReviewActionsDataJsonApi {
   id: string;
-  attributes: RegistryActionAttributesJsonApi;
-  embeds: RegistryActionEmbedsJsonApi;
+  attributes: ReviewActionAttributesJsonApi;
+  embeds: ReviewActionEmbedsJsonApi;
 }
 
-interface RegistryActionAttributesJsonApi {
+interface ReviewActionAttributesJsonApi {
   auto: boolean;
   comment: string;
   date_created: string;
@@ -19,7 +19,7 @@ interface RegistryActionAttributesJsonApi {
   visible: true;
 }
 
-interface RegistryActionEmbedsJsonApi {
+interface ReviewActionEmbedsJsonApi {
   creator: {
     data: UserModelJsonApi;
   };

@@ -1,4 +1,4 @@
-import { RegistryAction } from './registry-action.model';
+import { ReviewAction } from './review-action.model';
 
 export interface RegistryModeration {
   id: string;
@@ -7,5 +7,5 @@ export interface RegistryModeration {
   public: boolean;
   embargoed: boolean;
   embargoEndDate?: string;
-  actions: RegistryAction[];
+  actions: ReviewAction[];
 }

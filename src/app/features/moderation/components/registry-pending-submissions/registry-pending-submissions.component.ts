@@ -11,7 +11,7 @@ import { TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { Primitive } from '@osf/core/helpers';
 import { PENDING_SUBMISSION_REVIEW_OPTIONS, REGISTRY_SORT_OPTIONS } from '@osf/features/moderation/constants';
@@ -51,6 +51,7 @@ export class RegistryPendingSubmissionsComponent implements OnInit {
   readonly sortOptions = REGISTRY_SORT_OPTIONS;
 
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly providerId = toSignal(
     this.route.parent?.params.pipe(map((params) => params['id'])) ?? of(undefined)
   );
@@ -68,11 +69,18 @@ export class RegistryPendingSubmissionsComponent implements OnInit {
   readonly selectedReviewOption = signal(this.submissionReviewOptions[0].value);
 
   ngOnInit(): void {
+    this.getStatusFromQueryParams();
     this.fetchSubmissions();
   }
 
   changeReviewStatus(value: SubmissionReviewStatus): void {
     this.selectedReviewOption.set(value);
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { status: value },
+      queryParamsHandling: 'merge',
+    });
+
     this.resetPagination();
     this.fetchSubmissions();
   }
@@ -86,6 +94,17 @@ export class RegistryPendingSubmissionsComponent implements OnInit {
     this.currentPage.set(event.page ? event.page + 1 : 1);
     this.first.set(event.first ?? 0);
     this.fetchSubmissions();
+  }
+
+  private getStatusFromQueryParams() {
+    const queryParams = this.route.snapshot.queryParams;
+    const statusValues = Object.values(SubmissionReviewStatus);
+
+    const statusParam = queryParams['status'];
+
+    if (statusParam && statusValues.includes(statusParam)) {
+      this.selectedReviewOption.set(statusParam);
+    }
   }
 
   private resetPagination(): void {

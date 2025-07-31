@@ -1,6 +1,6 @@
 import { IdName } from '@osf/shared/models';
 
-export interface RegistryAction {
+export interface ReviewAction {
   id: string;
   fromState: string;
   toState: string;

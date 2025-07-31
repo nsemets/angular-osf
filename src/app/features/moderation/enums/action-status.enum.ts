@@ -1,4 +1,4 @@
-export enum RegistryActionState {
+export enum ActionStatus {
   Pending = 'pending',
   Accepted = 'accepted',
   Rejected = 'rejected',

@@ -8,10 +8,10 @@ import { SelectButton } from 'primeng/selectbutton';
 import { map, of } from 'rxjs';
 
 import { TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { Primitive } from '@osf/core/helpers';
 import {
@@ -48,6 +48,7 @@ export class RegistrySubmissionsComponent implements OnInit {
   readonly sortOptions = REGISTRY_SORT_OPTIONS;
 
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly providerId = toSignal(
     this.route.parent?.params.pipe(map((params) => params['id'])) ?? of(undefined)
   );
@@ -64,18 +65,19 @@ export class RegistrySubmissionsComponent implements OnInit {
   readonly selectedSortOption = signal(RegistrySort.RegisteredNewest);
   readonly selectedReviewOption = signal(this.submissionReviewOptions[0].value);
 
-  readonly actualStatus = computed(() =>
-    this.selectedReviewOption() === SubmissionReviewStatus.Public
-      ? SubmissionReviewStatus.Accepted
-      : this.selectedReviewOption()
-  );
-
   ngOnInit(): void {
+    this.getStatusFromQueryParams();
     this.fetchSubmissions();
   }
 
   changeReviewStatus(value: SubmissionReviewStatus): void {
     this.selectedReviewOption.set(value);
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { status: value },
+      queryParamsHandling: 'merge',
+    });
+
     this.resetPagination();
     this.fetchSubmissions();
   }
@@ -91,6 +93,17 @@ export class RegistrySubmissionsComponent implements OnInit {
     this.fetchSubmissions();
   }
 
+  private getStatusFromQueryParams() {
+    const queryParams = this.route.snapshot.queryParams;
+    const statusValues = Object.values(SubmissionReviewStatus);
+
+    const statusParam = queryParams['status'];
+
+    if (statusParam && statusValues.includes(statusParam)) {
+      this.selectedReviewOption.set(statusParam);
+    }
+  }
+
   private resetPagination(): void {
     this.currentPage.set(1);
     this.first.set(0);
@@ -101,6 +114,11 @@ export class RegistrySubmissionsComponent implements OnInit {
 
     if (!providerId) return;
 
-    this.actions.getRegistrySubmissions(providerId, this.actualStatus(), this.currentPage(), this.selectedSortOption());
+    this.actions.getRegistrySubmissions(
+      providerId,
+      this.selectedReviewOption(),
+      this.currentPage(),
+      this.selectedSortOption()
+    );
   }
 }
