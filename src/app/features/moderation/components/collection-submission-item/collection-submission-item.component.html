@@ -1,0 +1,61 @@
+@let action = currentReviewAction();
+@let attributes = currentSubmissionAttributes();
+
+@if (action && attributes) {
+  <div class="p-3">
+    <div class="flex align-items-center">
+      <osf-icon
+        [class]="reviewStatusIcon[submission().reviewsState].value"
+        [iconClass]="reviewStatusIcon[submission().reviewsState].icon"
+      ></osf-icon>
+
+      <p-button
+        class="link-btn-no-padding pl-2"
+        styleClass="text-lg text-primary"
+        link
+        (click)="handleNavigation()"
+        [label]="submission().title"
+      >
+      </p-button>
+    </div>
+
+    <p class="flex flex-wrap gap-1 mt-2">
+      @switch (action.toState) {
+        @case (SubmissionReviewStatus.Pending) {
+          <span class="capitalize">{{ 'moderation.submissionReview.submitted' | translate }}</span>
+        }
+        @case (SubmissionReviewStatus.Accepted) {
+          @if (!collectionProvider()?.reviewsWorkflow) {
+            <span class="capitalize">{{ 'moderation.submissionReview.submitted' | translate }}</span>
+          } @else {
+            <span class="capitalize">{{ 'moderation.submissionReview.accepted' | translate }}</span>
+          }
+        }
+        @case (SubmissionReviewStatus.Rejected) {
+          <span class="capitalize">{{ 'moderation.submissionReview.rejected' | translate }}</span>
+        }
+        @case (SubmissionReviewStatus.Removed) {
+          <span class="capitalize">{{ 'moderation.submissionReview.withdrawn' | translate }}</span>
+        }
+      }
+      <span>{{ action.dateCreated | timeAgo }}</span>
+      <span>{{ 'moderation.submissionReview.by' | translate }}</span>
+      <span>{{ action.createdBy }}</span>
+    </p>
+
+    <div class="flex mt-2 flex-wrap">
+      @for (attribute of attributes; track attribute.key) {
+        @if (!$first) {
+          <span class="mx-1 flex align-items-start">|</span>
+        }
+        <p class="font-normal">
+          <span class="font-bold">{{ attribute.label }}:</span> {{ attribute.value }}
+        </p>
+      }
+    </div>
+
+    @if (action.comment) {
+      <p class="font-italic mt-2">- {{ action.comment }}</p>
+    }
+  </div>
+}

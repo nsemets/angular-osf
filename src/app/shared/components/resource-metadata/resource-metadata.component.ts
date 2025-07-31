@@ -22,6 +22,7 @@ import { ResourceOverview } from '@shared/models';
 export class ResourceMetadataComponent {
   currentResource = input.required<ResourceOverview | null>();
   customCitationUpdated = output<string>();
+  isCollectionsRoute = input<boolean>(false);
 
   protected readonly resourceTypes = OsfResourceTypes;
 
