@@ -1,6 +1,14 @@
 import { Selector } from '@ngxs/store';
 
-import { DraftRegistrationModel, License, OsfFile, RegistrationCard, Resource, SchemaResponse } from '@shared/models';
+import {
+  DraftRegistrationModel,
+  License,
+  OsfFile,
+  RegistrationCard,
+  RegistrationModel,
+  Resource,
+  SchemaResponse,
+} from '@shared/models';
 
 import { PageSchema, Project, ProviderSchema } from '../models';
 
@@ -96,6 +104,11 @@ export class RegistriesSelectors {
   @Selector([RegistriesState])
   static isRegistrationSubmitting(state: RegistriesStateModel): boolean {
     return state.registration.isSubmitting || false;
+  }
+
+  @Selector([RegistriesState])
+  static getRegistration(state: RegistriesStateModel): RegistrationModel | null {
+    return state.registration.data;
   }
 
   @Selector([RegistriesState])

@@ -115,6 +115,7 @@ export class RegistryMetadataMapper {
       links: {
         files: '',
       },
+      archiving: attributes['archiving'] as boolean,
     } as RegistryOverview;
   }
 

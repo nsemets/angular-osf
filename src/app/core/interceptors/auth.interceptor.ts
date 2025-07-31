@@ -2,6 +2,8 @@ import { Observable } from 'rxjs';
 
 import { HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
 
+import { environment } from 'src/environments/environment';
+
 export const authInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
   next: HttpHandlerFn
@@ -12,7 +14,7 @@ export const authInterceptor: HttpInterceptorFn = (
   // yZ485nN6MfhqvGrfU4Xk5BEnq0T6LM50nQ6H9VrYaMTaZUQNTuxnIwlp0Wpz879RCsK9GQ NM stage3
   const localStorageToken = localStorage.getItem('authToken');
   const token = localStorageToken || authToken;
-  if (token) {
+  if (token && !environment.production) {
     if (!req.url.includes('/api.crossref.org/funders')) {
       const authReq = req.clone({
         setHeaders: {

@@ -1,5 +1,5 @@
 export const environment = {
-  production: false,
+  production: true,
   webUrl: 'https://staging4.osf.io',
   downloadUrl: 'https://staging4.osf.io/download',
   apiUrl: 'https://api.staging4.osf.io/v2',
