@@ -2093,6 +2093,10 @@
       "noLinkedProjectsOrComponentsFound": "No linked projects or components found",
       "linkedRegistrations": "Linked registrations",
       "noLinkedRegistrationsFound": "No linked registrations found"
+    },
+    "components": {
+      "title": "Components",
+      "noComponentsFound": "No components found"
     }
   },
   "truncatedText": {

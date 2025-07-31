@@ -67,7 +67,7 @@ export class RegistryOverviewState {
               error: null,
             },
           });
-          if (registryOverview?.registrationSchemaLink && registryOverview?.questions) {
+          if (registryOverview?.registrationSchemaLink && registryOverview?.questions && !action.isComponentPage) {
             ctx.dispatch(new GetSchemaBlocks(registryOverview.registrationSchemaLink, registryOverview.questions));
           }
         },
