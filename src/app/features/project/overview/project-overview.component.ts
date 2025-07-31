@@ -13,9 +13,7 @@ import { ClearCollections } from '@osf/features/collections/store/collections';
 import { LoadingSpinnerComponent, ResourceMetadataComponent, SubHeaderComponent } from '@shared/components';
 import { ResourceType } from '@shared/enums';
 import { MapProjectOverview } from '@shared/mappers/resource-overview.mappers';
-import { GetAllNodeLinks, GetBookmarksCollectionId, GetLinkedResources } from '@shared/stores';
-
-import { ClearWiki, GetHomeWiki } from '../wiki/store';
+import { ClearWiki, GetAllNodeLinks, GetBookmarksCollectionId, GetHomeWiki, GetLinkedResources } from '@shared/stores';
 
 import {
   LinkedResourcesComponent,
@@ -24,7 +22,13 @@ import {
   OverviewWikiComponent,
   RecentActivityComponent,
 } from './components';
-import { ClearProjectOverview, GetComponents, GetProjectById, ProjectOverviewSelectors } from './store';
+import {
+  ClearProjectOverview,
+  GetComponents,
+  GetProjectById,
+  ProjectOverviewSelectors,
+  SetProjectCustomCitation,
+} from './store';
 
 @Component({
   selector: 'osf-project-overview',
@@ -60,6 +64,7 @@ export class ProjectOverviewComponent implements OnInit {
     getComponents: GetComponents,
     getLinkedProjects: GetLinkedResources,
     getNodeLinks: GetAllNodeLinks,
+    setProjectCustomCitation: SetProjectCustomCitation,
     clearProjectOverview: ClearProjectOverview,
     clearWiki: ClearWiki,
     clearCollections: ClearCollections,
@@ -92,12 +97,16 @@ export class ProjectOverviewComponent implements OnInit {
     this.setupCleanup();
   }
 
+  onCustomCitationUpdated(citation: string): void {
+    this.actions.setProjectCustomCitation(citation);
+  }
+
   ngOnInit(): void {
     const projectId = this.route.parent?.snapshot.params['id'];
     if (projectId) {
       this.actions.getProject(projectId);
       this.actions.getBookmarksId();
-      this.actions.getHomeWiki(projectId);
+      this.actions.getHomeWiki(ResourceType.Project, projectId);
       this.actions.getComponents(projectId);
       this.actions.getNodeLinks(projectId);
       this.actions.getLinkedProjects(projectId);
