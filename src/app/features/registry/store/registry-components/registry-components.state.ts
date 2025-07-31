@@ -12,7 +12,7 @@ import { GetRegistryComponents } from './registry-components.actions';
 import { RegistryComponentsStateModel } from './registry-components.model';
 
 const initialState: RegistryComponentsStateModel = {
-  registryComponents: { data: [], isLoading: false, error: null },
+  registryComponents: { data: [], isLoading: false, error: null, totalCount: 0 },
 };
 
 @State<RegistryComponentsStateModel>({
@@ -37,7 +37,7 @@ export class RegistryComponentsState {
             data: response.data,
             isLoading: false,
             error: null,
-            meta: response.meta,
+            totalCount: response.meta.total,
           },
         });
       }),
