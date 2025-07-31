@@ -67,5 +67,6 @@ export function MapRegistryOverview(data: RegistryOverviewJsonApiData): Registry
     links: {
       files: data?.embeds?.files?.data?.[0]?.relationships?.files?.links?.related?.href,
     },
+    archiving: data.attributes.archiving,
   } as RegistryOverview;
 }

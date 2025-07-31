@@ -47,6 +47,7 @@ export interface RegistryOverviewJsonApiAttributes {
   revision_state: RevisionReviewStates;
   reviews_state: RegistrationReviewStates;
   embargoed: boolean;
+  archiving: boolean;
 }
 
 export type RegistrationQuestions = Record<string, string | string[] | { file_id: string; file_name: string }[]>;

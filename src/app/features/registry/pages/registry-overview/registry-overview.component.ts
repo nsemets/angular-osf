@@ -17,7 +17,7 @@ import { MapRegistryOverview } from '@osf/shared/mappers';
 import { ToolbarResource } from '@osf/shared/models';
 import { GetBookmarksCollectionId } from '@shared/stores';
 
-import { RegistryRevisionsComponent, RegistryStatusesComponent } from '../../components';
+import { ArchivingMessageComponent, RegistryRevisionsComponent, RegistryStatusesComponent } from '../../components';
 import { MapViewSchemaBlock } from '../../mappers';
 import { RegistrationQuestions } from '../../models';
 import {
@@ -39,6 +39,7 @@ import {
     RegistryRevisionsComponent,
     RegistryStatusesComponent,
     DataResourcesComponent,
+    ArchivingMessageComponent,
   ],
   templateUrl: './registry-overview.component.html',
   styleUrl: './registry-overview.component.scss',
