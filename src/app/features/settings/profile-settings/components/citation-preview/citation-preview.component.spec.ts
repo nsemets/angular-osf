@@ -1,18 +1,32 @@
+import { TranslatePipe } from '@ngx-translate/core';
+import { MockPipes } from 'ng-mocks';
+
+import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { MOCK_USER } from '@osf/shared/mocks';
+import { CitationFormatPipe } from '@shared/pipes';
 
 import { CitationPreviewComponent } from './citation-preview.component';
 
 describe('CitationPreviewComponent', () => {
   let component: CitationPreviewComponent;
+  let componentRef: ComponentRef<CitationPreviewComponent>;
   let fixture: ComponentFixture<CitationPreviewComponent>;
+
+  const mockUser = MOCK_USER;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CitationPreviewComponent],
+      imports: [CitationPreviewComponent, MockPipes(TranslatePipe, CitationFormatPipe)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CitationPreviewComponent);
     component = fixture.componentInstance;
+    componentRef = fixture.componentRef;
+
+    componentRef.setInput('currentUser', mockUser);
+
     fixture.detectChanges();
   });
 

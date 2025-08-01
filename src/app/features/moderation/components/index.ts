@@ -15,5 +15,5 @@ export { RegistryPendingSubmissionsComponent } from './registry-pending-submissi
 export { RegistrySettingsComponent } from './registry-settings/registry-settings.component';
 export { RegistrySubmissionItemComponent } from './registry-submission-item/registry-submission-item.component';
 export { RegistrySubmissionsComponent } from './registry-submissions/registry-submissions.component';
-export { SubmissionItemComponent } from './submission-item/submission-item.component';
-export { SubmissionsListComponent } from './submissions-list/submissions-list.component';
+export { CollectionSubmissionItemComponent } from '@osf/features/moderation/components/collection-submission-item/collection-submission-item.component';
+export { CollectionSubmissionsListComponent } from '@osf/features/moderation/components/collection-submissions-list/collection-submissions-list.component';

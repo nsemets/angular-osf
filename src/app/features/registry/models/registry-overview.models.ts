@@ -65,4 +65,5 @@ export interface RegistryOverview {
   links: {
     files: string;
   };
+  archiving: boolean;
 }

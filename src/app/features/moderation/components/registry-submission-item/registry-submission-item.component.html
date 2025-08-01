@@ -37,7 +37,7 @@
 
     @if (submission().actions.length > 1) {
       <p-button
-        class="no-link-btn-padding block mt-2"
+        class="link-btn-no-padding block mt-2"
         [link]="true"
         [label]="(showAll ? 'common.buttons.hide' : 'moderation.showHistory') | translate"
         (onClick)="toggleHistory()"

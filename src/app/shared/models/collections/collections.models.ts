@@ -1,3 +1,5 @@
+import { CollectionSubmissionReviewAction } from '@osf/features/moderation/models';
+
 export interface CollectionProvider {
   id: string;
   type: string;
@@ -82,4 +84,9 @@ export interface CollectionSubmission {
   disease: string;
   gradeLevels: string;
   contributors?: CollectionContributor[];
+  creator?: {
+    id: string;
+    fullName: string;
+  };
+  actions?: CollectionSubmissionReviewAction[];
 }

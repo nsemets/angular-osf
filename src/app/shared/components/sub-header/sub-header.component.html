@@ -22,8 +22,9 @@
     </div>
 
     @if (showButton()) {
-      <div class="flex ml-auto w-full md:w-auto">
+      <div class="ml-auto w-full md:w-auto">
         <p-button
+          [severity]="buttonSeverity()"
           class="w-full"
           styleClass="w-full"
           [label]="buttonLabel()"

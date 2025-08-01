@@ -1140,7 +1140,6 @@
     "submitted": "Submitted",
     "pending": "Pending",
     "submissions": "Submissions",
-    "noSubmissions": "No submissions.",
     "withdrawalRequest": "Withdrawal Request",
     "notifications": "Notifications",
     "settingsMessage": "To configure your notification preferences visit your",
@@ -1151,6 +1150,7 @@
     "inviteModerator": "Invite moderator",
     "searchModerator": "Search moderator",
     "selectPermission": "Select permission",
+    "noSubmissions": "No submissions",
     "moderatorPermissions": {
       "administrator": "Administrator",
       "moderator": "Moderator"
@@ -1175,11 +1175,28 @@
       "pendingUpdates": "Pending Updates",
       "pendingWithdrawal": "Pending Withdrawal"
     },
+    "makeDecision": {
+      "header": "Make decision",
+      "requestSubmitted": "Request submitted",
+      "acceptRequest": "Accept request",
+      "rejectRequest": "Reject request",
+      "withdrawRequest": "Withdraw Request",
+      "acceptRequestMessage": "Submission will appear in search results and will be associated with the collection.",
+      "rejectRequestMessage": "Submission will not appear in search results nor will be associated with the collection.",
+      "withdrawRequestMessage": "Submission will be withdrawn from the collection and will no longer appear in search results.",
+      "remarksPlaceholder": "Add remarks to project admins (optional)",
+      "submitDecision": "Submit decision",
+      "goBackLink": "< Back to list of submissions",
+      "acceptSuccess": "Submission has been accepted successfully",
+      "rejectSuccess": "Submission has been rejected successfully",
+      "removeSuccess": "Submission has been withdrawn successfully"
+    },
     "submissionReview": {
       "submitted": "Submitted",
       "accepted": "Accepted",
       "rejected": "Rejected",
       "requested": "Requested",
+      "withdrawn": "Withdrawn",
       "by": "by"
     },
     "preprintReviewStatus": {
@@ -2116,6 +2133,13 @@
     "components": {
       "title": "Components",
       "noComponentsFound": "No components found"
+    },
+    "archiving": {
+      "title": "This registration is currently archiving, and no changes can be made at this time.",
+      "pleaseNote": "Please note",
+      "description": "Changes to any files (1) in the projects or components being registered, (2) uploaded or selected as prompt responses, including those connected through add-ons during archiving will result in archiving failure and loss of your registration timestamp. Please do not modify your files until after you have received email confirmation of archiving completion. If this registration has been archiving for more than 72 hours, please email ",
+      "descriptionEnd": " for assistance.",
+      "createdDate": "Date created"
     }
   },
   "truncatedText": {
