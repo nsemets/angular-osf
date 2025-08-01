@@ -12,7 +12,7 @@ import { collectionFilterNames } from '@osf/features/collections/constants';
 import { SubmissionReviewStatus } from '@osf/features/moderation/enums';
 import { IconComponent } from '@osf/shared/components';
 import { DateAgoPipe } from '@osf/shared/pipes';
-import { CollectionSubmission } from '@shared/models';
+import { CollectionSubmissionWithGuid } from '@shared/models';
 import { CollectionsSelectors } from '@shared/stores';
 
 import { ReviewStatusIcon } from '../../constants';
@@ -28,7 +28,7 @@ import { ReviewStatusIcon } from '../../constants';
 export class CollectionSubmissionItemComponent {
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
-  submission = input.required<CollectionSubmission>();
+  submission = input.required<CollectionSubmissionWithGuid>();
   collectionProvider = select(CollectionsSelectors.getCollectionProvider);
 
   protected readonly reviewStatusIcon = ReviewStatusIcon;
@@ -48,7 +48,7 @@ export class CollectionSubmissionItemComponent {
     return collectionFilterNames
       .map((attribute) => ({
         ...attribute,
-        value: item[attribute.key as keyof CollectionSubmission] as string,
+        value: item[attribute.key as keyof CollectionSubmissionWithGuid] as string,
       }))
       .filter((attribute) => attribute.value);
   });
