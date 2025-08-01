@@ -40,6 +40,7 @@
       "view": "View",
       "review": "Review",
       "upload": "Upload",
+      "hide": "Hide",
       "customize": "Customize",
       "createCustomCitation": "Create Custom Citation",
       "preview": "Preview",
@@ -1170,7 +1171,9 @@
       "rejected": "Rejected",
       "withdrawn": "Withdrawn",
       "public": "Public",
-      "embargo": "Embargo"
+      "embargo": "Embargo",
+      "pendingUpdates": "Pending Updates",
+      "pendingWithdrawal": "Pending Withdrawal"
     },
     "makeDecision": {
       "header": "Make decision",
@@ -1192,6 +1195,7 @@
       "submitted": "Submitted",
       "accepted": "Accepted",
       "rejected": "Rejected",
+      "requested": "Requested",
       "withdrawn": "Withdrawn",
       "by": "by"
     },
@@ -1227,6 +1231,20 @@
         "named": "Named Comments",
         "namedDescription": "All comments will be visible to the contributors of the submission and the moderator's osf profile name will be displayed."
       }
+    },
+    "registryAccepted": "Registration submission accepted",
+    "registrySubmitted": "Registration submitted",
+    "registryWithdrawalRequested": "Registration withdrawal requested",
+    "registryWithdrawalAccepted": "Registration withdrawal request accepted",
+    "registryRejected": "Registration submission rejected",
+    "registryEmbargoedWithEndDate": "Embargoed Registration with an end date of ",
+    "withNoEmbargo": "with no embargo",
+    "showHistory": "Show history",
+    "sortOption": {
+      "titleAZ": "Title: A-Z",
+      "titleZA": "Title: Z-A",
+      "oldest": "Date: oldest to newest",
+      "newest": "Date: newest to oldest"
     }
   },
   "settings": {
