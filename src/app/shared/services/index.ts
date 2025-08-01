@@ -1,6 +1,7 @@
 export * from './addons';
 export { BookmarksService } from './bookmarks.service';
 export { BrandService } from './brand.service';
+export { CollectionsService } from './collections.service';
 export { ContributorsService } from './contributors.service';
 export { CustomConfirmationService } from './custom-confirmation.service';
 export { FilesService } from './files.service';
@@ -16,3 +17,4 @@ export { SearchService } from './search.service';
 export { SubjectsService } from './subjects.service';
 export { ToastService } from './toast.service';
 export { ViewOnlyLinksService } from './view-only-links.service';
+export { WikiService } from './wiki.service';

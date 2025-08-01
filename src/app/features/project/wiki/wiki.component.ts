@@ -11,15 +11,16 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { SubHeaderComponent } from '@osf/shared/components';
+import {
+  CompareSectionComponent,
+  EditSectionComponent,
+  SubHeaderComponent,
+  ViewSectionComponent,
+  WikiListComponent,
+} from '@osf/shared/components';
+import { ResourceType } from '@osf/shared/enums';
+import { WikiModes } from '@osf/shared/models';
 import { ToastService } from '@osf/shared/services';
-
-import { CompareSectionComponent } from './components/compare-section/compare-section.component';
-import { EditSectionComponent } from './components/edit-section/edit-section.component';
-import { ViewSectionComponent } from './components/view-section/view-section.component';
-import { WikiListComponent } from './components/wiki-list/wiki-list.component';
-import { WikiSelectors } from './store/wiki.selectors';
-import { WikiModes } from './models';
 import {
   CreateWiki,
   CreateWikiVersion,
@@ -34,7 +35,8 @@ import {
   SetCurrentWiki,
   ToggleMode,
   UpdateWikiPreviewContent,
-} from './store';
+  WikiSelectors,
+} from '@osf/shared/stores';
 
 const HomeWikiName = 'Home';
 
@@ -94,7 +96,7 @@ export class WikiComponent {
 
   constructor() {
     this.actions
-      .getWikiList(this.projectId())
+      .getWikiList(ResourceType.Project, this.projectId())
       .pipe(
         takeUntilDestroyed(),
         tap(() => {
@@ -102,13 +104,13 @@ export class WikiComponent {
             this.navigateToWiki(this.wikiList()?.[0]?.id || '');
           }
           if (!this.wikiList()?.length) {
-            this.actions.createWiki(this.projectId(), HomeWikiName);
+            this.actions.createWiki(ResourceType.Project, this.projectId(), HomeWikiName);
           }
         })
       )
       .subscribe();
 
-    this.actions.getComponentsWikiList(this.projectId());
+    this.actions.getComponentsWikiList(ResourceType.Project, this.projectId());
 
     this.route.queryParams
       .pipe(

@@ -23,6 +23,7 @@ export interface RegistryOverviewJsonApiAttributes {
   tags: string[];
   category: string;
   fork?: boolean;
+  custom_citation?: string | null;
   accessRequestsEnabled?: boolean;
   node_license?: {
     copyright_holders: string[];
@@ -47,6 +48,7 @@ export interface RegistryOverviewJsonApiAttributes {
   revision_state: RevisionReviewStates;
   reviews_state: RegistrationReviewStates;
   embargoed: boolean;
+  archiving: boolean;
 }
 
 export type RegistrationQuestions = Record<string, string | string[] | { file_id: string; file_name: string }[]>;
@@ -113,6 +115,13 @@ export interface RegistryOverviewJsonApiEmbed {
         };
       };
     }[];
+  };
+  provider: {
+    data: {
+      attributes: {
+        name: string;
+      };
+    };
   };
 }
 

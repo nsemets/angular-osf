@@ -13,6 +13,7 @@ export function MapRegistryOverview(data: RegistryOverviewJsonApiData): Registry
     dateCreated: data.attributes?.date_created,
     dateRegistered: data.attributes?.date_registered,
     category: data.attributes?.category,
+    customCitation: data.attributes?.custom_citation,
     isFork: data.attributes?.fork,
     accessRequestsEnabled: data.attributes?.accessRequestsEnabled,
     nodeLicense: data.attributes.node_license
@@ -60,11 +61,13 @@ export function MapRegistryOverview(data: RegistryOverviewJsonApiData): Registry
       revisionResponses: schemaResponse.attributes?.revision_responses,
       updatedResponseKeys: schemaResponse.attributes?.updated_response_keys,
     })),
+    registry: data.embeds.provider.data.attributes.name,
     status: MapRegistryStatus(data.attributes),
     revisionStatus: data.attributes.revision_state,
     reviewsState: data.attributes.reviews_state,
     links: {
       files: data?.embeds?.files?.data?.[0]?.relationships?.files?.links?.related?.href,
     },
+    archiving: data.attributes.archiving,
   } as RegistryOverview;
 }

@@ -2,9 +2,11 @@ import { provideStates } from '@ngxs/store';
 
 import { Routes } from '@angular/router';
 
+import { CollectionsModerationState } from '@osf/features/moderation/store/collections-moderation';
 import { ResourceType } from '@osf/shared/enums';
 import {
   CitationsState,
+  CollectionsState,
   ContributorsState,
   NodeLinksState,
   SubjectsState,
@@ -29,7 +31,7 @@ export const projectRoutes: Routes = [
         path: 'overview',
         loadComponent: () =>
           import('../project/overview/project-overview.component').then((mod) => mod.ProjectOverviewComponent),
-        providers: [provideStates([CitationsState, NodeLinksState])],
+        providers: [provideStates([NodeLinksState, CitationsState, CollectionsState, CollectionsModerationState])],
       },
       {
         path: 'metadata',

@@ -1,19 +1,62 @@
 @let project = currentProject();
+@let status = submissionReviewStatus();
 
-@if (!isProjectLoading() && project) {
+@if (!isLoading() && project) {
   <div class="flex justify-content-between">
-    <osf-sub-header [title]="project.title" />
+    <osf-sub-header
+      [title]="project.title"
+      [showButton]="showDecisionButton()"
+      [buttonSeverity]="'success'"
+      [buttonLabel]="'moderation.makeDecision.header' | translate"
+      (buttonClick)="handleOpenMakeDecisionDialog()"
+    />
   </div>
 
   <div class="px-3 pb-5 flex flex-column sm:px-5">
-    <osf-overview-toolbar [currentResource]="currentResource()" />
+    <osf-overview-toolbar [isCollectionsRoute]="isCollectionsRoute()" [currentResource]="currentResource()" />
   </div>
 
-  <div class="flex gap-4 bg-white h-full p-3 flex-column-reverse sm:p-4 lg:flex-row">
+  <div class="flex flex-wrap gap-4 bg-white h-full p-3 flex-column-reverse sm:p-4 lg:flex-row">
+    @if (isCollectionsRoute()) {
+      <p-button
+        link
+        [label]="'moderation.makeDecision.goBackLink' | translate"
+        class="link-btn-no-padding font-bold"
+        (click)="goBack()"
+      >
+      </p-button>
+
+      @if (status && isCollectionsRoute() && collectionProvider()) {
+        @switch (status) {
+          @case (SubmissionReviewStatus.Pending) {
+            <!-- TODO - Update text messages to translates RNa-->
+            <p-message class="overview-message w-full" icon="fas fa-circle-exclamation" severity="warn">
+              Pending: Pending entry into <a class="cursor-pointer">{{ collectionProvider()?.name }}</a>
+            </p-message>
+          }
+          @case (SubmissionReviewStatus.Accepted) {
+            <p-message class="overview-message w-full" icon="fas fa-circle-exclamation" severity="success">
+              Accepted: Accepted entry into <a class="cursor-pointer">{{ collectionProvider()?.name }}</a>
+            </p-message>
+          }
+          @case (SubmissionReviewStatus.Rejected) {
+            <p-message class="overview-message w-full" icon="fas fa-circle-exclamation" severity="error">
+              Rejected: Rejected entry into <a class="cursor-pointer">{{ collectionProvider()?.name }}</a>
+            </p-message>
+          }
+          @case (SubmissionReviewStatus.Removed) {
+            <p-message class="overview-message w-full" icon="fas fa-circle-exclamation" severity="secondary">
+              Withdrawn: Entry withdrawn from <a class="cursor-pointer">{{ collectionProvider()?.name }}</a>
+            </p-message>
+          }
+        }
+      }
+    }
+
     <div class="flex flex-column gap-4 left-section">
       <osf-project-wiki />
-      <osf-project-components />
-      <osf-linked-resources />
+      <osf-project-components [isCollectionsRoute]="isCollectionsRoute()" />
+      <osf-linked-resources [isCollectionsRoute]="isCollectionsRoute()" />
       <osf-recent-activity-list />
     </div>
 
@@ -21,6 +64,7 @@
       <osf-resource-metadata
         [currentResource]="resourceOverview()"
         (customCitationUpdated)="onCustomCitationUpdated($event)"
+        [isCollectionsRoute]="isCollectionsRoute()"
       />
     </div>
   </div>

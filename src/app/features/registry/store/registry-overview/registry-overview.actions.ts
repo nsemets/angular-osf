@@ -3,7 +3,10 @@ import { RegistrationQuestions } from '@osf/features/registry/models';
 export class GetRegistryById {
   static readonly type = '[Registry Overview] Get Registry By Id';
 
-  constructor(public id: string) {}
+  constructor(
+    public id: string,
+    public isComponentPage?: boolean
+  ) {}
 }
 
 export class GetRegistrySubjects {

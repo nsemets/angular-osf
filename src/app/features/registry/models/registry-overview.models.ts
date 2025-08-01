@@ -16,6 +16,7 @@ export interface RegistryOverview {
   registrationType: string;
   doi: string;
   tags: string[];
+  registry?: string;
   contributors: ProjectOverviewContributor[];
   citation: string;
   category: string;
@@ -64,4 +65,5 @@ export interface RegistryOverview {
   links: {
     files: string;
   };
+  archiving: boolean;
 }
