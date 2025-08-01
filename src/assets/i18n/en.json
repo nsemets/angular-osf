@@ -1499,6 +1499,7 @@
         "addMore": "Add One More",
         "successUpdate": "Education successfully updated."
       },
+      "changesDiscarded": "Changes discarded successfully.",
       "endDateError": "End date must be greater than start date."
     },
     "accountSettings": {

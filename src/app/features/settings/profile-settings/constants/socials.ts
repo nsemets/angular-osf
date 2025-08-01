@@ -1,13 +1,12 @@
 import { SocialLinksModel } from '../models';
 
-export const socials: SocialLinksModel[] = [
+export const SOCIALS: SocialLinksModel[] = [
   {
     id: 0,
     label: 'ResearcherID',
     address: 'http://researchers.com/rid/',
     placeholder: 'x-xxxx-xxxx',
     key: 'researcherId',
-    multiple: false,
   },
   {
     id: 1,
@@ -15,7 +14,6 @@ export const socials: SocialLinksModel[] = [
     address: 'http://orcid.org/',
     placeholder: 'xxxx-xxxx-xxxx',
     key: 'orcid',
-    multiple: false,
   },
   {
     id: 2,
@@ -23,7 +21,6 @@ export const socials: SocialLinksModel[] = [
     address: 'https://linkedin.com/',
     placeholder: 'in/userID, profie/view?profileID, or pub/pubID',
     key: 'linkedIn',
-    multiple: true,
   },
   {
     id: 3,
@@ -31,7 +28,6 @@ export const socials: SocialLinksModel[] = [
     address: '@',
     placeholder: 'twitterhandle',
     key: 'twitter',
-    multiple: true,
   },
   {
     id: 4,
@@ -39,7 +35,6 @@ export const socials: SocialLinksModel[] = [
     address: 'https://github.com/',
     placeholder: 'username',
     key: 'github',
-    multiple: true,
   },
   {
     id: 5,
@@ -47,7 +42,6 @@ export const socials: SocialLinksModel[] = [
     address: 'https://impactstory.org/u/',
     placeholder: 'profileID',
     key: 'impactStory',
-    multiple: false,
   },
   {
     id: 6,
@@ -55,7 +49,6 @@ export const socials: SocialLinksModel[] = [
     address: 'http://scholar.google.com/citations?user=',
     placeholder: 'profileID',
     key: 'scholar',
-    multiple: false,
   },
   {
     id: 7,
@@ -63,7 +56,6 @@ export const socials: SocialLinksModel[] = [
     address: 'https://researchgate.net/profile/',
     placeholder: 'profileID',
     key: 'researchGate',
-    multiple: false,
   },
   {
     id: 8,
@@ -71,7 +63,6 @@ export const socials: SocialLinksModel[] = [
     address: 'http://xueshu.baidu.com/scholarID/',
     placeholder: 'profileID',
     key: 'baiduScholar',
-    multiple: false,
   },
   {
     id: 9,
@@ -79,7 +70,6 @@ export const socials: SocialLinksModel[] = [
     address: 'http://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=',
     placeholder: 'profileID',
     key: 'ssrn',
-    multiple: false,
   },
   {
     id: 10,
@@ -87,14 +77,17 @@ export const socials: SocialLinksModel[] = [
     address: 'website',
     placeholder: 'https://yourwebsite.com',
     key: 'profileWebsites',
-    multiple: true,
   },
   {
     id: 11,
-    label: 'Academia Profile Id',
-    address: '.academia.edu/',
-    placeholder: 'profileId',
-    key: 'academiaProfileID',
-    multiple: false,
+    label: 'Academia Profile Institution',
+    address: 'https://',
+    placeholder: 'institution',
+    key: 'academiaInstitution',
+    linkedField: {
+      key: 'academiaProfileID',
+      label: 'Academia Profile Id',
+      placeholder: 'profileId',
+    },
   },
 ];
