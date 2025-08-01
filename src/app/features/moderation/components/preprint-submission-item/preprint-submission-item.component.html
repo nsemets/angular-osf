@@ -2,14 +2,7 @@
   <osf-icon [class]="reviewStatusIcon[status()].value" [iconClass]="reviewStatusIcon[status()].icon"></osf-icon>
 
   <div>
-    <a
-      class="submission-link font-bold cursor-pointer"
-      (click)="selected.emit()"
-      (keydown)="selected.emit()"
-      tabindex="0"
-    >
-      {{ submission().title }}
-    </a>
+    <p-button class="link-btn-no-padding" link [label]="submission().title" (onClick)="selected.emit()" />
 
     @for (action of showAll ? submission().actions : submission().actions.slice(0, limitValue); track $index) {
       <div class="flex flex-wrap gap-1 mt-2">
