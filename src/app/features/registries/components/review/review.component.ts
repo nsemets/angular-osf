@@ -71,6 +71,7 @@ export class ReviewComponent {
   protected readonly subjects = select(SubjectsSelectors.getSelectedSubjects);
   protected readonly components = select(RegistriesSelectors.getRegistrationComponents);
   protected readonly license = select(RegistriesSelectors.getRegistrationLicense);
+  protected readonly newRegistration = select(RegistriesSelectors.getRegistration);
   private readonly OSF_PROVIDER_ID = 'osf';
 
   protected readonly FieldType = FieldType;
@@ -192,8 +193,7 @@ export class ReviewComponent {
       .onClose.subscribe((res) => {
         if (res) {
           this.toastService.showSuccess('registries.review.confirmation.successMessage');
-          // [NM] TODO: Navigate to the newly created registration page
-          this.router.navigate([`registries/my-registrations`]);
+          this.router.navigate([`registries/${this.newRegistration()?.id}/overview`]);
         } else {
           if (this.components()?.length) {
             this.openSelectComponentsForRegistrationDialog();

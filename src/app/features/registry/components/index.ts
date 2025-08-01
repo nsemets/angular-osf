@@ -1,4 +1,5 @@
 export * from './add-resource-dialog/add-resource-dialog.component';
+export * from './archiving-message/archiving-message.component';
 export * from './edit-resource-dialog/edit-resource-dialog.component';
 export * from './registration-links-card/registration-links-card.component';
 export * from './registry-revisions/registry-revisions.component';

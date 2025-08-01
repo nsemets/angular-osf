@@ -53,6 +53,7 @@ export class OverviewToolbarComponent {
   private translateService = inject(TranslateService);
   private toastService = inject(ToastService);
   protected destroyRef = inject(DestroyRef);
+  isCollectionsRoute = input<boolean>(false);
   protected isPublic = signal(false);
   protected isBookmarked = signal(false);
 

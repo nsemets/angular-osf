@@ -102,6 +102,19 @@ export interface CollectionSubmissionJsonApi {
         };
       };
     };
+    creator?: {
+      data: {
+        attributes: {
+          full_name: string;
+        };
+        id: string;
+      };
+    };
+  };
+  links: {
+    meta: {
+      total: number;
+    };
   };
 }
 
@@ -127,7 +140,7 @@ export interface CollectionDetailsGetResponseJsonApi extends JsonApiResponse<Col
   data: CollectionDetailsResponseJsonApi;
 }
 
-export interface CollectionSubmissionsPayloadJsonApi {
+export interface CollectionSubmissionsSearchPayloadJsonApi {
   data: {
     attributes: {
       provider: string[];
