@@ -10,12 +10,14 @@
 
   <div class="flex flex-column row-gap-4 w-full md:flex-row md:align-items-end md:column-gap-3">
     <div class="w-full md:w-12">
-      <label for="id">{{ label() }}</label>
+      <label for="id">{{ label() | translate }}</label>
 
       <p-inputgroup class="addon-input flex-wrap">
-        <p-inputgroup-addon class="border-1 grey-border-color md:border-0">
-          {{ domain() }}
-        </p-inputgroup-addon>
+        @if (domain()) {
+          <p-inputgroup-addon class="border-1 grey-border-color md:border-0">
+            {{ domain() }}
+          </p-inputgroup-addon>
+        }
 
         <input pInputText [placeholder]="placeholder()" formControlName="webAddress" [maxlength]="socialMaxLength" />
 

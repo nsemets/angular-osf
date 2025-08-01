@@ -1489,11 +1489,22 @@
       },
       "social": {
         "title": "Social Link {{index}}",
-        "remove": "Remove",
-        "socialOutput": "Social output",
-        "webAddress": "Web Address",
-        "addMore": "Add One More",
-        "successUpdate": "Social successfully updated."
+        "successUpdate": "Social successfully updated.",
+        "labels": {
+          "researcherId": "ResearcherID",
+          "orcid": "ORCID",
+          "linkedIn": "LinkedIn",
+          "twitter": "X",
+          "github": "GitHub",
+          "impactStory": "ImpactStory",
+          "scholar": "Google Scholar",
+          "researchGate": "ResearchGate",
+          "baiduScholar": "Baidu Scholar",
+          "ssrn": "SSRN",
+          "profileWebsites": "Your website",
+          "academia": "Academia",
+          "academiaProfileId": "Academia Profile Id"
+        }
       },
       "employment": {
         "title": "Position {{index}}",
