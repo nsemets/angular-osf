@@ -5,8 +5,6 @@ import { Observable } from 'rxjs';
 import { HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
 
-import { environment } from 'src/environments/environment';
-
 export const authInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
   next: HttpHandlerFn
@@ -33,7 +31,8 @@ export const authInterceptor: HttpInterceptorFn = (
     }
 
     // TODO: remove this after the migration to the new auth approach is complete
-    if (token && !environment.production) {
+    // if (token && !environment.production) {
+    if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
