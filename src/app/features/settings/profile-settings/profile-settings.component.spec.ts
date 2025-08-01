@@ -44,9 +44,11 @@ describe('ProfileSettingsComponent', () => {
     expect(fixture.componentInstance['selectedTab']).toBe(newTabIndex);
   });
 
-  it('should display all tab options', () => {
+  it('should display all tab options on medium screens', () => {
+    isMedium.next(true);
+    fixture.detectChanges();
     const tabElements = fixture.debugElement.queryAll(By.css('p-tab'));
-    expect(tabElements.length).toBe(fixture.componentInstance['tabOptions'].length);
+    expect(tabElements.length).toBe(component['tabOptions'].length);
   });
 
   it('should render all tab panels', () => {
