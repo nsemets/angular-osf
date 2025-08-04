@@ -18,6 +18,7 @@
           [currentResource]="toolbarResource()"
           [visibilityToggle]="false"
           [showViewOnlyLinks]="false"
+          [isAdmin]="true"
         />
       </div>
     }
@@ -80,6 +81,7 @@
           <osf-resource-metadata
             [currentResource]="resourceOverview()"
             (customCitationUpdated)="onCustomCitationUpdated($event)"
+            [canWrite]="true"
           />
         </div>
       </div>
