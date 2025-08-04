@@ -1,8 +1,11 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+
 import { DialogService } from 'primeng/dynamicdialog';
 
-import { ChangeDetectionStrategy, Component, computed, HostBinding, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, HostBinding, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { OverviewToolbarComponent } from '@osf/features/project/overview/components';
@@ -15,9 +18,11 @@ import {
 import { ResourceType } from '@osf/shared/enums';
 import { MapRegistryOverview } from '@osf/shared/mappers';
 import { ToolbarResource } from '@osf/shared/models';
+import { ToastService } from '@osf/shared/services';
 import { GetBookmarksCollectionId } from '@shared/stores';
 
 import { ArchivingMessageComponent, RegistryRevisionsComponent, RegistryStatusesComponent } from '../../components';
+import { RegistryMakeDecisionComponent } from '../../components/registry-make-decision/registry-make-decision.component';
 import { MapViewSchemaBlock } from '../../mappers';
 import { RegistrationQuestions } from '../../models';
 import {
@@ -40,6 +45,7 @@ import {
     RegistryStatusesComponent,
     DataResourcesComponent,
     ArchivingMessageComponent,
+    TranslatePipe,
   ],
   templateUrl: './registry-overview.component.html',
   styleUrl: './registry-overview.component.scss',
@@ -48,8 +54,12 @@ import {
 })
 export class RegistryOverviewComponent {
   @HostBinding('class') classes = 'flex-1 flex flex-column w-full h-full';
-  protected readonly route = inject(ActivatedRoute);
+  private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
+  protected readonly toastService = inject(ToastService);
+  protected readonly dialogService = inject(DialogService);
+  protected readonly translateService = inject(TranslateService);
 
   protected readonly registry = select(RegistryOverviewSelectors.getRegistry);
   protected readonly isRegistryLoading = select(RegistryOverviewSelectors.isRegistryLoading);
@@ -131,5 +141,26 @@ export class RegistryOverviewComponent {
 
   onCustomCitationUpdated(citation: string): void {
     this.actions.setCustomCitation(citation);
+  }
+
+  protected handleOpenMakeDecisionDialog() {
+    const dialogWidth = '600px';
+
+    this.dialogService
+      .open(RegistryMakeDecisionComponent, {
+        width: dialogWidth,
+        focusOnShow: false,
+        header: this.translateService.instant('moderation.makeDecision.header'),
+        closeOnEscape: true,
+        modal: true,
+        closable: true,
+        data: this.registry()?.id,
+      })
+      .onClose.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((data) => {
+        if (data && data.action) {
+          this.toastService.showSuccess(`moderation.makeDecision.${data.action}Success`);
+        }
+      });
   }
 }

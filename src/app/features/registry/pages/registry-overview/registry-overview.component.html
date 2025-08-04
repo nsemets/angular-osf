@@ -1,8 +1,17 @@
 @if (!isRegistryLoading() && !isSubjectsLoading() && !isInstitutionsLoading() && !isSchemaBlocksLoading()) {
   <div
-    class="flex flex-column justify-content-center md:flex-row md:gap-4 md:justify-content-between md:align-items-center"
+    class="flex flex-column justify-content-center flex-wrap md:flex-row md:gap-4 md:justify-content-between md:align-items-center"
   >
-    <osf-sub-header [title]="registry()!.title" />
+    <osf-sub-header
+      [title]="registry()!.title"
+      [showButton]="true"
+      [buttonSeverity]="'success'"
+      [buttonLabel]="'moderation.makeDecision.header' | translate"
+      (buttonClick)="handleOpenMakeDecisionDialog()"
+    />
+
+    <!-- <p-button severity="success" [label]="'moderation.makeDecision.header' | translate" (onClick)="handleOpenMakeDecisionDialog()"></p-button> -->
+
     @if (!registry()?.archiving) {
       <div class="pb-5 pl-3 md:pr-5">
         <osf-overview-toolbar

@@ -1,4 +1,5 @@
 import { RegistrationQuestions } from '@osf/features/registry/models';
+import { ReviewActionPayload } from '@osf/shared/models';
 
 export class GetRegistryById {
   static readonly type = '[Registry Overview] Get Registry By Id';
@@ -49,4 +50,16 @@ export class SetRegistryCustomCitation {
   static readonly type = '[Registry Overview] Set Registry Custom Citation';
 
   constructor(public citation: string) {}
+}
+
+export class GetRegistryReviewActions {
+  static readonly type = '[Registry Overview] Get Registry Review Actions';
+
+  constructor(public registryId: string) {}
+}
+
+export class SubmitDecision {
+  static readonly type = '[Registry Overview] Submit Decision';
+
+  constructor(public payload: ReviewActionPayload) {}
 }

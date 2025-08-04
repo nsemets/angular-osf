@@ -3,6 +3,8 @@ import { map, Observable } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { JsonApiService } from '@core/services';
+import { RegistryModerationMapper } from '@osf/features/moderation/mappers';
+import { ReviewAction, ReviewActionsResponseJsonApi } from '@osf/features/moderation/models';
 import { MapRegistryOverview, MapRegistrySchemaBlock } from '@osf/features/registry/mappers';
 import {
   GetRegistryInstitutionsJsonApi,
@@ -15,6 +17,7 @@ import {
   RegistrySchemaBlock,
   RegistrySubject,
 } from '@osf/features/registry/models';
+import { ReviewActionPayload } from '@osf/shared/models';
 
 import { environment } from 'src/environments/environment';
 
@@ -117,5 +120,17 @@ export class RegistryOverviewService {
     return this.jsonApiService
       .patch<RegistryOverviewJsonApiData>(`${environment.apiUrl}/registrations/${registryId}`, payload)
       .pipe(map((response) => MapRegistryOverview(response)));
+  }
+
+  getRegistryReviewActions(id: string): Observable<ReviewAction[]> {
+    const baseUrl = `${environment.apiUrl}/registrations/${id}/actions/`;
+
+    return this.jsonApiService
+      .get<ReviewActionsResponseJsonApi>(baseUrl)
+      .pipe(map((response) => response.data.map((x) => RegistryModerationMapper.fromActionResponse(x))));
+  }
+
+  submitDecision(payload: ReviewActionPayload): Observable<void> {
+    return this.jsonApiService.post<void>(`${environment.apiUrl}/review_action/`, payload);
   }
 }
