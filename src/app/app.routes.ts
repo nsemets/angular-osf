@@ -46,7 +46,7 @@ export const routes: Routes = [
         data: { skipBreadcrumbs: true },
       },
       {
-        path: 'forgot-password',
+        path: 'forgotpassword',
         loadComponent: () =>
           import('./features/auth/pages/forgot-password/forgot-password.component').then(
             (mod) => mod.ForgotPasswordComponent
@@ -54,7 +54,7 @@ export const routes: Routes = [
         data: { skipBreadcrumbs: true },
       },
       {
-        path: 'reset-password',
+        path: 'resetpassword',
         loadComponent: () =>
           import('./features/auth/pages/reset-password/reset-password.component').then(
             (mod) => mod.ResetPasswordComponent

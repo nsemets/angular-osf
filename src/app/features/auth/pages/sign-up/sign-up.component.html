@@ -47,7 +47,7 @@
         <div class="flex flex-column">
           <osf-text-input
             [control]="signUpForm.controls['email2']"
-            [label]="'auth.common.email'"
+            [label]="'auth.common.confirmEmail'"
             [placeholder]="'auth.common.emailPlaceholder'"
             type="email"
             [maxLength]="inputLimits.email.maxLength"
@@ -66,9 +66,7 @@
             autocomplete="new-password"
             styleClass="w-full"
           ></p-password>
-          <osf-password-input-hint
-            [isError]="signUpForm.controls['password'].errors && signUpForm.get('password')?.touched"
-          />
+          <osf-password-input-hint [isError]="isPasswordError" />
         </div>
 
         <div class="flex mt-1">

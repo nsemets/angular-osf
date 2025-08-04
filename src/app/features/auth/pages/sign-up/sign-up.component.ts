@@ -16,9 +16,8 @@ import { RouterLink } from '@angular/router';
 import { RegisterUser } from '@osf/features/auth/store';
 import { PasswordInputHintComponent, TextInputComponent } from '@osf/shared/components';
 import { InputLimits } from '@osf/shared/constants';
-import { CustomValidators } from '@osf/shared/utils';
+import { CustomValidators, PASSWORD_REGEX } from '@osf/shared/utils';
 
-import { PASSWORD_REGEX } from '../../helpers';
 import { SignUpForm, SignUpModel } from '../../models';
 
 @Component({
@@ -50,6 +49,10 @@ export class SignUpComponent implements OnInit {
   actions = createDispatchMap({ registerUser: RegisterUser });
 
   readonly siteKey = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
+
+  get isPasswordError() {
+    return this.signUpForm.controls['password'].errors && this.signUpForm.get('password')?.touched;
+  }
 
   ngOnInit(): void {
     this.initializeForm();
