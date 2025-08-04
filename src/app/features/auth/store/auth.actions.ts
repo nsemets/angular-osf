@@ -5,3 +5,19 @@ export class RegisterUser {
 
   constructor(public payload: SignUpModel) {}
 }
+
+export class ForgotPassword {
+  static readonly type = '[Auth] Forgot password';
+
+  constructor(public email: string) {}
+}
+
+export class ResetPassword {
+  static readonly type = '[Auth] Reset Password';
+
+  constructor(
+    public userId: string,
+    public token: string,
+    public newPassword: string
+  ) {}
+}

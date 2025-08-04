@@ -1,3 +1,5 @@
+import { createDispatchMap } from '@ngxs/store';
+
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
@@ -6,12 +8,13 @@ import { Password } from 'primeng/password';
 
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { CustomValidators, PASSWORD_REGEX } from '@osf/shared/utils';
 import { PasswordInputHintComponent } from '@shared/components';
 
 import { ResetPasswordFormGroupType } from '../../models';
+import { ResetPassword } from '../../store';
 
 @Component({
   selector: 'osf-reset-password',
@@ -21,6 +24,8 @@ import { ResetPasswordFormGroupType } from '../../models';
 })
 export class ResetPasswordComponent {
   private readonly fb = inject(FormBuilder);
+  private readonly route = inject(ActivatedRoute);
+  private readonly actions = createDispatchMap({ resetPassword: ResetPassword });
 
   isFormSubmitted = signal(false);
   passwordRegex = PASSWORD_REGEX;
@@ -52,6 +57,12 @@ export class ResetPasswordComponent {
       return;
     }
 
-    this.isFormSubmitted.set(true);
+    const userId = this.route.snapshot.params['userId'];
+    const token = this.route.snapshot.params['token'];
+    const newPassword = this.resetPasswordForm.getRawValue().newPassword;
+
+    this.actions.resetPassword(userId, token, newPassword).subscribe(() => {
+      this.isFormSubmitted.set(true);
+    });
   }
 }

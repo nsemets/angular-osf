@@ -54,7 +54,7 @@ export const routes: Routes = [
         data: { skipBreadcrumbs: true },
       },
       {
-        path: 'resetpassword',
+        path: 'resetpassword/:userId/:token',
         loadComponent: () =>
           import('./features/auth/pages/reset-password/reset-password.component').then(
             (mod) => mod.ResetPasswordComponent

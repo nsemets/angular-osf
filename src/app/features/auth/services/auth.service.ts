@@ -21,4 +21,26 @@ export class AuthService {
 
     return this.jsonApiService.post(baseUrl, body);
   }
+
+  forgotPassword(email: string) {
+    const baseUrl = `${environment.apiUrl}/users/reset_password/`;
+    const params: Record<string, string> = { email };
+
+    return this.jsonApiService.get(baseUrl, params);
+  }
+
+  resetPassword(userId: string, token: string, newPassword: string) {
+    const baseUrl = `${environment.apiUrl}/users/reset_password/`;
+    const body = {
+      data: {
+        attributes: {
+          uid: userId,
+          token,
+          new_password: newPassword,
+        },
+      },
+    };
+
+    return this.jsonApiService.post(baseUrl, body);
+  }
 }
