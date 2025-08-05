@@ -1,4 +1,3 @@
-import { AuthState } from '@core/store/auth';
 import { ProviderState } from '@core/store/provider';
 import { UserState } from '@core/store/user';
 import { MeetingsState } from '@osf/features/meetings/store';
@@ -15,7 +14,6 @@ import { RegionsState } from '@shared/stores/regions';
 import { MyResourcesState } from 'src/app/shared/stores/my-resources';
 
 export const STATES = [
-  AuthState,
   AddonsState,
   UserState,
   ProviderState,
