@@ -1,4 +1,15 @@
+import { Store } from '@ngxs/store';
+
+import { TranslatePipe } from '@ngx-translate/core';
+import { MockPipes, MockProvider } from 'ng-mocks';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
+
+import { PreprintProvidersSelectors } from '@osf/features/preprints/store/preprint-providers';
+import { PreprintStepperSelectors } from '@osf/features/preprints/store/preprint-stepper';
+import { MOCK_STORE, TranslateServiceMock } from '@shared/mocks';
+import { DecodeHtmlPipe } from '@shared/pipes';
 
 import { SelectPreprintServiceComponent } from './select-preprint-service.component';
 
@@ -7,8 +18,22 @@ describe('SelectPreprintServiceComponent', () => {
   let fixture: ComponentFixture<SelectPreprintServiceComponent>;
 
   beforeEach(async () => {
+    (MOCK_STORE.selectSignal as jest.Mock).mockImplementation((selector) => {
+      switch (selector) {
+        case PreprintProvidersSelectors.getPreprintProvidersAllowingSubmissions:
+          return () => [];
+        case PreprintProvidersSelectors.arePreprintProvidersAllowingSubmissionsLoading:
+          return () => false;
+        case PreprintStepperSelectors.getSelectedProviderId:
+          return () => null;
+        default:
+          return () => [];
+      }
+    });
+
     await TestBed.configureTestingModule({
-      imports: [SelectPreprintServiceComponent],
+      imports: [SelectPreprintServiceComponent, MockPipes(TranslatePipe, DecodeHtmlPipe)],
+      providers: [MockProvider(Store, MOCK_STORE), TranslateServiceMock, MockProvider(Router)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SelectPreprintServiceComponent);
