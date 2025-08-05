@@ -4,6 +4,8 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { DialogService } from 'primeng/dynamicdialog';
 
+import { filter, map, switchMap, tap } from 'rxjs';
+
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, HostBinding, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -15,7 +17,7 @@ import {
   ResourceMetadataComponent,
   SubHeaderComponent,
 } from '@osf/shared/components';
-import { ResourceType } from '@osf/shared/enums';
+import { ResourceType, UserPermissions } from '@osf/shared/enums';
 import { MapRegistryOverview } from '@osf/shared/mappers';
 import { ToolbarResource } from '@osf/shared/models';
 import { ToastService } from '@osf/shared/services';
@@ -28,6 +30,7 @@ import { RegistrationQuestions } from '../../models';
 import {
   GetRegistryById,
   GetRegistryInstitutions,
+  GetRegistryReviewActions,
   GetRegistrySubjects,
   RegistryOverviewSelectors,
   SetRegistryCustomCitation,
@@ -69,6 +72,7 @@ export class RegistryOverviewComponent {
   protected readonly isInstitutionsLoading = select(RegistryOverviewSelectors.isInstitutionsLoading);
   protected readonly schemaBlocks = select(RegistryOverviewSelectors.getSchemaBlocks);
   protected readonly isSchemaBlocksLoading = select(RegistryOverviewSelectors.isSchemaBlocksLoading);
+  protected areReviewActionsLoading = select(RegistryOverviewSelectors.areReviewActionsLoading);
 
   protected readonly resourceOverview = computed(() => {
     const registry = this.registry();
@@ -117,7 +121,18 @@ export class RegistryOverviewComponent {
     getSubjects: GetRegistrySubjects,
     getInstitutions: GetRegistryInstitutions,
     setCustomCitation: SetRegistryCustomCitation,
+    getRegistryReviewActions: GetRegistryReviewActions,
   });
+
+  isModeration = this.route.snapshot.queryParamMap.get('mode') === 'moderator';
+  revisionId: string | null = null;
+  protected userPermissions = computed(() => {
+    return this.registry()?.currentUserPermissions || [];
+  });
+
+  get isAdmin(): boolean {
+    return this.userPermissions().includes(UserPermissions.Admin);
+  }
 
   constructor() {
     this.route.parent?.params.subscribe((params) => {
@@ -129,6 +144,19 @@ export class RegistryOverviewComponent {
       }
     });
     this.actions.getBookmarksId();
+    this.route.queryParams
+      .pipe(
+        takeUntilDestroyed(),
+        map((params) => params['revisionId']),
+        filter((revisionId) => revisionId),
+        tap((revisionId) => {
+          this.revisionId = revisionId;
+        })
+        // [NM] TODO: add logic to handle revisionId
+        // switchMap((revisionId) => {
+        // })
+      )
+      .subscribe();
   }
 
   navigateToFile(fileId: string): void {
@@ -145,21 +173,36 @@ export class RegistryOverviewComponent {
 
   protected handleOpenMakeDecisionDialog() {
     const dialogWidth = '600px';
-
-    this.dialogService
-      .open(RegistryMakeDecisionComponent, {
-        width: dialogWidth,
-        focusOnShow: false,
-        header: this.translateService.instant('moderation.makeDecision.header'),
-        closeOnEscape: true,
-        modal: true,
-        closable: true,
-        data: this.registry()?.id,
-      })
-      .onClose.pipe(takeUntilDestroyed(this.destroyRef))
+    this.actions
+      .getRegistryReviewActions(this.registry()?.id || '')
+      .pipe(
+        switchMap(() =>
+          this.dialogService
+            .open(RegistryMakeDecisionComponent, {
+              width: dialogWidth,
+              focusOnShow: false,
+              header: this.translateService.instant('moderation.makeDecision.header'),
+              closeOnEscape: true,
+              modal: true,
+              closable: true,
+              data: {
+                registry: this.registry(),
+                revisionId: this.revisionId,
+              },
+            })
+            .onClose.pipe(takeUntilDestroyed(this.destroyRef))
+        )
+      )
       .subscribe((data) => {
-        if (data && data.action) {
-          this.toastService.showSuccess(`moderation.makeDecision.${data.action}Success`);
+        if (data) {
+          if (data.action) {
+            this.toastService.showSuccess(`moderation.makeDecision.${data.action}Success`);
+          }
+          const currentUrl = this.router.url.split('?')[0];
+          this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+            this.router.navigateByUrl(currentUrl);
+          });
+          // this.actions.getRegistryById(this.registry()?.id || '');
         }
       });
   }

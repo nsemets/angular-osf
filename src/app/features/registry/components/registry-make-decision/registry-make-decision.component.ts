@@ -7,18 +7,27 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { RadioButton } from 'primeng/radiobutton';
 import { Textarea } from 'primeng/textarea';
 
+import { tap } from 'rxjs';
+
+import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { SubmissionReviewStatus } from '@osf/features/moderation/enums';
-import { ModerationDecisionFormControls, ModerationSubmitType } from '@osf/shared/enums';
+import {
+  ModerationDecisionFormControls,
+  RegistrationReviewStates,
+  RevisionReviewStates,
+  TriggerAction,
+} from '@osf/shared/enums';
 import { DateAgoPipe } from '@osf/shared/pipes';
 
-import { GetRegistryReviewActions, RegistryOverviewSelectors, SubmitDecision } from '../../store/registry-overview';
+import { RegistryOverview } from '../../models';
+import { RegistryOverviewSelectors, SubmitDecision } from '../../store/registry-overview';
 
 @Component({
   selector: 'osf-registry-make-decision',
-  imports: [Button, TranslatePipe, DateAgoPipe, FormsModule, RadioButton, ReactiveFormsModule, Textarea],
+  imports: [Button, TranslatePipe, DateAgoPipe, FormsModule, RadioButton, ReactiveFormsModule, Textarea, DatePipe],
   templateUrl: './registry-make-decision.component.html',
   styleUrl: './registry-make-decision.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,27 +37,49 @@ export class RegistryMakeDecisionComponent implements OnInit {
   protected readonly config = inject(DynamicDialogConfig);
   protected readonly dialogRef = inject(DynamicDialogRef);
 
-  protected readonly ModerationSubmitType = ModerationSubmitType;
+  protected readonly TriggerAction = TriggerAction;
   protected readonly SubmissionReviewStatus = SubmissionReviewStatus;
   protected readonly ModerationDecisionFormControls = ModerationDecisionFormControls;
   protected reviewActions = select(RegistryOverviewSelectors.getReviewActions);
 
-  protected isLoading = select(RegistryOverviewSelectors.areReviewActionsLoading);
   protected isSubmitting = select(RegistryOverviewSelectors.isReviewActionSubmitting);
   protected requestForm!: FormGroup;
 
   protected actions = createDispatchMap({
-    getRegistryReviewActions: GetRegistryReviewActions,
     submitDecision: SubmitDecision,
   });
 
+  registry = this.config.data.registry as RegistryOverview;
+  embargoEndDate = this.registry.embargoEndDate;
+
+  RevisionReviewStates = RevisionReviewStates;
+  RegistrationReviewStates = RegistrationReviewStates;
+
+  get isPendingModeration(): boolean {
+    return this.registry.revisionStatus === RevisionReviewStates.RevisionPendingModeration;
+  }
+
+  get isPendingReview(): boolean {
+    return this.registry.reviewsState === RegistrationReviewStates.Pending;
+  }
+
   ngOnInit() {
-    this.actions.getRegistryReviewActions(this.config.data);
     this.initForm();
   }
 
   protected handleSubmission(): void {
-    console.log('Submit');
+    const revisionId = this.config.data.revisionId;
+    this.actions
+      .submitDecision(
+        {
+          targetId: revisionId ? revisionId : this.registry.id,
+          action: this.requestForm.value[ModerationDecisionFormControls.Action],
+          comment: this.requestForm.value[ModerationDecisionFormControls.Comment],
+        },
+        !!revisionId
+      )
+      .pipe(tap(() => this.dialogRef.close(this.requestForm.value)))
+      .subscribe();
   }
 
   private initForm(): void {

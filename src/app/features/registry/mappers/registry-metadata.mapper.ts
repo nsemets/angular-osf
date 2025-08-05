@@ -120,6 +120,7 @@ export class RegistryMetadataMapper {
       currentUserIsModerator: ReviewPermissionsMapper.fromProviderResponse(
         (embeds['contributors'] as Record<string, unknown>)['data'] as ProviderDataJsonApi
       ),
+      embargoEndDate: attributes['embargo_end_date'] as string,
     } as RegistryOverview;
   }
 

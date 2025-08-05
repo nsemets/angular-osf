@@ -1183,15 +1183,21 @@
       "requestSubmitted": "Request submitted",
       "acceptRequest": "Accept request",
       "rejectRequest": "Reject request",
+      "acceptUpdate": "Accept update",
+      "rejectUpdate": "Reject update",
       "withdrawRequest": "Withdraw Request",
       "acceptRequestMessage": "Submission will appear in search results and will be associated with the collection.",
       "rejectRequestMessage": "Submission will not appear in search results nor will be associated with the collection.",
+      "acceptUpdateMessage": "Update will be accepted and registration will be updated",
+      "rejectUpdateMessage": "Update will be rejected and registration will remain unchanged",
       "withdrawRequestMessage": "Submission will be withdrawn from the collection and will no longer appear in search results.",
-      "remarksPlaceholder": "Add remarks to project admins (optional)",
+      "remarksPlaceholder": "Add remarks to registration admins (optional)",
       "submitDecision": "Submit decision",
       "goBackLink": "< Back to list of submissions",
       "acceptSuccess": "Submission has been accepted successfully",
       "rejectSuccess": "Submission has been rejected successfully",
+      "acceptSubmissionSuccess": "Submission has been accepted successfully",
+      "rejectSubmissionSuccess": "Submission has been rejected successfully",
       "removeSuccess": "Submission has been withdrawn successfully"
     },
     "submissionReview": {
@@ -1200,7 +1206,8 @@
       "rejected": "Rejected",
       "requested": "Requested",
       "withdrawn": "Withdrawn",
-      "by": "by"
+      "by": "by",
+      "embargoEnding": "with embargo ending"
     },
     "preprintReviewStatus": {
       "submitted": "submitted a preprint \"{{name}}\" to",

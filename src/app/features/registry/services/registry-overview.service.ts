@@ -17,7 +17,8 @@ import {
   RegistrySchemaBlock,
   RegistrySubject,
 } from '@osf/features/registry/models';
-import { ReviewActionPayload } from '@osf/shared/models';
+import { ReviewActionsMapper } from '@osf/shared/mappers';
+import { ReviewActionPayload } from '@osf/shared/models/review-action';
 
 import { environment } from 'src/environments/environment';
 
@@ -130,7 +131,14 @@ export class RegistryOverviewService {
       .pipe(map((response) => response.data.map((x) => RegistryModerationMapper.fromActionResponse(x))));
   }
 
-  submitDecision(payload: ReviewActionPayload): Observable<void> {
-    return this.jsonApiService.post<void>(`${environment.apiUrl}/review_action/`, payload);
+  submitDecision(payload: ReviewActionPayload, isRevision: boolean): Observable<void> {
+    const path = isRevision ? 'schema_responses' : 'registrations';
+    const baseUrl = `${environment.apiUrl}/${path}/${payload.targetId}/actions/`;
+
+    const actionType = isRevision ? 'schema_response_actions' : 'review_actions';
+    const targetType = isRevision ? 'schema-responses' : 'registrations';
+
+    const params = ReviewActionsMapper.toReviewActionPayloadJsonApi(payload, actionType, targetType);
+    return this.jsonApiService.post<void>(`${baseUrl}`, params);
   }
 }

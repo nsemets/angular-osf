@@ -66,5 +66,6 @@ export interface RegistryOverview {
     files: string;
   };
   archiving: boolean;
+  embargoEndDate: string;
   currentUserIsModerator: boolean;
 }

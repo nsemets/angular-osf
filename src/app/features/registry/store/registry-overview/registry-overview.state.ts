@@ -248,17 +248,18 @@ export class RegistryOverviewState {
       moderationActions: {
         data: [],
         isLoading: true,
-        isSubmitting: false,
+        isSubmitting: true,
         error: null,
       },
     });
 
-    return this.registryOverviewService.submitDecision(action.payload).pipe(
+    return this.registryOverviewService.submitDecision(action.payload, action.isRevision).pipe(
       tap(() => {
         ctx.patchState({
           moderationActions: {
             data: [],
             isLoading: false,
+            isSubmitting: false,
             error: null,
           },
         });
