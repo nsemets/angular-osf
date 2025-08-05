@@ -10,5 +10,6 @@ export * from './node-links';
 export * from './registry';
 export * from './resource-card';
 export * from './resource-overview.mappers';
+export * from './review-permissions.mapper';
 export * from './subjects';
 export * from './view-only-links.mapper';

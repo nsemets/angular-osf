@@ -6,6 +6,8 @@ import { catchError } from 'rxjs/operators';
 import { inject, Injectable } from '@angular/core';
 
 import { handleSectionError } from '@osf/core/handlers';
+import { SetCurrentProvider } from '@osf/core/store/provider/provider.actions';
+import { SetUserAsModerator } from '@osf/core/store/user';
 
 import { RegistryOverviewService } from '../../services';
 
@@ -43,6 +45,12 @@ export class RegistryOverviewState {
     return this.registryOverviewService.getRegistrationById(action.id).pipe(
       tap({
         next: (registryOverview) => {
+          if (registryOverview?.currentUserIsModerator) {
+            ctx.dispatch(new SetUserAsModerator());
+          }
+          if (registryOverview?.provider) {
+            ctx.dispatch(new SetCurrentProvider(registryOverview.provider));
+          }
           ctx.patchState({
             registry: {
               data: registryOverview,

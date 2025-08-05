@@ -1,4 +1,5 @@
 import { AuthState } from '@core/store/auth';
+import { ProviderState } from '@core/store/provider';
 import { UserState } from '@core/store/user';
 import { MeetingsState } from '@osf/features/meetings/store';
 import { ProjectMetadataState } from '@osf/features/project/metadata/store';
@@ -17,6 +18,7 @@ export const STATES = [
   AuthState,
   AddonsState,
   UserState,
+  ProviderState,
   MyResourcesState,
   InstitutionsState,
   DeveloperAppsState,

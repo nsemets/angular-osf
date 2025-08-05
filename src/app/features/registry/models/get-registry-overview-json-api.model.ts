@@ -1,4 +1,5 @@
 import { ApiData, JsonApiResponse } from '@core/models';
+import { ProviderDataJsonApi } from '@osf/shared/models';
 import { RegistrationReviewStates, RevisionReviewStates } from '@shared/enums';
 
 export type GetRegistryOverviewJsonApi = JsonApiResponse<RegistryOverviewJsonApiData, null>;
@@ -116,13 +117,7 @@ export interface RegistryOverviewJsonApiEmbed {
       };
     }[];
   };
-  provider: {
-    data: {
-      attributes: {
-        name: string;
-      };
-    };
-  };
+  provider: { data: ProviderDataJsonApi };
 }
 
 export interface RegistryOverviewJsonApiRelationships {
