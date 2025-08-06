@@ -1,6 +1,8 @@
 module.exports = {
   preset: 'jest-preset-angular',
   setupFilesAfterEnv: ['<rootDir>/setup-jest.ts'],
+  collectCoverage: true,
+  coverageReporters: ['json-summary', 'lcov', 'clover'],
   moduleNameMapper: {
     '^@osf/(.*)$': '<rootDir>/src/app/$1',
     '^@core/(.*)$': '<rootDir>/src/app/core/$1',
@@ -32,10 +34,10 @@ module.exports = {
   extensionsToTreatAsEsm: ['.ts'],
   coverageThreshold: {
     global: {
-      statements: 37.83,
       branches: 11.89,
       functions: 12.12,
       lines: 37.27,
+      statements: 37.83,
     },
   },
   testPathIgnorePatterns: [
