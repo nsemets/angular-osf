@@ -1,7 +1,9 @@
+import { select } from '@ngxs/store';
+
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AuthService } from '../auth/services';
+import { AuthSelectors } from '../auth/store';
 
 @Component({
   selector: 'osf-home',
@@ -10,11 +12,11 @@ import { AuthService } from '../auth/services';
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {
-  private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly isAuthenticated = select(AuthSelectors.isAuthenticated);
 
   ngOnInit(): void {
-    if (this.authService.isAuthenticated()) {
+    if (this.isAuthenticated()) {
       this.router.navigate(['/dashboard']);
     } else {
       this.router.navigate(['/home']);
