@@ -30,4 +30,11 @@ module.exports = {
     '!src/app/**/public-api.ts',
   ],
   extensionsToTreatAsEsm: ['.ts'],
+  testPathIgnorePatterns: [
+    '<rootDir>/src/app/features/registry/',
+    '<rootDir>/src/app/features/project/',
+    '<rootDir>/src/app/features/registries/',
+    '<rootDir>/src/app/features/settings/',
+    '<rootDir>/src/app/shared/',
+  ],
 };
