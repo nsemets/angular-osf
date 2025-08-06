@@ -68,4 +68,7 @@ export interface RegistryOverview {
   archiving: boolean;
   embargoEndDate: string;
   currentUserIsModerator: boolean;
+  withdrawn: boolean;
+  withdrawalJustification?: string;
+  dateWithdrawn: string | null;
 }

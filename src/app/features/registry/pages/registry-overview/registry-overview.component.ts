@@ -11,6 +11,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { OverviewToolbarComponent } from '@osf/features/project/overview/components';
+import { CreateSchemaResponse, FetchAllSchemaResponses, RegistriesSelectors } from '@osf/features/registries/store';
 import {
   DataResourcesComponent,
   LoadingSpinnerComponent,
@@ -25,6 +26,7 @@ import { GetBookmarksCollectionId } from '@shared/stores';
 
 import { ArchivingMessageComponent, RegistryRevisionsComponent, RegistryStatusesComponent } from '../../components';
 import { RegistryMakeDecisionComponent } from '../../components/registry-make-decision/registry-make-decision.component';
+import { WithdrawnMessageComponent } from '../../components/withdrawn-message/withdrawn-message.component';
 import { MapViewSchemaBlock } from '../../mappers';
 import { RegistrationQuestions } from '../../models';
 import {
@@ -49,6 +51,7 @@ import {
     DataResourcesComponent,
     ArchivingMessageComponent,
     TranslatePipe,
+    WithdrawnMessageComponent,
   ],
   templateUrl: './registry-overview.component.html',
   styleUrl: './registry-overview.component.scss',
@@ -73,6 +76,7 @@ export class RegistryOverviewComponent {
   protected readonly schemaBlocks = select(RegistryOverviewSelectors.getSchemaBlocks);
   protected readonly isSchemaBlocksLoading = select(RegistryOverviewSelectors.isSchemaBlocksLoading);
   protected areReviewActionsLoading = select(RegistryOverviewSelectors.areReviewActionsLoading);
+  protected schemaResponse = select(RegistriesSelectors.getSchemaResponse);
 
   protected readonly resourceOverview = computed(() => {
     const registry = this.registry();
@@ -122,6 +126,8 @@ export class RegistryOverviewComponent {
     getInstitutions: GetRegistryInstitutions,
     setCustomCitation: SetRegistryCustomCitation,
     getRegistryReviewActions: GetRegistryReviewActions,
+    getSchemaResponse: FetchAllSchemaResponses,
+    createSchemaResponse: CreateSchemaResponse,
   });
 
   isModeration = this.route.snapshot.queryParamMap.get('mode') === 'moderator';
@@ -169,6 +175,42 @@ export class RegistryOverviewComponent {
 
   onCustomCitationUpdated(citation: string): void {
     this.actions.setCustomCitation(citation);
+  }
+
+  onUpdateRegistration(id: string): void {
+    this.actions
+      .createSchemaResponse(id)
+      .pipe(
+        tap(() => {
+          this.navigateToJustificationPage();
+        })
+      )
+      .subscribe();
+  }
+
+  onContinueUpdateRegistration({ id, unapproved }: { id: string; unapproved: boolean }): void {
+    this.actions
+      .getSchemaResponse(id)
+      .pipe(
+        tap(() => {
+          if (unapproved) {
+            this.navigateToJustificationReview();
+          } else {
+            this.navigateToJustificationPage();
+          }
+        })
+      )
+      .subscribe();
+  }
+
+  private navigateToJustificationPage(): void {
+    const revisionId = this.revisionId || this.schemaResponse()?.id;
+    this.router.navigate([`/registries/revisions/${revisionId}/justification`]);
+  }
+
+  private navigateToJustificationReview(): void {
+    const revisionId = this.revisionId || this.schemaResponse()?.id;
+    this.router.navigate([`/registries/revisions/${revisionId}/review`]);
   }
 
   protected handleOpenMakeDecisionDialog() {

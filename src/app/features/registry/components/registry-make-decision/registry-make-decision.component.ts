@@ -4,6 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { Message } from 'primeng/message';
 import { RadioButton } from 'primeng/radiobutton';
 import { Textarea } from 'primeng/textarea';
 
@@ -14,6 +15,7 @@ import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/cor
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { SubmissionReviewStatus } from '@osf/features/moderation/enums';
+import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants';
 import {
   ModerationDecisionFormControls,
   RegistrationReviewStates,
@@ -27,7 +29,17 @@ import { RegistryOverviewSelectors, SubmitDecision } from '../../store/registry-
 
 @Component({
   selector: 'osf-registry-make-decision',
-  imports: [Button, TranslatePipe, DateAgoPipe, FormsModule, RadioButton, ReactiveFormsModule, Textarea, DatePipe],
+  imports: [
+    Button,
+    TranslatePipe,
+    DateAgoPipe,
+    FormsModule,
+    RadioButton,
+    ReactiveFormsModule,
+    Textarea,
+    DatePipe,
+    Message,
+  ],
   templateUrl: './registry-make-decision.component.html',
   styleUrl: './registry-make-decision.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -55,12 +67,28 @@ export class RegistryMakeDecisionComponent implements OnInit {
   RevisionReviewStates = RevisionReviewStates;
   RegistrationReviewStates = RegistrationReviewStates;
 
+  readonly INPUT_VALIDATION_MESSAGES = INPUT_VALIDATION_MESSAGES;
+
   get isPendingModeration(): boolean {
     return this.registry.revisionStatus === RevisionReviewStates.RevisionPendingModeration;
   }
 
   get isPendingReview(): boolean {
     return this.registry.reviewsState === RegistrationReviewStates.Pending;
+  }
+
+  get canWithdraw(): boolean {
+    return (
+      this.registry.reviewsState === RegistrationReviewStates.Accepted &&
+      this.registry.revisionStatus === RevisionReviewStates.Approved
+    );
+  }
+  get isCommentInvalid(): boolean {
+    return (
+      this.requestForm.controls[ModerationDecisionFormControls.Comment].errors?.['required'] &&
+      (this.requestForm.controls[ModerationDecisionFormControls.Comment].touched ||
+        this.requestForm.controls[ModerationDecisionFormControls.Comment].dirty)
+    );
   }
 
   ngOnInit() {
@@ -83,9 +111,11 @@ export class RegistryMakeDecisionComponent implements OnInit {
   }
 
   private initForm(): void {
+    const commentValidators = this.canWithdraw ? [Validators.required] : [];
+
     this.requestForm = this.fb.group({
       [ModerationDecisionFormControls.Action]: new FormControl('', [Validators.required]),
-      [ModerationDecisionFormControls.Comment]: new FormControl(''),
+      [ModerationDecisionFormControls.Comment]: new FormControl('', commentValidators),
     });
   }
 }

@@ -75,5 +75,8 @@ export function MapRegistryOverview(data: RegistryOverviewJsonApiData): Registry
     },
     archiving: data.attributes.archiving,
     currentUserIsModerator: ReviewPermissionsMapper.fromProviderResponse(data.embeds?.provider.data),
+    withdrawn: data.attributes.withdrawn || false,
+    withdrawalJustification: data.attributes.withdrawal_justification,
+    dateWithdrawn: data.attributes.date_withdrawn || null,
   } as RegistryOverview;
 }

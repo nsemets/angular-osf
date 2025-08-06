@@ -121,6 +121,9 @@ export class RegistryMetadataMapper {
         (embeds['contributors'] as Record<string, unknown>)['data'] as ProviderDataJsonApi
       ),
       embargoEndDate: attributes['embargo_end_date'] as string,
+      withdrawn: attributes['withdrawn'] as boolean,
+      withdrawalJustification: attributes['withdrawal_justification'] as string | undefined,
+      dateWithdrawn: attributes['date_withdrawn'] as string | null,
     } as RegistryOverview;
   }
 

@@ -84,6 +84,11 @@ export const registriesRoutes: Routes = [
           import('./pages/justification/justification.component').then((mod) => mod.JustificationComponent),
         children: [
           {
+            path: ':id',
+            redirectTo: ':id/review',
+            pathMatch: 'full',
+          },
+          {
             path: ':id/justification',
             loadComponent: () =>
               import('./components/justification-step/justification-step.component').then(

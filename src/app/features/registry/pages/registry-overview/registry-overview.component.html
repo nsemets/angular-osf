@@ -11,7 +11,7 @@
       (buttonClick)="handleOpenMakeDecisionDialog()"
     />
 
-    @if (!registry()?.archiving) {
+    @if (!registry()?.archiving && !registry()?.withdrawn) {
       <div class="pb-5 pl-4 ml-auto w-full md:pr-4">
         <osf-overview-toolbar [currentResource]="toolbarResource()" [showViewOnlyLinks]="false" [isAdmin]="true" />
       </div>
@@ -20,6 +20,10 @@
   @if (registry()?.archiving) {
     <div class="flex flex-column bg-white flex-1 p-4 gap-4">
       <osf-archiving-message [registration]="registry()!"></osf-archiving-message>
+    </div>
+  } @else if (registry()?.withdrawn) {
+    <div class="flex flex-column bg-white flex-1 p-4 gap-4">
+      <osf-withdrawn-message [registration]="registry()!"></osf-withdrawn-message>
     </div>
   } @else {
     <div class="flex flex-column bg-white flex-1 p-4 gap-4">
@@ -40,6 +44,8 @@
               [registry]="registry()"
               [selectedRevisionIndex]="selectedRevisionIndex()"
               (openRevision)="openRevision($event)"
+              (updateRegistration)="onUpdateRegistration($event)"
+              (continueUpdate)="onContinueUpdateRegistration($event)"
             >
             </osf-registry-revisions>
           </div>
