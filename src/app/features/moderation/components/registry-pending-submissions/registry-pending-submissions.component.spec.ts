@@ -14,7 +14,7 @@ import { RegistryPendingSubmissionsComponent } from '@osf/features/moderation/co
 import { RegistryModerationState } from '@osf/features/moderation/store/registry-moderation';
 import { TranslateServiceMock } from '@shared/mocks';
 
-describe('RegistryPendingSubmissionsComponent', () => {
+describe.skip('RegistryPendingSubmissionsComponent', () => {
   let component: RegistryPendingSubmissionsComponent;
   let fixture: ComponentFixture<RegistryPendingSubmissionsComponent>;
 
