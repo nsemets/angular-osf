@@ -9,7 +9,8 @@ import { Component, computed, effect, inject, output } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 
-import { MENU_ITEMS, PROJECT_MENU_ITEMS, REGISTRATION_MENU_ITEMS } from '@core/constants';
+import { PROJECT_MENU_ITEMS, REGISTRATION_MENU_ITEMS } from '@core/constants';
+import { NavigationService } from '@core/services';
 import { IconComponent } from '@osf/shared/components';
 
 @Component({
@@ -23,14 +24,17 @@ export class NavMenuComponent {
 
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly navigationService = inject(NavigationService);
 
-  protected menuItems = MENU_ITEMS;
+  protected menuItems = this.navigationService.getFilteredMenuItems();
   protected readonly myProjectMenuItems = PROJECT_MENU_ITEMS;
   protected readonly registrationMenuItems = REGISTRATION_MENU_ITEMS;
 
-  protected readonly mainMenuItems = computed(() =>
-    this.isCollectionsRoute() ? this.menuItems : this.menuItems.filter((item) => item.routerLink !== '/collections')
-  );
+  protected readonly mainMenuItems = computed(() => {
+    return this.isCollectionsRoute()
+      ? this.menuItems
+      : this.menuItems.filter((item) => item.routerLink !== '/collections');
+  });
 
   protected readonly currentRoute = toSignal(
     this.router.events.pipe(

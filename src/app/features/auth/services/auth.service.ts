@@ -1,4 +1,5 @@
-import { HttpClient } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
+
 import { inject, Injectable } from '@angular/core';
 
 import { JsonApiService } from '@osf/core/services';
@@ -12,8 +13,16 @@ import { environment } from 'src/environments/environment';
 })
 export class AuthService {
   private readonly jsonApiService = inject(JsonApiService);
+  private readonly cookieService = inject(CookieService);
 
-  readonly http: HttpClient = inject(HttpClient);
+  isAuthenticated(): boolean {
+    const csrfToken = this.cookieService.get('api-csrf');
+    return !!csrfToken;
+  }
+
+  logout(): void {
+    this.cookieService.deleteAll();
+  }
 
   register(payload: SignUpModel) {
     const baseUrl = `${environment.apiUrlV1}/register/`;

@@ -26,14 +26,9 @@ export const authInterceptor: HttpInterceptorFn = (
       Accept: req.responseType === 'text' ? '*/*' : 'application/vnd.api+json',
       'Content-Type': 'application/vnd.api+json',
     };
+
     if (csrfToken) {
       headers['X-CSRFToken'] = csrfToken;
-    }
-
-    // TODO: remove this after the migration to the new auth approach is complete
-    // if (token && !environment.production) {
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
     }
 
     const authReq = req.clone({
@@ -45,6 +40,4 @@ export const authInterceptor: HttpInterceptorFn = (
   } else {
     return next(req);
   }
-
-  return next(req);
 };

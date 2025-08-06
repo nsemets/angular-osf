@@ -80,3 +80,17 @@ export interface UserNamesJsonApi {
   middle_names: string;
   suffix: string;
 }
+
+export interface UserDataResponseJsonApi {
+  meta: {
+    active_flags: string[];
+    current_user: {
+      data: UserGetResponse | null;
+    };
+  };
+}
+
+export interface UserData {
+  activeFlags: string[];
+  currentUser: User | null;
+}

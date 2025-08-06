@@ -8,7 +8,12 @@
       <p class="mt-3" [innerHTML]="'home.loggedOut.hero.subtitle' | translate"></p>
 
       <div class="flex justify-content-center mt-4 w-6 xl:w-auto">
-        <p-button class="btn-full-width" [label]="'home.loggedOut.hero.signUp' | translate" severity="success" />
+        <p-button
+          class="btn-full-width"
+          [label]="'home.loggedOut.hero.signUp' | translate"
+          severity="success"
+          [routerLink]="['/register']"
+        />
       </div>
     </div>
 
@@ -32,7 +37,11 @@
     </div>
 
     <div class="w-full mt-4">
-      <osf-search-input [placeholder]="'home.loggedOut.discover.searchPlaceholder' | translate" />
+      <osf-search-input
+        [control]="searchControl"
+        [placeholder]="'home.loggedOut.discover.searchPlaceholder' | translate"
+        (triggerSearch)="redirectToSearchPageWithValue()"
+      />
     </div>
   </div>
 
@@ -122,7 +131,15 @@
     </div>
 
     <div class="flex justify-content-center mt-4 xl:mt-6">
-      <p-button class="w-6 btn-full-width xl:w-auto" [label]="'home.loggedOut.support.learnMore' | translate" />
+      <a
+        class="w-6 btn-full-width xl:w-auto"
+        href="https://cos.io/our-products/osf/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="p-button font-bold"
+      >
+        {{ 'home.loggedOut.support.learnMore' | translate }}
+      </a>
     </div>
   </div>
 
@@ -130,7 +147,7 @@
     <h1 [innerHTML]="'home.loggedOut.testimonials.title' | translate"></h1>
   </div>
 
-  <div class="carousel-container max-w-full pt-5 px-3 md:px-5 xl:px-4">
+  <div class="carousel-container max-w-full mt-4 pt-5 px-3 md:mt-6 md:px-5 xl:px-4">
     <p-carousel
       [value]="slides"
       [showNavigators]="false"

@@ -10,7 +10,6 @@ import { AuthStateModel } from './auth.model';
 @State<AuthStateModel>({
   name: 'auth',
   defaults: {
-    accessToken: null,
     isAuthenticated: false,
   },
 })
