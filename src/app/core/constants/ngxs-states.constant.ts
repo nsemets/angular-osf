@@ -9,9 +9,8 @@ import { DeveloperAppsState } from '@osf/features/settings/developer-apps/store'
 import { NotificationSubscriptionState } from '@osf/features/settings/notifications/store';
 import { AddonsState, InstitutionsState, WikiState } from '@shared/stores';
 import { LicensesState } from '@shared/stores/licenses';
+import { MyResourcesState } from '@shared/stores/my-resources';
 import { RegionsState } from '@shared/stores/regions';
-
-import { MyResourcesState } from 'src/app/shared/stores/my-resources';
 
 export const STATES = [
   AddonsState,
