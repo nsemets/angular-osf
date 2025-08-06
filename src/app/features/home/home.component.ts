@@ -19,14 +19,12 @@ import { MyProjectsTableComponent, SubHeaderComponent } from '@osf/shared/compon
 import { SortOrder } from '@osf/shared/enums';
 import { MyResourcesItem, MyResourcesSearchFilters, TableParameters } from '@osf/shared/models';
 import { IS_MEDIUM } from '@osf/shared/utils';
-import { FetchUserInstitutions } from '@shared/stores';
+import { ClearMyResources, FetchUserInstitutions, GetMyProjects, MyResourcesSelectors } from '@shared/stores';
 
 import { CreateProjectDialogComponent } from '../my-projects/components';
 import { AccountSettingsService } from '../settings/account-settings/services';
 
 import { ConfirmEmailComponent } from './components';
-
-import { ClearMyResources, GetMyProjects, MyResourcesSelectors } from 'src/app/shared/stores/my-resources';
 
 @Component({
   selector: 'osf-home',

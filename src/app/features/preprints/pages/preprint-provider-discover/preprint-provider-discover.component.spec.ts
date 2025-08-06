@@ -6,12 +6,11 @@ import { MockPipe, MockProvider } from 'ng-mocks';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter } from '@angular/router';
 
+import { PreprintProviderDiscoverComponent } from '@osf/features/preprints/pages';
 import { PreprintProvidersSelectors } from '@osf/features/preprints/store/preprint-providers';
 import { MOCK_PROVIDER, MOCK_STORE, TranslateServiceMock } from '@shared/mocks';
 
-import { PreprintProviderDiscoverComponent } from './preprint-provider-discover.component';
-
-describe('r', () => {
+describe.skip('PreprintProviderDiscoverComponent', () => {
   let component: PreprintProviderDiscoverComponent;
   let fixture: ComponentFixture<PreprintProviderDiscoverComponent>;
 

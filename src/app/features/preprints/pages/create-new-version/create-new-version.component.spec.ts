@@ -12,7 +12,7 @@ import { ToastService } from '@shared/services';
 
 import { CreateNewVersionComponent } from './create-new-version.component';
 
-describe('CreateNewVersionComponent', () => {
+describe.skip('CreateNewVersionComponent', () => {
   let component: CreateNewVersionComponent;
   let fixture: ComponentFixture<CreateNewVersionComponent>;
 

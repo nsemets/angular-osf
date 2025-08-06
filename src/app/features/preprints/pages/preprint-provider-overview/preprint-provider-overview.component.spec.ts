@@ -14,11 +14,10 @@ import {
   PreprintProviderFooterComponent,
   PreprintProviderHeroComponent,
 } from '@osf/features/preprints/components';
+import { PreprintProviderOverviewComponent } from '@osf/features/preprints/pages';
 import { PreprintProvidersSelectors } from '@osf/features/preprints/store/preprint-providers';
 import { MOCK_PROVIDER, MOCK_STORE, TranslateServiceMock } from '@shared/mocks';
 import { BrandService } from '@shared/services';
-
-import { PreprintProviderOverviewComponent } from './preprint-provider-overview.component';
 
 describe('PreprintProviderOverviewComponent', () => {
   let component: PreprintProviderOverviewComponent;
@@ -57,8 +56,8 @@ describe('PreprintProviderOverviewComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            params: of({ providerId: 'prov1' }),
-            snapshot: { params: { providerId: 'prov1' } },
+            params: of({ providerId: 'osf' }),
+            snapshot: { params: { providerId: 'osf' } },
           },
         },
         MockProvider(BrandService),

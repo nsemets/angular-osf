@@ -17,10 +17,10 @@ describe('MyPreprintsComponent', () => {
   let component: MyPreprintsComponent;
   let fixture: ComponentFixture<MyPreprintsComponent>;
   let queryParamsSubject: BehaviorSubject<Record<string, string>>;
-  const mockRouter = {
+  const mockRouter: Partial<Router> = {
     navigateByUrl: jest.fn(),
     navigate: jest.fn(),
-  } as Partial<Router>;
+  };
 
   beforeEach(async () => {
     queryParamsSubject = new BehaviorSubject<Record<string, string>>({});
@@ -43,7 +43,7 @@ describe('MyPreprintsComponent', () => {
       imports: [MyPreprintsComponent, MockPipe(TranslatePipe)],
       providers: [
         provideRouter([]),
-        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        MockProvider(ActivatedRoute, mockActivatedRoute),
         MockProvider(Router, mockRouter),
         MockProvider(Store, MOCK_STORE),
         TranslateServiceMock,

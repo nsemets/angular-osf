@@ -1,13 +1,13 @@
 import { Store } from '@ngxs/store';
 
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MockPipe, MockProvider } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl } from '@angular/forms';
 
 import { PreprintStepperSelectors } from '@osf/features/preprints/store/preprint-stepper';
-import { MOCK_STORE } from '@shared/mocks';
+import { MOCK_STORE, TranslateServiceMock } from '@shared/mocks';
 import { SubjectsSelectors } from '@shared/stores';
 
 import { PreprintsSubjectsComponent } from './preprints-subjects.component';
@@ -32,7 +32,7 @@ describe('PreprintsSubjectsComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [PreprintsSubjectsComponent, MockPipe(TranslatePipe)],
-      providers: [MockProvider(Store, MOCK_STORE), MockProvider(TranslateService)],
+      providers: [MockProvider(Store, MOCK_STORE), TranslateServiceMock],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PreprintsSubjectsComponent);

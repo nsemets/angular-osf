@@ -1,10 +1,10 @@
 import { Store } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
-import { MockPipes, MockProvider } from 'ng-mocks';
+import { MockPipes, MockProvider, MockProviders } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { PreprintProvidersSelectors } from '@osf/features/preprints/store/preprint-providers';
 import { PreprintStepperSelectors } from '@osf/features/preprints/store/preprint-stepper';
@@ -33,7 +33,7 @@ describe('SelectPreprintServiceComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [SelectPreprintServiceComponent, MockPipes(TranslatePipe, DecodeHtmlPipe)],
-      providers: [MockProvider(Store, MOCK_STORE), TranslateServiceMock, MockProvider(Router)],
+      providers: [MockProvider(Store, MOCK_STORE), TranslateServiceMock, MockProviders(Router, ActivatedRoute)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SelectPreprintServiceComponent);

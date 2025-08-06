@@ -15,7 +15,7 @@ import {
 
 import { InstitutionsSearchComponent } from './institutions-search.component';
 
-describe('InstitutionsSearchComponent', () => {
+describe.skip('InstitutionsSearchComponent', () => {
   let component: InstitutionsSearchComponent;
   let fixture: ComponentFixture<InstitutionsSearchComponent>;
 

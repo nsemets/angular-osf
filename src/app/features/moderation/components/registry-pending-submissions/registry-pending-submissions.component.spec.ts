@@ -1,21 +1,18 @@
 import { provideStore } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
-import { MockComponents, MockPipes } from 'ng-mocks';
+import { MockPipes, MockProvider } from 'ng-mocks';
 
 import { of } from 'rxjs';
 
-import { TitleCasePipe } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { RegistrySubmissionItemComponent } from '@osf/features/moderation/components';
+import { RegistryPendingSubmissionsComponent } from '@osf/features/moderation/components';
 import { RegistryModerationState } from '@osf/features/moderation/store/registry-moderation';
-import { CustomPaginatorComponent, IconComponent, LoadingSpinnerComponent, SelectComponent } from '@shared/components';
-
-import { RegistryPendingSubmissionsComponent } from './registry-pending-submissions.component';
+import { TranslateServiceMock } from '@shared/mocks';
 
 describe('RegistryPendingSubmissionsComponent', () => {
   let component: RegistryPendingSubmissionsComponent;
@@ -23,38 +20,24 @@ describe('RegistryPendingSubmissionsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RegistryPendingSubmissionsComponent,
-        ...MockComponents(
-          SelectComponent,
-          IconComponent,
-          LoadingSpinnerComponent,
-          RegistrySubmissionItemComponent,
-          CustomPaginatorComponent
-        ),
-        MockPipes(TitleCasePipe, TranslatePipe),
-      ],
+      imports: [RegistryPendingSubmissionsComponent, ...MockPipes(TranslatePipe)],
       providers: [
         provideStore([RegistryModerationState]),
         {
           provide: ActivatedRoute,
           useValue: {
             parent: {
-              params: of({ providerId: '1' }),
+              params: of({ providerId: 'id1' }),
             },
             snapshot: {
               queryParams: {},
             },
           },
         },
+        MockProvider(Router),
+        TranslateServiceMock,
         provideHttpClient(),
         provideHttpClientTesting(),
-        {
-          provide: Router,
-          useValue: {
-            navigate: jest.fn(),
-          },
-        },
       ],
     }).compileComponents();
 

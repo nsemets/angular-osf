@@ -25,6 +25,7 @@ describe('HomeComponent', () => {
         ...MockComponents(SubHeaderComponent, MyProjectsTableComponent),
         MockPipe(TranslatePipe),
       ],
+      teardown: { destroyAfterEach: false },
       providers: [
         provideRouter([]),
         provideHttpClient(withFetch()),

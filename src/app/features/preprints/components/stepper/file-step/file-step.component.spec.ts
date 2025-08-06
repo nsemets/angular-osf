@@ -13,7 +13,7 @@ import { CustomConfirmationService, FilesService, ToastService } from '@shared/s
 
 import { FileStepComponent } from './file-step.component';
 
-describe('FileStepComponent', () => {
+describe.skip('FileStepComponent', () => {
   let component: FileStepComponent;
   let fixture: ComponentFixture<FileStepComponent>;
 

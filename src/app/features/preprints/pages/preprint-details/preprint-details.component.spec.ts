@@ -22,9 +22,9 @@ describe('PreprintDetailsComponent', () => {
   let component: PreprintDetailsComponent;
   let fixture: ComponentFixture<PreprintDetailsComponent>;
 
-  const mockRoute = {
+  const mockRoute: Partial<ActivatedRoute> = {
     params: of({ providerId: 'osf', preprintId: 'p1' }),
-  } as Partial<ActivatedRoute>;
+  };
 
   beforeEach(async () => {
     (MOCK_STORE.selectSignal as jest.Mock).mockImplementation((selector) => {
