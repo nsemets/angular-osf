@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { NavigationService } from '@osf/core/services';
 import { UserSelectors } from '@osf/core/store/user';
 import { AuthService } from '@osf/features/auth/services';
+import { LoaderService } from '@osf/shared/services';
 
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 
@@ -26,6 +27,7 @@ export class HeaderComponent {
 
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
+  private readonly loaderService = inject(LoaderService);
   private readonly navigationService = inject(NavigationService);
 
   items = [
@@ -37,11 +39,17 @@ export class HeaderComponent {
     {
       label: 'navigation.logOut',
       command: () => {
+        this.loaderService.show();
         this.authService.logout();
         this.router.navigate(['/']);
+        this.loaderService.hide();
       },
     },
   ];
+
+  get isAuthenticated() {
+    return this.authService.isAuthenticated();
+  }
 
   navigateToSignIn() {
     this.navigationService.navigateToSignIn();
