@@ -9,6 +9,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "ci": "npm run lint && npm run test:coverage",
     "lint": "ng lint",
     "lint:fix": "ng lint --fix",
     "format": "prettier --write .",
