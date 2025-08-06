@@ -1,3 +1,5 @@
+import { select } from '@ngxs/store';
+
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { MenuItem } from 'primeng/api';
@@ -5,12 +7,13 @@ import { PanelMenuModule } from 'primeng/panelmenu';
 
 import { filter, map } from 'rxjs';
 
-import { Component, computed, effect, inject, output } from '@angular/core';
+import { Component, computed, inject, output } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { PROJECT_MENU_ITEMS, REGISTRATION_MENU_ITEMS } from '@core/constants';
 import { NavigationService } from '@core/services';
+import { AuthSelectors } from '@osf/features/auth/store';
 import { IconComponent } from '@osf/shared/components';
 
 @Component({
@@ -26,14 +29,26 @@ export class NavMenuComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly navigationService = inject(NavigationService);
 
-  protected menuItems = this.navigationService.getFilteredMenuItems();
+  private readonly isAuthenticated = select(AuthSelectors.isAuthenticated);
+
   protected readonly myProjectMenuItems = PROJECT_MENU_ITEMS;
   protected readonly registrationMenuItems = REGISTRATION_MENU_ITEMS;
 
   protected readonly mainMenuItems = computed(() => {
-    return this.isCollectionsRoute()
-      ? this.menuItems
-      : this.menuItems.filter((item) => item.routerLink !== '/collections');
+    const isAuthenticated = this.isAuthenticated();
+    const menuItems = this.navigationService.getFilteredMenuItems(isAuthenticated);
+
+    if (this.isRegistryRouteDetails()) {
+      menuItems.map((menuItem) => {
+        if (menuItem.id === 'registries') {
+          menuItem.expanded = true;
+          return menuItem;
+        }
+        return menuItem;
+      });
+    }
+
+    return this.isCollectionsRoute() ? menuItems : menuItems.filter((item) => item.routerLink !== '/collections');
   });
 
   protected readonly currentRoute = toSignal(
@@ -51,21 +66,6 @@ export class NavMenuComponent {
   protected readonly isCollectionsRoute = computed(() => this.currentRoute().isCollectionsWithId);
   protected readonly isRegistryRoute = computed(() => this.currentRoute().isRegistryRoute);
   protected readonly isRegistryRouteDetails = computed(() => this.currentRoute().isRegistryRouteDetails);
-
-  constructor() {
-    effect(() => {
-      const isRouteDetails = this.isRegistryRouteDetails();
-      if (isRouteDetails) {
-        this.menuItems = this.menuItems.map((menuItem) => {
-          if (menuItem.id === 'registries') {
-            menuItem.expanded = true;
-            return menuItem;
-          }
-          return menuItem;
-        });
-      }
-    });
-  }
 
   private getRouteInfo() {
     const urlSegments = this.router.url.split('/').filter((segment) => segment);

@@ -1,4 +1,4 @@
-import { select } from '@ngxs/store';
+import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 
 import { NavigationService } from '@osf/core/services';
 import { UserSelectors } from '@osf/core/store/user';
-import { AuthService } from '@osf/features/auth/services';
+import { AuthSelectors, Logout } from '@osf/features/auth/store';
 import { LoaderService } from '@osf/shared/services';
 
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
@@ -24,11 +24,12 @@ import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 })
 export class HeaderComponent {
   currentUser = select(UserSelectors.getCurrentUser);
+  isAuthenticated = select(AuthSelectors.isAuthenticated);
 
   private readonly router = inject(Router);
-  private readonly authService = inject(AuthService);
   private readonly loaderService = inject(LoaderService);
   private readonly navigationService = inject(NavigationService);
+  private readonly actions = createDispatchMap({ logout: Logout });
 
   items = [
     {
@@ -40,16 +41,11 @@ export class HeaderComponent {
       label: 'navigation.logOut',
       command: () => {
         this.loaderService.show();
-        this.authService.logout();
-        this.router.navigate(['/']);
-        this.loaderService.hide();
+        this.actions.logout();
+        this.router.navigate(['/home']).then(() => window.location.reload());
       },
     },
   ];
-
-  get isAuthenticated() {
-    return this.authService.isAuthenticated();
-  }
 
   navigateToSignIn() {
     this.navigationService.navigateToSignIn();

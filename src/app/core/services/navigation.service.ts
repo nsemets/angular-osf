@@ -1,8 +1,6 @@
 import { MenuItem } from 'primeng/api';
 
-import { inject, Injectable } from '@angular/core';
-
-import { AuthService } from '@osf/features/auth/services';
+import { Injectable } from '@angular/core';
 
 import { MENU_ITEMS } from '../constants';
 import { filterMenuItemsByAuth } from '../helpers';
@@ -13,15 +11,12 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class NavigationService {
-  private readonly authService = inject(AuthService);
-
   navigateToSignIn(): void {
     const loginUrl = `${environment.casUrl}/login?service=${environment.webUrl}/login`;
     window.location.href = loginUrl;
   }
 
-  getFilteredMenuItems(): MenuItem[] {
-    const isAuthenticated = this.authService.isAuthenticated();
+  getFilteredMenuItems(isAuthenticated: boolean): MenuItem[] {
     return filterMenuItemsByAuth(MENU_ITEMS, isAuthenticated);
   }
 }

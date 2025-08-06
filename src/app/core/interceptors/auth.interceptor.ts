@@ -27,6 +27,10 @@ export const authInterceptor: HttpInterceptorFn = (
       'Content-Type': 'application/vnd.api+json',
     };
 
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
     if (csrfToken) {
       headers['X-CSRFToken'] = csrfToken;
     }
