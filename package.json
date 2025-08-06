@@ -90,5 +90,9 @@
       "prettier --write",
       "eslint --fix"
     ]
+  },
+  "volta": {
+    "node": "22.13.1",
+    "npm": "10.9.2"
   }
 }
