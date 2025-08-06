@@ -30,6 +30,14 @@ module.exports = {
     '!src/app/**/public-api.ts',
   ],
   extensionsToTreatAsEsm: ['.ts'],
+  coverageThreshold: {
+    global: {
+      statements: 37.83,
+      branches: 11.89,
+      functions: 12.12,
+      lines: 37.27,
+    },
+  },
   testPathIgnorePatterns: [
     '<rootDir>/src/app/features/registry/',
     '<rootDir>/src/app/features/project/',

@@ -1,0 +1,6 @@
+npm run build
+
+npm run test:coverage || {
+  echo "ERROR: Testing errors or coverage issues were found. Please address them before proceeding."
+  exit 1
+}
