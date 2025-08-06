@@ -1,4 +1,3 @@
-import { execSync } from 'child_process';
 import { setupZoneTestEnv } from 'jest-preset-angular/setup-env/zone';
 
 setupZoneTestEnv();
@@ -37,9 +36,3 @@ Object.defineProperty(window, 'ResizeObserver', {
   configurable: true,
   value: ResizeObserver,
 });
-
-try {
-  execSync('node .github/counter/counter.test.increment.js', { stdio: 'inherit' });
-} catch (err) {
-  // Optionally log error
-}
