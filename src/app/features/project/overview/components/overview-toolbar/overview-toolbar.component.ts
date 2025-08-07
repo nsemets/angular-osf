@@ -62,7 +62,6 @@ export class OverviewToolbarComponent {
   protected isBookmarked = signal(false);
   isAdmin = input.required<boolean>();
   currentResource = input.required<ToolbarResource | null>();
-  visibilityToggle = input<boolean>(true);
   showViewOnlyLinks = input<boolean>(true);
   protected isBookmarksLoading = select(MyResourcesSelectors.getBookmarksLoading);
   protected isBookmarksSubmitting = select(BookmarksSelectors.getBookmarksCollectionIdSubmitting);

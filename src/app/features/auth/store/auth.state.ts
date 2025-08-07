@@ -4,19 +4,24 @@ import { inject, Injectable } from '@angular/core';
 
 import { AuthService } from '@osf/features/auth/services';
 
-import { ForgotPassword, RegisterUser, ResetPassword } from './auth.actions';
+import { ForgotPassword, InitializeAuth, Logout, RegisterUser, ResetPassword, SetAuthenticated } from './auth.actions';
 import { AuthStateModel } from './auth.model';
 
 @State<AuthStateModel>({
   name: 'auth',
   defaults: {
-    accessToken: null,
     isAuthenticated: false,
   },
 })
 @Injectable()
 export class AuthState {
   private readonly authService = inject(AuthService);
+
+  @Action(InitializeAuth)
+  initializeAuth(ctx: StateContext<AuthStateModel>) {
+    const isAuthenticated = this.authService.isAuthenticated();
+    ctx.patchState({ isAuthenticated });
+  }
 
   @Action(RegisterUser)
   signUp(ctx: StateContext<AuthStateModel>, action: RegisterUser) {
@@ -31,5 +36,16 @@ export class AuthState {
   @Action(ResetPassword)
   resetPassword(ctx: StateContext<AuthStateModel>, { userId, token, newPassword }: ResetPassword) {
     return this.authService.resetPassword(userId, token, newPassword).subscribe();
+  }
+
+  @Action(SetAuthenticated)
+  setAuthenticated(ctx: StateContext<AuthStateModel>, action: SetAuthenticated) {
+    ctx.patchState({ isAuthenticated: action.isAuthenticated });
+  }
+
+  @Action(Logout)
+  logout(ctx: StateContext<AuthStateModel>) {
+    this.authService.logout();
+    ctx.patchState({ isAuthenticated: false });
   }
 }
