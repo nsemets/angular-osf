@@ -16,7 +16,7 @@ import { DeveloperAppsState } from '../../store';
 
 import { DeveloperAppDetailsComponent } from './developer-app-details.component';
 
-describe.skip('DeveloperAppDetailsComponent', () => {
+describe('DeveloperAppDetailsComponent', () => {
   let component: DeveloperAppDetailsComponent;
   let fixture: ComponentFixture<DeveloperAppDetailsComponent>;
 

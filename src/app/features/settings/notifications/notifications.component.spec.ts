@@ -14,7 +14,7 @@ import { MOCK_STORE } from '@shared/mocks';
 
 import { NotificationsComponent } from './notifications.component';
 
-describe.skip('NotificationsComponent', () => {
+describe('NotificationsComponent', () => {
   let component: NotificationsComponent;
   let fixture: ComponentFixture<NotificationsComponent>;
 

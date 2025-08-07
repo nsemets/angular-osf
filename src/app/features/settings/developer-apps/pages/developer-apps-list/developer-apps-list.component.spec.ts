@@ -13,7 +13,7 @@ import { DeveloperAppsState } from '../../store';
 
 import { DeveloperAppsListComponent } from './developer-apps-list.component';
 
-describe.skip('DeveloperApplicationsListComponent', () => {
+describe('DeveloperApplicationsListComponent', () => {
   let component: DeveloperAppsListComponent;
   let fixture: ComponentFixture<DeveloperAppsListComponent>;
 

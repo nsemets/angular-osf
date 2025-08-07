@@ -5,7 +5,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DeveloperAppsContainerComponent } from './developer-apps-container.component';
 
-describe.skip('DeveloperAppsComponent', () => {
+describe('DeveloperAppsComponent', () => {
   let component: DeveloperAppsContainerComponent;
   let fixture: ComponentFixture<DeveloperAppsContainerComponent>;
 
