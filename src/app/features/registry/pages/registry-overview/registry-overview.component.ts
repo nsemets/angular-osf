@@ -244,7 +244,6 @@ export class RegistryOverviewComponent {
           this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
             this.router.navigateByUrl(currentUrl);
           });
-          // this.actions.getRegistryById(this.registry()?.id || '');
         }
       });
   }
