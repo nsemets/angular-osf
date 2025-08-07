@@ -1,3 +1,5 @@
+import { select } from '@ngxs/store';
+
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { MenuItem } from 'primeng/api';
@@ -9,7 +11,9 @@ import { Component, computed, effect, inject, output } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 
-import { MENU_ITEMS, PROJECT_MENU_ITEMS, REGISTRATION_MENU_ITEMS } from '@core/constants';
+import { MENU_ITEMS, MODERATION_MENU_ITEM, PROJECT_MENU_ITEMS, REGISTRATION_MENU_ITEMS } from '@core/constants';
+import { ProviderSelectors } from '@osf/core/store/provider';
+import { UserSelectors } from '@osf/core/store/user';
 import { IconComponent } from '@osf/shared/components';
 
 @Component({
@@ -26,7 +30,30 @@ export class NavMenuComponent {
 
   protected menuItems = MENU_ITEMS;
   protected readonly myProjectMenuItems = PROJECT_MENU_ITEMS;
-  protected readonly registrationMenuItems = REGISTRATION_MENU_ITEMS;
+  protected readonly registrationMenuItems = computed(() => {
+    const menu = [...REGISTRATION_MENU_ITEMS];
+    if (this.isUserModerator()) {
+      const menuItems = menu[0].items ?? [];
+      if (!menuItems.some((item) => item.label === MODERATION_MENU_ITEM.label)) {
+        menuItems.push(MODERATION_MENU_ITEM);
+      }
+    }
+    const withRouterLinks = menu.map((section) => ({
+      ...section,
+      items: section.items?.map((item) => {
+        const isModerationPage = item.state && item.state['isModeration'];
+        const routeId = isModerationPage ? this.provider()?.id : this.currentResourceId();
+        return {
+          ...item,
+          routerLink: item.routerLink ? ['/registries', routeId, item.routerLink] : null,
+          queryParams: isModerationPage ? { resourceId: this.currentResourceId() } : {},
+        };
+      }),
+    }));
+    return withRouterLinks;
+  });
+  protected readonly isUserModerator = select(UserSelectors.isCurrentUserModerator);
+  protected readonly provider = select(ProviderSelectors.getCurrentProvider);
 
   protected readonly mainMenuItems = computed(() =>
     this.isCollectionsRoute() ? this.menuItems : this.menuItems.filter((item) => item.routerLink !== '/collections')
@@ -65,14 +92,12 @@ export class NavMenuComponent {
 
   private getRouteInfo() {
     const urlSegments = this.router.url.split('/').filter((segment) => segment);
-
-    const resourceId = this.route.firstChild?.snapshot.params['id'] || null;
+    const resourceFromQueryParams = this.route.snapshot.queryParams['resourceId'];
+    const resourceId = this.route.firstChild?.snapshot.params['id'] || resourceFromQueryParams;
     const section = this.route.firstChild?.firstChild?.snapshot.url[0]?.path || 'overview';
-
     const isCollectionsWithId = urlSegments[0] === 'collections' && urlSegments[1] && urlSegments[1] !== '';
     const isRegistryRoute = urlSegments[0] === 'registries' && !!urlSegments[2];
     const isRegistryRouteDetails = urlSegments[0] === 'registries' && urlSegments[2] === 'overview';
-
     return {
       resourceId,
       section,
