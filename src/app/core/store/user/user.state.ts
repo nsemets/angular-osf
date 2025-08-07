@@ -16,6 +16,7 @@ import {
   GetCurrentUser,
   GetCurrentUserSettings,
   SetCurrentUser,
+  SetUserAsModerator,
   UpdateProfileSettingsEducation,
   UpdateProfileSettingsEmployment,
   UpdateProfileSettingsSocialLinks,
@@ -199,5 +200,24 @@ export class UserState {
         });
       })
     );
+  }
+  @Action(SetUserAsModerator)
+  setUserAsModerator(ctx: StateContext<UserStateModel>) {
+    const state = ctx.getState();
+    const currentUser = state.currentUser.data;
+
+    if (!currentUser) {
+      return;
+    }
+
+    ctx.patchState({
+      currentUser: {
+        ...state.currentUser,
+        data: {
+          ...currentUser,
+          isModerator: true,
+        },
+      },
+    });
   }
 }

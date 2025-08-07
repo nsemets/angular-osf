@@ -284,3 +284,11 @@ export const REGISTRATION_MENU_ITEMS: MenuItem[] = [
     ],
   },
 ];
+
+export const MODERATION_MENU_ITEM: MenuItem = {
+  label: 'navigation.moderation',
+  routerLink: 'moderation',
+  state: {
+    isModeration: true,
+  },
+};

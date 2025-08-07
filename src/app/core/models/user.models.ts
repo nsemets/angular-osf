@@ -16,6 +16,7 @@ export interface User {
   iri?: string;
   defaultRegionId: string;
   allowIndexing: boolean | undefined;
+  isModerator?: boolean;
 }
 
 export interface UserSettings {
