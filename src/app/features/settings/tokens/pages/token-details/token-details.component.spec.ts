@@ -2,7 +2,7 @@ import { Store } from '@ngxs/store';
 
 import { TranslateModule } from '@ngx-translate/core';
 
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 import { of } from 'rxjs';
 
@@ -14,7 +14,7 @@ import { TokenModel } from '../../models';
 
 import { TokenDetailsComponent } from './token-details.component';
 
-describe('TokenDetailsComponent', () => {
+describe.only('TokenDetailsComponent', () => {
   let component: TokenDetailsComponent;
   let fixture: ComponentFixture<TokenDetailsComponent>;
   let store: Partial<Store>;
@@ -45,6 +45,7 @@ describe('TokenDetailsComponent', () => {
       providers: [
         { provide: Store, useValue: store },
         { provide: ConfirmationService, useValue: confirmationService },
+        { provide: MessageService, useValue: {} }, // ✅ ADD THIS LINE
         {
           provide: ActivatedRoute,
           useValue: {
