@@ -34,7 +34,6 @@ module.exports = {
     '<rootDir>/src/app/features/registry/',
     '<rootDir>/src/app/features/project/',
     '<rootDir>/src/app/features/registries/',
-    '<rootDir>/src/app/features/settings/',
     '<rootDir>/src/app/shared/',
   ],
 };

@@ -1,6 +1,7 @@
 import { Store } from '@ngxs/store';
 
 import { TranslateModule } from '@ngx-translate/core';
+import { MockProvider } from 'ng-mocks';
 
 import { ConfirmationService } from 'primeng/api';
 
@@ -9,6 +10,8 @@ import { of } from 'rxjs';
 import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter, RouterModule } from '@angular/router';
+
+import { ToastService } from '@shared/services';
 
 import { TokenModel } from '../../models';
 
@@ -43,6 +46,7 @@ describe('TokenDetailsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [TokenDetailsComponent, TranslateModule.forRoot(), RouterModule.forRoot([])],
       providers: [
+        MockProvider(ToastService),
         { provide: Store, useValue: store },
         { provide: ConfirmationService, useValue: confirmationService },
         {
