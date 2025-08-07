@@ -11,8 +11,8 @@ import { Component, computed, inject, output } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 
-import { MODERATION_MENU_ITEM, PROJECT_MENU_ITEMS, REGISTRATION_MENU_ITEMS } from '@core/constants';
-import { NavigationService } from '@core/services';
+import { MENU_ITEMS, MODERATION_MENU_ITEM, PROJECT_MENU_ITEMS, REGISTRATION_MENU_ITEMS } from '@core/constants';
+import { filterMenuItems } from '@osf/core/helpers';
 import { ProviderSelectors } from '@osf/core/store/provider';
 import { UserSelectors } from '@osf/core/store/user';
 import { AuthSelectors } from '@osf/features/auth/store';
@@ -29,7 +29,6 @@ export class NavMenuComponent {
 
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
-  private readonly navigationService = inject(NavigationService);
 
   private readonly isAuthenticated = select(AuthSelectors.isAuthenticated);
 
@@ -61,7 +60,7 @@ export class NavMenuComponent {
 
   protected readonly mainMenuItems = computed(() => {
     const isAuthenticated = this.isAuthenticated();
-    const menuItems = this.navigationService.getFilteredMenuItems(isAuthenticated);
+    const menuItems = filterMenuItems(MENU_ITEMS, isAuthenticated);
 
     if (this.isRegistryRouteDetails()) {
       menuItems.map((menuItem) => {

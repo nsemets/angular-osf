@@ -4,7 +4,7 @@ import { Routes } from '@angular/router';
 
 import { BookmarksState, ProjectsState } from '@shared/stores';
 
-import { authGuard } from './core/guards';
+import { authGuard, redirectIfLoggedInGuard } from './core/guards';
 import { MyProfileResourceFiltersOptionsState } from './features/my-profile/components/filters/store';
 import { MyProfileResourceFiltersState } from './features/my-profile/components/my-profile-resource-filters/store';
 import { MyProfileState } from './features/my-profile/store';
@@ -20,7 +20,9 @@ export const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        loadComponent: () => import('./features/home/home.component').then((mod) => mod.HomeComponent),
+        canActivate: [redirectIfLoggedInGuard],
+        loadComponent: () => import('@osf/features/home/home.component').then((mod) => mod.HomeComponent),
+        data: { skipBreadcrumbs: true },
       },
       {
         path: 'dashboard',
@@ -28,14 +30,6 @@ export const routes: Routes = [
           import('./features/home/pages/dashboard/dashboard.component').then((mod) => mod.DashboardComponent),
         data: { skipBreadcrumbs: true },
         canActivate: [authGuard],
-      },
-      {
-        path: 'home',
-        loadComponent: () =>
-          import('@osf/features/home/pages/home-logged-out/home-logged-out.component').then(
-            (mod) => mod.HomeLoggedOutComponent
-          ),
-        data: { skipBreadcrumbs: true },
       },
       {
         path: 'confirm/:userId/:token',
