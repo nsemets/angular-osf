@@ -30,17 +30,17 @@ import {
 } from '@osf/features/project/files/models';
 import {
   AddFileResponse,
+  ConfiguredStorageAddon,
   FileLinks,
   FileRelationshipsResponse,
   FileResponse,
+  FileVersionsResponseJsonApi,
+  GetConfiguredStorageAddonsJsonApi,
   GetFileResponse,
   GetFilesResponse,
   OsfFile,
   OsfFileVersion,
 } from '@shared/models';
-import { ConfiguredStorageAddon } from '@shared/models/addons/configured-storage-addon.model';
-import { FileVersionsResponseJsonApi } from '@shared/models/files/file-version-json-api.model';
-import { GetConfiguredStorageAddonsJsonApi } from '@shared/models/files/get-configured-storage-addons.model';
 import { ToastService } from '@shared/services/toast.service';
 
 import { environment } from 'src/environments/environment';
