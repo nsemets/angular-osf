@@ -96,8 +96,10 @@ export class RegistryOverviewComponent {
     } else if (this.registry()?.schemaResponses?.length) {
       questions = this.registry()?.schemaResponses?.[index]?.revisionResponses;
     }
-
     if (schemaBlocks?.length && questions) {
+      console.log('schemaBlocks', schemaBlocks);
+      console.log('questions', questions);
+      console.log(schemaBlocks.map((schemaBlock) => MapViewSchemaBlock(schemaBlock, questions)));
       return schemaBlocks.map((schemaBlock) => MapViewSchemaBlock(schemaBlock, questions));
     }
     return [];

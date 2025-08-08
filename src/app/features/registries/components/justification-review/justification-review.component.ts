@@ -62,10 +62,28 @@ export class JustificationReviewComponent {
   }
 
   changes = computed(() => {
+    let questions: Record<string, string> = {};
+    this.pages().forEach((page) => {
+      if (page.sections?.length) {
+        questions = {
+          ...questions,
+          ...Object.fromEntries(
+            page.sections.flatMap(
+              (section) => section.questions?.map((q) => [q.responseKey, q.displayText || '']) || []
+            )
+          ),
+        };
+      } else {
+        questions = {
+          ...questions,
+          ...Object.fromEntries(page.questions?.map((q) => [q.responseKey, q.displayText]) || []),
+        };
+      }
+    });
     const updatedFields = this.updatedFields();
     const updatedResponseKeys = this.schemaResponse()?.updatedResponseKeys || [];
     const uniqueKeys = new Set([...updatedResponseKeys, ...Object.keys(updatedFields)]);
-    return Array.from(uniqueKeys);
+    return Array.from(uniqueKeys).map((key) => questions[key]);
   });
 
   submit(): void {

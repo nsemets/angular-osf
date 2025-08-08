@@ -2148,7 +2148,9 @@
         "associatedProject": "Associated project"
       },
       "original": "Original",
-      "latest": "Latest"
+      "latest": "Latest",
+      "update": "Update {{version}}",
+      "reviewUpdate": "Review Update"
     },
     "links": {
       "viewLinksProjectsAndComponents": "View for Linked projects and Components",
