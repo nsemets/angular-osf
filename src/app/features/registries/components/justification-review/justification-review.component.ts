@@ -11,10 +11,10 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants';
-import { RevisionReviewStates } from '@osf/shared/enums';
+import { FieldType, RevisionReviewStates } from '@osf/shared/enums';
 import { CustomConfirmationService, ToastService } from '@osf/shared/services';
 
-import { FieldType, SchemaActionTrigger } from '../../enums';
+import { SchemaActionTrigger } from '../../enums';
 import { ClearState, DeleteSchemaResponse, HandleSchemaResponse, RegistriesSelectors } from '../../store';
 import { ConfirmContinueEditingDialogComponent } from '../confirm-continue-editing-dialog/confirm-continue-editing-dialog.component';
 import { ReviewDataComponent } from '../review-data/review-data.component';

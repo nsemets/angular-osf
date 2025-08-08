@@ -16,7 +16,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants';
-import { ResourceType } from '@osf/shared/enums';
+import { FieldType, ResourceType } from '@osf/shared/enums';
 import { InterpolatePipe } from '@osf/shared/pipes';
 import { CustomConfirmationService, ToastService } from '@osf/shared/services';
 import {
@@ -26,7 +26,6 @@ import {
   SubjectsSelectors,
 } from '@osf/shared/stores';
 
-import { FieldType } from '../../enums';
 import { ClearState, DeleteDraft, FetchLicenses, FetchProjectChildren, RegistriesSelectors } from '../../store';
 import { ConfirmRegistrationDialogComponent } from '../confirm-registration-dialog/confirm-registration-dialog.component';
 import { ReviewDataComponent } from '../review-data/review-data.component';

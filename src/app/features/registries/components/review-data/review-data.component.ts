@@ -6,9 +6,8 @@ import { Tag } from 'primeng/tag';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants';
-
-import { FieldType } from '../../enums';
-import { Question } from '../../models';
+import { FieldType } from '@osf/shared/enums';
+import { Question } from '@osf/shared/models';
 
 @Component({
   selector: 'osf-review-data',
