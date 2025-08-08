@@ -20,6 +20,8 @@ import { CustomValidators, PASSWORD_REGEX } from '@osf/shared/utils';
 
 import { SignUpForm, SignUpModel } from '../../models';
 
+import { environment } from 'src/environments/environment';
+
 @Component({
   selector: 'osf-sign-up',
   imports: [
@@ -48,7 +50,7 @@ export class SignUpComponent implements OnInit {
 
   actions = createDispatchMap({ registerUser: RegisterUser });
 
-  readonly siteKey = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
+  readonly siteKey = environment.recaptchaSiteKey;
 
   get isPasswordError() {
     return this.signUpForm.controls['password'].errors && this.signUpForm.get('password')?.touched;
@@ -89,10 +91,18 @@ export class SignUpComponent implements OnInit {
       return;
     }
 
+    this.signUpForm.disable();
+
     const data = this.signUpForm.getRawValue() as SignUpModel;
 
-    this.actions.registerUser(data).subscribe(() => {
-      this.isFormSubmitted.set(true);
+    this.actions.registerUser(data).subscribe({
+      next: () => {
+        this.signUpForm.reset();
+        this.isFormSubmitted.set(true);
+      },
+      error: () => {
+        this.signUpForm.enable();
+      },
     });
   }
 }
