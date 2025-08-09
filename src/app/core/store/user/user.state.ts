@@ -43,13 +43,14 @@ export class UserState {
     });
 
     return this.userService.getCurrentUser().pipe(
-      tap((user) => {
+      tap((data) => {
         ctx.patchState({
           currentUser: {
-            data: user,
+            data: data.currentUser,
             isLoading: false,
             error: null,
           },
+          activeFlags: data.activeFlags,
         });
       })
     );
