@@ -14,7 +14,7 @@
 
         <span>{{ item.label | translate }}</span>
 
-        @if (item.items) {
+        @if (hasVisibleChildren | wrapFn: item) {
           <osf-icon
             class="ml-auto pt-1"
             [iconClass]="item.expanded ? `fas fa-chevron-down fa-sm` : `fas fa-chevron-right fa-sm`"

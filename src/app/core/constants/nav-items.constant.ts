@@ -303,7 +303,7 @@ export const MENU_ITEMS: MenuItem[] = [
     items: [
       {
         id: 'collections-moderation',
-        routerLink: '/collections/ibdgc/moderation',
+        routerLink: 'moderation',
         label: 'navigation.moderation',
         visible: false,
         routerLinkActiveOptions: { exact: true },

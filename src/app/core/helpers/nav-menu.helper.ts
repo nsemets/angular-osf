@@ -12,7 +12,15 @@ export function filterMenuItems(items: MenuItem[], isAuthenticated: boolean): Me
   return items.map((item) => {
     const isAuthenticatedItem = AUTHENTICATED_MENU_ITEMS.includes(item.id || '');
 
-    const updatedItem = { ...item, visible: isAuthenticatedItem ? isAuthenticated : item.visible };
+    let updatedItem: MenuItem = { ...item, visible: isAuthenticatedItem ? isAuthenticated : item.visible };
+
+    if (item.id === 'home') {
+      updatedItem = {
+        ...updatedItem,
+        routerLink: isAuthenticated ? '/dashboard' : '/',
+        routerLinkActiveOptions: isAuthenticated ? { exact: false } : { exact: true },
+      };
+    }
 
     if (item.items) {
       updatedItem.items = filterMenuItems(item.items, isAuthenticated);

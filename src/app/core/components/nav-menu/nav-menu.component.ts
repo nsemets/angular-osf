@@ -17,10 +17,11 @@ import { RouteContext } from '@osf/core/models';
 import { ProviderSelectors } from '@osf/core/store/provider';
 import { AuthSelectors } from '@osf/features/auth/store';
 import { IconComponent } from '@osf/shared/components';
+import { WrapFnPipe } from '@osf/shared/pipes';
 
 @Component({
   selector: 'osf-nav-menu',
-  imports: [RouterLinkActive, RouterLink, PanelMenuModule, TranslatePipe, IconComponent],
+  imports: [RouterLinkActive, RouterLink, PanelMenuModule, TranslatePipe, IconComponent, WrapFnPipe],
   templateUrl: './nav-menu.component.html',
   styleUrl: './nav-menu.component.scss',
 })
@@ -92,4 +93,7 @@ export class NavMenuComponent {
       this.closeMenu.emit();
     }
   }
+
+  protected readonly hasVisibleChildren = (item: MenuItem): boolean =>
+    Array.isArray(item.items) && item.items.some((child) => !!child.visible);
 }
