@@ -57,7 +57,7 @@
         <p-tabpanel [value]="RegistrationTab.Submitted" class="flex flex-column gap-4 flex-1">
           @if (isSubmittedRegistrationsLoading()) {
             @for (item of skeletons; track $index) {
-              <p-skeleton width="100%" height="1.5rem" borderRadius="0" />
+              <p-skeleton width="100%" height="2rem" />
             }
           } @else {
             @if (submittedRegistrationsTotalCount() === 0) {

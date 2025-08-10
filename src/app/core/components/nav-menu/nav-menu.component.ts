@@ -11,10 +11,10 @@ import { Component, computed, inject, output } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 
-import { MENU_ITEMS, MODERATION_MENU_ITEM, PROJECT_MENU_ITEMS, REGISTRATION_MENU_ITEMS } from '@core/constants';
-import { filterMenuItems } from '@osf/core/helpers';
+import { MENU_ITEMS } from '@core/constants';
+import { filterMenuItems, updateMenuItems } from '@osf/core/helpers';
+import { RouteContext } from '@osf/core/models';
 import { ProviderSelectors } from '@osf/core/store/provider';
-import { UserSelectors } from '@osf/core/store/user';
 import { AuthSelectors } from '@osf/features/auth/store';
 import { IconComponent } from '@osf/shared/components';
 
@@ -32,47 +32,24 @@ export class NavMenuComponent {
 
   private readonly isAuthenticated = select(AuthSelectors.isAuthenticated);
 
-  protected readonly myProjectMenuItems = PROJECT_MENU_ITEMS;
-  protected readonly registrationMenuItems = computed(() => {
-    const menu = [...REGISTRATION_MENU_ITEMS];
-    if (this.isUserModerator()) {
-      const menuItems = menu[0].items ?? [];
-      if (!menuItems.some((item) => item.label === MODERATION_MENU_ITEM.label)) {
-        menuItems.push(MODERATION_MENU_ITEM);
-      }
-    }
-    const withRouterLinks = menu.map((section) => ({
-      ...section,
-      items: section.items?.map((item) => {
-        const isModerationPage = item.state && item.state['isModeration'];
-        const routeId = isModerationPage ? this.provider()?.id : this.currentResourceId();
-        return {
-          ...item,
-          routerLink: item.routerLink ? ['/registries', routeId, item.routerLink] : null,
-          queryParams: isModerationPage ? { resourceId: this.currentResourceId() } : {},
-        };
-      }),
-    }));
-    return withRouterLinks;
-  });
-  protected readonly isUserModerator = select(UserSelectors.isCurrentUserModerator);
   protected readonly provider = select(ProviderSelectors.getCurrentProvider);
 
   protected readonly mainMenuItems = computed(() => {
     const isAuthenticated = this.isAuthenticated();
-    const menuItems = filterMenuItems(MENU_ITEMS, isAuthenticated);
+    const filtered = filterMenuItems(MENU_ITEMS, isAuthenticated);
 
-    if (this.isRegistryRouteDetails()) {
-      menuItems.map((menuItem) => {
-        if (menuItem.id === 'registries') {
-          menuItem.expanded = true;
-          return menuItem;
-        }
-        return menuItem;
-      });
-    }
+    const routeContext: RouteContext = {
+      resourceId: this.currentResourceId(),
+      providerId: this.currentProviderId(),
+      isProject: this.isProjectRoute() && !this.isRegistryRoute() && !this.isPreprintRoute(),
+      isRegistry: this.isRegistryRoute(),
+      isPreprint: this.isPreprintRoute(),
+      isCollections: this.isCollectionsRoute() || false,
+    };
 
-    return this.isCollectionsRoute() ? menuItems : menuItems.filter((item) => item.routerLink !== '/collections');
+    const items = updateMenuItems(filtered, routeContext);
+
+    return items;
   });
 
   protected readonly currentRoute = toSignal(
@@ -86,25 +63,27 @@ export class NavMenuComponent {
   );
 
   protected readonly currentResourceId = computed(() => this.currentRoute().resourceId);
+  protected readonly currentProviderId = computed(() => this.currentRoute().providerId);
   protected readonly isProjectRoute = computed(() => !!this.currentResourceId());
   protected readonly isCollectionsRoute = computed(() => this.currentRoute().isCollectionsWithId);
   protected readonly isRegistryRoute = computed(() => this.currentRoute().isRegistryRoute);
-  protected readonly isRegistryRouteDetails = computed(() => this.currentRoute().isRegistryRouteDetails);
+  protected readonly isPreprintRoute = computed(() => this.currentRoute().isPreprintRoute);
 
   private getRouteInfo() {
     const urlSegments = this.router.url.split('/').filter((segment) => segment);
     const resourceFromQueryParams = this.route.snapshot.queryParams['resourceId'];
     const resourceId = this.route.firstChild?.snapshot.params['id'] || resourceFromQueryParams;
-    const section = this.route.firstChild?.firstChild?.snapshot.url[0]?.path || 'overview';
+    const providerId = this.route.firstChild?.snapshot.params['providerId'];
     const isCollectionsWithId = urlSegments[0] === 'collections' && urlSegments[1] && urlSegments[1] !== '';
     const isRegistryRoute = urlSegments[0] === 'registries' && !!urlSegments[2];
-    const isRegistryRouteDetails = urlSegments[0] === 'registries' && urlSegments[2] === 'overview';
+    const isPreprintRoute = urlSegments[0] === 'preprints' && !!urlSegments[2];
+
     return {
       resourceId,
-      section,
+      providerId,
       isCollectionsWithId,
       isRegistryRoute,
-      isRegistryRouteDetails,
+      isPreprintRoute,
     };
   }
 
