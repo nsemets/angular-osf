@@ -4,7 +4,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { DialogService } from 'primeng/dynamicdialog';
 
-import { filter, map, switchMap, tap } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs';
 
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, HostBinding, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -132,8 +132,9 @@ export class RegistryOverviewComponent {
     createSchemaResponse: CreateSchemaResponse,
   });
 
-  isModeration = this.route.snapshot.queryParamMap.get('mode') === 'moderator';
   revisionId: string | null = null;
+  isModeration = false;
+
   protected userPermissions = computed(() => {
     return this.registry()?.currentUserPermissions || [];
   });
@@ -155,10 +156,10 @@ export class RegistryOverviewComponent {
     this.route.queryParams
       .pipe(
         takeUntilDestroyed(),
-        map((params) => params['revisionId']),
-        filter((revisionId) => revisionId),
-        tap((revisionId) => {
+        map((params) => ({ revisionId: params['revisionId'], mode: params['mode'] })),
+        tap(({ revisionId, mode }) => {
           this.revisionId = revisionId;
+          this.isModeration = mode === 'moderator';
         })
         // [NM] TODO: add logic to handle revisionId
         // switchMap((revisionId) => {
@@ -246,6 +247,7 @@ export class RegistryOverviewComponent {
           this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
             this.router.navigateByUrl(currentUrl);
           });
+          this.actions.getRegistryById(this.registry()?.id || '');
         }
       });
   }

@@ -444,7 +444,8 @@
     }
   },
   "myProfile": {
-    "editProfile": "Edit Profile"
+    "editProfile": "Edit Profile",
+    "memberSince": "Member since"
   },
   "project": {
     "analytics": {
@@ -1198,8 +1199,9 @@
       "goBackLink": "< Back to list of submissions",
       "acceptSuccess": "Submission has been accepted successfully",
       "rejectSuccess": "Submission has been rejected successfully",
-      "acceptSubmissionSuccess": "Submission has been accepted successfully",
-      "rejectSubmissionSuccess": "Submission has been rejected successfully",
+      "accept_submissionSuccess": "Submission has been accepted successfully",
+      "reject_submissionSuccess": "Submission has been rejected successfully",
+      "force_withdrawSuccess": "Submission has been force withdrawn successfully",
       "removeSuccess": "Submission has been withdrawn successfully",
       "justificationPlaceholder": "Provide justification for withdrawal"
     },
