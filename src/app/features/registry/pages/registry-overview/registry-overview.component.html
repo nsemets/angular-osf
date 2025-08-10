@@ -50,7 +50,44 @@
             </osf-registry-revisions>
           </div>
           <div class="blocks-section p-4">
-            @for (block of mappedSchemaBlocks(); track $index) {
+            @for (page of schemaBlocks(); track page.id) {
+              <h2 class="mb-4 text-xl">{{ page.title }}</h2>
+
+              @if (page.description) {
+                <p class="mb-4">{{ page.description }}</p>
+              }
+
+              @if (page.sections?.length) {
+                @for (section of page.sections; track section.id) {
+                  <div class="mb-4">
+                    <h3 class="mb-2">{{ section.title }}</h3>
+                    @if (section.description) {
+                      <p class="mb-4">{{ section.description }}</p>
+                    }
+                    @if (section.questions?.length) {
+                      <osf-registration-blocks-data
+                        [class.mb-4]="!$last"
+                        [questions]="section.questions"
+                        [reviewData]="schemaResponse()?.revisionResponses || {}"
+                        [isOverviewPage]="true"
+                        [updatedFields]="updatedFields()"
+                      ></osf-registration-blocks-data>
+                    }
+                  </div>
+                }
+              } @else {
+                @if (page.questions?.length) {
+                  <osf-registration-blocks-data
+                    [class.mb-4]="!$last"
+                    [questions]="page.questions"
+                    [reviewData]="schemaResponse()?.revisionResponses || {}"
+                    [isOverviewPage]="true"
+                    [updatedFields]="updatedFields()"
+                  ></osf-registration-blocks-data>
+                }
+              }
+            }
+            <!-- @for (block of mappedSchemaBlocks(); track $index) {
               @if (block.type === 'file-input' && block.files) {
                 <ul class="flex flex-column gap-4 ml-5">
                   @for (file of block.files; track $index) {
@@ -74,7 +111,7 @@
               } @else if (block.value && block.value !== 'select-input-option') {
                 <p class="pb-4 text-no-transform">{{ block.value }}</p>
               }
-            }
+            } -->
           </div>
         </div>
         <div class="flex flex-column right-section p-4">

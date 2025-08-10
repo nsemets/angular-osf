@@ -15,6 +15,7 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@a
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
+import { RegistrationBlocksDataComponent } from '@osf/shared/components';
 import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants';
 import { FieldType, ResourceType } from '@osf/shared/enums';
 import { InterpolatePipe } from '@osf/shared/pipes';
@@ -28,7 +29,6 @@ import {
 
 import { ClearState, DeleteDraft, FetchLicenses, FetchProjectChildren, RegistriesSelectors } from '../../store';
 import { ConfirmRegistrationDialogComponent } from '../confirm-registration-dialog/confirm-registration-dialog.component';
-import { ReviewDataComponent } from '../review-data/review-data.component';
 import { SelectComponentsDialogComponent } from '../select-components-dialog/select-components-dialog.component';
 
 @Component({
@@ -45,7 +45,7 @@ import { SelectComponentsDialogComponent } from '../select-components-dialog/sel
     AccordionHeader,
     AccordionPanel,
     InterpolatePipe,
-    ReviewDataComponent,
+    RegistrationBlocksDataComponent,
   ],
   templateUrl: './review.component.html',
   styleUrl: './review.component.scss',

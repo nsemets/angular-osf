@@ -11,10 +11,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { OverviewToolbarComponent } from '@osf/features/project/overview/components';
-import { CreateSchemaResponse, FetchAllSchemaResponses, RegistriesSelectors } from '@osf/features/registries/store';
+import { CreateSchemaResponse, FetchAllSchemaResponses } from '@osf/features/registries/store';
 import {
   DataResourcesComponent,
   LoadingSpinnerComponent,
+  RegistrationBlocksDataComponent,
   ResourceMetadataComponent,
   SubHeaderComponent,
 } from '@osf/shared/components';
@@ -27,8 +28,6 @@ import { GetBookmarksCollectionId } from '@shared/stores';
 import { ArchivingMessageComponent, RegistryRevisionsComponent, RegistryStatusesComponent } from '../../components';
 import { RegistryMakeDecisionComponent } from '../../components/registry-make-decision/registry-make-decision.component';
 import { WithdrawnMessageComponent } from '../../components/withdrawn-message/withdrawn-message.component';
-import { MapViewSchemaBlock } from '../../mappers';
-import { RegistrationQuestions } from '../../models';
 import {
   GetRegistryById,
   GetRegistryInstitutions,
@@ -52,6 +51,7 @@ import {
     ArchivingMessageComponent,
     TranslatePipe,
     WithdrawnMessageComponent,
+    RegistrationBlocksDataComponent,
   ],
   templateUrl: './registry-overview.component.html',
   styleUrl: './registry-overview.component.scss',
@@ -76,7 +76,23 @@ export class RegistryOverviewComponent {
   protected readonly schemaBlocks = select(RegistryOverviewSelectors.getSchemaBlocks);
   protected readonly isSchemaBlocksLoading = select(RegistryOverviewSelectors.isSchemaBlocksLoading);
   protected areReviewActionsLoading = select(RegistryOverviewSelectors.areReviewActionsLoading);
-  protected schemaResponse = select(RegistriesSelectors.getSchemaResponse);
+
+  protected readonly schemaResponse = computed(() => {
+    const registry = this.registry();
+    const index = this.selectedRevisionIndex();
+    if (registry && index !== null) {
+      return registry.schemaResponses[index];
+    }
+    return null;
+  });
+
+  protected readonly updatedFields = computed(() => {
+    const schemaResponse = this.schemaResponse();
+    if (schemaResponse) {
+      return schemaResponse.updatedResponseKeys || [];
+    }
+    return [];
+  });
 
   protected readonly resourceOverview = computed(() => {
     const registry = this.registry();
@@ -86,23 +102,6 @@ export class RegistryOverviewComponent {
       return MapRegistryOverview(registry, subjects, institutions);
     }
     return null;
-  });
-  protected readonly mappedSchemaBlocks = computed(() => {
-    const schemaBlocks = this.schemaBlocks();
-    const index = this.selectedRevisionIndex();
-    let questions: RegistrationQuestions | undefined;
-    if (index === 0) {
-      questions = this.registry()?.questions;
-    } else if (this.registry()?.schemaResponses?.length) {
-      questions = this.registry()?.schemaResponses?.[index]?.revisionResponses;
-    }
-    if (schemaBlocks?.length && questions) {
-      console.log('schemaBlocks', schemaBlocks);
-      console.log('questions', questions);
-      console.log(schemaBlocks.map((schemaBlock) => MapViewSchemaBlock(schemaBlock, questions)));
-      return schemaBlocks.map((schemaBlock) => MapViewSchemaBlock(schemaBlock, questions));
-    }
-    return [];
   });
 
   protected readonly selectedRevisionIndex = signal(0);
