@@ -2077,7 +2077,8 @@
         "header": "Are you sure this needs more edits?",
         "message": "This will cancel any approvals from other admin contributors and return the registration back to its draft form for additional changes.",
         "label": "What additional changes need to be made and why?"
-      }
+      },
+      "caution": "Caution: Only one person is able to edit a registration draft at a time. Be sure to coordinate with any other contributors."
     }
   },
   "registry": {
@@ -2153,7 +2154,9 @@
       "original": "Original",
       "latest": "Latest",
       "update": "Update {{version}}",
-      "reviewUpdate": "Review Update"
+      "reviewUpdate": "Review Update",
+      "updateReason": "Reason for update:",
+      "updatedRevisionDescription": "This is an update to the original registration. This update was made on "
     },
     "links": {
       "viewLinksProjectsAndComponents": "View for Linked projects and Components",

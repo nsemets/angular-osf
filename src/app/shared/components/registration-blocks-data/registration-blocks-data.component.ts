@@ -22,6 +22,7 @@ export class RegistrationBlocksDataComponent {
   reviewData = input<Record<string, any>>({});
   isOverviewPage = input<boolean>(false);
   updatedFields = input<string[]>([]);
+  isOriginalRevision = input<boolean>(true);
 
   updatedKeysMap = computed<Record<string, boolean>>(() => {
     return this.updatedFields().reduce((acc, key) => {

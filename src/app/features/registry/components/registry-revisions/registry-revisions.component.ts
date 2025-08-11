@@ -21,17 +21,22 @@ export class RegistryRevisionsComponent {
   @HostBinding('class') classes = 'flex-1 flex';
   registry = input.required<RegistryOverview | null>();
   selectedRevisionIndex = input.required<number>();
+  isSubmitting = input<boolean>(false);
   openRevision = output<number>();
-  unApprovedRevisionId: string | null = null;
   readonly updateRegistration = output<string>();
-  readonly continueUpdate = output<{ id: string; unapproved: boolean }>();
+  readonly continueUpdate = output<void>();
+
+  unApprovedRevisionId: string | null = null;
 
   revisions = computed(() => {
-    const schemaResponses = this.registry()?.schemaResponses || [];
+    let schemaResponses = this.registry()?.schemaResponses || [];
     if (this.registryAcceptedUnapproved) {
-      this.unApprovedRevisionId = schemaResponses.splice(0, 1)[0]?.id || null;
+      this.unApprovedRevisionId =
+        schemaResponses.find((response) => response.reviewsState === RevisionReviewStates.Unapproved)?.id || null;
     }
-    const revisions = schemaResponses.map((response, index) => {
+    schemaResponses = schemaResponses.filter((r) => r.reviewsState === RevisionReviewStates.Approved);
+
+    return schemaResponses.map((response, index) => {
       const onlyOne = schemaResponses.length === 1;
       const label = onlyOne
         ? `registry.overview.original`
@@ -47,7 +52,6 @@ export class RegistryRevisionsComponent {
         isSelected: index === this.selectedRevisionIndex(),
       };
     });
-    return this.registryAcceptedUnapproved ? revisions.slice(0, 1) : revisions;
   });
 
   get registryInProgress(): boolean {
@@ -71,9 +75,6 @@ export class RegistryRevisionsComponent {
 
   protected readonly RevisionReviewStates = RevisionReviewStates;
   continueUpdateHandler(): void {
-    this.continueUpdate.emit({
-      id: this.registry()?.id || '',
-      unapproved: this.registry()?.revisionStatus === RevisionReviewStates.Unapproved,
-    });
+    this.continueUpdate.emit();
   }
 }

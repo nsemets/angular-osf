@@ -3,12 +3,14 @@ import { createDispatchMap, select } from '@ngxs/store';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { DialogService } from 'primeng/dynamicdialog';
+import { Message } from 'primeng/message';
 
 import { map, switchMap, tap } from 'rxjs';
 
+import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, HostBinding, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { OverviewToolbarComponent } from '@osf/features/project/overview/components';
 import { CreateSchemaResponse, FetchAllSchemaResponses } from '@osf/features/registries/store';
@@ -19,9 +21,9 @@ import {
   ResourceMetadataComponent,
   SubHeaderComponent,
 } from '@osf/shared/components';
-import { ResourceType, UserPermissions } from '@osf/shared/enums';
+import { ResourceType, RevisionReviewStates, UserPermissions } from '@osf/shared/enums';
 import { MapRegistryOverview } from '@osf/shared/mappers';
-import { ToolbarResource } from '@osf/shared/models';
+import { SchemaResponse, ToolbarResource } from '@osf/shared/models';
 import { ToastService } from '@osf/shared/services';
 import { GetBookmarksCollectionId } from '@shared/stores';
 
@@ -37,13 +39,14 @@ import {
   SetRegistryCustomCitation,
 } from '../../store/registry-overview';
 
+import { RegistriesSelectors } from './../../../registries/store/registries.selectors';
+
 @Component({
   selector: 'osf-registry-overview',
   imports: [
     SubHeaderComponent,
     OverviewToolbarComponent,
     LoadingSpinnerComponent,
-    RouterLink,
     ResourceMetadataComponent,
     RegistryRevisionsComponent,
     RegistryStatusesComponent,
@@ -52,6 +55,8 @@ import {
     TranslatePipe,
     WithdrawnMessageComponent,
     RegistrationBlocksDataComponent,
+    Message,
+    DatePipe,
   ],
   templateUrl: './registry-overview.component.html',
   styleUrl: './registry-overview.component.scss',
@@ -76,12 +81,20 @@ export class RegistryOverviewComponent {
   protected readonly schemaBlocks = select(RegistryOverviewSelectors.getSchemaBlocks);
   protected readonly isSchemaBlocksLoading = select(RegistryOverviewSelectors.isSchemaBlocksLoading);
   protected areReviewActionsLoading = select(RegistryOverviewSelectors.areReviewActionsLoading);
+  protected readonly currentRevision = select(RegistriesSelectors.getSchemaResponse);
+  protected readonly isSchemaResponseLoading = select(RegistriesSelectors.getSchemaResponseLoading);
+  protected revisionInProgress: SchemaResponse | undefined;
 
   protected readonly schemaResponse = computed(() => {
     const registry = this.registry();
     const index = this.selectedRevisionIndex();
-    if (registry && index !== null) {
-      return registry.schemaResponses[index];
+    this.revisionInProgress = registry?.schemaResponses.find(
+      (r) => r.reviewsState === RevisionReviewStates.RevisionInProgress
+    );
+    const schemaResponses =
+      registry?.schemaResponses.filter((r) => r.reviewsState === RevisionReviewStates.Approved) || [];
+    if (index !== null) {
+      return schemaResponses[index];
     }
     return null;
   });
@@ -160,14 +173,12 @@ export class RegistryOverviewComponent {
           this.revisionId = revisionId;
           this.isModeration = mode === 'moderator';
         })
-        // [NM] TODO: add logic to handle revisionId
-        // switchMap((revisionId) => {
-        // })
       )
       .subscribe();
   }
 
   navigateToFile(fileId: string): void {
+    // [NM] TODO: add logic to handle fileId
     this.router.navigate(['/files', fileId]);
   }
 
@@ -184,13 +195,18 @@ export class RegistryOverviewComponent {
       .createSchemaResponse(id)
       .pipe(
         tap(() => {
+          this.revisionInProgress = this.currentRevision()!;
           this.navigateToJustificationPage();
         })
       )
       .subscribe();
   }
 
-  onContinueUpdateRegistration({ id, unapproved }: { id: string; unapproved: boolean }): void {
+  onContinueUpdateRegistration(): void {
+    const { id, unapproved } = {
+      id: this.registry()?.id || '',
+      unapproved: this.revisionInProgress?.reviewsState === RevisionReviewStates.Unapproved,
+    };
     this.actions
       .getSchemaResponse(id)
       .pipe(
@@ -206,12 +222,12 @@ export class RegistryOverviewComponent {
   }
 
   private navigateToJustificationPage(): void {
-    const revisionId = this.revisionId || this.schemaResponse()?.id;
+    const revisionId = this.revisionId || this.revisionInProgress?.id;
     this.router.navigate([`/registries/revisions/${revisionId}/justification`]);
   }
 
   private navigateToJustificationReview(): void {
-    const revisionId = this.revisionId || this.schemaResponse()?.id;
+    const revisionId = this.revisionId || this.revisionInProgress?.id;
     this.router.navigate([`/registries/revisions/${revisionId}/review`]);
   }
 

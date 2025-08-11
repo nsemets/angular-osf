@@ -12,7 +12,7 @@
               class="w-full"
               [class.current-revision]="selectedRevisionIndex() === $index"
               styleClass="w-full"
-              [label]="revision.label | translate: { version: $index + 1 }"
+              [label]="revision.label | translate: { version: revisions().length - $index - 1 }"
               (click)="emitOpenRevision($index)"
             />
           }
@@ -30,6 +30,7 @@
               styleClass="w-full"
               (click)="updateRegistration.emit(registry()?.id!)"
               [label]="'common.buttons.update' | translate"
+              [loading]="isSubmitting()"
             />
           }
           @if (registryInProgress) {
@@ -38,6 +39,7 @@
               styleClass="w-full"
               (click)="continueUpdateHandler()"
               [label]="'common.buttons.continueUpdate' | translate"
+              [loading]="isSubmitting()"
             />
           }
         }
