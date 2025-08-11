@@ -40,10 +40,10 @@ module.exports = {
   extensionsToTreatAsEsm: ['.ts'],
   coverageThreshold: {
     global: {
-      branches: 11.2,
-      functions: 11.34,
-      lines: 36.73,
-      statements: 37.33,
+      branches: 13.84,
+      functions: 14.33,
+      lines: 40.35,
+      statements: 40.9,
     },
   },
   testPathIgnorePatterns: [
@@ -53,8 +53,6 @@ module.exports = {
     '<rootDir>/src/app/features/project/',
     '<rootDir>/src/app/features/registries/',
     '<rootDir>/src/app/features/settings/addons/',
-    '<rootDir>/src/app/features/settings/developer-apps/',
-    '<rootDir>/src/app/features/settings/notifications/',
     '<rootDir>/src/app/features/settings/settings-container.component.ts',
     '<rootDir>/src/app/features/settings/tokens/components/',
     '<rootDir>/src/app/features/settings/tokens/mappers/',
