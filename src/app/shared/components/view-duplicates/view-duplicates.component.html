@@ -78,7 +78,7 @@
         }
       }
 
-      @if (totalForks() < pageSize) {
+      @if (totalForks() > pageSize) {
         <osf-custom-paginator
           [totalCount]="totalForks()"
           [rows]="pageSize"
