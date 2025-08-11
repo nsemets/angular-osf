@@ -1,4 +1,4 @@
-<section class="subheader flex flex-column">
+<section class="flex flex-column flex-1 xl:mt-6">
   <div class="flex flex-column align-items-start">
     <osf-sub-header
       [title]="'navigation.registriesSubRoutes.myRegistrations' | translate"
@@ -8,6 +8,7 @@
       (buttonClick)="goToCreateRegistration()"
     />
   </div>
+
   <div class="flex-column flex flex-1 w-full">
     <p-tabs [value]="selectedTab()" (valueChange)="selectedTab.set(+$event)" class="flex-1">
       @if (!isMobile()) {

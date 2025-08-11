@@ -189,7 +189,7 @@ export const MENU_ITEMS: MenuItem[] = [
         routerLink: '/my-registrations',
         label: 'navigation.registriesSubRoutes.myRegistrations',
         visible: false,
-        routerLinkActiveOptions: { exact: true },
+        routerLinkActiveOptions: { exact: false },
       },
       {
         id: 'my-preprints',

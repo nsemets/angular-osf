@@ -14,7 +14,6 @@ import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive } f
 import { MENU_ITEMS } from '@core/constants';
 import { filterMenuItems, updateMenuItems } from '@osf/core/helpers';
 import { RouteContext } from '@osf/core/models';
-import { ProviderSelectors } from '@osf/core/store/provider';
 import { AuthSelectors } from '@osf/features/auth/store';
 import { IconComponent } from '@osf/shared/components';
 import { WrapFnPipe } from '@osf/shared/pipes';
@@ -33,8 +32,6 @@ export class NavMenuComponent {
 
   private readonly isAuthenticated = select(AuthSelectors.isAuthenticated);
 
-  protected readonly provider = select(ProviderSelectors.getCurrentProvider);
-
   protected readonly mainMenuItems = computed(() => {
     const isAuthenticated = this.isAuthenticated();
     const filtered = filterMenuItems(MENU_ITEMS, isAuthenticated);
@@ -46,6 +43,7 @@ export class NavMenuComponent {
       isRegistry: this.isRegistryRoute(),
       isPreprint: this.isPreprintRoute(),
       isCollections: this.isCollectionsRoute() || false,
+      currentUrl: this.router.url,
     };
 
     const items = updateMenuItems(filtered, routeContext);

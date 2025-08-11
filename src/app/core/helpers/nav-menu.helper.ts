@@ -32,6 +32,10 @@ export function filterMenuItems(items: MenuItem[], isAuthenticated: boolean): Me
 
 export function updateMenuItems(menuItems: MenuItem[], ctx: RouteContext): MenuItem[] {
   return menuItems.map((item) => {
+    if (item.id === 'my-resources') {
+      return updateMyResourcesMenuItem(item, ctx);
+    }
+
     if (item.id === 'projects') {
       return updateProjectMenuItem(item, ctx);
     }
@@ -50,6 +54,19 @@ export function updateMenuItems(menuItems: MenuItem[], ctx: RouteContext): MenuI
 
     return item;
   });
+}
+
+function updateMyResourcesMenuItem(item: MenuItem, ctx: RouteContext): MenuItem {
+  const currentUrl = ctx.currentUrl || '';
+  const isMyResourcesActive =
+    currentUrl.startsWith('/my-projects') ||
+    currentUrl.startsWith('/my-registrations') ||
+    currentUrl.startsWith('/my-preprints');
+
+  return {
+    ...item,
+    expanded: isMyResourcesActive,
+  };
 }
 
 function updateProjectMenuItem(item: MenuItem, ctx: RouteContext): MenuItem {

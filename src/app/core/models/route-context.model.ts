@@ -5,4 +5,5 @@ export interface RouteContext {
   isRegistry: boolean;
   isPreprint: boolean;
   isCollections: boolean;
+  currentUrl?: string;
 }
