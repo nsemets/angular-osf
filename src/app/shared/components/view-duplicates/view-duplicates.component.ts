@@ -80,11 +80,11 @@ export class ViewDuplicatesComponent {
   protected readonly forkActionItems = (resourceId: string) => [
     {
       label: 'project.overview.actions.manageContributors',
-      command: () => this.router.navigate(['/my-projects', resourceId, 'contributors']),
+      command: () => this.router.navigate(['/project', resourceId, 'contributors']),
     },
     {
       label: 'project.overview.actions.settings',
-      command: () => this.router.navigate(['/my-projects', resourceId, 'settings']),
+      command: () => this.router.navigate(['/project', resourceId, 'settings']),
     },
     {
       label: 'project.overview.actions.delete',
