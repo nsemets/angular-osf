@@ -700,7 +700,6 @@
           "headerRegistry": "Duplicate This Registry",
           "forksMessage": "Duplicates you have permission to view are shown here.",
           "noForksMessage": "No duplicates found",
-          "backToAnalytics": "< Back to Analytics",
           "confirmButton": "Duplicate",
           "cancelButton": "Cancel",
           "messageProject": "Are you sure you want to duplicate this project (with files)?",
