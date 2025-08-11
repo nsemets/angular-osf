@@ -4,6 +4,7 @@ export * from './collections';
 export * from './components';
 export * from './contributors';
 export * from './filters';
+export * from './forks.mapper';
 export * from './institutions';
 export * from './licenses.mapper';
 export * from './node-links';
