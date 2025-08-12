@@ -12,8 +12,6 @@ export const authInterceptor: HttpInterceptorFn = (
   const cookieService = inject(CookieService);
 
   const csrfToken = cookieService.get('api-csrf');
-  const staging = cookieService.get('osf_staging4');
-  console.log(staging);
 
   if (!req.url.includes('/api.crossref.org/funders')) {
     const headers: Record<string, string> = {
