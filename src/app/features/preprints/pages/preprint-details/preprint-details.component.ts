@@ -39,7 +39,7 @@ export class PreprintDetailsComponent implements OnInit, OnDestroy {
   private readonly router = inject(Router);
 
   private providerId = toSignal(this.route.params.pipe(map((params) => params['providerId'])) ?? of(undefined));
-  private preprintId = toSignal(this.route.params.pipe(map((params) => params['preprintId'])) ?? of(undefined));
+  private preprintId = toSignal(this.route.params.pipe(map((params) => params['id'])) ?? of(undefined));
 
   private actions = createDispatchMap({
     getPreprintProviderById: GetPreprintProviderById,
