@@ -22,6 +22,7 @@ export class RegistryRevisionsComponent {
   registry = input.required<RegistryOverview | null>();
   selectedRevisionIndex = input.required<number>();
   isSubmitting = input<boolean>(false);
+  isModeration = input<boolean>(false);
   openRevision = output<number>();
   readonly updateRegistration = output<string>();
   readonly continueUpdate = output<void>();
@@ -34,7 +35,9 @@ export class RegistryRevisionsComponent {
       this.unApprovedRevisionId =
         schemaResponses.find((response) => response.reviewsState === RevisionReviewStates.Unapproved)?.id || null;
     }
-    schemaResponses = schemaResponses.filter((r) => r.reviewsState === RevisionReviewStates.Approved);
+    schemaResponses = this.isModeration()
+      ? schemaResponses
+      : schemaResponses.filter((r) => r.reviewsState === RevisionReviewStates.Approved);
 
     return schemaResponses.map((response, index) => {
       const onlyOne = schemaResponses.length === 1;

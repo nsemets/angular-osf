@@ -1,12 +1,12 @@
 export enum ReviewActionTrigger {
-  Submit = 'submit', // registration submitted by admins
-  AcceptSubmission = 'accept_submission', // accept submission
-  RejectSubmission = 'reject_submission', // reject submission
-  ForceWithdraw = 'force_withdraw', // force withdraw without request
-  RequestWithdrawal = 'request_withdrawal', // request to withdraw by contributors
-  AcceptWithdrawal = 'accept_withdrawal', // accept withdrawal request
-  RejectWithdrawal = 'reject_withdrawal', // deny withdrawal request
-  RequestEmbargoTermination = 'request_embargo_termination', // admin requests embargo termination
+  Submit = 'submit',
+  AcceptSubmission = 'accept_submission',
+  RejectSubmission = 'reject_submission',
+  ForceWithdraw = 'force_withdraw',
+  RequestWithdrawal = 'request_withdrawal',
+  AcceptWithdrawal = 'accept_withdrawal',
+  RejectWithdrawal = 'reject_withdrawal',
+  RequestEmbargoTermination = 'request_embargo_termination',
 }
 
 export enum SchemaResponseActionTrigger {

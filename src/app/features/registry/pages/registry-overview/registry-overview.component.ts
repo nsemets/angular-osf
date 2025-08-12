@@ -5,7 +5,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Message } from 'primeng/message';
 
-import { map, switchMap, tap } from 'rxjs';
+import { filter, map, switchMap, tap } from 'rxjs';
 
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, HostBinding, inject, signal } from '@angular/core';
@@ -25,6 +25,7 @@ import { ResourceType, RevisionReviewStates, UserPermissions } from '@osf/shared
 import { MapRegistryOverview } from '@osf/shared/mappers';
 import { SchemaResponse, ToolbarResource } from '@osf/shared/models';
 import { ToastService } from '@osf/shared/services';
+import { toCamelCase } from '@osf/shared/utils';
 import { GetBookmarksCollectionId } from '@shared/stores';
 
 import { ArchivingMessageComponent, RegistryRevisionsComponent, RegistryStatusesComponent } from '../../components';
@@ -92,7 +93,9 @@ export class RegistryOverviewComponent {
       (r) => r.reviewsState === RevisionReviewStates.RevisionInProgress
     );
     const schemaResponses =
-      registry?.schemaResponses.filter((r) => r.reviewsState === RevisionReviewStates.Approved) || [];
+      (this.isModeration
+        ? registry?.schemaResponses
+        : registry?.schemaResponses.filter((r) => r.reviewsState === RevisionReviewStates.Approved)) || [];
     if (index !== null) {
       return schemaResponses[index];
     }
@@ -159,9 +162,18 @@ export class RegistryOverviewComponent {
     this.route.parent?.params.subscribe((params) => {
       const id = params['id'];
       if (id) {
-        this.actions.getRegistryById(id);
-        this.actions.getSubjects(id);
-        this.actions.getInstitutions(id);
+        this.actions
+          .getRegistryById(id)
+          .pipe(
+            filter(() => {
+              return !this.registry()?.withdrawn;
+            }),
+            tap(() => {
+              this.actions.getSubjects(id);
+              this.actions.getInstitutions(id);
+            })
+          )
+          .subscribe();
       }
     });
     this.actions.getBookmarksId();
@@ -256,7 +268,8 @@ export class RegistryOverviewComponent {
       .subscribe((data) => {
         if (data) {
           if (data.action) {
-            this.toastService.showSuccess(`moderation.makeDecision.${data.action}Success`);
+            const action = toCamelCase(data.action);
+            this.toastService.showSuccess(`moderation.makeDecision.${action}Success`);
           }
           const currentUrl = this.router.url.split('?')[0];
           this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
