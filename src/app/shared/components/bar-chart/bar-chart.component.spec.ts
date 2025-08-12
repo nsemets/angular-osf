@@ -52,7 +52,7 @@ describe('BarChartComponent', () => {
     expect(color1).not.toBe(color2);
   });
 
-  it('should initialize chart on ngOnInit', () => {
+  it('should initialize chart successfully', () => {
     const mockGetPropertyValue = jest.fn((prop: string) => {
       const colors: Record<string, string> = {
         '--dark-blue-1': '#1a365d',
@@ -62,14 +62,14 @@ describe('BarChartComponent', () => {
       return colors[prop] || '#000000';
     });
 
-    jest.spyOn(window, 'getComputedStyle').mockReturnValue({
+    const mockGetComputedStyle = jest.spyOn(window, 'getComputedStyle').mockReturnValue({
       getPropertyValue: mockGetPropertyValue,
     } as any);
 
-    component.ngOnInit();
-    fixture.detectChanges();
+    (component as any).initChart();
 
-    expect(component).toBeTruthy();
-    expect(component.getColor(0)).toBeDefined();
+    expect(mockGetComputedStyle).toHaveBeenCalledWith(document.documentElement);
+
+    mockGetComputedStyle.mockRestore();
   });
 });

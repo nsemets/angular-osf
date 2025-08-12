@@ -1,3 +1,4 @@
+export { MOCK_ADDON } from './addon.mock';
 export * from './contributors.mock';
 export * from './custom-сonfirmation.service.mock';
 export { MOCK_USER } from './data.mock';
