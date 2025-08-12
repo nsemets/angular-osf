@@ -2354,7 +2354,8 @@
       "sendMessage": "Send message",
       "osfLink": "OSF Link",
       "orcid": "ORCID",
-      "noData": "No users found"
+      "noData": "No users found",
+      "messageSent": "Message has been sent."
     },
     "projects": {
       "title": "Title",

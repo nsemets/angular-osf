@@ -36,6 +36,7 @@ import {
 } from '@osf/features/admin-institutions/store/institutions-admin.actions';
 import { InstitutionsAdminSelectors } from '@osf/features/admin-institutions/store/institutions-admin.selectors';
 import { LoadingSpinnerComponent, SelectComponent } from '@osf/shared/components';
+import { ToastService } from '@osf/shared/services';
 import { TABLE_PARAMS } from '@shared/constants';
 import { SortOrder } from '@shared/enums';
 import { QueryParams } from '@shared/models';
@@ -63,6 +64,7 @@ export class InstitutionsUsersComponent implements OnInit {
   private readonly translate = inject(TranslateService);
   private readonly dialogService = inject(DialogService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly toastService = inject(ToastService);
 
   private readonly actions = createDispatchMap({
     fetchInstitutionUsers: FetchInstitutionUsers,
@@ -268,12 +270,14 @@ export class InstitutionsUsersComponent implements OnInit {
   private sendEmailToUser(userRowData: TableCellData, emailData: SendEmailDialogData): void {
     const userId = (userRowData['userLink'] as TableCellLink).text as string;
 
-    this.actions.sendUserMessage(
-      userId,
-      this.institutionId,
-      emailData.emailContent,
-      emailData.ccSender,
-      emailData.allowReplyToSender
-    );
+    this.actions
+      .sendUserMessage(
+        userId,
+        this.institutionId,
+        emailData.emailContent,
+        emailData.ccSender,
+        emailData.allowReplyToSender
+      )
+      .subscribe(() => this.toastService.showSuccess('adminInstitutions.institutionUsers.messageSent'));
   }
 }

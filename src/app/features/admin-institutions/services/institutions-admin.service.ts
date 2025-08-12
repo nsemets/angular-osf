@@ -110,7 +110,7 @@ export class InstitutionsAdminService {
     const payload = sendMessageRequestMapper(request);
 
     return this.jsonApiService.post<SendMessageResponseJsonApi>(
-      `${environment.apiUrl}/institutions/messages/`,
+      `${environment.apiUrl}/users/${request.userId}/messages/`,
       payload
     );
   }
