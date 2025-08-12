@@ -51,15 +51,15 @@
                 <p>{{ fork.dateModified | date: 'MMM d, y, h:mm a' }}</p>
               </div>
 
-              @for (contributor of fork.contributors; track contributor.id) {
-                <div class="flex flex-wrap align-items-center gap-1">
-                  <span class="font-bold">{{ 'common.labels.contributors' | translate }}:</span>
+              <div class="flex flex-wrap align-items-center gap-1">
+                <span class="font-bold">{{ 'common.labels.contributors' | translate }}:</span>
+                @for (contributor of fork.contributors; track contributor.id) {
                   <div>
                     <a [href]="contributor.id" target="_blank" class="font-bold"> {{ contributor.fullName }}</a>
                     <span>{{ $last ? '' : ',' }}</span>
                   </div>
-                </div>
-              }
+                }
+              </div>
 
               <div class="component-description">
                 <div class="flex flex-wrap align-items-center gap-1">
