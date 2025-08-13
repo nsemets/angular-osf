@@ -3,7 +3,7 @@ import { map, Observable } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { JsonApiService } from '@core/services';
-import { ApiData, JsonApiResponse, JsonApiResponseWithMeta, JsonApiResponseWithPaging } from '@osf/core/models';
+import { ApiData, JsonApiResponse, JsonApiResponseWithMeta, ResponseJsonApi } from '@osf/core/models';
 import { RegistryModerationMapper } from '@osf/features/moderation/mappers';
 import { ReviewActionsResponseJsonApi } from '@osf/features/moderation/models';
 import { preprintSortFieldMap } from '@osf/features/preprints/constants';
@@ -150,7 +150,7 @@ export class PreprintsService {
   getPreprintVersionIds(preprintId: string): Observable<string[]> {
     return this.jsonApiService
       .get<
-        JsonApiResponseWithPaging<ApiData<PreprintAttributesJsonApi, null, null, null>[], null>
+        ResponseJsonApi<ApiData<PreprintAttributesJsonApi, null, null, null>[]>
       >(`${environment.apiUrl}/preprints/${preprintId}/versions/`)
       .pipe(map((response) => response.data.map((data) => data.id)));
   }
@@ -166,10 +166,7 @@ export class PreprintsService {
 
     return this.jsonApiService
       .get<
-        JsonApiResponseWithPaging<
-          ApiData<PreprintAttributesJsonApi, PreprintEmbedsJsonApi, PreprintRelationshipsJsonApi, null>[],
-          null
-        >
+        ResponseJsonApi<ApiData<PreprintAttributesJsonApi, PreprintEmbedsJsonApi, PreprintRelationshipsJsonApi, null>[]>
       >(`${environment.apiUrl}/users/me/preprints/`, params)
       .pipe(map((response) => PreprintsMapper.fromMyPreprintJsonApi(response)));
   }

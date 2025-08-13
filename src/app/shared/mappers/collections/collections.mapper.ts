@@ -1,4 +1,4 @@
-import { JsonApiResponseWithPaging } from '@core/models';
+import { ResponseJsonApi } from '@core/models';
 import {
   CollectionSubmissionReviewAction,
   CollectionSubmissionReviewActionJsonApi,
@@ -107,7 +107,7 @@ export class CollectionsMapper {
   }
 
   static fromGetCollectionSubmissionsResponse(
-    response: JsonApiResponseWithPaging<CollectionSubmissionWithGuidJsonApi[], null>
+    response: ResponseJsonApi<CollectionSubmissionWithGuidJsonApi[]>
   ): PaginatedData<CollectionSubmissionWithGuid[]> {
     return {
       data: response.data.map((submission) => ({
@@ -139,7 +139,7 @@ export class CollectionsMapper {
             }
           : undefined,
       })),
-      totalCount: response.links.meta.total,
+      totalCount: response.meta.total,
     };
   }
 

@@ -1,4 +1,4 @@
-import { JsonApiResponseWithPaging, UserGetResponse } from '@osf/core/models';
+import { ResponseJsonApi, UserGetResponse } from '@osf/core/models';
 import { AddContributorType, ContributorPermission } from '@osf/shared/enums';
 import {
   ContributorAddModel,
@@ -24,7 +24,7 @@ export class ContributorsMapper {
   }
 
   static fromUsersWithPaginationGetResponse(
-    response: JsonApiResponseWithPaging<UserGetResponse[], null>
+    response: ResponseJsonApi<UserGetResponse[]>
   ): PaginatedData<ContributorAddModel[]> {
     return {
       data: response.data.map(
@@ -36,7 +36,7 @@ export class ContributorsMapper {
             permission: ContributorPermission.Read,
           }) as ContributorAddModel
       ),
-      totalCount: response.links.meta.total,
+      totalCount: response.meta.total,
     };
   }
 
