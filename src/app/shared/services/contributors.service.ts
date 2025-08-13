@@ -2,18 +2,19 @@ import { map, Observable } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { AddContributorType, ResourceType } from '@osf/shared/enums';
-import { ContributorsMapper } from '@osf/shared/mappers/contributors';
+import { AddContributorType, ResourceType } from '../enums';
+import { ContributorsMapper } from '../mappers';
 import {
   ContributorAddModel,
   ContributorModel,
   ContributorResponse,
   JsonApiResponse,
-  JsonApiResponseWithPaging,
   PaginatedData,
+  ResponseJsonApi,
   UserGetResponse,
-} from '@osf/shared/models';
-import { JsonApiService } from '@osf/shared/services';
+} from '../models';
+
+import { JsonApiService } from './json-api.service';
 
 import { environment } from 'src/environments/environment';
 
@@ -53,7 +54,7 @@ export class ContributorsService {
     const baseUrl = `${environment.apiUrl}/users/?filter[full_name]=${value}&page=${page}`;
 
     return this.jsonApiService
-      .get<JsonApiResponseWithPaging<UserGetResponse[], null>>(baseUrl)
+      .get<ResponseJsonApi<UserGetResponse[]>>(baseUrl)
       .pipe(map((response) => ContributorsMapper.fromUsersWithPaginationGetResponse(response)));
   }
 

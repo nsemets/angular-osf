@@ -17,8 +17,8 @@ import {
   CollectionSubmissionWithGuid,
   CollectionSubmissionWithGuidJsonApi,
   PaginatedData,
+  ResponseJsonApi,
 } from '@osf/shared/models';
-import { JsonApiResponseWithPaging } from '@shared/models';
 
 export class CollectionsMapper {
   static fromGetCollectionContributorsResponse(response: CollectionContributorJsonApi[]): CollectionContributor[] {
@@ -107,7 +107,7 @@ export class CollectionsMapper {
   }
 
   static fromGetCollectionSubmissionsResponse(
-    response: JsonApiResponseWithPaging<CollectionSubmissionWithGuidJsonApi[], null>
+    response: ResponseJsonApi<CollectionSubmissionWithGuidJsonApi[]>
   ): PaginatedData<CollectionSubmissionWithGuid[]> {
     return {
       data: response.data.map((submission) => ({
@@ -139,7 +139,7 @@ export class CollectionsMapper {
             }
           : undefined,
       })),
-      totalCount: response.links.meta.total,
+      totalCount: response.meta.total,
     };
   }
 

@@ -8,13 +8,13 @@ import {
   DraftRegistrationModel,
   DraftRegistrationRelationshipsJsonApi,
   DraftRegistrationResponseJsonApi,
-  JsonApiResponseWithPaging,
   PageSchema,
   RegistrationAttributesJsonApi,
   RegistrationCard,
   RegistrationDataJsonApi,
   RegistrationModel,
   RegistrationResponseJsonApi,
+  ResponseJsonApi,
   SchemaBlocksResponseJsonApi,
   SchemaResponse,
   SchemaResponseDataJsonApi,
@@ -132,9 +132,7 @@ export class RegistriesService {
       embed: ['bibliographic_contributors', 'registration_schema', 'provider'],
     };
     return this.jsonApiService
-      .get<
-        JsonApiResponseWithPaging<DraftRegistrationDataJsonApi[], null>
-      >(`${this.apiUrl}/draft_registrations/`, params)
+      .get<ResponseJsonApi<DraftRegistrationDataJsonApi[]>>(`${this.apiUrl}/draft_registrations/`, params)
       .pipe(
         map((response) => {
           const data = response.data.map((registration: DraftRegistrationDataJsonApi) =>
@@ -142,7 +140,7 @@ export class RegistriesService {
           );
           return {
             data,
-            totalCount: response.links.meta?.total,
+            totalCount: response.meta?.total,
           };
         })
       );
@@ -159,9 +157,7 @@ export class RegistriesService {
       embed: ['bibliographic_contributors', 'registration_schema', 'provider'],
     };
     return this.jsonApiService
-      .get<
-        JsonApiResponseWithPaging<RegistrationDataJsonApi[], null>
-      >(`${this.apiUrl}/users/${userId}/registrations/`, params)
+      .get<ResponseJsonApi<RegistrationDataJsonApi[]>>(`${this.apiUrl}/users/${userId}/registrations/`, params)
       .pipe(
         map((response) => {
           const data = response.data.map((registration: RegistrationDataJsonApi) =>
@@ -169,7 +165,7 @@ export class RegistriesService {
           );
           return {
             data,
-            totalCount: response.links.meta?.total,
+            totalCount: response.meta?.total,
           };
         })
       );

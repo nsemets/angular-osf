@@ -36,7 +36,6 @@ import { ToastService } from '@shared/services';
 import {
   ClearWiki,
   CollectionsSelectors,
-  GetAllNodeLinks,
   GetBookmarksCollectionId,
   GetCollectionProvider,
   GetHomeWiki,
@@ -108,7 +107,6 @@ export class ProjectOverviewComponent implements OnInit {
     getHomeWiki: GetHomeWiki,
     getComponents: GetComponents,
     getLinkedProjects: GetLinkedResources,
-    getNodeLinks: GetAllNodeLinks,
     setProjectCustomCitation: SetProjectCustomCitation,
     getCollectionProvider: GetCollectionProvider,
     getCurrentReviewAction: GetSubmissionsReviewActions,
@@ -196,7 +194,6 @@ export class ProjectOverviewComponent implements OnInit {
       this.actions.getBookmarksId();
       this.actions.getHomeWiki(ResourceType.Project, projectId);
       this.actions.getComponents(projectId);
-      this.actions.getNodeLinks(projectId);
       this.actions.getLinkedProjects(projectId);
     }
   }

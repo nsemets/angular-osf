@@ -1,4 +1,4 @@
-import { JsonApiResponseWithPaging, PaginatedData, UserGetResponse } from '@osf/shared/models';
+import { PaginatedData, ResponseJsonApi, UserGetResponse } from '@osf/shared/models';
 
 import { AddModeratorType, ModeratorPermission } from '../enums';
 import { ModeratorAddModel, ModeratorAddRequestModel, ModeratorDataJsonApi, ModeratorModel } from '../models';
@@ -16,7 +16,7 @@ export class ModerationMapper {
   }
 
   static fromUsersWithPaginationGetResponse(
-    response: JsonApiResponseWithPaging<UserGetResponse[], null>
+    response: ResponseJsonApi<UserGetResponse[]>
   ): PaginatedData<ModeratorAddModel[]> {
     return {
       data: response.data.map(
@@ -27,7 +27,7 @@ export class ModerationMapper {
             permission: ModeratorPermission.Moderator,
           }) as ModeratorAddModel
       ),
-      totalCount: response.links.meta.total,
+      totalCount: response.meta.total,
     };
   }
 

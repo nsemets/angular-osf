@@ -2,7 +2,7 @@ import { map, Observable } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { JsonApiResponse, JsonApiResponseWithPaging, PaginatedData } from '@osf/shared/models';
+import { JsonApiResponse, PaginatedData, ResponseJsonApi } from '@osf/shared/models';
 import { JsonApiService } from '@osf/shared/services';
 
 import { PreprintSubmissionsSort } from '../enums';
@@ -48,7 +48,7 @@ export class PreprintModerationService {
     const baseUrl = `${environment.apiUrl}/actions/reviews/?embed=provider&embed=target&page=${page}`;
 
     return this.jsonApiService
-      .get<JsonApiResponseWithPaging<ReviewActionJsonApi[], null>>(baseUrl)
+      .get<ResponseJsonApi<ReviewActionJsonApi[]>>(baseUrl)
       .pipe(map((response) => PreprintModerationMapper.fromResponseWithPagination(response)));
   }
 

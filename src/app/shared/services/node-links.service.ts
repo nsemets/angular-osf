@@ -49,12 +49,8 @@ export class NodeLinksService {
     };
 
     return this.jsonApiService
-      .get<JsonApiResponse<NodeLinkJsonApi[], null>>(`${environment.apiUrl}/nodes/${projectId}/node_links/`, params)
-      .pipe(
-        map((response) => {
-          return response.data.map((item) => NodeLinksMapper.fromNodeLinkResponse(item));
-        })
-      );
+      .get<JsonApiResponse<NodeLinkJsonApi[], null>>(`${environment.apiUrl}/nodes/${projectId}/linked_nodes/`, params)
+      .pipe(map((response) => response.data.map((item) => NodeLinksMapper.fromNodeLinkResponse(item))));
   }
 
   deleteNodeLink(projectId: string, nodeLinkId: string): Observable<void> {

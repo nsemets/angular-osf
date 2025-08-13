@@ -4,6 +4,12 @@ import { inject, Injectable } from '@angular/core';
 
 import { RegistryModerationMapper } from '@osf/features/moderation/mappers';
 import { ReviewActionsResponseJsonApi } from '@osf/features/moderation/models';
+import { searchPreferencesToJsonApiQueryParams } from '@osf/shared/helpers';
+import { ApiData, JsonApiResponse, JsonApiResponseWithMeta, ResponseJsonApi, SearchFilters } from '@osf/shared/models';
+import { JsonApiService } from '@osf/shared/services';
+
+import { preprintSortFieldMap } from '../constants';
+import { PreprintRequestMapper, PreprintsMapper } from '../mappers';
 import {
   Preprint,
   PreprintAttributesJsonApi,
@@ -13,14 +19,7 @@ import {
   PreprintRelationshipsJsonApi,
   PreprintRequest,
   PreprintRequestsJsonApiResponse,
-} from '@osf/features/preprints/models';
-import { searchPreferencesToJsonApiQueryParams } from '@osf/shared/helpers';
-import { ApiData, JsonApiResponse, JsonApiResponseWithMeta, JsonApiResponseWithPaging } from '@osf/shared/models';
-import { SearchFilters } from '@shared/models';
-import { JsonApiService } from '@shared/services';
-
-import { preprintSortFieldMap } from '../constants';
-import { PreprintRequestMapper, PreprintsMapper } from '../mappers';
+} from '../models';
 
 import { environment } from 'src/environments/environment';
 
@@ -138,7 +137,7 @@ export class PreprintsService {
   getPreprintVersionIds(preprintId: string): Observable<string[]> {
     return this.jsonApiService
       .get<
-        JsonApiResponseWithPaging<ApiData<PreprintAttributesJsonApi, null, null, null>[], null>
+        ResponseJsonApi<ApiData<PreprintAttributesJsonApi, null, null, null>[]>
       >(`${environment.apiUrl}/preprints/${preprintId}/versions/`)
       .pipe(map((response) => response.data.map((data) => data.id)));
   }
@@ -154,10 +153,7 @@ export class PreprintsService {
 
     return this.jsonApiService
       .get<
-        JsonApiResponseWithPaging<
-          ApiData<PreprintAttributesJsonApi, PreprintEmbedsJsonApi, PreprintRelationshipsJsonApi, null>[],
-          null
-        >
+        ResponseJsonApi<ApiData<PreprintAttributesJsonApi, PreprintEmbedsJsonApi, PreprintRelationshipsJsonApi, null>[]>
       >(`${environment.apiUrl}/users/me/preprints/`, params)
       .pipe(map((response) => PreprintsMapper.fromMyPreprintJsonApi(response)));
   }

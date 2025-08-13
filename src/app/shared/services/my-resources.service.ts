@@ -102,6 +102,7 @@ export class MyResourcesService {
       map((response: MyResourcesResponseJsonApi) => ({
         data: response.data.map((item: MyResourcesItemGetResponseJsonApi) => MyResourcesMapper.fromResponse(item)),
         links: response.links,
+        meta: response.meta,
       }))
     );
   }
