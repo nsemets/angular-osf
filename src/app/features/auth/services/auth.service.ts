@@ -22,8 +22,7 @@ export class AuthService {
   isAuthenticated(): boolean {
     const csrfToken = this.cookieService.get('api-csrf');
     const staging = this.cookieService.get('osf_staging4');
-    console.log(staging, csrfToken);
-    console.log(document.cookie);
+
     const authenticated = !!csrfToken;
 
     this.actions.setAuthenticated(authenticated);
