@@ -1,5 +1,4 @@
-import { ResponseJsonApi, UserGetResponse } from '@osf/core/models';
-import { PaginatedData } from '@osf/shared/models';
+import { PaginatedData, ResponseJsonApi, UserGetResponse } from '@osf/shared/models';
 
 import { AddModeratorType, ModeratorPermission } from '../enums';
 import { ModeratorAddModel, ModeratorAddRequestModel, ModeratorDataJsonApi, ModeratorModel } from '../models';

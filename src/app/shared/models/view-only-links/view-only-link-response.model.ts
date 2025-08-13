@@ -1,4 +1,5 @@
-import { MetaJsonApi, UserGetResponse } from '@osf/core/models';
+import { MetaJsonApi } from '../common';
+import { UserGetResponse } from '../user';
 
 export interface ViewOnlyLinksResponseJsonApi {
   data: ViewOnlyLinkJsonApi[];
@@ -47,7 +48,7 @@ export interface LinkWithMetaJsonApi {
   meta: Record<string, unknown>;
 }
 
-export interface PaginationLinksJsonApi {
+interface PaginationLinksJsonApi {
   first: string | null;
   last: string | null;
   prev: string | null;

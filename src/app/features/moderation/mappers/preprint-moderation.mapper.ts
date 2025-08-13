@@ -1,5 +1,4 @@
-import { ResponseJsonApi } from '@osf/core/models';
-import { PaginatedData } from '@osf/shared/models';
+import { PaginatedData, ResponseJsonApi } from '@osf/shared/models';
 
 import {
   PreprintProviderModerationInfo,

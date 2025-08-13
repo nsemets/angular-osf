@@ -1,5 +1,5 @@
-import { MetaJsonApi } from '@osf/core/models';
 import { InstitutionUsersLinksJsonApi } from '@osf/features/admin-institutions/models';
+import { MetaJsonApi } from '@osf/shared/models';
 
 export interface BibliographicContributorJsonApi {
   id: string;

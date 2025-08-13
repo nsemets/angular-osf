@@ -2,19 +2,18 @@ import { map, Observable } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { JsonApiService } from '@core/services';
-import { JsonApiResponse, ResponseJsonApi } from '@osf/core/models';
-import { MeetingsMapper } from '@osf/features/meetings/mappers';
+import { searchPreferencesToJsonApiQueryParams } from '@osf/shared/helpers';
+import { JsonApiResponse, ResponseJsonApi, SearchFilters } from '@osf/shared/models';
+import { JsonApiService } from '@osf/shared/services';
+
+import { meetingSortFieldMap, meetingSubmissionSortFieldMap } from '../constants';
+import { MeetingsMapper } from '../mappers';
 import {
   MeetingGetResponseJsonApi,
   MeetingSubmissionGetResponseJsonApi,
   MeetingSubmissionsWithPaging,
   MeetingsWithPaging,
-} from '@osf/features/meetings/models';
-import { searchPreferencesToJsonApiQueryParams } from '@osf/shared/utils';
-import { SearchFilters } from '@shared/models/filters';
-
-import { meetingSortFieldMap, meetingSubmissionSortFieldMap } from '../constants';
+} from '../models';
 
 import { environment } from 'src/environments/environment';
 

@@ -1,8 +1,8 @@
-import { ResponseJsonApi } from '@core/models';
 import {
   CollectionSubmissionReviewAction,
   CollectionSubmissionReviewActionJsonApi,
 } from '@osf/features/moderation/models';
+import { convertToSnakeCase } from '@osf/shared/helpers';
 import {
   CollectionContributor,
   CollectionContributorJsonApi,
@@ -17,8 +17,8 @@ import {
   CollectionSubmissionWithGuid,
   CollectionSubmissionWithGuidJsonApi,
   PaginatedData,
+  ResponseJsonApi,
 } from '@osf/shared/models';
-import { convertToSnakeCase } from '@shared/utils';
 
 export class CollectionsMapper {
   static fromGetCollectionContributorsResponse(response: CollectionContributorJsonApi[]): CollectionContributor[] {

@@ -4,8 +4,8 @@ import { catchError, forkJoin, Observable, tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { handleSectionError } from '@core/handlers';
 import { CitationTypes } from '@shared/enums';
+import { handleSectionError } from '@shared/helpers';
 import { CitationsService } from '@shared/services/citations.service';
 
 import { GetCitationStyles, GetDefaultCitations, GetStyledCitation, UpdateCustomCitation } from './citations.actions';

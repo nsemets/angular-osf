@@ -1,5 +1,5 @@
-import { ResponseJsonApi } from '@osf/core/models';
 import { RegistrationReviewStates, RevisionReviewStates } from '@osf/shared/enums';
+import { ResponseJsonApi } from '@osf/shared/models';
 
 export type RegistryResponseJsonApi = ResponseJsonApi<RegistryDataJsonApi[]>;
 

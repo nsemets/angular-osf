@@ -1,4 +1,4 @@
-import { ResponseJsonApi } from '@osf/core/models';
+import { ResponseJsonApi } from '@osf/shared/models';
 import { Institution, InstitutionAttributes } from '@shared/models';
 
 export interface InstitutionRelationships {

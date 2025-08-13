@@ -23,6 +23,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { SubmissionReviewStatus } from '@osf/features/moderation/enums';
+import { IS_XSMALL } from '@osf/shared/helpers';
 import {
   LoadingSpinnerComponent,
   MakeDecisionDialogComponent,
@@ -41,7 +42,6 @@ import {
   GetLinkedResources,
 } from '@shared/stores';
 import { ClearCollections } from '@shared/stores/collections';
-import { IS_XSMALL } from '@shared/utils';
 
 import {
   ClearCollectionModeration,

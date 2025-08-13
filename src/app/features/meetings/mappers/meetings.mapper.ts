@@ -1,4 +1,4 @@
-import { ResponseJsonApi } from '@core/models';
+import { ResponseJsonApi } from '@shared/models';
 
 import {
   MeetingGetResponseJsonApi,

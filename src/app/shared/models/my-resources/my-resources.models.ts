@@ -1,4 +1,4 @@
-import { ResponseJsonApi } from '@core/models';
+import { ResponseJsonApi } from '@shared/models';
 
 export type MyResourcesItemResponseJsonApi = ResponseJsonApi<MyResourcesItem[]>;
 

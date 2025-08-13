@@ -2,11 +2,19 @@ import { map, Observable } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { JsonApiResponse, ResponseJsonApi, UserGetResponse } from '@osf/core/models';
-import { JsonApiService } from '@osf/core/services';
-import { AddContributorType, ResourceType } from '@osf/shared/enums';
-import { ContributorsMapper } from '@osf/shared/mappers/contributors';
-import { ContributorAddModel, ContributorModel, ContributorResponse, PaginatedData } from '@osf/shared/models';
+import { AddContributorType, ResourceType } from '../enums';
+import { ContributorsMapper } from '../mappers';
+import {
+  ContributorAddModel,
+  ContributorModel,
+  ContributorResponse,
+  JsonApiResponse,
+  PaginatedData,
+  ResponseJsonApi,
+  UserGetResponse,
+} from '../models';
+
+import { JsonApiService } from './json-api.service';
 
 import { environment } from 'src/environments/environment';
 
