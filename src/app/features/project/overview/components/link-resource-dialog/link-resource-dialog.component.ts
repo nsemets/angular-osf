@@ -28,7 +28,7 @@ import { FormControl, FormsModule } from '@angular/forms';
 import { ProjectOverviewSelectors } from '@osf/features/project/overview/store';
 import { SearchInputComponent } from '@shared/components';
 import { ResourceSearchMode, ResourceType } from '@shared/enums';
-import { MyResourcesSearchFilters } from '@shared/models';
+import { MyResourcesItem, MyResourcesSearchFilters } from '@shared/models';
 import {
   CreateNodeLink,
   DeleteNodeLink,
@@ -164,24 +164,24 @@ export class LinkResourceDialogComponent {
     this.dialogRef.close();
   }
 
-  handleToggleNodeLink($event: CheckboxChangeEvent, linkProjectId: string) {
+  handleToggleNodeLink($event: CheckboxChangeEvent, resource: MyResourcesItem) {
     const currentProjectId = this.currentProject()?.id;
 
     if (!currentProjectId) {
       return;
     }
 
-    const isCurrentlyLinked = this.isItemLinked()(linkProjectId);
+    const isCurrentlyLinked = this.isItemLinked()(resource.id);
 
     if (isCurrentlyLinked) {
       const resources = this.linkedResources();
-      const linkToDelete = resources.find((resource) => resource.id === linkProjectId);
+      const linkToDelete = resources.find((component) => component.id === resource.id);
 
       if (!linkToDelete) return;
 
       this.actions.deleteNodeLink(currentProjectId, linkToDelete);
     } else {
-      this.actions.createNodeLink(currentProjectId, linkProjectId);
+      this.actions.createNodeLink(currentProjectId, resource);
     }
   }
 

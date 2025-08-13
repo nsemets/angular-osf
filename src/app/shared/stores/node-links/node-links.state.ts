@@ -27,7 +27,7 @@ export class NodeLinksState {
       },
     });
 
-    return this.nodeLinksService.createNodeLink(action.currentProjectId, action.linkProjectId).pipe(
+    return this.nodeLinksService.createNodeLink(action.currentProjectId, action.resource).pipe(
       tap(() => {
         ctx.patchState({
           linkedResources: {

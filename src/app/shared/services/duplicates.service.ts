@@ -3,7 +3,7 @@ import { map } from 'rxjs/operators';
 
 import { inject, Injectable } from '@angular/core';
 
-import { JsonApiResponseWithPaging } from '@core/models';
+import { ResponseJsonApi } from '@core/models';
 import { JsonApiService } from '@core/services';
 import { DuplicatesMapper } from '@shared/mappers';
 
@@ -36,9 +36,7 @@ export class DuplicatesService {
     }
 
     return this.jsonApiService
-      .get<
-        JsonApiResponseWithPaging<DuplicateJsonApi[], null>
-      >(`${environment.apiUrl}/${resourceType}/${resourceId}/forks/`, params)
+      .get<ResponseJsonApi<DuplicateJsonApi[]>>(`${environment.apiUrl}/${resourceType}/${resourceId}/forks/`, params)
       .pipe(map((res) => DuplicatesMapper.fromDuplicatesJsonApiResponse(res)));
   }
 }

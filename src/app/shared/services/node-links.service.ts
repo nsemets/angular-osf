@@ -6,7 +6,7 @@ import { inject, Injectable } from '@angular/core';
 import { JsonApiResponse } from '@core/models';
 import { JsonApiService } from '@osf/core/services';
 import { ComponentsMapper } from '@shared/mappers/components';
-import { ComponentGetResponseJsonApi, ComponentOverview } from '@shared/models';
+import { ComponentGetResponseJsonApi, ComponentOverview, MyResourcesItem } from '@shared/models';
 import { NodeLinkJsonApi } from '@shared/models/node-links';
 
 import { environment } from 'src/environments/environment';
@@ -17,18 +17,21 @@ import { environment } from 'src/environments/environment';
 export class NodeLinksService {
   jsonApiService = inject(JsonApiService);
 
-  createNodeLink(currentProjectId: string, linkProjectId: string): Observable<JsonApiResponse<NodeLinkJsonApi, null>> {
+  createNodeLink(
+    currentProjectId: string,
+    resource: MyResourcesItem
+  ): Observable<JsonApiResponse<NodeLinkJsonApi, null>> {
     const payload = {
       data: [
         {
-          type: 'linked_nodes',
-          id: linkProjectId,
+          type: resource.type,
+          id: resource.id,
         },
       ],
     };
 
     return this.jsonApiService.post<JsonApiResponse<NodeLinkJsonApi, null>>(
-      `${environment.apiUrl}/nodes/${currentProjectId}/relationships/linked_nodes/`,
+      `${environment.apiUrl}/nodes/${currentProjectId}/relationships/linked_${resource.type}/`,
       payload
     );
   }

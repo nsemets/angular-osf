@@ -7,7 +7,6 @@ export * from './duplicates.mapper';
 export * from './filters';
 export * from './institutions';
 export * from './licenses.mapper';
-export * from './node-links';
 export * from './registry';
 export * from './resource-card';
 export * from './resource-overview.mappers';

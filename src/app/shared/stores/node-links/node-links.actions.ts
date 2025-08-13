@@ -1,11 +1,11 @@
-import { ComponentOverview } from '@shared/models';
+import { ComponentOverview, MyResourcesItem } from '@shared/models';
 
 export class CreateNodeLink {
   static readonly type = '[Node Links] Create Node Link';
 
   constructor(
     public currentProjectId: string,
-    public linkProjectId: string
+    public resource: MyResourcesItem
   ) {}
 }
 
