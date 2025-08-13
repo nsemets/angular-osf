@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 
 import { TruncatedTextComponent } from '@osf/shared/components';
 import { ResourceType, UserPermissions } from '@osf/shared/enums';
-import { IS_XSMALL } from '@osf/shared/utils';
+import { IS_XSMALL } from '@osf/shared/helpers';
 
 import { ProjectOverviewSelectors } from '../../store';
 import { AddComponentDialogComponent } from '../add-component-dialog/add-component-dialog.component';

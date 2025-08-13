@@ -1,4 +1,3 @@
-import { ResponseJsonApi, UserGetResponse } from '@osf/core/models';
 import { AddContributorType, ContributorPermission } from '@osf/shared/enums';
 import {
   ContributorAddModel,
@@ -6,6 +5,8 @@ import {
   ContributorModel,
   ContributorResponse,
   PaginatedData,
+  ResponseJsonApi,
+  UserGetResponse,
 } from '@osf/shared/models';
 
 export class ContributorsMapper {

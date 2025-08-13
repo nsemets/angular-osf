@@ -1,4 +1,4 @@
-import { MetaJsonApi } from '@osf/core/models';
+import { MetaJsonApi } from '@osf/shared/models';
 
 import { RegistryComponentModel } from './registry-components.models';
 

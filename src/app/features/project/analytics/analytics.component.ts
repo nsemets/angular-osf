@@ -14,8 +14,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { BarChartComponent, LineChartComponent, PieChartComponent, SubHeaderComponent } from '@osf/shared/components';
 import { ResourceType } from '@osf/shared/enums';
+import { IS_WEB } from '@osf/shared/helpers';
 import { DatasetInput } from '@osf/shared/models';
-import { IS_WEB } from '@osf/shared/utils';
 
 import { AnalyticsKpiComponent } from './components';
 import { DATE_RANGE_OPTIONS } from './constants';

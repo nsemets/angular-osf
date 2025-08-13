@@ -13,4 +13,5 @@ export * from './resource-overview.mappers';
 export * from './review-actions.mapper';
 export * from './review-permissions.mapper';
 export * from './subjects';
+export * from './user';
 export * from './view-only-links.mapper';

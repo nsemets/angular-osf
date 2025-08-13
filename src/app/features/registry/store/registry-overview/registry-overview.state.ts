@@ -5,9 +5,9 @@ import { catchError } from 'rxjs/operators';
 
 import { inject, Injectable } from '@angular/core';
 
-import { handleSectionError } from '@osf/core/handlers';
 import { SetCurrentProvider } from '@osf/core/store/provider/provider.actions';
 import { SetUserAsModerator } from '@osf/core/store/user';
+import { handleSectionError } from '@osf/shared/helpers';
 
 import { RegistryOverviewService } from '../../services';
 

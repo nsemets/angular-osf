@@ -4,8 +4,6 @@ import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { JsonApiResponse, ResponseJsonApi } from '@core/models';
-import { JsonApiService } from '@core/services';
 import {
   CollectionSubmissionReviewAction,
   CollectionSubmissionReviewActionJsonApi,
@@ -26,8 +24,11 @@ import {
   CollectionSubmissionWithGuid,
   CollectionSubmissionWithGuidJsonApi,
   ContributorsResponseJsonApi,
+  JsonApiResponse,
   PaginatedData,
+  ResponseJsonApi,
 } from '@shared/models';
+import { JsonApiService } from '@shared/services';
 import { SetTotalSubmissions } from '@shared/stores/collections';
 
 import { ReviewActionsMapper } from '../mappers';
