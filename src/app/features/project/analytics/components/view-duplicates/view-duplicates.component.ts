@@ -219,7 +219,7 @@ export class ViewDuplicatesComponent {
     });
 
     dialogRef.onClose.subscribe((result) => {
-      if (result.success) {
+      if (result && result.success) {
         const resource = this.currentResource();
         if (resource) {
           this.actions.getDuplicates(resource.id, resource.type, parseInt(this.currentPage()), this.pageSize);
