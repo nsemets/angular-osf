@@ -41,5 +41,4 @@ export { TagsInputComponent } from './tags-input/tags-input.component';
 export { TextInputComponent } from './text-input/text-input.component';
 export { ToastComponent } from './toast/toast.component';
 export { TruncatedTextComponent } from './truncated-text/truncated-text.component';
-export { ViewDuplicatesComponent } from './view-duplicates/view-duplicates.component';
 export { ViewOnlyTableComponent } from './view-only-table/view-only-table.component';

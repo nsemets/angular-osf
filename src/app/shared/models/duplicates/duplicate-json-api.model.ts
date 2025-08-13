@@ -1,4 +1,4 @@
-export interface ForkJsonApi {
+export interface DuplicateJsonApi {
   id: string;
   type: string;
   attributes: {

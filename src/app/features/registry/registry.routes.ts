@@ -8,7 +8,7 @@ import { RegistryLinksState } from '@osf/features/registry/store/registry-links'
 import { RegistryMetadataState } from '@osf/features/registry/store/registry-metadata';
 import { RegistryOverviewState } from '@osf/features/registry/store/registry-overview';
 import { ResourceType } from '@osf/shared/enums';
-import { ContributorsState, ForksState, ViewOnlyLinkState } from '@osf/shared/stores';
+import { ContributorsState, DuplicatesState, ViewOnlyLinkState } from '@osf/shared/stores';
 
 import { AnalyticsState } from '../project/analytics/store';
 
@@ -74,10 +74,10 @@ export const registryRoutes: Routes = [
         path: 'analytics/duplicates',
         data: { resourceType: ResourceType.Registration },
         loadComponent: () =>
-          import('@shared/components/view-duplicates/view-duplicates.component').then(
+          import('../project/analytics/components/view-duplicates/view-duplicates.component').then(
             (mod) => mod.ViewDuplicatesComponent
           ),
-        providers: [provideStates([ForksState])],
+        providers: [provideStates([DuplicatesState])],
       },
       {
         path: 'files',

@@ -5,28 +5,23 @@ import { inject, Injectable } from '@angular/core';
 
 import { JsonApiResponseWithPaging } from '@core/models';
 import { JsonApiService } from '@core/services';
-import { ForksMapper } from '@shared/mappers';
-import { Fork, ForkJsonApi } from '@shared/models/forks';
+import { DuplicatesMapper } from '@shared/mappers';
 
-import { environment } from '../../../environments/environment';
-
-export interface ForksWithPagination {
-  data: Fork[];
-  totalCount: number;
-}
+import { DuplicateJsonApi, DuplicatesWithTotal } from 'src/app/shared/models/duplicates';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ForkService {
+export class DuplicatesService {
   private jsonApiService = inject(JsonApiService);
 
-  fetchAllForks(
+  fetchAllDuplicates(
     resourceId: string,
     resourceType: string,
     pageNumber?: number,
     pageSize?: number
-  ): Observable<ForksWithPagination> {
+  ): Observable<DuplicatesWithTotal> {
     const params: Record<string, unknown> = {
       embed: 'bibliographic_contributors',
       'fields[users]': 'family_name,full_name,given_name,middle_name',
@@ -42,15 +37,8 @@ export class ForkService {
 
     return this.jsonApiService
       .get<
-        JsonApiResponseWithPaging<ForkJsonApi[], null>
+        JsonApiResponseWithPaging<DuplicateJsonApi[], null>
       >(`${environment.apiUrl}/${resourceType}/${resourceId}/forks/`, params)
-      .pipe(
-        map((res) => {
-          return {
-            data: ForksMapper.fromForksJsonApiResponse(res.data),
-            totalCount: res.links.meta.total,
-          };
-        })
-      );
+      .pipe(map((res) => DuplicatesMapper.fromDuplicatesJsonApiResponse(res)));
   }
 }

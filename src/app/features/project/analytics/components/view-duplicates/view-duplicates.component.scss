@@ -1,5 +1,5 @@
-@use "/assets/styles/variables" as var;
-@use "/assets/styles/mixins" as mix;
+@use "assets/styles/variables" as var;
+@use "assets/styles/mixins" as mix;
 
 :host {
   display: flex;
@@ -7,12 +7,8 @@
   flex: 1;
 }
 
-.fork-wrapper {
+.duplicate-wrapper {
   border: 1px solid var.$grey-2;
   border-radius: mix.rem(12px);
-  color: var.$dark-blue-1;
-}
-
-.fork-title {
   color: var.$dark-blue-1;
 }

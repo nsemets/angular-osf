@@ -1,4 +1,4 @@
-export interface Fork {
+export interface Duplicate {
   id: string;
   type: string;
   title: string;
@@ -15,4 +15,9 @@ export interface Fork {
     id: string;
     type: string;
   }[];
+}
+
+export interface DuplicatesWithTotal {
+  data: Duplicate[];
+  totalCount: number;
 }

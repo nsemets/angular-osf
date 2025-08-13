@@ -3,7 +3,7 @@ export * from './bookmarks';
 export * from './citations';
 export * from './collections';
 export * from './contributors';
-export * from './forks';
+export * from './duplicates';
 export * from './institutions';
 export * from './institutions-search';
 export * from './licenses';

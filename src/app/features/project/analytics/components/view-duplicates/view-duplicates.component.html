@@ -6,22 +6,22 @@
 />
 
 <div class="flex flex-column flex-1 bg-white gap-5 p-3 sm:p-4">
-  @if (!isForksLoading() && currentResource()) {
-    @if (!forks().length) {
+  @if (!isDuplicatesLoading() && currentResource()) {
+    @if (!duplicates().length) {
       <h3 class="mt-5 text-center">{{ 'project.overview.dialog.fork.noForksMessage' | translate }}</h3>
     } @else {
       <p>{{ 'project.overview.dialog.fork.forksMessage' | translate }}</p>
 
-      @for (fork of forks(); track fork.id) {
-        @if (fork.currentUserPermissions.includes(UserPermissions.Read)) {
-          <div class="fork-wrapper flex flex-column gap-3 p-3 sm:p-4">
+      @for (duplicate of duplicates(); track duplicate.id) {
+        @if (duplicate.currentUserPermissions.includes(UserPermissions.Read)) {
+          <div class="duplicate-wrapper flex flex-column gap-3 p-3 sm:p-4">
             <div class="flex justify-content-between align-items-center">
               <h2 class="flex gap-2">
-                <i [ngClass]="fork.public ? 'osf-icon-padlock-unlock' : 'osf-icon-padlock'"></i>
-                {{ fork.title }}
+                <i [ngClass]="duplicate.public ? 'osf-icon-padlock-unlock' : 'osf-icon-padlock'"></i>
+                {{ duplicate.title }}
               </h2>
               <div>
-                @if (fork.currentUserPermissions.includes(UserPermissions.Write)) {
+                @if (duplicate.currentUserPermissions.includes(UserPermissions.Write)) {
                   <p-button
                     severity="contrast"
                     icon="fas fa-ellipsis-vertical"
@@ -32,7 +32,7 @@
                   </p-button>
                 }
 
-                <p-menu appendTo="body" #componentActionMenu [model]="forkActionItems(fork.id)" popup>
+                <p-menu appendTo="body" #componentActionMenu [model]="forkActionItems(duplicate.id)" popup>
                   <ng-template #item let-item>
                     <a class="p-menu-item-link">{{ item.label | translate }}</a>
                   </ng-template>
@@ -43,17 +43,17 @@
             <div class="component-name flex flex-column gap-2">
               <div class="flex flex-wrap align-items-center gap-1">
                 <span class="font-bold">{{ 'common.labels.forked' | translate }}:</span>
-                <p>{{ fork.dateCreated | date: 'MMM d, y, h:mm a' }}</p>
+                <p>{{ duplicate.dateCreated | date: 'MMM d, y, h:mm a' }}</p>
               </div>
 
               <div class="flex flex-wrap align-items-center gap-1">
                 <span class="font-bold">{{ 'common.labels.lastUpdated' | translate }}:</span>
-                <p>{{ fork.dateModified | date: 'MMM d, y, h:mm a' }}</p>
+                <p>{{ duplicate.dateModified | date: 'MMM d, y, h:mm a' }}</p>
               </div>
 
               <div class="flex flex-wrap align-items-center gap-1">
                 <span class="font-bold">{{ 'common.labels.contributors' | translate }}:</span>
-                @for (contributor of fork.contributors; track contributor.id) {
+                @for (contributor of duplicate.contributors; track contributor.id) {
                   <div>
                     <a [href]="contributor.id" target="_blank" class="font-bold"> {{ contributor.fullName }}</a>
                     <span>{{ $last ? '' : ',' }}</span>
@@ -64,22 +64,22 @@
               <div class="component-description">
                 <div class="flex flex-wrap align-items-center gap-1">
                   <span class="font-bold">{{ 'common.labels.description' | translate }}:</span>
-                  <osf-truncated-text [text]="fork.description" />
+                  <osf-truncated-text [text]="duplicate.description" />
                 </div>
               </div>
             </div>
             <p-button
               [label]="'common.buttons.view' | translate"
               severity="secondary"
-              [routerLink]="'/project/' + fork.id"
+              [routerLink]="'/project/' + duplicate.id"
             />
           </div>
         }
       }
 
-      @if (totalForks() > pageSize) {
+      @if (totalDuplicates() > pageSize) {
         <osf-custom-paginator
-          [totalCount]="totalForks()"
+          [totalCount]="totalDuplicates()"
           [rows]="pageSize"
           [first]="firstIndex()"
           (pageChanged)="onPageChange($event)"

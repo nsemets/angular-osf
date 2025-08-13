@@ -8,7 +8,7 @@ import {
   CitationsState,
   CollectionsState,
   ContributorsState,
-  ForksState,
+  DuplicatesState,
   NodeLinksState,
   SubjectsState,
   ViewOnlyLinkState,
@@ -75,10 +75,10 @@ export const projectRoutes: Routes = [
         path: 'analytics/duplicates',
         data: { resourceType: ResourceType.Project },
         loadComponent: () =>
-          import('@shared/components/view-duplicates/view-duplicates.component').then(
+          import('../project/analytics/components/view-duplicates/view-duplicates.component').then(
             (mod) => mod.ViewDuplicatesComponent
           ),
-        providers: [provideStates([ForksState])],
+        providers: [provideStates([DuplicatesState])],
       },
       {
         path: 'wiki',

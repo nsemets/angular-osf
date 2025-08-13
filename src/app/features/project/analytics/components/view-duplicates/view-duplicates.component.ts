@@ -38,8 +38,8 @@ import {
 } from '@shared/components';
 import { ResourceType, UserPermissions } from '@shared/enums';
 import { ToolbarResource } from '@shared/models';
-import { ClearForks, ForksSelectors, GetAllForks } from '@shared/stores';
-import { IS_XSMALL } from '@shared/utils';
+import { ClearDuplicates, DuplicatesSelectors, GetAllDuplicates } from '@shared/stores';
+import { IS_SMALL } from '@shared/utils';
 
 @Component({
   selector: 'osf-view-duplicates',
@@ -67,15 +67,15 @@ export class ViewDuplicatesComponent {
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
   protected currentPage = signal<string>('1');
-  protected isMobile = toSignal(inject(IS_XSMALL));
+  protected isSmall = toSignal(inject(IS_SMALL));
   protected readonly pageSize = 10;
   protected readonly UserPermissions = UserPermissions;
   protected firstIndex = computed(() => (parseInt(this.currentPage()) - 1) * this.pageSize);
   private project = select(ProjectOverviewSelectors.getProject);
   private registration = select(RegistryOverviewSelectors.getRegistry);
-  protected forks = select(ForksSelectors.getForks);
-  protected isForksLoading = select(ForksSelectors.getForksLoading);
-  protected totalForks = select(ForksSelectors.getForksTotalCount);
+  protected duplicates = select(DuplicatesSelectors.getDuplicates);
+  protected isDuplicatesLoading = select(DuplicatesSelectors.getDuplicatesLoading);
+  protected totalDuplicates = select(DuplicatesSelectors.getDuplicatesTotalCount);
 
   protected readonly forkActionItems = (resourceId: string) => [
     {
@@ -111,8 +111,8 @@ export class ViewDuplicatesComponent {
   protected actions = createDispatchMap({
     getProject: GetProjectById,
     getRegistration: GetRegistryById,
-    getForks: GetAllForks,
-    clearForks: ClearForks,
+    getDuplicates: GetAllDuplicates,
+    clearDuplicates: ClearDuplicates,
     clearProject: ClearProjectOverview,
     clearRegistration: ClearRegistryOverview,
   });
@@ -132,7 +132,7 @@ export class ViewDuplicatesComponent {
       const resource = this.currentResource();
 
       if (resource) {
-        this.actions.getForks(resource.id, resource.type, parseInt(this.currentPage()), this.pageSize);
+        this.actions.getDuplicates(resource.id, resource.type, parseInt(this.currentPage()), this.pageSize);
       }
     });
 
@@ -157,8 +157,11 @@ export class ViewDuplicatesComponent {
 
   protected handleForkResource(): void {
     const toolbarResource = this.toolbarResource();
+    const dialogWidth = !this.isSmall() ? '95vw' : '450px';
+
     if (toolbarResource) {
       const dialogRef = this.dialogService.open(ForkDialogComponent, {
+        width: dialogWidth,
         focusOnShow: false,
         header: this.translateService.instant('project.overview.dialog.fork.headerProject'),
         closeOnEscape: true,
@@ -174,7 +177,7 @@ export class ViewDuplicatesComponent {
         if (result.success) {
           const resource = this.currentResource();
           if (resource) {
-            this.actions.getForks(resource.id, resource.type, parseInt(this.currentPage()), this.pageSize);
+            this.actions.getDuplicates(resource.id, resource.type, parseInt(this.currentPage()), this.pageSize);
           }
         }
       });
@@ -190,14 +193,14 @@ export class ViewDuplicatesComponent {
 
   setupCleanup(): void {
     this.destroyRef.onDestroy(() => {
-      this.actions.clearForks();
+      this.actions.clearDuplicates();
       this.actions.clearProject();
       this.actions.clearRegistration();
     });
   }
 
   private handleDeleteFork(id: string): void {
-    const dialogWidth = this.isMobile() ? '95vw' : '650px';
+    const dialogWidth = !this.isSmall() ? '95vw' : '650px';
 
     const dialogRef = this.dialogService.open(DeleteComponentDialogComponent, {
       width: dialogWidth,
@@ -219,7 +222,7 @@ export class ViewDuplicatesComponent {
       if (result.success) {
         const resource = this.currentResource();
         if (resource) {
-          this.actions.getForks(resource.id, resource.type, parseInt(this.currentPage()), this.pageSize);
+          this.actions.getDuplicates(resource.id, resource.type, parseInt(this.currentPage()), this.pageSize);
         }
       }
     });
