@@ -3,6 +3,7 @@ import { MockComponent, MockPipe, MockProvider } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { AuthService } from '@osf/core/services';
 import { TextInputComponent } from '@shared/components';
 
 import { ForgotPasswordComponent } from './forgot-password.component';
@@ -14,7 +15,7 @@ describe('ForgotPasswordComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ForgotPasswordComponent, MockPipe(TranslatePipe), MockComponent(TextInputComponent)],
-      providers: [MockProvider(TranslateService)],
+      providers: [MockProvider(TranslateService), MockProvider(AuthService)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ForgotPasswordComponent);
