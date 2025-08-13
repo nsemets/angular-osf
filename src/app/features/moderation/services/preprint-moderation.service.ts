@@ -2,9 +2,8 @@ import { map, Observable } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { JsonApiResponse, JsonApiResponseWithPaging } from '@osf/core/models';
-import { JsonApiService } from '@osf/core/services';
-import { PaginatedData } from '@osf/shared/models';
+import { JsonApiResponse, JsonApiResponseWithPaging, PaginatedData } from '@osf/shared/models';
+import { JsonApiService } from '@osf/shared/services';
 
 import { PreprintSubmissionsSort } from '../enums';
 import { PreprintModerationMapper, RegistryModerationMapper } from '../mappers';

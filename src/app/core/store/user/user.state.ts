@@ -5,9 +5,9 @@ import { tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { UserMapper } from '@osf/core/models';
 import { removeNullable } from '@osf/shared/constants';
 import { ProfileSettingsKey } from '@osf/shared/enums';
+import { UserMapper } from '@osf/shared/mappers';
 import { Social } from '@osf/shared/models';
 
 import { UserService } from '../../services';

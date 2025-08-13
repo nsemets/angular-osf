@@ -1,4 +1,4 @@
-import { JsonApiResponseWithPaging } from '@core/models';
+import { JsonApiResponseWithPaging } from '@shared/models';
 
 import {
   MeetingGetResponseJsonApi,

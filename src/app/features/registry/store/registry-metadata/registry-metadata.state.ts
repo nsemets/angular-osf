@@ -4,9 +4,9 @@ import { catchError, tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { handleSectionError } from '@core/handlers';
 import { CedarMetadataRecord, CedarMetadataRecordJsonApi } from '@osf/features/project/metadata/models';
 import { ResourceType } from '@shared/enums';
+import { handleSectionError } from '@shared/helpers';
 import { GetAllContributors } from '@shared/stores';
 
 import { RegistryMetadataMapper } from '../../mappers';

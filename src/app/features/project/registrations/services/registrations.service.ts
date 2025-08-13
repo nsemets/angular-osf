@@ -2,10 +2,9 @@ import { map, Observable } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { JsonApiResponseWithPaging } from '@osf/core/models';
-import { JsonApiService } from '@osf/core/services';
 import { RegistrationMapper } from '@osf/shared/mappers/registration';
-import { RegistrationCard, RegistrationDataJsonApi } from '@osf/shared/models';
+import { JsonApiResponseWithPaging, RegistrationCard, RegistrationDataJsonApi } from '@osf/shared/models';
+import { JsonApiService } from '@osf/shared/services';
 
 import { environment } from 'src/environments/environment';
 

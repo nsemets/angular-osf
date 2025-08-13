@@ -4,7 +4,7 @@ import { catchError, tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { handleSectionError } from '@core/handlers';
+import { handleSectionError } from '@shared/helpers';
 
 import { InstitutionPreprint, InstitutionProject, InstitutionRegistration, InstitutionSummaryMetrics } from '../models';
 import { InstitutionsAdminService } from '../services/institutions-admin.service';

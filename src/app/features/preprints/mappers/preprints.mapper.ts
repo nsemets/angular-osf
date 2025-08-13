@@ -1,4 +1,3 @@
-import { ApiData, JsonApiResponseWithMeta, JsonApiResponseWithPaging } from '@core/models';
 import {
   Preprint,
   PreprintAttributesJsonApi,
@@ -8,6 +7,7 @@ import {
   PreprintShortInfoWithTotalCount,
 } from '@osf/features/preprints/models';
 import { LicensesMapper } from '@shared/mappers';
+import { ApiData, JsonApiResponseWithMeta, JsonApiResponseWithPaging } from '@shared/models';
 
 export class PreprintsMapper {
   static toCreatePayload(title: string, abstract: string, providerId: string) {

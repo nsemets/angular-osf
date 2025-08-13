@@ -8,9 +8,9 @@ import { ChangeDetectionStrategy, Component, DestroyRef, effect, HostBinding, in
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder } from '@angular/forms';
 
-import { User } from '@osf/core/models';
 import { UpdateProfileSettingsUser, UserSelectors } from '@osf/core/store/user';
 import { CustomValidators } from '@osf/shared/helpers';
+import { User } from '@osf/shared/models';
 import { CustomConfirmationService, LoaderService, ToastService } from '@osf/shared/services';
 
 import { NameForm } from '../../models';

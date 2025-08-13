@@ -2,8 +2,6 @@ import { map, Observable, switchMap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { JsonApiService } from '@core/services';
-import { ApiData } from '@osf/core/models';
 import { PreprintsMapper } from '@osf/features/preprints/mappers';
 import {
   Preprint,
@@ -11,8 +9,8 @@ import {
   PreprintFilesLinks,
   PreprintRelationshipsJsonApi,
 } from '@osf/features/preprints/models';
-import { GetFileResponse, GetFilesResponse, OsfFile } from '@osf/shared/models';
-import { FilesService } from '@shared/services';
+import { ApiData, GetFileResponse, GetFilesResponse, OsfFile } from '@osf/shared/models';
+import { FilesService, JsonApiService } from '@shared/services';
 
 import { environment } from 'src/environments/environment';
 

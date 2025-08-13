@@ -2,10 +2,9 @@ import { map, Observable } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { JsonApiResponse, JsonApiResponseWithPaging, UserGetResponse } from '@osf/core/models';
-import { JsonApiService } from '@osf/core/services';
 import { ResourceType } from '@osf/shared/enums';
-import { PaginatedData } from '@osf/shared/models';
+import { JsonApiResponse, JsonApiResponseWithPaging, PaginatedData, UserGetResponse } from '@osf/shared/models';
+import { JsonApiService } from '@osf/shared/services';
 
 import { AddModeratorType } from '../enums';
 import { ModerationMapper } from '../mappers';

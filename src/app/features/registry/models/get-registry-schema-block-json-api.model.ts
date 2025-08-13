@@ -1,4 +1,4 @@
-import { ApiData, JsonApiResponse } from '@core/models';
+import { ApiData, JsonApiResponse } from '@shared/models';
 
 export type GetRegistrySchemaBlockJsonApi = JsonApiResponse<ApiData<SchemaBlockAttributes, null, null, null>[], null>;
 

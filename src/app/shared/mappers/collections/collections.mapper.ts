@@ -1,4 +1,3 @@
-import { JsonApiResponseWithPaging } from '@core/models';
 import {
   CollectionSubmissionReviewAction,
   CollectionSubmissionReviewActionJsonApi,
@@ -19,6 +18,7 @@ import {
   CollectionSubmissionWithGuidJsonApi,
   PaginatedData,
 } from '@osf/shared/models';
+import { JsonApiResponseWithPaging } from '@shared/models';
 
 export class CollectionsMapper {
   static fromGetCollectionContributorsResponse(response: CollectionContributorJsonApi[]): CollectionContributor[] {

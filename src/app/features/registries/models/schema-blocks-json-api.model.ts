@@ -1,4 +1,4 @@
-import { ApiData, MetaJsonApi, PaginationLinksJsonApi } from '@osf/core/models';
+import { ApiData, MetaJsonApi, PaginationLinksJsonApi } from '@osf/shared/models';
 
 import { BlockType } from '../enums';
 

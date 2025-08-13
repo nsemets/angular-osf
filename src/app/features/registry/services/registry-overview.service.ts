@@ -2,7 +2,6 @@ import { map, Observable } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { JsonApiService } from '@core/services';
 import { RegistryModerationMapper } from '@osf/features/moderation/mappers';
 import { ReviewAction, ReviewActionsResponseJsonApi } from '@osf/features/moderation/models';
 import { MapRegistryOverview, MapRegistrySchemaBlock } from '@osf/features/registry/mappers';
@@ -19,6 +18,7 @@ import {
 } from '@osf/features/registry/models';
 import { ReviewActionsMapper } from '@osf/shared/mappers';
 import { ReviewActionPayload } from '@osf/shared/models/review-action';
+import { JsonApiService } from '@shared/services';
 
 import { environment } from 'src/environments/environment';
 

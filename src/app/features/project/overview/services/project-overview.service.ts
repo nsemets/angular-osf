@@ -3,10 +3,10 @@ import { map } from 'rxjs/operators';
 
 import { inject, Injectable } from '@angular/core';
 
-import { JsonApiResponse } from '@core/models';
-import { JsonApiService } from '@osf/core/services';
 import { ComponentGetResponseJsonApi, ComponentOverview } from '@osf/shared/models';
+import { JsonApiService } from '@osf/shared/services';
 import { ComponentsMapper } from '@shared/mappers';
+import { JsonApiResponse } from '@shared/models';
 
 import { ProjectOverviewMapper } from '../mappers';
 import { ProjectOverview, ProjectOverviewResponseJsonApi } from '../models';

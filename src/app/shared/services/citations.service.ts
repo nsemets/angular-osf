@@ -3,8 +3,6 @@ import { map, Observable } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
-import { JsonApiResponse } from '@core/models';
-import { JsonApiService } from '@core/services';
 import { CitationsMapper } from '@shared/mappers';
 import {
   CitationStyle,
@@ -12,9 +10,11 @@ import {
   CustomCitationPayload,
   DefaultCitation,
   DefaultCitationJsonApi,
+  JsonApiResponse,
   StyledCitation,
   StyledCitationJsonApi,
 } from '@shared/models';
+import { JsonApiService } from '@shared/services';
 
 import { environment } from 'src/environments/environment';
 

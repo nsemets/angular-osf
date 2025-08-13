@@ -4,9 +4,9 @@ import { CookieService } from 'ngx-cookie-service';
 
 import { inject, Injectable } from '@angular/core';
 
-import { JsonApiService } from '@osf/core/services';
 import { ClearCurrentUser } from '@osf/core/store/user';
 import { urlParam } from '@osf/shared/helpers';
+import { JsonApiService } from '@osf/shared/services';
 
 import { SignUpModel } from '../models';
 

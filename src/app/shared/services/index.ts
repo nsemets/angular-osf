@@ -7,6 +7,7 @@ export { CustomConfirmationService } from './custom-confirmation.service';
 export { FilesService } from './files.service';
 export { FiltersOptionsService } from './filters-options.service';
 export { InstitutionsService } from './institutions.service';
+export { JsonApiService } from './json-api.service';
 export { LicensesService } from './licenses.service';
 export { LoaderService } from './loader.service';
 export { MyResourcesService } from './my-resources.service';

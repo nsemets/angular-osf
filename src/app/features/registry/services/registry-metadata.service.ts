@@ -3,12 +3,12 @@ import { map } from 'rxjs/operators';
 
 import { inject, Injectable } from '@angular/core';
 
-import { JsonApiService } from '@osf/core/services';
 import {
   CedarMetadataRecord,
   CedarMetadataRecordJsonApi,
   CedarMetadataTemplateJsonApi,
 } from '@osf/features/project/metadata/models';
+import { JsonApiService } from '@osf/shared/services';
 import { License } from '@shared/models';
 
 import { RegistryMetadataMapper } from '../mappers';

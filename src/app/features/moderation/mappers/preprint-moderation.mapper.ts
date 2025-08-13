@@ -1,5 +1,4 @@
-import { JsonApiResponseWithPaging } from '@osf/core/models';
-import { PaginatedData } from '@osf/shared/models';
+import { JsonApiResponseWithPaging, PaginatedData } from '@osf/shared/models';
 
 import {
   PreprintProviderModerationInfo,

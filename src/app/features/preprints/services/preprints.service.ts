@@ -2,8 +2,6 @@ import { map, Observable } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { JsonApiService } from '@core/services';
-import { ApiData, JsonApiResponse, JsonApiResponseWithMeta, JsonApiResponseWithPaging } from '@osf/core/models';
 import { preprintSortFieldMap } from '@osf/features/preprints/constants';
 import { PreprintsMapper } from '@osf/features/preprints/mappers';
 import {
@@ -14,7 +12,9 @@ import {
   PreprintRelationshipsJsonApi,
 } from '@osf/features/preprints/models';
 import { searchPreferencesToJsonApiQueryParams } from '@osf/shared/helpers';
+import { ApiData, JsonApiResponse, JsonApiResponseWithMeta, JsonApiResponseWithPaging } from '@osf/shared/models';
 import { SearchFilters } from '@shared/models';
+import { JsonApiService } from '@shared/services';
 
 import { environment } from 'src/environments/environment';
 

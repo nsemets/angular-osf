@@ -5,6 +5,7 @@ export * from './can-deactivate.interface';
 export * from './charts';
 export * from './citations';
 export * from './collections';
+export * from './common';
 export * from './components';
 export * from './confirmation-options.model';
 export * from './contributors';
