@@ -7,6 +7,7 @@ import {
   Preprint,
   PreprintAttributesJsonApi,
   PreprintFilesLinks,
+  PreprintLinksJsonApi,
   PreprintRelationshipsJsonApi,
 } from '@osf/features/preprints/models';
 import { ApiData, GetFileResponse, GetFilesResponse, OsfFile } from '@osf/shared/models';
@@ -23,7 +24,7 @@ export class PreprintFilesService {
 
   updateFileRelationship(preprintId: string, fileId: string): Observable<Preprint> {
     return this.jsonApiService
-      .patch<ApiData<PreprintAttributesJsonApi, null, PreprintRelationshipsJsonApi, null>>(
+      .patch<ApiData<PreprintAttributesJsonApi, null, PreprintRelationshipsJsonApi, PreprintLinksJsonApi>>(
         `${environment.apiUrl}/preprints/${preprintId}/`,
         {
           data: {

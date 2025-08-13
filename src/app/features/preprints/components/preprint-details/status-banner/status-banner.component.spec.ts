@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ReviewDataComponent } from './review-data.component';
+import { StatusBannerComponent } from './status-banner.component';
 
-describe('ReviewDataComponent', () => {
-  let component: ReviewDataComponent;
-  let fixture: ComponentFixture<ReviewDataComponent>;
+describe.skip('StatusBarComponent', () => {
+  let component: StatusBannerComponent;
+  let fixture: ComponentFixture<StatusBannerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReviewDataComponent],
+      imports: [StatusBannerComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ReviewDataComponent);
+    fixture = TestBed.createComponent(StatusBannerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

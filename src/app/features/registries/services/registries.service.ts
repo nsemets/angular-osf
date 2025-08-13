@@ -2,18 +2,20 @@ import { map, Observable } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { RegistrationMapper } from '@osf/shared/mappers/registration';
+import { PageSchemaMapper, RegistrationMapper } from '@osf/shared/mappers/registration';
 import {
   DraftRegistrationDataJsonApi,
   DraftRegistrationModel,
   DraftRegistrationRelationshipsJsonApi,
   DraftRegistrationResponseJsonApi,
   JsonApiResponseWithPaging,
+  PageSchema,
   RegistrationAttributesJsonApi,
   RegistrationCard,
   RegistrationDataJsonApi,
   RegistrationModel,
   RegistrationResponseJsonApi,
+  SchemaBlocksResponseJsonApi,
   SchemaResponse,
   SchemaResponseDataJsonApi,
   SchemaResponseJsonApi,
@@ -22,8 +24,6 @@ import {
 import { JsonApiService } from '@osf/shared/services';
 
 import { SchemaActionTrigger } from '../enums';
-import { PageSchemaMapper } from '../mappers';
-import { PageSchema, SchemaBlocksResponseJsonApi } from '../models';
 
 import { environment } from 'src/environments/environment';
 

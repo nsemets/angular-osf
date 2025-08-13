@@ -4,19 +4,19 @@ import { inject, Injectable } from '@angular/core';
 
 import { RegistryModerationMapper } from '@osf/features/moderation/mappers';
 import { ReviewAction, ReviewActionsResponseJsonApi } from '@osf/features/moderation/models';
-import { MapRegistryOverview, MapRegistrySchemaBlock } from '@osf/features/registry/mappers';
+import { MapRegistryOverview } from '@osf/features/registry/mappers';
 import {
   GetRegistryInstitutionsJsonApi,
   GetRegistryOverviewJsonApi,
-  GetRegistrySchemaBlockJsonApi,
   GetResourceSubjectsJsonApi,
   RegistryInstitution,
   RegistryOverview,
   RegistryOverviewJsonApiData,
-  RegistrySchemaBlock,
   RegistrySubject,
 } from '@osf/features/registry/models';
 import { ReviewActionsMapper } from '@osf/shared/mappers';
+import { PageSchemaMapper } from '@osf/shared/mappers/registration';
+import { PageSchema, SchemaBlocksResponseJsonApi } from '@osf/shared/models';
 import { ReviewActionPayload } from '@osf/shared/models/review-action';
 import { JsonApiService } from '@shared/services';
 
@@ -77,15 +77,15 @@ export class RegistryOverviewService {
       );
   }
 
-  getSchemaBlocks(schemaLink: string): Observable<RegistrySchemaBlock[]> {
+  getSchemaBlocks(schemaLink: string): Observable<PageSchema[]> {
     const params = {
-      'page[size]': 100,
+      'page[size]': 200,
       page: 1,
     };
 
     return this.jsonApiService
-      .get<GetRegistrySchemaBlockJsonApi>(`${schemaLink}schema_blocks`, params)
-      .pipe(map((response) => response.data.map((block) => MapRegistrySchemaBlock(block.attributes))));
+      .get<SchemaBlocksResponseJsonApi>(`${schemaLink}schema_blocks`, params)
+      .pipe(map((response) => PageSchemaMapper.fromSchemaBlocksResponse(response)));
   }
 
   withdrawRegistration(registryId: string, justification: string): Observable<RegistryOverview | null> {

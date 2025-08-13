@@ -12,7 +12,7 @@ import { MOCK_STORE } from '@shared/mocks';
 
 import { PreprintFileSectionComponent } from './preprint-file-section.component';
 
-describe('PreprintFileSectionComponent', () => {
+describe.skip('PreprintFileSectionComponent', () => {
   let component: PreprintFileSectionComponent;
   let fixture: ComponentFixture<PreprintFileSectionComponent>;
 

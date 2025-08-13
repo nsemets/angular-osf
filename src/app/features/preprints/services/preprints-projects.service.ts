@@ -2,11 +2,12 @@ import { map, Observable } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { PreprintsMapper } from '@osf/features/preprints/mappers';
-import { Preprint, PreprintAttributesJsonApi, PreprintRelationshipsJsonApi } from '@osf/features/preprints/models';
 import { Primitive, StringOrNull } from '@osf/shared/helpers';
 import { ApiData, CreateProjectPayloadJsoApi, IdName, JsonApiResponse, NodeData } from '@osf/shared/models';
-import { JsonApiService } from '@shared/services';
+import { JsonApiService } from '@osf/shared/services';
+
+import { PreprintsMapper } from '../mappers';
+import { Preprint, PreprintAttributesJsonApi, PreprintLinksJsonApi, PreprintRelationshipsJsonApi } from '../models';
 
 import { environment } from 'src/environments/environment';
 
@@ -54,7 +55,7 @@ export class PreprintsProjectsService {
 
   updatePreprintProjectRelationship(preprintId: string, projectId: string): Observable<Preprint> {
     return this.jsonApiService
-      .patch<ApiData<PreprintAttributesJsonApi, null, PreprintRelationshipsJsonApi, null>>(
+      .patch<ApiData<PreprintAttributesJsonApi, null, PreprintRelationshipsJsonApi, PreprintLinksJsonApi>>(
         `${environment.apiUrl}/preprints/${preprintId}/`,
         {
           data: {

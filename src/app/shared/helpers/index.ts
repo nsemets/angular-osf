@@ -2,6 +2,7 @@ export * from './add-filters-params.helper';
 export * from './addon-type.helper';
 export * from './breakpoints.tokens';
 export * from './browser-tab.helper';
+export * from './camel-case';
 export * from './convert-to-snake-case.helper';
 export * from './custom-form-validators.helper';
 export * from './find-changed-fields';
