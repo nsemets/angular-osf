@@ -1,3 +1,5 @@
+import { ComponentOverview } from '@shared/models';
+
 export class CreateNodeLink {
   static readonly type = '[Node Links] Create Node Link';
 
@@ -5,12 +7,6 @@ export class CreateNodeLink {
     public currentProjectId: string,
     public linkProjectId: string
   ) {}
-}
-
-export class GetAllNodeLinks {
-  static readonly type = '[Node Links] Get All Node Links';
-
-  constructor(public projectId: string) {}
 }
 
 export class GetLinkedResources {
@@ -24,7 +20,7 @@ export class DeleteNodeLink {
 
   constructor(
     public projectId: string,
-    public nodeLinkId: string
+    public linkedResource: ComponentOverview
   ) {}
 }
 

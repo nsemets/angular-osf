@@ -5,10 +5,9 @@ import { inject, Injectable } from '@angular/core';
 
 import { JsonApiResponse } from '@core/models';
 import { JsonApiService } from '@osf/core/services';
-import { NodeLinksMapper } from '@shared/mappers';
 import { ComponentsMapper } from '@shared/mappers/components';
 import { ComponentGetResponseJsonApi, ComponentOverview } from '@shared/models';
-import { NodeLink, NodeLinkJsonApi } from '@shared/models/node-links';
+import { NodeLinkJsonApi } from '@shared/models/node-links';
 
 import { environment } from 'src/environments/environment';
 
@@ -18,48 +17,36 @@ import { environment } from 'src/environments/environment';
 export class NodeLinksService {
   jsonApiService = inject(JsonApiService);
 
-  createNodeLink(currentProjectId: string, linkProjectId: string): Observable<NodeLink> {
+  createNodeLink(currentProjectId: string, linkProjectId: string): Observable<JsonApiResponse<NodeLinkJsonApi, null>> {
     const payload = {
-      data: {
-        type: 'node_links',
-        relationships: {
-          nodes: {
-            data: {
-              type: 'nodes',
-              id: linkProjectId,
-            },
-          },
+      data: [
+        {
+          type: 'linked_nodes',
+          id: linkProjectId,
         },
-      },
+      ],
     };
 
-    return this.jsonApiService
-      .post<
-        JsonApiResponse<NodeLinkJsonApi, null>
-      >(`${environment.apiUrl}/nodes/${currentProjectId}/node_links/`, payload)
-      .pipe(
-        map((response) => {
-          return NodeLinksMapper.fromNodeLinkResponse(response.data);
-        })
-      );
+    return this.jsonApiService.post<JsonApiResponse<NodeLinkJsonApi, null>>(
+      `${environment.apiUrl}/nodes/${currentProjectId}/relationships/linked_nodes/`,
+      payload
+    );
   }
 
-  fetchAllNodeLinks(projectId: string): Observable<NodeLink[]> {
-    const params: Record<string, unknown> = {
-      'fields[nodes]': 'relationships',
+  deleteNodeLink(projectId: string, resource: ComponentOverview): Observable<void> {
+    const payload = {
+      data: [
+        {
+          type: resource.type,
+          id: resource.id,
+        },
+      ],
     };
 
-    return this.jsonApiService
-      .get<JsonApiResponse<NodeLinkJsonApi[], null>>(`${environment.apiUrl}/nodes/${projectId}/node_links/`, params)
-      .pipe(
-        map((response) => {
-          return response.data.map((item) => NodeLinksMapper.fromNodeLinkResponse(item));
-        })
-      );
-  }
-
-  deleteNodeLink(projectId: string, nodeLinkId: string): Observable<void> {
-    return this.jsonApiService.delete(`${environment.apiUrl}/nodes/${projectId}/node_links/${nodeLinkId}/`);
+    return this.jsonApiService.delete(
+      `${environment.apiUrl}/nodes/${projectId}/relationships/linked_${resource.type}/`,
+      payload
+    );
   }
 
   fetchLinkedProjects(projectId: string): Observable<ComponentOverview[]> {
@@ -88,7 +75,7 @@ export class NodeLinksService {
     return this.jsonApiService
       .get<
         JsonApiResponse<ComponentGetResponseJsonApi[], null>
-      >(`${environment.apiUrl}/nodes/${projectId}/linked_registrations`, params)
+      >(`${environment.apiUrl}/nodes/${projectId}/linked_registrations/`, params)
       .pipe(
         map((response) => {
           return response.data.map((item) => ComponentsMapper.fromGetComponentResponse(item));
