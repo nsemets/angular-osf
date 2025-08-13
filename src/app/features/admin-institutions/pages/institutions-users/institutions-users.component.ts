@@ -32,14 +32,12 @@ import {
   FetchInstitutionUsers,
   SendUserMessage,
 } from '@osf/features/admin-institutions/store/institutions-admin.actions';
-import { InstitutionsAdminSelectors } from '@osf/features/admin-institutions/store/institutions-admin.selectors';
 import { LoadingSpinnerComponent, SelectComponent } from '@osf/shared/components';
-import { Primitive } from '@osf/shared/helpers';
+import { TABLE_PARAMS } from '@osf/shared/constants';
+import { SortOrder } from '@osf/shared/enums';
+import { parseQueryFilterParams, Primitive } from '@osf/shared/helpers';
+import { QueryParams } from '@osf/shared/models';
 import { ToastService } from '@osf/shared/services';
-import { TABLE_PARAMS } from '@shared/constants';
-import { SortOrder } from '@shared/enums';
-import { parseQueryFilterParams } from '@shared/helpers';
-import { QueryParams } from '@shared/models';
 
 import {
   InstitutionsUsersQueryParamsModel,
@@ -49,6 +47,7 @@ import {
   TableCellLink,
   TableIconClickEvent,
 } from '../../models';
+import { InstitutionsAdminSelectors } from '../../store';
 
 @Component({
   selector: 'osf-institutions-users',
