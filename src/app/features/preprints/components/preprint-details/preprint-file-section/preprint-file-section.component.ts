@@ -10,8 +10,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { PreprintSelectors } from '@osf/features/preprints/store/preprint';
+import { IS_LARGE, IS_MEDIUM } from '@osf/shared/helpers';
 import { LoadingSpinnerComponent } from '@shared/components';
-import { IS_LARGE, IS_MEDIUM } from '@shared/utils';
 
 @Component({
   selector: 'osf-preprint-file-section',

@@ -12,8 +12,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
 
 import { DeleteNodeLinkDialogComponent, LinkResourceDialogComponent } from '@osf/features/project/overview/components';
 import { TruncatedTextComponent } from '@osf/shared/components';
+import { IS_XSMALL } from '@osf/shared/helpers';
 import { NodeLinksSelectors } from '@shared/stores';
-import { IS_XSMALL } from '@shared/utils';
 
 @Component({
   selector: 'osf-linked-resources',

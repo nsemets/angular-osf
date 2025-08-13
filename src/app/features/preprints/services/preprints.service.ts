@@ -13,8 +13,8 @@ import {
   PreprintMetaJsonApi,
   PreprintRelationshipsJsonApi,
 } from '@osf/features/preprints/models';
+import { searchPreferencesToJsonApiQueryParams } from '@osf/shared/helpers';
 import { SearchFilters } from '@shared/models';
-import { searchPreferencesToJsonApiQueryParams } from '@shared/utils';
 
 import { environment } from 'src/environments/environment';
 

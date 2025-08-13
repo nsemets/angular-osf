@@ -23,9 +23,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
-import { parseQueryFilterParams } from '@core/helpers';
 import { UserSelectors } from '@core/store/user';
-import { Primitive } from '@osf/core/helpers';
 import { AdminTableComponent } from '@osf/features/admin-institutions/components';
 import { departmentOptions, userTableColumns } from '@osf/features/admin-institutions/constants';
 import { SendEmailDialogComponent } from '@osf/features/admin-institutions/dialogs';
@@ -36,8 +34,10 @@ import {
 } from '@osf/features/admin-institutions/store/institutions-admin.actions';
 import { InstitutionsAdminSelectors } from '@osf/features/admin-institutions/store/institutions-admin.selectors';
 import { LoadingSpinnerComponent, SelectComponent } from '@osf/shared/components';
+import { Primitive } from '@osf/shared/helpers';
 import { TABLE_PARAMS } from '@shared/constants';
 import { SortOrder } from '@shared/enums';
+import { parseQueryFilterParams } from '@shared/helpers';
 import { QueryParams } from '@shared/models';
 
 import {

@@ -30,8 +30,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { InfoIconComponent } from '@osf/shared/components';
 import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants';
+import { CustomValidators, findChangedFields } from '@osf/shared/helpers';
 import { FilePayloadJsonApi, OsfFile } from '@osf/shared/models';
-import { CustomValidators, findChangedFields } from '@osf/shared/utils';
 
 import { FieldType } from '../../enums';
 import { FilesMapper } from '../../mappers/files.mapper';

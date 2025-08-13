@@ -11,7 +11,7 @@ import {
   MeetingSubmissionsWithPaging,
   MeetingsWithPaging,
 } from '@osf/features/meetings/models';
-import { searchPreferencesToJsonApiQueryParams } from '@osf/shared/utils';
+import { searchPreferencesToJsonApiQueryParams } from '@osf/shared/helpers';
 import { SearchFilters } from '@shared/models/filters';
 
 import { meetingSortFieldMap, meetingSubmissionSortFieldMap } from '../constants';

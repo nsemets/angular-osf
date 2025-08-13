@@ -16,6 +16,7 @@ export * from './google-drive-folder.model';
 export * from './id-name.model';
 export * from './institutions';
 export * from './language-code.model';
+export * from './license';
 export * from './license.model';
 export * from './license.model';
 export * from './licenses-json-api.model';

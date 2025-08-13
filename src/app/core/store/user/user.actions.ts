@@ -50,3 +50,7 @@ export class UpdateProfileSettingsUser {
 export class SetUserAsModerator {
   static readonly type = '[User] Set User As Moderator';
 }
+
+export class ClearCurrentUser {
+  static readonly type = '[User] Clear Current User';
+}

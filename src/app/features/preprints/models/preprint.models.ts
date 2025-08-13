@@ -1,5 +1,5 @@
-import { BooleanOrNull, StringOrNull } from '@core/helpers';
 import { ApplicabilityStatus, PreregLinkInfo } from '@osf/features/preprints/enums';
+import { BooleanOrNull, StringOrNull } from '@osf/shared/helpers';
 import { IdName, License, LicenseOptions } from '@shared/models';
 
 export interface Preprint {

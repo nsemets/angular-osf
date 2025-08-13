@@ -6,8 +6,8 @@ import { inject, Injectable } from '@angular/core';
 
 import { handleSectionError } from '@osf/core/handlers';
 import { ResourceTab } from '@osf/shared/enums';
+import { getResourceTypes } from '@osf/shared/helpers';
 import { FilesService, SearchService } from '@osf/shared/services';
-import { getResourceTypes } from '@osf/shared/utils';
 
 import { RegistriesService } from '../services';
 

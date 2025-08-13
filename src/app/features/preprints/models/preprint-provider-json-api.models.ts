@@ -1,4 +1,4 @@
-import { StringOrNull } from '@core/helpers';
+import { StringOrNull } from '@shared/helpers';
 import { BrandDataJsonApi } from '@shared/models';
 
 export interface PreprintProviderDetailsJsonApi {

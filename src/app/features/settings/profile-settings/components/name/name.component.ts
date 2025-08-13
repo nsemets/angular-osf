@@ -10,8 +10,8 @@ import { FormBuilder } from '@angular/forms';
 
 import { User } from '@osf/core/models';
 import { UpdateProfileSettingsUser, UserSelectors } from '@osf/core/store/user';
+import { CustomValidators } from '@osf/shared/helpers';
 import { CustomConfirmationService, LoaderService, ToastService } from '@osf/shared/services';
-import { CustomValidators } from '@osf/shared/utils';
 
 import { NameForm } from '../../models';
 import { hasNameChanges } from '../../utils';

@@ -19,8 +19,8 @@ import { CreateProjectDialogComponent } from '@osf/features/my-projects/componen
 import { AccountSettingsService } from '@osf/features/settings/account-settings/services';
 import { MyProjectsTableComponent, SubHeaderComponent } from '@osf/shared/components';
 import { SortOrder } from '@osf/shared/enums';
+import { IS_MEDIUM } from '@osf/shared/helpers';
 import { MyResourcesItem, MyResourcesSearchFilters, TableParameters } from '@osf/shared/models';
-import { IS_MEDIUM } from '@osf/shared/utils';
 import { ClearMyResources, FetchUserInstitutions, GetMyProjects, MyResourcesSelectors } from '@shared/stores';
 
 import { ConfirmEmailComponent } from '../../components';
