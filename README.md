@@ -1,43 +1,33 @@
-# OSF
+# Open Science Framework Angular Project
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.0.
+This is the front-end angular repository for the Open Science Framework (OSF).
 
-## Development server
+## Running the project
 
-To start a local development server, run:
+1. npm install
+2. npm run start
+3. browse to localhost:4200
 
-```bash
-ng serve
-```
+## Testing the project
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+The project uses jest for unit testing.
+A "counter" script executes before and after each test run to track how many times the unit
+tests are run locally. The output is displayed.
 
-## Code scaffolding
+1. npm run test (single test run)
+2. npm run test:watch (single run after file save)
+3. npm run test:coverage (code coverage results)
+   - all commits must pass the local pipeline for test coverage
+4. npm run test:check-coverage-thresholds
+   - Verifies newly added tests match the thresholds
+   - This is only used until we hit 100% test coverage
+   - all commits must pass the local pipeline for test coverage
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Github pipeline
 
-```bash
-ng generate component component-name
-```
+The `.github` folder contains the following:
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+1. The test run "counter" scripts
+2. The "counter" file
+3. The github action work flow scripts
+4. The github PR templates
