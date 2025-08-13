@@ -1,4 +1,4 @@
-import { MetaJsonApi } from '@osf/core/models';
+import { MetaJsonApi } from '@osf/shared/models';
 
 export interface BibliographicContributorsJsonApi {
   data: BibliographicContributorData[];
