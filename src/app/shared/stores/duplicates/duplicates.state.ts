@@ -4,7 +4,7 @@ import { catchError, tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { handleSectionError } from '@core/handlers';
+import { handleSectionError } from '@shared/helpers';
 import { DuplicatesService } from '@shared/services/duplicates.service';
 
 import { ClearDuplicates, GetAllDuplicates } from './duplicates.actions';

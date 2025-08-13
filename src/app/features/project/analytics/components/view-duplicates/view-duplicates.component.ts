@@ -37,9 +37,9 @@ import {
   TruncatedTextComponent,
 } from '@shared/components';
 import { ResourceType, UserPermissions } from '@shared/enums';
+import { IS_SMALL } from '@shared/helpers';
 import { ToolbarResource } from '@shared/models';
 import { ClearDuplicates, DuplicatesSelectors, GetAllDuplicates } from '@shared/stores';
-import { IS_SMALL } from '@shared/utils';
 
 @Component({
   selector: 'osf-view-duplicates',

@@ -3,9 +3,9 @@ import { map } from 'rxjs/operators';
 
 import { inject, Injectable } from '@angular/core';
 
-import { ResponseJsonApi } from '@core/models';
-import { JsonApiService } from '@core/services';
 import { DuplicatesMapper } from '@shared/mappers';
+import { ResponseJsonApi } from '@shared/models';
+import { JsonApiService } from '@shared/services/json-api.service';
 
 import { DuplicateJsonApi, DuplicatesWithTotal } from 'src/app/shared/models/duplicates';
 import { environment } from 'src/environments/environment';

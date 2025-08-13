@@ -1,4 +1,4 @@
-import { ResponseJsonApi } from '@core/models';
+import { ResponseJsonApi } from '@shared/models';
 
 import { DuplicateJsonApi, DuplicatesWithTotal } from 'src/app/shared/models/duplicates';
 
