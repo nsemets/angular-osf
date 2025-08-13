@@ -3,7 +3,7 @@ import { map, Observable } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { JsonApiService } from '@core/services';
-import { JsonApiResponse, JsonApiResponseWithPaging } from '@osf/core/models';
+import { JsonApiResponse, ResponseJsonApi } from '@osf/core/models';
 import { MeetingsMapper } from '@osf/features/meetings/mappers';
 import {
   MeetingGetResponseJsonApi,
@@ -35,7 +35,7 @@ export class MeetingsService {
     );
 
     return this.jsonApiService
-      .get<JsonApiResponseWithPaging<MeetingGetResponseJsonApi[], null>>(this.baseUrl, params)
+      .get<ResponseJsonApi<MeetingGetResponseJsonApi[]>>(this.baseUrl, params)
       .pipe(map((response) => MeetingsMapper.fromMeetingsGetResponse(response)));
   }
 
@@ -54,9 +54,7 @@ export class MeetingsService {
     );
 
     return this.jsonApiService
-      .get<
-        JsonApiResponseWithPaging<MeetingSubmissionGetResponseJsonApi[], null>
-      >(`${this.baseUrl}${meetingId}/submissions/`, params)
+      .get<ResponseJsonApi<MeetingSubmissionGetResponseJsonApi[]>>(`${this.baseUrl}${meetingId}/submissions/`, params)
       .pipe(map((response) => MeetingsMapper.fromMeetingSubmissionGetResponse(response)));
   }
 

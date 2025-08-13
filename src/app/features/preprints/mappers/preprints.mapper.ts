@@ -1,4 +1,4 @@
-import { ApiData, JsonApiResponseWithMeta, JsonApiResponseWithPaging } from '@core/models';
+import { ApiData, JsonApiResponseWithMeta, ResponseJsonApi } from '@core/models';
 import {
   Preprint,
   PreprintAttributesJsonApi,
@@ -155,9 +155,8 @@ export class PreprintsMapper {
   }
 
   static fromMyPreprintJsonApi(
-    response: JsonApiResponseWithPaging<
-      ApiData<PreprintAttributesJsonApi, PreprintEmbedsJsonApi, PreprintRelationshipsJsonApi, null>[],
-      null
+    response: ResponseJsonApi<
+      ApiData<PreprintAttributesJsonApi, PreprintEmbedsJsonApi, PreprintRelationshipsJsonApi, null>[]
     >
   ): PreprintShortInfoWithTotalCount {
     return {
@@ -175,7 +174,7 @@ export class PreprintsMapper {
           providerId: preprintData.relationships.provider.data.id,
         };
       }),
-      totalCount: response.links.meta.total,
+      totalCount: response.meta.total,
     };
   }
 }

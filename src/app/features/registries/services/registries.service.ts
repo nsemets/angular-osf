@@ -2,7 +2,7 @@ import { map, Observable } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { JsonApiResponseWithPaging } from '@osf/core/models';
+import { ResponseJsonApi } from '@osf/core/models';
 import { JsonApiService } from '@osf/core/services';
 import { PageSchemaMapper, RegistrationMapper } from '@osf/shared/mappers/registration';
 import {
@@ -132,9 +132,7 @@ export class RegistriesService {
       embed: ['bibliographic_contributors', 'registration_schema', 'provider'],
     };
     return this.jsonApiService
-      .get<
-        JsonApiResponseWithPaging<DraftRegistrationDataJsonApi[], null>
-      >(`${this.apiUrl}/draft_registrations/`, params)
+      .get<ResponseJsonApi<DraftRegistrationDataJsonApi[]>>(`${this.apiUrl}/draft_registrations/`, params)
       .pipe(
         map((response) => {
           const data = response.data.map((registration: DraftRegistrationDataJsonApi) =>
@@ -142,7 +140,7 @@ export class RegistriesService {
           );
           return {
             data,
-            totalCount: response.links.meta?.total,
+            totalCount: response.meta?.total,
           };
         })
       );
@@ -159,9 +157,7 @@ export class RegistriesService {
       embed: ['bibliographic_contributors', 'registration_schema', 'provider'],
     };
     return this.jsonApiService
-      .get<
-        JsonApiResponseWithPaging<RegistrationDataJsonApi[], null>
-      >(`${this.apiUrl}/users/${userId}/registrations/`, params)
+      .get<ResponseJsonApi<RegistrationDataJsonApi[]>>(`${this.apiUrl}/users/${userId}/registrations/`, params)
       .pipe(
         map((response) => {
           const data = response.data.map((registration: RegistrationDataJsonApi) =>
@@ -169,7 +165,7 @@ export class RegistriesService {
           );
           return {
             data,
-            totalCount: response.links.meta?.total,
+            totalCount: response.meta?.total,
           };
         })
       );

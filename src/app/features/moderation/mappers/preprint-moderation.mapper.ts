@@ -1,4 +1,4 @@
-import { JsonApiResponseWithPaging } from '@osf/core/models';
+import { ResponseJsonApi } from '@osf/core/models';
 import { PaginatedData } from '@osf/shared/models';
 
 import {
@@ -35,11 +35,11 @@ export class PreprintModerationMapper {
   }
 
   static fromResponseWithPagination(
-    response: JsonApiResponseWithPaging<ReviewActionJsonApi[], null>
+    response: ResponseJsonApi<ReviewActionJsonApi[]>
   ): PaginatedData<PreprintReviewActionModel[]> {
     return {
       data: response.data.map((x) => this.fromResponse(x)),
-      totalCount: response.links.meta.total,
+      totalCount: response.meta.total,
     };
   }
 
