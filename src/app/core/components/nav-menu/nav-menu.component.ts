@@ -89,6 +89,10 @@ export class NavMenuComponent {
   }
 
   goToLink(item: MenuItem) {
+    if (item.id === 'support' || item.id === 'donate') {
+      window.open(item.url, '_blank');
+    }
+
     if (item.id === 'sign-in') {
       this.authService.navigateToSignIn();
       return;
