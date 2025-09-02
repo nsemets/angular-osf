@@ -3,21 +3,18 @@ export interface RelatedCountsGetResponse {
   meta: MetaGetResponse;
 }
 
-export interface RelatedCountsModel {
-  id: string;
-  forksCount: number;
-  linksToCount: number;
-  templateCount: number;
-  lastFetched?: number;
-}
-
 interface MetaGetResponse {
   templated_by_count: number;
 }
 
 interface RelatedCountsDataResponse {
   id: string;
+  attributes: RelatedCountsAttributes;
   relationships: RelationshipsResponse;
+}
+
+interface RelatedCountsAttributes {
+  public: boolean;
 }
 
 interface RelationshipsResponse {
