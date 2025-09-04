@@ -15,7 +15,12 @@ import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { CreateProjectDialogComponent } from '@osf/features/my-projects/components';
-import { IconComponent, MyProjectsTableComponent, SubHeaderComponent } from '@osf/shared/components';
+import {
+  IconComponent,
+  LoadingSpinnerComponent,
+  MyProjectsTableComponent,
+  SubHeaderComponent,
+} from '@osf/shared/components';
 import { MY_PROJECTS_TABLE_PARAMS } from '@osf/shared/constants';
 import { SortOrder } from '@osf/shared/enums';
 import { IS_MEDIUM } from '@osf/shared/helpers';
@@ -24,7 +29,15 @@ import { ClearMyResources, GetMyProjects, MyResourcesSelectors } from '@osf/shar
 
 @Component({
   selector: 'osf-dashboard',
-  imports: [RouterLink, Button, SubHeaderComponent, MyProjectsTableComponent, IconComponent, TranslatePipe],
+  imports: [
+    RouterLink,
+    Button,
+    SubHeaderComponent,
+    MyProjectsTableComponent,
+    IconComponent,
+    TranslatePipe,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
   providers: [DialogService],
@@ -35,7 +48,6 @@ export class DashboardComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly translateService = inject(TranslateService);
   private readonly dialogService = inject(DialogService);
-
   readonly isMedium = toSignal(inject(IS_MEDIUM));
 
   readonly searchControl = new FormControl<string>('');
@@ -53,6 +65,10 @@ export class DashboardComponent implements OnInit {
   readonly filteredProjects = computed(() => {
     const search = this.searchControl.value?.toLowerCase() ?? '';
     return this.projects().filter((project) => project.title.toLowerCase().includes(search));
+  });
+
+  protected readonly existsProjects = computed(() => {
+    return this.projects().length || !!this.searchControl.value?.length;
   });
 
   dialogRef: DynamicDialogRef | null = null;
@@ -183,5 +199,9 @@ export class DashboardComponent implements OnInit {
       modal: true,
       closable: true,
     });
+  }
+
+  openInfoLink(): void {
+    window.open('https://help.osf.io/', '_blank');
   }
 }
