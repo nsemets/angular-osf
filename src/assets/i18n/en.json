@@ -2589,6 +2589,10 @@
     "learnMore": "Learn more about OSF Institutions."
   },
   "adminInstitutions": {
+    "common": {
+      "filterBy": "Filter by",
+      "filters": "Filters"
+    },
     "summary": {
       "title": "Summary",
       "totalUsersByDepartment": "Total Users by Department",
@@ -2623,7 +2627,7 @@
       "lastLogin": "Last Login",
       "lastActive": "Last Active",
       "accountCreated": "Account Created",
-      "publishedPreprints": "Published Preprints",
+      "preprints": "Preprints",
       "publicFiles": "Public Files",
       "storageBytes": "Storage (Bytes)",
       "contacts": "Contacts",
