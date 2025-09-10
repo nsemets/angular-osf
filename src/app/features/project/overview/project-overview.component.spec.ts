@@ -8,8 +8,6 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { Message } from 'primeng/message';
 import { TagModule } from 'primeng/tag';
 
-import { of } from 'rxjs';
-
 import { DestroyRef, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
@@ -17,6 +15,13 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { CollectionSubmissionReviewAction } from '@osf/features/moderation/models';
 import { CollectionsModerationSelectors } from '@osf/features/moderation/store/collections-moderation';
+import {
+  LinkedResourcesComponent,
+  OverviewComponentsComponent,
+  OverviewToolbarComponent,
+  OverviewWikiComponent,
+  RecentActivityComponent,
+} from '@osf/features/project/overview/components';
 import { ProjectOverviewSelectors } from '@osf/features/project/overview/store';
 import {
   LoadingSpinnerComponent,
@@ -37,15 +42,9 @@ import {
 } from '@shared/stores';
 import { ActivityLogsSelectors } from '@shared/stores/activity-logs';
 
-import {
-  LinkedResourcesComponent,
-  OverviewComponentsComponent,
-  OverviewToolbarComponent,
-  OverviewWikiComponent,
-  RecentActivityComponent,
-} from './components';
 import { ProjectOverviewComponent } from './project-overview.component';
 
+import { DataciteMockFactory } from '@testing/mocks/datacite.service.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 
 const sampleReviewAction: CollectionSubmissionReviewAction = {
@@ -65,6 +64,7 @@ const sampleReviewAction: CollectionSubmissionReviewAction = {
 describe('ProjectOverviewComponent', () => {
   let fixture: ComponentFixture<ProjectOverviewComponent>;
   let dataciteService: jest.Mocked<DataciteService>;
+  let component: ProjectOverviewComponent;
   const projectSignal = signal<any>(getProject());
 
   const activatedRouteMock = {
@@ -117,9 +117,7 @@ describe('ProjectOverviewComponent', () => {
       }
     });
 
-    dataciteService = {
-      logView: jest.fn().mockReturnValue(of(void 0)),
-    } as unknown as jest.Mocked<DataciteService>;
+    dataciteService = DataciteMockFactory();
 
     await TestBed.configureTestingModule({
       imports: [
@@ -142,6 +140,7 @@ describe('ProjectOverviewComponent', () => {
         ViewOnlyLinkMessageComponent,
       ],
       providers: [
+        TranslatePipe,
         { provide: ActivatedRoute, useValue: activatedRouteMock },
         { provide: Store, useValue: MOCK_STORE },
         { provide: DataciteService, useValue: dataciteService },
@@ -152,32 +151,14 @@ describe('ProjectOverviewComponent', () => {
         TranslateService,
       ],
     }).compileComponents();
-
     fixture = TestBed.createComponent(ProjectOverviewComponent);
+    component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   it('reacts to sequence of state changes', () => {
     fixture.detectChanges();
-    expect(dataciteService.logView).toHaveBeenCalledTimes(0);
-
-    projectSignal.set(getProject());
-
-    fixture.detectChanges();
-    expect(dataciteService.logView).toHaveBeenCalledTimes(0);
-
-    projectSignal.set(getProject([{ category: 'dio', value: '123', id: '', type: 'identifier' }]));
-    fixture.detectChanges();
-    expect(dataciteService.logView).toHaveBeenCalledTimes(0);
-
-    projectSignal.set(getProject([{ category: 'doi', value: '123', id: '', type: 'identifier' }]));
-
-    fixture.detectChanges();
-    expect(dataciteService.logView).toHaveBeenCalled();
-
-    projectSignal.set(getProject([{ category: 'doi', value: '456', id: '', type: 'identifier' }]));
-    fixture.detectChanges();
-    expect(dataciteService.logView).toHaveBeenLastCalledWith('123');
+    expect(dataciteService.logIdentifiableView).toHaveBeenCalledWith(component.currentProject$);
   });
 
   function getProject(identifiers?: Identifier[]) {

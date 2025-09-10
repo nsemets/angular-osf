@@ -57,6 +57,7 @@ import { ResourceType } from '@osf/shared/enums';
 import { hasViewOnlyParam, IS_MEDIUM } from '@osf/shared/helpers';
 import { ConfiguredStorageAddonModel, FilesTreeActions, OsfFile, StorageItemModel } from '@shared/models';
 import { FilesService } from '@shared/services';
+import { DataciteService } from '@shared/services/datacite/datacite.service';
 
 import { CreateFolderDialogComponent, FileBrowserInfoComponent } from '../../components';
 import { FileProvider } from '../../constants';
@@ -132,6 +133,7 @@ export class FilesComponent {
   readonly isRootFoldersLoading = select(FilesSelectors.isRootFoldersLoading);
   readonly configuredStorageAddons = select(FilesSelectors.getConfiguredStorageAddons);
   readonly isConfiguredStorageAddonsLoading = select(FilesSelectors.isConfiguredStorageAddonsLoading);
+  readonly dataciteService = inject(DataciteService);
 
   readonly progress = signal(0);
   readonly fileName = signal('');
@@ -338,8 +340,10 @@ export class FilesComponent {
     const folderId = this.currentFolder()?.id ?? '';
     const isRootFolder = !this.currentFolder()?.relationships?.parentFolderLink;
     const provider = this.currentRootFolder()?.folder?.provider ?? 'osfstorage';
+    const resourcePath = this.urlMap.get(this.resourceType()) ?? 'nodes';
 
     if (resourceId && folderId) {
+      this.dataciteService.logFileDownload(resourceId, resourcePath).subscribe();
       if (isRootFolder) {
         const link = this.filesService.getFolderDownloadLink(resourceId, provider, '', true);
         window.open(link, '_blank')?.focus();
