@@ -29,7 +29,7 @@ export class MetaTagsService {
   private readonly metaTagClass = 'osf-dynamic-meta';
 
   // data from all active routed components that set meta tags
-  private metaTagStack: Array<{ metaTagsData: MetaTagsData; componentDestroyRef: DestroyRef }> = [];
+  private metaTagStack: { metaTagsData: MetaTagsData; componentDestroyRef: DestroyRef }[] = [];
 
   constructor(
     private meta: Meta,
@@ -75,7 +75,7 @@ export class MetaTagsService {
     } else {
       this.clearMetaTags();
     }
-  };
+  }
 
   private applyMetaTagsData(metaTagsData: MetaTagsData) {
     const combinedData = { ...this.defaultMetaTags, ...metaTagsData };
