@@ -47,7 +47,27 @@
       "continueUpdate": "Continue Update",
       "editAndResubmit": "Edit And Resubmit",
       "createNewVersion": "Create New Version",
-      "leaveThisView": "Leave this view"
+      "leaveThisView": "Leave this view",
+      "addOneMore": "Add One More"
+    },
+    "accessibility": {
+      "help": "Help",
+      "openFilters": "Open filters",
+      "openSortingOptions": "Open sorting options",
+      "goToFirstPage": "Go to first page",
+      "goToPreviousPage": "Go to previous page",
+      "goToNextPage": "Go to next page",
+      "mainNavigation": "Main navigation",
+      "searchHelp": "Search help",
+      "confirmationDialog": "Confirmation dialog",
+      "reportsLink": "Reports link",
+      "tooltipBtn": "Tooltip button",
+      "customizeOptions": "Customize options",
+      "toggleProjectVisibility": "Toggle project visibility",
+      "tagInput": "Tag input"
+    },
+    "dialogs": {
+      "confirmation": "Confirmation"
     },
     "search": {
       "title": "Search",
@@ -963,10 +983,10 @@
         "link": "Link",
         "noLink": "No link available"
       },
-              "noLinkedServices": "This project has no configured linked services at the moment.",
-        "redirectMessage": "Visit",
-        "addonsLink": "Add-ons",
-        "redirectMessageSuffix": "to add a linked service."
+      "noLinkedServices": "This project has no configured linked services at the moment.",
+      "redirectMessage": "Visit",
+      "addonsLink": "Add-ons",
+      "redirectMessageSuffix": "to add a linked service."
     }
   },
   "files": {
@@ -1663,7 +1683,6 @@
         "startDate": "Start Date",
         "endDate": "End Date",
         "ongoing": "Ongoing",
-        "addMore": "Add One More",
         "successUpdate": "Education successfully updated."
       },
       "changesDiscarded": "Changes discarded successfully.",
