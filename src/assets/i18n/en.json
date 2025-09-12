@@ -65,6 +65,7 @@
       "customizeOptions": "Customize options",
       "toggleProjectVisibility": "Toggle project visibility",
       "tagInput": "Tag input",
+      "toggleTreeNode": "Toggle tree node",
       "copyButtonInfo": "Copy to clipboard button"
     },
     "dialogs": {

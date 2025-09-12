@@ -69,6 +69,7 @@
       (onNodeSelect)="selectSubject($event.node.data)"
       (onNodeUnselect)="removeSubject($event.node.data)"
       [ariaLabel]="'shared.subjects.subjectTree' | translate"
+      [togglerAriaLabel]="'common.accessibility.toggleTreeNode' | translate"
     >
     </p-tree>
   }
