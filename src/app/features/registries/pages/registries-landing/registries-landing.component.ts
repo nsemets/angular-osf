@@ -14,6 +14,7 @@ import {
   SearchInputComponent,
   SubHeaderComponent,
 } from '@osf/shared/components';
+import { ScheduledBannerComponent } from '@osf/shared/components/scheduled-banner/scheduled-banner.component';
 import { ResourceType } from '@osf/shared/enums';
 
 import { RegistryServicesComponent } from '../../components';
@@ -31,6 +32,7 @@ import { environment } from 'src/environments/environment';
     ResourceCardComponent,
     LoadingSpinnerComponent,
     SubHeaderComponent,
+    ScheduledBannerComponent,
   ],
   templateUrl: './registries-landing.component.html',
   styleUrl: './registries-landing.component.scss',
