@@ -46,7 +46,6 @@ describe('TosConsentBannerComponent', () => {
 
   it('should have the "Continue" button disabled by default', () => {
     const continueButton = fixture.debugElement.query(By.css('p-button button')).nativeElement;
-    console.log('continueButton ' + continueButton )
     expect(continueButton.disabled).toBe(true);
   });
 
@@ -71,7 +70,7 @@ describe('TosConsentBannerComponent', () => {
     expect(toastServiceMock.showError).not.toHaveBeenCalled();
   });
 
-   it('should show toast banner if acceptedTermsOfService is false and "Continue" is clicked', () => {
+  it('should show toast banner if acceptedTermsOfService is false and "Continue" is clicked', () => {
     component.acceptedTermsOfService.set(false);
     const continueButton = fixture.debugElement.query(By.css('p-button button')).nativeElement;
     continueButton.disabled = false;
@@ -79,5 +78,4 @@ describe('TosConsentBannerComponent', () => {
     fixture.detectChanges();
     expect(component.errorMessage).toEqual('toast.tos-consent.error-message');
   });
-
 });
