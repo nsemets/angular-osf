@@ -255,6 +255,10 @@ export class GlobalSearchState {
   @Action(SetResourceType)
   setResourceType(ctx: StateContext<GlobalSearchStateModel>, action: SetResourceType) {
     ctx.patchState({ resourceType: action.type });
+    ctx.patchState({ filterOptionsCache: {} });
+    ctx.patchState({ filterValues: {} });
+    ctx.patchState({ filterSearchCache: {} });
+    ctx.patchState({ filterPaginationCache: {} });
   }
 
   @Action(ResetSearchState)
@@ -275,7 +279,6 @@ export class GlobalSearchState {
       resources: { data: response.resources, isLoading: false, error: null },
       filters: filtersWithCachedOptions,
       resourcesCount: response.count,
-      self: response.self,
       first: response.first,
       next: response.next,
       previous: response.previous,
