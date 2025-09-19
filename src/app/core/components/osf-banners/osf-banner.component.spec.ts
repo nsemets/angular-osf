@@ -3,6 +3,7 @@ import { MockComponent } from 'ng-mocks';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
+import { CookieConsentBannerComponent } from './cookie-consent-banner/cookie-consent-banner.component';
 import { ScheduledBannerComponent } from './scheduled-banner/scheduled-banner.component';
 import { OSFBannerComponent } from './osf-banner.component';
 
@@ -21,6 +22,7 @@ describe('Component: OSF Banner', () => {
         NoopAnimationsModule,
         MockComponentWithSignal('osf-maintenance-banner'),
         MockComponent(ScheduledBannerComponent),
+        MockComponent(CookieConsentBannerComponent),
       ],
     }).compileComponents();
 
