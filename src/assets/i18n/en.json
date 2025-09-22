@@ -877,6 +877,10 @@
     },
     "metadata": {
       "addSubjects": "Add subjects...",
+      "title": "Title",
+      "editTitle": "Edit Title",
+      "editTitlePlaceholder": "Edit title here",
+      "titleUpdated": "Description updated successfully",
       "description": {
         "updated": "Description updated successfully",
         "dialog": {
@@ -939,7 +943,8 @@
           "header": "Edit Publication DOI",
           "label": "Publication DOI",
           "placeholder": "Enter publication DOI"
-        }
+        },
+        "updated": "Publication DOI updated successfully"
       },
       "addMetadata": {
         "title": "Add community metadata record",
