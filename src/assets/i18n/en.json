@@ -50,7 +50,8 @@
       "leaveThisView": "Leave this view",
       "addOneMore": "Add One More",
       "filter": "Filter",
-      "sort": "Sort"
+      "sort": "Sort",
+      "replace": "Replace"
     },
     "accessibility": {
       "help": "Help",
@@ -1053,7 +1054,11 @@
     "dialogs": {
       "uploadFile": {
         "title": "Upload file",
-        "message": "Are you sure you want to update <span class=\"font-bold\">{{name}}</span>?"
+        "message": "Are you sure you want to upload <span class=\"font-bold\">{{name}}</span>?"
+      },
+      "uploadFiles": {
+        "title": "Upload files",
+        "message": "Are you sure you want to upload <span class=\"font-bold\">{{count}}</span> files?"
       },
       "createFolder": {
         "title": "Create folder",
@@ -1079,6 +1084,11 @@
       "deleteFile": {
         "title": "Delete File",
         "message": "Are you sure you want to delete <span class=\"font-bold\">{{name}}</span>?"
+      },
+      "replaceFile": {
+        "single": "Replace file",
+        "multiple": "Replace files",
+        "message": "Are you sure you want to replace <span class=\"font-bold\">{{name}}</span>?"
       }
     },
     "filesBrowserDialog": {
