@@ -19,6 +19,7 @@ import {
   RegistrationCardComponent,
   SubHeaderComponent,
 } from '@osf/shared/components';
+import { CurrentResourceSelectors } from '@shared/stores';
 
 import { GetRegistrations, RegistrationsSelectors } from './store';
 
@@ -41,7 +42,7 @@ export class RegistrationsComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly environment = inject(ENVIRONMENT);
-
+  hasAdminAccess = select(CurrentResourceSelectors.hasAdminAccess);
   readonly projectId = toSignal(this.route.parent?.params.pipe(map((params) => params['id'])) ?? of(undefined));
 
   registrations = select(RegistrationsSelectors.getRegistrations);
