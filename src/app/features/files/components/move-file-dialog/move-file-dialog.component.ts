@@ -160,6 +160,7 @@ export class MoveFileDialogComponent {
         if (file.id) {
           const filesLink = this.currentFolder()?.relationships.filesLink;
           const rootFolders = this.rootFolders();
+          this.resetPagination();
           if (filesLink) {
             this.dispatch.getFiles(filesLink);
           } else if (rootFolders) {
@@ -167,6 +168,11 @@ export class MoveFileDialogComponent {
           }
         }
       });
+  }
+
+  resetPagination() {
+    this.first = 0;
+    this.pageNumber.set(1);
   }
 
   onFilesPageChange(event: PaginatorState): void {

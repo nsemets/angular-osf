@@ -375,6 +375,7 @@ export class FilesTreeComponent implements OnDestroy, AfterViewInit {
             },
           })
           .onClose.subscribe((foldersStack) => {
+            this.resetPagination();
             if (foldersStack) {
               this.foldersStack = [...foldersStack];
             }
