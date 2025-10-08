@@ -31,6 +31,8 @@ import {
 } from '@osf/features/metadata/models';
 
 import 'cedar-artifact-viewer';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map, of } from 'rxjs';
 
 @Component({
   selector: 'osf-cedar-template-form',
@@ -118,8 +120,14 @@ export class CedarTemplateFormComponent {
     this.validateCedarMetadata();
   }
 
-  downloadFile() {
-    window.open(this.downloadUrl(), '_blank');
+  readonly fileGuid = toSignal(this.route.params.pipe(map((params) => params['fileGuid'])) ?? of(undefined));
+
+  downloadMetadadaRecord() {
+    if (this.fileGuid()) {
+      window.open(`${this.environment.webUrl}/metadata/${this.fileGuid()}`)?.focus();
+    } else {
+      window.open(this.downloadUrl(), '_blank');
+    }
   }
 
   copyUrl() {
