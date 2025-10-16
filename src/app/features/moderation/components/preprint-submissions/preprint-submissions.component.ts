@@ -24,7 +24,7 @@ import {
 } from '@osf/shared/components';
 import { Primitive } from '@osf/shared/helpers';
 
-import { PreprintSubmission } from '../../models';
+import { PreprintSubmissionModel } from '../../models';
 import { GetPreprintSubmissions, PreprintModerationSelectors } from '../../store/preprint-moderation';
 
 @Component({
@@ -112,7 +112,7 @@ export class PreprintSubmissionsComponent implements OnInit {
     this.fetchSubmissions();
   }
 
-  navigateToPreprint(item: PreprintSubmission) {
+  navigateToPreprint(item: PreprintSubmissionModel) {
     const url = this.router.serializeUrl(
       this.router.createUrlTree(['/preprints/', this.providerId(), item.id], { queryParams: { mode: 'moderator' } })
     );
