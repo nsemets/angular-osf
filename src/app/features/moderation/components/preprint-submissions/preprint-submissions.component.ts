@@ -25,7 +25,11 @@ import {
 import { Primitive } from '@osf/shared/helpers';
 
 import { PreprintSubmissionModel } from '../../models';
-import { GetPreprintSubmissions, PreprintModerationSelectors } from '../../store/preprint-moderation';
+import {
+  GetPreprintSubmissionContributors,
+  GetPreprintSubmissions,
+  PreprintModerationSelectors,
+} from '../../store/preprint-moderation';
 
 @Component({
   selector: 'osf-preprint-submissions',
@@ -53,7 +57,10 @@ export class PreprintSubmissionsComponent implements OnInit {
     this.route.parent?.params.pipe(map((params) => params['providerId'])) ?? of(undefined)
   );
 
-  readonly actions = createDispatchMap({ getPreprintSubmissions: GetPreprintSubmissions });
+  readonly actions = createDispatchMap({
+    getPreprintSubmissions: GetPreprintSubmissions,
+    getPreprintSubmissionContributors: GetPreprintSubmissionContributors,
+  });
 
   readonly submissions = select(PreprintModerationSelectors.getPreprintSubmissions);
   readonly isLoading = select(PreprintModerationSelectors.arePreprintSubmissionsLoading);
@@ -118,6 +125,10 @@ export class PreprintSubmissionsComponent implements OnInit {
     );
 
     window.open(url, '_blank');
+  }
+
+  loadContributors(item: PreprintSubmissionModel) {
+    this.actions.getPreprintSubmissionContributors(item.id);
   }
 
   private getStatusFromQueryParams() {

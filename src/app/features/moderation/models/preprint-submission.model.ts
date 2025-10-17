@@ -17,4 +17,5 @@ export interface PreprintSubmissionModel {
   actions: ReviewAction[];
   contributors: ContributorModel[];
   totalContributors: number;
+  contributorsLoading?: boolean;
 }

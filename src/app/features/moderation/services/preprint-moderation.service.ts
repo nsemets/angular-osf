@@ -3,7 +3,6 @@ import { catchError, forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
-import { ResourceType } from '@osf/shared/enums';
 import { JsonApiResponse, PaginatedData, ResponseJsonApi } from '@osf/shared/models';
 import { ContributorsService, JsonApiService } from '@osf/shared/services';
 
@@ -80,23 +79,13 @@ export class PreprintModerationService {
           return of(res);
         }
 
-        return forkJoin(
-          res.data.map((item) =>
-            forkJoin({
-              actions: this.getPreprintSubmissionReviewAction(item.id).pipe(catchError(() => of([]))),
-              contributors: this.contributorsService
-                .getAllContributors(ResourceType.Preprint, item.id, 1, 10)
-                .pipe(catchError(() => of({ data: [], totalCount: 0 }))),
-            }).pipe(
-              map(({ actions, contributors }) => ({
-                ...item,
-                actions,
-                contributors: contributors.data,
-                totalContributors: contributors.totalCount,
-              }))
-            )
-          )
-        ).pipe(map((data) => ({ ...res, data }) as PreprintSubmissionPaginatedData));
+        const actionsRequests = res.data.map((item) =>
+          this.getPreprintSubmissionReviewAction(item.id).pipe(catchError(() => of([])))
+        );
+
+        return forkJoin(actionsRequests).pipe(
+          map((actions) => ({ ...res, data: res.data.map((item, i) => ({ ...item, actions: actions[i] })) }))
+        );
       })
     );
   }
@@ -124,23 +113,13 @@ export class PreprintModerationService {
           return of(res);
         }
 
-        return forkJoin(
-          res.data.map((item) =>
-            forkJoin({
-              actions: this.getPreprintWithdrawalSubmissionReviewAction(item.id).pipe(catchError(() => of([]))),
-              contributors: this.contributorsService
-                .getAllContributors(ResourceType.Preprint, item.preprintId, 1, 10)
-                .pipe(catchError(() => of({ data: [], totalCount: 0 }))),
-            }).pipe(
-              map(({ actions, contributors }) => ({
-                ...item,
-                actions,
-                contributors: contributors.data,
-                totalContributors: contributors.totalCount,
-              }))
-            )
-          )
-        ).pipe(map((data) => ({ ...res, data }) as PreprintWithdrawalPaginatedData));
+        const actionsRequests = res.data.map((item) =>
+          this.getPreprintWithdrawalSubmissionReviewAction(item.id).pipe(catchError(() => of([])))
+        );
+
+        return forkJoin(actionsRequests).pipe(
+          map((actions) => ({ ...res, data: res.data.map((item, i) => ({ ...item, actions: actions[i] })) }))
+        );
       })
     );
   }
