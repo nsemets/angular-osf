@@ -1,12 +1,12 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
-import { DialogService } from 'primeng/dynamicdialog';
 
-import { filter } from 'rxjs';
+import { catchError, EMPTY, filter } from 'rxjs';
 
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -20,9 +20,10 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { UserSelectors } from '@core/store/user';
+import { RequestAccessErrorDialogComponent } from '@osf/features/admin-institutions/components/request-access-error-dialog/request-access-error-dialog.component';
 import { ResourceType, SortOrder } from '@osf/shared/enums';
 import { PaginationLinksModel, ResourceModel, SearchFilters } from '@osf/shared/models';
-import { ToastService } from '@osf/shared/services';
+import { CustomDialogService, ToastService } from '@osf/shared/services';
 import {
   FetchResources,
   FetchResourcesByLink,
@@ -49,13 +50,11 @@ import { InstitutionsAdminSelectors, RequestProjectAccess, SendUserMessage } fro
   templateUrl: './institutions-projects.component.html',
   styleUrl: './institutions-projects.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DialogService],
 })
 export class InstitutionsProjectsComponent implements OnInit, OnDestroy {
-  private dialogService = inject(DialogService);
+  private customDialogService = inject(CustomDialogService);
   private destroyRef = inject(DestroyRef);
   private toastService = inject(ToastService);
-  private translate = inject(TranslateService);
 
   private actions = createDispatchMap({
     sendUserMessage: SendUserMessage,
@@ -87,7 +86,9 @@ export class InstitutionsProjectsComponent implements OnInit, OnDestroy {
   currentUser = select(UserSelectors.getCurrentUser);
 
   tableData = computed(() =>
-    this.resources().map((resource: ResourceModel): TableCellData => mapProjectResourceToTableCellData(resource))
+    this.resources().map(
+      (resource: ResourceModel): TableCellData => mapProjectResourceToTableCellData(resource, this.institution().iri)
+    )
   );
 
   sortParam = computed(() => {
@@ -135,25 +136,28 @@ export class InstitutionsProjectsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.dialogService
+    this.openContactDialog(event);
+  }
+
+  private openContactDialog(event: TableIconClickEvent, defaultData?: ContactDialogData): void {
+    this.customDialogService
       .open(ContactDialogComponent, {
+        header: 'adminInstitutions.institutionUsers.sendEmail',
         width: '448px',
-        focusOnShow: false,
-        header: this.translate.instant('adminInstitutions.institutionUsers.sendEmail'),
-        closeOnEscape: true,
-        modal: true,
-        closable: true,
-        data: this.currentUser()?.fullName,
+        data: {
+          currentUserFullName: this.currentUser()?.fullName,
+          defaultContactData: defaultData,
+        },
       })
       .onClose.pipe(
         filter((value) => !!value),
         takeUntilDestroyed(this.destroyRef)
       )
-      .subscribe((data: ContactDialogData) => this.sendEmailToUser(event.rowData, data));
+      .subscribe((data: ContactDialogData) => this.sendEmailToUser(event, data));
   }
 
-  private sendEmailToUser(userRowData: TableCellData, emailData: ContactDialogData): void {
-    const userId = (userRowData['creator'] as TableCellLink).url.split('/').pop() || '';
+  private sendEmailToUser(event: TableIconClickEvent, emailData: ContactDialogData): void {
+    const userId = (event.rowData['creator'] as TableCellLink[])[event.arrayIndex ?? 0].url.split('/').pop() || '';
 
     if (emailData.selectedOption === ContactOption.SendMessage) {
       this.actions
@@ -167,7 +171,7 @@ export class InstitutionsProjectsComponent implements OnInit, OnDestroy {
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => this.toastService.showSuccess('adminInstitutions.institutionUsers.messageSent'));
     } else {
-      const projectId = (userRowData['title'] as TableCellLink).url.split('/').pop() || '';
+      const projectId = (event.rowData['link'] as TableCellLink).url.split('/').pop() || '';
 
       this.actions
         .requestProjectAccess({
@@ -179,7 +183,26 @@ export class InstitutionsProjectsComponent implements OnInit, OnDestroy {
           bccSender: emailData.ccSender,
           replyTo: emailData.allowReplyToSender,
         })
-        .pipe(takeUntilDestroyed(this.destroyRef))
+        .pipe(
+          catchError((e) => {
+            if (e instanceof HttpErrorResponse && e.status === 403) {
+              this.customDialogService
+                .open(RequestAccessErrorDialogComponent, {
+                  header: 'adminInstitutions.requestAccessErrorDialog.title',
+                })
+                .onClose.pipe(
+                  filter((value) => !!value),
+                  takeUntilDestroyed(this.destroyRef)
+                )
+                .subscribe(() =>
+                  this.openContactDialog(event, { ...emailData, selectedOption: ContactOption.SendMessage })
+                );
+            }
+
+            return EMPTY;
+          }),
+          takeUntilDestroyed(this.destroyRef)
+        )
         .subscribe(() => this.toastService.showSuccess('adminInstitutions.institutionUsers.requestSent'));
     }
   }

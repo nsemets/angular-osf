@@ -1,6 +1,14 @@
 import { Selector } from '@ngxs/store';
 
-import { ConfiguredAddonModel, ContributorModel, OsfFile, ResourceMetadata } from '@shared/models';
+import { SupportedFeature, UserPermissions } from '@osf/shared/enums';
+import {
+  ConfiguredAddonModel,
+  ContributorModel,
+  FileDetailsModel,
+  FileFolderModel,
+  FileModel,
+  ResourceMetadata,
+} from '@shared/models';
 
 import { OsfFileCustomMetadata, OsfFileRevision } from '../models';
 
@@ -9,7 +17,7 @@ import { FilesState } from './files.state';
 
 export class FilesSelectors {
   @Selector([FilesState])
-  static getFiles(state: FilesStateModel): OsfFile[] {
+  static getFiles(state: FilesStateModel): FileModel[] {
     return state.files.data;
   }
 
@@ -29,28 +37,28 @@ export class FilesSelectors {
   }
 
   @Selector([FilesState])
-  static getMoveFileFiles(state: FilesStateModel): OsfFile[] {
-    return state.moveFileFiles.data;
+  static getMoveDialogFiles(state: FilesStateModel): FileModel[] {
+    return state.moveDialogFiles.data;
   }
 
   @Selector([FilesState])
-  static getMoveFileFilesTotalCount(state: FilesStateModel): number {
-    return state.moveFileFiles.totalCount;
+  static getMoveDialogFilesTotalCount(state: FilesStateModel): number {
+    return state.moveDialogFiles.totalCount;
   }
 
   @Selector([FilesState])
-  static isMoveFileFilesLoading(state: FilesStateModel): boolean {
-    return state.moveFileFiles.isLoading;
+  static isMoveDialogFilesLoading(state: FilesStateModel): boolean {
+    return state.moveDialogFiles.isLoading;
   }
 
   @Selector([FilesState])
-  static getCurrentFolder(state: FilesStateModel): OsfFile | null {
+  static getCurrentFolder(state: FilesStateModel): FileFolderModel | null {
     return state.currentFolder;
   }
 
   @Selector([FilesState])
-  static getMoveFileCurrentFolder(state: FilesStateModel): OsfFile | null {
-    return state.moveFileCurrentFolder;
+  static getMoveDialogCurrentFolder(state: FilesStateModel): FileFolderModel | null {
+    return state.moveDialogCurrentFolder;
   }
 
   @Selector([FilesState])
@@ -59,7 +67,7 @@ export class FilesSelectors {
   }
 
   @Selector([FilesState])
-  static getOpenedFile(state: FilesStateModel): OsfFile | null {
+  static getOpenedFile(state: FilesStateModel): FileDetailsModel | null {
     return state.openedFile.data;
   }
 
@@ -89,8 +97,8 @@ export class FilesSelectors {
   }
 
   @Selector([FilesState])
-  static getContributors(state: FilesStateModel): Partial<ContributorModel>[] | null {
-    return state.contributors.data;
+  static getContributors(state: FilesStateModel): ContributorModel[] {
+    return state.contributors.data || [];
   }
 
   @Selector([FilesState])
@@ -119,7 +127,7 @@ export class FilesSelectors {
   }
 
   @Selector([FilesState])
-  static getRootFolders(state: FilesStateModel): OsfFile[] | null {
+  static getRootFolders(state: FilesStateModel): FileFolderModel[] | null {
     return state.rootFolders.data;
   }
 
@@ -136,5 +144,35 @@ export class FilesSelectors {
   @Selector([FilesState])
   static isConfiguredStorageAddonsLoading(state: FilesStateModel): boolean {
     return state.configuredStorageAddons.isLoading;
+  }
+
+  @Selector([FilesState])
+  static getMoveDialogRootFolders(state: FilesStateModel): FileFolderModel[] | null {
+    return state.moveDialogRootFolders.data;
+  }
+
+  @Selector([FilesState])
+  static isMoveDialogRootFoldersLoading(state: FilesStateModel): boolean {
+    return state.moveDialogRootFolders.isLoading;
+  }
+
+  @Selector([FilesState])
+  static getMoveDialogConfiguredStorageAddons(state: FilesStateModel): ConfiguredAddonModel[] | null {
+    return state.moveDialogConfiguredStorageAddons.data;
+  }
+
+  @Selector([FilesState])
+  static isMoveDialogConfiguredStorageAddonsLoading(state: FilesStateModel): boolean {
+    return state.moveDialogConfiguredStorageAddons.isLoading;
+  }
+
+  @Selector([FilesState])
+  static getStorageSupportedFeatures(state: FilesStateModel): Record<string, SupportedFeature[]> {
+    return state.storageSupportedFeatures || {};
+  }
+
+  @Selector([FilesState])
+  static hasWriteAccess(state: FilesStateModel): boolean {
+    return state.openedFile.data?.target?.currentUserPermissions?.includes(UserPermissions.Write) || false;
   }
 }

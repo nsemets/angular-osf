@@ -4,10 +4,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 
 import { MarkdownComponent } from '@shared/components';
-import { TranslateServiceMock } from '@shared/mocks';
 import { WikiVersion } from '@shared/models';
 
 import { ViewSectionComponent } from './view-section.component';
+
+import { TranslateServiceMock } from '@testing/mocks';
 
 describe('ViewSectionComponent', () => {
   let component: ViewSectionComponent;
@@ -141,6 +142,9 @@ describe('ViewSectionComponent', () => {
   });
 
   it('should initialize with null selected version when not viewOnly', () => {
+    fixture.componentRef.setInput('versions', []);
+    fixture.detectChanges();
+
     expect(component.selectedVersion()).toBe(null);
   });
 
@@ -151,15 +155,6 @@ describe('ViewSectionComponent', () => {
     expect(component.selectedVersion()).toBe(mockVersions[0].id);
   });
 
-  it('should emit first version when viewOnly is true', () => {
-    const emitSpy = jest.spyOn(component.selectVersion, 'emit');
-
-    fixture.componentRef.setInput('viewOnly', true);
-    fixture.detectChanges();
-
-    expect(emitSpy).toHaveBeenCalledWith(mockVersions[0].id);
-  });
-
   it('should handle empty versions when viewOnly is true', () => {
     const emitSpy = jest.spyOn(component.selectVersion, 'emit');
 
@@ -168,7 +163,7 @@ describe('ViewSectionComponent', () => {
     fixture.detectChanges();
 
     expect(component.selectedVersion()).toBe(null);
-    expect(emitSpy).not.toHaveBeenCalled();
+    expect(emitSpy).toHaveBeenCalledWith(undefined);
   });
 
   it('should render markdown component when content exists', () => {
@@ -183,6 +178,7 @@ describe('ViewSectionComponent', () => {
 
   it('should render no content message when content is empty', () => {
     fixture.componentRef.setInput('previewContent', '');
+    fixture.componentRef.setInput('versionContent', '');
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement;

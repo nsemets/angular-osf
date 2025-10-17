@@ -2,16 +2,18 @@ import { Selector } from '@ngxs/store';
 
 import {
   DraftRegistrationModel,
+  FileFolderModel,
+  FileModel,
   LicenseModel,
-  OsfFile,
   PageSchema,
+  ProviderSchema,
   RegistrationCard,
   RegistrationModel,
   ResourceModel,
   SchemaResponse,
 } from '@shared/models';
 
-import { Project, ProviderSchema } from '../models';
+import { ProjectShortInfoModel } from '../models';
 
 import { RegistriesStateModel } from './registries.model';
 import { RegistriesState } from './registries.state';
@@ -28,7 +30,7 @@ export class RegistriesSelectors {
   }
 
   @Selector([RegistriesState])
-  static getProjects(state: RegistriesStateModel): Project[] {
+  static getProjects(state: RegistriesStateModel): ProjectShortInfoModel[] {
     return state.projects.data;
   }
 
@@ -93,8 +95,8 @@ export class RegistriesSelectors {
   }
 
   @Selector([RegistriesState])
-  static getStepsValidation(state: RegistriesStateModel): Record<string, { invalid: boolean }> {
-    return state.stepsValidation;
+  static getStepsState(state: RegistriesStateModel): Record<string, { invalid: boolean; touched: boolean }> {
+    return state.stepsState;
   }
 
   @Selector([RegistriesState])
@@ -143,7 +145,7 @@ export class RegistriesSelectors {
   }
 
   @Selector([RegistriesState])
-  static getFiles(state: RegistriesStateModel): OsfFile[] {
+  static getFiles(state: RegistriesStateModel): FileModel[] {
     return state.files.data;
   }
 
@@ -163,7 +165,7 @@ export class RegistriesSelectors {
   }
 
   @Selector([RegistriesState])
-  static getCurrentFolder(state: RegistriesStateModel): OsfFile | null {
+  static getCurrentFolder(state: RegistriesStateModel): FileFolderModel | null {
     return state.currentFolder;
   }
 

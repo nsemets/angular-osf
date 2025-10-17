@@ -1,12 +1,12 @@
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
-import { DialogService } from 'primeng/dynamicdialog';
 import { Skeleton } from 'primeng/skeleton';
-import { TableModule } from 'primeng/table';
+import { TableModule, TablePageEvent } from 'primeng/table';
 
-import { ChangeDetectionStrategy, Component, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 import { MODERATION_PERMISSIONS } from '@osf/features/moderation/constants';
 import { ModeratorPermission } from '@osf/features/moderation/enums';
@@ -16,34 +16,37 @@ import {
   EmploymentHistoryDialogComponent,
   SelectComponent,
 } from '@osf/shared/components';
-import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
 import { TableParameters } from '@osf/shared/models';
+import { CustomDialogService } from '@osf/shared/services';
 
 @Component({
   selector: 'osf-moderators-table',
-  imports: [TranslatePipe, FormsModule, TableModule, Skeleton, Button, SelectComponent],
+  imports: [TranslatePipe, FormsModule, TableModule, Skeleton, Button, SelectComponent, RouterLink],
   templateUrl: './moderators-table.component.html',
   styleUrl: './moderators-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DialogService],
 })
 export class ModeratorsTableComponent {
   items = input<ModeratorModel[]>([]);
   isLoading = input(false);
+  tableParams = input.required<TableParameters>();
   currentUserId = input.required<string | undefined>();
   isCurrentUserAdminModerator = input.required<boolean>();
 
   update = output<ModeratorModel>();
   remove = output<ModeratorModel>();
+  pageChanged = output<TablePageEvent>();
 
-  dialogService = inject(DialogService);
-  translateService = inject(TranslateService);
+  customDialogService = inject(CustomDialogService);
 
-  readonly tableParams = signal<TableParameters>({ ...DEFAULT_TABLE_PARAMS });
   readonly permissionsOptions = MODERATION_PERMISSIONS;
   readonly ModeratorPermission = ModeratorPermission;
 
   skeletonData: ModeratorModel[] = Array.from({ length: 3 }, () => ({}) as ModeratorModel);
+
+  onPageChange(event: TablePageEvent): void {
+    this.pageChanged.emit(event);
+  }
 
   updatePermission(item: ModeratorModel) {
     this.update.emit(item);
@@ -54,26 +57,18 @@ export class ModeratorsTableComponent {
   }
 
   openEducationHistory(contributor: ModeratorModel) {
-    this.dialogService.open(EducationHistoryDialogComponent, {
+    this.customDialogService.open(EducationHistoryDialogComponent, {
+      header: 'project.contributors.table.headers.education',
       width: '552px',
       data: contributor.education,
-      focusOnShow: false,
-      header: this.translateService.instant('project.contributors.table.headers.education'),
-      closeOnEscape: true,
-      modal: true,
-      closable: true,
     });
   }
 
   openEmploymentHistory(contributor: ModeratorModel) {
-    this.dialogService.open(EmploymentHistoryDialogComponent, {
+    this.customDialogService.open(EmploymentHistoryDialogComponent, {
+      header: 'project.contributors.table.headers.employment',
       width: '552px',
       data: contributor.employment,
-      focusOnShow: false,
-      header: this.translateService.instant('project.contributors.table.headers.employment'),
-      closeOnEscape: true,
-      modal: true,
-      closable: true,
     });
   }
 }

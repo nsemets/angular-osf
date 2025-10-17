@@ -1,11 +1,11 @@
-<osf-sub-header [title]="'navigation.wiki' | translate" [tooltip]="'project.wiki.tooltip' | translate">
-  <p-buttongroup class="ml-auto">
+<osf-sub-header [title]="'navigation.wiki' | translate">
+  <p-buttonGroup class="ml-auto">
     <p-button
       [label]="'project.wiki.view' | translate"
       [variant]="wikiModes().view ? undefined : 'outlined'"
       (onClick)="toggleMode(WikiModes.View)"
     />
-    @if (!hasViewOnly()) {
+    @if (hasWriteAccess()) {
       <p-button
         [label]="'project.wiki.edit' | translate"
         [variant]="wikiModes().edit ? undefined : 'outlined'"
@@ -17,7 +17,7 @@
       [variant]="wikiModes().compare ? undefined : 'outlined'"
       (onClick)="toggleMode(WikiModes.Compare)"
     />
-  </p-buttongroup>
+  </p-buttonGroup>
 </osf-sub-header>
 
 @if (hasViewOnly()) {
@@ -26,15 +26,14 @@
   </div>
 }
 
-<section class="flex flex-column lg:flex-row bg-white flex-1 h-full p-5 gap-4 w-full overflow-auto wiki-page">
+<section class="flex flex-column lg:flex-row lg:flex-wrap bg-white flex-1 h-full p-5 gap-4 w-full wiki-page">
   <osf-wiki-list
     [list]="wikiList()"
     [resourceId]="projectId()"
     [isLoading]="isWikiListLoading()"
     [componentsList]="componentsWikiList()"
     [currentWikiId]="currentWikiId()"
-    [viewOnly]="hasViewOnly()"
-    [showAddBtn]="true"
+    [canEdit]="hasWriteAccess()"
     (createWiki)="onCreateWiki()"
     (deleteWiki)="onDeleteWiki()"
   ></osf-wiki-list>
@@ -47,7 +46,7 @@
       (selectVersion)="onSelectVersion($event)"
     ></osf-view-section>
   }
-  @if (!hasViewOnly() && wikiModes().edit) {
+  @if (hasWriteAccess() && wikiModes().edit) {
     <osf-edit-section
       [currentContent]="previewContent()"
       [versionContent]="versionContent()"

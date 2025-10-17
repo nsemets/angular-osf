@@ -3,8 +3,10 @@ import { map } from 'rxjs/operators';
 
 import { inject, Injectable } from '@angular/core';
 
+import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { MyResourcesMapper } from '@osf/features/my-projects/mappers';
-import { ResourceSearchMode, ResourceType, SortOrder } from '@shared/enums';
+
+import { ResourceSearchMode, ResourceType, SortOrder } from '../enums';
 import {
   CreateProjectPayloadJsoApi,
   EndpointType,
@@ -14,10 +16,9 @@ import {
   MyResourcesItemResponseJsonApi,
   MyResourcesResponseJsonApi,
   MyResourcesSearchFilters,
-} from '@shared/models';
-import { JsonApiService } from '@shared/services';
+} from '../models';
 
-import { environment } from 'src/environments/environment';
+import { JsonApiService } from './json-api.service';
 
 @Injectable({
   providedIn: 'root',
@@ -30,7 +31,11 @@ export class MyResourcesService {
   };
 
   private readonly jsonApiService = inject(JsonApiService);
-  private readonly apiUrl = `${environment.apiDomainUrl}/v2`;
+  private readonly environment = inject(ENVIRONMENT);
+
+  get apiUrl() {
+    return `${this.environment.apiDomainUrl}/v2`;
+  }
 
   private buildCommonParams(
     filters?: MyResourcesSearchFilters,
@@ -89,9 +94,17 @@ export class MyResourcesService {
 
     let url;
     if (searchMode === ResourceSearchMode.All) {
-      url = `${this.apiUrl}/${endpoint}/`;
+      url = `${this.apiUrl}/${endpoint}`;
     } else {
       url = endpoint.startsWith('collections/') ? `${this.apiUrl}/${endpoint}` : `${this.apiUrl}/users/me/${endpoint}`;
+    }
+
+    if (searchMode === ResourceSearchMode.Component) {
+      params['filter[parent][ne]'] = null;
+    }
+
+    if (searchMode === ResourceSearchMode.Root) {
+      params['filter[parent]'] = null;
     }
 
     return this.jsonApiService.get<MyResourcesResponseJsonApi>(url, params).pipe(
@@ -117,9 +130,18 @@ export class MyResourcesService {
     filters?: MyResourcesSearchFilters,
     pageNumber?: number,
     pageSize?: number,
-    searchMode?: ResourceSearchMode
+    searchMode?: ResourceSearchMode,
+    rootProjectId?: string
   ): Observable<MyResourcesItemResponseJsonApi> {
-    return this.getResources('registrations/', filters, pageNumber, pageSize, 'registrations', searchMode);
+    return this.getResources(
+      'registrations/',
+      filters,
+      pageNumber,
+      pageSize,
+      'registrations',
+      searchMode,
+      rootProjectId
+    );
   }
 
   getMyPreprints(
@@ -176,6 +198,7 @@ export class MyResourcesService {
           ...(description && { description }),
           category: 'project',
           ...(templateFrom && { template_from: templateFrom }),
+          public: false,
         },
         relationships: {
           region: {

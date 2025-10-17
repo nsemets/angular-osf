@@ -1,4 +1,4 @@
-<section class="home-container xl:mt-6" [class.medium]="isMedium()">
+<section class="home-container flex-1 xl:mt-6">
   @if (areProjectsLoading()) {
     <osf-loading-spinner />
   } @else {
@@ -25,14 +25,18 @@
             {{ 'home.loggedIn.dashboard.quickSearch.osf' | translate }}
           </p>
 
+          <osf-search-input
+            [placeholder]="'home.loggedIn.dashboard.quickSearch.searchPlaceholder' | translate"
+            [control]="searchControl"
+          />
+
           <osf-my-projects-table
+            class="block mt-4"
             [items]="filteredProjects()"
             [tableParams]="tableParams()"
-            [searchControl]="searchControl"
             [sortColumn]="sortColumn()"
             [sortOrder]="sortOrder()"
             [isLoading]="areProjectsLoading()"
-            [searchPlaceholder]="'home.loggedIn.dashboard.quickSearch.searchPlaceholder' | translate"
             (pageChange)="onPageChange($event)"
             (sort)="onSort($event)"
             (itemClick)="navigateToProject($event)"
@@ -57,15 +61,6 @@
             [label]="'home.loggedIn.latestResearch.button' | translate"
             severity="success"
           />
-        </div>
-
-        <div class="hosting-container flex flex-column gap-4 py-6 px-3 md:px-4 xl:flex-row xl:justify-content-between">
-          <div class="text-container">
-            <h1>{{ 'home.loggedIn.hosting.title' | translate }}</h1>
-            <p class="m-t-12">{{ 'home.loggedIn.hosting.subtitle' | translate }}</p>
-          </div>
-
-          <p-button routerLink="/meetings" [label]="'home.loggedIn.hosting.button' | translate" severity="success" />
         </div>
       </div>
     } @else {
@@ -112,6 +107,7 @@
         data-test-products-collections
       >
         <img
+          class="max-w-full"
           src="assets/images/dashboard/products/osf-collections.png"
           [alt]="'home.loggedIn.dashboard.images.osfCollectionsImageAltText' | translate"
         />
@@ -119,6 +115,7 @@
 
       <a routerLink="/institutions">
         <img
+          class="max-w-full"
           src="assets/images/dashboard/products/osf-institutions.png"
           [alt]="'home.loggedIn.dashboard.images.osfInstitutionsImageAltText' | translate"
         />
@@ -126,6 +123,7 @@
 
       <a routerLink="/registries">
         <img
+          class="max-w-full"
           src="assets/images/dashboard/products/osf-registries.png"
           [alt]="'home.loggedIn.dashboard.images.osfRegistriesImageAltTest' | translate"
         />
@@ -133,6 +131,7 @@
 
       <a routerLink="/preprints">
         <img
+          class="max-w-full"
           src="assets/images/dashboard/products/osf-preprints.png"
           [alt]="'home.loggedIn.dashboard.images.osfPreprintsImageAltTest' | translate"
         />

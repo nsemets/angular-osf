@@ -2,23 +2,27 @@
   <osf-icon [class]="reviewStatusIcon[status()].value" [iconClass]="reviewStatusIcon[status()].icon"></osf-icon>
 
   <div>
-    <p-button
-      class="link-btn-no-padding"
-      link
-      [label]="submission().title"
-      [routerLink]="['/', submission().id, 'overview']"
-      [queryParams]="{
-        mode: 'moderator',
-        revisionId: isPendingModeration && !isPending ? submission().revisionId : null,
-      }"
-    />
+    @if (isRejected) {
+      <h4>{{ submission().title }}</h4>
+    } @else {
+      <p-button
+        class="link-btn-no-padding"
+        link
+        styleClass="text-left"
+        [label]="submission().title"
+        (onClick)="selected.emit()"
+      />
+    }
 
     @if (submission().public && !submission().embargoEndDate) {
       <p class="flex flex-wrap gap-1 mt-2">{{ 'registry.overview.statuses.accepted.text' | translate }}</p>
     }
 
     @if (submission().embargoEndDate) {
-      <p class="flex flex-wrap gap-1 mt-2">{{ 'moderation.registryEmbargoedWithEndDate' | translate }}</p>
+      <p class="flex flex-wrap gap-1 mt-2">
+        {{ 'moderation.registryEmbargoedWithEndDate' | translate }}
+        {{ submission().embargoEndDate | date: 'MMM d, y' }}
+      </p>
     }
 
     @for (action of showAll ? submission().actions : submission().actions.slice(0, limitValue); track $index) {
@@ -26,14 +30,14 @@
         <span>{{ registryActionLabel[action.toState] | translate }}</span>
         <span>{{ action.dateModified | dateAgo }}</span>
         <span>{{ 'moderation.submissionReview.by' | translate }}</span>
-        <span>{{ action.creator.name }}</span>
+        <span>{{ action.creator?.name }}</span>
 
         @if (action.toState === registryActionState.Accepted) {
           <span>{{ 'moderation.withNoEmbargo' | translate }}</span>
         }
 
         @if (action.comment.length) {
-          <span class="font-italic">- {{ action.comment }}</span>
+          <osf-truncated-text class="font-italic" [text]="action.comment" />
         }
       </div>
     }

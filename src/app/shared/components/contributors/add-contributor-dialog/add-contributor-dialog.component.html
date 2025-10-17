@@ -1,5 +1,5 @@
 <div class="flex flex-column">
-  @if (isSearchState) {
+  @if (isSearchState()) {
     <osf-search-input
       [control]="searchControl"
       [placeholder]="'project.contributors.addDialog.placeholder' | translate"
@@ -11,8 +11,8 @@
       } @else {
         @for (item of users(); track $index) {
           <div class="border-divider flex pb-3">
-            <p-checkbox variant="filled" [value]="item" [inputId]="item.id" [(ngModel)]="selectedUsers"></p-checkbox>
-            <label class="label ml-2" [for]="item.id">{{ item.fullName }}</label>
+            <p-checkbox variant="filled" [value]="item" [(ngModel)]="selectedUsers"></p-checkbox>
+            <a class="ml-2 font-bold" [href]="item.id" target="_blank">{{ item.fullName }}</a>
           </div>
         }
 
@@ -37,10 +37,11 @@
           severity="secondary"
           [label]="'project.contributors.addDialog.addUnregisteredContributor' | translate"
           (click)="addUnregistered()"
+          data-test-add-unregistered-contributor-button
         />
       </div>
     }
-  } @else {
+  } @else if (isDetailsState()) {
     <div>
       <p>{{ 'project.contributors.addDialog.selectPermissions' | translate }}</p>
 
@@ -49,6 +50,18 @@
           <osf-add-contributor-item [contributor]="user"></osf-add-contributor-item>
         }
       </div>
+    </div>
+  } @else if (isComponentsState()) {
+    <div class="flex flex-column gap-4">
+      <p
+        [innerHTML]="
+          'project.contributors.addDialog.addingContributorsTo'
+            | translate: { names: contributorNames(), projectName: resourceName() }
+        "
+      ></p>
+      <p>{{ 'project.contributors.addDialog.addContributorsToComponents' | translate }}</p>
+
+      <osf-components-selection-list [(components)]="components" />
     </div>
   }
 
@@ -59,6 +72,7 @@
       (click)="dialogRef.close()"
       severity="info"
       [label]="'common.buttons.cancel' | translate"
+      data-test-cancel-add-contributor-button
     >
     </p-button>
 
@@ -66,8 +80,9 @@
       class="w-full"
       styleClass="w-full"
       (click)="addContributor()"
-      [label]="'common.buttons.next' | translate"
+      [label]="buttonLabel() | translate"
       [disabled]="!selectedUsers().length"
+      data-test-add-contributor-button
     >
     </p-button>
   </div>

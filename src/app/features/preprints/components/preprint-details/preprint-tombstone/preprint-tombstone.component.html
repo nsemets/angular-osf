@@ -13,12 +13,7 @@
         <h3>{{ 'preprints.preprintStepper.review.sections.metadata.authors' | translate }}</h3>
 
         <div class="flex flex-column gap-1 line-height-2 md:flex-row">
-          @for (contributor of bibliographicContributors(); track contributor.id) {
-            <div>
-              <a class="font-bold"> {{ contributor.fullName }}</a>
-              <span>{{ $last ? '' : ',' }}</span>
-            </div>
-          }
+          <osf-contributors-list [contributors]="bibliographicContributors()"></osf-contributors-list>
 
           @if (areContributorsLoading()) {
             <p-skeleton width="10rem" height="1.25rem" />
@@ -39,7 +34,6 @@
       <section class="license flex flex-column gap-2">
         <h3>{{ 'preprints.preprintStepper.review.sections.metadata.license' | translate }}</h3>
 
-        <!-- [RNi] TODO: Extract to separate component -->
         <p-accordion>
           <p-accordion-panel value="0">
             <p-accordion-header class="p-0 justify-content-start gap-2">
@@ -82,7 +76,12 @@
 
         <div class="flex flex-wrap gap-2">
           @for (tag of preprintValue.tags; track tag) {
-            <p-tag [value]="tag" severity="info" />
+            <p-tag
+              class="cursor-pointer hover:bg-black-alpha-10"
+              [value]="tag"
+              severity="info"
+              (click)="tagClicked(tag)"
+            />
           } @empty {
             <p>{{ 'common.labels.none' | translate }}</p>
           }

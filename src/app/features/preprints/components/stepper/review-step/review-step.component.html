@@ -10,9 +10,13 @@
 </p>
 <p>
   {{ 'preprints.preprintStepper.review.learnMore' | translate }}
-  <a href="https://help.osf.io/article/592-preprint-moderation">{{
-    'preprints.preprintStepper.review.moderationPolicies' | translate
-  }}</a>
+  <a
+    class="font-bold"
+    href="https://help.osf.io/article/592-preprint-moderation"
+    target="_blank"
+    rel="noopener noreferrer"
+    >{{ 'preprints.preprintStepper.review.moderationPolicies' | translate }}</a
+  >
   {{ 'preprints.preprintStepper.review.supportCenter' | translate }}
 </p>
 
@@ -56,42 +60,37 @@
     <h2>{{ 'preprints.preprintStepper.review.sections.metadata.title' | translate }}</h2>
 
     <section class="flex flex-column gap-2">
-      <h3>{{ 'preprints.preprintStepper.review.sections.metadata.contributors' | translate }}</h3>
+      <h3>{{ 'common.labels.contributors' | translate }}</h3>
 
-      <div class="flex gap-1 line-height-2">
-        @for (contributor of bibliographicContributors(); track contributor.id) {
-          <div>
-            <a class="font-bold"> {{ contributor.fullName }}</a>
-            <span>{{ $last ? '' : ',' }}</span>
-          </div>
-        }
-      </div>
+      <osf-contributors-list [contributors]="bibliographicContributors()"></osf-contributors-list>
     </section>
 
     @if (affiliatedInstitutions().length) {
-      <osf-affiliated-institutions-view [institutions]="affiliatedInstitutions()" />
+      <osf-affiliated-institutions-view data-test-preprint-institution-list [institutions]="affiliatedInstitutions()" />
     }
 
-    <section class="license flex flex-column gap-2">
-      <h3>{{ 'preprints.preprintStepper.review.sections.metadata.license' | translate }}</h3>
+    @if (license()) {
+      <section class="license flex flex-column gap-2">
+        <h3>{{ 'preprints.preprintStepper.review.sections.metadata.license' | translate }}</h3>
 
-      <p-accordion>
-        <p-accordion-panel value="0">
-          <p-accordion-header class="p-0 justify-content-start gap-2">
-            <p class="font-normal">{{ license()?.name }}</p>
-          </p-accordion-header>
-          <p-accordion-content>
-            <p>{{ license()!.text | interpolate: licenseOptionsRecord() }}</p>
-          </p-accordion-content>
-        </p-accordion-panel>
-      </p-accordion>
-    </section>
+        <p-accordion>
+          <p-accordion-panel value="0">
+            <p-accordion-header class="p-0 justify-content-start gap-2">
+              <p class="font-normal">{{ license()?.name }}</p>
+            </p-accordion-header>
+            <p-accordion-content>
+              <p>{{ license()!.text | interpolate: licenseOptionsRecord() }}</p>
+            </p-accordion-content>
+          </p-accordion-panel>
+        </p-accordion>
+      </section>
+    }
 
     @if (preprint()?.articleDoiLink) {
       <section class="flex flex-column gap-2">
         <h3>{{ 'preprints.preprintStepper.review.sections.metadata.publicationDoi' | translate }}</h3>
 
-        <a [href]="preprint()?.articleDoiLink">
+        <a [href]="preprint()?.articleDoiLink" target="_blank" rel="noopener noreferrer">
           {{ preprint()?.articleDoiLink }}
         </a>
       </section>
@@ -123,7 +122,7 @@
       <h3>{{ 'preprints.preprintStepper.review.sections.metadata.publicationDate' | translate }}</h3>
 
       @if (preprint()?.originalPublicationDate) {
-        {{ preprint()?.originalPublicationDate | date: 'MMM d, y, h:mm a' }}
+        {{ preprint()?.originalPublicationDate | date: 'MMM d, y' }}
       } @else {
         <p>{{ 'common.labels.notApplicable' | translate }}</p>
       }
@@ -237,6 +236,7 @@
     [disabled]="isPreprintSubmitting()"
   />
   <p-button
+    data-test-submit-button
     class="w-6 md:w-9rem"
     styleClass="w-full"
     [label]="'common.buttons.submit' | translate"

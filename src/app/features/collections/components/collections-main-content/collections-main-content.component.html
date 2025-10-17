@@ -1,11 +1,7 @@
 <div class="flex justify-content-between align-items-center mb-4 column-gap-3">
   <div class="flex flex-1 flex-column gap-7 results-count-heading">
-    @if (collectionSubmissions().length) {
-      <h3 class="highlight">
-        {{ collectionSubmissions().length }} {{ 'collections.searchResults.results' | translate }}
-      </h3>
-    } @else if (collectionSubmissions().length > 10000) {
-      <h3 class="highlight">{{ 'collections.searchResults.10000results' | translate }}</h3>
+    @if (totalSubmissions()) {
+      <h3 class="highlight">{{ totalSubmissions() }} {{ 'collections.searchResults.results' | translate }}</h3>
     } @else {
       <h3 class="highlight">{{ 'collections.searchResults.noResults' | translate }}</h3>
     }
@@ -31,9 +27,21 @@
         </ng-template>
       </p-select>
     } @else {
-      <p-button severity="secondary" icon="fas fa-sliders" size="large" (click)="openFilters()"></p-button>
+      <p-button
+        severity="secondary"
+        icon="fas fa-sliders"
+        class="btn-icon-only"
+        (click)="openFilters()"
+        [ariaLabel]="'common.buttons.filter' | translate"
+      ></p-button>
 
-      <p-button severity="secondary" icon="fas fa-filter" size="large" (click)="openSorting()"></p-button>
+      <p-button
+        severity="secondary"
+        icon="fas fa-filter"
+        class="btn-icon-only"
+        (click)="openSorting()"
+        [ariaLabel]="'common.buttons.sort' | translate"
+      ></p-button>
     }
   </div>
 </div>

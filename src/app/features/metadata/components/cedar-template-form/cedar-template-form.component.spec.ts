@@ -2,9 +2,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CedarMetadataHelper } from '@osf/features/metadata/helpers';
 import { CedarMetadataDataTemplateJsonApi } from '@osf/features/metadata/models';
-import { CEDAR_METADATA_DATA_TEMPLATE_JSON_API_MOCK, TranslateServiceMock } from '@shared/mocks';
 
 import { CedarTemplateFormComponent } from './cedar-template-form.component';
+
+import { CEDAR_METADATA_DATA_TEMPLATE_JSON_API_MOCK } from '@testing/mocks';
+import { OSFTestingModule } from '@testing/osf.testing.module';
 
 describe('CedarTemplateFormComponent', () => {
   let component: CedarTemplateFormComponent;
@@ -14,8 +16,7 @@ describe('CedarTemplateFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CedarTemplateFormComponent],
-      providers: [TranslateServiceMock],
+      imports: [CedarTemplateFormComponent, OSFTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CedarTemplateFormComponent);
@@ -66,10 +67,10 @@ describe('CedarTemplateFormComponent', () => {
     expect(emitSpy).toHaveBeenCalled();
   });
 
-  it('should emit editMode event', () => {
-    const emitSpy = jest.spyOn(component.editMode, 'emit');
+  it('should emit toggleEditMode event', () => {
+    const emitSpy = jest.spyOn(component.toggleEditMode, 'emit');
 
-    component.editMode.emit();
+    component.toggleEditMode.emit();
 
     expect(emitSpy).toHaveBeenCalled();
   });

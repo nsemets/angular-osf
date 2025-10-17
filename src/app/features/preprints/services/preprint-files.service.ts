@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { map, Observable, switchMap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
+import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { PreprintsMapper } from '@osf/features/preprints/mappers';
 import {
   Preprint,
@@ -10,10 +12,9 @@ import {
   PreprintLinksJsonApi,
   PreprintRelationshipsJsonApi,
 } from '@osf/features/preprints/models';
-import { ApiData, GetFileResponse, GetFilesResponse, OsfFile } from '@osf/shared/models';
+import { ApiData, FileFolderModel, FileFolderResponseJsonApi, FileFoldersResponseJsonApi } from '@osf/shared/models';
+import { FilesMapper } from '@shared/mappers';
 import { FilesService, JsonApiService } from '@shared/services';
-
-import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +22,11 @@ import { environment } from 'src/environments/environment';
 export class PreprintFilesService {
   private filesService = inject(FilesService);
   private jsonApiService = inject(JsonApiService);
-  private readonly apiUrl = `${environment.apiDomainUrl}/v2`;
+  private readonly environment = inject(ENVIRONMENT);
+
+  get apiUrl() {
+    return `${this.environment.apiDomainUrl}/v2`;
+  }
 
   updateFileRelationship(preprintId: string, fileId: string): Observable<Preprint> {
     return this.jsonApiService
@@ -47,7 +52,7 @@ export class PreprintFilesService {
   }
 
   getPreprintFilesLinks(id: string): Observable<PreprintFilesLinks> {
-    return this.jsonApiService.get<GetFilesResponse>(`${this.apiUrl}/preprints/${id}/files/`).pipe(
+    return this.jsonApiService.get<any>(`${this.apiUrl}/preprints/${id}/files/`).pipe(
       map((response) => {
         const rel = response.data[0].relationships;
         const links = response.data[0].links;
@@ -60,16 +65,12 @@ export class PreprintFilesService {
     );
   }
 
-  getProjectFiles(projectId: string): Observable<OsfFile[]> {
-    return this.jsonApiService.get<GetFilesResponse>(`${this.apiUrl}/nodes/${projectId}/files/`).pipe(
-      switchMap((response: GetFilesResponse) => {
+  getProjectRootFolder(projectId: string): Observable<FileFolderModel> {
+    return this.jsonApiService.get<any>(`${this.apiUrl}/nodes/${projectId}/files/`).pipe(
+      switchMap((response: FileFoldersResponseJsonApi) => {
         return this.jsonApiService
-          .get<GetFileResponse>(response.data[0].relationships.root_folder.links.related.href)
-          .pipe(
-            switchMap((fileResponse) =>
-              this.filesService.getFilesWithoutFiltering(fileResponse.data.relationships.files.links.related.href)
-            )
-          );
+          .get<FileFolderResponseJsonApi>(response.data[0].relationships.root_folder.links.related.href)
+          .pipe(map((folder) => FilesMapper.getFileFolder(folder.data)));
       })
     );
   }

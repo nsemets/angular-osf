@@ -1,19 +1,9 @@
-import { RegistrationQuestions } from '@osf/features/registry/models';
 import { ReviewActionPayload } from '@osf/shared/models/review-action';
 
 export class GetRegistryById {
   static readonly type = '[Registry Overview] Get Registry By Id';
 
-  constructor(
-    public id: string,
-    public isComponentPage?: boolean
-  ) {}
-}
-
-export class GetRegistrySubjects {
-  static readonly type = '[Registry Overview] Get Registry Subjects';
-
-  constructor(public registryId: string) {}
+  constructor(public id: string) {}
 }
 
 export class GetRegistryInstitutions {
@@ -25,10 +15,7 @@ export class GetRegistryInstitutions {
 export class GetSchemaBlocks {
   static readonly type = '[Registry Overview] Get Schema Blocks';
 
-  constructor(
-    public schemaLink: string,
-    public questions: RegistrationQuestions
-  ) {}
+  constructor(public schemaLink: string) {}
 }
 
 export class WithdrawRegistration {

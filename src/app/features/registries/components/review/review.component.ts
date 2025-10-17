@@ -1,11 +1,10 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { Accordion, AccordionContent, AccordionHeader, AccordionPanel } from 'primeng/accordion';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
-import { DialogService } from 'primeng/dynamicdialog';
 import { Message } from 'primeng/message';
 import { Tag } from 'primeng/tag';
 
@@ -13,13 +12,14 @@ import { map, of } from 'rxjs';
 
 import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { RegistrationBlocksDataComponent } from '@osf/shared/components';
+import { ENVIRONMENT } from '@core/provider/environment.provider';
+import { ContributorsListComponent, RegistrationBlocksDataComponent } from '@osf/shared/components';
 import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants';
-import { FieldType, ResourceType } from '@osf/shared/enums';
+import { FieldType, ResourceType, UserPermissions } from '@osf/shared/enums';
 import { InterpolatePipe } from '@osf/shared/pipes';
-import { CustomConfirmationService, ToastService } from '@osf/shared/services';
+import { CustomConfirmationService, CustomDialogService, ToastService } from '@osf/shared/services';
 import {
   ContributorsSelectors,
   FetchSelectedSubjects,
@@ -27,11 +27,16 @@ import {
   SubjectsSelectors,
 } from '@osf/shared/stores';
 
-import { ClearState, DeleteDraft, FetchLicenses, FetchProjectChildren, RegistriesSelectors } from '../../store';
+import {
+  ClearState,
+  DeleteDraft,
+  FetchLicenses,
+  FetchProjectChildren,
+  RegistriesSelectors,
+  UpdateStepState,
+} from '../../store';
 import { ConfirmRegistrationDialogComponent } from '../confirm-registration-dialog/confirm-registration-dialog.component';
 import { SelectComponentsDialogComponent } from '../select-components-dialog/select-components-dialog.component';
-
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'osf-review',
@@ -39,7 +44,6 @@ import { environment } from 'src/environments/environment';
     TranslatePipe,
     Card,
     Message,
-    RouterLink,
     Tag,
     Button,
     Accordion,
@@ -48,19 +52,19 @@ import { environment } from 'src/environments/environment';
     AccordionPanel,
     InterpolatePipe,
     RegistrationBlocksDataComponent,
+    ContributorsListComponent,
   ],
   templateUrl: './review.component.html',
   styleUrl: './review.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DialogService],
 })
 export class ReviewComponent {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly customConfirmationService = inject(CustomConfirmationService);
-  private readonly dialogService = inject(DialogService);
-  private readonly translateService = inject(TranslateService);
+  private readonly customDialogService = inject(CustomDialogService);
   private readonly toastService = inject(ToastService);
+  private readonly environment = inject(ENVIRONMENT);
 
   readonly pages = select(RegistriesSelectors.getPagesSchema);
   readonly draftRegistration = select(RegistriesSelectors.getDraftRegistration);
@@ -83,19 +87,24 @@ export class ReviewComponent {
     clearState: ClearState,
     getProjectsComponents: FetchProjectChildren,
     fetchLicenses: FetchLicenses,
+    updateStepState: UpdateStepState,
   });
 
   private readonly draftId = toSignal(this.route.params.pipe(map((params) => params['id'])) ?? of(undefined));
 
-  stepsValidation = select(RegistriesSelectors.getStepsValidation);
+  stepsState = select(RegistriesSelectors.getStepsState);
 
-  isDraftInvalid = computed(() => {
-    return Object.values(this.stepsValidation()).some((step) => step.invalid);
+  isDraftInvalid = computed(() => Object.values(this.stepsState()).some((step) => step.invalid));
+
+  licenseOptionsRecord = computed(() => (this.draftRegistration()?.license.options ?? {}) as Record<string, string>);
+
+  hasAdminAccess = computed(() => {
+    const registry = this.draftRegistration();
+    if (!registry) return false;
+    return registry.currentUserPermissions.includes(UserPermissions.Admin);
   });
 
-  licenseOptionsRecord = computed(() => {
-    return (this.draftRegistration()?.license.options ?? {}) as Record<string, string>;
-  });
+  registerButtonDisabled = computed(() => this.isDraftLoading() || this.isDraftInvalid() || !this.hasAdminAccess());
 
   constructor() {
     if (!this.contributors()?.length) {
@@ -107,7 +116,7 @@ export class ReviewComponent {
 
     effect(() => {
       if (this.draftRegistration()) {
-        this.actions.fetchLicenses(this.draftRegistration()?.providerId ?? environment.defaultProvider);
+        this.actions.fetchLicenses(this.draftRegistration()?.providerId ?? this.environment.defaultProvider);
       }
     });
 
@@ -155,31 +164,27 @@ export class ReviewComponent {
   }
 
   openSelectComponentsForRegistrationDialog(): void {
-    this.dialogService
+    this.customDialogService
       .open(SelectComponentsDialogComponent, {
+        header: 'registries.review.selectComponents.title',
         width: '552px',
-        focusOnShow: false,
-        header: this.translateService.instant('registries.review.selectComponents.title'),
-        closeOnEscape: true,
-        modal: true,
         data: {
           parent: this.draftRegistration()?.branchedFrom,
           components: this.components(),
         },
       })
       .onClose.subscribe((selectedComponents) => {
-        this.openConfirmRegistrationDialog(selectedComponents);
+        if (selectedComponents) {
+          this.openConfirmRegistrationDialog(selectedComponents);
+        }
       });
   }
 
   openConfirmRegistrationDialog(components?: string[]): void {
-    this.dialogService
+    this.customDialogService
       .open(ConfirmRegistrationDialogComponent, {
+        header: 'registries.review.confirmation.title',
         width: '552px',
-        focusOnShow: false,
-        header: this.translateService.instant('registries.review.confirmation.title'),
-        closeOnEscape: true,
-        modal: true,
         data: {
           draftId: this.draftId(),
           projectId:

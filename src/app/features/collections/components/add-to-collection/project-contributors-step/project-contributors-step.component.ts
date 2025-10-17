@@ -1,56 +1,75 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
-import { DialogService } from 'primeng/dynamicdialog';
 import { Step, StepItem, StepPanel } from 'primeng/stepper';
 import { Tooltip } from 'primeng/tooltip';
 
-import { forkJoin } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
 
+import { UserSelectors } from '@core/store/user';
 import { InfoIconComponent } from '@osf/shared/components';
 import {
   AddContributorDialogComponent,
   AddUnregisteredContributorDialogComponent,
-  ContributorsListComponent,
+  ContributorsTableComponent,
 } from '@osf/shared/components/contributors';
+import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
 import { AddContributorType, ResourceType } from '@osf/shared/enums';
 import { findChangedItems } from '@osf/shared/helpers';
-import { ContributorDialogAddModel, ContributorModel } from '@osf/shared/models';
-import { CustomConfirmationService, ToastService } from '@osf/shared/services';
+import { ContributorDialogAddModel, ContributorModel, TableParameters } from '@osf/shared/models';
+import { CustomConfirmationService, CustomDialogService, ToastService } from '@osf/shared/services';
 import {
   AddContributor,
+  BulkAddContributors,
+  BulkUpdateContributors,
   ContributorsSelectors,
   DeleteContributor,
   ProjectsSelectors,
-  UpdateContributor,
 } from '@osf/shared/stores';
 
 @Component({
   selector: 'osf-project-contributors-step',
-  imports: [Button, Step, StepItem, StepPanel, Tooltip, TranslatePipe, ContributorsListComponent, InfoIconComponent],
+  imports: [Button, Step, StepItem, StepPanel, Tooltip, TranslatePipe, ContributorsTableComponent, InfoIconComponent],
   templateUrl: './project-contributors-step.component.html',
   styleUrl: './project-contributors-step.component.scss',
-  providers: [DialogService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectContributorsStepComponent {
   private readonly destroyRef = inject(DestroyRef);
-  private readonly translateService = inject(TranslateService);
-  private readonly dialogService = inject(DialogService);
+  private readonly customDialogService = inject(CustomDialogService);
   private readonly toastService = inject(ToastService);
   private readonly customConfirmationService = inject(CustomConfirmationService);
+  private readonly router = inject(Router);
 
-  readonly projectContributors = select(ContributorsSelectors.getContributors);
   readonly isContributorsLoading = select(ContributorsSelectors.isContributorsLoading);
+  readonly contributorsTotalCount = select(ContributorsSelectors.getContributorsTotalCount);
   readonly selectedProject = select(ProjectsSelectors.getSelectedProject);
+  readonly currentUser = select(UserSelectors.getCurrentUser);
 
-  private initialContributors = signal<ContributorModel[]>([]);
+  private initialContributors = select(ContributorsSelectors.getContributors);
+  readonly projectContributors = signal<ContributorModel[]>([]);
+
+  readonly tableParams = computed<TableParameters>(() => ({
+    ...DEFAULT_TABLE_PARAMS,
+    totalRecords: this.contributorsTotalCount(),
+    paginator: this.contributorsTotalCount() > DEFAULT_TABLE_PARAMS.rows,
+  }));
 
   stepperActiveValue = input.required<number>();
   targetStepValue = input.required<number>();
@@ -62,7 +81,8 @@ export class ProjectContributorsStepComponent {
 
   actions = createDispatchMap({
     addContributor: AddContributor,
-    updateContributor: UpdateContributor,
+    bulkAddContributors: BulkAddContributors,
+    bulkUpdateContributors: BulkUpdateContributors,
     deleteContributor: DeleteContributor,
   });
 
@@ -75,6 +95,8 @@ export class ProjectContributorsStepComponent {
   }
 
   handleRemoveContributor(contributor: ContributorModel) {
+    const isDeletingSelf = contributor.userId === this.currentUser()?.id;
+
     this.customConfirmationService.confirmDelete({
       headerKey: 'project.contributors.removeDialog.title',
       messageKey: 'project.contributors.removeDialog.message',
@@ -82,13 +104,18 @@ export class ProjectContributorsStepComponent {
       acceptLabelKey: 'common.buttons.remove',
       onConfirm: () => {
         this.actions
-          .deleteContributor(this.selectedProject()?.id, ResourceType.Project, contributor.userId)
+          .deleteContributor(this.selectedProject()?.id, ResourceType.Project, contributor.userId, isDeletingSelf)
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
-            next: () =>
+            next: () => {
               this.toastService.showSuccess('project.contributors.removeDialog.successMessage', {
                 name: contributor.fullName,
-              }),
+              });
+
+              if (isDeletingSelf) {
+                this.router.navigate(['/']);
+              }
+            },
           });
       },
     });
@@ -103,17 +130,16 @@ export class ProjectContributorsStepComponent {
       const updatedContributors = findChangedItems(this.initialContributors(), this.projectContributors(), 'id');
 
       if (!updatedContributors.length) {
-        this.initialContributors.set(JSON.parse(JSON.stringify(this.projectContributors())));
+        this.projectContributors.set(structuredClone(this.initialContributors()));
         this.contributorsSaved.emit();
       } else {
-        const updateRequests = updatedContributors.map((payload) =>
-          this.actions.updateContributor(this.selectedProject()?.id, ResourceType.Project, payload)
-        );
-        forkJoin(updateRequests).subscribe(() => {
-          this.toastService.showSuccess('project.contributors.toastMessages.multipleUpdateSuccessMessage');
-          this.initialContributors.set(JSON.parse(JSON.stringify(this.projectContributors())));
-          this.contributorsSaved.emit();
-        });
+        this.actions
+          .bulkUpdateContributors(this.selectedProject()?.id, ResourceType.Project, updatedContributors)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe(() => {
+            this.toastService.showSuccess('project.contributors.toastMessages.multipleUpdateSuccessMessage');
+            this.contributorsSaved.emit();
+          });
       }
     } else {
       this.contributorsSaved.emit();
@@ -127,15 +153,11 @@ export class ProjectContributorsStepComponent {
   private openAddContributorDialog() {
     const addedContributorIds = this.projectContributors().map((x) => x.userId);
 
-    this.dialogService
+    this.customDialogService
       .open(AddContributorDialogComponent, {
+        header: 'project.contributors.addDialog.addRegisteredContributor',
         width: '448px',
         data: addedContributorIds,
-        focusOnShow: false,
-        header: this.translateService.instant('project.contributors.addDialog.addRegisteredContributor'),
-        closeOnEscape: true,
-        modal: true,
-        closable: true,
       })
       .onClose.pipe(
         filter((res: ContributorDialogAddModel) => !!res),
@@ -145,26 +167,21 @@ export class ProjectContributorsStepComponent {
         if (res.type === AddContributorType.Unregistered) {
           this.openAddUnregisteredContributorDialog();
         } else {
-          const addRequests = res.data.map((payload) =>
-            this.actions.addContributor(this.selectedProject()?.id, ResourceType.Project, payload)
-          );
-
-          forkJoin(addRequests).subscribe(() => {
-            this.toastService.showSuccess('project.contributors.toastMessages.multipleAddSuccessMessage');
-          });
+          this.actions
+            .bulkAddContributors(this.selectedProject()?.id, ResourceType.Project, res.data)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() =>
+              this.toastService.showSuccess('project.contributors.toastMessages.multipleAddSuccessMessage')
+            );
         }
       });
   }
 
   private openAddUnregisteredContributorDialog() {
-    this.dialogService
+    this.customDialogService
       .open(AddUnregisteredContributorDialogComponent, {
+        header: 'project.contributors.addDialog.addUnregisteredContributor',
         width: '448px',
-        focusOnShow: false,
-        header: this.translateService.instant('project.contributors.addDialog.addUnregisteredContributor'),
-        closeOnEscape: true,
-        modal: true,
-        closable: true,
       })
       .onClose.pipe(
         filter((res: ContributorDialogAddModel) => !!res),
@@ -186,10 +203,10 @@ export class ProjectContributorsStepComponent {
   private setupEffects(): void {
     effect(() => {
       const isMetadataSaved = this.isProjectMetadataSaved();
-      const contributors = this.projectContributors();
+      const contributors = this.initialContributors();
 
-      if (isMetadataSaved && contributors.length && !this.initialContributors().length) {
-        this.initialContributors.set(JSON.parse(JSON.stringify(contributors)));
+      if (isMetadataSaved && contributors.length) {
+        this.projectContributors.set(structuredClone(contributors));
       }
     });
   }

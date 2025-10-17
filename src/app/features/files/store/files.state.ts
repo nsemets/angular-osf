@@ -1,12 +1,14 @@
 import { Action, State, StateContext } from '@ngxs/store';
 
-import { catchError, finalize, forkJoin, tap } from 'rxjs';
+import { catchError, finalize, forkJoin, of, tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { MapResourceMetadata } from '@osf/features/files/mappers';
+import { SupportedFeature } from '@osf/shared/enums';
 import { handleSectionError } from '@osf/shared/helpers';
-import { FilesService, ToastService } from '@shared/services';
+import { FilesService, ToastService } from '@osf/shared/services';
+
+import { MapResourceMetadata } from '../mappers';
 
 import {
   CreateFolder,
@@ -18,82 +20,74 @@ import {
   GetFileResourceMetadata,
   GetFileRevisions,
   GetFiles,
-  GetMoveFileFiles,
-  GetRootFolderFiles,
+  GetMoveDialogConfiguredStorageAddons,
+  GetMoveDialogFiles,
+  GetMoveDialogRootFolders,
   GetRootFolders,
+  GetStorageSupportedFeatures,
   RenameEntry,
   ResetState,
   SetCurrentFolder,
   SetCurrentProvider,
   SetFileMetadata,
-  SetFilesIsLoading,
-  SetMoveFileCurrentFolder,
+  SetMoveDialogCurrentFolder,
   SetSearch,
   SetSort,
   UpdateTags,
 } from './files.actions';
-import { filesStateDefaults, FilesStateModel } from './files.model';
+import { FILES_STATE_DEFAULTS, FilesStateModel } from './files.model';
 
 @Injectable()
 @State<FilesStateModel>({
-  name: 'filesState',
-  defaults: filesStateDefaults,
+  name: 'files',
+  defaults: FILES_STATE_DEFAULTS,
 })
 export class FilesState {
   filesService = inject(FilesService);
   toastService = inject(ToastService);
-
-  @Action(GetMoveFileFiles)
-  getMoveFileFiles(ctx: StateContext<FilesStateModel>, action: GetMoveFileFiles) {
-    const state = ctx.getState();
-    ctx.patchState({
-      moveFileFiles: { ...state.moveFileFiles, isLoading: true, error: null },
-    });
-
-    return this.filesService.getFiles(action.filesLink, '', '', action.page).pipe(
-      tap({
-        next: (response) => {
-          ctx.patchState({
-            moveFileFiles: {
-              data: response.files,
-              isLoading: false,
-              error: null,
-              totalCount: response.meta?.total ?? 0,
-            },
-            isAnonymous: response.meta?.anonymous ?? false,
-          });
-        },
-      }),
-      catchError((error) => handleSectionError(ctx, 'moveFileFiles', error))
-    );
-  }
 
   @Action(GetFiles)
   getFiles(ctx: StateContext<FilesStateModel>, action: GetFiles) {
     const state = ctx.getState();
     ctx.patchState({ files: { ...state.files, isLoading: true, error: null, totalCount: 0 } });
     return this.filesService.getFiles(action.filesLink, state.search, state.sort, action.page).pipe(
-      tap({
-        next: (response) => {
-          ctx.patchState({
-            files: {
-              data: response.files,
-              isLoading: false,
-              error: null,
-              totalCount: response.meta?.total ?? 0,
-            },
-            isAnonymous: response.meta?.anonymous ?? false,
-          });
-        },
+      tap((response) => {
+        const newData = action.page === 1 ? response.files : [...(state.files.data ?? []), ...response.files];
+        ctx.patchState({
+          files: {
+            data: newData,
+            isLoading: false,
+            error: null,
+            totalCount: response.meta?.total ?? 0,
+          },
+          isAnonymous: response.meta?.anonymous ?? false,
+        });
       }),
       catchError((error) => handleSectionError(ctx, 'files', error))
     );
   }
 
-  @Action(SetFilesIsLoading)
-  setFilesIsLoading(ctx: StateContext<FilesStateModel>, action: SetFilesIsLoading) {
+  @Action(GetMoveDialogFiles)
+  getMoveDialogFiles(ctx: StateContext<FilesStateModel>, action: GetMoveDialogFiles) {
     const state = ctx.getState();
-    ctx.patchState({ files: { ...state.files, isLoading: action.isLoading, error: null } });
+    ctx.patchState({
+      moveDialogFiles: { ...state.moveDialogFiles, isLoading: true, error: null, totalCount: 0 },
+    });
+    return this.filesService.getFiles(action.filesLink, state.search, state.sort, action.page).pipe(
+      tap((response) => {
+        const newData = action.page === 1 ? response.files : [...(state.moveDialogFiles.data ?? []), ...response.files];
+        ctx.patchState({
+          moveDialogFiles: {
+            data: newData,
+            isLoading: false,
+            error: null,
+            totalCount: response.meta?.total ?? 0,
+          },
+          isAnonymous: response.meta?.anonymous ?? false,
+        });
+      }),
+      catchError((error) => handleSectionError(ctx, 'moveDialogFiles', error))
+    );
   }
 
   @Action(SetCurrentFolder)
@@ -101,9 +95,9 @@ export class FilesState {
     ctx.patchState({ currentFolder: action.folder });
   }
 
-  @Action(SetMoveFileCurrentFolder)
-  setMoveFileSelectedFolder(ctx: StateContext<FilesStateModel>, action: SetMoveFileCurrentFolder) {
-    ctx.patchState({ moveFileCurrentFolder: action.folder });
+  @Action(SetMoveDialogCurrentFolder)
+  setMoveDialogCurrentFolder(ctx: StateContext<FilesStateModel>, action: SetMoveDialogCurrentFolder) {
+    ctx.patchState({ moveDialogCurrentFolder: action.folder });
   }
 
   @Action(CreateFolder)
@@ -118,17 +112,13 @@ export class FilesState {
 
   @Action(DeleteEntry)
   deleteEntry(ctx: StateContext<FilesStateModel>, action: DeleteEntry) {
+    const state = ctx.getState();
+    ctx.patchState({ files: { ...state.files, isLoading: true, error: null } });
     return this.filesService.deleteEntry(action.link).pipe(
-      tap({
-        next: () => {
-          const selectedFolder = ctx.getState().currentFolder;
-          if (selectedFolder?.relationships.filesLink) {
-            ctx.dispatch(new GetFiles(selectedFolder?.relationships.filesLink));
-          } else {
-            ctx.dispatch(new GetRootFolderFiles(action.resourceId));
-          }
-        },
-      })
+      tap(() => {
+        ctx.patchState({ files: { ...state.files, isLoading: false, error: null } });
+      }),
+      catchError((error) => handleSectionError(ctx, 'files', error))
     );
   }
 
@@ -138,16 +128,10 @@ export class FilesState {
     ctx.patchState({ files: { ...state.files, isLoading: true, error: null } });
 
     return this.filesService.renameEntry(action.link, action.name).pipe(
-      tap({
-        next: () => {
-          const selectedFolder = ctx.getState().currentFolder;
-          if (selectedFolder?.relationships.filesLink) {
-            ctx.dispatch(new GetFiles(selectedFolder?.relationships.filesLink));
-          } else {
-            ctx.dispatch(new GetRootFolderFiles(action.resourceId));
-          }
-        },
-      })
+      tap(() => {
+        ctx.patchState({ files: { ...state.files, isLoading: false, error: null } });
+      }),
+      catchError((error) => handleSectionError(ctx, 'files', error))
     );
   }
 
@@ -173,11 +157,9 @@ export class FilesState {
     ctx.patchState({ tags: { ...state.tags, isLoading: true, error: null } });
 
     return this.filesService.getFileTarget(action.fileGuid).pipe(
-      tap({
-        next: (file) => {
-          ctx.patchState({ openedFile: { data: file, isLoading: false, error: null } });
-          ctx.patchState({ tags: { data: file.tags, isLoading: false, error: null } });
-        },
+      tap((file) => {
+        ctx.patchState({ openedFile: { data: file, isLoading: false, error: null } });
+        ctx.patchState({ tags: { data: file.tags, isLoading: false, error: null } });
       }),
       catchError((error) => handleSectionError(ctx, 'openedFile', error))
     );
@@ -189,10 +171,8 @@ export class FilesState {
     ctx.patchState({ fileMetadata: { ...state.fileMetadata, isLoading: true, error: null } });
 
     return this.filesService.getFileMetadata(action.fileGuid).pipe(
-      tap({
-        next: (metadata) => {
-          ctx.patchState({ fileMetadata: { data: metadata, isLoading: false, error: null } });
-        },
+      tap((metadata) => {
+        ctx.patchState({ fileMetadata: { data: metadata, isLoading: false, error: null } });
       }),
       catchError((error) => handleSectionError(ctx, 'fileMetadata', error))
     );
@@ -204,12 +184,10 @@ export class FilesState {
     ctx.patchState({ fileMetadata: { ...state.fileMetadata, isLoading: true, error: null } });
 
     return this.filesService.patchFileMetadata(action.payload, action.fileGuid).pipe(
-      tap({
-        next: (fileMetadata) => {
-          if (fileMetadata.id) {
-            ctx.patchState({ fileMetadata: { data: fileMetadata, isLoading: false, error: null } });
-          }
-        },
+      tap((fileMetadata) => {
+        if (fileMetadata.id) {
+          ctx.patchState({ fileMetadata: { data: fileMetadata, isLoading: false, error: null } });
+        }
       }),
       catchError((error) => handleSectionError(ctx, 'fileMetadata', error))
     );
@@ -243,10 +221,8 @@ export class FilesState {
     ctx.patchState({ contributors: { ...state.contributors, isLoading: true, error: null } });
 
     return this.filesService.getResourceContributors(action.resourceId, action.resourceType).pipe(
-      tap({
-        next: (contributors) => {
-          ctx.patchState({ contributors: { data: contributors, isLoading: false, error: null } });
-        },
+      tap((contributors) => {
+        ctx.patchState({ contributors: { data: contributors, isLoading: false, error: null } });
       }),
       catchError((error) => handleSectionError(ctx, 'contributors', error))
     );
@@ -258,10 +234,8 @@ export class FilesState {
     ctx.patchState({ fileRevisions: { ...state.fileRevisions, isLoading: true, error: null } });
 
     return this.filesService.getFileRevisions(action.link).pipe(
-      tap({
-        next: (revisions) => {
-          ctx.patchState({ fileRevisions: { data: revisions, isLoading: false, error: null } });
-        },
+      tap((revisions) => {
+        ctx.patchState({ fileRevisions: { data: revisions, isLoading: false, error: null } });
       }),
       catchError((error) => handleSectionError(ctx, 'fileRevisions', error))
     );
@@ -273,10 +247,8 @@ export class FilesState {
     ctx.patchState({ tags: { ...state.tags, isLoading: true, error: null } });
 
     return this.filesService.updateTags(action.tags, action.fileGuid).pipe(
-      tap({
-        next: (file) => {
-          ctx.patchState({ tags: { data: file.tags, isLoading: false, error: null } });
-        },
+      tap((file) => {
+        ctx.patchState({ tags: { data: file.tags, isLoading: false, error: null } });
       }),
       catchError((error) => handleSectionError(ctx, 'tags', error))
     );
@@ -286,20 +258,38 @@ export class FilesState {
   getRootFolders(ctx: StateContext<FilesStateModel>, action: GetRootFolders) {
     const state = ctx.getState();
     ctx.patchState({ rootFolders: { ...state.rootFolders, isLoading: true } });
+    return this.filesService.getFolders(action.folderLink).pipe(
+      tap((response) =>
+        ctx.patchState({
+          rootFolders: {
+            data: response.files,
+            isLoading: false,
+            error: null,
+          },
+          isAnonymous: response.meta?.anonymous ?? false,
+        })
+      ),
+      catchError((error) => handleSectionError(ctx, 'rootFolders', error))
+    );
+  }
+
+  @Action(GetMoveDialogRootFolders)
+  getMoveDialogRootFolders(ctx: StateContext<FilesStateModel>, action: GetMoveDialogRootFolders) {
+    const state = ctx.getState();
+    ctx.patchState({ moveDialogRootFolders: { ...state.moveDialogRootFolders, isLoading: true } });
 
     return this.filesService.getFolders(action.folderLink).pipe(
-      tap({
-        next: (response) =>
-          ctx.patchState({
-            rootFolders: {
-              data: response.files,
-              isLoading: false,
-              error: null,
-            },
-            isAnonymous: response.meta?.anonymous ?? false,
-          }),
-      }),
-      catchError((error) => handleSectionError(ctx, 'rootFolders', error))
+      tap((response) =>
+        ctx.patchState({
+          moveDialogRootFolders: {
+            data: response.files,
+            isLoading: false,
+            error: null,
+          },
+          isAnonymous: response.meta?.anonymous ?? false,
+        })
+      ),
+      catchError((error) => handleSectionError(ctx, 'moveDialogRootFolders', error))
     );
   }
 
@@ -309,22 +299,65 @@ export class FilesState {
     ctx.patchState({ configuredStorageAddons: { ...state.configuredStorageAddons, isLoading: true } });
 
     return this.filesService.getConfiguredStorageAddons(action.resourceUri).pipe(
-      tap({
-        next: (addons) =>
-          ctx.patchState({
-            configuredStorageAddons: {
-              data: addons,
-              isLoading: false,
-              error: null,
-            },
-          }),
-      }),
+      tap((addons) =>
+        ctx.patchState({
+          configuredStorageAddons: {
+            data: addons,
+            isLoading: false,
+            error: null,
+          },
+        })
+      ),
       catchError((error) => handleSectionError(ctx, 'configuredStorageAddons', error))
+    );
+  }
+
+  @Action(GetMoveDialogConfiguredStorageAddons)
+  getMoveDialogConfiguredStorageAddons(
+    ctx: StateContext<FilesStateModel>,
+    action: GetMoveDialogConfiguredStorageAddons
+  ) {
+    const state = ctx.getState();
+    ctx.patchState({
+      moveDialogConfiguredStorageAddons: { ...state.moveDialogConfiguredStorageAddons, isLoading: true },
+    });
+
+    return this.filesService.getConfiguredStorageAddons(action.resourceUri).pipe(
+      tap((addons) =>
+        ctx.patchState({
+          moveDialogConfiguredStorageAddons: {
+            data: addons,
+            isLoading: false,
+            error: null,
+          },
+        })
+      ),
+      catchError((error) => handleSectionError(ctx, 'moveDialogConfiguredStorageAddons', error))
+    );
+  }
+
+  @Action(GetStorageSupportedFeatures)
+  getStorageSupportedFeatures(ctx: StateContext<FilesStateModel>, action: GetStorageSupportedFeatures) {
+    if (ctx.getState().storageSupportedFeatures[action.providerName]) {
+      return of(null);
+    }
+    return this.filesService.getExternalStorageService(action.storageId).pipe(
+      tap((addon) => {
+        const providerName = addon.externalServiceName;
+        const currentFeatures = ctx.getState().storageSupportedFeatures;
+        ctx.patchState({
+          storageSupportedFeatures: {
+            ...currentFeatures,
+            [providerName]: (addon.supportedFeatures ?? []) as SupportedFeature[],
+          },
+        });
+      }),
+      catchError((error) => handleSectionError(ctx, 'storageSupportedFeatures', error))
     );
   }
 
   @Action(ResetState)
   resetState(ctx: StateContext<FilesStateModel>) {
-    ctx.patchState(filesStateDefaults);
+    ctx.patchState(FILES_STATE_DEFAULTS);
   }
 }

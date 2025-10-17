@@ -1,11 +1,11 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
-import { DialogService } from 'primeng/dynamicdialog';
+import { TablePageEvent } from 'primeng/table';
 
-import { debounceTime, distinctUntilChanged, filter, forkJoin, map, of, skip } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, forkJoin, map, of } from 'rxjs';
 
 import {
   ChangeDetectionStrategy,
@@ -23,20 +23,22 @@ import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { UserSelectors } from '@core/store/user';
-import { AddModeratorType, ModeratorPermission } from '@osf/features/moderation/enums';
-import { ModeratorDialogAddModel, ModeratorModel } from '@osf/features/moderation/models';
+import { SearchInputComponent } from '@osf/shared/components';
+import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
+import { ResourceType } from '@osf/shared/enums';
+import { TableParameters } from '@osf/shared/models';
+import { CustomConfirmationService, CustomDialogService, ToastService } from '@osf/shared/services';
+
+import { AddModeratorType, ModeratorPermission } from '../../enums';
+import { ModeratorDialogAddModel, ModeratorModel } from '../../models';
 import {
   AddModerator,
   DeleteModerator,
   LoadModerators,
   ModeratorsSelectors,
   UpdateModerator,
-  UpdateSearchValue,
-} from '@osf/features/moderation/store/moderators';
-import { SearchInputComponent } from '@osf/shared/components';
-import { ResourceType } from '@osf/shared/enums';
-import { CustomConfirmationService, ToastService } from '@osf/shared/services';
-
+  UpdateModeratorsSearchValue,
+} from '../../store/moderators';
 import { AddModeratorDialogComponent } from '../add-moderator-dialog/add-moderator-dialog.component';
 import { InviteModeratorDialogComponent } from '../invite-moderator-dialog/invite-moderator-dialog.component';
 import { ModeratorsTableComponent } from '../moderators-table/moderators-table.component';
@@ -47,16 +49,14 @@ import { ModeratorsTableComponent } from '../moderators-table/moderators-table.c
   templateUrl: './moderators-list.component.html',
   styleUrl: './moderators-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DialogService],
 })
 export class ModeratorsListComponent implements OnInit {
   searchControl = new FormControl<string>('');
 
   private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly translateService = inject(TranslateService);
+  private readonly customDialogService = inject(CustomDialogService);
   private readonly customConfirmationService = inject(CustomConfirmationService);
-  private readonly dialogService = inject(DialogService);
   private readonly toastService = inject(ToastService);
 
   readonly providerId = toSignal(
@@ -66,24 +66,32 @@ export class ModeratorsListComponent implements OnInit {
     this.route.data.pipe(map((params) => params['resourceType'])) ?? of(undefined)
   );
 
-  moderators = signal([]);
+  moderators = signal<ModeratorModel[]>([]);
   initialModerators = select(ModeratorsSelectors.getModerators);
   isModeratorsLoading = select(ModeratorsSelectors.isModeratorsLoading);
+  moderatorsTotalCount = select(ModeratorsSelectors.getModeratorsTotalCount);
   currentUser = select(UserSelectors.getCurrentUser);
+
+  readonly tableParams = computed<TableParameters>(() => ({
+    ...DEFAULT_TABLE_PARAMS,
+    totalRecords: this.moderatorsTotalCount(),
+    paginator: this.moderatorsTotalCount() > DEFAULT_TABLE_PARAMS.rows,
+  }));
 
   isCurrentUserAdminModerator = computed(() => {
     const currentUserId = this.currentUser()?.id;
     const initialModerators = this.initialModerators();
     if (!currentUserId) return false;
 
-    return initialModerators.some((moderator: ModeratorModel) => {
-      return moderator.userId === currentUserId && moderator.permission === ModeratorPermission.Admin;
-    });
+    return initialModerators.some(
+      (moderator: ModeratorModel) =>
+        moderator.userId === currentUserId && moderator.permission === ModeratorPermission.Admin
+    );
   });
 
   actions = createDispatchMap({
     loadModerators: LoadModerators,
-    updateSearchValue: UpdateSearchValue,
+    updateSearchValue: UpdateModeratorsSearchValue,
     addModerators: AddModerator,
     updateModerator: UpdateModerator,
     deleteModerator: DeleteModerator,
@@ -91,13 +99,7 @@ export class ModeratorsListComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      this.moderators.set(JSON.parse(JSON.stringify(this.initialModerators())));
-
-      if (this.isModeratorsLoading()) {
-        this.searchControl.disable();
-      } else {
-        this.searchControl.enable();
-      }
+      this.moderators.set(structuredClone(this.initialModerators()));
     });
   }
 
@@ -109,15 +111,11 @@ export class ModeratorsListComponent implements OnInit {
   openAddModeratorDialog() {
     const addedModeratorsIds = this.initialModerators().map((x) => x.userId);
 
-    this.dialogService
+    this.customDialogService
       .open(AddModeratorDialogComponent, {
+        header: 'moderation.addModerator',
         width: '448px',
         data: addedModeratorsIds,
-        focusOnShow: false,
-        header: this.translateService.instant('moderation.addModerator'),
-        closeOnEscape: true,
-        modal: true,
-        closable: true,
       })
       .onClose.pipe(
         filter((res: ModeratorDialogAddModel) => !!res),
@@ -139,14 +137,11 @@ export class ModeratorsListComponent implements OnInit {
   }
 
   openInviteModeratorDialog() {
-    this.dialogService
+    this.customDialogService
       .open(InviteModeratorDialogComponent, {
+        header: 'moderation.inviteModerator',
         width: '448px',
         focusOnShow: false,
-        header: this.translateService.instant('moderation.inviteModerator'),
-        closeOnEscape: true,
-        modal: true,
-        closable: true,
       })
       .onClose.pipe(
         filter((res: ModeratorDialogAddModel) => !!res),
@@ -164,6 +159,13 @@ export class ModeratorsListComponent implements OnInit {
           });
         }
       });
+  }
+
+  pageChanged(event: TablePageEvent) {
+    const page = Math.floor(event.first / event.rows) + 1;
+    const pageSize = event.rows;
+
+    this.actions.loadModerators(this.providerId(), this.resourceType(), page, pageSize);
   }
 
   updateModerator(item: ModeratorModel) {
@@ -199,7 +201,11 @@ export class ModeratorsListComponent implements OnInit {
 
   private setSearchSubscription() {
     this.searchControl.valueChanges
-      .pipe(skip(1), debounceTime(500), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
-      .subscribe((res) => this.actions.updateSearchValue(res ?? null));
+      .pipe(debounceTime(500), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+      .subscribe((res) => {
+        if (!res) res = null;
+        this.actions.updateSearchValue(res);
+        this.actions.loadModerators(this.providerId(), this.resourceType());
+      });
   }
 }

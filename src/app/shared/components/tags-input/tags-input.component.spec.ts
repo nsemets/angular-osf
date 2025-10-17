@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TranslateServiceMock } from '@shared/mocks';
-
 import { TagsInputComponent } from './tags-input.component';
+
+import { OSFTestingModule } from '@testing/osf.testing.module';
 
 describe('TagsInputComponent', () => {
   let component: TagsInputComponent;
@@ -10,8 +10,7 @@ describe('TagsInputComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TagsInputComponent],
-      providers: [TranslateServiceMock],
+      imports: [TagsInputComponent, OSFTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TagsInputComponent);
@@ -159,25 +158,6 @@ describe('TagsInputComponent', () => {
   it('should add tag on Comma key with value', () => {
     const mockEvent = {
       key: ',',
-      preventDefault: jest.fn(),
-      target: {
-        value: 'new tag',
-      },
-    } as unknown as KeyboardEvent;
-
-    const emitSpy = jest.spyOn(component.tagsChanged, 'emit');
-    component.localTags.set(['existing tag']);
-
-    component.onInputKeydown(mockEvent);
-
-    expect(mockEvent.preventDefault).toHaveBeenCalled();
-    expect(component.localTags()).toEqual(['existing tag', 'new tag']);
-    expect(emitSpy).toHaveBeenCalledWith(['existing tag', 'new tag']);
-  });
-
-  it('should add tag on Space key with value', () => {
-    const mockEvent = {
-      key: ' ',
       preventDefault: jest.fn(),
       target: {
         value: 'new tag',

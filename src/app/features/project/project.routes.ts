@@ -45,6 +45,8 @@ export const projectRoutes: Routes = [
             CollectionsState,
             CollectionsModerationState,
             ActivityLogsState,
+            SubjectsState,
+            SettingsState,
           ]),
         ],
       },
@@ -83,8 +85,7 @@ export const projectRoutes: Routes = [
       {
         path: 'contributors',
         canActivate: [viewOnlyGuard],
-        loadComponent: () =>
-          import('../project/contributors/contributors.component').then((mod) => mod.ContributorsComponent),
+        loadComponent: () => import('../contributors/contributors.component').then((mod) => mod.ContributorsComponent),
         data: { resourceType: ResourceType.Project },
         providers: [provideStates([ContributorsState, ViewOnlyLinkState])],
       },
@@ -93,6 +94,15 @@ export const projectRoutes: Routes = [
         loadComponent: () => import('../analytics/analytics.component').then((mod) => mod.AnalyticsComponent),
         data: { resourceType: ResourceType.Project },
         providers: [provideStates([AnalyticsState])],
+      },
+      {
+        path: 'analytics/linked-projects',
+        data: { resourceType: ResourceType.Project },
+        loadComponent: () =>
+          import('../analytics/components/view-linked-projects/view-linked-projects.component').then(
+            (mod) => mod.ViewLinkedProjectsComponent
+          ),
+        providers: [provideStates([DuplicatesState])],
       },
       {
         path: 'analytics/duplicates',
@@ -110,7 +120,14 @@ export const projectRoutes: Routes = [
       {
         path: 'addons',
         canActivate: [viewOnlyGuard],
-        loadChildren: () => import('../project/addons/addons.routes').then((mod) => mod.addonsRoutes),
+        loadChildren: () =>
+          import('@osf/features/project/project-addons/project-addons.routes').then((mod) => mod.projectAddonsRoutes),
+      },
+      {
+        path: 'links',
+        canActivate: [viewOnlyGuard],
+        loadComponent: () =>
+          import('../project/linked-services/linked-services.component').then((mod) => mod.LinkedServicesComponent),
       },
       {
         path: 'links',

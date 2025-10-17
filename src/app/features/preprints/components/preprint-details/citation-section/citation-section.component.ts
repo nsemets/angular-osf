@@ -1,6 +1,6 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { Accordion, AccordionContent, AccordionHeader, AccordionPanel } from 'primeng/accordion';
 import { Divider } from 'primeng/divider';
@@ -26,8 +26,8 @@ import { ResourceType } from '@shared/enums';
 import { CitationStyle, CustomOption } from '@shared/models';
 import {
   CitationsSelectors,
+  FetchDefaultProviderCitationStyles,
   GetCitationStyles,
-  GetDefaultCitations,
   GetStyledCitation,
   UpdateCustomCitation,
 } from '@shared/stores';
@@ -41,12 +41,12 @@ import {
 })
 export class CitationSectionComponent implements OnInit {
   preprintId = input.required<string>();
+  providerId = input.required<string>();
 
   private readonly destroyRef = inject(DestroyRef);
-  private readonly translateService = inject(TranslateService);
   private readonly filterSubject = new Subject<string>();
   private actions = createDispatchMap({
-    getDefaultCitations: GetDefaultCitations,
+    getDefaultCitations: FetchDefaultProviderCitationStyles,
     getCitationStyles: GetCitationStyles,
     getStyledCitation: GetStyledCitation,
     updateCustomCitation: UpdateCustomCitation,
@@ -59,12 +59,11 @@ export class CitationSectionComponent implements OnInit {
   styledCitation = select(CitationsSelectors.getStyledCitation);
   citationStylesOptions = signal<CustomOption<CitationStyle>[]>([]);
 
-  filterMessage = computed(() => {
-    const isLoading = this.areCitationStylesLoading();
-    return isLoading
-      ? this.translateService.instant('project.overview.metadata.citationLoadingPlaceholder')
-      : this.translateService.instant('project.overview.metadata.noCitationStylesFound');
-  });
+  filterMessage = computed(() =>
+    this.areCitationStylesLoading()
+      ? 'project.overview.metadata.citationLoadingPlaceholder'
+      : 'project.overview.metadata.noCitationStylesFound'
+  );
 
   constructor() {
     this.setupFilterDebounce();
@@ -72,7 +71,7 @@ export class CitationSectionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.actions.getDefaultCitations(ResourceType.Preprint, this.preprintId());
+    this.actions.getDefaultCitations(ResourceType.Preprint, this.preprintId(), this.providerId());
   }
 
   handleCitationStyleFilterSearch(event: SelectFilterEvent) {

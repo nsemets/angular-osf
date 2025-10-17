@@ -1,13 +1,14 @@
 import { LMarkdownEditorModule, MdEditorOption } from 'ngx-markdown-editor';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { Checkbox } from 'primeng/checkbox';
-import { DialogService } from 'primeng/dynamicdialog';
-import { PanelModule } from 'primeng/panel';
+import { Panel } from 'primeng/panel';
 
-import { ChangeDetectionStrategy, Component, effect, inject, input, OnInit, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+
+import { CustomDialogService } from '@osf/shared/services';
 
 import 'ace-builds/src-noconflict/ext-language_tools';
 
@@ -15,13 +16,12 @@ import { WikiSyntaxHelpDialogComponent } from '../wiki-syntax-help-dialog/wiki-s
 
 @Component({
   selector: 'osf-edit-section',
-  imports: [PanelModule, Button, TranslatePipe, FormsModule, LMarkdownEditorModule, Checkbox],
+  imports: [Panel, Button, TranslatePipe, FormsModule, LMarkdownEditorModule, Checkbox],
   templateUrl: './edit-section.component.html',
   styleUrl: './edit-section.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DialogService],
 })
-export class EditSectionComponent implements OnInit {
+export class EditSectionComponent {
   readonly currentContent = input.required<string>();
   readonly versionContent = input.required<string>();
   readonly isSaving = input<boolean>(false);
@@ -31,8 +31,8 @@ export class EditSectionComponent implements OnInit {
   private editorInstance: any;
   content = '';
   initialContent = '';
-  private readonly dialogService = inject(DialogService);
-  private readonly translateService = inject(TranslateService);
+
+  private readonly customDialogService = inject(CustomDialogService);
 
   public options: MdEditorOption = {
     showPreviewPanel: false,
@@ -54,11 +54,12 @@ export class EditSectionComponent implements OnInit {
         this.initialContent = versionContent;
       }
     });
-  }
 
-  ngOnInit(): void {
-    this.content = this.currentContent();
-    this.initialContent = this.currentContent();
+    effect(() => {
+      const currentContent = this.currentContent();
+      this.content = currentContent;
+      this.initialContent = currentContent;
+    });
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -100,10 +101,7 @@ export class EditSectionComponent implements OnInit {
   }
 
   openSyntaxHelpDialog() {
-    this.dialogService.open(WikiSyntaxHelpDialogComponent, {
-      header: this.translateService.instant('project.wiki.syntaxHelp.header'),
-      modal: true,
-    });
+    this.customDialogService.open(WikiSyntaxHelpDialogComponent, { header: 'project.wiki.syntaxHelp.header' });
   }
 
   toggleAutocomplete() {

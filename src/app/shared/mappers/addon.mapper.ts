@@ -25,6 +25,7 @@ export class AddonMapper {
       supportedResourceTypes: response.attributes.supported_resource_types,
       credentialsFormat: response.attributes.credentials_format,
       providerName: response.attributes.display_name,
+      iconUrl: response.attributes.icon_url,
     };
   }
 
@@ -108,6 +109,7 @@ export class AddonMapper {
           itemLink: item.item_link,
           canBeRoot: item.can_be_root ?? true,
           mayContainRootCandidates: item.may_contain_root_candidates ?? isLinkAddon,
+          csl: item.csl,
         }))
       : [
           {
@@ -117,8 +119,18 @@ export class AddonMapper {
             itemLink: operationResult.item_link,
             canBeRoot: operationResult.can_be_root ?? true,
             mayContainRootCandidates: operationResult.may_contain_root_candidates ?? isLinkAddon,
+            csl: operationResult.csl,
           },
         ];
+
+    const cursors = isOperationResult
+      ? {
+          ...(operationResult.this_sample_cursor && { thisSampleCursor: operationResult.this_sample_cursor }),
+          ...(operationResult.first_sample_cursor && { firstSampleCursor: operationResult.first_sample_cursor }),
+          ...(operationResult.next_sample_cursor && { nextSampleCursor: operationResult.next_sample_cursor }),
+        }
+      : {};
+
     return {
       type: response.type,
       id: response.id,
@@ -130,6 +142,7 @@ export class AddonMapper {
       },
       itemCount: isOperationResult ? operationResult.total_count : 0,
       operationResult: mappedOperationResult,
+      ...cursors,
     };
   }
 }

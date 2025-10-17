@@ -98,4 +98,32 @@ export class CustomValidators {
       return null;
     };
   }
+
+  static forbiddenCharactersValidator(pattern: RegExp): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      if (!value) {
+        return null;
+      }
+
+      const hasForbiddenCharacters = pattern.test(value);
+      return hasForbiddenCharacters ? { forbiddenCharacters: true } : null;
+    };
+  }
+
+  static noPeriodAtEnd(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      if (!value || typeof value !== 'string') {
+        return null;
+      }
+
+      const trimmedValue = value.trim();
+      if (trimmedValue.endsWith('.')) {
+        return { periodAtEnd: true };
+      }
+
+      return null;
+    };
+  }
 }

@@ -1,35 +1,77 @@
-import { AppliedFilter, RelatedPropertyPathAttributes } from '@shared/mappers';
 import { ApiData, JsonApiResponse } from '@shared/models';
 
 export type IndexCardSearchResponseJsonApi = JsonApiResponse<
   {
     attributes: {
-      totalResultCount: number;
-      cardSearchFilter?: AppliedFilter[];
+      totalResultCount: number | { '@id': string };
     };
     relationships: {
-      searchResultPage: {
-        links: {
-          first: {
-            href: string;
-          };
-          next: {
-            href: string;
-          };
-          prev?: {
-            href: string;
-          };
-        };
-      };
+      searchResultPage: SearchResultPageJsonApi;
+      relatedProperties: RelatedPropertiesJsonApi;
     };
     links: {
       self: string;
     };
   },
-  (IndexCardDataJsonApi | ApiData<RelatedPropertyPathAttributes, null, null, null> | SearchResultJsonApi)[]
+  (IndexCardDataJsonApi | RelatedPropertyPathDataJsonApi | SearchResultDataJsonApi)[]
 >;
 
-export interface SearchResultJsonApi {
+export type RelatedPropertyPathDataJsonApi = ApiData<RelatedPropertyPathAttributesJsonApi, null, null, null>;
+export type IndexCardDataJsonApi = ApiData<IndexCardAttributesJsonApi, null, null, null>;
+
+interface SearchResultPageJsonApi {
+  data: { id: string }[];
+  links: {
+    first: {
+      href: string;
+    };
+    next: {
+      href: string;
+    };
+    prev?: {
+      href: string;
+    };
+  };
+}
+
+interface RelatedPropertiesJsonApi {
+  data: { id: string }[];
+}
+
+export interface RelatedPropertyPathAttributesJsonApi {
+  propertyPathKey: string;
+  propertyPath: {
+    '@id': string;
+    displayLabel: {
+      '@language': string;
+      '@value': string;
+    }[];
+    description?: {
+      '@language': string;
+      '@value': string;
+    }[];
+    link?: {
+      '@language': string;
+      '@value': string;
+    }[];
+    linkText?: {
+      '@language': string;
+      '@value': string;
+    }[];
+    resourceType: {
+      '@id': string;
+    }[];
+    shortFormLabel: {
+      '@language': string;
+      '@value': string;
+    }[];
+  }[];
+  suggestedFilterOperator: string;
+  cardSearchResultCount: number;
+  osfmapPropertyPath: string[];
+}
+
+export interface SearchResultDataJsonApi {
   id: string;
   type: 'search-result';
   relationships: {
@@ -41,11 +83,10 @@ export interface SearchResultJsonApi {
     };
   };
   attributes?: {
+    matchEvidence: (IriMatchEvidence | TextMatchEvidence)[];
     cardSearchResultCount: number;
   };
 }
-
-export type IndexCardDataJsonApi = ApiData<IndexCardAttributesJsonApi, null, null, null>;
 
 interface IndexCardAttributesJsonApi {
   resourceIdentifier: string[];
@@ -64,7 +105,7 @@ interface ResourceMetadataJsonApi {
   dateModified: { '@value': string }[];
   dateWithdrawn: { '@value': string }[];
 
-  creator: MetadataField[];
+  creator: Creator[];
   hasVersion: MetadataField[];
   identifier: { '@value': string }[];
   publisher: MetadataField[];
@@ -111,9 +152,37 @@ interface Usage {
   downloadCount: { '@value': string }[];
 }
 
+interface Creator extends MetadataField {
+  affiliation: MetadataField[];
+}
+
+interface IriMatchEvidence {
+  matchingIri: string;
+  osfmapPropertyPath: string[];
+  propertyPathKey: string;
+  propertyPath: {
+    displayLabel: {
+      '@language': string;
+      '@value': string;
+    }[];
+  }[];
+}
+
+interface TextMatchEvidence {
+  matchingHighlight: string;
+  osfmapPropertyPath: string[];
+  propertyPathKey: string;
+  propertyPath: {
+    displayLabel: {
+      '@language': string;
+      '@value': string;
+    }[];
+  }[];
+}
+
 interface IsContainedBy extends MetadataField {
   funder: MetadataField[];
-  creator: MetadataField[];
+  creator: Creator[];
   rights: MetadataField[];
   qualifiedAttribution: QualifiedAttribution[];
 }

@@ -2,9 +2,13 @@ import { map, Observable } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
+import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { SubscriptionFrequency } from '@osf/shared/enums';
 import { NotificationSubscriptionMapper } from '@osf/shared/mappers';
 import {
+  BaseNodeDataJsonApi,
+  NodeResponseJsonApi,
+  NodeShortInfoModel,
   NotificationSubscription,
   NotificationSubscriptionGetResponseJsonApi,
   ResponseJsonApi,
@@ -14,32 +18,32 @@ import { JsonApiService } from '@shared/services';
 
 import { SettingsMapper } from '../mappers';
 import {
-  NodeDataJsonApi,
   NodeDetailsModel,
-  NodeResponseJsonApi,
-  ProjectSettingsData,
+  ProjectSettingsDataJsonApi,
   ProjectSettingsModel,
-  ProjectSettingsResponseModel,
+  ProjectSettingsResponseJsonApi,
 } from '../models';
-
-import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SettingsService {
   private readonly jsonApiService = inject(JsonApiService);
-  private readonly apiUrl = `${environment.apiDomainUrl}/v2`;
+  private readonly environment = inject(ENVIRONMENT);
+
+  get apiUrl() {
+    return `${this.environment.apiDomainUrl}/v2`;
+  }
 
   getProjectSettings(nodeId: string): Observable<ProjectSettingsModel> {
     return this.jsonApiService
-      .get<ProjectSettingsResponseModel>(`${this.apiUrl}/nodes/${nodeId}/settings/`)
+      .get<ProjectSettingsResponseJsonApi>(`${this.apiUrl}/nodes/${nodeId}/settings/`)
       .pipe(map((response) => SettingsMapper.fromResponse(response, nodeId)));
   }
 
-  updateProjectSettings(model: ProjectSettingsData): Observable<ProjectSettingsModel> {
+  updateProjectSettings(model: ProjectSettingsDataJsonApi): Observable<ProjectSettingsModel> {
     return this.jsonApiService
-      .patch<ProjectSettingsResponseModel>(`${this.apiUrl}/nodes/${model.id}/settings/`, { data: model })
+      .patch<ProjectSettingsResponseJsonApi>(`${this.apiUrl}/nodes/${model.id}/settings/`, { data: model })
       .pipe(map((response) => SettingsMapper.fromResponse(response, model.id)));
   }
 
@@ -67,6 +71,7 @@ export class SettingsService {
     const params = {
       'embed[]': ['affiliated_institutions', 'region'],
     };
+
     return this.jsonApiService
       .get<NodeResponseJsonApi>(`${this.apiUrl}/nodes/${projectId}/`, params)
       .pipe(map((response) => SettingsMapper.fromNodeResponse(response.data)));
@@ -74,12 +79,23 @@ export class SettingsService {
 
   updateProjectById(model: UpdateNodeRequestModel): Observable<NodeDetailsModel> {
     return this.jsonApiService
-      .patch<NodeDataJsonApi>(`${this.apiUrl}/nodes/${model?.data?.id}/`, model)
+      .patch<BaseNodeDataJsonApi>(`${this.apiUrl}/nodes/${model?.data?.id}/`, model)
       .pipe(map((response) => SettingsMapper.fromNodeResponse(response)));
   }
 
-  deleteProject(projectId: string): Observable<void> {
-    return this.jsonApiService.delete(`${this.apiUrl}/nodes/${projectId}/`);
+  deleteProject(projects: NodeShortInfoModel[]): Observable<void> {
+    const payload = {
+      data: projects.map((project) => ({
+        type: 'nodes',
+        id: project.id,
+      })),
+    };
+
+    const headers = {
+      'Content-Type': 'application/vnd.api+json; ext=bulk',
+    };
+
+    return this.jsonApiService.delete(`${this.apiUrl}/nodes/`, payload, headers);
   }
 
   deleteInstitution(institutionId: string, projectId: string): Observable<void> {

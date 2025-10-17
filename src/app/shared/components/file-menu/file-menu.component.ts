@@ -4,11 +4,12 @@ import { MenuItem } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { TieredMenu } from 'primeng/tieredmenu';
 
-import { Component, computed, inject, input, output } from '@angular/core';
+import { Component, computed, inject, input, output, viewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { FileMenuType } from '@osf/shared/enums';
-import { FileMenuAction, FileMenuData } from '@osf/shared/models';
+import { FileMenuAction, FileMenuData, FileMenuFlags } from '@osf/shared/models';
+import { MenuManagerService } from '@osf/shared/services';
 import { hasViewOnlyParam } from '@shared/helpers';
 
 @Component({
@@ -19,12 +20,13 @@ import { hasViewOnlyParam } from '@shared/helpers';
 })
 export class FileMenuComponent {
   private router = inject(Router);
-  action = output<FileMenuAction>();
+  private menuManager = inject(MenuManagerService);
   isFolder = input<boolean>(false);
+  allowedActions = input<FileMenuFlags>({} as FileMenuFlags);
+  menu = viewChild.required<TieredMenu>('menu');
+  action = output<FileMenuAction>();
 
-  hasViewOnly = computed(() => {
-    return hasViewOnlyParam(this.router);
-  });
+  hasViewOnly = computed(() => hasViewOnlyParam(this.router));
 
   private readonly allMenuItems: MenuItem[] = [
     {
@@ -91,7 +93,7 @@ export class FileMenuComponent {
     },
     {
       id: FileMenuType.Copy,
-      label: 'common.buttons.copy',
+      label: 'common.buttons.copyTo',
       icon: 'fas fa-copy',
       command: () => this.emitAction(FileMenuType.Copy),
     },
@@ -105,8 +107,16 @@ export class FileMenuComponent {
 
   menuItems = computed(() => {
     if (this.hasViewOnly()) {
-      const allowedActionsForFiles = [FileMenuType.Download, FileMenuType.Embed, FileMenuType.Share, FileMenuType.Copy];
-      const allowedActionsForFolders = [FileMenuType.Download, FileMenuType.Copy];
+      const allowedActionsForFiles = [
+        FileMenuType.Download,
+        FileMenuType.Embed,
+        FileMenuType.Share,
+        FileMenuType.Copy,
+      ].filter((action) => this.allowedActions()[action]);
+
+      const allowedActionsForFolders = [FileMenuType.Download, FileMenuType.Copy].filter(
+        (action) => this.allowedActions()[action]
+      );
 
       const allowedActions = this.isFolder() ? allowedActionsForFolders : allowedActionsForFiles;
 
@@ -123,8 +133,22 @@ export class FileMenuComponent {
       });
     }
 
-    return this.allMenuItems;
+    if (this.isFolder()) {
+      const disallowedActions = [FileMenuType.Share, FileMenuType.Embed];
+      return this.allMenuItems.filter(
+        (item) => !disallowedActions.includes(item.id as FileMenuType) && this.allowedActions()[item.id as FileMenuType]
+      );
+    }
+    return this.allMenuItems.filter((item) => this.allowedActions()[item.id as FileMenuType]);
   });
+
+  onMenuToggle(event: Event): void {
+    this.menuManager.openMenu(this.menu(), event);
+  }
+
+  onMenuHide(): void {
+    this.menuManager.onMenuHide();
+  }
 
   private emitAction(value: FileMenuType, data?: FileMenuData): void {
     this.action.emit({ value, data } as FileMenuAction);

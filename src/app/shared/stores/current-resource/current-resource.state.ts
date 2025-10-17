@@ -19,10 +19,10 @@ export class CurrentResourceState {
   private resourceService = inject(ResourceGuidService);
 
   @Action(GetResource)
-  getResourceType(ctx: StateContext<CurrentResourceStateModel>, action: GetResource) {
+  getResource(ctx: StateContext<CurrentResourceStateModel>, action: GetResource) {
     const state = ctx.getState();
 
-    if (state.currentResource.data?.id === action.resourceId) {
+    if (state.currentResource.data?.id === action.resourceId && !action.refresh) {
       return;
     }
 
@@ -51,10 +51,6 @@ export class CurrentResourceState {
   @Action(GetResourceDetails)
   getResourceDetails(ctx: StateContext<CurrentResourceStateModel>, action: GetResourceDetails) {
     const state = ctx.getState();
-
-    if (state.resourceDetails.data?.id === action.resourceId) {
-      return;
-    }
 
     ctx.patchState({
       resourceDetails: {

@@ -17,14 +17,14 @@ import {
   ViewOnlyLinkMessageComponent,
 } from '@shared/components';
 import { IS_WEB } from '@shared/helpers';
-import { MOCK_ANALYTICS_METRICS, MOCK_RELATED_COUNTS, MOCK_RESOURCE_OVERVIEW } from '@shared/mocks';
 
+import { MOCK_ANALYTICS_METRICS, MOCK_RELATED_COUNTS, MOCK_RESOURCE_OVERVIEW } from '@testing/mocks';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
-describe('AnalyticsComponent', () => {
+describe('Component: Analytics', () => {
   let component: AnalyticsComponent;
   let fixture: ComponentFixture<AnalyticsComponent>;
   let routerMock: ReturnType<RouterMockBuilder['build']>;
@@ -86,9 +86,20 @@ describe('AnalyticsComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create', () => {
+  it('should set selectedRange via onRangeChange', () => {
     fixture.detectChanges();
-    expect(component).toBeTruthy();
+    component.onRangeChange('month');
+    expect(component.selectedRange()).toBe('month');
+  });
+
+  it('should navigate to duplicates with correct relative route', () => {
+    const router = TestBed.inject(Router);
+    const navigateSpy = jest.spyOn(router, 'navigate');
+
+    fixture.detectChanges();
+    component.navigateToDuplicates();
+
+    expect(navigateSpy).toHaveBeenCalledWith(['duplicates'], { relativeTo: expect.any(Object) });
   });
 
   it('should set selectedRange via onRangeChange', () => {

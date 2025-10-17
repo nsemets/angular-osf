@@ -54,11 +54,7 @@ export class EducationComponent {
   }
 
   removeEducation(index: number): void {
-    if (this.educations.length > 1) {
-      this.educations.removeAt(index);
-    } else {
-      this.educations.reset();
-    }
+    this.educations.removeAt(index);
   }
 
   addEducation(): void {
@@ -123,6 +119,10 @@ export class EducationComponent {
       );
     }
 
+    if (formPositions.length !== education.length) {
+      return true;
+    }
+
     return this.educations.value.some((formEducation, index) => {
       const initialEdu = this.educationItems()[index];
       if (!initialEdu) return true;
@@ -153,15 +153,11 @@ export class EducationComponent {
 
     this.educations.clear();
 
-    if (!educations?.length) {
-      this.addEducation();
-      this.cd.markForCheck();
-      return;
+    if (educations?.length) {
+      educations
+        .map((education) => mapEducationToForm(education))
+        .forEach((education) => this.educations.push(this.createEducationFormGroup(education)));
     }
-
-    educations
-      .map((education) => mapEducationToForm(education))
-      .forEach((education) => this.educations.push(this.createEducationFormGroup(education)));
 
     this.cd.markForCheck();
   }

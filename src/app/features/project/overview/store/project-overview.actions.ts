@@ -1,5 +1,7 @@
 import { ResourceType } from '@shared/enums';
 
+import { PrivacyStatusModel } from '../models';
+
 export class GetProjectById {
   static readonly type = '[Project Overview] Get Project By Id';
 
@@ -9,10 +11,7 @@ export class GetProjectById {
 export class UpdateProjectPublicStatus {
   static readonly type = '[Project Overview] Update Project Public Status';
 
-  constructor(
-    public projectId: string,
-    public isPublic: boolean
-  ) {}
+  constructor(public payload: PrivacyStatusModel[]) {}
 }
 
 export class SetProjectCustomCitation {
@@ -37,6 +36,10 @@ export class DuplicateProject {
     public projectId: string,
     public title: string
   ) {}
+}
+
+export class ClearDuplicatedProject {
+  static readonly type = '[Project Overview] Clear Duplicated Project';
 }
 
 export class ClearProjectOverview {
@@ -69,8 +72,8 @@ export class GetComponents {
   constructor(public projectId: string) {}
 }
 
-export class GetComponentsTree {
-  static readonly type = '[Project Overview] Get Components Tree';
+export class GetParentProject {
+  static readonly type = '[Project Overview] Get Parent Project';
 
   constructor(public projectId: string) {}
 }

@@ -3,14 +3,13 @@
   [rows]="tableParams().rows"
   [first]="tableParams().firstRowIndex"
   [rowsPerPageOptions]="tableParams().rowsPerPageOptions"
+  [paginator]="tableParams().paginator"
   [totalRecords]="tableParams().totalRecords"
-  [resizableColumns]="true"
-  [autoLayout]="true"
-  [scrollable]="true"
-  [sortMode]="'single'"
+  paginatorDropdownAppendTo="body"
+  [scrollable]="tableParams().scrollable"
   [lazy]="true"
   [lazyLoadOnInit]="true"
-  [customSort]="true"
+  (onPage)="onPageChange($event)"
   class="view-only-table"
 >
   <ng-template #header>
@@ -32,9 +31,9 @@
     @if (item.id) {
       <tr>
         <td>
-          <p class="flex align-items-center gap-2">
-            <span>{{ item.fullName }}</span>
-          </p>
+          <a class="font-bold" [routerLink]="['/', item.userId]">
+            {{ item.fullName }}
+          </a>
         </td>
         <td>
           <div>

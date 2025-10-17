@@ -7,15 +7,23 @@ import { map, of } from 'rxjs';
 import { ChangeDetectionStrategy, Component, effect, inject, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
+import { UserSelectors } from '@core/store/user';
 import { LoadingSpinnerComponent, SubHeaderComponent } from '@osf/shared/components';
 import { ResourceType, SubscriptionEvent, SubscriptionFrequency } from '@osf/shared/enums';
 import { Institution, UpdateNodeRequestModel, ViewOnlyLinkModel } from '@osf/shared/models';
-import { CustomConfirmationService, LoaderService, ToastService } from '@osf/shared/services';
-import { DeleteViewOnlyLink, FetchViewOnlyLinks, ViewOnlyLinkSelectors } from '@osf/shared/stores';
+import { CustomConfirmationService, CustomDialogService, LoaderService, ToastService } from '@osf/shared/services';
+import {
+  DeleteViewOnlyLink,
+  FetchViewOnlyLinks,
+  GetResource,
+  GetResourceWithChildren,
+  ViewOnlyLinkSelectors,
+} from '@osf/shared/stores';
 
 import {
+  DeleteProjectDialogComponent,
   ProjectSettingNotificationsComponent,
   SettingsAccessRequestsCardComponent,
   SettingsProjectAffiliationComponent,
@@ -24,7 +32,7 @@ import {
   SettingsViewOnlyLinksCardComponent,
   SettingsWikiCardComponent,
 } from './components';
-import { ProjectDetailsModel, ProjectSettingsAttributes, ProjectSettingsData } from './models';
+import { ProjectDetailsModel, ProjectSettingsAttributesJsonApi, ProjectSettingsDataJsonApi } from './models';
 import {
   DeleteInstitution,
   DeleteProject,
@@ -59,18 +67,21 @@ import {
 })
 export class SettingsComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
   private readonly customConfirmationService = inject(CustomConfirmationService);
+  private readonly customDialogService = inject(CustomDialogService);
   private readonly toastService = inject(ToastService);
   private readonly loaderService = inject(LoaderService);
 
   readonly projectId = toSignal(this.route.parent?.params.pipe(map((params) => params['id'])) ?? of(undefined));
 
+  currentUser = select(UserSelectors.getCurrentUser);
   settings = select(SettingsSelectors.getSettings);
   notifications = select(SettingsSelectors.getNotificationSubscriptions);
   areNotificationsLoading = select(SettingsSelectors.areNotificationsLoading);
   projectDetails = select(SettingsSelectors.getProjectDetails);
   areProjectDetailsLoading = select(SettingsSelectors.areProjectDetailsLoading);
+  hasAdminAccess = select(SettingsSelectors.hasAdminAccess);
+  hasWriteAccess = select(SettingsSelectors.hasWriteAccess);
   viewOnlyLinks = select(ViewOnlyLinkSelectors.getViewOnlyLinks);
   isViewOnlyLinksLoading = select(ViewOnlyLinkSelectors.isViewOnlyLinksLoading);
 
@@ -85,13 +96,14 @@ export class SettingsComponent implements OnInit {
     deleteViewOnlyLink: DeleteViewOnlyLink,
     deleteProject: DeleteProject,
     deleteInstitution: DeleteInstitution,
+    refreshCurrentResource: GetResource,
+    getComponentsTree: GetResourceWithChildren,
   });
 
   accessRequest = signal(false);
   wikiEnabled = signal(false);
   anyoneCanEditWiki = signal(false);
   anyoneCanComment = signal(false);
-  title = signal('');
 
   constructor() {
     this.setupEffects();
@@ -103,7 +115,6 @@ export class SettingsComponent implements OnInit {
       this.actions.getSettings(id);
       this.actions.getNotifications(id);
       this.actions.getProjectDetails(id);
-      this.actions.getViewOnlyLinks(id, ResourceType.Project);
     }
   }
 
@@ -136,6 +147,7 @@ export class SettingsComponent implements OnInit {
   onWikiRequestChange(newValue: boolean): void {
     this.wikiEnabled.set(newValue);
     this.syncSettingsChanges('wiki_enabled', newValue);
+    this.actions.refreshCurrentResource(this.projectId(), true);
   }
 
   onAnyoneCanEditWikiRequestChange(newValue: boolean): void {
@@ -169,19 +181,19 @@ export class SettingsComponent implements OnInit {
   }
 
   deleteProject(): void {
-    this.customConfirmationService.confirmDelete({
-      headerKey: 'project.deleteProject.title',
-      messageParams: { name: this.projectDetails().title },
-      messageKey: 'project.deleteProject.message',
-      onConfirm: () => {
-        this.loaderService.show();
-        this.actions.deleteProject(this.projectId()).subscribe(() => {
+    this.loaderService.show();
+
+    this.actions
+      .getComponentsTree(this.projectDetails()?.rootId || this.projectId(), this.projectId(), ResourceType.Project)
+      .subscribe({
+        next: () => {
           this.loaderService.hide();
-          this.toastService.showSuccess('project.deleteProject.success');
-          this.router.navigate(['/']);
-        });
-      },
-    });
+          this.customDialogService.open(DeleteProjectDialogComponent, {
+            header: 'project.deleteProject.dialog.deleteProject',
+            width: '500px',
+          });
+        },
+      });
   }
 
   removeAffiliation(affiliation: Institution): void {
@@ -201,13 +213,12 @@ export class SettingsComponent implements OnInit {
   }
 
   private syncSettingsChanges(changedField: string, value: boolean): void {
-    const payload: Partial<ProjectSettingsAttributes> = {};
+    const payload: Partial<ProjectSettingsAttributesJsonApi> = {};
 
     switch (changedField) {
       case 'access_requests_enabled':
       case 'wiki_enabled':
       case 'anyone_can_edit_wiki':
-      case 'anyone_can_comment':
         payload[changedField] = value as boolean;
         break;
     }
@@ -216,7 +227,7 @@ export class SettingsComponent implements OnInit {
       id: this.projectId(),
       type: 'node-settings',
       attributes: { ...payload },
-    } as ProjectSettingsData;
+    } as ProjectSettingsDataJsonApi;
 
     this.loaderService.show();
 
@@ -239,10 +250,10 @@ export class SettingsComponent implements OnInit {
     });
 
     effect(() => {
-      const project = this.projectDetails();
+      const id = this.projectId();
 
-      if (project) {
-        this.title.set(project.title);
+      if (id && this.hasAdminAccess()) {
+        this.actions.getViewOnlyLinks(id, ResourceType.Project);
       }
     });
   }

@@ -1,0 +1,28 @@
+<p>{{ dialogMessage }}</p>
+<br />
+<p>
+  {{ 'settings.addons.configureAddon.account' | translate }} <span class="font-bold">{{ addon.displayName }}</span>
+</p>
+<p>
+  {{ selectedItemLabel() | translate }}
+  <span class="font-bold">{{ selectedFolder()?.itemName }}</span>
+</p>
+<div class="flex pt-5 justify-content-between gap-3">
+  <p-button
+    class="btn-full-width"
+    [label]="'common.buttons.cancel' | translate"
+    severity="info"
+    (click)="dialogRef.close()"
+    [disabled]="isSubmitting()"
+    data-test-addon-cancel-button
+  />
+  <p-button
+    class="btn-full-width"
+    severity="danger"
+    [label]="'common.buttons.disconnect' | translate"
+    (onClick)="handleDisconnectAddonAccount()"
+    [loading]="isSubmitting()"
+    [disabled]="isSubmitting()"
+    data-test-addon-disconnect-button
+  />
+</div>

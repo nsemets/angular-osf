@@ -1,7 +1,8 @@
 import { Selector } from '@ngxs/store';
 
 import { ReviewAction } from '@osf/features/moderation/models';
-import { RegistryOverview, RegistrySubject } from '@osf/features/registry/models';
+import { RegistryOverview } from '@osf/features/registry/models';
+import { UserPermissions } from '@osf/shared/enums';
 import { Institution, PageSchema } from '@osf/shared/models';
 
 import { RegistryOverviewStateModel } from './registry-overview.model';
@@ -21,16 +22,6 @@ export class RegistryOverviewSelectors {
   @Selector([RegistryOverviewState])
   static isRegistryAnonymous(state: RegistryOverviewStateModel): boolean {
     return state.isAnonymous;
-  }
-
-  @Selector([RegistryOverviewState])
-  static getSubjects(state: RegistryOverviewStateModel): RegistrySubject[] | null {
-    return state.subjects.data;
-  }
-
-  @Selector([RegistryOverviewState])
-  static isSubjectsLoading(state: RegistryOverviewStateModel): boolean {
-    return state.subjects.isLoading;
   }
 
   @Selector([RegistryOverviewState])
@@ -66,5 +57,25 @@ export class RegistryOverviewSelectors {
   @Selector([RegistryOverviewState])
   static isReviewActionSubmitting(state: RegistryOverviewStateModel): boolean {
     return state.moderationActions.isSubmitting || false;
+  }
+
+  @Selector([RegistryOverviewState])
+  static hasReadAccess(state: RegistryOverviewStateModel): boolean {
+    return state.registry.data?.currentUserPermissions.includes(UserPermissions.Read) || false;
+  }
+
+  @Selector([RegistryOverviewState])
+  static hasWriteAccess(state: RegistryOverviewStateModel): boolean {
+    return state.registry.data?.currentUserPermissions.includes(UserPermissions.Write) || false;
+  }
+
+  @Selector([RegistryOverviewState])
+  static hasAdminAccess(state: RegistryOverviewStateModel): boolean {
+    return state.registry.data?.currentUserPermissions.includes(UserPermissions.Admin) || false;
+  }
+
+  @Selector([RegistryOverviewState])
+  static hasNoPermissions(state: RegistryOverviewStateModel): boolean {
+    return !state.registry.data?.currentUserPermissions.length;
   }
 }

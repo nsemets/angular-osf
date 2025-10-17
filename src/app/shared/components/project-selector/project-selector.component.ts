@@ -1,6 +1,6 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { Select, SelectChangeEvent, SelectFilterEvent } from 'primeng/select';
 
@@ -23,7 +23,7 @@ import { FormsModule } from '@angular/forms';
 
 import { UserSelectors } from '@core/store/user';
 import { CustomOption } from '@shared/models';
-import { Project } from '@shared/models/projects';
+import { ProjectModel } from '@shared/models/projects';
 import { GetProjects } from '@shared/stores';
 import { ProjectsSelectors } from '@shared/stores/projects/projects.selectors';
 
@@ -36,7 +36,6 @@ import { ProjectsSelectors } from '@shared/stores/projects/projects.selectors';
 })
 export class ProjectSelectorComponent {
   private readonly destroyRef = inject(DestroyRef);
-  private readonly translateService = inject(TranslateService);
   private readonly filterSubject = new Subject<string>();
 
   projects = select(ProjectsSelectors.getProjects);
@@ -46,23 +45,20 @@ export class ProjectSelectorComponent {
   placeholder = input<string>('common.buttons.select');
   showClear = input<boolean>(true);
   excludeProjectIds = input<string[]>([]);
-  selectedProject = model<Project | null>(null);
+  selectedProject = model<ProjectModel | null>(null);
 
-  projectChange = output<Project | null>();
-  projectsLoaded = output<Project[]>();
+  projectChange = output<ProjectModel | null>();
+  projectsLoaded = output<ProjectModel[]>();
 
-  projectsOptions = signal<CustomOption<Project>[]>([]);
+  projectsOptions = signal<CustomOption<ProjectModel>[]>([]);
 
-  filterMessage = computed(() => {
-    const isLoading = this.isProjectsLoading();
-    return isLoading
-      ? this.translateService.instant('collections.addToCollection.form.loadingPlaceholder')
-      : this.translateService.instant('collections.addToCollection.form.noProjectsFound');
-  });
+  filterMessage = computed(() =>
+    this.isProjectsLoading()
+      ? 'collections.addToCollection.form.loadingPlaceholder'
+      : 'collections.addToCollection.form.noProjectsFound'
+  );
 
-  actions = createDispatchMap({
-    getProjects: GetProjects,
-  });
+  actions = createDispatchMap({ getProjects: GetProjects });
 
   constructor() {
     this.setupEffects();
@@ -84,8 +80,19 @@ export class ProjectSelectorComponent {
     effect(() => {
       const currentUser = this.currentUser();
       if (currentUser) {
-        this.actions.getProjects(currentUser.id);
+        this.fetchProjects();
       }
+    });
+
+    effect(() => {
+      const isProjectsLoading = this.isProjectsLoading();
+      const projects = this.projects();
+
+      if (isProjectsLoading || !projects.length) {
+        return;
+      }
+
+      this.projectsLoaded.emit(projects);
     });
 
     effect(() => {
@@ -97,8 +104,6 @@ export class ProjectSelectorComponent {
         this.projectsOptions.set([]);
         return;
       }
-
-      this.projectsLoaded.emit(projects);
 
       const excludeSet = new Set(excludeIds);
       const availableProjects = projects.filter((project) => !excludeSet.has(project.id));
@@ -116,15 +121,22 @@ export class ProjectSelectorComponent {
     this.filterSubject
       .pipe(debounceTime(300), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe((filterValue) => {
-        const currentUser = this.currentUser();
-        if (!currentUser) return;
-
-        const params: Record<string, string> = {
-          'filter[current_user_permissions]': 'admin',
-          'filter[title]': filterValue,
-        };
-
-        this.actions.getProjects(currentUser.id, params);
+        this.fetchProjects(filterValue);
       });
+  }
+
+  private fetchProjects(filterTitle?: string): void {
+    const currentUser = this.currentUser();
+    if (!currentUser) return;
+
+    const params: Record<string, string> = {
+      'filter[current_user_permissions]': 'admin',
+    };
+
+    if (filterTitle && filterTitle.trim()) {
+      params['filter[title]'] = filterTitle;
+    }
+
+    this.actions.getProjects(currentUser.id, params);
   }
 }

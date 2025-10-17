@@ -22,6 +22,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   BarChartComponent,
   LineChartComponent,
+  LoadingSpinnerComponent,
   PieChartComponent,
   SelectComponent,
   SubHeaderComponent,
@@ -47,6 +48,7 @@ import { AnalyticsSelectors, ClearAnalytics, GetMetrics, GetRelatedCounts } from
     BarChartComponent,
     ViewOnlyLinkMessageComponent,
     SelectComponent,
+    LoadingSpinnerComponent,
   ],
   templateUrl: './analytics.component.html',
   styleUrl: './analytics.component.scss',
@@ -123,11 +125,7 @@ export class AnalyticsComponent implements OnInit {
     });
 
     effect(() => {
-      const analytics = this.analytics();
-
-      if (analytics) {
-        this.setData();
-      }
+      this.setData();
     });
   }
 
@@ -139,6 +137,9 @@ export class AnalyticsComponent implements OnInit {
     this.router.navigate(['duplicates'], { relativeTo: this.route });
   }
 
+  navigateToLinkedProjects() {
+    this.router.navigate(['linked-projects'], { relativeTo: this.route });
+  }
   private setData() {
     const analytics = this.analytics();
 

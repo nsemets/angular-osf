@@ -1,22 +1,18 @@
 import { InstitutionUser, TableCellData } from '../models';
 
-import { environment } from 'src/environments/environment';
-
-export function mapUserToTableCellData(user: InstitutionUser): TableCellData {
+export function mapUserToTableCellData(user: InstitutionUser, webUrl: string): TableCellData {
   return {
     id: user.id,
     userName: user.userName || '-',
     department: user.department || '-',
     userLink: {
       text: user.userId,
-      url: `${environment.webUrl}/${user.userId}`,
-      target: '_blank',
+      url: `${webUrl}/${user.userId}`,
     },
     orcidId: user.orcidId
       ? {
           text: user.orcidId,
           url: `https://orcid.org/${user.orcidId}`,
-          target: '_blank',
         }
       : '-',
     publicProjects: user.publicProjects,
@@ -24,5 +20,10 @@ export function mapUserToTableCellData(user: InstitutionUser): TableCellData {
     publicRegistrationCount: user.publicRegistrationCount,
     embargoedRegistrationCount: user.embargoedRegistrationCount,
     publishedPreprintCount: user.publishedPreprintCount,
+    publicFileCount: user.publicFileCount,
+    totalDataStored: user.storageByteCount ? `${(user.storageByteCount / (1024 * 1024)).toFixed(1)} MB` : '0 B',
+    monthLasLogin: user.monthLasLogin,
+    monthLastActive: user.monthLastActive,
+    accountCreationDate: user.accountCreationDate,
   };
 }

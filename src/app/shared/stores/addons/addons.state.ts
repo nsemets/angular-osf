@@ -10,10 +10,12 @@ import { AuthorizedAccountModel } from '@osf/shared/models';
 import { AddonsService } from '@osf/shared/services';
 
 import {
+  ClearAuthorizedAddons,
   ClearConfiguredAddons,
   ClearOperationInvocations,
   CreateAddonOperationInvocation,
   CreateAuthorizedAddon,
+  CreateCitationAddonOperationInvocation,
   CreateConfiguredAddon,
   DeleteAuthorizedAddon,
   DeleteConfiguredAddon,
@@ -148,7 +150,7 @@ export class AddonsState {
       },
     });
 
-    return this.addonsService.getAuthorizedStorageOauthToken(action.accountId).pipe(
+    return this.addonsService.getAuthorizedStorageOauthToken(action.accountId, action.addonType).pipe(
       tap((addon) => {
         ctx.setState((state) => {
           const existing = state.authorizedStorageAddons.data.find(
@@ -558,16 +560,27 @@ export class AddonsState {
 
     return this.addonsService.createAddonOperationInvocation(action.payload).pipe(
       tap((response) => {
+        const isLoadMore = !!action.payload.data.attributes.operation_kwargs['page_cursor'];
+        const existingData = state.operationInvocation.data;
+        const shouldMerge = isLoadMore && existingData;
+
+        const mergedResponse = shouldMerge
+          ? {
+              ...response,
+              operationResult: [...existingData.operationResult, ...response.operationResult],
+            }
+          : response;
+
         ctx.patchState({
           operationInvocation: {
-            data: response,
+            data: mergedResponse,
             isLoading: false,
             isSubmitting: false,
             error: null,
           },
         });
 
-        if (response.operationName === 'get_item_info' && response.operationResult[0]?.itemName) {
+        if (response.operationName === 'get_item_info' && response.invocationStatus === 'SUCCESS') {
           ctx.patchState({
             selectedItemOperationInvocation: {
               data: response,
@@ -582,6 +595,88 @@ export class AddonsState {
     );
   }
 
+  @Action(CreateCitationAddonOperationInvocation)
+  createCitationAddonOperationInvocation(
+    ctx: StateContext<AddonsStateModel>,
+    action: CreateCitationAddonOperationInvocation
+  ) {
+    const state = ctx.getState();
+    const existingInvocation = state.citationOperationInvocations[action.addonId] || {
+      data: null,
+      isLoading: false,
+      isSubmitting: false,
+      error: null,
+    };
+
+    ctx.patchState({
+      citationOperationInvocations: {
+        ...state.citationOperationInvocations,
+        [action.addonId]: {
+          ...existingInvocation,
+          isSubmitting: true,
+        },
+      },
+    });
+
+    return this.addonsService.createAddonOperationInvocation(action.payload).pipe(
+      tap((response) => {
+        const currentState = ctx.getState();
+        ctx.patchState({
+          citationOperationInvocations: {
+            ...currentState.citationOperationInvocations,
+            [action.addonId]: {
+              data: response,
+              isLoading: false,
+              isSubmitting: false,
+              error: null,
+            },
+          },
+        });
+      }),
+      catchError((error) => {
+        const currentState = ctx.getState();
+        ctx.patchState({
+          citationOperationInvocations: {
+            ...currentState.citationOperationInvocations,
+            [action.addonId]: {
+              data: null,
+              isLoading: false,
+              isSubmitting: false,
+              error: error,
+            },
+          },
+        });
+        return handleSectionError(ctx, 'citationOperationInvocations', error);
+      })
+    );
+  }
+
+  @Action(ClearAuthorizedAddons)
+  clearAuthorizedAddons(ctx: StateContext<AddonsStateModel>) {
+    ctx.patchState({
+      authorizedStorageAddons: {
+        data: [],
+        isLoading: false,
+        error: null,
+      },
+      authorizedCitationAddons: {
+        data: [],
+        isLoading: false,
+        error: null,
+      },
+      authorizedLinkAddons: {
+        data: [],
+        isLoading: false,
+        error: null,
+      },
+      addonsResourceReference: {
+        data: [],
+        isLoading: false,
+        error: null,
+      },
+    });
+  }
+
   @Action(ClearConfiguredAddons)
   clearConfiguredAddons(ctx: StateContext<AddonsStateModel>) {
     ctx.patchState({
@@ -591,6 +686,11 @@ export class AddonsState {
         error: null,
       },
       configuredCitationAddons: {
+        data: [],
+        isLoading: false,
+        error: null,
+      },
+      configuredLinkAddons: {
         data: [],
         isLoading: false,
         error: null,
@@ -616,6 +716,7 @@ export class AddonsState {
         isLoading: false,
         error: null,
       },
+      citationOperationInvocations: {},
     });
   }
 }

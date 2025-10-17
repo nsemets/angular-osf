@@ -2,30 +2,40 @@ import { map, Observable } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
+import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { Primitive, StringOrNull } from '@osf/shared/helpers';
-import { ApiData, CreateProjectPayloadJsoApi, IdName, JsonApiResponse, NodeData } from '@osf/shared/models';
+import {
+  ApiData,
+  CreateProjectPayloadJsoApi,
+  IdName,
+  NodeResponseJsonApi,
+  NodesResponseJsonApi,
+} from '@osf/shared/models';
 import { JsonApiService } from '@osf/shared/services';
 
 import { PreprintsMapper } from '../mappers';
 import { Preprint, PreprintAttributesJsonApi, PreprintLinksJsonApi, PreprintRelationshipsJsonApi } from '../models';
-
-import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PreprintsProjectsService {
   private readonly jsonApiService = inject(JsonApiService);
-  private readonly apiUrl = `${environment.apiDomainUrl}/v2`;
+  private readonly environment = inject(ENVIRONMENT);
+
+  get apiUrl() {
+    return `${this.environment.apiDomainUrl}/v2`;
+  }
 
   getAvailableProjects(searchTerm: StringOrNull): Observable<IdName[]> {
     const params: Record<string, Primitive> = {};
     params['page'] = 1;
+
     if (searchTerm) {
       params['filter[title]'] = searchTerm;
     }
 
-    return this.jsonApiService.get<JsonApiResponse<NodeData[], null>>(`${this.apiUrl}/users/me/nodes/`, params).pipe(
+    return this.jsonApiService.get<NodesResponseJsonApi>(`${this.apiUrl}/users/me/nodes/`, params).pipe(
       map((response) => {
         return response.data.map((item) => ({
           id: item.id,
@@ -36,7 +46,7 @@ export class PreprintsProjectsService {
   }
 
   getProjectById(projectId: string): Observable<IdName> {
-    return this.jsonApiService.get<JsonApiResponse<NodeData, null>>(`${this.apiUrl}/nodes/${projectId}/`).pipe(
+    return this.jsonApiService.get<NodeResponseJsonApi>(`${this.apiUrl}/nodes/${projectId}/`).pipe(
       map((response) => {
         return {
           id: response.data.id,
@@ -90,6 +100,7 @@ export class PreprintsProjectsService {
           ...(description && { description }),
           category: 'project',
           ...(templateFrom && { template_from: templateFrom }),
+          public: true,
         },
         relationships: {
           region: {
@@ -110,7 +121,7 @@ export class PreprintsProjectsService {
       },
     };
 
-    return this.jsonApiService.post<JsonApiResponse<NodeData, null>>(`${this.apiUrl}/nodes/`, payload).pipe(
+    return this.jsonApiService.post<NodeResponseJsonApi>(`${this.apiUrl}/nodes/`, payload).pipe(
       map((response) => {
         return {
           id: response.data.id,

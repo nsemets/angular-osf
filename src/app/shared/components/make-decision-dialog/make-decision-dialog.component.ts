@@ -15,6 +15,7 @@ import {
   CollectionsModerationSelectors,
   CreateCollectionSubmissionAction,
 } from '@osf/features/moderation/store/collections-moderation';
+import { InputLimits } from '@osf/shared/constants';
 import { ModerationDecisionFormControls, ModerationSubmitType } from '@osf/shared/enums';
 import { DateAgoPipe } from '@osf/shared/pipes';
 import { CollectionsSelectors } from '@osf/shared/stores';
@@ -39,6 +40,8 @@ export class MakeDecisionDialogComponent implements OnInit {
   isSubmitting = select(CollectionsModerationSelectors.getCollectionSubmissionSubmitting);
   requestForm!: FormGroup;
 
+  decisionCommentLimit = InputLimits.decisionComment.maxLength;
+
   actions = createDispatchMap({
     createSubmissionAction: CreateCollectionSubmissionAction,
   });
@@ -58,9 +61,19 @@ export class MakeDecisionDialogComponent implements OnInit {
     return provider?.reviewsWorkflow === ModerationType.Post;
   });
 
-  isPendingStatus = computed(() => {
-    return this.currentReviewAction()?.toState === SubmissionReviewStatus.Pending;
-  });
+  isPendingStatus = computed(() => this.currentReviewAction()?.toState === SubmissionReviewStatus.Pending);
+  isAcceptedStatus = computed(() => this.currentReviewAction()?.toState === SubmissionReviewStatus.Accepted);
+
+  isRejectOptionVisible = computed(
+    () => (this.isPreModeration() && this.isPendingStatus()) || (this.isHybridModeration() && this.isPendingStatus())
+  );
+
+  isWithdrawOptionVisible = computed(
+    () =>
+      (this.isPreModeration() && this.isAcceptedStatus()) ||
+      (this.isHybridModeration() && !this.isPendingStatus()) ||
+      this.isPostModeration()
+  );
 
   ngOnInit() {
     this.initForm();
@@ -88,7 +101,7 @@ export class MakeDecisionDialogComponent implements OnInit {
   private initForm(): void {
     this.requestForm = this.fb.group({
       [ModerationDecisionFormControls.Action]: new FormControl('', [Validators.required]),
-      [ModerationDecisionFormControls.Comment]: new FormControl(''),
+      [ModerationDecisionFormControls.Comment]: new FormControl('', [Validators.maxLength(this.decisionCommentLimit)]),
     });
   }
 }

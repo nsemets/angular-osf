@@ -4,9 +4,9 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TranslateServiceMock } from '@shared/mocks';
-
 import { ResourceInformationDialogComponent } from './resource-information-dialog.component';
+
+import { OSFTestingModule } from '@testing/osf.testing.module';
 
 describe('ResourceInformationDialogComponent', () => {
   let component: ResourceInformationDialogComponent;
@@ -14,8 +14,8 @@ describe('ResourceInformationDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ResourceInformationDialogComponent],
-      providers: [TranslateServiceMock, MockProvider(DynamicDialogRef), MockProvider(DynamicDialogConfig)],
+      imports: [ResourceInformationDialogComponent, OSFTestingModule],
+      providers: [MockProvider(DynamicDialogRef), MockProvider(DynamicDialogConfig)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ResourceInformationDialogComponent);
@@ -41,13 +41,16 @@ describe('ResourceInformationDialogComponent', () => {
     const closeSpy = jest.spyOn(dialogRef, 'close');
 
     component.resourceForm.patchValue({
-      resourceType: '',
-      resourceLanguage: '',
+      resourceType: 'dataset',
+      resourceLanguage: 'en',
     });
 
     component.save();
 
-    expect(closeSpy).not.toHaveBeenCalled();
+    expect(closeSpy).toHaveBeenCalledWith({
+      resourceTypeGeneral: 'dataset',
+      language: 'en',
+    });
   });
 
   it('should not save when resource type is missing', () => {
@@ -61,21 +64,10 @@ describe('ResourceInformationDialogComponent', () => {
 
     component.save();
 
-    expect(closeSpy).not.toHaveBeenCalled();
-  });
-
-  it('should not save when resource language is missing', () => {
-    const dialogRef = TestBed.inject(DynamicDialogRef);
-    const closeSpy = jest.spyOn(dialogRef, 'close');
-
-    component.resourceForm.patchValue({
-      resourceType: 'dataset',
-      resourceLanguage: '',
+    expect(closeSpy).toHaveBeenCalledWith({
+      resourceTypeGeneral: '',
+      language: 'en',
     });
-
-    component.save();
-
-    expect(closeSpy).not.toHaveBeenCalled();
   });
 
   it('should cancel dialog', () => {
@@ -89,20 +81,16 @@ describe('ResourceInformationDialogComponent', () => {
 
   it('should validate required fields', () => {
     const resourceTypeControl = component.resourceForm.get('resourceType');
-    const resourceLanguageControl = component.resourceForm.get('resourceLanguage');
-
-    expect(resourceTypeControl?.hasError('required')).toBe(true);
-    expect(resourceLanguageControl?.hasError('required')).toBe(true);
-
-    resourceTypeControl?.setValue('dataset');
-    resourceLanguageControl?.setValue('en');
 
     expect(resourceTypeControl?.hasError('required')).toBe(false);
-    expect(resourceLanguageControl?.hasError('required')).toBe(false);
+
+    resourceTypeControl?.setValue('dataset');
+
+    expect(resourceTypeControl?.hasError('required')).toBe(false);
   });
 
   it('should handle form validation state', () => {
-    expect(component.resourceForm.valid).toBe(false);
+    expect(component.resourceForm.valid).toBe(true);
 
     component.resourceForm.patchValue({
       resourceType: 'dataset',

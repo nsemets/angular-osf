@@ -1,4 +1,6 @@
-import { TableColumn } from '@osf/features/admin-institutions/models';
+import { TableColumn } from '../models';
+
+const defaultDateFormat = 'MMM d, y';
 
 export const projectTableColumns: TableColumn[] = [
   {
@@ -17,13 +19,13 @@ export const projectTableColumns: TableColumn[] = [
     field: 'dateCreated',
     header: 'adminInstitutions.projects.dateCreated',
     sortable: true,
-    dateFormat: 'dd/MM/yyyy',
+    dateFormat: defaultDateFormat,
   },
   {
     field: 'dateModified',
     header: 'adminInstitutions.projects.dateModified',
     sortable: true,
-    dateFormat: 'dd/MM/yyyy',
+    dateFormat: defaultDateFormat,
   },
   {
     field: 'doi',
@@ -46,6 +48,7 @@ export const projectTableColumns: TableColumn[] = [
     header: 'adminInstitutions.projects.contributorName',
     isLink: true,
     linkTarget: '_blank',
+    isArray: true,
     showIcon: true,
     iconClass: 'fa-solid fa-comment text-primary',
     iconTooltip: 'adminInstitutions.institutionUsers.sendMessage',

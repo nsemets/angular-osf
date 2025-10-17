@@ -1,7 +1,9 @@
 import { map, Observable } from 'rxjs';
 
-import { HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+
+import { ENVIRONMENT } from '@core/provider/environment.provider';
 
 import { ResourceType } from '../enums';
 import { CitationsMapper } from '../mappers';
@@ -9,8 +11,6 @@ import {
   CitationStyle,
   CitationStyleJsonApi,
   CustomCitationPayload,
-  DefaultCitation,
-  DefaultCitationJsonApi,
   JsonApiResponse,
   StyledCitation,
   StyledCitationJsonApi,
@@ -18,26 +18,29 @@ import {
 
 import { JsonApiService } from './json-api.service';
 
-import { environment } from 'src/environments/environment';
-
 @Injectable({
   providedIn: 'root',
 })
 export class CitationsService {
   private readonly jsonApiService = inject(JsonApiService);
-  private readonly apiUrl = `${environment.apiDomainUrl}/v2`;
+  private readonly http = inject(HttpClient);
+  private readonly environment = inject(ENVIRONMENT);
+
+  get apiUrl() {
+    return `${this.environment.apiDomainUrl}/v2`;
+  }
 
   private readonly urlMap = new Map<ResourceType, string>([[ResourceType.Preprint, 'preprints']]);
 
-  fetchDefaultCitation(
+  fetchStyledCitationById(
     resourceType: ResourceType | string,
     resourceId: string,
     citationId: string
-  ): Observable<DefaultCitation> {
+  ): Observable<StyledCitation> {
     const baseUrl = this.getBaseCitationUrl(resourceType, resourceId);
     return this.jsonApiService
-      .get<JsonApiResponse<DefaultCitationJsonApi, null>>(`${baseUrl}/${citationId}/`)
-      .pipe(map((response) => CitationsMapper.fromGetDefaultResponse(response.data)));
+      .get<JsonApiResponse<StyledCitationJsonApi, null>>(`${baseUrl}/${citationId}/`)
+      .pipe(map((response) => CitationsMapper.fromGetStyledCitationResponse(response.data)));
   }
 
   fetchCitationStyles(searchQuery?: string): Observable<CitationStyle[]> {
@@ -54,16 +57,9 @@ export class CitationsService {
     return this.jsonApiService.patch<unknown>(`${this.apiUrl}/${payload.type}/${payload.id}/`, citationData);
   }
 
-  fetchStyledCitation(
-    resourceType: ResourceType | string,
-    resourceId: string,
-    citationStyle: string
-  ): Observable<StyledCitation> {
-    const baseUrl = this.getBaseCitationUrl(resourceType, resourceId);
-
-    return this.jsonApiService
-      .get<JsonApiResponse<StyledCitationJsonApi, null>>(`${baseUrl}/${citationStyle}/`)
-      .pipe(map((response) => CitationsMapper.fromGetStyledCitationResponse(response.data)));
+  fetchCustomCitationFile(styleId: string): Observable<string> {
+    const url = `/static/vendor/bower_components/styles/${styleId}.csl`;
+    return this.http.get(url, { responseType: 'text' });
   }
 
   private getBaseCitationUrl(resourceType: ResourceType | string, resourceId: string): string {
@@ -76,5 +72,13 @@ export class CitationsService {
     }
 
     return `${this.apiUrl}/${resourceTypeString}/${resourceId}/citation`;
+  }
+
+  fetchCitationStylesFromProvider(resourceType: ResourceType, providerId: string) {
+    return this.jsonApiService
+      .get<
+        JsonApiResponse<CitationStyleJsonApi[], null>
+      >(`${this.apiUrl}/providers/${this.urlMap.get(resourceType)}/${providerId}/citation_styles/`)
+      .pipe(map((response) => CitationsMapper.fromGetCitationStylesResponse(response.data)));
   }
 }

@@ -1,0 +1,31 @@
+<div class="flex flex-column gap-2">
+  <div class="flex gap-4">
+    <p-button
+      class="link-btn-no-padding"
+      severity="secondary"
+      link
+      [label]="'myProjects.createProject.affiliation.selectAll' | translate"
+      [disabled]="isSelectAllDisabled()"
+      (onClick)="selectAll()"
+      (keydown.enter)="selectAll()"
+    />
+
+    <p-button
+      class="link-btn-no-padding"
+      severity="secondary"
+      link
+      [label]="'myProjects.createProject.affiliation.removeAll' | translate"
+      [disabled]="isRemoveAllDisabled()"
+      (onClick)="removeAll()"
+      (keydown.enter)="removeAll()"
+    />
+  </div>
+
+  @for (item of components(); track item.id; let idx = $index) {
+    <osf-component-checkbox-item
+      [item]="item"
+      [tooltipText]="disabledTooltip()"
+      (itemChange)="onItemChange($event, idx)"
+    />
+  }
+</div>

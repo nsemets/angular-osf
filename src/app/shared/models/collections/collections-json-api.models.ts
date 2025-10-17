@@ -1,31 +1,15 @@
-import { BrandDataJsonApi, JsonApiResponse } from '@shared/models';
+import {
+  BaseNodeDataJsonApi,
+  BrandDataJsonApi,
+  CollectionsProviderAttributesJsonApi,
+  JsonApiResponse,
+  UserDataErrorResponseJsonApi,
+} from '@shared/models';
 
 export interface CollectionProviderResponseJsonApi {
   id: string;
   type: string;
-  attributes: {
-    name: string;
-    description: string;
-    advisory_board: string;
-    example: string | null;
-    domain: string;
-    domain_redirect_enabled: boolean;
-    footer_links: string;
-    email_support: boolean | null;
-    facebook_app_id: string | null;
-    allow_submissions: boolean;
-    allow_commenting: boolean;
-    assets: {
-      style?: string;
-      square_color_transparent?: string;
-      square_color_no_transparent?: string;
-      favicon?: string;
-    };
-    share_source: string;
-    share_publish_type: string;
-    permissions: string[];
-    reviews_workflow: string;
-  };
+  attributes: CollectionsProviderAttributesJsonApi;
   embeds: {
     brand: {
       data?: BrandDataJsonApi;
@@ -37,12 +21,6 @@ export interface CollectionProviderResponseJsonApi {
         id: string;
         type: string;
       };
-    };
-    brand: {
-      data: {
-        id: string;
-        type: string;
-      } | null;
     };
   };
 }
@@ -122,44 +100,9 @@ export interface CollectionSubmissionWithGuidJsonApi {
   };
   embeds: {
     guid: {
-      data: {
-        id: string;
-        type: string;
-        attributes: {
-          title: string;
-          description: string;
-          category: string;
-          date_created: string;
-          date_modified: string;
-          public: boolean;
-        };
-        links: {
-          html: string;
-        };
-        relationships: {
-          bibliographic_contributors: {
-            links: {
-              related: {
-                href: string;
-              };
-            };
-          };
-        };
-      };
+      data: BaseNodeDataJsonApi;
     };
-    creator?: {
-      data: {
-        attributes: {
-          full_name: string;
-        };
-        id: string;
-      };
-    };
-  };
-  links: {
-    meta: {
-      total: number;
-    };
+    creator?: UserDataErrorResponseJsonApi;
   };
 }
 
@@ -199,26 +142,4 @@ export interface CollectionSubmissionsSearchPayloadJsonApi {
     };
   };
   type: string;
-}
-
-export interface CollectionContributorJsonApi {
-  id: string;
-  type: string;
-  embeds: {
-    users: {
-      data: {
-        attributes: {
-          full_name: string;
-        };
-        id: string;
-        links: {
-          html: string;
-        };
-      };
-    };
-  };
-}
-
-export interface ContributorsResponseJsonApi extends JsonApiResponse<CollectionContributorJsonApi[], null> {
-  data: CollectionContributorJsonApi[];
 }

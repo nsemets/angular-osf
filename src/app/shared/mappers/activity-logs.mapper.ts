@@ -1,3 +1,4 @@
+import { DEFAULT_TABLE_PARAMS } from '../constants';
 import {
   ActivityLog,
   ActivityLogJsonApi,
@@ -32,6 +33,13 @@ export class ActivityLogsMapper {
             }
           : { id: '', title: '' },
         paramsProject: params.params_project,
+        template_node: params.template_node
+          ? {
+              id: params.template_node.id,
+              url: params.template_node.url,
+              title: params.template_node.title,
+            }
+          : null,
         pointer: params.pointer
           ? {
               category: params.pointer.category,
@@ -156,6 +164,7 @@ export class ActivityLogsMapper {
     return {
       data: logs.data.map((log) => this.fromActivityLogJsonApi(log, isAnonymous)),
       totalCount: logs.meta.total ?? 0,
+      pageSize: logs.meta.per_page ?? DEFAULT_TABLE_PARAMS.rows,
       isAnonymous,
     };
   }

@@ -31,7 +31,7 @@
         </div>
       }
 
-      @if (isPreModeration() || (isHybridModeration() && isPendingStatus())) {
+      @if (isRejectOptionVisible()) {
         <div class="flex gap-2">
           <p-radioButton
             [formControlName]="ModerationDecisionFormControls.Action"
@@ -45,7 +45,7 @@
         </div>
       }
 
-      @if ((isHybridModeration() && !isPendingStatus()) || isPostModeration()) {
+      @if (isWithdrawOptionVisible()) {
         <div class="flex gap-2">
           <p-radioButton
             [formControlName]="ModerationDecisionFormControls.Action"
@@ -65,6 +65,7 @@
           [formControlName]="ModerationDecisionFormControls.Comment"
           [placeholder]="'moderation.makeDecision.remarksPlaceholder' | translate"
           [rows]="6"
+          [maxlength]="decisionCommentLimit"
           class="w-full mt-3"
         ></textarea>
       </div>

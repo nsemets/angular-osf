@@ -15,23 +15,22 @@
 
         <osf-filter-chips
           class="px-4"
-          [filterValues]="filterValues()"
+          [filterOptions]="selectedFilterOptions()"
           [filters]="filters()"
-          [filterOptionsCache]="filterOptionsCache()"
-          (filterRemoved)="onFilterChipRemoved($event)"
+          (selectedOptionRemoved)="onFilterChipRemoved($event)"
         />
 
-        <div class="overflow-auto px-4">
-          <osf-reusable-filters
+        <div class="filters-section overflow-auto px-4">
+          <osf-search-filters
             [plainStyle]="true"
             [filters]="filters()"
-            [selectedValues]="filterValues()"
+            [selectedOptions]="selectedFilterOptions()"
             [filterSearchResults]="filterSearchCache()"
             [isLoading]="areResourcesLoading()"
             [showEmptyState]="true"
             (loadFilterOptions)="onLoadFilterOptions($event)"
-            (filterValueChanged)="onFilterChanged($event)"
-            (filterSearchChanged)="onFilterSearchChanged($event)"
+            (filterOptionSelected)="onSelectedFilterOptionsChanged($event)"
+            (filterOptionsSearch)="onSearchFilterOptions($event)"
             (loadMoreFilterOptions)="onLoadMoreFilterOptions($event)"
           />
         </div>

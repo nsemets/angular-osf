@@ -11,12 +11,14 @@ import { ResourceType } from '@shared/enums';
 import { ProjectOverviewService } from '../services';
 
 import {
+  ClearDuplicatedProject,
   ClearProjectOverview,
   CreateComponent,
   DeleteComponent,
   DuplicateProject,
   ForkResource,
   GetComponents,
+  GetParentProject,
   GetProjectById,
   SetProjectCustomCitation,
   UpdateProjectPublicStatus,
@@ -73,17 +75,29 @@ export class ProjectOverviewState {
         },
       });
     }
-    return this.projectOverviewService.updateProjectPublicStatus(action.projectId, action.isPublic).pipe(
-      tap(() => {
-        if (state.project.data) {
+
+    return this.projectOverviewService.updateProjectPublicStatus(action.payload).pipe(
+      tap((res) => {
+        const project = res.find((item) => item.id === state.project.data?.id);
+
+        if (project) {
+          const updatedComponents = state.components.data.map((component) => {
+            const updatedComponent = res.find((item) => item.id === component.id);
+            return updatedComponent ? { ...component, public: updatedComponent.isPublic } : component;
+          });
+
           ctx.patchState({
             project: {
               ...state.project,
               data: {
                 ...state.project.data!,
-                isPublic: action.isPublic,
+                isPublic: project.isPublic,
               },
               isSubmitting: false,
+            },
+            components: {
+              ...state.components,
+              data: updatedComponents,
             },
           });
         }
@@ -154,16 +168,24 @@ export class ProjectOverviewState {
     });
 
     return this.projectOverviewService.duplicateProject(action.projectId, action.title).pipe(
-      tap(() => {
+      tap((response) => {
         ctx.patchState({
           project: {
             ...state.project,
             isSubmitting: false,
           },
+          duplicatedProject: response,
         });
       }),
       catchError((error) => handleSectionError(ctx, 'project', error))
     );
+  }
+
+  @Action(ClearDuplicatedProject)
+  clearDuplicatedProject(ctx: StateContext<ProjectOverviewStateModel>) {
+    ctx.patchState({
+      duplicatedProject: null,
+    });
   }
 
   @Action(CreateComponent)
@@ -244,6 +266,29 @@ export class ProjectOverviewState {
         });
       }),
       catchError((error) => handleSectionError(ctx, 'components', error))
+    );
+  }
+
+  @Action(GetParentProject)
+  getParentProject(ctx: StateContext<ProjectOverviewStateModel>, action: GetParentProject) {
+    const state = ctx.getState();
+    ctx.patchState({
+      parentProject: {
+        ...state.parentProject,
+        isLoading: true,
+      },
+    });
+    return this.projectOverviewService.getParentProject(action.projectId).pipe(
+      tap((response) => {
+        ctx.patchState({
+          parentProject: {
+            data: response.project,
+            isLoading: false,
+            error: null,
+          },
+        });
+      }),
+      catchError((error) => handleSectionError(ctx, 'parentProject', error))
     );
   }
 }

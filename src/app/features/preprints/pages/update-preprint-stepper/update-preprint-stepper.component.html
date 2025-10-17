@@ -35,8 +35,15 @@
     @case (PreprintSteps.TitleAndAbstract) {
       <osf-title-and-abstract-step (nextClicked)="moveToNextStep()" />
     }
+    @case (SubmitStepsEnum.File) {
+      <osf-file-step
+        [provider]="preprintProvider()"
+        (nextClicked)="moveToNextStep()"
+        (backClicked)="moveToPreviousStep()"
+      />
+    }
     @case (PreprintSteps.Metadata) {
-      <osf-preprint-metadata
+      <osf-preprints-metadata
         (nextClicked)="moveToNextStep()"
         (backClicked)="moveToPreviousStep()"
         [provider]="preprintProvider()"

@@ -29,13 +29,32 @@ export class ContributorsSelectors {
   }
 
   @Selector([ContributorsState])
+  static getBibliographicContributors(state: ContributorsStateModel) {
+    if (!state?.contributorsList?.data) {
+      return [];
+    }
+
+    return state.contributorsList.data.filter((contributor) => contributor.isBibliographic);
+  }
+
+  @Selector([ContributorsState])
   static isContributorsLoading(state: ContributorsStateModel) {
     return state?.contributorsList?.isLoading || false;
   }
 
   @Selector([ContributorsState])
-  static isContributorsError(state: ContributorsStateModel) {
-    return !!state?.contributorsList?.error?.length;
+  static getContributorsPageNumber(state: ContributorsStateModel) {
+    return state.contributorsList.page;
+  }
+
+  @Selector([ContributorsState])
+  static getContributorsPageSize(state: ContributorsStateModel) {
+    return state.contributorsList.pageSize;
+  }
+
+  @Selector([ContributorsState])
+  static getContributorsTotalCount(state: ContributorsStateModel) {
+    return state.contributorsList.totalCount;
   }
 
   @Selector([ContributorsState])
@@ -54,7 +73,16 @@ export class ContributorsSelectors {
   }
 
   @Selector([ContributorsState])
-  static isUsersError(state: ContributorsStateModel) {
-    return !!state?.users?.error?.length;
+  static getRequestAccessList(state: ContributorsStateModel) {
+    if (!state?.requestAccessList?.data) {
+      return [];
+    }
+
+    return state.requestAccessList.data;
+  }
+
+  @Selector([ContributorsState])
+  static areRequestAccessListLoading(state: ContributorsStateModel) {
+    return state.requestAccessList.isLoading;
   }
 }

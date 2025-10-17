@@ -1,4 +1,6 @@
-import { TableColumn } from '@osf/features/admin-institutions/models';
+import { TableColumn } from '../models';
+
+const defaultDateFormat = 'MMM d, y';
 
 export const preprintsTableColumns: TableColumn[] = [
   {
@@ -17,13 +19,13 @@ export const preprintsTableColumns: TableColumn[] = [
     field: 'dateCreated',
     header: 'adminInstitutions.projects.dateCreated',
     sortable: true,
-    dateFormat: 'dd/MM/yyyy',
+    dateFormat: defaultDateFormat,
   },
   {
     field: 'dateModified',
     header: 'adminInstitutions.projects.dateModified',
     sortable: true,
-    dateFormat: 'dd/MM/yyyy',
+    dateFormat: defaultDateFormat,
   },
   {
     field: 'doi',
@@ -36,9 +38,10 @@ export const preprintsTableColumns: TableColumn[] = [
     header: 'adminInstitutions.projects.license',
   },
   {
-    field: 'contributorName',
+    field: 'creator',
     header: 'adminInstitutions.projects.contributorName',
     isLink: true,
+    isArray: true,
     linkTarget: '_blank',
   },
   {

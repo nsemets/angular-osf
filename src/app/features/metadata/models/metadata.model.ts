@@ -1,6 +1,7 @@
-import { ContributorModel, Identifier, Institution, LicenseModel } from '@osf/shared/models';
+import { Identifier, Institution, LicenseModel } from '@osf/shared/models';
+import { UserPermissions } from '@shared/enums';
 
-export interface Metadata {
+export interface MetadataModel {
   id: string;
   title: string;
   description: string;
@@ -12,7 +13,6 @@ export interface Metadata {
   category?: string;
   dateCreated: string;
   dateModified: string;
-  contributors: ContributorModel[];
   identifiers: Identifier[];
   affiliatedInstitutions?: Institution[];
   provider?: string;
@@ -21,6 +21,7 @@ export interface Metadata {
     year: string;
   };
   public?: boolean;
+  currentUserPermissions: UserPermissions[];
 }
 
 export interface CustomItemMetadataRecord {

@@ -1,10 +1,10 @@
 import { createDispatchMap, select, Store } from '@ngxs/store';
 
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { Checkbox } from 'primeng/checkbox';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { map } from 'rxjs';
 
@@ -15,7 +15,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { TextInputComponent } from '@osf/shared/components';
 import { InputLimits } from '@osf/shared/constants';
-import { ToastService } from '@osf/shared/services';
+import { CustomDialogService, ToastService } from '@osf/shared/services';
 
 import { TokenForm, TokenFormControls, TokenModel } from '../../models';
 import { CreateToken, GetTokens, TokensSelectors, UpdateToken } from '../../store';
@@ -31,8 +31,7 @@ import { TokenCreatedDialogComponent } from '../token-created-dialog/token-creat
 export class TokenAddEditFormComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly dialogService = inject(DialogService);
-  private readonly translateService = inject(TranslateService);
+  private readonly customDialogService = inject(CustomDialogService);
   private readonly toastService = inject(ToastService);
   private readonly store = inject(Store);
 
@@ -65,9 +64,7 @@ export class TokenAddEditFormComponent implements OnInit {
   });
 
   constructor() {
-    effect(() => {
-      return this.isLoading() ? this.tokenForm.disable() : this.tokenForm.enable();
-    });
+    effect(() => (this.isLoading() ? this.tokenForm.disable() : this.tokenForm.enable()));
   }
 
   ngOnInit(): void {
@@ -98,7 +95,7 @@ export class TokenAddEditFormComponent implements OnInit {
           const tokens = this.store.selectSignal(TokensSelectors.getTokens);
           const newToken = tokens()[0];
           this.dialogRef.close();
-          this.showTokenCreatedDialog(newToken.name, newToken.id);
+          this.showTokenCreatedDialog(newToken.name, newToken.tokenId);
         },
       });
     } else {
@@ -112,12 +109,9 @@ export class TokenAddEditFormComponent implements OnInit {
   }
 
   showTokenCreatedDialog(tokenName: string, tokenValue: string) {
-    this.dialogService.open(TokenCreatedDialogComponent, {
+    this.customDialogService.open(TokenCreatedDialogComponent, {
+      header: 'settings.tokens.createdDialog.title',
       width: '500px',
-      header: this.translateService.instant('settings.tokens.createdDialog.title'),
-      closeOnEscape: true,
-      modal: true,
-      closable: true,
       data: {
         tokenName,
         tokenValue,

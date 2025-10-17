@@ -5,19 +5,23 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Card } from 'primeng/card';
 import { Skeleton } from 'primeng/skeleton';
 
-import { ChangeDetectionStrategy, Component, computed, effect, input, OnDestroy, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, OnDestroy, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
+import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { PreprintDoiSectionComponent } from '@osf/features/preprints/components/preprint-details/preprint-doi-section/preprint-doi-section.component';
 import { ApplicabilityStatus, PreregLinkInfo } from '@osf/features/preprints/enums';
 import { PreprintProviderDetails } from '@osf/features/preprints/models';
 import { FetchPreprintById, PreprintSelectors } from '@osf/features/preprints/store/preprint';
-import { AffiliatedInstitutionsViewComponent, IconComponent, TruncatedTextComponent } from '@shared/components';
+import {
+  AffiliatedInstitutionsViewComponent,
+  ContributorsListComponent,
+  IconComponent,
+  TruncatedTextComponent,
+} from '@shared/components';
 import { ResourceType } from '@shared/enums';
 import { ContributorsSelectors, GetAllContributors, ResetContributorsState } from '@shared/stores';
 import { FetchResourceInstitutions, InstitutionsSelectors } from '@shared/stores/institutions';
-
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'osf-preprint-general-information',
@@ -30,12 +34,15 @@ import { environment } from 'src/environments/environment';
     PreprintDoiSectionComponent,
     IconComponent,
     AffiliatedInstitutionsViewComponent,
+    ContributorsListComponent,
   ],
   templateUrl: './general-information.component.html',
   styleUrl: './general-information.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GeneralInformationComponent implements OnDestroy {
+  private readonly environment = inject(ENVIRONMENT);
+
   readonly ApplicabilityStatus = ApplicabilityStatus;
   readonly PreregLinkInfo = PreregLinkInfo;
 
@@ -45,7 +52,6 @@ export class GeneralInformationComponent implements OnDestroy {
     fetchPreprintById: FetchPreprintById,
     fetchResourceInstitutions: FetchResourceInstitutions,
   });
-  readonly environment = environment;
 
   preprintProvider = input.required<PreprintProviderDetails | undefined>();
   preprintVersionSelected = output<string>();
@@ -57,15 +63,11 @@ export class GeneralInformationComponent implements OnDestroy {
 
   contributors = select(ContributorsSelectors.getContributors);
   areContributorsLoading = select(ContributorsSelectors.isContributorsLoading);
-  bibliographicContributors = computed(() => {
-    return this.contributors().filter((contributor) => contributor.isBibliographic);
-  });
+  bibliographicContributors = computed(() => this.contributors().filter((contributor) => contributor.isBibliographic));
 
   skeletonData = Array.from({ length: 5 }, () => null);
 
-  nodeLink = computed(() => {
-    return `${environment.webUrl}/${this.preprint()?.nodeId}`;
-  });
+  nodeLink = computed(() => `${this.environment.webUrl}/${this.preprint()?.nodeId}`);
 
   constructor() {
     effect(() => {

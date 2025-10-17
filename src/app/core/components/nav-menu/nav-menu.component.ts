@@ -1,8 +1,7 @@
-import { select } from '@ngxs/store';
+import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { MenuItem } from 'primeng/api';
 import { PanelMenuModule } from 'primeng/panelmenu';
 
 import { filter, map } from 'rxjs';
@@ -12,15 +11,16 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { MENU_ITEMS } from '@core/constants';
+import { ProviderSelectors } from '@core/store/provider';
 import { filterMenuItems, updateMenuItems } from '@osf/core/helpers';
-import { RouteContext } from '@osf/core/models';
+import { CustomMenuItem, RouteContext } from '@osf/core/models';
 import { AuthService } from '@osf/core/services';
 import { UserSelectors } from '@osf/core/store/user';
 import { IconComponent } from '@osf/shared/components';
-import { CurrentResourceType } from '@osf/shared/enums';
+import { CurrentResourceType, ReviewPermissions } from '@osf/shared/enums';
 import { getViewOnlyParam } from '@osf/shared/helpers';
 import { WrapFnPipe } from '@osf/shared/pipes';
-import { CurrentResourceSelectors } from '@osf/shared/stores';
+import { CurrentResourceSelectors, GetResourceDetails } from '@osf/shared/stores';
 
 @Component({
   selector: 'osf-nav-menu',
@@ -37,6 +37,9 @@ export class NavMenuComponent {
 
   private readonly isAuthenticated = select(UserSelectors.isAuthenticated);
   private readonly currentResource = select(CurrentResourceSelectors.getCurrentResource);
+  private readonly provider = select(ProviderSelectors.getCurrentProvider);
+
+  readonly actions = createDispatchMap({ getResourceDetails: GetResourceDetails });
 
   readonly mainMenuItems = computed(() => {
     const isAuthenticated = this.isAuthenticated();
@@ -44,18 +47,27 @@ export class NavMenuComponent {
 
     const routeContext: RouteContext = {
       resourceId: this.currentResourceId(),
-      providerId: this.currentProviderId(),
+      providerId: this.provider()?.id,
       isProject:
         this.currentResource()?.type === CurrentResourceType.Projects &&
         this.currentResourceId() === this.currentResource()?.id,
+      wikiPageVisible: this.currentResource()?.wikiEnabled,
       isRegistry:
         this.currentResource()?.type === CurrentResourceType.Registrations &&
         this.currentResourceId() === this.currentResource()?.id,
       isPreprint: this.isPreprintRoute(),
       preprintReviewsPageVisible: this.canUserViewReviews(),
+      registrationModerationPageVisible:
+        this.provider()?.type === CurrentResourceType.Registrations &&
+        this.provider()?.permissions?.includes(ReviewPermissions.ViewSubmissions) &&
+        !!this.provider()?.reviewsWorkflow,
+      collectionModerationPageVisible:
+        this.provider()?.type === CurrentResourceType.Collections &&
+        this.provider()?.permissions?.includes(ReviewPermissions.ViewSubmissions),
       isCollections: this.isCollectionsRoute() || false,
       currentUrl: this.router.url,
       isViewOnly: !!getViewOnlyParam(this.router),
+      permissions: this.currentResource()?.permissions,
     };
 
     const items = updateMenuItems(filtered, routeContext);
@@ -74,7 +86,6 @@ export class NavMenuComponent {
   );
 
   readonly currentResourceId = computed(() => this.currentRoute().resourceId);
-  readonly currentProviderId = computed(() => this.currentRoute().providerId);
   readonly isCollectionsRoute = computed(() => this.currentRoute().isCollectionsWithId);
   readonly isPreprintRoute = computed(() => this.currentRoute().isPreprintRoute);
   readonly canUserViewReviews = select(UserSelectors.getCanViewReviews);
@@ -95,7 +106,7 @@ export class NavMenuComponent {
     };
   }
 
-  goToLink(item: MenuItem) {
+  goToLink(item: CustomMenuItem) {
     if (item.id === 'support' || item.id === 'donate') {
       window.open(item.url, '_blank');
     }
@@ -115,6 +126,6 @@ export class NavMenuComponent {
     }
   }
 
-  readonly hasVisibleChildren = (item: MenuItem): boolean =>
+  readonly hasVisibleChildren = (item: CustomMenuItem): boolean =>
     Array.isArray(item.items) && item.items.some((child) => !!child.visible);
 }

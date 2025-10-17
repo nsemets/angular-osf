@@ -4,8 +4,9 @@ import { catchError, EMPTY, forkJoin, Observable, of, tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
+import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { getResourceTypeStringFromEnum } from '@shared/helpers';
-import { ResourcesData } from '@shared/models';
+import { FilterOperator, ResourcesData } from '@shared/models';
 import { GlobalSearchService } from '@shared/services';
 
 import {
@@ -21,11 +22,9 @@ import {
   SetResourceType,
   SetSearchText,
   SetSortBy,
-  UpdateFilterValue,
+  UpdateSelectedFilterOption,
 } from './global-search.actions';
 import { GLOBAL_SEARCH_STATE_DEFAULTS, GlobalSearchStateModel } from './global-search.model';
-
-import { environment } from 'src/environments/environment';
 
 @State<GlobalSearchStateModel>({
   name: 'globalSearch',
@@ -34,6 +33,7 @@ import { environment } from 'src/environments/environment';
 @Injectable()
 export class GlobalSearchState {
   private searchService = inject(GlobalSearchService);
+  private readonly environment = inject(ENVIRONMENT);
 
   @Action(FetchResources)
   fetchResources(ctx: StateContext<GlobalSearchStateModel>): Observable<ResourcesData> {
@@ -49,6 +49,8 @@ export class GlobalSearchState {
   @Action(FetchResourcesByLink)
   fetchResourcesByLink(ctx: StateContext<GlobalSearchStateModel>, action: FetchResourcesByLink) {
     if (!action.link) return EMPTY;
+    ctx.patchState({ resources: { ...ctx.getState().resources, isLoading: true } });
+
     return this.searchService
       .getResourcesByLink(action.link)
       .pipe(tap((response) => this.updateResourcesState(ctx, response)));
@@ -197,7 +199,7 @@ export class GlobalSearchState {
         filterKeys.includes(f.key) && !ctx.getState().filterOptionsCache[f.key]?.length ? { ...f, isLoading: true } : f
       );
     ctx.patchState({ filters: loadingFilters });
-    ctx.patchState({ filterValues });
+    ctx.patchState({ selectedFilterOptions: filterValues });
 
     const observables = filterKeys.map((key) =>
       this.searchService.getFilterOptions(this.buildParamsForIndexValueSearch(ctx.getState(), key)).pipe(
@@ -231,14 +233,14 @@ export class GlobalSearchState {
 
   @Action(SetDefaultFilterValue)
   setDefaultFilterValue(ctx: StateContext<GlobalSearchStateModel>, action: SetDefaultFilterValue) {
-    const updatedFilterValues = { ...ctx.getState().defaultFilterValues, [action.filterKey]: action.value };
-    ctx.patchState({ defaultFilterValues: updatedFilterValues });
+    const updatedFilterValues = { ...ctx.getState().defaultFilterOptions, [action.filterKey]: action.value };
+    ctx.patchState({ defaultFilterOptions: updatedFilterValues });
   }
 
-  @Action(UpdateFilterValue)
-  updateFilterValue(ctx: StateContext<GlobalSearchStateModel>, action: UpdateFilterValue) {
-    const updatedFilterValues = { ...ctx.getState().filterValues, [action.filterKey]: action.value };
-    ctx.patchState({ filterValues: updatedFilterValues });
+  @Action(UpdateSelectedFilterOption)
+  updateSelectedFilterOption(ctx: StateContext<GlobalSearchStateModel>, action: UpdateSelectedFilterOption) {
+    const updatedFilterValues = { ...ctx.getState().selectedFilterOptions, [action.filterKey]: action.filterOption };
+    ctx.patchState({ selectedFilterOptions: updatedFilterValues });
   }
 
   @Action(SetSortBy)
@@ -254,6 +256,7 @@ export class GlobalSearchState {
   @Action(SetResourceType)
   setResourceType(ctx: StateContext<GlobalSearchStateModel>, action: SetResourceType) {
     ctx.patchState({ resourceType: action.type });
+    ctx.patchState({ selectedFilterOptions: {} });
   }
 
   @Action(ResetSearchState)
@@ -264,17 +267,13 @@ export class GlobalSearchState {
   }
 
   private updateResourcesState(ctx: StateContext<GlobalSearchStateModel>, response: ResourcesData) {
-    const state = ctx.getState();
-    const filtersWithCachedOptions = (response.filters || []).map((filter) => {
-      const cachedOptions = state.filterOptionsCache[filter.key];
-      return cachedOptions?.length ? { ...filter, options: cachedOptions, isLoaded: true } : filter;
-    });
-
     ctx.patchState({
       resources: { data: response.resources, isLoading: false, error: null },
-      filters: filtersWithCachedOptions,
+      filterOptionsCache: {},
+      filterSearchCache: {},
+      filterPaginationCache: {},
+      filters: response.filters,
       resourcesCount: response.count,
-      self: response.self,
       first: response.first,
       next: response.next,
       previous: response.previous,
@@ -285,7 +284,7 @@ export class GlobalSearchState {
     state: GlobalSearchStateModel,
     filterKey: string,
     valueSearchText?: string
-  ): Record<string, string> {
+  ): Record<string, string | string[]> {
     return {
       ...this.buildParamsForIndexCardSearch(state),
       'page[size]': '200',
@@ -294,33 +293,34 @@ export class GlobalSearchState {
     };
   }
 
-  private buildParamsForIndexCardSearch(state: GlobalSearchStateModel): Record<string, string> {
-    const filtersParams: Record<string, string> = {};
-    Object.entries(state.filterValues).forEach(([key, value]) => {
-      if (value) {
-        const filterDefinition = state.filters.find((f) => f.key === key);
-        const operator = filterDefinition?.operator;
+  private buildParamsForIndexCardSearch(state: GlobalSearchStateModel): Record<string, string | string[]> {
+    const filtersParams: Record<string, string | string[]> = {};
+    Object.entries(state.defaultFilterOptions).forEach(([key, value]) => {
+      filtersParams[`cardSearchFilter[${key}][]`] = value;
+    });
+    Object.entries(state.selectedFilterOptions).forEach(([key, options]) => {
+      const filter = state.filters.find((f) => f.key === key);
 
-        if (operator === 'is-present') {
-          filtersParams[`cardSearchFilter[${key}][is-present]`] = value;
-        } else {
-          filtersParams[`cardSearchFilter[${key}][]`] = value;
+      const firstOptionValue = options[0]?.value;
+      const isOptionValueBoolean = firstOptionValue === 'true' || firstOptionValue === 'false';
+      if (filter?.operator === FilterOperator.IsPresent || isOptionValueBoolean) {
+        if (firstOptionValue) {
+          filtersParams[`cardSearchFilter[${key}][is-present]`] = firstOptionValue;
         }
+      } else {
+        filtersParams[`cardSearchFilter[${key}][]`] = options.map((option) => option.value);
       }
     });
 
     filtersParams['cardSearchFilter[resourceType]'] = getResourceTypeStringFromEnum(state.resourceType);
-    filtersParams['cardSearchFilter[accessService]'] = `${environment.webUrl}/`;
+    filtersParams['cardSearchFilter[accessService]'] = `${this.environment.webUrl}/`;
     filtersParams['cardSearchText[*,creator.name,isContainedBy.creator.name]'] = state.searchText ?? '';
     filtersParams['page[size]'] = '10';
 
     const sortBy = state.sortBy;
-    const sortParam = sortBy.includes('date') || sortBy.includes('relevance') ? 'sort' : 'sort[integer-value]';
+    const sortParam =
+      sortBy.toLowerCase().includes('count') && !sortBy.includes('relevance') ? 'sort[integer-value]' : 'sort';
     filtersParams[sortParam] = sortBy;
-
-    Object.entries(state.defaultFilterValues).forEach(([key, value]) => {
-      filtersParams[`cardSearchFilter[${key}][]`] = value;
-    });
 
     return filtersParams;
   }

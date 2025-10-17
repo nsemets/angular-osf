@@ -1,9 +1,9 @@
-import { ContributorsMapper, LicensesMapper } from '@osf/shared/mappers';
+import { IdentifiersMapper, LicensesMapper } from '@osf/shared/mappers';
 
-import { CustomItemMetadataRecord, CustomMetadataJsonApi, Metadata, MetadataJsonApi } from '../models';
+import { CustomItemMetadataRecord, CustomMetadataJsonApi, MetadataJsonApi, MetadataModel } from '../models';
 
 export class MetadataMapper {
-  static fromMetadataApiResponse(response: MetadataJsonApi): Metadata {
+  static fromMetadataApiResponse(response: MetadataJsonApi): MetadataModel {
     return {
       id: response.id,
       title: response.attributes.title,
@@ -12,7 +12,6 @@ export class MetadataMapper {
       dateCreated: response.attributes.date_created,
       dateModified: response.attributes.date_modified,
       publicationDoi: response.attributes.article_doi,
-      contributors: ContributorsMapper.fromResponse(response.embeds?.bibliographic_contributors?.data),
       license: LicensesMapper.fromLicenseDataJsonApi(response.embeds?.license?.data),
       nodeLicense: response.attributes.node_license
         ? {
@@ -20,14 +19,10 @@ export class MetadataMapper {
             year: response.attributes.node_license.year || '',
           }
         : undefined,
-      identifiers: response.embeds?.identifiers?.data.map((identifier) => ({
-        id: identifier.id,
-        type: identifier.type,
-        category: identifier.attributes.category,
-        value: identifier.attributes.value,
-      })),
+      identifiers: IdentifiersMapper.fromJsonApi(response.embeds?.identifiers),
       provider: response.embeds?.provider?.data.id,
       public: response.attributes.public,
+      currentUserPermissions: response.attributes.current_user_permissions,
     };
   }
 

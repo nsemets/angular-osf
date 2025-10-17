@@ -1,9 +1,12 @@
-import { TranslateService } from '@ngx-translate/core';
-import { MockProvider } from 'ng-mocks';
+import { MockComponent } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { AddonCardComponent } from '@shared/components/addons';
+
 import { AddonCardListComponent } from './addon-card-list.component';
+
+import { OSFTestingModule } from '@testing/osf.testing.module';
 
 describe('AddonCardListComponent', () => {
   let component: AddonCardListComponent;
@@ -11,8 +14,7 @@ describe('AddonCardListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AddonCardListComponent],
-      providers: [MockProvider(TranslateService)],
+      imports: [AddonCardListComponent, MockComponent(AddonCardComponent), OSFTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AddonCardListComponent);
@@ -27,11 +29,7 @@ describe('AddonCardListComponent', () => {
     expect(component.cards()).toEqual([]);
   });
 
-  it('should have default empty string ', () => {
-    expect(component.cardButtonLabel()).toBe('');
-  });
-
   it('should have default false value', () => {
-    expect(component.showDangerButton()).toBe(false);
+    expect(component.isConnected()).toBe(false);
   });
 });

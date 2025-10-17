@@ -4,16 +4,16 @@ import { Button } from 'primeng/button';
 
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
-import { PREPRINT_ACTION_LABEL, ReviewStatusIcon } from '@osf/features/moderation/constants';
-import { ActionStatus, SubmissionReviewStatus } from '@osf/features/moderation/enums';
-import { IconComponent } from '@osf/shared/components';
+import { IconComponent, TruncatedTextComponent } from '@osf/shared/components';
 import { DateAgoPipe } from '@osf/shared/pipes';
 
+import { PREPRINT_ACTION_LABEL, ReviewStatusIcon } from '../../constants';
+import { ActionStatus, SubmissionReviewStatus } from '../../enums';
 import { PreprintSubmission, PreprintWithdrawalSubmission } from '../../models';
 
 @Component({
   selector: 'osf-preprint-submission-item',
-  imports: [IconComponent, DateAgoPipe, Button, TranslatePipe],
+  imports: [IconComponent, DateAgoPipe, Button, TranslatePipe, TruncatedTextComponent],
   templateUrl: './preprint-submission-item.component.html',
   styleUrl: './preprint-submission-item.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

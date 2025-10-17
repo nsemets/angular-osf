@@ -14,7 +14,7 @@
       @if (preprintValue.nodeId) {
         <section class="flex flex-column gap-2">
           <h3>{{ 'preprints.details.supplementalMaterials' | translate }}</h3>
-          <a [href]="nodeLink()" class="flex gap-1">
+          <a class="font-bold flex gap-1" [href]="nodeLink()">
             {{ nodeLink() }}
             <osf-icon iconClass="fa fa-external-link-alt" />
           </a>
@@ -25,12 +25,7 @@
         <h3>{{ 'preprints.preprintStepper.review.sections.metadata.authors' | translate }}</h3>
 
         <div class="flex flex-column gap-1 line-height-2 md:flex-row">
-          @for (contributor of bibliographicContributors(); track contributor.id) {
-            <div>
-              <a class="font-bold"> {{ contributor.fullName }}</a>
-              <span>{{ $last ? '' : ',' }}</span>
-            </div>
-          }
+          <osf-contributors-list [contributors]="bibliographicContributors()"></osf-contributors-list>
 
           @if (areContributorsLoading()) {
             <p-skeleton width="10rem" height="1.25rem" />
@@ -38,7 +33,6 @@
         </div>
       </section>
 
-      <!-- [RNi] TODO: Extract to separate component -->
       @if (preprintProvider()?.assertionsEnabled) {
         <section class="flex flex-column gap-2">
           <h3>{{ 'preprints.preprintStepper.review.sections.authorAssertions.conflictOfInterest' | translate }}</h3>

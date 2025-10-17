@@ -29,13 +29,14 @@ import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, 
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { InfoIconComponent } from '@osf/shared/components';
-import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants';
+import { FILE_COUNT_ATTACHMENTS_LIMIT, INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants';
 import { FieldType } from '@osf/shared/enums';
 import { CustomValidators, findChangedFields } from '@osf/shared/helpers';
-import { FilePayloadJsonApi, OsfFile, PageSchema } from '@osf/shared/models';
+import { FileModel, FilePayloadJsonApi, PageSchema } from '@osf/shared/models';
+import { ToastService } from '@osf/shared/services';
 
 import { FilesMapper } from '../../mappers/files.mapper';
-import { RegistriesSelectors, SetUpdatedFields, UpdateStepValidation } from '../../store';
+import { RegistriesSelectors, SetUpdatedFields, UpdateStepState } from '../../store';
 import { FilesControlComponent } from '../files-control/files-control.component';
 
 @Component({
@@ -77,13 +78,14 @@ export class CustomStepComponent implements OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
+  private toastService = inject(ToastService);
 
   readonly pages = select(RegistriesSelectors.getPagesSchema);
   readonly FieldType = FieldType;
-  readonly stepsValidation = select(RegistriesSelectors.getStepsValidation);
+  readonly stepsState = select(RegistriesSelectors.getStepsState);
 
   readonly actions = createDispatchMap({
-    updateStepValidation: UpdateStepValidation,
+    updateStepState: UpdateStepState,
     setUpdatedFields: SetUpdatedFields,
   });
 
@@ -96,7 +98,7 @@ export class CustomStepComponent implements OnDestroy {
 
   stepForm!: FormGroup;
 
-  attachedFiles: Record<string, Partial<OsfFile & { file_id: string }>[]> = {};
+  attachedFiles: Record<string, Partial<FileModel & { file_id: string }>[]> = {};
 
   constructor() {
     this.route.params.pipe(takeUntilDestroyed()).subscribe((params) => {
@@ -116,7 +118,7 @@ export class CustomStepComponent implements OnDestroy {
     this.stepForm = this.fb.group({});
     let questions = page.questions || [];
     if (page.sections?.length) {
-      questions = page.sections.flatMap((section) => section.questions || []);
+      questions = [...questions, ...page.sections.flatMap((section) => section.questions ?? [])];
     }
     questions?.forEach((q) => {
       const controlName = q.responseKey as string;
@@ -157,7 +159,7 @@ export class CustomStepComponent implements OnDestroy {
 
       this.stepForm.addControl(controlName, control);
     });
-    if (this.stepsValidation()?.[this.step()]?.invalid) {
+    if (this.stepsState()?.[this.step()]?.invalid) {
       this.stepForm.markAllAsTouched();
     }
   }
@@ -174,13 +176,18 @@ export class CustomStepComponent implements OnDestroy {
     if (this.stepForm) {
       this.updateDraft();
       this.stepForm.markAllAsTouched();
-      this.actions.updateStepValidation(this.step(), this.stepForm.invalid);
+      this.actions.updateStepState(this.step(), this.stepForm.invalid, true);
     }
   }
 
-  onAttachFile(file: OsfFile, questionKey: string): void {
+  onAttachFile(file: FileModel, questionKey: string): void {
     this.attachedFiles[questionKey] = this.attachedFiles[questionKey] || [];
+
     if (!this.attachedFiles[questionKey].some((f) => f.file_id === file.id)) {
+      if (this.attachedFiles[questionKey].length >= FILE_COUNT_ATTACHMENTS_LIMIT) {
+        this.toastService.showWarn('shared.files.limitText');
+        return;
+      }
       this.attachedFiles[questionKey].push(file);
       this.stepForm.patchValue({
         [questionKey]: [...(this.attachedFiles[questionKey] || []), file],
@@ -194,7 +201,7 @@ export class CustomStepComponent implements OnDestroy {
               const { name: _, ...payload } = f;
               return payload;
             }
-            return FilesMapper.toFilePayload(f as OsfFile);
+            return FilesMapper.toFilePayload(f as FileModel);
           }),
         ],
         ...otherFormValues,
@@ -202,7 +209,7 @@ export class CustomStepComponent implements OnDestroy {
     }
   }
 
-  removeFromAttachedFiles(file: Partial<OsfFile & { file_id: string }>, questionKey: string): void {
+  removeFromAttachedFiles(file: Partial<FileModel & { file_id: string }>, questionKey: string): void {
     if (this.attachedFiles[questionKey]) {
       this.attachedFiles[questionKey] = this.attachedFiles[questionKey].filter((f) => f.file_id !== file.file_id);
       this.stepForm.patchValue({
@@ -215,7 +222,7 @@ export class CustomStepComponent implements OnDestroy {
               const { name: _, ...payload } = f;
               return payload;
             }
-            return FilesMapper.toFilePayload(f as OsfFile);
+            return FilesMapper.toFilePayload(f as FileModel);
           }),
         ],
       });

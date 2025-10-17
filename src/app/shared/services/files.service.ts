@@ -1,49 +1,49 @@
-import { Observable, of, switchMap, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable, of, switchMap } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { HttpEvent } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
+import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { MapFileCustomMetadata, MapFileRevision } from '@osf/features/files/mappers';
 import {
-  CreateFolderResponse,
   FileCustomMetadata,
-  FileTargetResponse,
   GetCustomMetadataResponse,
   GetFileMetadataResponse,
   GetFileRevisionsResponse,
-  GetFileTargetResponse,
   GetShortInfoResponse,
   OsfFileCustomMetadata,
   OsfFileRevision,
   PatchFileMetadata,
 } from '@osf/features/files/models';
 import {
-  AddFileResponse,
+  AddonGetResponseJsonApi,
+  AddonModel,
   ApiData,
   ConfiguredAddonGetResponseJsonApi,
   ConfiguredAddonModel,
   ContributorModel,
-  ContributorResponse,
-  FileLinks,
-  FileRelationshipsResponse,
-  FileResponse,
+  ContributorsResponseJsonApi,
+  FileDetailsModel,
+  FileDetailsResponseJsonApi,
+  FileFolderDataJsonApi,
+  FileFolderModel,
+  FileFolderResponseJsonApi,
+  FileFoldersResponseJsonApi,
+  FileModel,
+  FileResponseJsonApi,
+  FilesResponseJsonApi,
+  FileVersionModel,
   FileVersionsResponseJsonApi,
-  GetFileResponse,
-  GetFilesResponse,
-  GetFilesResponseWithMeta,
   JsonApiResponse,
-  MetaAnonymousJsonApi,
-  OsfFile,
-  OsfFileVersion,
+  MetaJsonApi,
 } from '@shared/models';
-import { JsonApiService } from '@shared/services';
-import { ToastService } from '@shared/services/toast.service';
 
-import { ResourceType } from '../enums';
-import { AddonMapper, ContributorsMapper, MapFile, MapFiles, MapFileVersions } from '../mappers';
+import { FileKind } from '../enums';
+import { AddonMapper, ContributorsMapper, FilesMapper } from '../mappers';
 
-import { environment } from 'src/environments/environment';
+import { JsonApiService } from './json-api.service';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root',
@@ -51,21 +51,24 @@ import { environment } from 'src/environments/environment';
 export class FilesService {
   readonly jsonApiService = inject(JsonApiService);
   readonly toastService = inject(ToastService);
-  private readonly apiUrl = `${environment.apiDomainUrl}/v2`;
+  private readonly environment = inject(ENVIRONMENT);
+
+  get apiUrl() {
+    return `${this.environment.apiDomainUrl}/v2`;
+  }
+
+  get addonsApiUrl() {
+    return this.environment.addonsApiUrl;
+  }
 
   filesFields = 'name,guid,kind,extra,size,path,materialized_path,date_modified,parent_folder,files';
-
-  private readonly urlMap = new Map<ResourceType, string>([
-    [ResourceType.Project, 'nodes'],
-    [ResourceType.Registration, 'registrations'],
-  ]);
 
   getFiles(
     filesLink: string,
     search: string,
     sort: string,
     page = 1
-  ): Observable<{ files: OsfFile[]; meta?: MetaAnonymousJsonApi }> {
+  ): Observable<{ files: FileModel[]; meta?: MetaJsonApi }> {
     const params: Record<string, string> = {
       sort: sort,
       page: page.toString(),
@@ -74,32 +77,35 @@ export class FilesService {
     };
 
     return this.jsonApiService
-      .get<GetFilesResponseWithMeta>(`${filesLink}`, params)
-      .pipe(map((response) => ({ files: MapFiles(response.data), meta: response.meta })));
+      .get<FilesResponseJsonApi>(`${filesLink}`, params)
+      .pipe(map((response) => ({ files: FilesMapper.getFiles(response.data), meta: response.meta })));
   }
 
-  getFolders(folderLink: string): Observable<{ files: OsfFile[]; meta?: MetaAnonymousJsonApi }> {
+  getFolders(folderLink: string): Observable<{ files: FileFolderModel[]; meta?: MetaJsonApi }> {
     return this.jsonApiService
-      .get<GetFilesResponseWithMeta>(`${folderLink}`)
-      .pipe(map((response) => ({ files: MapFiles(response.data), meta: response.meta })));
+      .get<FileFoldersResponseJsonApi>(`${folderLink}`)
+      .pipe(map((response) => ({ files: FilesMapper.getFileFolders(response.data), meta: response.meta })));
   }
 
-  getFilesWithoutFiltering(filesLink: string): Observable<OsfFile[]> {
-    return this.jsonApiService.get<GetFilesResponse>(filesLink).pipe(map((response) => MapFiles(response.data)));
+  getFilesWithoutFiltering(filesLink: string): Observable<FileModel[]> {
+    return this.jsonApiService
+      .get<FilesResponseJsonApi>(filesLink)
+      .pipe(map((response) => FilesMapper.getFiles(response.data)));
   }
 
-  uploadFile(file: File, uploadLink: string): Observable<HttpEvent<JsonApiResponse<AddFileResponse, null>>> {
-    const params = {
-      kind: 'file',
-      name: file.name,
-    };
+  uploadFile(
+    file: File,
+    uploadLink: string,
+    isUpdate = false
+  ): Observable<HttpEvent<JsonApiResponse<FileModel, null>>> {
+    const params = isUpdate
+      ? undefined
+      : {
+          kind: FileKind.File,
+          name: file.name,
+        };
 
-    return this.jsonApiService.putFile<AddFileResponse>(uploadLink, file, params).pipe(
-      catchError((error) => {
-        this.toastService.showError(error.error.message);
-        return throwError(() => error);
-      })
-    );
+    return this.jsonApiService.putFile(uploadLink, file, params);
   }
 
   updateFileContent(file: File, link: string) {
@@ -110,36 +116,21 @@ export class FilesService {
     return this.jsonApiService.put(link, file, params);
   }
 
-  createFolder(link: string, folderName: string): Observable<OsfFile> {
-    return this.jsonApiService.put<CreateFolderResponse>(link, null, { name: folderName }).pipe(
-      map((response) => MapFile(response)),
-      catchError((error) => {
-        this.toastService.showError(error.error.message);
-        return throwError(() => error);
-      })
-    );
+  createFolder(link: string, folderName: string) {
+    return this.jsonApiService.put<FileFolderDataJsonApi>(link, null, { name: folderName });
   }
 
-  getFolder(link: string): Observable<OsfFile> {
-    return this.jsonApiService.get<GetFileResponse>(link).pipe(
-      map((response) => MapFile(response.data)),
-      catchError((error) => {
-        this.toastService.showError(error.error.message);
-        return throwError(() => error);
-      })
-    );
+  getFolder(link: string): Observable<FileFolderModel> {
+    return this.jsonApiService
+      .get<FileFolderResponseJsonApi>(link)
+      .pipe(map((response) => FilesMapper.getFileFolder(response.data)));
   }
 
   deleteEntry(link: string) {
-    return this.jsonApiService.delete(link).pipe(
-      catchError((error) => {
-        this.toastService.showError(error.error.message);
-        return throwError(() => error);
-      })
-    );
+    return this.jsonApiService.delete(link).pipe();
   }
 
-  renameEntry(link: string, name: string, conflict = ''): Observable<OsfFile> {
+  renameEntry(link: string, name: string, conflict = ''): Observable<FileModel> {
     const body = {
       action: 'rename',
       rename: name,
@@ -148,53 +139,46 @@ export class FilesService {
     return this.jsonApiService.post(link, body);
   }
 
-  moveFile(link: string, path: string, resourceId: string, provider: string, action: string): Observable<OsfFile> {
+  moveFile(link: string, path: string, resourceId: string, provider: string, action: string, replace?: boolean) {
     const body = {
       action: action,
       path: path,
       provider: provider,
       resource: resourceId,
+      conflict: replace ? 'replace' : undefined,
     };
 
-    return this.jsonApiService.post<GetFileResponse>(link, body).pipe(
-      map((response) => MapFile(response.data)),
-      catchError((error) => {
-        this.toastService.showError(error.error.message);
-        return throwError(() => error);
-      })
-    );
+    return this.jsonApiService.post<FileResponseJsonApi>(link, body);
   }
 
-  getFolderDownloadLink(storageLink: string, folderId: string, isRootFolder: boolean): string {
-    if (isRootFolder) {
-      return `${storageLink}?zip=`;
-    }
-    return `${storageLink}${folderId}/?zip=`;
+  getFolderDownloadLink(link: string): string {
+    const separator = link.includes('?') ? '&' : '?';
+    return `${link}${separator}zip=`;
   }
 
-  getFileTarget(fileGuid: string): Observable<OsfFile> {
+  getFileTarget(fileGuid: string): Observable<FileDetailsModel> {
     return this.jsonApiService
-      .get<GetFileTargetResponse>(`${this.apiUrl}/files/${fileGuid}/?embed=target`)
-      .pipe(map((response) => MapFile(response.data)));
+      .get<FileDetailsResponseJsonApi>(`${this.apiUrl}/files/${fileGuid}/?embed=target`)
+      .pipe(map((response) => FilesMapper.getFileDetails(response.data)));
   }
 
-  getFileGuid(id: string): Observable<OsfFile> {
+  getFileGuid(id: string): Observable<FileModel> {
     const params = {
       create_guid: 'true',
     };
 
     return this.jsonApiService
-      .get<GetFileResponse>(`${this.apiUrl}/files/${id}/`, params)
-      .pipe(map((response) => MapFile(response.data)));
+      .get<FileResponseJsonApi>(`${this.apiUrl}/files/${id}/`, params)
+      .pipe(map((response) => FilesMapper.getFile(response.data)));
   }
 
-  getFileById(fileGuid: string): Observable<OsfFile> {
+  getFileById(fileGuid: string): Observable<FileModel> {
     return this.jsonApiService
-      .get<GetFileResponse>(`${this.apiUrl}/files/${fileGuid}/`)
-      .pipe(map((response) => MapFile(response.data)));
+      .get<FileResponseJsonApi>(`${this.apiUrl}/files/${fileGuid}/`)
+      .pipe(map((response) => FilesMapper.getFile(response.data)));
   }
 
-  getFileVersions(fileGuid: string): Observable<OsfFileVersion[]> {
+  getFileVersions(fileGuid: string): Observable<FileVersionModel[]> {
     const params = {
       sort: '-id',
       'page[size]': 50,
@@ -202,7 +186,7 @@ export class FilesService {
 
     return this.jsonApiService
       .get<FileVersionsResponseJsonApi>(`${this.apiUrl}/files/${fileGuid}/versions/`, params)
-      .pipe(map((response) => MapFileVersions(response)));
+      .pipe(map((response) => FilesMapper.getFileVersions(response)));
   }
 
   getFileMetadata(fileGuid: string): Observable<OsfFileCustomMetadata> {
@@ -225,12 +209,10 @@ export class FilesService {
     );
   }
 
-  getResourceContributors(resourceId: string, resourceType: string): Observable<Partial<ContributorModel>[]> {
+  getResourceContributors(resourceId: string, resourceType: string): Observable<ContributorModel[]> {
     return this.jsonApiService
-      .get<
-        JsonApiResponse<ContributorResponse[], null>
-      >(`${this.apiUrl}/${resourceType}/${resourceId}/bibliographic_contributors/`)
-      .pipe(map((response) => ContributorsMapper.fromResponse(response.data)));
+      .get<ContributorsResponseJsonApi>(`${this.apiUrl}/${resourceType}/${resourceId}/bibliographic_contributors/`)
+      .pipe(map((response) => ContributorsMapper.getContributors(response.data)));
   }
 
   patchFileMetadata(data: PatchFileMetadata, fileGuid: string): Observable<OsfFileCustomMetadata> {
@@ -250,12 +232,15 @@ export class FilesService {
   }
 
   getFileRevisions(link: string): Observable<OsfFileRevision[]> {
+    const separator = link.includes('?') ? '&' : '?';
+    const urlWithRevisions = `${link}${separator}revisions=`;
+
     return this.jsonApiService
-      .get<GetFileRevisionsResponse>(`${link}?revisions=`)
+      .get<GetFileRevisionsResponse>(urlWithRevisions)
       .pipe(map((response) => MapFileRevision(response.data)));
   }
 
-  updateTags(tags: string[], fileGuid: string): Observable<OsfFile> {
+  updateTags(tags: string[], fileGuid: string): Observable<FileDetailsModel> {
     const payload = {
       data: {
         id: fileGuid,
@@ -268,10 +253,8 @@ export class FilesService {
     };
 
     return this.jsonApiService
-      .patch<
-        ApiData<FileResponse, FileTargetResponse, FileRelationshipsResponse, FileLinks>
-      >(`${this.apiUrl}/files/${fileGuid}/`, payload)
-      .pipe(map((response) => MapFile(response)));
+      .patch<FileDetailsResponseJsonApi>(`${this.apiUrl}/files/${fileGuid}/`, payload)
+      .pipe(map((response) => FilesMapper.getFileDetails(response.data)));
   }
 
   copyFileToAnotherLocation(moveLink: string, provider: string, resourceId: string) {
@@ -284,10 +267,8 @@ export class FilesService {
     };
 
     return this.jsonApiService
-      .post<
-        JsonApiResponse<ApiData<FileResponse, FileTargetResponse, FileRelationshipsResponse, FileLinks>, null>
-      >(moveLink, body)
-      .pipe(map((response) => MapFile(response.data)));
+      .post<FileResponseJsonApi>(moveLink, body)
+      .pipe(map((response) => FilesMapper.getFile(response.data)));
   }
 
   getResourceReferences(resourceUri: string): Observable<string> {
@@ -298,7 +279,7 @@ export class FilesService {
     return this.jsonApiService
       .get<
         JsonApiResponse<ApiData<null, null, null, { self: string }>[], null>
-      >(`${environment.addonsApiUrl}/resource-references`, params)
+      >(`${this.addonsApiUrl}/resource-references`, params)
       .pipe(map((response) => response.data?.[0]?.links?.self ?? ''));
   }
 
@@ -306,11 +287,18 @@ export class FilesService {
     return this.getResourceReferences(resourceUri).pipe(
       switchMap((referenceUrl: string) => {
         if (!referenceUrl) return of([]);
-
         return this.jsonApiService
           .get<JsonApiResponse<ConfiguredAddonGetResponseJsonApi[], null>>(`${referenceUrl}/configured_storage_addons`)
           .pipe(map((response) => response.data.map((item) => AddonMapper.fromConfiguredAddonResponse(item))));
       })
     );
+  }
+
+  getExternalStorageService(serviceId: string): Observable<AddonModel> {
+    return this.jsonApiService
+      .get<
+        JsonApiResponse<AddonGetResponseJsonApi, null>
+      >(`${this.addonsApiUrl}/configured-storage-addons/${serviceId}/external_storage_service/`)
+      .pipe(map((response) => AddonMapper.fromResponse(response.data)));
   }
 }

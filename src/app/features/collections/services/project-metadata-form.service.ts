@@ -5,7 +5,7 @@ import { ProjectMetadataFormControls } from '@osf/features/collections/enums';
 import { ProjectMetadataForm } from '@osf/features/collections/models';
 import { CustomValidators } from '@osf/shared/helpers';
 import { LicenseModel, ProjectMetadataUpdatePayload } from '@shared/models';
-import { Project } from '@shared/models/projects';
+import { ProjectModel } from '@shared/models/projects';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +29,6 @@ export class ProjectMetadataFormService {
       }),
       [ProjectMetadataFormControls.Tags]: new FormControl([], {
         nonNullable: true,
-        validators: [CustomValidators.requiredArrayValidator()],
       }),
       [ProjectMetadataFormControls.LicenseYear]: new FormControl(this.currentYear.getFullYear().toString(), {
         nonNullable: true,
@@ -55,7 +54,7 @@ export class ProjectMetadataFormService {
 
   populateFormFromProject(
     form: FormGroup<ProjectMetadataForm>,
-    project: Project,
+    project: ProjectModel,
     license: LicenseModel | null
   ): { tags: string[] } {
     const tags = project.tags || [];
@@ -73,7 +72,7 @@ export class ProjectMetadataFormService {
     return { tags };
   }
 
-  patchLicenseData(form: FormGroup<ProjectMetadataForm>, license: LicenseModel, project: Project): void {
+  patchLicenseData(form: FormGroup<ProjectMetadataForm>, license: LicenseModel, project: ProjectModel): void {
     form.patchValue({
       [ProjectMetadataFormControls.License]: license,
       [ProjectMetadataFormControls.LicenseYear]:
@@ -87,7 +86,7 @@ export class ProjectMetadataFormService {
     form.get(ProjectMetadataFormControls.Tags)?.markAsTouched();
   }
 
-  buildMetadataPayload(form: FormGroup<ProjectMetadataForm>, project: Project): ProjectMetadataUpdatePayload {
+  buildMetadataPayload(form: FormGroup<ProjectMetadataForm>, project: ProjectModel): ProjectMetadataUpdatePayload {
     const formValue = form.value;
 
     return {

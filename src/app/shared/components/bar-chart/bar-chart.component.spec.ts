@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TranslateServiceMock } from '@shared/mocks';
-
 import { BarChartComponent } from './bar-chart.component';
+
+import { OSFTestingModule } from '@testing/osf.testing.module';
 
 describe('BarChartComponent', () => {
   let component: BarChartComponent;
@@ -10,8 +10,7 @@ describe('BarChartComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BarChartComponent],
-      providers: [TranslateServiceMock],
+      imports: [BarChartComponent, OSFTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(BarChartComponent);
@@ -34,25 +33,21 @@ describe('BarChartComponent', () => {
     expect(component.showExpandedSection()).toBe(false);
   });
 
-  it('should return color from getColor method', () => {
-    const color1 = component.getColor(0);
-    const color2 = component.getColor(1);
-    const color3 = component.getColor(10);
+  it('should have access to PIE_CHART_PALETTE', () => {
+    expect(component.PIE_CHART_PALETTE).toBeDefined();
+    expect(Array.isArray(component.PIE_CHART_PALETTE)).toBe(true);
+  });
+
+  it('should return different colors from PIE_CHART_PALETTE for different indices', () => {
+    const color1 = component.PIE_CHART_PALETTE[0];
+    const color2 = component.PIE_CHART_PALETTE[1];
 
     expect(color1).toBeDefined();
     expect(color2).toBeDefined();
-    expect(color3).toBeDefined();
-    expect(typeof color1).toBe('string');
-  });
-
-  it('should return different colors for different indices', () => {
-    const color1 = component.getColor(0);
-    const color2 = component.getColor(1);
-
     expect(color1).not.toBe(color2);
   });
 
-  it('should initialize chart successfully', () => {
+  it('should initialize chart data and options on ngOnInit', () => {
     const mockGetPropertyValue = jest.fn((prop: string) => {
       const colors: Record<string, string> = {
         '--dark-blue-1': '#1a365d',
@@ -66,9 +61,11 @@ describe('BarChartComponent', () => {
       getPropertyValue: mockGetPropertyValue,
     } as any);
 
-    (component as any).initChart();
+    component.ngOnInit();
 
     expect(mockGetComputedStyle).toHaveBeenCalledWith(document.documentElement);
+    expect(component.data()).toBeDefined();
+    expect(component.options()).toBeDefined();
 
     mockGetComputedStyle.mockRestore();
   });

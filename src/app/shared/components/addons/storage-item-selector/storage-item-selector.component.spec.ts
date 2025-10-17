@@ -1,39 +1,50 @@
-import { provideStore } from '@ngxs/store';
+import { MockComponents, MockProvider } from 'ng-mocks';
 
 import { DialogService } from 'primeng/dynamicdialog';
 
-import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OperationNames } from '@osf/features/project/addons/enums';
+import { GoogleFilePickerComponent, SelectComponent } from '@shared/components';
 import { StorageItemSelectorComponent } from '@shared/components/addons';
-import { MOCK_STORE, TranslateServiceMock } from '@shared/mocks';
-import { StorageItemModel } from '@shared/models';
+import { OperationNames } from '@shared/enums';
+import { AddonsSelectors } from '@shared/stores';
+
+import { OSFTestingModule } from '@testing/osf.testing.module';
+import { DialogServiceMockBuilder } from '@testing/providers/dialog-provider.mock';
+import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('StorageItemSelectorComponent', () => {
   let component: StorageItemSelectorComponent;
   let fixture: ComponentFixture<StorageItemSelectorComponent>;
+  let mockDialogService: ReturnType<DialogServiceMockBuilder['build']>;
 
   beforeEach(async () => {
-    MOCK_STORE.selectSignal.mockImplementation((selector) => {
-      if (selector === 'getSelectedFolder') return () => signal(null);
-      if (selector === 'getOperationInvocationSubmitting') return () => signal(false);
-      if (selector === 'getCreatedOrUpdatedConfiguredAddonSubmitting') return () => signal(false);
-      return () => signal(null);
-    });
+    mockDialogService = DialogServiceMockBuilder.create().withOpenMock().build();
 
     await TestBed.configureTestingModule({
-      imports: [StorageItemSelectorComponent],
+      imports: [
+        StorageItemSelectorComponent,
+        OSFTestingModule,
+        ...MockComponents(GoogleFilePickerComponent, SelectComponent),
+      ],
       providers: [
-        TranslateServiceMock,
-        provideStore([]),
-        { provide: 'Store', useValue: MOCK_STORE },
-        {
-          provide: DialogService,
-          useValue: {
-            open: jest.fn(),
-          },
-        },
+        provideMockStore({
+          signals: [
+            {
+              selector: AddonsSelectors.getSelectedStorageItem,
+              value: null,
+            },
+            {
+              selector: AddonsSelectors.getOperationInvocationSubmitting,
+              value: false,
+            },
+            {
+              selector: AddonsSelectors.getCreatedOrUpdatedConfiguredAddonSubmitting,
+              value: false,
+            },
+          ],
+        }),
+        MockProvider(DialogService, mockDialogService),
       ],
     }).compileComponents();
 
@@ -74,19 +85,6 @@ describe('StorageItemSelectorComponent', () => {
     (component as any).handleSave();
 
     expect(saveSpy).toHaveBeenCalled();
-  });
-
-  it('should set selectedStorageItemId', () => {
-    const mockFolder: StorageItemModel = {
-      itemId: 'test-folder-id',
-      itemName: 'Test Folder',
-      itemType: 'folder',
-    } as StorageItemModel;
-
-    (component as any).selectedStorageItem.set(mockFolder);
-    (component as any).handleSave();
-
-    expect(component.selectedStorageItemId()).toBe('test-folder-id');
   });
 
   it('should emit cancelSelection event', () => {
