@@ -2,8 +2,9 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { Component, input } from '@angular/core';
 
-import { AddonCardComponent } from '@shared/components/addons';
-import { AddonModel, AuthorizedAccountModel, ConfiguredAddonModel } from '@shared/models';
+import { AddonCardModel, AddonModel, AuthorizedAccountModel, ConfiguredAddonModel } from '@shared/models';
+
+import { AddonCardComponent } from '../addon-card/addon-card.component';
 
 @Component({
   selector: 'osf-addon-card-list',
@@ -12,7 +13,7 @@ import { AddonModel, AuthorizedAccountModel, ConfiguredAddonModel } from '@share
   styleUrl: './addon-card-list.component.scss',
 })
 export class AddonCardListComponent {
-  cards = input<(AddonModel | AuthorizedAccountModel | ConfiguredAddonModel)[]>([]);
-  cardButtonLabel = input<string>('');
-  showDangerButton = input<boolean>(false);
+  cards = input<(AddonModel | AuthorizedAccountModel | ConfiguredAddonModel | AddonCardModel)[]>([]);
+  isConnected = input<boolean>(false);
+  hasAdminAccess = input<boolean>(false);
 }

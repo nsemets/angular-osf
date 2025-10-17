@@ -1,0 +1,108 @@
+<h2>{{ 'preprints.preprintStepper.metadata.title' | translate }}</h2>
+
+<div class="mt-4">
+  <osf-preprints-contributors [preprintId]="createdPreprint()?.id" />
+</div>
+
+<p-card class="w-full card" styleClass="mt-4">
+  <h2 class="mb-2">{{ 'shared.license.title' | translate }}</h2>
+
+  <p class="mb-1">{{ 'shared.license.description' | translate }}</p>
+  <p>
+    {{ 'shared.license.helpText' | translate }}
+    <a class="font-bold" href="https://help.osf.io/article/148-licensing" target="_blank" rel="noopener noreferrer">
+      {{ 'common.links.helpGuide' | translate }}.
+    </a>
+  </p>
+  <osf-license
+    [licenses]="licenses()"
+    [selectedLicenseId]="createdPreprint()?.licenseId"
+    [selectedLicenseOptions]="createdPreprint()?.licenseOptions"
+    [fullWidthSelect]="true"
+    (createLicense)="createLicense($event)"
+    (selectLicense)="selectLicense($event)"
+  />
+</p-card>
+
+<div class="mt-4">
+  <osf-preprints-affiliated-institutions [preprint]="createdPreprint()" [provider]="provider()" />
+</div>
+
+<div class="mt-4">
+  <osf-preprints-subjects [control]="metadataForm.controls['subjects']" [preprintId]="createdPreprint()?.id" />
+</div>
+
+<p-card styleClass="mt-4" class="card">
+  <div>
+    <h2>{{ 'preprints.preprintStepper.metadata.tagsTitle' | translate }}</h2>
+
+    <div class="mt-4">
+      <osf-tags-input [tags]="createdPreprint()?.tags || []" (tagsChanged)="updateTags($event)" />
+    </div>
+  </div>
+</p-card>
+
+<p-card styleClass="mt-4" class="card">
+  <div>
+    <h2>{{ 'preprints.preprintStepper.metadata.publicationDoi.title' | translate }}</h2>
+
+    <input id="doi" class="mt-4" pInputText type="text" [formControl]="metadataForm.controls['doi']" />
+    @let doiControl = metadataForm.controls['doi'];
+    @if (doiControl.errors?.['pattern'] && (doiControl.touched || doiControl.dirty)) {
+      <p-message class="simple-variant flex mt-1" severity="error" variant="simple" size="small"
+        >{{ 'preprints.preprintStepper.metadata.publicationDoi.patternError' | translate }}
+      </p-message>
+    }
+  </div>
+</p-card>
+
+<p-card styleClass="mt-4" class="card">
+  <h2>{{ 'preprints.preprintStepper.metadata.publicationDateTitle' | translate }}</h2>
+
+  <p-datePicker
+    inputId="publicationDate"
+    class="w-full"
+    styleClass="mt-4"
+    [formControl]="metadataForm.controls['originalPublicationDate']"
+    [iconDisplay]="'input'"
+    [showIcon]="true"
+    [showOnFocus]="true"
+    dateFormat="yy-mm-dd"
+    [maxDate]="today"
+  >
+    <ng-template #inputicon>
+      <osf-icon class="fa fa-calendar" />
+    </ng-template>
+  </p-datePicker>
+</p-card>
+
+<p-card styleClass="mt-4" class="card">
+  <h2 class="mb-4">{{ 'preprints.preprintStepper.metadata.publicationCitationTitle' | translate }}</h2>
+
+  <osf-text-input
+    [control]="metadataForm.controls['customPublicationCitation']"
+    [maxLength]="inputLimits.citation.maxLength"
+  />
+</p-card>
+
+<section class="mt-6 flex flex-row justify-content-end align-items-center gap-2">
+  <p-button
+    class="w-6 md:w-6rem"
+    styleClass="w-full"
+    [label]="'common.buttons.back' | translate"
+    severity="info"
+    (click)="backButtonClicked()"
+  />
+  <p-button
+    class="w-6 md:w-9rem"
+    styleClass="w-full"
+    [label]="'common.buttons.next' | translate"
+    [pTooltip]="
+      metadataForm.invalid ? ('preprints.preprintStepper.common.validation.fillRequiredFields' | translate) : ''
+    "
+    tooltipPosition="top"
+    [disabled]="metadataForm.invalid || !createdPreprint()?.licenseId"
+    [loading]="isUpdatingPreprint()"
+    (click)="nextButtonClicked()"
+  />
+</section>

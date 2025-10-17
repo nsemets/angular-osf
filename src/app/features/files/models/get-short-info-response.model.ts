@@ -1,5 +1,4 @@
-import { ApiData, JsonApiResponse } from '@shared/models';
-import { IdentifiersJsonApiResponse } from '@shared/models/identifiers/identifier-json-api.model';
+import { ApiData, IdentifiersResponseJsonApi, JsonApiResponse } from '@shared/models';
 
 export type GetShortInfoResponse = JsonApiResponse<
   ApiData<
@@ -9,7 +8,7 @@ export type GetShortInfoResponse = JsonApiResponse<
       date_created: string;
       date_modified: string;
     },
-    { identifiers: IdentifiersJsonApiResponse },
+    { identifiers: IdentifiersResponseJsonApi },
     null,
     null
   >,

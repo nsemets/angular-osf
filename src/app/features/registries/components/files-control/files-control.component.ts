@@ -1,11 +1,9 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { TreeDragDropService } from 'primeng/api';
 import { Button } from 'primeng/button';
-import { Dialog } from 'primeng/dialog';
-import { DialogService } from 'primeng/dynamicdialog';
 
 import { EMPTY, filter, finalize, Observable, shareReplay, take } from 'rxjs';
 
@@ -26,9 +24,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { HelpScoutService } from '@core/services/help-scout.service';
 import { CreateFolderDialogComponent } from '@osf/features/files/components';
-import { FilesTreeComponent, LoadingSpinnerComponent } from '@osf/shared/components';
-import { FilesTreeActions, OsfFile } from '@osf/shared/models';
-import { FilesService } from '@osf/shared/services';
+import { FilesTreeComponent, FileUploadDialogComponent, LoadingSpinnerComponent } from '@osf/shared/components';
+import { FILE_SIZE_LIMIT } from '@osf/shared/constants';
+import { ClearFileDirective } from '@osf/shared/directives';
+import { FileFolderModel, FileModel } from '@osf/shared/models';
+import { CustomDialogService, FilesService, ToastService } from '@osf/shared/services';
 
 import {
   CreateFolder,
@@ -37,7 +37,6 @@ import {
   RegistriesSelectors,
   SetCurrentFolder,
   SetFilesIsLoading,
-  SetMoveFileCurrentFolder,
 } from '../../store';
 
 @Component({
@@ -46,28 +45,29 @@ import {
     FilesTreeComponent,
     Button,
     LoadingSpinnerComponent,
-    Dialog,
+    FileUploadDialogComponent,
     FormsModule,
     ReactiveFormsModule,
     TranslatePipe,
+    ClearFileDirective,
   ],
   templateUrl: './files-control.component.html',
   styleUrl: './files-control.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DialogService, TreeDragDropService],
+  providers: [TreeDragDropService],
 })
 export class FilesControlComponent implements OnDestroy {
-  attachedFiles = input.required<Partial<OsfFile>[]>();
-  attachFile = output<OsfFile>();
+  attachedFiles = input.required<Partial<FileModel>[]>();
+  attachFile = output<FileModel>();
   filesLink = input.required<string>();
   projectId = input.required<string>();
   provider = input.required<string>();
   filesViewOnly = input<boolean>(false);
 
   private readonly filesService = inject(FilesService);
-  private readonly dialogService = inject(DialogService);
-  private readonly translateService = inject(TranslateService);
+  private readonly customDialogService = inject(CustomDialogService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly toastService = inject(ToastService);
   private readonly helpScoutService = inject(HelpScoutService);
 
   readonly files = select(RegistriesSelectors.getFiles);
@@ -80,7 +80,6 @@ export class FilesControlComponent implements OnDestroy {
   readonly dataLoaded = signal(false);
 
   fileIsUploading = signal(false);
-  isFolderOpening = signal(false);
 
   private readonly actions = createDispatchMap({
     createFolder: CreateFolder,
@@ -88,15 +87,7 @@ export class FilesControlComponent implements OnDestroy {
     setFilesIsLoading: SetFilesIsLoading,
     setCurrentFolder: SetCurrentFolder,
     getRootFolders: GetRootFolders,
-    setMoveFileCurrentFolder: SetMoveFileCurrentFolder,
   });
-
-  readonly filesTreeActions: FilesTreeActions = {
-    setCurrentFolder: (folder) => this.actions.setCurrentFolder(folder),
-    setFilesIsLoading: (isLoading) => this.actions.setFilesIsLoading(isLoading),
-    getFiles: (filesLink) => this.actions.getFiles(filesLink),
-    setMoveFileCurrentFolder: (folder) => this.actions.setMoveFileCurrentFolder(folder),
-  };
 
   constructor() {
     this.helpScoutService.setResourceType('files');
@@ -111,14 +102,26 @@ export class FilesControlComponent implements OnDestroy {
           });
       }
     });
+
+    effect(() => {
+      const currentFolder = this.currentFolder();
+      if (currentFolder) {
+        this.updateFilesList().subscribe();
+      }
+    });
   }
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
+
+    if (file && file.size >= FILE_SIZE_LIMIT) {
+      this.toastService.showWarn('shared.files.limitText');
+      return;
+    }
     if (!file) return;
 
-    this.uploadFile(file);
+    this.uploadFiles(file);
   }
 
   createFolder(): void {
@@ -127,14 +130,10 @@ export class FilesControlComponent implements OnDestroy {
 
     if (!newFolderLink) return;
 
-    this.dialogService
+    this.customDialogService
       .open(CreateFolderDialogComponent, {
+        header: 'files.dialogs.createFolder.title',
         width: '448px',
-        focusOnShow: false,
-        header: this.translateService.instant('files.dialogs.createFolder.title'),
-        closeOnEscape: true,
-        modal: true,
-        closable: true,
       })
       .onClose.pipe(filter((folderName: string) => !!folderName))
       .subscribe((folderName) => {
@@ -152,15 +151,17 @@ export class FilesControlComponent implements OnDestroy {
 
   updateFilesList(): Observable<void> {
     const currentFolder = this.currentFolder();
-    if (currentFolder?.relationships.filesLink) {
-      this.filesTreeActions.setFilesIsLoading?.(true);
-      return this.actions.getFiles(currentFolder?.relationships.filesLink).pipe(take(1));
+    if (currentFolder?.links.filesLink) {
+      this.actions.setFilesIsLoading(true);
+      return this.actions.getFiles(currentFolder?.links.filesLink, 1).pipe(take(1));
     }
 
     return EMPTY;
   }
 
-  uploadFile(file: File): void {
+  uploadFiles(files: File | File[]): void {
+    const fileArray = Array.isArray(files) ? files : [files];
+    const file = fileArray[0];
     const currentFolder = this.currentFolder();
     const uploadLink = currentFolder?.links.upload;
     if (!uploadLink) return;
@@ -199,13 +200,17 @@ export class FilesControlComponent implements OnDestroy {
       });
   }
 
-  selectFile(file: OsfFile): void {
+  selectFile(file: FileModel): void {
     if (this.filesViewOnly()) return;
     this.attachFile.emit(file);
   }
 
-  folderIsOpening(value: boolean): void {
-    this.isFolderOpening.set(value);
+  onLoadFiles(event: { link: string; page: number }) {
+    this.actions.getFiles(event.link, event.page);
+  }
+
+  setCurrentFolder(folder: FileFolderModel) {
+    this.actions.setCurrentFolder(folder);
   }
 
   ngOnDestroy(): void {

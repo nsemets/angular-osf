@@ -24,7 +24,7 @@ import { ActivatedRoute } from '@angular/router';
 import {
   AuthorAssertionsStepComponent,
   FileStepComponent,
-  MetadataStepComponent,
+  PreprintsMetadataStepComponent,
   ReviewStepComponent,
   SupplementsStepComponent,
   TitleAndAbstractStepComponent,
@@ -50,7 +50,7 @@ import { BrandService } from '@shared/services';
     StepperComponent,
     TitleAndAbstractStepComponent,
     FileStepComponent,
-    MetadataStepComponent,
+    PreprintsMetadataStepComponent,
     AuthorAssertionsStepComponent,
     SupplementsStepComponent,
     AuthorAssertionsStepComponent,
@@ -145,14 +145,25 @@ export class SubmitPreprintStepperComponent implements OnInit, OnDestroy, CanDea
     }
 
     this.currentStep.set(step);
+    this.scrollToTop();
   }
 
   moveToNextStep() {
     this.currentStep.set(this.submitPreprintSteps()[this.currentStep()?.index + 1]);
+    this.scrollToTop();
   }
 
   moveToPreviousStep() {
     this.currentStep.set(this.submitPreprintSteps()[this.currentStep()?.index - 1]);
+    this.scrollToTop();
+  }
+
+  scrollToTop() {
+    const contentWrapper = document.querySelector('.content-wrapper') as HTMLElement;
+
+    if (contentWrapper) {
+      contentWrapper.scrollTo({ top: 0, behavior: 'instant' });
+    }
   }
 
   @HostListener('window:beforeunload', ['$event'])

@@ -7,9 +7,8 @@ import { Card } from 'primeng/card';
 
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 
-import { FilterChipsComponent, ReusableFilterComponent } from '@shared/components';
-import { StringOrNull } from '@shared/helpers';
-import { DiscoverableFilter } from '@shared/models';
+import { FilterChipsComponent, SearchFiltersComponent } from '@shared/components';
+import { DiscoverableFilter, FilterOption } from '@shared/models';
 import {
   ClearFilterSearchResults,
   FetchResources,
@@ -19,12 +18,12 @@ import {
   LoadFilterOptionsWithSearch,
   LoadMoreFilterOptions,
   SetDefaultFilterValue,
-  UpdateFilterValue,
+  UpdateSelectedFilterOption,
 } from '@shared/stores/global-search';
 
 @Component({
   selector: 'osf-institution-resource-table-filters',
-  imports: [Button, Card, FilterChipsComponent, TranslatePipe, ReusableFilterComponent],
+  imports: [Button, Card, FilterChipsComponent, TranslatePipe, SearchFiltersComponent],
   templateUrl: './filters-section.component.html',
   styleUrl: './filters-section.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,7 +34,7 @@ export class FiltersSectionComponent {
     loadFilterOptionsAndSetValues: LoadFilterOptionsAndSetValues,
     loadFilterOptionsWithSearch: LoadFilterOptionsWithSearch,
     loadMoreFilterOptions: LoadMoreFilterOptions,
-    updateFilterValue: UpdateFilterValue,
+    updateSelectedFilterOption: UpdateSelectedFilterOption,
     clearFilterSearchResults: ClearFilterSearchResults,
     setDefaultFilterValue: SetDefaultFilterValue,
     fetchResources: FetchResources,
@@ -43,13 +42,12 @@ export class FiltersSectionComponent {
 
   filtersVisible = model<boolean>();
   filters = select(GlobalSearchSelectors.getFilters);
-  filterValues = select(GlobalSearchSelectors.getFilterValues);
+  selectedFilterOptions = select(GlobalSearchSelectors.getSelectedOptions);
   filterSearchCache = select(GlobalSearchSelectors.getFilterSearchCache);
-  filterOptionsCache = select(GlobalSearchSelectors.getFilterOptionsCache);
   areResourcesLoading = select(GlobalSearchSelectors.getResourcesLoading);
 
-  onFilterChanged(event: { filterType: string; value: StringOrNull }): void {
-    this.actions.updateFilterValue(event.filterType, event.value);
+  onSelectedFilterOptionsChanged(event: { filter: DiscoverableFilter; filterOption: FilterOption[] }): void {
+    this.actions.updateSelectedFilterOption(event.filter.key, event.filterOption);
     this.actions.fetchResources();
   }
 
@@ -57,20 +55,23 @@ export class FiltersSectionComponent {
     this.actions.loadFilterOptions(filter.key);
   }
 
-  onLoadMoreFilterOptions(event: { filterType: string; filter: DiscoverableFilter }): void {
-    this.actions.loadMoreFilterOptions(event.filterType);
+  onLoadMoreFilterOptions(filter: DiscoverableFilter): void {
+    this.actions.loadMoreFilterOptions(filter.key);
   }
 
-  onFilterSearchChanged(event: { filterType: string; searchText: string; filter: DiscoverableFilter }): void {
+  onSearchFilterOptions(event: { searchText: string; filter: DiscoverableFilter }): void {
     if (event.searchText.trim()) {
-      this.actions.loadFilterOptionsWithSearch(event.filterType, event.searchText);
+      this.actions.loadFilterOptionsWithSearch(event.filter.key, event.searchText);
     } else {
-      this.actions.clearFilterSearchResults(event.filterType);
+      this.actions.clearFilterSearchResults(event.filter.key);
     }
   }
 
-  onFilterChipRemoved(filterKey: string): void {
-    this.actions.updateFilterValue(filterKey, null);
+  onFilterChipRemoved(event: { filterKey: string; optionRemoved: FilterOption }): void {
+    const updatedOptions = this.selectedFilterOptions()[event.filterKey].filter(
+      (option) => option.value === event.optionRemoved.value
+    );
+    this.actions.updateSelectedFilterOption(event.filterKey, updatedOptions);
     this.actions.fetchResources();
   }
 }

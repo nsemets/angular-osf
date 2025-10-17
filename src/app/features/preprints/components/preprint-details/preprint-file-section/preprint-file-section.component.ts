@@ -7,8 +7,8 @@ import { Menu } from 'primeng/menu';
 import { Skeleton } from 'primeng/skeleton';
 
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input } from '@angular/core';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { ProviderReviewsWorkflow } from '@osf/features/preprints/enums';
@@ -29,6 +29,7 @@ export class PreprintFileSectionComponent {
   private readonly sanitizer = inject(DomSanitizer);
   private readonly datePipe = inject(DatePipe);
   private readonly translateService = inject(TranslateService);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly dataciteService = inject(DataciteService);
 
   providerReviewsWorkflow = input.required<ProviderReviewsWorkflow | null>();
@@ -36,6 +37,7 @@ export class PreprintFileSectionComponent {
   isMedium = toSignal(inject(IS_MEDIUM));
   isLarge = toSignal(inject(IS_LARGE));
 
+  preprint = select(PreprintSelectors.getPreprint);
   file = select(PreprintSelectors.getPreprintFile);
   preprint$ = toObservable(select(PreprintSelectors.getPreprint));
   isFileLoading = select(PreprintSelectors.isPreprintFileLoading);
@@ -51,17 +53,17 @@ export class PreprintFileSectionComponent {
   areFileVersionsLoading = select(PreprintSelectors.arePreprintFileVersionsLoading);
 
   logDownload() {
-    this.dataciteService.logIdentifiableDownload(this.preprint$).subscribe();
+    this.dataciteService.logIdentifiableDownload(this.preprint$).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
   }
 
   versionMenuItems = computed(() => {
     const fileVersions = this.fileVersions();
     if (!fileVersions.length) return [];
 
-    return fileVersions.map((version, index) => ({
+    return fileVersions.map((version) => ({
       label: this.translateService.instant('preprints.details.file.downloadVersion', {
-        version: ++index,
-        date: this.datePipe.transform(version.dateCreated, 'mm/dd/yyyy hh:mm:ss'),
+        version: version.id,
+        date: this.datePipe.transform(version.dateCreated, 'MM/dd/yyyy hh:mm:ss'),
       }),
       url: version.downloadLink,
       command: () => this.logDownload(),
@@ -70,7 +72,6 @@ export class PreprintFileSectionComponent {
 
   dateLabel = computed(() => {
     const reviewsWorkflow = this.providerReviewsWorkflow();
-    if (!reviewsWorkflow) return '';
 
     return reviewsWorkflow === ProviderReviewsWorkflow.PreModeration
       ? 'preprints.details.file.submitted'

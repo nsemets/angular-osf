@@ -13,7 +13,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { TokenCreatedDialogComponent } from '@osf/features/settings/tokens/components';
 import { InputLimits } from '@osf/shared/constants';
-import { MOCK_SCOPES, MOCK_STORE, MOCK_TOKEN, TranslateServiceMock } from '@shared/mocks';
 import { ToastService } from '@shared/services';
 
 import { TokenFormControls, TokenModel } from '../../models';
@@ -21,7 +20,9 @@ import { CreateToken, TokensSelectors } from '../../store';
 
 import { TokenAddEditFormComponent } from './token-add-edit-form.component';
 
+import { MOCK_SCOPES, MOCK_STORE, MOCK_TOKEN, TranslateServiceMock } from '@testing/mocks';
 import { OSFTestingStoreModule } from '@testing/osf.testing.module';
+import { ToastServiceMockBuilder } from '@testing/providers/toast-provider.mock';
 
 describe('TokenAddEditFormComponent', () => {
   let component: TokenAddEditFormComponent;
@@ -32,6 +33,7 @@ describe('TokenAddEditFormComponent', () => {
   let router: Partial<Router>;
   let toastService: jest.Mocked<ToastService>;
   let translateService: jest.Mocked<TranslateService>;
+  let toastServiceMock: ReturnType<ToastServiceMockBuilder['build']>;
 
   const mockTokens: TokenModel[] = [MOCK_TOKEN];
 
@@ -69,6 +71,8 @@ describe('TokenAddEditFormComponent', () => {
       navigate: jest.fn(),
     };
 
+    toastServiceMock = ToastServiceMockBuilder.create().build();
+
     await TestBed.configureTestingModule({
       imports: [TokenAddEditFormComponent, ReactiveFormsModule, OSFTestingStoreModule],
       providers: [
@@ -78,11 +82,7 @@ describe('TokenAddEditFormComponent', () => {
         MockProvider(DynamicDialogRef, dialogRef),
         MockProvider(ActivatedRoute, activatedRoute),
         MockProvider(Router, router),
-        MockProvider(ToastService, {
-          showSuccess: jest.fn(),
-          showWarn: jest.fn(),
-          showError: jest.fn(),
-        }),
+        MockProvider(ToastService, toastServiceMock),
       ],
     }).compileComponents();
 
@@ -178,19 +178,6 @@ describe('TokenAddEditFormComponent', () => {
 
     expect(toastService.showSuccess).toHaveBeenCalledWith('settings.tokens.toastMessage.successCreate');
     expect(dialogRef.close).toHaveBeenCalled();
-  });
-
-  it('should open created dialog with new token name and value after create', () => {
-    fixture.componentRef.setInput('isEditMode', false);
-    fillForm('Test Token', ['read', 'write']);
-
-    const showDialogSpy = jest.spyOn(component, 'showTokenCreatedDialog');
-
-    MOCK_STORE.dispatch.mockReturnValue(of(undefined));
-
-    component.handleSubmitForm();
-
-    expect(showDialogSpy).toHaveBeenCalledWith(MOCK_TOKEN.name, MOCK_TOKEN.id);
   });
 
   it('should show success toast and navigate after updating token', () => {

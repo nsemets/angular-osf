@@ -5,10 +5,13 @@ import { throwError } from 'rxjs';
 import * as Sentry from '@sentry/angular';
 
 export function handleSectionError<T>(ctx: StateContext<T>, section: keyof T, error: Error) {
-  // Report error to Sentry
-  Sentry.captureException(error);
+  Sentry.captureException(error, {
+    tags: {
+      'state.section': section.toString(),
+      feature: `state error section: ${section.toString()}`,
+    },
+  });
 
-  // Patch the state to update loading/submitting flags and set the error message
   ctx.patchState({
     [section]: {
       ...ctx.getState()[section],
@@ -17,6 +20,6 @@ export function handleSectionError<T>(ctx: StateContext<T>, section: keyof T, er
       error: error.message,
     },
   } as Partial<T>);
-  // Rethrow the error as an observable
+
   return throwError(() => error);
 }

@@ -16,7 +16,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { SubmissionReviewStatus } from '@osf/features/moderation/enums';
-import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants';
+import { INPUT_VALIDATION_MESSAGES, InputLimits } from '@osf/shared/constants';
 import {
   ModerationDecisionFormControls,
   RegistrationReviewStates,
@@ -68,6 +68,7 @@ export class RegistryMakeDecisionComponent {
   RevisionReviewStates = RevisionReviewStates;
   RegistrationReviewStates = RegistrationReviewStates;
 
+  decisionCommentLimit = InputLimits.decisionComment.maxLength;
   readonly INPUT_VALIDATION_MESSAGES = INPUT_VALIDATION_MESSAGES;
 
   get isPendingModeration(): boolean {
@@ -76,6 +77,10 @@ export class RegistryMakeDecisionComponent {
 
   get isPendingReview(): boolean {
     return this.registry.reviewsState === RegistrationReviewStates.Pending;
+  }
+
+  get isPendingWithdrawal(): boolean {
+    return this.registry.reviewsState === RegistrationReviewStates.PendingWithdraw;
   }
 
   get canWithdraw(): boolean {
@@ -90,6 +95,24 @@ export class RegistryMakeDecisionComponent {
       (this.requestForm.controls[ModerationDecisionFormControls.Comment].touched ||
         this.requestForm.controls[ModerationDecisionFormControls.Comment].dirty)
     );
+  }
+
+  get acceptValue(): string {
+    if (this.isPendingReview) {
+      return ReviewActionTrigger.AcceptSubmission;
+    } else if (this.isPendingWithdrawal) {
+      return ReviewActionTrigger.AcceptWithdrawal;
+    }
+    return SchemaResponseActionTrigger.AcceptRevision;
+  }
+
+  get rejectValue(): string {
+    if (this.isPendingReview) {
+      return ReviewActionTrigger.RejectSubmission;
+    } else if (this.isPendingWithdrawal) {
+      return ReviewActionTrigger.RejectWithdrawal;
+    }
+    return SchemaResponseActionTrigger.RejectRevision;
   }
 
   constructor() {
@@ -122,6 +145,7 @@ export class RegistryMakeDecisionComponent {
     return (
       action === ReviewActionTrigger.RejectSubmission ||
       action === SchemaResponseActionTrigger.RejectRevision ||
+      action === ReviewActionTrigger.RejectWithdrawal ||
       action === ReviewActionTrigger.ForceWithdraw
     );
   }
@@ -142,7 +166,7 @@ export class RegistryMakeDecisionComponent {
   private initForm(): void {
     this.requestForm = this.fb.group({
       [ModerationDecisionFormControls.Action]: new FormControl('', [Validators.required]),
-      [ModerationDecisionFormControls.Comment]: new FormControl(''),
+      [ModerationDecisionFormControls.Comment]: new FormControl('', [Validators.maxLength(this.decisionCommentLimit)]),
     });
   }
 }

@@ -1,0 +1,28 @@
+<div class="layout" [class.layout-desktop]="isWeb()" [class.layout-tablet]="!isWeb()">
+  @if (isWeb()) {
+    <osf-sidenav></osf-sidenav>
+  }
+
+  <div class="content-wrapper" osfScrollTopOnRouteChange>
+    @if (isWeb()) {
+      <osf-banner-component></osf-banner-component>
+      <osf-header></osf-header>
+    } @else {
+      <osf-topnav></osf-topnav>
+      @if (isMedium()) {
+        <osf-breadcrumb></osf-breadcrumb>
+      }
+      <osf-banner-component></osf-banner-component>
+    }
+
+    <router-outlet />
+
+    <osf-footer></osf-footer>
+  </div>
+</div>
+
+<p-confirm-dialog
+  id="dialog"
+  styleClass="w-full md:w-6 xl:w-5"
+  [header]="'common.accessibility.confirmation' | translate"
+/>

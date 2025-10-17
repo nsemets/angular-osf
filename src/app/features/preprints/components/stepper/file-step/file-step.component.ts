@@ -4,12 +4,11 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
-import { DialogService } from 'primeng/dynamicdialog';
 import { Select, SelectChangeEvent } from 'primeng/select';
 import { Skeleton } from 'primeng/skeleton';
 import { Tooltip } from 'primeng/tooltip';
 
-import { debounceTime, distinctUntilChanged, Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged, EMPTY, switchMap } from 'rxjs';
 
 import { NgClass, TitleCasePipe } from '@angular/common';
 import {
@@ -32,17 +31,18 @@ import {
   CopyFileFromProject,
   FetchAvailableProjects,
   FetchPreprintFilesLinks,
-  FetchProjectFiles,
+  FetchPreprintPrimaryFile,
   FetchProjectFilesByLink,
   PreprintStepperSelectors,
   ReuploadFile,
   SetCurrentFolder,
+  SetProjectRootFolder,
   SetSelectedPreprintFileSource,
   UploadFile,
 } from '@osf/features/preprints/store/preprint-stepper';
+import { FileFolderModel, FileModel } from '@osf/shared/models';
 import { FilesTreeComponent, IconComponent } from '@shared/components';
 import { StringOrNull } from '@shared/helpers';
-import { FilesTreeActions, OsfFile } from '@shared/models';
 import { CustomConfirmationService, ToastService } from '@shared/services';
 
 @Component({
@@ -62,7 +62,6 @@ import { CustomConfirmationService, ToastService } from '@shared/services';
   ],
   templateUrl: './file-step.component.html',
   styleUrl: './file-step.component.scss',
-  providers: [DialogService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileStepComponent implements OnInit {
@@ -73,8 +72,9 @@ export class FileStepComponent implements OnInit {
     getPreprintFilesLinks: FetchPreprintFilesLinks,
     uploadFile: UploadFile,
     reuploadFile: ReuploadFile,
+    fetchPreprintFile: FetchPreprintPrimaryFile,
     getAvailableProjects: FetchAvailableProjects,
-    getFilesForSelectedProject: FetchProjectFiles,
+    setProjectRootFolder: SetProjectRootFolder,
     getProjectFilesByLink: FetchProjectFilesByLink,
     copyFileFromProject: CopyFileFromProject,
     setCurrentFolder: SetCurrentFolder,
@@ -88,38 +88,40 @@ export class FileStepComponent implements OnInit {
   providerId = select(PreprintStepperSelectors.getSelectedProviderId);
   selectedFileSource = select(PreprintStepperSelectors.getSelectedFileSource);
   fileUploadLink = select(PreprintStepperSelectors.getUploadLink);
-  preprintFiles = select(PreprintStepperSelectors.getPreprintFiles);
-  arePreprintFilesLoading = select(PreprintStepperSelectors.arePreprintFilesLoading);
+
+  preprintFile = select(PreprintStepperSelectors.getPreprintFile);
+  isPreprintFileLoading = select(PreprintStepperSelectors.isPreprintFilesLoading);
+
   availableProjects = select(PreprintStepperSelectors.getAvailableProjects);
   areAvailableProjectsLoading = select(PreprintStepperSelectors.areAvailableProjectsLoading);
+
   projectFiles = select(PreprintStepperSelectors.getProjectFiles);
   areProjectFilesLoading = select(PreprintStepperSelectors.areProjectFilesLoading);
+
   currentFolder = select(PreprintStepperSelectors.getCurrentFolder);
+  isCurrentFolderLoading = select(PreprintStepperSelectors.isCurrentFolderLoading);
   selectedProjectId = signal<StringOrNull>(null);
 
   versionFileMode = signal<boolean>(false);
 
-  projectNameControl = new FormControl<StringOrNull>(null);
+  preprintHasPrimaryFile = computed(() => !!this.preprint()?.primaryFileId);
 
-  filesTreeActions: FilesTreeActions = {
-    setCurrentFolder: (folder: OsfFile | null): Observable<void> => {
-      return this.actions.setCurrentFolder(folder);
-    },
-    getFiles: (filesLink: string): Observable<void> => {
-      return this.actions.getProjectFilesByLink(filesLink);
-    },
-  };
+  cancelSourceOptionButtonVisible = computed(
+    () => !this.preprintFile() && this.selectedFileSource() !== PreprintFileSource.None && !this.isPreprintFileLoading()
+  );
+
+  projectNameControl = new FormControl<StringOrNull>(null);
 
   nextClicked = output<void>();
   backClicked = output<void>();
 
-  isFileSourceSelected = computed(() => {
-    return this.selectedFileSource() !== PreprintFileSource.None;
-  });
+  isFileSourceSelected = computed(() => this.selectedFileSource() !== PreprintFileSource.None);
 
   ngOnInit() {
     this.actions.getPreprintFilesLinks();
-
+    if (this.preprintHasPrimaryFile() && !this.preprintFile()) {
+      this.actions.fetchPreprintFile();
+    }
     this.projectNameControl.valueChanges
       .pipe(debounceTime(500), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe((projectNameOrId) => {
@@ -159,9 +161,17 @@ export class FileStepComponent implements OnInit {
 
     if (this.versionFileMode()) {
       this.versionFileMode.set(false);
-      this.actions.reuploadFile(file);
+      this.actions.reuploadFile(file).subscribe({
+        next: () => {
+          this.actions.fetchPreprintFile();
+        },
+      });
     } else {
-      this.actions.uploadFile(file);
+      this.actions.uploadFile(file).subscribe({
+        next: () => {
+          this.actions.fetchPreprintFile();
+        },
+      });
     }
   }
 
@@ -171,11 +181,27 @@ export class FileStepComponent implements OnInit {
     }
 
     this.selectedProjectId.set(event.value);
-    this.actions.getFilesForSelectedProject(event.value);
+    this.actions
+      .setProjectRootFolder(event.value)
+      .pipe(
+        switchMap(() => {
+          const filesLink = this.currentFolder()?.links.filesLink;
+          if (filesLink) {
+            return this.actions.getProjectFilesByLink(filesLink);
+          } else {
+            return EMPTY;
+          }
+        })
+      )
+      .subscribe();
   }
 
-  selectProjectFile(file: OsfFile) {
-    this.actions.copyFileFromProject(file);
+  selectProjectFile(file: FileModel) {
+    this.actions.copyFileFromProject(file).subscribe({
+      next: () => {
+        this.actions.fetchPreprintFile();
+      },
+    });
   }
 
   versionFile() {
@@ -188,5 +214,21 @@ export class FileStepComponent implements OnInit {
       },
       onReject: () => null,
     });
+  }
+
+  cancelButtonClicked() {
+    if (this.preprintFile()) {
+      return;
+    }
+
+    this.actions.setSelectedFileSource(PreprintFileSource.None);
+  }
+
+  setCurrentFolder(folder: FileFolderModel) {
+    if (this.currentFolder()?.id === folder.id) {
+      return;
+    }
+    this.actions.setCurrentFolder(folder);
+    this.actions.getProjectFilesByLink(folder.links.filesLink);
   }
 }

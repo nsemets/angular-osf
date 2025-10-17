@@ -31,4 +31,13 @@ export const InputLimits = {
   code: {
     maxLength: 6,
   },
+  title: {
+    minLength: 2,
+    maxLength: 512,
+  },
+  decisionComment: {
+    maxLength: 10000,
+  },
 };
+
+export const forbiddenFileNameCharacters = /[()<>~!@$&*#%^:;,"'\\|/?]/;

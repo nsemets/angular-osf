@@ -25,7 +25,10 @@ export class GetAuthorizedStorageAddons {
 export class GetAuthorizedStorageOauthToken {
   static readonly type = '[Addons] Get Authorized Storage Oauth Token';
 
-  constructor(public accountId: string) {}
+  constructor(
+    public accountId: string,
+    public addonType: string
+  ) {}
 }
 
 export class GetAuthorizedCitationAddons {
@@ -128,6 +131,19 @@ export class CreateAddonOperationInvocation {
   static readonly type = '[Addons] Create Addon Operation Invocation';
 
   constructor(public payload: OperationInvocationRequestJsonApi) {}
+}
+
+export class CreateCitationAddonOperationInvocation {
+  static readonly type = '[Addons] Create Citation Addon Operation Invocation';
+
+  constructor(
+    public payload: OperationInvocationRequestJsonApi,
+    public addonId: string
+  ) {}
+}
+
+export class ClearAuthorizedAddons {
+  static readonly type = '[Addons] Clear Authorized Addons';
 }
 
 export class ClearConfiguredAddons {

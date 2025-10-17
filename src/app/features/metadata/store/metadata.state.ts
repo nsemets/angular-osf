@@ -6,7 +6,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { handleSectionError } from '@osf/shared/helpers';
 
-import { CedarMetadataRecord, CedarMetadataRecordJsonApi, Metadata } from '../models';
+import { CedarMetadataRecord, CedarMetadataRecordJsonApi, MetadataModel } from '../models';
 import { MetadataService } from '../services';
 
 import {
@@ -48,7 +48,7 @@ export class MetadataState {
       tap((resource) => {
         ctx.patchState({
           metadata: {
-            data: resource as Metadata,
+            data: resource as MetadataModel,
             isLoading: false,
             error: null,
           },
@@ -178,7 +178,7 @@ export class MetadataState {
         error: null,
       },
     });
-    return this.metadataService.getMetadataCedarRecords(action.resourceId, action.resourceType).pipe(
+    return this.metadataService.getMetadataCedarRecords(action.resourceId, action.resourceType, action.url).pipe(
       tap((response: CedarMetadataRecordJsonApi) => {
         ctx.patchState({
           cedarRecords: {

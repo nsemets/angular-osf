@@ -39,6 +39,7 @@ export class CollectionsMainContentComponent {
   isWeb = toSignal(inject(IS_WEB));
   selectedSort = select(CollectionsSelectors.getSortBy);
   collectionSubmissions = select(CollectionsSelectors.getCollectionSubmissionsSearchResult);
+  totalSubmissions = select(CollectionsSelectors.getTotalSubmissions);
   isCollectionSubmissionsLoading = select(CollectionsSelectors.getCollectionSubmissionsLoading);
 
   isFiltersOpen = signal(false);
@@ -48,22 +49,16 @@ export class CollectionsMainContentComponent {
   isCollectionProviderLoading = select(CollectionsSelectors.getCollectionProviderLoading);
   isCollectionDetailsLoading = select(CollectionsSelectors.getCollectionDetailsLoading);
 
-  isCollectionLoading = computed(() => {
-    return this.isCollectionProviderLoading() || this.isCollectionDetailsLoading();
-  });
+  isCollectionLoading = computed(() => this.isCollectionProviderLoading() || this.isCollectionDetailsLoading());
 
   hasAnySelectedFilters = computed(() => {
     const currentFilters = this.selectedFilters();
-    const hasSelectedFiltersOptions = Object.values(currentFilters).some((value) => {
-      return value.length;
-    });
+    const hasSelectedFiltersOptions = Object.values(currentFilters).some((value) => value.length);
 
     return hasSelectedFiltersOptions;
   });
 
-  actions = createDispatchMap({
-    setSortBy: SetSortBy,
-  });
+  actions = createDispatchMap({ setSortBy: SetSortBy });
 
   openFilters(): void {
     this.isFiltersOpen.set(!this.isFiltersOpen());

@@ -29,13 +29,13 @@ export class PreprintStepperSelectors {
   }
 
   @Selector([PreprintStepperState])
-  static getPreprintFiles(state: PreprintStepperStateModel) {
-    return state.preprintFiles.data;
+  static getPreprintFile(state: PreprintStepperStateModel) {
+    return state.preprintFile.data;
   }
 
   @Selector([PreprintStepperState])
-  static arePreprintFilesLoading(state: PreprintStepperStateModel) {
-    return state.preprintFiles.isLoading;
+  static isPreprintFilesLoading(state: PreprintStepperStateModel) {
+    return state.preprintFile.isLoading;
   }
 
   @Selector([PreprintStepperState])
@@ -85,6 +85,16 @@ export class PreprintStepperSelectors {
 
   @Selector([PreprintStepperState])
   static getCurrentFolder(state: PreprintStepperStateModel) {
-    return state.currentFolder;
+    return state.currentFolder.data;
+  }
+
+  @Selector([PreprintStepperState])
+  static isCurrentFolderLoading(state: PreprintStepperStateModel) {
+    return state.currentFolder.isLoading;
+  }
+
+  @Selector([PreprintStepperState])
+  static getInstitutionsChanged(state: PreprintStepperStateModel) {
+    return state.institutionsChanged;
   }
 }

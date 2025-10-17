@@ -3,26 +3,30 @@ import { map } from 'rxjs/operators';
 
 import { inject, Injectable } from '@angular/core';
 
-import { DuplicatesMapper } from '@shared/mappers';
-import { ResponseJsonApi } from '@shared/models';
-import { JsonApiService } from '@shared/services/json-api.service';
+import { ENVIRONMENT } from '@core/provider/environment.provider';
 
-import { DuplicateJsonApi, DuplicatesWithTotal } from 'src/app/shared/models/duplicates';
-import { environment } from 'src/environments/environment';
+import { BaseNodeMapper } from '../mappers';
+import { BaseNodeDataJsonApi, NodeModel, PaginatedData, ResponseJsonApi } from '../models';
+
+import { JsonApiService } from './json-api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DuplicatesService {
   private jsonApiService = inject(JsonApiService);
-  private apiUrl = `${environment.apiDomainUrl}/v2`;
+  private readonly environment = inject(ENVIRONMENT);
+
+  get apiUrl() {
+    return `${this.environment.apiDomainUrl}/v2`;
+  }
 
   fetchAllDuplicates(
     resourceId: string,
     resourceType: string,
     pageNumber?: number,
     pageSize?: number
-  ): Observable<DuplicatesWithTotal> {
+  ): Observable<PaginatedData<NodeModel[]>> {
     const params: Record<string, unknown> = {
       embed: 'bibliographic_contributors',
       'fields[users]': 'family_name,full_name,given_name,middle_name',
@@ -37,7 +41,7 @@ export class DuplicatesService {
     }
 
     return this.jsonApiService
-      .get<ResponseJsonApi<DuplicateJsonApi[]>>(`${this.apiUrl}/${resourceType}/${resourceId}/forks/`, params)
-      .pipe(map((res) => DuplicatesMapper.fromDuplicatesJsonApiResponse(res)));
+      .get<ResponseJsonApi<BaseNodeDataJsonApi[]>>(`${this.apiUrl}/${resourceType}/${resourceId}/forks/`, params)
+      .pipe(map((res) => BaseNodeMapper.getNodesWithEmbedsAndTotalData(res)));
   }
 }

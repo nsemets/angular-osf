@@ -4,15 +4,12 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { TreeDragDropService } from 'primeng/api';
 import { Button } from 'primeng/button';
-import { Dialog } from 'primeng/dialog';
-import { DialogService } from 'primeng/dynamicdialog';
-import { FloatLabel } from 'primeng/floatlabel';
 import { Select } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 
-import { debounceTime, distinctUntilChanged, EMPTY, filter, finalize, Observable, skip, switchMap, take } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, filter, finalize, forkJoin, of, switchMap, take } from 'rxjs';
 
-import { HttpEventType } from '@angular/common/http';
+import { HttpEventType, HttpResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -25,54 +22,59 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { ENVIRONMENT } from '@core/provider/environment.provider';
 import {
   CreateFolder,
   DeleteEntry,
   GetConfiguredStorageAddons,
   GetFiles,
   GetRootFolders,
+  GetStorageSupportedFeatures,
   RenameEntry,
   ResetState,
   SetCurrentFolder,
   SetCurrentProvider,
-  SetFilesIsLoading,
-  SetMoveFileCurrentFolder,
+  SetMoveDialogCurrentFolder,
   SetSearch,
   SetSort,
 } from '@osf/features/files/store';
-import { ALL_SORT_OPTIONS } from '@osf/shared/constants';
-import { ResourceType } from '@osf/shared/enums';
-import { hasViewOnlyParam, IS_MEDIUM } from '@osf/shared/helpers';
+import { ALL_SORT_OPTIONS, FILE_SIZE_LIMIT } from '@osf/shared/constants';
+import { FileMenuType, ResourceType, SupportedFeature, UserPermissions } from '@osf/shared/enums';
+import { getViewOnlyParamFromUrl, hasViewOnlyParam } from '@osf/shared/helpers';
+import { CurrentResourceSelectors, GetResourceDetails } from '@osf/shared/stores';
 import {
   FilesTreeComponent,
+  FileUploadDialogComponent,
   FormSelectComponent,
+  GoogleFilePickerComponent,
   LoadingSpinnerComponent,
   SearchInputComponent,
   SubHeaderComponent,
   ViewOnlyLinkMessageComponent,
 } from '@shared/components';
-import { GoogleFilePickerComponent } from '@shared/components/addons/storage-item-selector/google-file-picker/google-file-picker.component';
-import { ConfiguredAddonModel, FileLabelModel, FilesTreeActions, OsfFile, StorageItemModel } from '@shared/models';
-import { FilesService } from '@shared/services';
+import { ConfiguredAddonModel, FileFolderModel, FileLabelModel, FileModel, StorageItem } from '@shared/models';
+import { CustomConfirmationService, CustomDialogService, FilesService, ToastService } from '@shared/services';
 import { DataciteService } from '@shared/services/datacite/datacite.service';
 
-import { CreateFolderDialogComponent, FileBrowserInfoComponent } from '../../components';
+import {
+  CreateFolderDialogComponent,
+  FileBrowserInfoComponent,
+  FilesSelectionActionsComponent,
+  MoveFileDialogComponent,
+} from '../../components';
 import { FileProvider } from '../../constants';
 import { FilesSelectors } from '../../store';
-
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'osf-files',
   imports: [
     Button,
-    Dialog,
+    FileUploadDialogComponent,
     FilesTreeComponent,
-    FloatLabel,
     FormSelectComponent,
     FormsModule,
     GoogleFilePickerComponent,
@@ -84,11 +86,13 @@ import { environment } from 'src/environments/environment';
     TableModule,
     TranslatePipe,
     ViewOnlyLinkMessageComponent,
+    GoogleFilePickerComponent,
+    FilesSelectionActionsComponent,
   ],
   templateUrl: './files.component.html',
   styleUrl: './files.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DialogService, TreeDragDropService],
+  providers: [TreeDragDropService],
 })
 export class FilesComponent {
   googleFilePickerComponent = viewChild(GoogleFilePickerComponent);
@@ -98,45 +102,51 @@ export class FilesComponent {
   private readonly filesService = inject(FilesService);
   private readonly activeRoute = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly dialogService = inject(DialogService);
+  private readonly customDialogService = inject(CustomDialogService);
   private readonly translateService = inject(TranslateService);
   private readonly router = inject(Router);
+  private readonly dataciteService = inject(DataciteService);
+  private readonly environment = inject(ENVIRONMENT);
+  private readonly customConfirmationService = inject(CustomConfirmationService);
+  private readonly toastService = inject(ToastService);
+
+  private readonly webUrl = this.environment.webUrl;
+  private readonly apiDomainUrl = this.environment.apiDomainUrl;
+
   private readonly actions = createDispatchMap({
     createFolder: CreateFolder,
-    deleteEntry: DeleteEntry,
     getFiles: GetFiles,
+    deleteEntry: DeleteEntry,
     renameEntry: RenameEntry,
     setCurrentFolder: SetCurrentFolder,
-    setFilesIsLoading: SetFilesIsLoading,
-    setMoveFileCurrentFolder: SetMoveFileCurrentFolder,
+    setMoveDialogCurrentFolder: SetMoveDialogCurrentFolder,
     setSearch: SetSearch,
     setSort: SetSort,
     getRootFolders: GetRootFolders,
     getConfiguredStorageAddons: GetConfiguredStorageAddons,
     setCurrentProvider: SetCurrentProvider,
     resetState: ResetState,
+    getResourceDetails: GetResourceDetails,
+    getStorageSupportedFeatures: GetStorageSupportedFeatures,
   });
 
-  isMedium = toSignal(inject(IS_MEDIUM));
-
-  readonly hasViewOnly = computed(() => {
-    return hasViewOnlyParam(this.router);
-  });
   readonly files = select(FilesSelectors.getFiles);
   readonly filesTotalCount = select(FilesSelectors.getFilesTotalCount);
   readonly isFilesLoading = select(FilesSelectors.isFilesLoading);
   readonly currentFolder = select(FilesSelectors.getCurrentFolder);
   readonly provider = select(FilesSelectors.getProvider);
-
-  readonly isGoogleDrive = signal<boolean>(false);
-  readonly accountId = signal<string>('');
-  readonly selectedRootFolder = signal<StorageItemModel>({});
-  readonly resourceId = signal<string>('');
+  readonly resourceDetails = select(CurrentResourceSelectors.getResourceDetails);
+  readonly resourceMetadata = select(CurrentResourceSelectors.getCurrentResource);
   readonly rootFolders = select(FilesSelectors.getRootFolders);
   readonly isRootFoldersLoading = select(FilesSelectors.isRootFoldersLoading);
   readonly configuredStorageAddons = select(FilesSelectors.getConfiguredStorageAddons);
   readonly isConfiguredStorageAddonsLoading = select(FilesSelectors.isConfiguredStorageAddonsLoading);
-  readonly dataciteService = inject(DataciteService);
+  readonly supportedFeatures = select(FilesSelectors.getStorageSupportedFeatures);
+
+  readonly isGoogleDrive = signal<boolean>(false);
+  readonly accountId = signal<string>('');
+  readonly selectedRootFolder = signal<StorageItem>({});
+  readonly resourceId = signal<string>('');
 
   readonly progress = signal(0);
   readonly fileName = signal('');
@@ -144,20 +154,44 @@ export class FilesComponent {
   readonly searchControl = new FormControl<string>('');
   readonly sortControl = new FormControl(ALL_SORT_OPTIONS[0].value);
 
+  foldersStack = [] as FileFolderModel[];
+
   currentRootFolder = model<FileLabelModel | null>(null);
 
   fileIsUploading = signal(false);
-  isFolderOpening = signal(false);
+  isMoveDialogOpened = signal(false);
 
   sortOptions = ALL_SORT_OPTIONS;
 
-  storageProvider = FileProvider.OsfStorage;
   pageNumber = signal(1);
+
+  allowRevisions = false;
+  filesSelection: FileModel[] = [];
 
   private readonly urlMap = new Map<ResourceType, string>([
     [ResourceType.Project, 'nodes'],
     [ResourceType.Registration, 'registrations'],
   ]);
+
+  readonly allowedMenuActions = computed(() => {
+    const provider = this.provider();
+    const supportedFeatures = this.supportedFeatures()[provider] || [];
+    const hasViewOnly = this.hasViewOnly();
+    const isRegistration = this.resourceType() === ResourceType.Registration;
+    const menuMap = this.mapMenuActions(supportedFeatures);
+
+    const result: Record<FileMenuType, boolean> = { ...menuMap };
+
+    if (hasViewOnly || isRegistration || !this.canEdit()) {
+      const allowed = new Set<FileMenuType>([FileMenuType.Download, FileMenuType.Embed, FileMenuType.Share]);
+
+      (Object.keys(result) as FileMenuType[]).forEach((key) => {
+        result[key] = allowed.has(key) && menuMap[key];
+      });
+    }
+
+    return result;
+  });
 
   readonly rootFoldersOptions = computed(() => {
     const rootFolders = this.rootFolders();
@@ -175,28 +209,36 @@ export class FilesComponent {
     this.activeRoute.parent?.parent?.snapshot.data['resourceType'] || ResourceType.Project
   );
 
-  readonly isViewOnly = computed(() => {
-    return this.resourceType() === ResourceType.Registration;
+  readonly hasViewOnly = computed(() => hasViewOnlyParam(this.router));
+
+  readonly canEdit = computed(() => {
+    const details = this.resourceDetails();
+    const hasAdminOrWrite = details.currentUserPermissions?.some(
+      (permission) => permission === UserPermissions.Admin || permission === UserPermissions.Write
+    );
+
+    return hasAdminOrWrite;
   });
 
-  readonly isViewOnlyDownloadable = computed(() => {
-    return this.resourceType() === ResourceType.Registration;
-  });
+  readonly isRegistration = computed(() => this.resourceType() === ResourceType.Registration);
 
-  readonly filesTreeActions: FilesTreeActions = {
-    setCurrentFolder: (folder) => this.actions.setCurrentFolder(folder),
-    setFilesIsLoading: (isLoading) => this.actions.setFilesIsLoading(isLoading),
-    getFiles: (filesLink) => this.actions.getFiles(filesLink, this.pageNumber()),
-    deleteEntry: (resourceId, link) => this.actions.deleteEntry(resourceId, link),
-    renameEntry: (resourceId, link, newName) => this.actions.renameEntry(resourceId, link, newName),
-    setMoveFileCurrentFolder: (folder) => this.actions.setMoveFileCurrentFolder(folder),
-  };
+  canUploadFiles = computed(
+    () =>
+      this.supportedFeatures()[this.provider()]?.includes(SupportedFeature.AddUpdateFiles) &&
+      this.canEdit() &&
+      !this.isRegistration()
+  );
+
+  isButtonDisabled = computed(() => this.fileIsUploading() || this.isFilesLoading());
+
+  isGoogleDriveButtonDisabled = computed(
+    () => this.isButtonDisabled() || (this.googleFilePickerComponent()?.isGFPDisabled() ?? false)
+  );
 
   constructor() {
     this.activeRoute.parent?.parent?.parent?.params.subscribe((params) => {
       if (params['id']) {
         this.resourceId.set(params['id']);
-        this.filesTreeActions.setFilesIsLoading?.(true);
       }
     });
 
@@ -204,8 +246,10 @@ export class FilesComponent {
       const resourceId = this.resourceId();
 
       const resourcePath = this.urlMap.get(this.resourceType()!);
-      const folderLink = `${environment.apiDomainUrl}/v2/${resourcePath}/${resourceId}/files/`;
-      const iriLink = `${environment.webUrl}/${resourceId}`;
+      const folderLink = `${this.apiDomainUrl}/v2/${resourcePath}/${resourceId}/files/`;
+      const iriLink = `${this.webUrl}/${resourceId}`;
+
+      this.actions.getResourceDetails(resourceId, this.resourceType()!);
       this.actions.getRootFolders(folderLink);
       this.actions.getConfiguredStorageAddons(iriLink);
     });
@@ -213,7 +257,9 @@ export class FilesComponent {
     effect(() => {
       const rootFolders = this.rootFolders();
       if (rootFolders) {
-        const osfRootFolder = rootFolders.find((folder: OsfFile) => folder.provider === FileProvider.OsfStorage);
+        const osfRootFolder = rootFolders.find(
+          (folder: FileFolderModel) => folder.provider === FileProvider.OsfStorage
+        );
         if (osfRootFolder) {
           this.currentRootFolder.set({
             label: this.translateService.instant('files.storageLocation'),
@@ -227,12 +273,19 @@ export class FilesComponent {
       const currentRootFolder = this.currentRootFolder();
       if (currentRootFolder) {
         const provider = currentRootFolder.folder?.provider;
+        const storageId = currentRootFolder.folder?.id;
+        // [NM TODO] Check if other providers allow revisions
+        this.allowRevisions = provider === FileProvider.OsfStorage;
         this.isGoogleDrive.set(provider === FileProvider.GoogleDrive);
         if (this.isGoogleDrive()) {
           this.setGoogleAccountId();
         }
+        if (storageId) {
+          this.actions.getStorageSupportedFeatures(storageId, provider);
+        }
         this.actions.setCurrentProvider(provider ?? FileProvider.OsfStorage);
         this.actions.setCurrentFolder(currentRootFolder.folder);
+        this.filesSelection = [];
       }
     });
 
@@ -242,65 +295,223 @@ export class FilesComponent {
       }
     });
 
-    this.searchControl.valueChanges
-      .pipe(skip(1), takeUntilDestroyed(this.destroyRef), distinctUntilChanged(), debounceTime(500))
-      .subscribe((searchText) => {
-        this.actions.setSearch(searchText ?? '');
-        if (!this.isFolderOpening()) {
-          this.updateFilesList();
-        }
-      });
-
-    this.sortControl.valueChanges.pipe(skip(1), takeUntilDestroyed(this.destroyRef)).subscribe((sort) => {
-      this.actions.setSort(sort ?? '');
-      if (!this.isFolderOpening()) {
+    effect(() => {
+      const currentFolder = this.currentFolder();
+      if (currentFolder) {
+        this.pageNumber.set(1);
         this.updateFilesList();
       }
     });
 
-    effect(() => {
-      this.destroyRef.onDestroy(() => {
-        this.actions.resetState();
+    this.searchControl.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef), distinctUntilChanged(), debounceTime(500))
+      .subscribe((searchText) => {
+        this.actions.setSearch(searchText ?? '');
+
+        this.updateFilesList();
       });
+
+    this.sortControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((sort) => {
+      this.actions.setSort(sort ?? '');
+
+      this.updateFilesList();
+    });
+
+    this.destroyRef.onDestroy(() => {
+      this.actions.resetState();
     });
   }
 
-  isButtonDisabled(): boolean {
-    return this.fileIsUploading() || this.isFilesLoading();
+  onLoadFiles(event: { link: string; page: number }) {
+    this.actions.getFiles(event.link, event.page);
   }
 
-  uploadFile(file: File): void {
+  uploadFiles(files: File | File[]): void {
     const currentFolder = this.currentFolder();
     const uploadLink = currentFolder?.links.upload;
-
     if (!uploadLink) return;
 
-    this.fileName.set(file.name);
-    this.fileIsUploading.set(true);
+    const fileArray = Array.isArray(files) ? files : [files];
+    if (fileArray.length === 0) return;
 
-    this.filesService
-      .uploadFile(file, uploadLink)
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        finalize(() => {
-          this.fileIsUploading.set(false);
-          this.fileName.set('');
-          this.updateFilesList();
-        })
-      )
-      .subscribe((event) => {
-        if (event.type === HttpEventType.UploadProgress && event.total) {
-          this.progress.set(Math.round((event.loaded / event.total) * 100));
-        }
-      });
+    this.fileName.set(fileArray.length === 1 ? fileArray[0].name : `${fileArray.length} files`);
+    this.fileIsUploading.set(true);
+    this.progress.set(0);
+
+    let completedUploads = 0;
+    const totalFiles = fileArray.length;
+    const conflictFiles: { file: File; link: string }[] = [];
+
+    fileArray.forEach((file) => {
+      this.filesService
+        .uploadFile(file, uploadLink)
+        .pipe(
+          takeUntilDestroyed(this.destroyRef),
+          catchError((err) => {
+            const conflictLink = err.error?.data?.links?.upload;
+            if (err.status === 409 && conflictLink) {
+              if (this.allowRevisions) {
+                return this.filesService.uploadFile(file, conflictLink, true);
+              } else {
+                conflictFiles.push({ file, link: conflictLink });
+              }
+            }
+            return of(new HttpResponse());
+          })
+        )
+        .subscribe((event) => {
+          if (event.type === HttpEventType.UploadProgress && event.total) {
+            const progressPercentage = Math.round((event.loaded / event.total) * 100);
+            if (totalFiles === 1) {
+              this.progress.set(progressPercentage);
+            }
+          }
+
+          if (event.type === HttpEventType.Response) {
+            completedUploads++;
+
+            if (totalFiles > 1) {
+              const progressPercentage = Math.round((completedUploads / totalFiles) * 100);
+              this.progress.set(progressPercentage);
+            }
+
+            if (completedUploads === totalFiles) {
+              if (conflictFiles.length > 0) {
+                this.openReplaceFileDialog(conflictFiles);
+              } else {
+                this.completeUpload();
+              }
+            }
+          }
+        });
+    });
+  }
+
+  private openReplaceFileDialog(conflictFiles: { file: File; link: string }[]) {
+    this.customConfirmationService.confirmDelete({
+      headerKey: conflictFiles.length > 1 ? 'files.dialogs.replaceFile.multiple' : 'files.dialogs.replaceFile.single',
+      messageKey: 'files.dialogs.replaceFile.message',
+      messageParams: {
+        name: conflictFiles.map((c) => c.file.name).join(', '),
+      },
+      acceptLabelKey: 'common.buttons.replace',
+      onConfirm: () => {
+        const replaceRequests$ = conflictFiles.map(({ file, link }) =>
+          this.filesService.uploadFile(file, link, true).pipe(
+            takeUntilDestroyed(this.destroyRef),
+            catchError(() => of(null))
+          )
+        );
+
+        forkJoin(replaceRequests$).subscribe({
+          next: () => this.completeUpload(),
+        });
+      },
+    });
+  }
+
+  private completeUpload(): void {
+    this.fileIsUploading.set(false);
+    this.fileName.set('');
+    this.updateFilesList();
+  }
+
+  onFileTreeSelected(file: FileModel): void {
+    this.filesSelection = [...this.filesSelection, file];
+  }
+
+  onFileTreeUnselected(file: FileModel): void {
+    this.filesSelection = this.filesSelection.filter((f) => f.id !== file.id);
+  }
+
+  onClearSelection(): void {
+    this.filesSelection = [];
+  }
+
+  onDeleteSelected(): void {
+    if (!this.filesSelection.length) return;
+
+    this.customConfirmationService.confirmDelete({
+      headerKey: 'files.dialogs.deleteMultipleItems.title',
+      messageKey: 'files.dialogs.deleteMultipleItems.message',
+      messageParams: {
+        name: this.filesSelection.map((f) => f.name).join(', '),
+      },
+      acceptLabelKey: 'common.buttons.delete',
+      onConfirm: () => {
+        const deleteRequests$ = this.filesSelection.map((file) =>
+          this.actions.deleteEntry(file.links.delete).pipe(catchError(() => of(null)))
+        );
+
+        forkJoin(deleteRequests$)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe({
+            next: () => {
+              this.toastService.showSuccess('files.dialogs.deleteFile.success');
+              this.filesSelection = [];
+              this.updateFilesList();
+            },
+          });
+      },
+    });
+  }
+
+  onMoveSelected(): void {
+    this.moveFiles(this.filesSelection, 'move');
+  }
+
+  onCopySelected(): void {
+    this.moveFiles(this.filesSelection, 'copy');
   }
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-    if (!file) return;
+    const files = input.files;
 
-    this.uploadFile(file);
+    if (!files || files.length === 0) return;
+
+    for (const file of files) {
+      if (file.size >= FILE_SIZE_LIMIT) {
+        this.toastService.showWarn('shared.files.limitText');
+        return;
+      }
+    }
+
+    this.uploadFiles(Array.from(files));
+  }
+
+  moveFiles(files: FileModel[], action: string): void {
+    const currentFolder = this.currentFolder();
+    this.actions.setMoveDialogCurrentFolder(currentFolder);
+    this.isMoveDialogOpened.set(true);
+    this.customDialogService
+      .open(MoveFileDialogComponent, {
+        header: 'files.dialogs.moveFile.title',
+        width: '552px',
+        data: {
+          files: files,
+          resourceId: this.resourceId(),
+          action: action,
+          storageProvider: this.provider(),
+          foldersStack: this.foldersStack,
+          initialFolder: structuredClone(this.currentFolder()),
+        },
+      })
+      .onClose.subscribe((result) => {
+        if (result) {
+          this.filesSelection = [];
+        }
+        this.isMoveDialogOpened.set(false);
+        this.resetProvider();
+      });
+  }
+
+  resetProvider() {
+    const currentRootFolder = this.currentRootFolder();
+    const provider = currentRootFolder?.folder?.provider;
+    if (provider) {
+      this.actions.setCurrentProvider(provider);
+    }
   }
 
   createFolder(): void {
@@ -309,24 +520,19 @@ export class FilesComponent {
 
     if (!newFolderLink) return;
 
-    this.dialogService
+    this.customDialogService
       .open(CreateFolderDialogComponent, {
+        header: 'files.dialogs.createFolder.title',
         width: '448px',
-        focusOnShow: false,
-        header: this.translateService.instant('files.dialogs.createFolder.title'),
-        closeOnEscape: true,
-        modal: true,
-        closable: true,
       })
       .onClose.pipe(
         filter((folderName: string) => !!folderName),
-        switchMap((folderName: string) => {
-          return this.actions.createFolder(newFolderLink, folderName);
-        }),
+        switchMap((folderName: string) => this.actions.createFolder(newFolderLink, folderName)),
         take(1),
         finalize(() => {
           this.updateFilesList();
           this.fileIsUploading.set(false);
+          this.toastService.showSuccess('files.dialogs.createFolder.success');
         })
       )
       .subscribe();
@@ -334,57 +540,65 @@ export class FilesComponent {
 
   downloadFolder(): void {
     const resourceId = this.resourceId();
-    const folderId = this.currentFolder()?.id ?? '';
-    const isRootFolder = !this.currentFolder()?.relationships?.parentFolderLink;
-    const storageLink = this.currentRootFolder()?.folder?.links?.download ?? '';
-    const resourcePath = this.urlMap.get(this.resourceType()) ?? 'nodes';
-
-    if (resourceId && folderId) {
-      this.dataciteService.logFileDownload(resourceId, resourcePath).subscribe();
-      if (isRootFolder) {
-        const link = this.filesService.getFolderDownloadLink(storageLink, '', true);
-        window.open(link, '_blank')?.focus();
-      } else {
-        const link = this.filesService.getFolderDownloadLink(storageLink, folderId, false);
-        window.open(link, '_blank')?.focus();
-      }
+    const resourcePath = this.resourceMetadata()?.type ?? 'nodes';
+    const downloadLink = this.currentFolder()?.links.download ?? '';
+    if (resourceId && downloadLink) {
+      this.dataciteService
+        .logFileDownload(resourceId, resourcePath)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe();
+      const link = this.filesService.getFolderDownloadLink(downloadLink);
+      window.open(link, '_blank')?.focus();
     }
   }
 
   showInfoDialog() {
-    const dialogWidth = this.isMedium() ? '850px' : '95vw';
-
-    this.dialogService.open(FileBrowserInfoComponent, {
-      width: dialogWidth,
-      focusOnShow: false,
-      header: this.translateService.instant('files.filesBrowserDialog.title'),
-      closeOnEscape: true,
-      modal: true,
-      closable: true,
+    this.customDialogService.open(FileBrowserInfoComponent, {
+      header: 'files.filesBrowserDialog.title',
+      width: '850px',
       data: this.resourceType(),
     });
   }
 
-  public updateFilesList = (): Observable<void> => {
+  updateFilesList() {
     const currentFolder = this.currentFolder();
-    if (currentFolder?.relationships.filesLink) {
-      this.filesTreeActions.setFilesIsLoading?.(true);
-      return this.actions.getFiles(currentFolder?.relationships.filesLink).pipe(take(1));
-    }
-
-    return EMPTY;
-  };
-
-  folderIsOpening(value: boolean): void {
-    this.isFolderOpening.set(value);
-    if (value) {
-      this.searchControl.setValue('');
-      this.sortControl.setValue(ALL_SORT_OPTIONS[0].value);
+    const filesLink = currentFolder?.links.filesLink;
+    if (filesLink) {
+      this.actions.getFiles(filesLink, this.pageNumber());
     }
   }
 
-  navigateToFile(file: OsfFile) {
-    this.router.navigate([file.guid], { relativeTo: this.activeRoute });
+  setCurrentFolder(folder: FileFolderModel) {
+    this.actions.setCurrentFolder(folder);
+  }
+
+  setMoveDialogCurrentFolder(folder: FileFolderModel) {
+    this.actions.setMoveDialogCurrentFolder(folder);
+  }
+
+  deleteEntry(link: string) {
+    this.actions.deleteEntry(link).subscribe(() => {
+      this.toastService.showSuccess('files.dialogs.deleteFile.success');
+      this.updateFilesList();
+    });
+  }
+
+  renameEntry(event: { newName: string; link: string }) {
+    const { newName, link } = event;
+    this.actions.renameEntry(link, newName).subscribe(() => {
+      this.toastService.showSuccess('files.dialogs.renameFile.success');
+      this.updateFilesList();
+    });
+  }
+
+  navigateToFile(file: FileModel) {
+    const extras = this.hasViewOnly()
+      ? { queryParams: { view_only: getViewOnlyParamFromUrl(this.router.url) } }
+      : undefined;
+
+    const url = this.router.serializeUrl(this.router.createUrlTree(['/', file.guid], extras));
+
+    window.open(url, '_blank');
   }
 
   getAddonName(addons: ConfiguredAddonModel[], provider: string): string {
@@ -393,10 +607,6 @@ export class FilesComponent {
     } else {
       return addons.find((addon) => addon.externalServiceName === provider)?.displayName ?? '';
     }
-  }
-
-  onFilesPageChange(page: number) {
-    this.pageNumber.set(page);
   }
 
   private setGoogleAccountId(): void {
@@ -410,8 +620,27 @@ export class FilesComponent {
     }
   }
 
+  private mapMenuActions(supportedFeatures: SupportedFeature[]): Record<FileMenuType, boolean> {
+    return {
+      [FileMenuType.Download]: supportedFeatures.includes(SupportedFeature.DownloadAsZip),
+      [FileMenuType.Rename]: supportedFeatures.includes(SupportedFeature.AddUpdateFiles),
+      [FileMenuType.Delete]: supportedFeatures.includes(SupportedFeature.DeleteFiles),
+      [FileMenuType.Move]:
+        supportedFeatures.includes(SupportedFeature.CopyInto) &&
+        supportedFeatures.includes(SupportedFeature.DeleteFiles) &&
+        supportedFeatures.includes(SupportedFeature.AddUpdateFiles),
+      [FileMenuType.Embed]: true,
+      [FileMenuType.Share]: true,
+      [FileMenuType.Copy]: true,
+    };
+  }
+
   openGoogleFilePicker(): void {
     this.googleFilePickerComponent()?.createPicker();
     this.updateFilesList();
+  }
+
+  onUpdateFoldersStack(newStack: FileFolderModel[]): void {
+    this.foldersStack = [...newStack];
   }
 }

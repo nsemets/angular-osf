@@ -24,6 +24,7 @@ export class RegistryRevisionsComponent {
   selectedRevisionIndex = input.required<number>();
   isSubmitting = input<boolean>(false);
   isModeration = input<boolean>(false);
+  canEdit = input<boolean>(false);
   openRevision = output<number>();
 
   readonly updateRegistration = output<string>();
@@ -34,13 +35,15 @@ export class RegistryRevisionsComponent {
 
   revisions = computed(() => {
     let schemaResponses = this.registry()?.schemaResponses || [];
+
     if (this.registryAcceptedUnapproved) {
       this.unApprovedRevisionId =
         schemaResponses.find((response) => response.reviewsState === RevisionReviewStates.Unapproved)?.id || null;
     }
+
     schemaResponses = this.isModeration()
       ? schemaResponses
-      : schemaResponses.filter((r) => r.reviewsState === RevisionReviewStates.Approved);
+      : schemaResponses.filter((r) => r.reviewsState === RevisionReviewStates.Approved || r.isOriginalResponse);
 
     return schemaResponses.map((response, index) => {
       const onlyOne = schemaResponses.length === 1;

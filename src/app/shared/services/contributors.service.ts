@@ -1,14 +1,17 @@
-import { map, Observable } from 'rxjs';
+import { forkJoin, map, Observable, of } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
+
+import { ENVIRONMENT } from '@core/provider/environment.provider';
 
 import { AddContributorType, ResourceType } from '../enums';
 import { ContributorsMapper } from '../mappers';
 import {
   ContributorAddModel,
+  ContributorDataJsonApi,
   ContributorModel,
-  ContributorResponse,
-  JsonApiResponse,
+  ContributorResponseJsonApi,
+  ContributorsResponseJsonApi,
   PaginatedData,
   ResponseJsonApi,
   UserDataJsonApi,
@@ -16,14 +19,16 @@ import {
 
 import { JsonApiService } from './json-api.service';
 
-import { environment } from 'src/environments/environment';
-
 @Injectable({
   providedIn: 'root',
 })
 export class ContributorsService {
   private readonly jsonApiService = inject(JsonApiService);
-  private readonly apiUrl = `${environment.apiDomainUrl}/v2`;
+  private readonly environment = inject(ENVIRONMENT);
+
+  get apiUrl() {
+    return `${this.environment.apiDomainUrl}/v2`;
+  }
 
   private readonly urlMap = new Map<ResourceType, string>([
     [ResourceType.Project, 'nodes'],
@@ -42,12 +47,36 @@ export class ContributorsService {
     return `${this.apiUrl}/${resourcePath}/${resourceId}/contributors`;
   }
 
-  getAllContributors(resourceType: ResourceType, resourceId: string): Observable<ContributorModel[]> {
+  getAllContributors(
+    resourceType: ResourceType,
+    resourceId: string,
+    page: number,
+    pageSize: number
+  ): Observable<PaginatedData<ContributorModel[]>> {
     const baseUrl = this.getBaseUrl(resourceType, resourceId);
 
+    const params = {
+      page: page,
+      'page[size]': pageSize,
+    };
+
+    return this.jsonApiService.get<ContributorsResponseJsonApi>(`${baseUrl}/`, params).pipe(
+      map((response) => ({
+        data: ContributorsMapper.getContributors(response.data),
+        totalCount: response.meta.total,
+        pageSize: response.meta.per_page,
+      }))
+    );
+  }
+
+  getRequestAccessContributors(resourceType: ResourceType, resourceId: string): Observable<ContributorModel[]> {
+    const resourcePath = this.urlMap.get(resourceType);
+    const baseUrl = `${this.apiUrl}/${resourcePath}/${resourceId}/requests/`;
+    const params = { 'embed[]': ['creator'] };
+
     return this.jsonApiService
-      .get<JsonApiResponse<ContributorResponse[], null>>(`${baseUrl}/`)
-      .pipe(map((response) => ContributorsMapper.fromResponse(response.data)));
+      .get<ContributorsResponseJsonApi>(baseUrl, params)
+      .pipe(map((response) => ContributorsMapper.getContributors(response.data)));
   }
 
   searchUsers(value: string, page = 1): Observable<PaginatedData<ContributorAddModel[]>> {
@@ -55,22 +84,23 @@ export class ContributorsService {
 
     return this.jsonApiService
       .get<ResponseJsonApi<UserDataJsonApi[]>>(baseUrl)
-      .pipe(map((response) => ContributorsMapper.fromUsersWithPaginationGetResponse(response)));
+      .pipe(map((response) => ContributorsMapper.getPaginatedUsers(response)));
   }
 
-  addContributor(
+  bulkUpdateContributors(
     resourceType: ResourceType,
     resourceId: string,
-    data: ContributorAddModel
-  ): Observable<ContributorModel> {
-    const baseUrl = `${this.getBaseUrl(resourceType, resourceId)}/`;
-    const type = data.id ? AddContributorType.Registered : AddContributorType.Unregistered;
+    contributors: ContributorModel[]
+  ): Observable<ContributorModel[]> {
+    if (contributors.length === 0) {
+      return of([]);
+    }
 
-    const contributorData = { data: ContributorsMapper.toContributorAddRequest(data, type) };
+    const updateRequests = contributors.map((contributor) =>
+      this.updateContributor(resourceType, resourceId, contributor)
+    );
 
-    return this.jsonApiService
-      .post<JsonApiResponse<ContributorResponse, null>>(baseUrl, contributorData)
-      .pipe(map((contributor) => ContributorsMapper.fromContributorResponse(contributor.data)));
+    return forkJoin(updateRequests);
   }
 
   updateContributor(
@@ -83,8 +113,41 @@ export class ContributorsService {
     const contributorData = { data: ContributorsMapper.toContributorAddRequest(data) };
 
     return this.jsonApiService
-      .patch<ContributorResponse>(baseUrl, contributorData)
-      .pipe(map((contributor) => ContributorsMapper.fromContributorResponse(contributor)));
+      .patch<ContributorDataJsonApi>(baseUrl, contributorData)
+      .pipe(map((contributor) => ContributorsMapper.getContributor(contributor)));
+  }
+
+  bulkAddContributors(
+    resourceType: ResourceType,
+    resourceId: string,
+    contributors: ContributorAddModel[],
+    childNodeIds?: string[]
+  ): Observable<ContributorModel[]> {
+    if (contributors.length === 0) {
+      return of([]);
+    }
+
+    const addRequests = contributors.map((contributor) =>
+      this.addContributor(resourceType, resourceId, contributor, childNodeIds)
+    );
+
+    return forkJoin(addRequests);
+  }
+
+  addContributor(
+    resourceType: ResourceType,
+    resourceId: string,
+    data: ContributorAddModel,
+    childNodeIds?: string[]
+  ): Observable<ContributorModel> {
+    const baseUrl = `${this.getBaseUrl(resourceType, resourceId)}/`;
+    const type = data.id ? AddContributorType.Registered : AddContributorType.Unregistered;
+
+    const contributorData = { data: ContributorsMapper.toContributorAddRequest(data, type, childNodeIds) };
+
+    return this.jsonApiService
+      .post<ContributorResponseJsonApi>(baseUrl, contributorData)
+      .pipe(map((contributor) => ContributorsMapper.getContributor(contributor.data)));
   }
 
   deleteContributor(resourceType: ResourceType, resourceId: string, userId: string): Observable<void> {

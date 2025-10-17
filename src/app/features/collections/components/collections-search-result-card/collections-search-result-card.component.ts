@@ -4,11 +4,12 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
 import { collectionFilterNames } from '@osf/features/collections/constants';
+import { ContributorsListComponent } from '@osf/shared/components';
 import { CollectionSubmissionWithGuid } from '@shared/models';
 
 @Component({
   selector: 'osf-collections-search-result-card',
-  imports: [DatePipe, TranslatePipe],
+  imports: [DatePipe, TranslatePipe, ContributorsListComponent],
   templateUrl: './collections-search-result-card.component.html',
   styleUrl: './collections-search-result-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,3 +1,4 @@
+import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
 import { ResourceType } from '@osf/shared/enums';
 
 import { ModeratorAddModel, ModeratorModel } from '../../models';
@@ -9,7 +10,9 @@ export class LoadModerators {
 
   constructor(
     public resourceId: string,
-    public resourceType: ResourceType | undefined
+    public resourceType: ResourceType | undefined,
+    public pageNumber = 1,
+    public pageSize = DEFAULT_TABLE_PARAMS.rows
   ) {}
 }
 
@@ -43,7 +46,7 @@ export class DeleteModerator {
   ) {}
 }
 
-export class UpdateSearchValue {
+export class UpdateModeratorsSearchValue {
   static readonly type = `${ACTION_SCOPE} Update Search Value`;
 
   constructor(public searchValue: string | null) {}

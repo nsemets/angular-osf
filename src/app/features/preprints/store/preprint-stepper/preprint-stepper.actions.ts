@@ -1,7 +1,7 @@
 import { PreprintFileSource } from '@osf/features/preprints/enums';
 import { Preprint } from '@osf/features/preprints/models';
 import { StringOrNull } from '@shared/helpers';
-import { LicenseOptions, OsfFile } from '@shared/models';
+import { FileFolderModel, FileModel, LicenseOptions } from '@shared/models';
 
 export class SetSelectedPreprintProviderId {
   static readonly type = '[Preprint Stepper] Set Selected Preprint Provider Id';
@@ -50,6 +50,12 @@ export class UploadFile {
   constructor(public file: File) {}
 }
 
+export class UpdatePrimaryFileRelationship {
+  static readonly type = '[Preprint Stepper] Update Primary File Relationship';
+
+  constructor(public fileId: string) {}
+}
+
 export class ReuploadFile {
   static readonly type = '[Preprint Stepper] Reupload File';
 
@@ -59,11 +65,11 @@ export class ReuploadFile {
 export class CopyFileFromProject {
   static readonly type = '[Preprint Stepper] Copy File From Project';
 
-  constructor(public file: OsfFile) {}
+  constructor(public file: FileModel) {}
 }
 
-export class FetchPreprintFiles {
-  static readonly type = '[Preprint Stepper] Get Preprint Files';
+export class FetchPreprintPrimaryFile {
+  static readonly type = '[Preprint Stepper] Fetch Preprint Primary File';
 }
 
 export class FetchAvailableProjects {
@@ -72,8 +78,8 @@ export class FetchAvailableProjects {
   constructor(public searchTerm: StringOrNull) {}
 }
 
-export class FetchProjectFiles {
-  static readonly type = '[Preprint Stepper] Get Project Files';
+export class SetProjectRootFolder {
+  static readonly type = '[Preprint Stepper] Set Project Root Folder';
 
   constructor(public projectId: string) {}
 }
@@ -142,7 +148,13 @@ export class DeletePreprint {
 }
 
 export class SetCurrentFolder {
-  static readonly type = '[Submit Preprint] Set Current Folder';
+  static readonly type = '[Preprint Stepper] Set Current Folder';
 
-  constructor(public folder: OsfFile | null) {}
+  constructor(public folder: FileFolderModel | null) {}
+}
+
+export class SetInstitutionsChanged {
+  static readonly type = '[Preprint Stepper] Set Institutions Changed';
+
+  constructor(public institutionsChanged: boolean) {}
 }

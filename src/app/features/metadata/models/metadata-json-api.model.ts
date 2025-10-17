@@ -1,10 +1,11 @@
 import {
   ApiData,
-  ContributorResponse,
+  IdentifiersResponseJsonApi,
   InstitutionsJsonApiResponse,
   LicenseDataJsonApi,
   LicenseRecordJsonApi,
 } from '@osf/shared/models';
+import { UserPermissions } from '@shared/enums';
 
 export interface MetadataJsonApiResponse {
   data: MetadataJsonApi;
@@ -23,19 +24,15 @@ export interface MetadataAttributesJsonApi {
   category?: string;
   node_license?: LicenseRecordJsonApi;
   public?: boolean;
+  current_user_permissions: UserPermissions[];
 }
 
 interface MetadataEmbedsJsonApi {
-  bibliographic_contributors: {
-    data: ContributorResponse[];
-  };
-  identifiers: {
-    data: { id: string; type: string; attributes: { category: string; value: string } }[];
-  };
+  affiliated_institutions: InstitutionsJsonApiResponse;
+  identifiers: IdentifiersResponseJsonApi;
   license: {
     data: LicenseDataJsonApi;
   };
-  affiliated_institutions: InstitutionsJsonApiResponse;
   provider?: {
     data: { id: string; type: string; attributes: { name: string } };
   };

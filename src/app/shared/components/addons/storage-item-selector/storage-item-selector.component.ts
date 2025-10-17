@@ -6,7 +6,6 @@ import { MenuItem } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
-import { DialogService } from 'primeng/dynamicdialog';
 import { InputText } from 'primeng/inputtext';
 import { RadioButton } from 'primeng/radiobutton';
 import { Skeleton } from 'primeng/skeleton';
@@ -27,15 +26,15 @@ import {
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { OperationNames } from '@osf/features/project/addons/enums';
-import { SelectComponent } from '@shared/components';
-import { ResourceTypeInfoDialogComponent } from '@shared/components/addons/resource-type-info-dialog/resource-type-info-dialog.component';
-import { AddonType, StorageItemType } from '@shared/enums';
-import { convertCamelCaseToNormal, IS_MEDIUM, IS_XSMALL } from '@shared/helpers';
-import { OperationInvokeData, StorageItem } from '@shared/models';
-import { AddonsSelectors, ClearOperationInvocations } from '@shared/stores/addons';
+import { AddonType, OperationNames, StorageItemType } from '@osf/shared/enums';
+import { convertCamelCaseToNormal, IS_XSMALL } from '@osf/shared/helpers';
+import { OperationInvokeData, StorageItem } from '@osf/shared/models';
+import { CustomDialogService } from '@osf/shared/services';
+import { AddonsSelectors, ClearOperationInvocations } from '@osf/shared/stores';
 
-import { GoogleFilePickerComponent } from './google-file-picker/google-file-picker.component';
+import { GoogleFilePickerComponent } from '../../google-file-picker/google-file-picker.component';
+import { SelectComponent } from '../../select/select.component';
+import { ResourceTypeInfoDialogComponent } from '../resource-type-info-dialog/resource-type-info-dialog.component';
 
 @Component({
   selector: 'osf-storage-item-selector',
@@ -58,10 +57,10 @@ import { GoogleFilePickerComponent } from './google-file-picker/google-file-pick
 })
 export class StorageItemSelectorComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
+  private customDialogService = inject(CustomDialogService);
   private translateService = inject(TranslateService);
-  private dialogService = inject(DialogService);
+
   readonly AddonType = AddonType;
-  isMedium = toSignal(inject(IS_MEDIUM));
   isMobile = toSignal(inject(IS_XSMALL));
 
   isGoogleFilePicker = input.required<boolean>();
@@ -76,6 +75,7 @@ export class StorageItemSelectorComponent implements OnInit {
   selectedStorageItemId = model<string>('/');
   selectedStorageItemUrl = model<string>('');
   operationInvoke = output<OperationInvokeData>();
+  operationInvokeWithCursor = output<OperationInvokeData>();
   save = output<void>();
   cancelSelection = output<void>();
   readonly OperationNames = OperationNames;
@@ -88,27 +88,29 @@ export class StorageItemSelectorComponent implements OnInit {
   initialResourceType = signal<string>('');
   breadcrumbItems = signal<MenuItem[]>([]);
 
-  selectedItemLabel = computed(() => {
-    return this.currentAddonType() === AddonType.LINK
+  selectedItemLabel = computed(() =>
+    this.currentAddonType() === AddonType.LINK
       ? 'settings.addons.configureAddon.linkedItem'
-      : 'settings.addons.configureAddon.selectedFolder';
-  });
+      : 'settings.addons.configureAddon.selectedFolder'
+  );
 
-  noSelectionLabel = computed(() => {
-    return this.currentAddonType() === AddonType.LINK
+  noSelectionLabel = computed(() =>
+    this.currentAddonType() === AddonType.LINK
       ? 'settings.addons.configureAddon.noLinkedItem'
-      : 'settings.addons.configureAddon.noFolderSelected';
-  });
+      : 'settings.addons.configureAddon.noFolderSelected'
+  );
 
-  resourceTypeOptions = computed(() => {
-    return this.supportedResourceTypes().map((type) => ({
+  resourceTypeOptions = computed(() =>
+    this.supportedResourceTypes().map((type) => ({
       label: convertCamelCaseToNormal(type),
       value: type,
-    }));
-  });
+    }))
+  );
+
   initiallySelectedStorageItem = select(AddonsSelectors.getSelectedStorageItem);
   isOperationInvocationSubmitting = select(AddonsSelectors.getOperationInvocationSubmitting);
   isSubmitting = select(AddonsSelectors.getCreatedOrUpdatedConfiguredAddonSubmitting);
+  operationInvocation = select(AddonsSelectors.getOperationInvocation);
   readonly homeBreadcrumb: MenuItem = {
     id: '/',
     label: this.translateService.instant('settings.addons.configureAddon.home'),
@@ -117,14 +119,12 @@ export class StorageItemSelectorComponent implements OnInit {
     },
   };
 
-  actions = createDispatchMap({
-    clearOperationInvocations: ClearOperationInvocations,
-  });
+  actions = createDispatchMap({ clearOperationInvocations: ClearOperationInvocations });
 
   constructor() {
     effect(() => {
       const initialFolder = this.initiallySelectedStorageItem();
-      if (initialFolder && !this.selectedStorageItem()) {
+      if (initialFolder) {
         this.selectedStorageItem.set(initialFolder);
       }
     });
@@ -138,10 +138,8 @@ export class StorageItemSelectorComponent implements OnInit {
       }
     });
 
-    effect(() => {
-      this.destroyRef.onDestroy(() => {
-        this.actions.clearOperationInvocations();
-      });
+    this.destroyRef.onDestroy(() => {
+      this.actions.clearOperationInvocations();
     });
   }
 
@@ -184,6 +182,14 @@ export class StorageItemSelectorComponent implements OnInit {
     return this.hasInputChanged() || this.hasFolderChanged() || this.hasResourceTypeChanged();
   });
 
+  readonly showLoadMoreButton = computed(() => {
+    const invocation = this.operationInvocation();
+    if (!invocation?.nextSampleCursor || !invocation?.thisSampleCursor) {
+      return false;
+    }
+    return invocation.nextSampleCursor > invocation.thisSampleCursor;
+  });
+
   handleCreateOperationInvocation(
     operationName: OperationNames,
     itemId: string,
@@ -200,6 +206,19 @@ export class StorageItemSelectorComponent implements OnInit {
     this.trimBreadcrumbs(itemId);
   }
 
+  handleLoadMore(): void {
+    const invocation = this.operationInvocation();
+    if (!invocation?.nextSampleCursor) {
+      return;
+    }
+
+    this.operationInvokeWithCursor.emit({
+      operationName: invocation.operationName as OperationNames,
+      itemId: invocation.operationKwargs.itemId || '/',
+      pageCursor: invocation.nextSampleCursor,
+    });
+  }
+
   handleSave(): void {
     this.selectedStorageItemId.set(this.selectedStorageItem()?.itemId || '');
     this.selectedStorageItemUrl.set(this.selectedStorageItem()?.itemLink || '');
@@ -210,10 +229,10 @@ export class StorageItemSelectorComponent implements OnInit {
     this.cancelSelection.emit();
   }
 
-  handleFolderSelection(folder: StorageItem): void {
+  handleFolderSelection = (folder: StorageItem): void => {
     this.selectedStorageItem.set(folder);
     this.hasFolderChanged.set(folder?.itemId !== this.initiallySelectedStorageItem()?.itemId);
-  }
+  };
 
   private updateBreadcrumbs(
     operationName: OperationNames,
@@ -252,15 +271,9 @@ export class StorageItemSelectorComponent implements OnInit {
   }
 
   openInfoDialog() {
-    const dialogWidth = this.isMedium() ? '850px' : '95vw';
-
-    this.dialogService.open(ResourceTypeInfoDialogComponent, {
-      width: dialogWidth,
-      focusOnShow: false,
-      header: this.translateService.instant('settings.addons.configureAddon.aboutResourceType'),
-      closeOnEscape: true,
-      modal: true,
-      closable: true,
+    this.customDialogService.open(ResourceTypeInfoDialogComponent, {
+      header: 'settings.addons.configureAddon.aboutResourceType',
+      width: '850px',
     });
   }
 }

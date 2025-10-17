@@ -1,14 +1,20 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+
+import { ENVIRONMENT } from '@core/provider/environment.provider';
 
 import { SOCIAL_SHARE_URLS } from '../constants';
 import { ShareableContent, SocialShareLinks } from '../models';
-
-import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SocialShareService {
+  private readonly environment = inject(ENVIRONMENT);
+
+  get webUrl() {
+    return this.environment.webUrl;
+  }
+
   generateEmailLink(content: ShareableContent): string {
     const subject = encodeURIComponent(content.title);
     const body = encodeURIComponent(content.url);
@@ -20,7 +26,7 @@ export class SocialShareService {
     const url = encodeURIComponent(content.url);
     const text = encodeURIComponent(content.title);
 
-    return `${SOCIAL_SHARE_URLS.twitter}?url=${url}&text=${text}`;
+    return `${SOCIAL_SHARE_URLS.twitter.preview_url}?url=${url}&text=${text}&via=${SOCIAL_SHARE_URLS.twitter.viaHandle}`;
   }
 
   generateFacebookLink(content: ShareableContent): string {
@@ -31,11 +37,21 @@ export class SocialShareService {
 
   generateLinkedInLink(content: ShareableContent): string {
     const url = encodeURIComponent(content.url);
-    const title = encodeURIComponent(content.title);
-    const summary = encodeURIComponent(content.description || content.title);
-    const source = encodeURIComponent('OSF');
 
-    return `${SOCIAL_SHARE_URLS.linkedIn}?mini=true&url=${url}&title=${title}&summary=${summary}&source=${source}`;
+    return `${SOCIAL_SHARE_URLS.linkedIn}?url=${url}`;
+  }
+
+  generateMastodonLink(content: ShareableContent): string {
+    const url = encodeURIComponent(content.url);
+    const text = encodeURIComponent(content.title);
+
+    return `${SOCIAL_SHARE_URLS.mastodon}?url=${url}&text=${text}`;
+  }
+
+  generateBlueskyLink(content: ShareableContent): string {
+    const text = encodeURIComponent(`${content.title} ${content.url}`);
+
+    return `${SOCIAL_SHARE_URLS.bluesky}?text=${text}`;
   }
 
   generateAllSharingLinks(content: ShareableContent): SocialShareLinks {
@@ -44,22 +60,24 @@ export class SocialShareService {
       twitter: this.generateTwitterLink(content),
       facebook: this.generateFacebookLink(content),
       linkedIn: this.generateLinkedInLink(content),
+      mastodon: this.generateMastodonLink(content),
+      bluesky: this.generateBlueskyLink(content),
     };
   }
 
   createPreprintUrl(preprintId: string, providerId: string): string {
-    return `${environment.webUrl}/preprints/${providerId}/${preprintId}`;
+    return `${this.webUrl}/preprints/${providerId}/${preprintId}`;
   }
 
   createProjectUrl(projectId: string): string {
-    return `${environment.webUrl}/${projectId}`;
+    return `${this.webUrl}/${projectId}`;
   }
 
   createRegistrationUrl(registrationId: string, providerId = 'osf'): string {
-    return `${environment.webUrl}/registries/${providerId}/${registrationId}`;
+    return `${this.webUrl}/registries/${providerId}/${registrationId}`;
   }
 
   createDownloadUrl(resourceId: string): string {
-    return `${environment.webUrl}/download/${resourceId}`;
+    return `${this.webUrl}/download/${resourceId}`;
   }
 }

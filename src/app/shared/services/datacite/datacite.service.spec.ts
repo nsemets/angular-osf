@@ -4,7 +4,8 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
-import { ENVIRONMENT } from '@core/constants/environment.token';
+import { ENVIRONMENT } from '@core/provider/environment.provider';
+import { SENTRY_TOKEN } from '@core/provider/sentry.provider';
 import { Identifier } from '@shared/models';
 import { DataciteEvent } from '@shared/models/datacite/datacite-event.enum';
 
@@ -45,6 +46,7 @@ function assertSuccess(
   doi: string,
   event: DataciteEvent
 ) {
+  assertSendBeacon(dataciteTrackerAddress, dataciteTrackerRepoId, doi, event);
   const req = httpMock.expectOne(dataciteTrackerAddress);
   expect(req.request.method).toBe('POST');
   expect(req.request.body).toEqual({
@@ -57,24 +59,48 @@ function assertSuccess(
   req.flush({});
 }
 
+function assertSendBeacon(
+  dataciteTrackerAddress: string,
+  dataciteTrackerRepoId: string,
+  doi: string,
+  event: DataciteEvent
+) {
+  expect(navigator.sendBeacon).toBeCalledTimes(1);
+  expect(navigator.sendBeacon).toHaveBeenCalledWith(
+    dataciteTrackerAddress,
+    JSON.stringify({
+      n: event,
+      u: window.location.href,
+      i: dataciteTrackerRepoId,
+      p: doi,
+    })
+  );
+}
+
 describe('DataciteService', () => {
   let service: DataciteService;
+  let sentry: jest.Mocked<any>;
   let httpMock: HttpTestingController;
 
   const dataciteTrackerAddress = 'https://tracker.test';
-  const webUrl = 'https://osf.io';
+  const apiDomainUrl = 'https://osf.io';
   const dataciteTrackerRepoId = 'repo-123';
   describe('with proper configuration', () => {
     beforeEach(() => {
+      Object.defineProperty(navigator, 'sendBeacon', {
+        configurable: true,
+        value: jest.fn(() => false),
+      });
       TestBed.configureTestingModule({
         providers: [
           DataciteService,
           provideHttpClient(),
           provideHttpClientTesting(),
+          { provide: SENTRY_TOKEN, useValue: sentry },
           {
             provide: ENVIRONMENT,
             useValue: {
-              webUrl,
+              apiDomainUrl,
               dataciteTrackerRepoId,
               dataciteTrackerAddress,
             },
@@ -117,8 +143,7 @@ describe('DataciteService', () => {
 
       service.logFileView(targetId, targetType).subscribe();
 
-      // First request: GET identifiers
-      const reqGet = httpMock.expectOne(`${webUrl}/${targetType}/${targetId}/identifiers`);
+      const reqGet = httpMock.expectOne(`${apiDomainUrl}/v2/${targetType}/${targetId}/identifiers`);
       expect(reqGet.request.method).toBe('GET');
       reqGet.flush({
         data: [
@@ -130,7 +155,6 @@ describe('DataciteService', () => {
         ],
       });
 
-      // Second request: POST to datacite tracker
       assertSuccess(httpMock, dataciteTrackerAddress, dataciteTrackerRepoId, doi, DataciteEvent.VIEW);
     });
 
@@ -141,8 +165,7 @@ describe('DataciteService', () => {
 
       service.logFileDownload(targetId, targetType).subscribe();
 
-      // First request: GET identifiers
-      const reqGet = httpMock.expectOne(`${webUrl}/${targetType}/${targetId}/identifiers`);
+      const reqGet = httpMock.expectOne(`${apiDomainUrl}/v2/${targetType}/${targetId}/identifiers`);
       expect(reqGet.request.method).toBe('GET');
       reqGet.flush({
         data: [
@@ -154,8 +177,18 @@ describe('DataciteService', () => {
         ],
       });
 
-      // Second request: POST to datacite tracker
       assertSuccess(httpMock, dataciteTrackerAddress, dataciteTrackerRepoId, doi, DataciteEvent.DOWNLOAD);
+    });
+
+    it('navigator success', () => {
+      (navigator.sendBeacon as jest.Mock).mockReturnValueOnce(true);
+
+      const doi = 'qwerty';
+      const event = DataciteEvent.VIEW;
+      service.logIdentifiableView(buildObservable(doi)).subscribe();
+
+      httpMock.expectNone(dataciteTrackerAddress);
+      assertSendBeacon(dataciteTrackerAddress, dataciteTrackerRepoId, doi, event);
     });
   });
 

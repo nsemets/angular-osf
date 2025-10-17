@@ -12,14 +12,19 @@
           tabindex="0"
           (click)="handleCreateOperationInvocation(item.state.operationName, item.id)"
           (keydown.enter)="handleCreateOperationInvocation(item.state.operationName, item.id)"
-          >{{ item.label }}</a
+          >{{ item.label | translate }}</a
         >
       </ng-template>
     </p-breadcrumb>
+
     <p-card>
       <p>
         {{ selectedItemLabel() | translate }}
-        <span class="font-bold">{{ selectedStorageItem()?.itemName || (noSelectionLabel() | translate) }}</span>
+        <span class="font-bold">{{
+          selectedStorageItem()
+            ? selectedStorageItem()?.itemName || ('settings.addons.configureAddon.rootDirectory' | translate)
+            : (noSelectionLabel() | translate)
+        }}</span>
       </p>
       <h3 class="mt-4 mb-2">
         {{ 'settings.addons.form.fields.accountName' | translate }}
@@ -35,6 +40,7 @@
     <osf-google-file-picker
       [isFolderPicker]="true"
       [accountId]="accountId()"
+      [currentAddonType]="currentAddonType()"
       [handleFolderSelection]="handleFolderSelection"
       [rootFolder]="selectedStorageItem()"
     ></osf-google-file-picker>
@@ -51,15 +57,15 @@
           @let itemId = folder.itemId || '/';
           @let isLinkDisabled = !folder.mayContainRootCandidates || folder.itemType !== StorageItemType.Folder;
           <div class="folders-table-row relative">
-            <div class="flex gap-2 flex-1">
-              <div tabindex="0" class="flex align-items-center gap-2">
+            <div class="flex gap-2 flex-1 max-w-full">
+              <div tabindex="0" class="flex align-items-center gap-2 w-11">
                 <i class="{{ folder.itemType === StorageItemType.Folder ? 'fas fa-folder' : 'fas fa-file' }}"></i>
                 @if (isLinkDisabled) {
-                  <span class="folder-link-disabled">{{ folder.itemName }}</span>
+                  <span class="folder-link-disabled overflow-ellipsis">{{ folder.itemName }}</span>
                 } @else {
                   <a
                     tabindex="0"
-                    class="cursor-pointer folder-link"
+                    class="cursor-pointer folder-link overflow-ellipsis"
                     (keydown.enter)="
                       handleCreateOperationInvocation(
                         operationName,
@@ -96,6 +102,16 @@
       } @else {
         <div class="flex justify-content-center py-4">
           <p>{{ 'settings.addons.configureAddon.noFolders' | translate }}</p>
+        </div>
+      }
+      @if (showLoadMoreButton() && !isOperationInvocationSubmitting()) {
+        <div class="flex justify-content-center my-3">
+          <p-button
+            link
+            [label]="'common.buttons.loadMore' | translate"
+            severity="secondary"
+            (onClick)="handleLoadMore()"
+          ></p-button>
         </div>
       }
     </div>

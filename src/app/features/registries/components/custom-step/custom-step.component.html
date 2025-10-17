@@ -12,6 +12,8 @@
 
     @let questions = currentPage().questions || [];
 
+    <ng-container *ngTemplateOutlet="questionList; context: { $implicit: questions }"></ng-container>
+
     @if (currentPage().sections?.length) {
       @for (section of currentPage().sections; track section.id) {
         <p-card>
@@ -29,8 +31,6 @@
           <ng-container *ngTemplateOutlet="questionList; context: { $implicit: section.questions }"></ng-container>
         </p-card>
       }
-    } @else {
-      <ng-container *ngTemplateOutlet="questionList; context: { $implicit: questions }"></ng-container>
     }
 
     <ng-template #questionList let-questions>
@@ -45,13 +45,12 @@
                     <span class="text-red-500">*</span>
                   }
                 </h3>
-
-                @if (q.helpText) {
-                  <osf-info-icon [tooltipText]="q.helpText" tooltipPosition="top"></osf-info-icon>
-                }
               </div>
               @if (q.paragraphText) {
                 <p class="mb-3">{{ q.paragraphText }}</p>
+              }
+              @if (q.helpText && q.fieldType !== FieldType.Radio && q.fieldType !== FieldType.Checkbox) {
+                <p>{{ q.helpText }}</p>
               }
             </label>
             @if (q.exampleText) {
@@ -139,13 +138,7 @@
               }
 
               @case (FieldType.Text) {
-                <input
-                  [formControlName]="q.responseKey!"
-                  type="text"
-                  class="w-full"
-                  [placeholder]="q.exampleText"
-                  pInputText
-                />
+                <input [formControlName]="q.responseKey!" type="text" class="w-full" pInputText />
                 @if (
                   stepForm.controls[q.responseKey!].errors?.['required'] &&
                   (stepForm.controls[q.responseKey!].touched || stepForm.controls[q.responseKey!].dirty)

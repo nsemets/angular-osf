@@ -1,4 +1,3 @@
-// Dependencies
 import { Store } from '@ngxs/store';
 
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -30,11 +29,11 @@ import {
   SubHeaderComponent,
   ViewOnlyLinkMessageComponent,
 } from '@shared/components';
-import { MOCK_STORE } from '@shared/mocks';
 import { CustomConfirmationService } from '@shared/services/custom-confirmation.service';
 import { DataciteService } from '@shared/services/datacite/datacite.service';
 import { ToastService } from '@shared/services/toast.service';
 
+import { MOCK_STORE } from '@testing/mocks';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 
 describe('FileDetailComponent', () => {

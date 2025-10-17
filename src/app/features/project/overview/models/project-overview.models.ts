@@ -1,5 +1,7 @@
 import { UserPermissions } from '@osf/shared/enums';
 import {
+  ContributorDataJsonApi,
+  ContributorModel,
   Identifier,
   IdTypeModel,
   Institution,
@@ -9,15 +11,6 @@ import {
   LicensesOption,
   MetaAnonymousJsonApi,
 } from '@osf/shared/models';
-
-export interface ProjectOverviewContributor {
-  familyName: string;
-  fullName: string;
-  givenName: string;
-  middleName: string;
-  id: string;
-  type: string;
-}
 
 export interface ProjectOverview {
   id: string;
@@ -52,8 +45,7 @@ export interface ProjectOverview {
   currentUserIsContributor: boolean;
   currentUserIsContributorOrGroupMember: boolean;
   wikiEnabled: boolean;
-  subjects: ProjectOverviewSubject[];
-  contributors: ProjectOverviewContributor[];
+  contributors: ContributorModel[];
   customCitation: string | null;
   region?: IdTypeModel;
   affiliatedInstitutions?: Institution[];
@@ -63,12 +55,8 @@ export interface ProjectOverview {
     rootFolder: string;
     iri: string;
   };
+  parentId?: string;
   rootParentId?: string;
-}
-
-export interface ProjectOverviewSubject {
-  id: string;
-  text: string;
 }
 
 export interface ProjectOverviewWithMeta {
@@ -104,7 +92,6 @@ export interface ProjectOverviewGetResponseJsonApi {
     current_user_is_contributor: boolean;
     current_user_is_contributor_or_group_member: boolean;
     wiki_enabled: boolean;
-    subjects: ProjectOverviewSubject[][];
     custom_citation: string | null;
   };
   embeds: {
@@ -120,22 +107,7 @@ export interface ProjectOverviewGetResponseJsonApi {
       }[];
     };
     bibliographic_contributors: {
-      data: {
-        embeds: {
-          users: {
-            data: {
-              id: string;
-              type: string;
-              attributes: {
-                family_name: string;
-                full_name: string;
-                given_name: string;
-                middle_name: string;
-              };
-            };
-          };
-        };
-      }[];
+      data: ContributorDataJsonApi[];
     };
     license: {
       data: {
@@ -208,6 +180,12 @@ export interface ProjectOverviewGetResponseJsonApi {
       };
     };
     root?: {
+      data: {
+        id: string;
+        type: string;
+      };
+    };
+    parent?: {
       data: {
         id: string;
         type: string;

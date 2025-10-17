@@ -5,6 +5,7 @@ import { catchError, of, tap } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { handleSectionError } from '@osf/shared/helpers';
+import { PaginatedData } from '@osf/shared/models';
 
 import { ModeratorModel } from '../../models';
 import { ModeratorsService } from '../../services';
@@ -16,7 +17,7 @@ import {
   LoadModerators,
   SearchUsers,
   UpdateModerator,
-  UpdateSearchValue,
+  UpdateModeratorsSearchValue,
 } from './moderators.actions';
 import { MODERATORS_STATE_DEFAULTS, ModeratorsStateModel } from './moderators.model';
 
@@ -40,22 +41,27 @@ export class ModeratorsState {
       moderators: { ...state.moderators, isLoading: true, error: null },
     });
 
-    return this.moderatorsService.getModerators(action.resourceId, action.resourceType).pipe(
-      tap((moderators: ModeratorModel[]) => {
-        ctx.patchState({
-          moderators: {
-            ...state.moderators,
-            data: moderators,
-            isLoading: false,
-          },
-        });
-      }),
-      catchError((error) => handleSectionError(ctx, 'moderators', error))
-    );
+    const searchValue = state.moderators.searchValue;
+
+    return this.moderatorsService
+      .getModerators(action.resourceId, action.resourceType, searchValue, action.pageNumber, action.pageSize)
+      .pipe(
+        tap((res: PaginatedData<ModeratorModel[]>) => {
+          ctx.patchState({
+            moderators: {
+              ...state.moderators,
+              data: res.data,
+              isLoading: false,
+              totalCount: res.totalCount,
+            },
+          });
+        }),
+        catchError((error) => handleSectionError(ctx, 'moderators', error))
+      );
   }
 
-  @Action(UpdateSearchValue)
-  updateSearchValue(ctx: StateContext<ModeratorsStateModel>, action: UpdateSearchValue) {
+  @Action(UpdateModeratorsSearchValue)
+  updateModeratorsSearchValue(ctx: StateContext<ModeratorsStateModel>, action: UpdateModeratorsSearchValue) {
     ctx.patchState({
       moderators: { ...ctx.getState().moderators, searchValue: action.searchValue },
     });
@@ -74,16 +80,8 @@ export class ModeratorsState {
     });
 
     return this.moderatorsService.addModerator(action.resourceId, action.resourceType, action.moderator).pipe(
-      tap((moderator) => {
-        const currentState = ctx.getState();
-
-        ctx.patchState({
-          moderators: {
-            ...currentState.moderators,
-            data: [...currentState.moderators.data, moderator],
-            isLoading: false,
-          },
-        });
+      tap(() => {
+        ctx.dispatch(new LoadModerators(action.resourceId, action.resourceType));
       }),
       catchError((error) => handleSectionError(ctx, 'moderators', error))
     );
@@ -102,18 +100,8 @@ export class ModeratorsState {
     });
 
     return this.moderatorsService.updateModerator(action.resourceId, action.resourceType, action.moderator).pipe(
-      tap((updatedModerator) => {
-        const currentState = ctx.getState();
-
-        ctx.patchState({
-          moderators: {
-            ...currentState.moderators,
-            data: currentState.moderators.data.map((moderator) =>
-              moderator.id === updatedModerator.id ? updatedModerator : moderator
-            ),
-            isLoading: false,
-          },
-        });
+      tap(() => {
+        ctx.dispatch(new LoadModerators(action.resourceId, action.resourceType));
       }),
       catchError((error) => handleSectionError(ctx, 'moderators', error))
     );
@@ -133,13 +121,7 @@ export class ModeratorsState {
 
     return this.moderatorsService.deleteModerator(action.resourceId, action.resourceType, action.moderatorId).pipe(
       tap(() => {
-        ctx.patchState({
-          moderators: {
-            ...state.moderators,
-            data: state.moderators.data.filter((moderator) => moderator.userId !== action.moderatorId),
-            isLoading: false,
-          },
-        });
+        ctx.dispatch(new LoadModerators(action.resourceId, action.resourceType));
       }),
       catchError((error) => handleSectionError(ctx, 'moderators', error))
     );

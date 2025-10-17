@@ -1,34 +1,53 @@
+import { catchError, map, Observable, of, switchMap, tap } from 'rxjs';
+
 import { DOCUMENT } from '@angular/common';
-import { DestroyRef, Inject, Injectable } from '@angular/core';
+import { DestroyRef, Inject, inject, Injectable } from '@angular/core';
 import { Meta, MetaDefinition, Title } from '@angular/platform-browser';
 
+import { ENVIRONMENT } from '@core/provider/environment.provider';
+
+import { MetadataRecordFormat } from '../enums';
 import { Content, DataContent, HeadTagDef, MetaTagAuthor, MetaTagsData } from '../models/meta-tags';
 
-import { environment } from 'src/environments/environment';
+import { MetadataRecordsService } from './metadata-records.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MetaTagsService {
+  private readonly metadataRecords: MetadataRecordsService = inject(MetadataRecordsService);
+  private readonly environment = inject(ENVIRONMENT);
+
+  get webUrl() {
+    return this.environment.webUrl;
+  }
+
+  get facebookAppId() {
+    return this.environment.facebookAppId;
+  }
+
+  get twitterHandle() {
+    return this.environment.twitterHandle;
+  }
+
   private readonly defaultMetaTags: MetaTagsData = {
     type: 'article',
     description: 'Hosted on the OSF',
     language: 'en-US',
-    image: `${environment.webUrl}/assets/images/osf-sharing.png`,
+    image: `${this.webUrl}/assets/images/osf-sharing.png`,
     imageType: 'image/png',
     imageWidth: 1200,
     imageHeight: 630,
     imageAlt: 'OSF',
     siteName: 'OSF',
     institution: 'Center for Open Science',
-    fbAppId: environment.facebookAppId,
-    twitterSite: environment.twitterHandle,
-    twitterCreator: environment.twitterHandle,
+    fbAppId: this.facebookAppId,
+    twitterSite: this.twitterHandle,
+    twitterCreator: this.twitterHandle,
   };
 
   private readonly metaTagClass = 'osf-dynamic-meta';
 
-  // data from all active routed components that set meta tags
   private metaTagStack: { metaTagsData: MetaTagsData; componentDestroyRef: DestroyRef }[] = [];
 
   constructor(
@@ -63,12 +82,10 @@ export class MetaTagsService {
   }
 
   private metaTagStackWithout(destroyRefToRemove: DestroyRef) {
-    // get a copy of `this.metaTagStack` minus any entries with the given destroyRef
     return this.metaTagStack.filter(({ componentDestroyRef }) => componentDestroyRef !== destroyRefToRemove);
   }
 
   private applyNearestMetaTags() {
-    // apply the meta tags for the nearest active route that called `updateMetaTags` (if any)
     const nearest = this.metaTagStack.at(-1);
     if (nearest) {
       this.applyMetaTagsData(nearest.metaTagsData);
@@ -80,13 +97,41 @@ export class MetaTagsService {
   private applyMetaTagsData(metaTagsData: MetaTagsData) {
     const combinedData = { ...this.defaultMetaTags, ...metaTagsData };
     const headTags = this.getHeadTags(combinedData);
-    this.applyHeadTags(headTags);
-    this.dispatchZoteroEvent();
+    of(metaTagsData.osfGuid)
+      .pipe(
+        switchMap((osfid) =>
+          osfid
+            ? this.getSchemaDotOrgJsonLdHeadTag(osfid).pipe(
+                tap((jsonLdHeadTag) => {
+                  if (jsonLdHeadTag) {
+                    headTags.push(jsonLdHeadTag);
+                  }
+                }),
+                catchError(() => of(null))
+              )
+            : of(null)
+        ),
+        tap(() => this.applyHeadTags(headTags)),
+        tap(() => this.dispatchZoteroEvent())
+      )
+      .subscribe();
+  }
+
+  private getSchemaDotOrgJsonLdHeadTag(osfid: string): Observable<HeadTagDef | null> {
+    return this.metadataRecords.getMetadataRecord(osfid, MetadataRecordFormat.SchemaDotOrgDataset).pipe(
+      map((jsonLd) =>
+        jsonLd
+          ? {
+              type: 'script' as const,
+              attrs: { type: 'application/ld+json' },
+              content: jsonLd,
+            }
+          : null
+      )
+    );
   }
 
   private getHeadTags(metaTagsData: MetaTagsData): HeadTagDef[] {
-    const headTags: HeadTagDef[] = [];
-
     const identifiers = this.toArray(metaTagsData.url)
       .concat(this.toArray(metaTagsData.doi))
       .concat(this.toArray(metaTagsData.identifier));
@@ -112,7 +157,7 @@ export class MetaTagsService {
       'dct.created': metaTagsData.publishedDate,
       'dc.publisher': metaTagsData.siteName,
       'dc.language': metaTagsData.language,
-      'dc.contributor': metaTagsData.contributors,
+      'dc.creator': metaTagsData.contributors,
       'dc.subject': metaTagsData.keywords,
 
       // Open Graph/Facebook
@@ -140,7 +185,7 @@ export class MetaTagsService {
       'twitter:image:alt': metaTagsData.imageAlt,
     };
 
-    const metaTagsHeadTags = Object.entries(metaTagsDefs)
+    return Object.entries(metaTagsDefs)
       .reduce((acc: HeadTagDef[], [name, content]) => {
         if (content) {
           const contentArray = this.toArray(content);
@@ -156,45 +201,10 @@ export class MetaTagsService {
         return acc;
       }, [])
       .filter((tag) => tag.attrs.content);
-
-    headTags.push(...metaTagsHeadTags);
-
-    if (metaTagsData.contributors) {
-      headTags.push(this.buildPersonScriptTag(metaTagsData.contributors));
-    }
-
-    return headTags;
-  }
-
-  private buildPersonScriptTag(contributors: DataContent): HeadTagDef {
-    const contributorArray = this.toArray(contributors);
-    const contributor = contributorArray
-      .filter((person): person is MetaTagAuthor => typeof person === 'object' && person !== null)
-      .map((person) => ({
-        '@type': 'schema:Person',
-        name: person.fullName,
-        givenName: person.givenName,
-        familyName: person.familyName,
-      }));
-
-    return {
-      type: 'script',
-      content: JSON.stringify({
-        '@context': {
-          dc: 'http://purl.org/dc/elements/1.1/',
-          schema: 'http://schema.org',
-        },
-        '@type': 'schema:CreativeWork',
-        contributor,
-      }),
-      attrs: {
-        type: 'application/ld+json',
-      },
-    };
   }
 
   private buildMetaTagContent(name: string, content: Content): Content {
-    if (['citation_author', 'dc.contributor'].includes(name) && typeof content === 'object') {
+    if (['citation_author', 'dc.creator'].includes(name) && typeof content === 'object') {
       const author = content as MetaTagAuthor;
       return `${author.familyName}, ${author.givenName}`;
     }

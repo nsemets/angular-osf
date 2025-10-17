@@ -1,0 +1,62 @@
+<osf-sub-header [title]="'project.analytics.viewRelated.linkedProjectsTitle' | translate" [showButton]="false" />
+
+<div class="flex flex-column flex-1 bg-white gap-5 p-3 sm:p-4">
+  @if (!isLoading() && currentResource()) {
+    @if (!linkedProjects().length) {
+      <p class="mt-5 text-center">{{ 'project.analytics.viewRelated.noLinkedProjectsMessage' | translate }}</p>
+    } @else {
+      <p>{{ 'project.analytics.viewRelated.linkedProjectsMessage' | translate }}</p>
+
+      @for (duplicate of linkedProjects(); track duplicate.id) {
+        <div class="duplicate-wrapper flex flex-column gap-3 p-3 sm:p-4">
+          <div class="flex justify-content-between align-items-center">
+            <h2 class="flex align-items-center gap-2">
+              <osf-icon [iconClass]="duplicate.isPublic ? 'fas fa-lock-open' : 'fas fa-lock'"></osf-icon>
+              {{ duplicate.title }}
+            </h2>
+          </div>
+
+          <div class="flex flex-column gap-2">
+            <div class="flex flex-wrap align-items-center gap-1">
+              <span class="font-bold">{{ 'common.labels.forked' | translate }}:</span>
+              <p>{{ duplicate.dateCreated | date: 'MMM d, y, h:mm a' }}</p>
+            </div>
+
+            <div class="flex flex-wrap align-items-center gap-1">
+              <span class="font-bold">{{ 'common.labels.lastUpdated' | translate }}:</span>
+              <p>{{ duplicate.dateModified | date: 'MMM d, y, h:mm a' }}</p>
+            </div>
+
+            <div class="flex flex-wrap align-items-center gap-1">
+              <span class="font-bold">{{ 'common.labels.contributors' | translate }}:</span>
+
+              <osf-contributors-list [contributors]="duplicate.bibliographicContributors ?? []"></osf-contributors-list>
+            </div>
+
+            @if (duplicate.description) {
+              <osf-truncated-text
+                [text]="('resourceCard.labels.descriptionBold' | translate) + duplicate.description"
+              />
+            }
+          </div>
+          <p-button
+            [label]="'common.buttons.view' | translate"
+            severity="secondary"
+            [routerLink]="['/', duplicate.id]"
+          />
+        </div>
+      }
+
+      @if (totalLinkedProjects() > pageSize) {
+        <osf-custom-paginator
+          [totalCount]="totalLinkedProjects()"
+          [rows]="pageSize"
+          [first]="firstIndex()"
+          (pageChanged)="onPageChange($event)"
+        />
+      }
+    }
+  } @else {
+    <osf-loading-spinner></osf-loading-spinner>
+  }
+</div>

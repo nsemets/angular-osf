@@ -1,9 +1,8 @@
-import { select, Store } from '@ngxs/store';
+import { createDispatchMap, select, Store } from '@ngxs/store';
 
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
-import { DialogService } from 'primeng/dynamicdialog';
 import { Menu } from 'primeng/menu';
 import { ToggleSwitch } from 'primeng/toggleswitch';
 import { Tooltip } from 'primeng/tooltip';
@@ -16,11 +15,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
+import { UserSelectors } from '@core/store/user';
+import { ClearDuplicatedProject, ProjectOverviewSelectors } from '@osf/features/project/overview/store';
 import { IconComponent } from '@osf/shared/components';
 import { ResourceType } from '@osf/shared/enums';
 import { ShareableContent, ToolbarResource } from '@osf/shared/models';
 import { FileSizePipe } from '@osf/shared/pipes';
-import { SocialShareService, ToastService } from '@osf/shared/services';
+import { CustomDialogService, SocialShareService, ToastService } from '@osf/shared/services';
 import {
   AddResourceToBookmarks,
   BookmarksSelectors,
@@ -55,10 +56,10 @@ import { TogglePublicityDialogComponent } from '../toggle-publicity-dialog/toggl
 })
 export class OverviewToolbarComponent {
   private store = inject(Store);
-  private dialogService = inject(DialogService);
-  private translateService = inject(TranslateService);
+  private customDialogService = inject(CustomDialogService);
   private toastService = inject(ToastService);
   private socialShareService = inject(SocialShareService);
+
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
@@ -67,9 +68,8 @@ export class OverviewToolbarComponent {
   isBookmarked = signal(false);
 
   isCollectionsRoute = input<boolean>(false);
-  isAdmin = input.required<boolean>();
+  canEdit = input.required<boolean>();
   currentResource = input.required<ToolbarResource | null>();
-  projectTitle = input<string>('');
   projectDescription = input<string>('');
   showViewOnlyLinks = input<boolean>(true);
 
@@ -77,14 +77,18 @@ export class OverviewToolbarComponent {
   isBookmarksSubmitting = select(BookmarksSelectors.getBookmarksCollectionIdSubmitting);
   bookmarksCollectionId = select(BookmarksSelectors.getBookmarksCollectionId);
   bookmarkedProjects = select(MyResourcesSelectors.getBookmarks);
+  duplicatedProject = select(ProjectOverviewSelectors.getDuplicatedProject);
+  isAuthenticated = select(UserSelectors.isAuthenticated);
   socialsActionItems = computed(() => {
     const shareableContent = this.createShareableContent();
     return shareableContent ? this.buildSocialActionItems(shareableContent) : [];
   });
 
-  hasViewOnly = computed(() => {
-    return hasViewOnlyParam(this.router);
-  });
+  hasViewOnly = computed(() => hasViewOnlyParam(this.router));
+
+  actions = createDispatchMap({ clearDuplicatedProject: ClearDuplicatedProject });
+
+  readonly ResourceType = ResourceType;
 
   readonly forkActionItems = [
     {
@@ -102,7 +106,6 @@ export class OverviewToolbarComponent {
       },
     },
   ];
-  readonly ResourceType = ResourceType;
 
   get isRegistration(): boolean {
     return this.currentResource()?.resourceType === ResourceType.Registration;
@@ -145,25 +148,19 @@ export class OverviewToolbarComponent {
     if (!resource) return;
 
     const isCurrentlyPublic = resource.isPublic;
-    const newPublicStatus = !isCurrentlyPublic;
 
     timer(100)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.isPublic.set(resource.isPublic));
 
-    this.dialogService.open(TogglePublicityDialogComponent, {
-      focusOnShow: false,
-      width: '40vw',
-      header: this.translateService.instant(
-        isCurrentlyPublic ? 'project.overview.dialog.makePrivate.header' : 'project.overview.dialog.makePublic.header'
-      ),
-      closeOnEscape: true,
-      modal: true,
-      closable: true,
+    this.customDialogService.open(TogglePublicityDialogComponent, {
+      header: isCurrentlyPublic
+        ? 'project.overview.dialog.makePrivate.header'
+        : 'project.overview.dialog.makePublic.header',
+      width: '600px',
       data: {
         projectId: resource.id,
         isCurrentlyPublic,
-        newPublicStatus,
       },
     });
   }
@@ -207,13 +204,10 @@ export class OverviewToolbarComponent {
         : resource?.resourceType === ResourceType.Registration
           ? 'project.overview.dialog.fork.headerRegistry'
           : '';
+
     if (resource) {
-      this.dialogService.open(ForkDialogComponent, {
-        focusOnShow: false,
-        header: this.translateService.instant(headerTranslation),
-        closeOnEscape: true,
-        modal: true,
-        closable: true,
+      this.customDialogService.open(ForkDialogComponent, {
+        header: headerTranslation,
         data: {
           resource: resource,
         },
@@ -222,27 +216,31 @@ export class OverviewToolbarComponent {
   }
 
   private handleDuplicateProject(): void {
-    this.dialogService.open(DuplicateDialogComponent, {
-      focusOnShow: false,
-      header: this.translateService.instant('project.overview.dialog.duplicate.header'),
-      closeOnEscape: true,
-      modal: true,
-      closable: true,
-    });
+    this.customDialogService
+      .open(DuplicateDialogComponent, { header: 'project.overview.dialog.duplicate.header' })
+      .onClose.subscribe({
+        next: () => {
+          const duplicatedProject = this.duplicatedProject();
+
+          if (duplicatedProject) {
+            this.router.navigate(['/', duplicatedProject.id]);
+          }
+        },
+        complete: () => this.actions.clearDuplicatedProject(),
+      });
   }
 
   private createShareableContent(): ShareableContent | null {
     const resource = this.currentResource();
-    const title = this.projectTitle();
     const description = this.projectDescription();
 
-    if (!resource?.isPublic || !title) {
+    if (!resource?.isPublic) {
       return null;
     }
 
     return {
       id: resource.id,
-      title,
+      title: resource.title,
       description,
       url: this.buildResourceUrl(resource),
     };
@@ -282,6 +280,16 @@ export class OverviewToolbarComponent {
         label: 'project.overview.actions.socials.facebook',
         icon: 'fab fa-facebook-f',
         url: shareLinks.facebook,
+      },
+      {
+        label: 'project.overview.actions.socials.mastodon',
+        icon: 'fab fa-mastodon',
+        url: shareLinks.mastodon,
+      },
+      {
+        label: 'project.overview.actions.socials.bluesky',
+        icon: 'fab fa-bluesky',
+        url: shareLinks.bluesky,
       },
     ];
   }

@@ -2,31 +2,35 @@ import { map, Observable } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { JsonApiService } from '@osf/shared/services';
+import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { MapResources } from '@shared/mappers/search';
 import {
   FilterOption,
   FilterOptionItem,
   FilterOptionsResponseJsonApi,
-  IndexCardDataJsonApi,
   IndexCardSearchResponseJsonApi,
   ResourcesData,
-  SearchResultJsonApi,
+  SearchResultDataJsonApi,
 } from '@shared/models';
 
-import { AppliedFilter, CombinedFilterMapper, mapFilterOptions, RelatedPropertyPathItem } from '../mappers';
+import { mapFilterOptions, MapFilters } from '../mappers';
 
-import { environment } from 'src/environments/environment';
+import { JsonApiService } from './json-api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GlobalSearchService {
   private readonly jsonApiService = inject(JsonApiService);
+  private readonly environment = inject(ENVIRONMENT);
 
-  getResources(params: Record<string, string>): Observable<ResourcesData> {
+  get shareTroveUrl() {
+    return this.environment.shareTroveUrl;
+  }
+
+  getResources(params: Record<string, string | string[]>): Observable<ResourcesData> {
     return this.jsonApiService
-      .get<IndexCardSearchResponseJsonApi>(`${environment.shareTroveUrl}/index-card-search`, params)
+      .get<IndexCardSearchResponseJsonApi>(`${this.shareTroveUrl}/index-card-search`, params)
       .pipe(map((response) => this.handleResourcesRawResponse(response)));
   }
 
@@ -36,9 +40,11 @@ export class GlobalSearchService {
       .pipe(map((response) => this.handleResourcesRawResponse(response)));
   }
 
-  getFilterOptions(params: Record<string, string>): Observable<{ options: FilterOption[]; nextUrl?: string }> {
+  getFilterOptions(
+    params: Record<string, string | string[]>
+  ): Observable<{ options: FilterOption[]; nextUrl?: string }> {
     return this.jsonApiService
-      .get<FilterOptionsResponseJsonApi>(`${environment.shareTroveUrl}/index-value-search`, params)
+      .get<FilterOptionsResponseJsonApi>(`${this.shareTroveUrl}/index-value-search`, params)
       .pipe(map((response) => this.handleFilterOptionsRawResponse(response)));
   }
 
@@ -52,16 +58,14 @@ export class GlobalSearchService {
     options: FilterOption[];
     nextUrl?: string;
   } {
-    const options: FilterOption[] = [];
     let nextUrl: string | undefined;
 
-    const searchResultItems = response
-      .included!.filter((item): item is SearchResultJsonApi => item.type === 'search-result')
-      .sort((a, b) => Number(a.id.at(-1)) - Number(b.id.at(-1)));
-    const filterOptionItems = response.included!.filter((item): item is FilterOptionItem => item.type === 'index-card');
+    const searchResultItems =
+      response.included?.filter((item): item is SearchResultDataJsonApi => item.type === 'search-result') ?? [];
+    const filterOptionItems =
+      response.included?.filter((item): item is FilterOptionItem => item.type === 'index-card') ?? [];
 
-    options.push(...mapFilterOptions(searchResultItems, filterOptionItems));
-
+    const options = mapFilterOptions(searchResultItems, filterOptionItems);
     const searchResultPage = response?.data?.relationships?.['searchResultPage'] as {
       links?: { next?: { href: string } };
     };
@@ -73,28 +77,32 @@ export class GlobalSearchService {
   }
 
   private handleResourcesRawResponse(response: IndexCardSearchResponseJsonApi): ResourcesData {
-    const searchResultItems = response
-      .included!.filter((item): item is SearchResultJsonApi => item.type === 'search-result')
-      .sort((a, b) => Number(a.id.at(-1)) - Number(b.id.at(-1)));
-
-    const indexCardItems = response.included!.filter((item) => item.type === 'index-card') as IndexCardDataJsonApi[];
-    const indexCardItemsCorrectOrder = searchResultItems.map((searchResult) => {
-      return indexCardItems.find((indexCard) => indexCard.id === searchResult.relationships.indexCard.data.id)!;
-    });
-    const relatedPropertyPathItems = response.included!.filter(
-      (item): item is RelatedPropertyPathItem => item.type === 'related-property-path'
-    );
-
-    const appliedFilters: AppliedFilter[] = response.data?.attributes?.cardSearchFilter || [];
-
     return {
-      resources: indexCardItemsCorrectOrder.map((item) => MapResources(item)),
-      filters: CombinedFilterMapper(appliedFilters, relatedPropertyPathItems),
-      count: response.data.attributes.totalResultCount,
+      resources: MapResources(response),
+      filters: MapFilters(response),
+      count: this.parseTotalCount(response),
       self: response.data.links.self,
       first: response.data?.relationships?.searchResultPage.links?.first?.href ?? null,
       next: response.data?.relationships?.searchResultPage.links?.next?.href ?? null,
       previous: response.data?.relationships?.searchResultPage.links?.prev?.href ?? null,
     };
+  }
+
+  private parseTotalCount(response: IndexCardSearchResponseJsonApi) {
+    let totalCount = 0;
+    const rawTotalCount = response.data.attributes.totalResultCount;
+
+    if (typeof rawTotalCount === 'number') {
+      totalCount = rawTotalCount;
+    } else if (
+      typeof rawTotalCount === 'object' &&
+      rawTotalCount !== null &&
+      '@id' in rawTotalCount &&
+      String(rawTotalCount['@id']).includes('ten-thousands-and-more')
+    ) {
+      totalCount = 10000;
+    }
+
+    return totalCount;
   }
 }

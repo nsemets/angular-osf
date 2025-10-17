@@ -1,6 +1,8 @@
 export const SOCIAL_SHARE_URLS = {
   email: 'mailto:',
-  twitter: 'https://twitter.com/intent/tweet',
+  twitter: { preview_url: 'https://twitter.com/intent/tweet', viaHandle: 'OsfFramework' },
   facebook: 'https://www.facebook.com/sharer/sharer.php',
-  linkedIn: 'https://www.linkedin.com/shareArticle',
+  linkedIn: 'https://www.linkedin.com/sharing/share-offsite',
+  mastodon: 'https://mastodonshare.com',
+  bluesky: 'https://bsky.app/intent/compose',
 };

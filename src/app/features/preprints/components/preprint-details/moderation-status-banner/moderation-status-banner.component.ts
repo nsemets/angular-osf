@@ -7,6 +7,7 @@ import { Message } from 'primeng/message';
 import { DatePipe, TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 
+import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { ReviewAction } from '@osf/features/moderation/models';
 import {
   recentActivityMessageByState,
@@ -21,8 +22,6 @@ import { PreprintProviderDetails, PreprintRequest } from '@osf/features/preprint
 import { PreprintSelectors } from '@osf/features/preprints/store/preprint';
 import { IconComponent } from '@shared/components';
 
-import { environment } from 'src/environments/environment';
-
 @Component({
   selector: 'osf-moderation-status-banner',
   imports: [IconComponent, Message, TitleCasePipe, TranslatePipe, DatePipe],
@@ -32,7 +31,9 @@ import { environment } from 'src/environments/environment';
 })
 export class ModerationStatusBannerComponent {
   private readonly translateService = inject(TranslateService);
-  readonly environment = environment;
+  private readonly environment = inject(ENVIRONMENT);
+
+  webUrl = this.environment.webUrl;
 
   preprint = select(PreprintSelectors.getPreprint);
   provider = input.required<PreprintProviderDetails>();
@@ -40,9 +41,8 @@ export class ModerationStatusBannerComponent {
   latestWithdrawalRequest = input.required<PreprintRequest | null>();
 
   isPendingWithdrawal = input.required<boolean>();
-  noActions = computed(() => {
-    return this.latestAction() === null;
-  });
+
+  noActions = computed(() => this.latestAction() === null);
 
   documentType = computed(() => {
     const provider = this.provider();
@@ -106,20 +106,9 @@ export class ModerationStatusBannerComponent {
     return recentActivityMessageByState[ReviewsState.PendingWithdrawal];
   });
 
-  actionCreatorName = computed(() => {
-    return this.latestAction()?.creator.name;
-  });
-  actionCreatorLink = computed(() => {
-    return `${environment.webUrl}/${this.actionCreatorId()}`;
-  });
-  actionCreatorId = computed(() => {
-    return this.latestAction()?.creator.id;
-  });
-
-  withdrawalRequesterName = computed(() => {
-    return this.latestWithdrawalRequest()?.creator.name;
-  });
-  withdrawalRequesterId = computed(() => {
-    return this.latestWithdrawalRequest()?.creator.id;
-  });
+  actionCreatorName = computed(() => this.latestAction()?.creator?.name);
+  actionCreatorLink = computed(() => `${this.webUrl}/${this.actionCreatorId()}`);
+  actionCreatorId = computed(() => this.latestAction()?.creator?.id);
+  withdrawalRequesterName = computed(() => this.latestWithdrawalRequest()?.creator.name);
+  withdrawalRequesterId = computed(() => this.latestWithdrawalRequest()?.creator.id);
 }

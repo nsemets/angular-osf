@@ -1,30 +1,16 @@
 import { CollectionSubmissionReviewAction } from '@osf/features/moderation/models';
-import { Brand } from '@shared/models';
 
-export interface CollectionProvider {
-  id: string;
-  type: string;
-  name: string;
-  description: string;
-  advisoryBoard: string;
-  example: string | null;
-  domain: string;
-  domainRedirectEnabled: boolean;
-  footerLinks: string;
-  emailSupport: boolean | null;
-  facebookAppId: string | null;
-  allowSubmissions: boolean;
-  allowCommenting: boolean;
+import { Brand } from '../brand.model';
+import { ContributorModel } from '../contributors';
+import { BaseProviderModel } from '../provider';
+
+export interface CollectionProvider extends BaseProviderModel {
   assets: {
     style?: string;
     squareColorTransparent?: string;
     squareColorNoTransparent?: string;
     favicon?: string;
   };
-  shareSource: string;
-  sharePublishType: string;
-  permissions: string[];
-  reviewsWorkflow: string;
   primaryCollection: {
     id: string;
     type: string;
@@ -55,12 +41,6 @@ export interface CollectionDetails {
   isPromoted: boolean;
   isPublic: boolean;
   filters: CollectionFilters;
-}
-
-export interface CollectionContributor {
-  id: string;
-  name: string;
-  url: string;
 }
 
 export interface CollectionSubmission {
@@ -103,7 +83,7 @@ export interface CollectionSubmissionWithGuid {
   dataType: string;
   disease: string;
   gradeLevels: string;
-  contributors?: CollectionContributor[];
+  contributors?: ContributorModel[];
   creator?: {
     id: string;
     fullName: string;

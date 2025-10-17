@@ -1,14 +1,14 @@
 @if (label()) {
-  <label [for]="inputId">{{ label() | translate }}</label>
+  <label [for]="inputId()">{{ label() | translate }}</label>
 }
 <input
-  [id]="inputId"
+  [id]="inputId()"
   pInputText
   [type]="type()"
   [formControl]="control()"
   [attr.aria-describedby]="helpText() ? helpId : null"
-  [minLength]="minLength()"
-  [maxLength]="maxLength()"
+  [attr.minLength]="minLength()"
+  [attr.maxLength]="maxLength()"
   [placeholder]="placeholder() | translate"
 />
 

@@ -1,3 +1,4 @@
+import { UserMapper } from '@osf/shared/mappers';
 import { PaginatedData, ResponseJsonApi } from '@osf/shared/models';
 
 import {
@@ -13,14 +14,16 @@ import { PreprintSubmissionPaginatedData } from '../models/preprint-submission.m
 
 export class PreprintModerationMapper {
   static fromResponse(response: ReviewActionJsonApi): PreprintReviewActionModel {
+    const creator = UserMapper.getUserInfo(response.embeds.creator);
+
     return {
       id: response.id,
       dateModified: response.attributes.date_modified,
       fromState: response.attributes.from_state,
       toState: response.attributes.to_state,
       creator: {
-        id: response.embeds.creator.data.id,
-        name: response.embeds.creator.data.attributes.full_name,
+        id: creator?.id || '',
+        name: creator?.fullName || '',
       },
       preprint: {
         id: response.embeds.target.data.id,
@@ -39,6 +42,7 @@ export class PreprintModerationMapper {
     return {
       data: response.data.map((x) => this.fromResponse(x)),
       totalCount: response.meta.total,
+      pageSize: response.meta.per_page,
     };
   }
 
@@ -64,6 +68,7 @@ export class PreprintModerationMapper {
         actions: [],
       })),
       totalCount: response.meta.total,
+      pageSize: response.meta.per_page,
       pendingCount: response.meta.reviews_state_counts.pending,
       acceptedCount: response.meta.reviews_state_counts.accepted,
       rejectedCount: response.meta.reviews_state_counts.rejected,
@@ -82,6 +87,7 @@ export class PreprintModerationMapper {
         actions: [],
       })),
       totalCount: response.meta.total,
+      pageSize: response.meta.per_page,
       pendingCount: response.meta.requests_state_counts.pending,
       acceptedCount: response.meta.requests_state_counts.accepted,
       rejectedCount: response.meta.requests_state_counts.rejected,

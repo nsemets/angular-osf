@@ -8,8 +8,8 @@
       @if (isLoading()) {
         <p-skeleton width="12rem" height="37px"></p-skeleton>
       } @else {
-        <h1 data-test-page-heading class="flex align-items-center">
-          {{ title() }}
+        <h1 data-test-page-heading class="flex align-items-center word-break-word">
+          {{ title() | fixSpecialChar }}
           @if (tooltip()) {
             <i
               class="fas fa-circle-info ml-1 blue-icon cursor-pointer"
@@ -31,6 +31,7 @@
           (onClick)="buttonClick.emit()"
           [loading]="isSubmitting()"
           [disabled]="isButtonDisabled()"
+          data-test-sub-header-button
         ></p-button>
       </div>
     }

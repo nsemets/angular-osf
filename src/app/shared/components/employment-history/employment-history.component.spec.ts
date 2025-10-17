@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
-
-import { MOCK_EMPLOYMENT, TranslateServiceMock } from '@osf/shared/mocks';
 
 import { EmploymentHistoryComponent } from './employment-history.component';
+
+import { MOCK_EMPLOYMENT } from '@testing/mocks';
+import { OSFTestingModule } from '@testing/osf.testing.module';
 
 describe('EmploymentHistoryComponent', () => {
   let component: EmploymentHistoryComponent;
@@ -12,8 +12,7 @@ describe('EmploymentHistoryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EmploymentHistoryComponent],
-      providers: [provideNoopAnimations(), TranslateServiceMock],
+      imports: [EmploymentHistoryComponent, OSFTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(EmploymentHistoryComponent);

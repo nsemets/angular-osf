@@ -9,8 +9,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder } from '@angular/forms';
 
 import { UpdateProfileSettingsUser, UserSelectors } from '@osf/core/store/user';
+import { forbiddenFileNameCharacters } from '@osf/shared/constants';
 import { CustomValidators } from '@osf/shared/helpers';
-import { User } from '@osf/shared/models';
+import { UserModel } from '@osf/shared/models';
 import { CustomConfirmationService, LoaderService, ToastService } from '@osf/shared/services';
 
 import { hasNameChanges } from '../../helpers';
@@ -35,14 +36,29 @@ export class NameComponent {
 
   readonly actions = createDispatchMap({ updateProfileSettingsUser: UpdateProfileSettingsUser });
   readonly currentUser = select(UserSelectors.getUserNames);
-  readonly previewUser = signal<Partial<User>>({});
+  readonly previewUser = signal<Partial<UserModel>>({});
 
   readonly fb = inject(FormBuilder);
   readonly form = this.fb.group<NameForm>({
-    fullName: this.fb.control('', { nonNullable: true, validators: [CustomValidators.requiredTrimmed()] }),
-    givenName: this.fb.control('', { nonNullable: true }),
-    middleNames: this.fb.control('', { nonNullable: true }),
-    familyName: this.fb.control('', { nonNullable: true }),
+    fullName: this.fb.control('', {
+      nonNullable: true,
+      validators: [
+        CustomValidators.requiredTrimmed(),
+        CustomValidators.forbiddenCharactersValidator(forbiddenFileNameCharacters),
+      ],
+    }),
+    givenName: this.fb.control('', {
+      nonNullable: true,
+      validators: CustomValidators.forbiddenCharactersValidator(forbiddenFileNameCharacters),
+    }),
+    middleNames: this.fb.control('', {
+      nonNullable: true,
+      validators: CustomValidators.forbiddenCharactersValidator(forbiddenFileNameCharacters),
+    }),
+    familyName: this.fb.control('', {
+      nonNullable: true,
+      validators: CustomValidators.forbiddenCharactersValidator(forbiddenFileNameCharacters),
+    }),
     suffix: this.fb.control('', { nonNullable: true }),
   });
 
@@ -110,7 +126,7 @@ export class NameComponent {
     return hasNameChanges(this.form.controls, user);
   }
 
-  private updateForm(user: Partial<User>) {
+  private updateForm(user: Partial<UserModel>) {
     this.form.patchValue({
       fullName: user.fullName,
       givenName: user.givenName,

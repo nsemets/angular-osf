@@ -1,0 +1,63 @@
+<div class="flex flex-column gap-4">
+  <div>
+    <osf-text-input
+      [label]="'myProjects.settings.linkName'"
+      [control]="linkName"
+      [placeholder]="'myProjects.settings.typeLinkName'"
+      [maxLength]="inputLimits.name.maxLength"
+    ></osf-text-input>
+  </div>
+
+  <hr class="break-line" />
+
+  <div class="flex column-gap-2">
+    <p-checkbox variant="filled" inputId="anonymous" binary="true" [(ngModel)]="anonymous"></p-checkbox>
+    <label class="cursor-pointer" for="anonymous">
+      {{ 'myProjects.settings.anonymizeContributorList' | translate }}
+      <span class="font-italic">
+        {{ 'myProjects.settings.ensureNoInformation' | translate }}
+      </span>
+    </label>
+  </div>
+
+  <hr class="break-line" />
+
+  <p>
+    {{ 'myProjects.settings.whichComponentLink' | translate }}
+    <span class="font-italic">
+      {{ 'myProjects.settings.anyonePrivateLink' | translate }}
+    </span>
+  </p>
+
+  @if (isLoading()) {
+    <osf-loading-spinner />
+  } @else {
+    <div class="flex flex-column gap-2">
+      @for (item of componentsList(); track item.id) {
+        <osf-component-checkbox-item
+          [item]="item"
+          [tooltipText]="'myProjects.settings.parentsNeedToBeChecked'"
+          (itemChange)="onCheckboxChange(item)"
+        />
+      }
+    </div>
+  }
+
+  <div class="flex gap-2">
+    <p-button
+      class="w-full"
+      styleClass="w-full"
+      (onClick)="dialogRef.close()"
+      severity="info"
+      [label]="'project.contributors.addDialog.cancel' | translate"
+    ></p-button>
+
+    <p-button
+      class="w-full"
+      styleClass="w-full"
+      (onClick)="addLink()"
+      [disabled]="linkName.invalid"
+      [label]="'common.buttons.create' | translate"
+    ></p-button>
+  </div>
+</div>

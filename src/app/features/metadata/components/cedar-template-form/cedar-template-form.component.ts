@@ -1,6 +1,10 @@
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
+import { Menu } from 'primeng/menu';
+import { Tooltip } from 'primeng/tooltip';
+
+import { map, of } from 'rxjs';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -9,14 +13,17 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   effect,
   ElementRef,
+  inject,
   input,
-  OnInit,
   output,
   signal,
   viewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute } from '@angular/router';
 
+import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { CEDAR_CONFIG, CEDAR_VIEWER_CONFIG } from '@osf/features/metadata/constants';
 import { CedarMetadataHelper } from '@osf/features/metadata/helpers';
 import {
@@ -30,17 +37,17 @@ import 'cedar-artifact-viewer';
 
 @Component({
   selector: 'osf-cedar-template-form',
-  imports: [CommonModule, Button, TranslatePipe],
+  imports: [CommonModule, Button, TranslatePipe, Tooltip, Menu],
   templateUrl: './cedar-template-form.component.html',
   styleUrl: './cedar-template-form.component.scss',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CedarTemplateFormComponent implements OnInit {
+export class CedarTemplateFormComponent {
   emitData = output<CedarRecordDataBinding>();
   changeTemplate = output<void>();
-  editMode = output<void>();
+  toggleEditMode = output<void>();
 
   template = input.required<CedarMetadataDataTemplateJsonApi>();
   existingRecord = input<CedarMetadataRecordData | null>(null);
@@ -55,31 +62,78 @@ export class CedarTemplateFormComponent implements OnInit {
   cedarEditor = viewChild<ElementRef<CedarEditorElement>>('cedarEditor');
   cedarViewer = viewChild<ElementRef<CedarEditorElement>>('cedarViewer');
 
+  private route = inject(ActivatedRoute);
+  readonly environment = inject(ENVIRONMENT);
+
+  readonly recordId = signal<string>('');
+  readonly downloadUrl = signal<string>('');
+  readonly schemaName = signal<string>('');
+
+  shareItems = [
+    {
+      label: 'files.detail.actions.share.email',
+      command: () => this.handleEmailShare(),
+    },
+    {
+      label: 'files.detail.actions.share.x',
+      command: () => this.handleXShare(),
+    },
+    {
+      label: 'files.detail.actions.share.facebook',
+      command: () => this.handleFacebookShare(),
+    },
+  ];
+
   constructor() {
     effect(() => {
       const tpl = this.template();
       if (tpl?.attributes?.template) {
-        this.initializeFormData();
+        this.initializeCedar();
       }
     });
 
     effect(() => {
-      const editor = this.cedarEditor()?.nativeElement;
-      const viewer = this.cedarViewer()?.nativeElement;
-      const metadata = this.existingRecord()?.attributes?.metadata;
-      if (metadata) {
-        if (editor) {
-          editor.instanceObject = metadata;
-        }
-        if (viewer) {
-          viewer.instanceObject = metadata;
-        }
+      const record = this.existingRecord();
+      this.schemaName.set(record?.embeds?.template.data.attributes.schema_name || '');
+      if (record) {
+        this.initializeCedar();
       }
     });
   }
 
-  ngOnInit() {
+  private initializeCedar(): void {
+    const metadata = this.existingRecord()?.attributes?.metadata;
+    const editor = this.cedarEditor()?.nativeElement;
+    const viewer = this.cedarViewer()?.nativeElement;
+
     this.initializeFormData();
+
+    if (metadata) {
+      if (editor) editor.instanceObject = metadata;
+      if (viewer) viewer.instanceObject = metadata;
+    }
+
+    const id = this.route.snapshot.paramMap.get('recordId') ?? '';
+    this.recordId.set(id);
+
+    this.downloadUrl.set(`${this.environment.apiDomainUrl}/_/cedar_metadata_records/${id}/metadata_download/`);
+
+    this.validateCedarMetadata();
+  }
+
+  readonly fileGuid = toSignal(this.route.params.pipe(map((params) => params['fileGuid'])) ?? of(undefined));
+
+  downloadMetadadaRecord() {
+    if (this.fileGuid()) {
+      window.open(`${this.environment.webUrl}/metadata/${this.fileGuid()}`)?.focus();
+    } else {
+      window.open(this.downloadUrl(), '_blank');
+    }
+  }
+
+  copyUrl() {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then();
   }
 
   onCedarChange(event: Event): void {
@@ -100,8 +154,13 @@ export class CedarTemplateFormComponent implements OnInit {
     this.isValid = !!report?.isValid;
   }
 
-  editModeEmit(): void {
-    this.editMode.emit();
+  toggleEditModeEmit(): void {
+    this.toggleEditMode.emit();
+  }
+
+  cancel() {
+    this.initializeFormData();
+    this.toggleEditModeEmit();
   }
 
   onSubmit() {
@@ -123,5 +182,22 @@ export class CedarTemplateFormComponent implements OnInit {
     } else {
       this.formData.set(CedarMetadataHelper.buildEmptyMetadata());
     }
+  }
+
+  handleEmailShare(): void {
+    const url = window.location.href;
+    window.location.href = `mailto:?subject=${this.schemaName()}&body=${url}`;
+  }
+
+  handleXShare(): void {
+    const url = window.location.href;
+    const link = `https://x.com/intent/tweet?url=${url}&text=${this.schemaName()}&via=OSFramework`;
+    window.open(link, '_blank', 'noopener,noreferrer');
+  }
+
+  handleFacebookShare(): void {
+    const url = window.location.href;
+    const link = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+    window.open(link, '_blank', 'noopener,noreferrer');
   }
 }

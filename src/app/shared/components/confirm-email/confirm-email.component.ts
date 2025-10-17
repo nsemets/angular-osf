@@ -10,9 +10,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 
 import { DeleteEmail, UserEmailsSelectors, VerifyEmail } from '@core/store/user-emails';
-import { LoadingSpinnerComponent } from '@osf/shared/components';
 import { AccountEmailModel } from '@osf/shared/models';
 import { ToastService } from '@osf/shared/services';
+
+import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'osf-confirm-email',
@@ -36,25 +37,44 @@ export class ConfirmEmailComponent {
   }
 
   closeDialog() {
+    const isMerge = this.email.isMerge;
     this.actions
       .deleteEmail(this.email.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.toastService.showSuccess('home.confirmEmail.emailNotAdded', { name: this.email.emailAddress });
-        this.dialogRef.close();
+      .subscribe({
+        next: () => {
+          const showSuccessText = isMerge
+            ? 'home.confirmEmail.merge.emailNotAdded'
+            : 'home.confirmEmail.add.emailNotAdded';
+          this.toastService.showSuccess(showSuccessText, { name: this.email.emailAddress });
+          this.dialogRef.close();
+        },
+        error: () => {
+          const showErrorText = isMerge ? 'home.confirmEmail.merge.denyError' : 'home.confirmEmail.add.denyError';
+          this.toastService.showError(showErrorText, { name: this.email.emailAddress });
+          this.dialogRef.close();
+        },
       });
   }
 
   verifyEmail() {
+    const isMerge = this.email.isMerge;
     this.actions
       .verifyEmail(this.email.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          this.toastService.showSuccess('home.confirmEmail.emailVerified', { name: this.email.emailAddress });
+          const showSuccessText = isMerge
+            ? 'home.confirmEmail.merge.emailVerified'
+            : 'home.confirmEmail.add.emailVerified';
+          this.toastService.showSuccess(showSuccessText, { name: this.email.emailAddress });
           this.dialogRef.close();
         },
-        error: () => this.dialogRef.close(),
+        error: () => {
+          const showErrorText = isMerge ? 'home.confirmEmail.merge.verifyError' : 'home.confirmEmail.add.verifyError';
+          this.toastService.showError(showErrorText, { name: this.email.emailAddress });
+          this.dialogRef.close();
+        },
       });
   }
 }

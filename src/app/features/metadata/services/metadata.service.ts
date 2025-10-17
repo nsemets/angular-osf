@@ -3,8 +3,9 @@ import { map } from 'rxjs/operators';
 
 import { inject, Injectable } from '@angular/core';
 
+import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { ResourceType } from '@osf/shared/enums';
-import { Identifier, LicenseOptions } from '@osf/shared/models';
+import { BaseNodeAttributesJsonApi, Identifier, LicenseOptions } from '@osf/shared/models';
 import { JsonApiService } from '@osf/shared/services';
 
 import { CedarRecordsMapper, MetadataMapper } from '../mappers';
@@ -15,21 +16,30 @@ import {
   CedarRecordDataBinding,
   CustomMetadataJsonApi,
   CustomMetadataJsonApiResponse,
-  MetadataAttributesJsonApi,
   MetadataJsonApi,
   MetadataJsonApiResponse,
 } from '../models';
-import { CrossRefFundersResponse, CustomItemMetadataRecord, Metadata } from '../models/metadata.model';
-
-import { environment } from 'src/environments/environment';
+import { CrossRefFundersResponse, CustomItemMetadataRecord, MetadataModel } from '../models/metadata.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MetadataService {
   private readonly jsonApiService = inject(JsonApiService);
-  private readonly apiDomainUrl = environment.apiDomainUrl;
-  private readonly apiUrl = `${this.apiDomainUrl}/v2`;
+  private readonly environment = inject(ENVIRONMENT);
+
+  get apiUrl() {
+    return `${this.environment.apiDomainUrl}/v2`;
+  }
+
+  get apiDomainUrl() {
+    return this.environment.apiDomainUrl;
+  }
+
+  get funderApiUrl() {
+    return this.environment.funderApiUrl;
+  }
+
   private readonly urlMap = new Map<ResourceType, string>([
     [ResourceType.Project, 'nodes'],
     [ResourceType.Registration, 'registrations'],
@@ -67,7 +77,7 @@ export class MetadataService {
   }
 
   getFundersList(searchQuery?: string): Observable<CrossRefFundersResponse> {
-    let url = `${environment.funderApiUrl}funders?mailto=support%40osf.io`;
+    let url = `${this.funderApiUrl}funders?mailto=support%40osf.io`;
 
     if (searchQuery && searchQuery.trim()) {
       url += `&query=${encodeURIComponent(searchQuery.trim())}`;
@@ -82,16 +92,24 @@ export class MetadataService {
     );
   }
 
-  getMetadataCedarRecords(resourceId: string, resourceType: ResourceType): Observable<CedarMetadataRecordJsonApi> {
+  getMetadataCedarRecords(
+    resourceId: string,
+    resourceType: ResourceType,
+    url?: string
+  ): Observable<CedarMetadataRecordJsonApi> {
     const params: Record<string, unknown> = {
       embed: 'template',
       'page[size]': 20,
     };
 
-    return this.jsonApiService.get<CedarMetadataRecordJsonApi>(
-      `${this.apiUrl}/${this.urlMap.get(resourceType)}/${resourceId}/cedar_metadata_records/`,
-      params
-    );
+    // [NS] TODO: Check if it can be simplified
+    let cedarUrl = `${this.apiUrl}/${this.urlMap.get(resourceType)}/${resourceId}/cedar_metadata_records/`;
+
+    if (url) {
+      cedarUrl = this.getMetadataUrl(url);
+    }
+
+    return this.jsonApiService.get<CedarMetadataRecordJsonApi>(cedarUrl, params);
   }
 
   createMetadataCedarRecord(
@@ -117,10 +135,11 @@ export class MetadataService {
     );
   }
 
-  getResourceMetadata(resourceId: string, resourceType: ResourceType): Observable<Partial<Metadata>> {
+  getResourceMetadata(resourceId: string, resourceType: ResourceType): Observable<Partial<MetadataModel>> {
     const params = this.getMetadataParams(resourceType);
 
     const baseUrl = `${this.apiUrl}/${this.urlMap.get(resourceType)}/${resourceId}/`;
+
     return this.jsonApiService
       .get<MetadataJsonApiResponse>(baseUrl, params)
       .pipe(map((response) => MetadataMapper.fromMetadataApiResponse(response.data)));
@@ -129,8 +148,8 @@ export class MetadataService {
   updateResourceDetails(
     resourceId: string,
     resourceType: ResourceType,
-    updates: Partial<MetadataAttributesJsonApi>
-  ): Observable<Metadata> {
+    updates: Partial<BaseNodeAttributesJsonApi>
+  ): Observable<MetadataModel> {
     const payload = {
       data: {
         id: resourceId,
@@ -152,7 +171,7 @@ export class MetadataService {
     resourceType: ResourceType,
     licenseId: string,
     licenseOptions?: LicenseOptions
-  ): Observable<Metadata> {
+  ): Observable<MetadataModel> {
     const payload = {
       data: {
         id: resourceId,
@@ -186,7 +205,7 @@ export class MetadataService {
 
   private getMetadataParams(resourceType: ResourceType): Record<string, unknown> {
     const params = {
-      embed: ['affiliated_institutions', 'identifiers', 'license', 'bibliographic_contributors'],
+      embed: ['affiliated_institutions', 'identifiers', 'license'],
     };
 
     if (resourceType === ResourceType.Registration) {
@@ -194,5 +213,17 @@ export class MetadataService {
     }
 
     return params;
+  }
+
+  private getMetadataUrl(url: string): string {
+    const parsedUrl = new URL(url);
+
+    if (!parsedUrl.pathname.endsWith('/')) {
+      parsedUrl.pathname += '/';
+    }
+
+    parsedUrl.pathname += 'cedar_metadata_records/';
+
+    return parsedUrl.toString();
   }
 }

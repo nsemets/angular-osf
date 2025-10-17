@@ -25,17 +25,9 @@
     </div>
 
     <div class="mb-4">
-      <h4 class="mb-2">{{ 'navigation.contributors' | translate }}</h4>
-      <div class="flex flex-wrap gap-2">
-        @for (contributor of contributors(); let last = $last; track contributor.id) {
-          <span>
-            <a [routerLink]="`/${[contributor.userId]}`">{{ contributor.fullName }}</a>
-            @if (!last) {
-              <span class="text-gray-500">,</span>
-            }
-          </span>
-        }
-      </div>
+      <h4 class="mb-2">{{ 'common.labels.contributors' | translate }}</h4>
+
+      <osf-contributors-list [contributors]="contributors()"></osf-contributors-list>
     </div>
 
     <div class="license mb-4">
@@ -102,6 +94,7 @@
             }
             @if (section.questions?.length) {
               <osf-registration-blocks-data
+                [isDraft]="true"
                 [questions]="section.questions"
                 [reviewData]="stepsData()"
               ></osf-registration-blocks-data>
@@ -111,6 +104,7 @@
       } @else {
         @if (page.questions?.length) {
           <osf-registration-blocks-data
+            [isDraft]="true"
             [questions]="page.questions"
             [reviewData]="stepsData()"
           ></osf-registration-blocks-data>
@@ -127,13 +121,19 @@
       class="mr-2"
       (click)="goBack()"
     ></p-button>
-    <p-button [label]="'registries.deleteDraft' | translate" severity="danger" (click)="deleteDraft()" class="mr-2">
+    <p-button
+      [label]="'registries.deleteDraft' | translate"
+      severity="danger"
+      [disabled]="!hasAdminAccess()"
+      (click)="deleteDraft()"
+      class="mr-2"
+    >
     </p-button>
     <p-button
       type="button"
       data-test-goto-register
       [label]="'registries.review.register' | translate"
-      [disabled]="isDraftLoading() || isDraftInvalid()"
+      [disabled]="registerButtonDisabled()"
       (click)="confirmRegistration()"
     ></p-button>
   </div>

@@ -41,7 +41,7 @@ export const registryRoutes: Routes = [
         loadComponent: () =>
           import('./pages/registry-overview/registry-overview.component').then((c) => c.RegistryOverviewComponent),
         providers: [
-          provideStates([RegistriesState, CitationsState]),
+          provideStates([RegistriesState, SubjectsState, CitationsState]),
           ProvidersHandlers,
           ProjectsHandlers,
           LicensesHandlers,
@@ -66,8 +66,7 @@ export const registryRoutes: Routes = [
       {
         path: 'contributors',
         canActivate: [viewOnlyGuard],
-        loadComponent: () =>
-          import('../project/contributors/contributors.component').then((mod) => mod.ContributorsComponent),
+        loadComponent: () => import('../contributors/contributors.component').then((mod) => mod.ContributorsComponent),
         data: { resourceType: ResourceType.Registration },
         providers: [provideStates([ContributorsState, ViewOnlyLinkState])],
       },

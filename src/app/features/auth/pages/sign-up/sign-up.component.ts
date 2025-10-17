@@ -12,6 +12,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
+import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { SignUpModel } from '@osf/core/models';
 import { AuthService } from '@osf/core/services';
 import { PasswordInputHintComponent, TextInputComponent } from '@osf/shared/components';
@@ -20,8 +21,6 @@ import { CustomValidators, PASSWORD_REGEX } from '@osf/shared/helpers';
 import { ToastService } from '@osf/shared/services';
 
 import { SignUpForm } from '../../models';
-
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'osf-sign-up',
@@ -45,17 +44,13 @@ import { environment } from 'src/environments/environment';
 export class SignUpComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly toastService = inject(ToastService);
+  private readonly environment = inject(ENVIRONMENT);
 
   signUpForm = new FormGroup<SignUpForm>({} as SignUpForm);
-  passwordRegex: RegExp = PASSWORD_REGEX;
   inputLimits = InputLimits;
   isFormSubmitted = signal(false);
 
-  readonly siteKey = environment.recaptchaSiteKey;
-
-  get isPasswordError() {
-    return this.signUpForm.controls['password'].errors && this.signUpForm.get('password')?.touched;
-  }
+  readonly siteKey = this.environment.recaptchaSiteKey;
 
   ngOnInit(): void {
     this.initializeForm();
@@ -64,6 +59,8 @@ export class SignUpComponent implements OnInit {
   initializeForm(): void {
     this.signUpForm = new FormGroup<SignUpForm>({
       fullName: new FormControl('', { nonNullable: true, validators: CustomValidators.requiredTrimmed() }),
+      givenName: new FormControl('', { nonNullable: true, validators: CustomValidators.requiredTrimmed() }),
+      familyName: new FormControl('', { nonNullable: true, validators: CustomValidators.requiredTrimmed() }),
       email1: new FormControl('', {
         nonNullable: true,
         validators: [CustomValidators.requiredTrimmed(), Validators.email],
@@ -74,7 +71,7 @@ export class SignUpComponent implements OnInit {
       }),
       password: new FormControl('', {
         nonNullable: true,
-        validators: [CustomValidators.requiredTrimmed(), Validators.pattern(this.passwordRegex)],
+        validators: [CustomValidators.requiredTrimmed(), Validators.minLength(8), Validators.pattern(PASSWORD_REGEX)],
       }),
       acceptedTermsOfService: new FormControl(false, {
         nonNullable: true,
@@ -108,8 +105,8 @@ export class SignUpComponent implements OnInit {
     });
   }
 
-  navigateToOrcidSingIn(): void {
-    this.authService.navigateToOrcidSingIn();
+  navigateToOrcidSignIn(): void {
+    this.authService.navigateToOrcidSignIn();
   }
 
   navigateToInstitutionSingIn(): void {

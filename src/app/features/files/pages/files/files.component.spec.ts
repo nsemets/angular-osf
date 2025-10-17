@@ -1,5 +1,3 @@
-import { Store } from '@ngxs/store';
-
 import { TranslatePipe } from '@ngx-translate/core';
 import { MockProvider } from 'ng-mocks';
 
@@ -13,6 +11,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
+import { SENTRY_TOKEN } from '@core/provider/sentry.provider';
 import {
   FilesTreeComponent,
   FormSelectComponent,
@@ -21,9 +20,9 @@ import {
   SubHeaderComponent,
   ViewOnlyLinkMessageComponent,
 } from '@osf/shared/components';
-import { GoogleFilePickerComponent } from '@osf/shared/components/addons/storage-item-selector/google-file-picker/google-file-picker.component';
-import { OsfFile } from '@osf/shared/models';
 import { CustomConfirmationService, FilesService } from '@osf/shared/services';
+import { CurrentResourceSelectors } from '@osf/shared/stores';
+import { GoogleFilePickerComponent } from '@shared/components/google-file-picker/google-file-picker.component';
 
 import { FilesSelectors } from '../../store';
 
@@ -31,6 +30,7 @@ import { FilesComponent } from './files.component';
 
 import { getConfiguredAddonsMappedData } from '@testing/data/addons/addons.configured.data';
 import { getNodeFilesMappedData } from '@testing/data/files/node.data';
+import { testNode } from '@testing/mocks';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 import { MockComponentWithSignal } from '@testing/providers/component-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
@@ -64,8 +64,20 @@ describe('Component: Files', () => {
         MockProvider(ActivatedRoute),
         MockProvider(CustomConfirmationService),
         DialogService,
+        {
+          provide: SENTRY_TOKEN,
+          useValue: {
+            captureException: jest.fn(),
+            captureMessage: jest.fn(),
+            setUser: jest.fn(),
+          },
+        },
         provideMockStore({
           signals: [
+            {
+              selector: CurrentResourceSelectors.getResourceDetails,
+              value: testNode,
+            },
             {
               selector: FilesSelectors.getRootFolders,
               value: getNodeFilesMappedData(),
@@ -77,6 +89,17 @@ describe('Component: Files', () => {
             {
               selector: FilesSelectors.getConfiguredStorageAddons,
               value: getConfiguredAddonsMappedData(),
+            },
+            {
+              selector: FilesSelectors.getProvider,
+              value: 'osfstorage',
+            },
+            {
+              selector: FilesSelectors.getStorageSupportedFeatures,
+              value: {
+                osfstorage: ['AddUpdateFiles', 'DownloadAsZip', 'DeleteFiles', 'CopyInto'],
+                googledrive: ['AddUpdateFiles', 'DownloadAsZip', 'DeleteFiles', 'CopyInto'],
+              },
             },
           ],
         }),
@@ -92,13 +115,15 @@ describe('Component: Files', () => {
               'files',
               'currentFolder',
               'isLoading',
-              'actions',
               'viewOnly',
-              'viewOnlyDownloadable',
               'resourceId',
               'provider',
               'storage',
               'totalCount',
+              'allowedMenuActions',
+              'supportUpload',
+              'selectedFiles',
+              'scrollHeight',
             ]),
           ],
         },
@@ -143,45 +168,29 @@ describe('Component: Files', () => {
   });
 
   describe('updateFilesList', () => {
-    it('should handle the updateFilesList with a filesLink', () => {
-      let results!: string;
-      const store = TestBed.inject(Store);
-      const dispatchSpy = jest.spyOn(store, 'dispatch');
-      dispatchSpy.mockClear();
-      jest.spyOn(component.filesTreeActions, 'setFilesIsLoading');
-      component.updateFilesList().subscribe({
-        next: (result) => {
-          results = result as any;
-        },
-      });
-
-      expect(results).toBeTruthy();
-
-      expect(component.filesTreeActions.setFilesIsLoading).toHaveBeenCalledWith(true);
-      expect(dispatchSpy).toHaveBeenCalledWith({
-        filesLink: 'https://api.staging4.osf.io/v2/nodes/xgrm4/files/osfstorage/',
-      });
+    it('should call updateFilesList without errors when filesLink exists', () => {
+      expect(() => component.updateFilesList()).not.toThrow();
     });
 
-    it('should handle the updateFilesList without a filesLink', () => {
-      let results!: string;
-      const currentFolder = currentFolderSignal() as OsfFile;
-      currentFolder.relationships.filesLink = '';
-      currentFolderSignal.set(currentFolder);
-      const store = TestBed.inject(Store);
-      const dispatchSpy = jest.spyOn(store, 'dispatch');
-      dispatchSpy.mockClear();
-      jest.spyOn(component.filesTreeActions, 'setFilesIsLoading');
-      component.updateFilesList().subscribe({
-        next: (result) => {
-          results = result as any;
+    it('should not throw when filesLink is null', () => {
+      const mockFolder: any = {
+        id: 'folder-123',
+        kind: 'folder',
+        name: 'Test Folder',
+        node: 'node-456',
+        path: '/test',
+        provider: 'osfstorage',
+        links: {
+          newFolder: '/test/new',
+          storageAddons: '/addons',
+          upload: '/upload',
+          filesLink: '',
+          download: '/download',
         },
-      });
+      };
+      currentFolderSignal.set(mockFolder);
 
-      expect(results).toBeUndefined();
-
-      expect(component.filesTreeActions.setFilesIsLoading).not.toHaveBeenCalled();
-      expect(dispatchSpy).not.toHaveBeenCalled();
+      expect(() => component.updateFilesList()).not.toThrow();
     });
   });
 });

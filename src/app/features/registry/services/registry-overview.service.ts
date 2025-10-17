@@ -2,16 +2,15 @@ import { map, Observable } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
+import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { RegistryModerationMapper } from '@osf/features/moderation/mappers';
 import { ReviewAction, ReviewActionsResponseJsonApi } from '@osf/features/moderation/models';
 import { MapRegistryOverview } from '@osf/features/registry/mappers';
 import {
   GetRegistryOverviewJsonApi,
-  GetResourceSubjectsJsonApi,
   RegistryOverview,
   RegistryOverviewJsonApiData,
   RegistryOverviewWithMeta,
-  RegistrySubject,
 } from '@osf/features/registry/models';
 import { InstitutionsMapper, ReviewActionsMapper } from '@osf/shared/mappers';
 import { PageSchemaMapper } from '@osf/shared/mappers/registration';
@@ -19,18 +18,20 @@ import { Institution, InstitutionsJsonApiResponse, PageSchema, SchemaBlocksRespo
 import { ReviewActionPayload } from '@osf/shared/models/review-action';
 import { JsonApiService } from '@shared/services';
 
-import { environment } from 'src/environments/environment';
-
 @Injectable({
   providedIn: 'root',
 })
 export class RegistryOverviewService {
   private readonly jsonApiService = inject(JsonApiService);
-  private readonly apiUrl = `${environment.apiDomainUrl}/v2`;
+  private readonly environment = inject(ENVIRONMENT);
+
+  get apiUrl() {
+    return `${this.environment.apiDomainUrl}/v2`;
+  }
 
   getRegistrationById(id: string): Observable<RegistryOverviewWithMeta> {
     const params = {
-      related_counts: 'forks,comments,linked_nodes,linked_registrations,children,wikis',
+      related_counts: 'forks,linked_nodes,linked_registrations,children,wikis',
       'embed[]': [
         'bibliographic_contributors',
         'provider',
@@ -46,17 +47,6 @@ export class RegistryOverviewService {
     return this.jsonApiService
       .get<GetRegistryOverviewJsonApi>(`${this.apiUrl}/registrations/${id}/`, params)
       .pipe(map((response) => ({ registry: MapRegistryOverview(response.data), meta: response.meta })));
-  }
-
-  getSubjects(registryId: string): Observable<RegistrySubject[]> {
-    const params = {
-      'page[size]': 100,
-      page: 1,
-    };
-
-    return this.jsonApiService
-      .get<GetResourceSubjectsJsonApi>(`${this.apiUrl}/registrations/${registryId}/subjects/`, params)
-      .pipe(map((response) => response.data.map((subject) => ({ id: subject.id, text: subject.attributes.text }))));
   }
 
   getInstitutions(registryId: string): Observable<Institution[]> {
@@ -102,7 +92,7 @@ export class RegistryOverviewService {
     };
 
     return this.jsonApiService
-      .patch<RegistryOverviewJsonApiData>(`${this.apiUrl}/registrations/${registryId}`, payload)
+      .patch<RegistryOverviewJsonApiData>(`${this.apiUrl}/registrations/${registryId}/`, payload)
       .pipe(map((response) => MapRegistryOverview(response)));
   }
 
@@ -119,7 +109,7 @@ export class RegistryOverviewService {
     };
 
     return this.jsonApiService
-      .patch<RegistryOverviewJsonApiData>(`${this.apiUrl}/registrations/${registryId}`, payload)
+      .patch<RegistryOverviewJsonApiData>(`${this.apiUrl}/registrations/${registryId}/`, payload)
       .pipe(map((response) => MapRegistryOverview(response)));
   }
 

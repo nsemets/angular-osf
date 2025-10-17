@@ -1,23 +1,25 @@
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
+
+import { ENVIRONMENT } from '@core/provider/environment.provider';
+import { ContributorsListComponent } from '@osf/shared/components';
 
 import { RegistryOverview } from '../../models';
 
-import { environment } from 'src/environments/environment';
-
 @Component({
   selector: 'osf-short-registration-info',
-  imports: [TranslatePipe, DatePipe],
+  imports: [TranslatePipe, DatePipe, RouterLink, ContributorsListComponent],
   templateUrl: './short-registration-info.component.html',
   styleUrl: './short-registration-info.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShortRegistrationInfoComponent {
-  registration = input.required<RegistryOverview>();
+  private readonly environment = inject(ENVIRONMENT);
 
-  readonly environment = environment;
+  registration = input.required<RegistryOverview>();
 
   get associatedProjectUrl(): string {
     return `${this.environment.webUrl}/${this.registration().associatedProjectId}`;

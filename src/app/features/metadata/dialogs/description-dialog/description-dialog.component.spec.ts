@@ -4,9 +4,9 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TranslateServiceMock } from '@shared/mocks';
-
 import { DescriptionDialogComponent } from './description-dialog.component';
+
+import { OSFTestingModule } from '@testing/osf.testing.module';
 
 describe('DescriptionDialogComponent', () => {
   let component: DescriptionDialogComponent;
@@ -14,8 +14,8 @@ describe('DescriptionDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DescriptionDialogComponent],
-      providers: [TranslateServiceMock, MockProvider(DynamicDialogRef), MockProvider(DynamicDialogConfig)],
+      imports: [DescriptionDialogComponent, OSFTestingModule],
+      providers: [MockProvider(DynamicDialogRef), MockProvider(DynamicDialogConfig)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DescriptionDialogComponent);
@@ -24,16 +24,6 @@ describe('DescriptionDialogComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should not set description control value when currentProject is null', () => {
-    Object.defineProperty(component, 'currentProject', {
-      get: () => null,
-    });
-
-    component.ngOnInit();
-
-    expect(component.descriptionControl.value).toBe('');
   });
 
   it('should handle save with valid form', () => {

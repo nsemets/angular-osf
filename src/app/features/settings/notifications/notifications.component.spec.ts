@@ -14,18 +14,23 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { UserSelectors } from '@osf/core/store/user';
 import { LoaderService, ToastService } from '@osf/shared/services';
 import { SubscriptionEvent, SubscriptionFrequency } from '@shared/enums';
-import { MOCK_STORE, MOCK_USER, TranslateServiceMock } from '@shared/mocks';
-import { UserSettings } from '@shared/models';
+
+import { AccountSettings } from '../account-settings/models';
+import { AccountSettingsSelectors } from '../account-settings/store';
 
 import { NotificationsComponent } from './notifications.component';
 import { NotificationSubscriptionSelectors } from './store';
+
+import { MOCK_STORE, MOCK_USER, TranslateServiceMock } from '@testing/mocks';
+import { ToastServiceMockBuilder } from '@testing/providers/toast-provider.mock';
 
 describe('NotificationsComponent', () => {
   let component: NotificationsComponent;
   let fixture: ComponentFixture<NotificationsComponent>;
   let loaderService: LoaderService;
+  let toastServiceMock: ReturnType<ToastServiceMockBuilder['build']>;
 
-  const mockUserSettings: UserSettings = {
+  const mockUserSettings: Partial<AccountSettings> = {
     subscribeOsfGeneralEmail: true,
     subscribeOsfHelpEmail: false,
   };
@@ -40,10 +45,7 @@ describe('NotificationsComponent', () => {
   ];
 
   beforeEach(async () => {
-    const mockToastService = {
-      showSuccess: jest.fn(),
-      showError: jest.fn(),
-    };
+    toastServiceMock = ToastServiceMockBuilder.create().build();
 
     const mockLoaderService = {
       show: jest.fn(),
@@ -54,16 +56,13 @@ describe('NotificationsComponent', () => {
       if (selector === UserSelectors.getCurrentUser) {
         return signal(MOCK_USER);
       }
-      if (selector === UserSelectors.getCurrentUserSettings) {
+      if (selector === AccountSettingsSelectors.getAccountSettings) {
         return signal(mockUserSettings);
       }
       if (selector === NotificationSubscriptionSelectors.getAllGlobalNotificationSubscriptions) {
         return signal(mockNotificationSubscriptions);
       }
-      if (selector === UserSelectors.isUserSettingsLoading) {
-        return signal(false);
-      }
-      if (selector === UserSelectors.isUserSettingsSubmitting) {
+      if (selector === AccountSettingsSelectors.areAccountSettingsLoading) {
         return signal(false);
       }
       if (selector === NotificationSubscriptionSelectors.isLoading) {
@@ -82,7 +81,7 @@ describe('NotificationsComponent', () => {
         TranslateServiceMock,
         MockProvider(Store, MOCK_STORE),
         MockProvider(LoaderService, mockLoaderService),
-        MockProvider(ToastService, mockToastService),
+        MockProvider(ToastService, toastServiceMock),
         FormBuilder,
       ],
     }).compileComponents();

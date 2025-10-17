@@ -1,16 +1,19 @@
 import { createDispatchMap } from '@ngxs/store';
 
-import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
+import { catchError, forkJoin, map, Observable, of, switchMap } from 'rxjs';
 
+import { HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
+import { BYPASS_ERROR_INTERCEPTOR } from '@core/interceptors/error-interceptor.tokens';
+import { ENVIRONMENT } from '@core/provider/environment.provider';
 import {
   CollectionSubmissionReviewAction,
   CollectionSubmissionReviewActionJsonApi,
 } from '@osf/features/moderation/models';
-import { CollectionsMapper } from '@shared/mappers/collections';
+
+import { CollectionsMapper, ContributorsMapper, ReviewActionsMapper } from '../mappers';
 import {
-  CollectionContributor,
   CollectionDetails,
   CollectionDetailsGetResponseJsonApi,
   CollectionDetailsResponseJsonApi,
@@ -23,25 +26,28 @@ import {
   CollectionSubmissionTargetType,
   CollectionSubmissionWithGuid,
   CollectionSubmissionWithGuidJsonApi,
+  ContributorModel,
   ContributorsResponseJsonApi,
   JsonApiResponse,
   PaginatedData,
   ResponseJsonApi,
-} from '@shared/models';
-import { JsonApiService } from '@shared/services';
-import { SetTotalSubmissions } from '@shared/stores/collections';
-
-import { ReviewActionsMapper } from '../mappers';
+} from '../models';
 import { ReviewActionPayload, ReviewActionPayloadJsonApi } from '../models/review-action';
+import { SetTotalSubmissions } from '../stores/collections';
 
-import { environment } from 'src/environments/environment';
+import { JsonApiService } from './json-api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CollectionsService {
-  private jsonApiService = inject(JsonApiService);
-  private apiUrl = `${environment.apiDomainUrl}/v2`;
+  private readonly jsonApiService = inject(JsonApiService);
+  private readonly environment = inject(ENVIRONMENT);
+
+  get apiUrl() {
+    return `${this.environment.apiDomainUrl}/v2`;
+  }
+
   private actions = createDispatchMap({ setTotalSubmissions: SetTotalSubmissions });
 
   getCollectionProvider(collectionName: string): Observable<CollectionProvider> {
@@ -93,12 +99,18 @@ export class CollectionsService {
           return of([]);
         }
 
-        const contributorUrls = response.data.map(
-          (submission) => submission.embeds.guid.data.relationships.bibliographic_contributors.links.related.href
-        );
-        const contributorRequests = contributorUrls.map((url) => this.getCollectionContributors(url));
         const totalCount = response.meta?.total ?? 0;
         this.actions.setTotalSubmissions(totalCount);
+
+        const contributorRequests = response.data.map((submission) =>
+          this.getCollectionContributors(
+            submission.embeds.guid.data.relationships!.bibliographic_contributors!.links.related.href
+          ).pipe(catchError(() => of([])))
+        );
+
+        if (!contributorRequests.length) {
+          return of([]);
+        }
 
         return forkJoin(contributorRequests).pipe(
           map((contributorsArrays) =>
@@ -133,9 +145,15 @@ export class CollectionsService {
       .pipe(map((response) => CollectionsMapper.fromGetCollectionSubmissionsResponse(response)));
   }
 
-  fetchProjectCollections(projectId: string): Observable<CollectionDetails[]> {
+  fetchProjectCollections(projectId: string, is_public: boolean, bookmarks: boolean): Observable<CollectionDetails[]> {
+    const params: Record<string, boolean> = {
+      'filter[is_public]': is_public,
+      'filter[bookmarks]': bookmarks,
+    };
     return this.jsonApiService
-      .get<JsonApiResponse<CollectionDetailsResponseJsonApi[], null>>(`${this.apiUrl}/nodes/${projectId}/collections/`)
+      .get<
+        JsonApiResponse<CollectionDetailsResponseJsonApi[], null>
+      >(`${this.apiUrl}/nodes/${projectId}/collections/`, params)
       .pipe(
         map((response) =>
           response.data.map((collection) => CollectionsMapper.fromGetCollectionDetailsResponse(collection))
@@ -197,18 +215,17 @@ export class CollectionsService {
     >(`${this.apiUrl}/collection_submission_actions/`, params);
   }
 
-  private getCollectionContributors(contributorsUrl: string): Observable<CollectionContributor[]> {
+  private getCollectionContributors(contributorsUrl: string): Observable<ContributorModel[]> {
     const params: Record<string, unknown> = {
       'fields[users]': 'full_name',
     };
 
+    const context = new HttpContext();
+    context.set(BYPASS_ERROR_INTERCEPTOR, true);
+
     return this.jsonApiService
-      .get<ContributorsResponseJsonApi>(contributorsUrl, params)
-      .pipe(
-        map((response: ContributorsResponseJsonApi) =>
-          CollectionsMapper.fromGetCollectionContributorsResponse(response.data)
-        )
-      );
+      .get<ContributorsResponseJsonApi>(contributorsUrl, params, context)
+      .pipe(map((response) => ContributorsMapper.getContributors(response.data)));
   }
 
   private fetchUserCollectionSubmissionsByStatus(

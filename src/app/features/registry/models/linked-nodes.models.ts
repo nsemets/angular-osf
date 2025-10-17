@@ -1,6 +1,5 @@
+import { ContributorModel } from '@osf/shared/models';
 import { RegistrationReviewStates } from '@shared/enums';
-
-import { NodeBibliographicContributor } from './bibliographic-contributors.models';
 
 export interface LinkedNode {
   id: string;
@@ -11,8 +10,7 @@ export interface LinkedNode {
   dateModified: string;
   tags: string[];
   isPublic: boolean;
-  contributorsCount?: number;
-  contributors?: NodeBibliographicContributor[];
+  contributors: ContributorModel[];
   htmlUrl: string;
   apiUrl: string;
 }
@@ -27,10 +25,9 @@ export interface LinkedRegistration {
   dateRegistered?: string;
   tags: string[];
   isPublic: boolean;
-  contributorsCount?: number;
   reviewsState: RegistrationReviewStates;
   revisionState?: string;
-  contributors?: NodeBibliographicContributor[];
+  contributors: ContributorModel[];
   currentUserPermissions: string[];
   hasData?: boolean;
   hasAnalyticCode?: boolean;

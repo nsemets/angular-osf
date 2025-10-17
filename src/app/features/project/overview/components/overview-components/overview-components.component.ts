@@ -1,19 +1,19 @@
-import { select } from '@ngxs/store';
+import { createDispatchMap, select } from '@ngxs/store';
 
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
-import { DialogService } from 'primeng/dynamicdialog';
 import { Menu } from 'primeng/menu';
 import { Skeleton } from 'primeng/skeleton';
 
 import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 
-import { IconComponent, TruncatedTextComponent } from '@osf/shared/components';
+import { ContributorsListComponent, IconComponent, TruncatedTextComponent } from '@osf/shared/components';
 import { ResourceType, UserPermissions } from '@osf/shared/enums';
-import { IS_XSMALL } from '@osf/shared/helpers';
+import { CustomDialogService, LoaderService } from '@osf/shared/services';
+import { GetResourceWithChildren } from '@osf/shared/stores';
+import { ComponentOverview } from '@shared/models';
 
 import { ProjectOverviewSelectors } from '../../store';
 import { AddComponentDialogComponent } from '../add-component-dialog/add-component-dialog.component';
@@ -21,64 +21,98 @@ import { DeleteComponentDialogComponent } from '../delete-component-dialog/delet
 
 @Component({
   selector: 'osf-project-components',
-  imports: [Button, Menu, Skeleton, TranslatePipe, TruncatedTextComponent, IconComponent],
+  imports: [Button, Menu, Skeleton, TranslatePipe, TruncatedTextComponent, IconComponent, ContributorsListComponent],
   templateUrl: './overview-components.component.html',
   styleUrl: './overview-components.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OverviewComponentsComponent {
   private router = inject(Router);
-  private dialogService = inject(DialogService);
-  private translateService = inject(TranslateService);
-  isMobile = toSignal(inject(IS_XSMALL));
+  private customDialogService = inject(CustomDialogService);
+  private loaderService = inject(LoaderService);
 
-  isCollectionsRoute = input<boolean>(false);
-  canWrite = input.required<boolean>();
+  canEdit = input.required<boolean>();
+  anonymous = input<boolean>(false);
 
   components = select(ProjectOverviewSelectors.getComponents);
   isComponentsLoading = select(ProjectOverviewSelectors.getComponentsLoading);
-  readonly componentActionItems = (componentId: string) => [
-    {
-      label: 'project.overview.actions.manageContributors',
-      command: () => this.router.navigate([componentId, 'contributors']),
-    },
-    {
-      label: 'project.overview.actions.settings',
-      command: () => this.router.navigate([componentId, 'settings']),
-    },
-    {
-      label: 'project.overview.actions.delete',
-      command: () => this.handleDeleteComponent(componentId),
-    },
-  ];
+  project = select(ProjectOverviewSelectors.getProject);
+
+  actions = createDispatchMap({ getComponentsTree: GetResourceWithChildren });
+
   readonly UserPermissions = UserPermissions;
 
-  handleAddComponent(): void {
-    const dialogWidth = this.isMobile() ? '95vw' : '850px';
+  readonly componentActionItems = (component: ComponentOverview) => {
+    const baseItems = [
+      {
+        label: 'project.overview.actions.manageContributors',
+        action: 'manageContributors',
+        componentId: component.id,
+      },
+      {
+        label: 'project.overview.actions.settings',
+        action: 'settings',
+        componentId: component.id,
+      },
+    ];
 
-    this.dialogService.open(AddComponentDialogComponent, {
-      width: dialogWidth,
-      focusOnShow: false,
-      header: this.translateService.instant('project.overview.dialog.addComponent.header'),
-      closeOnEscape: true,
-      modal: true,
-      closable: true,
+    if (component.currentUserPermissions.includes(UserPermissions.Admin)) {
+      baseItems.push({
+        label: 'project.overview.actions.delete',
+        action: 'delete',
+        componentId: component.id,
+      });
+    }
+
+    return baseItems;
+  };
+
+  handleMenuAction(action: string, componentId: string): void {
+    switch (action) {
+      case 'manageContributors':
+        this.router.navigate([componentId, 'contributors']);
+        break;
+      case 'settings':
+        this.router.navigate([componentId, 'settings']);
+        break;
+      case 'delete':
+        this.handleDeleteComponent(componentId);
+        break;
+    }
+  }
+
+  handleAddComponent(): void {
+    this.customDialogService.open(AddComponentDialogComponent, {
+      header: 'project.overview.dialog.addComponent.header',
+      width: '850px',
     });
   }
 
-  private handleDeleteComponent(componentId: string): void {
-    const dialogWidth = this.isMobile() ? '95vw' : '650px';
+  navigateToComponent(componentId: string): void {
+    const url = this.router.serializeUrl(
+      this.router.createUrlTree(['/', componentId], { queryParamsHandling: 'preserve' })
+    );
 
-    this.dialogService.open(DeleteComponentDialogComponent, {
-      width: dialogWidth,
-      focusOnShow: false,
-      header: this.translateService.instant('project.overview.dialog.deleteComponent.header'),
-      closeOnEscape: true,
-      modal: true,
-      closable: true,
-      data: {
-        componentId,
-        resourceType: ResourceType.Project,
+    window.open(url, '_self');
+  }
+
+  private handleDeleteComponent(componentId: string): void {
+    const project = this.project();
+    if (!project) return;
+
+    this.loaderService.show();
+
+    this.actions.getComponentsTree(project.rootParentId || project.id, componentId, ResourceType.Project).subscribe({
+      next: () => {
+        this.loaderService.hide();
+        this.customDialogService.open(DeleteComponentDialogComponent, {
+          header: 'project.overview.dialog.deleteComponent.header',
+          width: '650px',
+          data: { componentId, resourceType: ResourceType.Project },
+        });
+      },
+      error: () => {
+        this.loaderService.hide();
       },
     });
   }

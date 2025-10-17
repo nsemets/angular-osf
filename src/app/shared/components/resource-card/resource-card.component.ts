@@ -13,15 +13,10 @@ import { getPreprintDocumentType } from '@osf/features/preprints/helpers';
 import { PreprintProviderDetails } from '@osf/features/preprints/models';
 import { CardLabelTranslationKeys } from '@osf/shared/constants';
 import { ResourceType } from '@osf/shared/enums';
-import { IS_XSMALL } from '@osf/shared/helpers';
-import {
-  AbsoluteUrlName,
-  IsContainedBy,
-  QualifiedAttribution,
-  ResourceModel,
-  UserRelatedCounts,
-} from '@osf/shared/models';
+import { getSortedContributorsByPermissions, IS_XSMALL } from '@osf/shared/helpers';
+import { ResourceModel, UserRelatedCounts } from '@osf/shared/models';
 import { ResourceCardService } from '@osf/shared/services';
+import { StopPropagationDirective } from '@shared/directives';
 
 import { DataResourcesComponent } from '../data-resources/data-resources.component';
 
@@ -48,6 +43,7 @@ import { UserSecondaryMetadataComponent } from './components/user-secondary-meta
     ProjectSecondaryMetadataComponent,
     PreprintSecondaryMetadataComponent,
     FileSecondaryMetadataComponent,
+    StopPropagationDirective,
   ],
   templateUrl: './resource-card.component.html',
   styleUrl: './resource-card.component.scss',
@@ -56,11 +52,15 @@ import { UserSecondaryMetadataComponent } from './components/user-secondary-meta
 export class ResourceCardComponent {
   private resourceCardService = inject(ResourceCardService);
   private translateService = inject(TranslateService);
-  ResourceType = ResourceType;
+
   isSmall = toSignal(inject(IS_XSMALL));
+
   resource = input.required<ResourceModel>();
   provider = input<PreprintProviderDetails | null>();
   userRelatedCounts = signal<UserRelatedCounts | null>(null);
+
+  ResourceType = ResourceType;
+  limit = 4;
 
   cardTypeLabel = computed(() => {
     const item = this.resource();
@@ -98,9 +98,9 @@ export class ResourceCardComponent {
         return resource.affiliations;
       }
     } else if (resource.creators) {
-      return this.getSortedContributors(resource);
+      return getSortedContributorsByPermissions(resource);
     } else if (resource.isContainedBy?.creators) {
-      return this.getSortedContributors(resource.isContainedBy);
+      return getSortedContributorsByPermissions(resource.isContainedBy);
     }
 
     return [];
@@ -167,18 +167,5 @@ export class ResourceCardComponent {
       .subscribe((res) => {
         this.userRelatedCounts.set(res);
       });
-  }
-
-  private getSortedContributors(base: ResourceModel | IsContainedBy) {
-    const objectOrder = Object.fromEntries(
-      base.qualifiedAttribution.map((item: QualifiedAttribution) => [item.agentId, item.order])
-    );
-    return base.creators
-      ?.map((item: AbsoluteUrlName) => ({
-        name: item.name,
-        absoluteUrl: item.absoluteUrl,
-        index: objectOrder[item.absoluteUrl],
-      }))
-      .sort((a: { index: number }, b: { index: number }) => a.index - b.index);
   }
 }

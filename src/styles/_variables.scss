@@ -7,63 +7,7 @@ $breakpoint-lg: 992px;
 $breakpoint-xl: 1200px;
 
 // Fonts
-$openSans: var(--openSans);
 $base-font-size: 16px;
-
-// Colors
-// Primary Blue
-$pr-blue-1: var(--pr-blue-1);
-$pr-blue-2: var(--pr-blue-2);
-$pr-blue-3: var(--pr-blue-3);
-
-// Dark Blue
-$dark-blue-1: var(--dark-blue-1);
-$dark-blue-2: var(--dark-blue-2);
-
-// Background Blue
-$bg-blue-2: var(--bg-blue-2);
-$bg-blue-3: var(--bg-blue-3);
-
-// Grey
-$grey-1: var(--grey-1);
-$grey-2: var(--grey-2);
-$grey-3: var(--grey-3);
-$grey-outline: var(--grey-outline);
-$white: var(--white);
-
-// Green
-$green-1: var(--green-1);
-$green-2: var(--green-2);
-$green-3: var(--green-3);
-
-// Red
-$red-1: var(--red-1);
-$red-2: var(--red-2);
-$red-3: var(--red-3);
-
-// Yellow
-$yellow-1: var(--yellow-1);
-$yellow-2: var(--yellow-2);
-
-// Additional Colors
-$green-1-alt: var(--green-1-alt);
-$green-2-alt: var(--green-2-alt);
-$blue-1: var(--blue-1);
-$blue-2: var(--blue-2);
-
-// Background Colors
-$green-1-bg: var(--green-1-bg);
-$green-2-bg: var(--green-2-bg);
-$blue-1-bg: var(--blue-1-bg);
-$blue-2-bg: var(--blue-2-bg);
-
-// Gradients
-$gradient-1: var(--gradient-1);
-$gradient-2: var(--gradient-2);
-$gradient-3: var(--gradient-3);
-
-// Opacity Colors
-$white-60: var(--white-60);
 
 :root {
   // Fonts
@@ -118,6 +62,9 @@ $white-60: var(--white-60);
   // Opacity Colors
   --white-60: rgba(256, 256, 256, 0.6);
 
+  --osf-provider-primary-color: #f5fafd;
+  --osf-provider-secondary-color: #204762;
+
   // Gradients
   --gradient-1:
     linear-gradient(
@@ -167,8 +114,8 @@ $white-60: var(--white-60);
   --header-background-color: none;
   --header-background-image-url: none;
 
-  --branding-primary-color: var(--pr-blue-1);
-  --branding-secondary-color: var(--white);
+  --branding-primary-color: var(--osf-provider-primary-color);
+  --branding-secondary-color: var(--osf-provider-secondary-color);
   --branding-background-color: var(--white);
   --branding-hero-logo-image-url: none;
   --branding-hero-background-image-url: none;

@@ -9,7 +9,7 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { ENVIRONMENT } from '@core/constants/environment.token';
+import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { CustomPaginatorComponent } from '@shared/components';
 import { ACTIVITY_LOGS_DEFAULT_PAGE_SIZE } from '@shared/constants/activity-logs';
 import {
@@ -26,9 +26,9 @@ import {
 })
 export class RegistrationRecentActivityComponent implements OnDestroy {
   private readonly route = inject(ActivatedRoute);
-  readonly #environment = inject(ENVIRONMENT);
+  readonly environment = inject(ENVIRONMENT);
 
-  readonly pageSize = this.#environment.activityLogs?.pageSize ?? ACTIVITY_LOGS_DEFAULT_PAGE_SIZE;
+  readonly pageSize = this.environment.activityLogs?.pageSize ?? ACTIVITY_LOGS_DEFAULT_PAGE_SIZE;
 
   private readonly registrationId: string = (this.route.snapshot.params['id'] ??
     this.route.parent?.snapshot.params['id']) as string;

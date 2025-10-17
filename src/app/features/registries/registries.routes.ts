@@ -2,11 +2,12 @@ import { provideStates } from '@ngxs/store';
 
 import { Routes } from '@angular/router';
 
+import { registrationModerationGuard } from '@core/guards/registration-moderation.guard';
 import { authGuard } from '@osf/core/guards';
 import { RegistriesComponent } from '@osf/features/registries/registries.component';
 import { RegistriesState } from '@osf/features/registries/store';
-import { RegistriesProviderSearchState } from '@osf/features/registries/store/registries-provider-search';
 import { CitationsState, ContributorsState, SubjectsState } from '@osf/shared/stores';
+import { RegistrationProviderState } from '@osf/shared/stores/registration-provider';
 
 import { LicensesHandlers, ProjectsHandlers, ProvidersHandlers } from './store/handlers';
 import { FilesHandlers } from './store/handlers/files.handlers';
@@ -17,7 +18,7 @@ export const registriesRoutes: Routes = [
     path: '',
     component: RegistriesComponent,
     providers: [
-      provideStates([RegistriesState, CitationsState, ContributorsState, SubjectsState, RegistriesProviderSearchState]),
+      provideStates([RegistriesState, CitationsState, ContributorsState, SubjectsState, RegistrationProviderState]),
       ProvidersHandlers,
       ProjectsHandlers,
       LicensesHandlers,
@@ -28,14 +29,14 @@ export const registriesRoutes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'overview',
+        redirectTo: 'discover',
       },
       {
         path: 'discover',
         loadComponent: () => import('@osf/features/registries/pages').then((c) => c.RegistriesLandingComponent),
       },
       {
-        path: ':name',
+        path: ':providerId',
         loadComponent: () =>
           import('@osf/features/registries/pages/registries-provider-search/registries-provider-search.component').then(
             (c) => c.RegistriesProviderSearchComponent
@@ -43,7 +44,7 @@ export const registriesRoutes: Routes = [
       },
       {
         path: ':providerId/moderation',
-        canActivate: [authGuard],
+        canActivate: [authGuard, registrationModerationGuard],
         loadChildren: () =>
           import('@osf/features/moderation/registry-moderation.routes').then((c) => c.registryModerationRoutes),
       },
@@ -62,7 +63,9 @@ export const registriesRoutes: Routes = [
           {
             path: ':id/metadata',
             loadComponent: () =>
-              import('./components/metadata/metadata.component').then((mod) => mod.MetadataComponent),
+              import('./components/registries-metadata-step/registries-metadata-step.component').then(
+                (mod) => mod.RegistriesMetadataStepComponent
+              ),
           },
           {
             path: ':id/review',

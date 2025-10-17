@@ -9,6 +9,7 @@ import { Tab, TabList, Tabs } from 'primeng/tabs';
 
 import { switchMap } from 'rxjs';
 
+import { Clipboard } from '@angular/cdk/clipboard';
 import { DatePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -24,6 +25,7 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
+import { ENVIRONMENT } from '@core/provider/environment.provider';
 import {
   CedarMetadataDataTemplateJsonApi,
   CedarMetadataRecordData,
@@ -38,10 +40,10 @@ import {
 } from '@osf/features/metadata/store';
 import { LoadingSpinnerComponent, MetadataTabsComponent, SubHeaderComponent } from '@osf/shared/components';
 import { MetadataResourceEnum, ResourceType } from '@osf/shared/enums';
-import { pathJoin } from '@osf/shared/helpers';
-import { MetadataTabsModel, OsfFile } from '@osf/shared/models';
+import { getViewOnlyParam, hasViewOnlyParam, pathJoin } from '@osf/shared/helpers';
+import { FileDetailsModel, MetadataTabsModel } from '@osf/shared/models';
 import { CustomConfirmationService, MetaTagsService, ToastService } from '@osf/shared/services';
-import { DataciteService } from '@shared/services/datacite/datacite.service';
+import { DataciteService } from '@osf/shared/services/datacite/datacite.service';
 
 import {
   FileKeywordsComponent,
@@ -60,8 +62,6 @@ import {
   GetFileResourceMetadata,
   GetFileRevisions,
 } from '../../store';
-
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'osf-file-detail',
@@ -97,10 +97,16 @@ export class FileDetailComponent {
   readonly sanitizer = inject(DomSanitizer);
   readonly toastService = inject(ToastService);
   readonly customConfirmationService = inject(CustomConfirmationService);
+
   private readonly metaTags = inject(MetaTagsService);
   private readonly datePipe = inject(DatePipe);
   private readonly translateService = inject(TranslateService);
+  private readonly environment = inject(ENVIRONMENT);
+  private readonly clipboard = inject(Clipboard);
+
   readonly dataciteService = inject(DataciteService);
+
+  private readonly webUrl = this.environment.webUrl;
 
   private readonly actions = createDispatchMap({
     getFile: GetFile,
@@ -123,8 +129,15 @@ export class FileDetailComponent {
   cedarTemplates = select(MetadataSelectors.getCedarTemplates);
   isAnonymous = select(FilesSelectors.isFilesAnonymous);
   fileCustomMetadata = select(FilesSelectors.getFileCustomMetadata);
+  isFileCustomMetadataLoading = select(FilesSelectors.isFileMetadataLoading);
   resourceMetadata = select(FilesSelectors.getResourceMetadata);
   resourceContributors = select(FilesSelectors.getContributors);
+  isResourceContributorsLoading = select(FilesSelectors.isResourceContributorsLoading);
+  fileRevisions = select(FilesSelectors.getFileRevisions);
+  isFileRevisionLoading = select(FilesSelectors.isFileRevisionsLoading);
+  hasWriteAccess = select(FilesSelectors.hasWriteAccess);
+
+  hasViewOnly = computed(() => hasViewOnlyParam(this.router));
 
   safeLink: SafeResourceUrl | null = null;
   resourceId = '';
@@ -137,6 +150,7 @@ export class FileDetailComponent {
   selectedTab: FileDetailTab = FileDetailTab.Details;
 
   fileGuid = '';
+  fileVersion = '';
 
   embedItems = [
     {
@@ -166,9 +180,7 @@ export class FileDetailComponent {
 
   tabs = signal<MetadataTabsModel[]>([]);
 
-  isLoading = computed(() => {
-    return this.isFileLoading();
-  });
+  isLoading = computed(() => this.isFileLoading());
 
   selectedMetadataTab = signal('osf');
 
@@ -176,21 +188,23 @@ export class FileDetailComponent {
   selectedCedarTemplate = signal<CedarMetadataDataTemplateJsonApi | null>(null);
   cedarFormReadonly = signal<boolean>(true);
 
-  private readonly effectMetaTags = effect(() => {
-    const metaTagsData = this.metaTagsData();
-    if (metaTagsData) {
-      this.metaTags.updateMetaTags(metaTagsData, this.destroyRef);
-    }
-  });
+  showDeleteButton = computed(() => this.hasWriteAccess() && this.file() && !this.isAnonymous() && !this.hasViewOnly());
 
   private readonly metaTagsData = computed(() => {
+    if (this.isFileLoading() || this.isFileCustomMetadataLoading() || this.isResourceContributorsLoading()) {
+      return null;
+    }
+
     const file = this.file();
     if (!file) return null;
+
     return {
+      osfGuid: file.guid,
       title: this.fileCustomMetadata()?.title || file.name,
+      type: this.fileCustomMetadata()?.resourceTypeGeneral,
       description:
         this.fileCustomMetadata()?.description ?? this.translateService.instant('files.metaTagDescriptionPlaceholder'),
-      url: pathJoin(environment.webUrl, this.fileGuid),
+      url: pathJoin(this.webUrl, this.fileGuid),
       publishedDate: this.datePipe.transform(file.dateCreated, 'yyyy-MM-dd'),
       modifiedDate: this.datePipe.transform(file.dateModified, 'yyyy-MM-dd'),
       language: this.fileCustomMetadata()?.language,
@@ -212,21 +226,22 @@ export class FileDetailComponent {
         })
       )
       .subscribe(() => {
-        const link = this.file()?.links.render;
-        if (link) {
-          this.safeLink = this.sanitizer.bypassSecurityTrustResourceUrl(link);
-        }
-        this.resourceId = this.file()?.target.id || '';
-        this.resourceType = this.file()?.target.type || '';
-        const fileId = this.file()?.path.replaceAll('/', '');
-        if (this.resourceId && this.resourceType) {
-          this.actions.getFileResourceMetadata(this.resourceId, this.resourceType);
-          this.actions.getFileResourceContributors(this.resourceId, this.resourceType);
-          if (fileId) {
-            const storageLink = this.file()?.links.upload || '';
+        this.getIframeLink('');
+        const file = this.file();
+        if (file) {
+          this.resourceId = file.target.id || '';
+          this.resourceType = file.target.type || '';
+          const cedarUrl = file.links.info;
+          if (this.resourceId && this.resourceType) {
+            this.actions.getFileResourceMetadata(this.resourceId, this.resourceType);
+            this.actions.getFileResourceContributors(this.resourceId, this.resourceType);
+
+            const storageLink = file.links.upload || '';
             this.actions.getFileRevisions(storageLink);
             this.actions.getCedarTemplates();
-            this.actions.getCedarRecords(fileId, ResourceType.File);
+            if (cedarUrl) {
+              this.actions.getCedarRecords(this.resourceId, ResourceType.File, cedarUrl);
+            }
           }
         }
       });
@@ -249,38 +264,72 @@ export class FileDetailComponent {
     this.route.params.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       this.actions.getFileMetadata(params['fileGuid']);
     });
-    this.dataciteService.logIdentifiableView(this.fileMetadata$).subscribe();
+
+    effect(() => {
+      const metaTagsData = this.metaTagsData();
+
+      if (metaTagsData) {
+        this.metaTags.updateMetaTags(metaTagsData, this.destroyRef);
+      }
+    });
+
+    this.dataciteService.logIdentifiableView(this.fileMetadata$).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+  }
+
+  getIframeLink(version: string) {
+    const url = this.getMfrUrlWithVersion(version);
+    if (url) {
+      this.safeLink = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    }
+  }
+
+  onOpenRevision(version: string): void {
+    if (this.fileVersion !== version) {
+      this.fileVersion = version;
+      this.getIframeLink(version);
+      this.isIframeLoading = true;
+    }
+  }
+
+  downloadRevision(version: string) {
+    this.dataciteService
+      .logIdentifiableDownload(this.fileMetadata$)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
+
+    const downloadUrl = this.file()?.links.download;
+    const storageLink = this.file()?.links.upload || '';
+
+    if (downloadUrl) {
+      window.open(`${downloadUrl}/?revision=${version}`)?.focus();
+      this.actions.getFileRevisions(storageLink);
+    }
   }
 
   downloadFile(link: string): void {
-    this.dataciteService.logIdentifiableDownload(this.fileMetadata$).subscribe();
+    this.dataciteService
+      .logIdentifiableDownload(this.fileMetadata$)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
     window.open(link)?.focus();
   }
 
   copyToClipboard(embedHtml: string): void {
-    navigator.clipboard
-      .writeText(embedHtml)
-      .then(() => {
-        this.toastService.showSuccess('files.detail.toast.copiedToClipboard');
-      })
-      .catch((err) => {
-        this.toastService.showError(err.message);
-      });
+    this.clipboard.copy(embedHtml);
+    this.toastService.showSuccess('files.detail.toast.copiedToClipboard');
   }
 
   deleteEntry(link: string): void {
     if (this.resourceId) {
       const redirectUrl = `/${this.resourceId}/files`;
       this.actions
-        .deleteEntry(this.resourceId, link)
+        .deleteEntry(link)
         .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe(() => {
-          this.router.navigate([redirectUrl]);
-        });
+        .subscribe(() => this.router.navigate([redirectUrl]));
     }
   }
 
-  confirmDelete(file: OsfFile): void {
+  confirmDelete(file: FileDetailsModel): void {
     this.customConfirmationService.confirmDelete({
       headerKey: 'files.dialogs.deleteFile.title',
       messageParams: { name: file.name },
@@ -304,7 +353,7 @@ export class FileDetailComponent {
   }
 
   handleFacebookShare(): void {
-    const link = `https://www.facebook.com/dialog/share?app_id=1022273774556662&display=popup&href=${this.file()?.links?.html ?? ''}&redirect_uri=${this.file()?.links?.html ?? ''}`;
+    const link = `https://www.facebook.com/dialog/share?app_id=${this.environment.facebookAppId}&display=popup&href=${this.file()?.links?.html ?? ''}&redirect_uri=${this.file()?.links?.html ?? ''}`;
     window.open(link, '_blank', 'noopener,noreferrer');
   }
 
@@ -338,8 +387,9 @@ export class FileDetailComponent {
     }
   }
 
-  onCedarFormEdit(): void {
-    this.cedarFormReadonly.set(false);
+  toggleEditMode(): void {
+    const editMode = this.cedarFormReadonly();
+    this.cedarFormReadonly.set(!editMode);
   }
 
   onCedarFormSubmit(data: CedarRecordDataBinding): void {
@@ -348,15 +398,31 @@ export class FileDetailComponent {
     if (selectedRecord.id) {
       this.actions
         .updateCedarRecord(data, selectedRecord.id, this.resourceId, ResourceType.File)
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe({
-          next: () => {
-            this.cedarFormReadonly.set(true);
-            this.toastService.showSuccess('files.detail.toast.cedarUpdated');
-            const fileId = this.file()?.path.replaceAll('/', '') || '';
-            this.actions.getCedarRecords(fileId, ResourceType.File);
-          },
+        .pipe(
+          takeUntilDestroyed(this.destroyRef),
+          switchMap(() => {
+            const cedarUrl = this.file()?.links.info;
+            if (cedarUrl) {
+              return this.actions.getCedarRecords(this.resourceId, ResourceType.File, cedarUrl);
+            }
+            return [];
+          })
+        )
+        .subscribe(() => {
+          this.cedarFormReadonly.set(true);
+          this.updateSelectedCedarRecord(selectedRecord.id!);
+          this.toastService.showSuccess('files.detail.toast.cedarUpdated');
         });
+    }
+  }
+
+  private updateSelectedCedarRecord(recordId: string): void {
+    const records = this.cedarRecords();
+    if (!records) return;
+
+    const record = records.find((r) => r.id === recordId);
+    if (record) {
+      this.selectedCedarRecord.set(record);
     }
   }
 
@@ -385,5 +451,26 @@ export class FileDetailComponent {
       this.selectedCedarTemplate.set(null);
       this.actions.getCedarTemplates();
     }
+  }
+
+  private getMfrUrlWithVersion(version?: string): string | null {
+    const mfrUrl = this.file()?.links.render;
+    if (!mfrUrl) return null;
+    const mfrUrlObj = new URL(mfrUrl);
+    const encodedDownloadUrl = mfrUrlObj.searchParams.get('url');
+    if (!encodedDownloadUrl) return mfrUrl;
+
+    const downloadUrlObj = new URL(decodeURIComponent(encodedDownloadUrl));
+
+    if (version) downloadUrlObj.searchParams.set('version', version);
+
+    if (this.hasViewOnly()) {
+      const viewOnlyParam = getViewOnlyParam();
+      if (viewOnlyParam) downloadUrlObj.searchParams.set('view_only', viewOnlyParam);
+    }
+
+    mfrUrlObj.searchParams.set('url', downloadUrlObj.toString());
+
+    return mfrUrlObj.toString();
   }
 }

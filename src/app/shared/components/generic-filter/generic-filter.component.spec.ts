@@ -1,34 +1,33 @@
-import { SelectChangeEvent } from 'primeng/select';
-
 import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { SelectOption } from '@shared/models';
+import { FilterOperator, FilterOption } from '@shared/models';
 
 import { GenericFilterComponent } from './generic-filter.component';
 
-import { jest } from '@jest/globals';
+import { OSFTestingModule } from '@testing/osf.testing.module';
 
 describe('GenericFilterComponent', () => {
   let component: GenericFilterComponent;
   let fixture: ComponentFixture<GenericFilterComponent>;
   let componentRef: ComponentRef<GenericFilterComponent>;
 
-  const mockOptions: SelectOption[] = [
-    { label: 'Option 1', value: 'value1' },
-    { label: 'Option 2', value: 'value2' },
-    { label: 'Option 3', value: 'value3' },
+  const mockOptions: FilterOption[] = [
+    { label: 'Option 1', value: 'value1', cardSearchResultCount: 10 },
+    { label: 'Option 2', value: 'value2', cardSearchResultCount: 20 },
+    { label: 'Option 3', value: 'value3', cardSearchResultCount: 30 },
   ];
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GenericFilterComponent],
+      imports: [GenericFilterComponent, OSFTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(GenericFilterComponent);
     component = fixture.componentInstance;
     componentRef = fixture.componentRef;
+    fixture.detectChanges();
   });
 
   it('should create', () => {
@@ -38,10 +37,13 @@ describe('GenericFilterComponent', () => {
   describe('Input Properties', () => {
     it('should initialize with default values', () => {
       expect(component.options()).toEqual([]);
+      expect(component.searchResults()).toEqual([]);
       expect(component.isLoading()).toBe(false);
-      expect(component.selectedValue()).toBeNull();
+      expect(component.isPaginationLoading()).toBe(false);
+      expect(component.isSearchLoading()).toBe(false);
+      expect(component.selectedOptions()).toEqual([]);
       expect(component.placeholder()).toBe('');
-      expect(component.filterType()).toBe('');
+      expect(component.filterOperator()).toBe(FilterOperator.AnyOf);
     });
 
     it('should accept options input', () => {
@@ -58,13 +60,6 @@ describe('GenericFilterComponent', () => {
       expect(component.isLoading()).toBe(true);
     });
 
-    it('should accept selectedValue input', () => {
-      componentRef.setInput('selectedValue', 'value1');
-      fixture.detectChanges();
-
-      expect(component.selectedValue()).toBe('value1');
-    });
-
     it('should accept placeholder input', () => {
       componentRef.setInput('placeholder', 'Select an option');
       fixture.detectChanges();
@@ -72,11 +67,27 @@ describe('GenericFilterComponent', () => {
       expect(component.placeholder()).toBe('Select an option');
     });
 
-    it('should accept filterType input', () => {
-      componentRef.setInput('filterType', 'subject');
+    it('should accept filterOperator input', () => {
+      componentRef.setInput('filterOperator', FilterOperator.Date);
       fixture.detectChanges();
 
-      expect(component.filterType()).toBe('subject');
+      expect(component.filterOperator()).toBe(FilterOperator.Date);
+    });
+
+    it('should accept selectedOptions input', () => {
+      const selected = [mockOptions[0]];
+      componentRef.setInput('selectedOptions', selected);
+      fixture.detectChanges();
+
+      expect(component.selectedOptions()).toEqual(selected);
+    });
+
+    it('should accept searchResults input', () => {
+      const searchResults = [mockOptions[1]];
+      componentRef.setInput('searchResults', searchResults);
+      fixture.detectChanges();
+
+      expect(component.searchResults()).toEqual(searchResults);
     });
   });
 
@@ -85,104 +96,38 @@ describe('GenericFilterComponent', () => {
       expect(component.filterOptions()).toEqual([]);
     });
 
-    it('should filter out options without labels', () => {
-      const optionsWithEmpty: SelectOption[] = [
-        { label: 'Valid Option', value: 'valid' },
-        { label: '', value: 'empty' },
-        { label: 'Another Valid', value: 'valid2' },
-      ];
-
-      componentRef.setInput('options', optionsWithEmpty);
-      fixture.detectChanges();
-
-      const filteredOptions = component.filterOptions();
-      expect(filteredOptions).toHaveLength(2);
-      expect(filteredOptions[0].label).toBe('Another Valid');
-      expect(filteredOptions[1].label).toBe('Valid Option');
-    });
-
-    it('should map options correctly', () => {
+    it('should return base options when no search results', () => {
       componentRef.setInput('options', mockOptions);
       fixture.detectChanges();
 
       const filteredOptions = component.filterOptions();
-      expect(filteredOptions[0]).toEqual({ label: 'Option 1', value: 'value1' });
-      expect(filteredOptions[1]).toEqual({ label: 'Option 2', value: 'value2' });
-      expect(filteredOptions[2]).toEqual({ label: 'Option 3', value: 'value3' });
+      expect(filteredOptions.length).toBe(3);
+      expect(filteredOptions).toEqual(mockOptions);
     });
 
-    it('should sort options alphabetically by label', () => {
-      const unsortedOptions: SelectOption[] = [
-        { label: 'Zebra', value: 'zebra' },
-        { label: 'Apple', value: 'apple' },
-        { label: 'Banana', value: 'banana' },
-      ];
+    it('should merge search results with base options', () => {
+      const baseOptions = [mockOptions[0]];
+      const searchResults = [mockOptions[1]];
 
-      componentRef.setInput('options', unsortedOptions);
+      componentRef.setInput('options', baseOptions);
+      componentRef.setInput('searchResults', searchResults);
       fixture.detectChanges();
 
       const filteredOptions = component.filterOptions();
-      expect(filteredOptions[0].label).toBe('Apple');
-      expect(filteredOptions[1].label).toBe('Banana');
-      expect(filteredOptions[2].label).toBe('Zebra');
+      expect(filteredOptions.length).toBe(2);
     });
 
-    it('should handle dateCreated filter type differently', () => {
-      const dateOptions: SelectOption[] = [
-        { label: '2023-01-01', value: 'date1' },
-        { label: '2023-12-31', value: 'date2' },
-        { label: '2023-06-15', value: 'date3' },
-      ];
-
-      componentRef.setInput('options', dateOptions);
-      componentRef.setInput('filterType', 'dateCreated');
+    it('should compute selectedOptionValues correctly', () => {
+      const selected = [mockOptions[0], mockOptions[2]];
+      componentRef.setInput('selectedOptions', selected);
       fixture.detectChanges();
 
-      const filteredOptions = component.filterOptions();
-      expect(filteredOptions[0].label).toBe('2023-01-01');
-      expect(filteredOptions[1].label).toBe('2023-12-31');
-      expect(filteredOptions[2].label).toBe('2023-06-15');
-    });
-  });
-
-  describe('Current Selected Option Signal', () => {
-    beforeEach(() => {
-      componentRef.setInput('options', mockOptions);
-      fixture.detectChanges();
+      const values = component.selectedOptionValues();
+      expect(values).toEqual(['value1', 'value3']);
     });
 
-    it('should set currentSelectedOption to null when no value selected', () => {
-      componentRef.setInput('selectedValue', null);
-      fixture.detectChanges();
-
-      expect(component.currentSelectedOption()).toBeNull();
-    });
-
-    it('should set currentSelectedOption when selectedValue matches an option', () => {
-      componentRef.setInput('selectedValue', 'value2');
-      fixture.detectChanges();
-
-      const currentOption = component.currentSelectedOption();
-      expect(currentOption).toEqual({ label: 'Option 2', value: 'value2' });
-    });
-
-    it('should set currentSelectedOption to null when selectedValue does not match any option', () => {
-      componentRef.setInput('selectedValue', 'nonexistent');
-      fixture.detectChanges();
-
-      expect(component.currentSelectedOption()).toBeNull();
-    });
-
-    it('should update currentSelectedOption when selectedValue changes', () => {
-      componentRef.setInput('selectedValue', 'value1');
-      fixture.detectChanges();
-
-      expect(component.currentSelectedOption()).toEqual({ label: 'Option 1', value: 'value1' });
-
-      componentRef.setInput('selectedValue', 'value3');
-      fixture.detectChanges();
-
-      expect(component.currentSelectedOption()).toEqual({ label: 'Option 3', value: 'value3' });
+    it('should return empty array for selectedOptionValues when no selection', () => {
+      expect(component.selectedOptionValues()).toEqual([]);
     });
   });
 
@@ -192,183 +137,43 @@ describe('GenericFilterComponent', () => {
       fixture.detectChanges();
 
       const loadingSpinner = fixture.debugElement.query(By.css('osf-loading-spinner'));
-      const selectElement = fixture.debugElement.query(By.css('p-select'));
+      const multiSelectElement = fixture.debugElement.query(By.css('p-multiselect'));
 
       expect(loadingSpinner).toBeTruthy();
-      expect(selectElement).toBeFalsy();
+      expect(multiSelectElement).toBeFalsy();
     });
 
-    it('should show select component when isLoading is false', () => {
+    it('should show multiselect component when isLoading is false', () => {
       componentRef.setInput('isLoading', false);
       fixture.detectChanges();
 
       const loadingSpinner = fixture.debugElement.query(By.css('osf-loading-spinner'));
-      const selectElement = fixture.debugElement.query(By.css('p-select'));
+      const multiSelectElement = fixture.debugElement.query(By.css('p-multiselect'));
 
       expect(loadingSpinner).toBeFalsy();
-      expect(selectElement).toBeTruthy();
-    });
-
-    it('should pass correct properties to p-select', () => {
-      componentRef.setInput('options', mockOptions);
-      componentRef.setInput('selectedValue', 'value1');
-      componentRef.setInput('placeholder', 'Choose option');
-      componentRef.setInput('filterType', 'subject');
-      fixture.detectChanges();
-
-      const selectElement = fixture.debugElement.query(By.css('p-select'));
-      expect(selectElement).toBeTruthy();
-
-      expect(selectElement.nativeElement.getAttribute('ng-reflect-id')).toBe('subject');
-      expect(selectElement.nativeElement.getAttribute('ng-reflect-style-class')).toBe('w-full');
-      expect(selectElement.nativeElement.getAttribute('ng-reflect-append-to')).toBe('body');
-
-      expect(selectElement).toBeTruthy();
-    });
-
-    it('should show selected option label as placeholder when option is selected', () => {
-      componentRef.setInput('options', mockOptions);
-      componentRef.setInput('selectedValue', 'value2');
-      componentRef.setInput('placeholder', 'Default placeholder');
-      fixture.detectChanges();
-
-      const selectElement = fixture.debugElement.query(By.css('p-select'));
-      expect(selectElement.nativeElement.getAttribute('ng-reflect-placeholder')).toBe('Option 2');
-    });
-
-    it('should show default placeholder when no option is selected', () => {
-      componentRef.setInput('options', mockOptions);
-      componentRef.setInput('selectedValue', null);
-      componentRef.setInput('placeholder', 'Default placeholder');
-      fixture.detectChanges();
-
-      const selectElement = fixture.debugElement.query(By.css('p-select'));
-      expect(selectElement.nativeElement.getAttribute('ng-reflect-placeholder')).toBe('Default placeholder');
-    });
-
-    it('should not show clear button when no value is selected', () => {
-      componentRef.setInput('selectedValue', null);
-      fixture.detectChanges();
-
-      const selectElement = fixture.debugElement.query(By.css('p-select'));
-
-      expect(selectElement).toBeTruthy();
+      expect(multiSelectElement).toBeTruthy();
     });
   });
 
-  describe('Event Handling', () => {
-    beforeEach(() => {
+  describe('Event Handlers', () => {
+    it('should emit selectedOptionsChanged on multi select change', () => {
+      const spy = jest.fn();
+      component.selectedOptionsChanged.subscribe(spy);
       componentRef.setInput('options', mockOptions);
       fixture.detectChanges();
+
+      component.onMultiChange({ value: ['value1', 'value2'] } as any);
+
+      expect(spy).toHaveBeenCalledWith([mockOptions[0], mockOptions[1]]);
     });
 
-    it('should emit valueChanged when onValueChange is called with a value', () => {
-      jest.spyOn(component.valueChanged, 'emit');
+    it('should handle empty value in onMultiChange', () => {
+      const spy = jest.fn();
+      component.selectedOptionsChanged.subscribe(spy);
 
-      const mockEvent: SelectChangeEvent = {
-        originalEvent: new Event('change'),
-        value: 'value2',
-      };
+      component.onMultiChange({ value: [] } as any);
 
-      component.onValueChange(mockEvent);
-
-      expect(component.valueChanged.emit).toHaveBeenCalledWith('value2');
-    });
-
-    it('should emit null when onValueChange is called with null value', () => {
-      jest.spyOn(component.valueChanged, 'emit');
-
-      const mockEvent: SelectChangeEvent = {
-        originalEvent: new Event('change'),
-        value: null,
-      };
-
-      component.onValueChange(mockEvent);
-
-      expect(component.valueChanged.emit).toHaveBeenCalledWith(null);
-    });
-
-    it('should update currentSelectedOption when onValueChange is called', () => {
-      const mockEvent: SelectChangeEvent = {
-        originalEvent: new Event('change'),
-        value: 'value3',
-      };
-
-      component.onValueChange(mockEvent);
-
-      expect(component.currentSelectedOption()).toEqual({ label: 'Option 3', value: 'value3' });
-    });
-
-    it('should set currentSelectedOption to null when clearing selection', () => {
-      componentRef.setInput('selectedValue', 'value1');
-      fixture.detectChanges();
-
-      expect(component.currentSelectedOption()).toEqual({ label: 'Option 1', value: 'value1' });
-
-      const mockEvent: SelectChangeEvent = {
-        originalEvent: new Event('change'),
-        value: null,
-      };
-
-      component.onValueChange(mockEvent);
-
-      expect(component.currentSelectedOption()).toBeNull();
-    });
-
-    it('should trigger onChange event in template', () => {
-      jest.spyOn(component, 'onValueChange');
-
-      const selectElement = fixture.debugElement.query(By.css('p-select'));
-      const mockEvent: SelectChangeEvent = {
-        originalEvent: new Event('change'),
-        value: 'value1',
-      };
-
-      selectElement.triggerEventHandler('onChange', mockEvent);
-
-      expect(component.onValueChange).toHaveBeenCalledWith(mockEvent);
-    });
-  });
-
-  describe('Edge Cases', () => {
-    it('should handle empty options array', () => {
-      componentRef.setInput('options', []);
-      fixture.detectChanges();
-
-      expect(component.filterOptions()).toEqual([]);
-      expect(component.currentSelectedOption()).toBeNull();
-    });
-
-    it('should handle options with null or undefined labels', () => {
-      const problematicOptions = [
-        { label: 'Valid', value: 'valid' },
-        { label: null, value: 'null-label' },
-        { label: undefined, value: 'undefined-label' },
-      ];
-
-      componentRef.setInput('options', problematicOptions);
-      fixture.detectChanges();
-
-      const filteredOptions = component.filterOptions();
-      expect(filteredOptions).toHaveLength(1);
-      expect(filteredOptions[0].label).toBe('Valid');
-    });
-  });
-
-  describe('Accessibility', () => {
-    it('should set proper id attribute for the select element', () => {
-      componentRef.setInput('filterType', 'subject-filter');
-      fixture.detectChanges();
-
-      const selectElement = fixture.debugElement.query(By.css('p-select'));
-      expect(selectElement.nativeElement.getAttribute('ng-reflect-id')).toBe('subject-filter');
-    });
-
-    it('should always enable filter', () => {
-      fixture.detectChanges();
-
-      const selectElement = fixture.debugElement.query(By.css('p-select'));
-      expect(selectElement).toBeTruthy();
+      expect(spy).toHaveBeenCalledWith([]);
     });
   });
 });

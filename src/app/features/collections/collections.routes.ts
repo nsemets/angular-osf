@@ -6,7 +6,14 @@ import { authGuard } from '@osf/core/guards';
 import { AddToCollectionState } from '@osf/features/collections/store/add-to-collection';
 import { CollectionsModerationState } from '@osf/features/moderation/store/collections-moderation';
 import { ConfirmLeavingGuard } from '@shared/guards';
-import { BookmarksState, CitationsState, ContributorsState, NodeLinksState, ProjectsState } from '@shared/stores';
+import {
+  BookmarksState,
+  CitationsState,
+  ContributorsState,
+  NodeLinksState,
+  ProjectsState,
+  SubjectsState,
+} from '@shared/stores';
 import { CollectionsState } from '@shared/stores/collections';
 
 export const collectionsRoutes: Routes = [
@@ -21,11 +28,11 @@ export const collectionsRoutes: Routes = [
         data: { skipBreadcrumbs: true },
       },
       {
-        path: ':id',
-        redirectTo: ':id/discover',
+        path: ':providerId',
+        redirectTo: ':providerId/discover',
       },
       {
-        path: ':id/discover',
+        path: ':providerId/discover',
         pathMatch: 'full',
         loadComponent: () =>
           import('@osf/features/collections/components/collections-discover/collections-discover.component').then(
@@ -34,7 +41,7 @@ export const collectionsRoutes: Routes = [
         providers: [provideStates([CollectionsState])],
       },
       {
-        path: ':id/add',
+        path: ':providerId/add',
         pathMatch: 'full',
         loadComponent: () =>
           import('@osf/features/collections/components/add-to-collection/add-to-collection.component').then(
@@ -58,7 +65,14 @@ export const collectionsRoutes: Routes = [
             '@osf/features/moderation/components/collection-submission-overview/collection-submission-overview.component'
           ).then((mod) => mod.CollectionSubmissionOverviewComponent),
         providers: [
-          provideStates([NodeLinksState, CitationsState, CollectionsModerationState, CollectionsState, BookmarksState]),
+          provideStates([
+            NodeLinksState,
+            CitationsState,
+            CollectionsModerationState,
+            CollectionsState,
+            BookmarksState,
+            SubjectsState,
+          ]),
         ],
       },
     ],

@@ -1,12 +1,8 @@
-import { SelectOption } from '@shared/models';
-
 export interface DiscoverableFilter {
   key: string;
   label: string;
-  type: 'select' | 'date' | 'checkbox' | 'group';
-  operator: string;
+  operator: FilterOperator;
   options?: FilterOption[];
-  selectedValues?: FilterOption[];
   description?: string;
   helpLink?: string;
   helpLinkText?: string;
@@ -15,11 +11,16 @@ export interface DiscoverableFilter {
   isLoaded?: boolean;
   isPaginationLoading?: boolean;
   isSearchLoading?: boolean;
-  hasOptions?: boolean;
-  loadOptionsOnExpand?: boolean;
-  filters?: DiscoverableFilter[];
 }
 
-export interface FilterOption extends SelectOption {
+export enum FilterOperator {
+  AnyOf = 'any-of',
+  Date = 'trove:at-date',
+  IsPresent = 'is-present',
+}
+
+export interface FilterOption {
+  label: string;
+  value: string;
   cardSearchResultCount: number;
 }

@@ -1,13 +1,14 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { ButtonModule } from 'primeng/button';
-import { DialogService } from 'primeng/dynamicdialog';
 import { Message } from 'primeng/message';
 import { TagModule } from 'primeng/tag';
 
-import { CommonModule } from '@angular/common';
+import { distinctUntilChanged, filter, map, skip, tap } from 'rxjs';
+
+import { CommonModule, DatePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -18,32 +19,37 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/router';
 
-import { GetRootFolders } from '@osf/features/files/store';
 import { SubmissionReviewStatus } from '@osf/features/moderation/enums';
 import {
   ClearCollectionModeration,
   CollectionsModerationSelectors,
   GetSubmissionsReviewActions,
 } from '@osf/features/moderation/store/collections-moderation';
-import { Mode, ResourceType, UserPermissions } from '@osf/shared/enums';
-import { hasViewOnlyParam, IS_XSMALL } from '@osf/shared/helpers';
+import { Mode, ResourceType } from '@osf/shared/enums';
+import { hasViewOnlyParam } from '@osf/shared/helpers';
 import { MapProjectOverview } from '@osf/shared/mappers';
-import { ToastService } from '@osf/shared/services';
+import { CustomDialogService, MetaTagsService, ToastService } from '@osf/shared/services';
 import {
+  AddonsSelectors,
   ClearCollections,
+  ClearConfiguredAddons,
   ClearWiki,
   CollectionsSelectors,
   CurrentResourceSelectors,
+  FetchSelectedSubjects,
+  GetAddonsResourceReference,
   GetBookmarksCollectionId,
   GetCollectionProvider,
+  GetConfiguredCitationAddons,
   GetConfiguredStorageAddons,
   GetHomeWiki,
   GetLinkedResources,
   GetResourceWithChildren,
+  SubjectsSelectors,
 } from '@osf/shared/stores';
 import { GetActivityLogs } from '@osf/shared/stores/activity-logs';
 import {
@@ -53,9 +59,12 @@ import {
   SubHeaderComponent,
   ViewOnlyLinkMessageComponent,
 } from '@shared/components';
+import { AnalyticsService } from '@shared/services/analytics.service';
 import { DataciteService } from '@shared/services/datacite/datacite.service';
 
+import { OverviewParentProjectComponent } from './components/overview-parent-project/overview-parent-project.component';
 import {
+  CitationAddonCardComponent,
   FilesWidgetComponent,
   LinkedResourcesComponent,
   OverviewComponentsComponent,
@@ -63,9 +72,11 @@ import {
   OverviewWikiComponent,
   RecentActivityComponent,
 } from './components';
+import { SUBMISSION_REVIEW_STATUS_OPTIONS } from './constants';
 import {
   ClearProjectOverview,
   GetComponents,
+  GetParentProject,
   GetProjectById,
   ProjectOverviewSelectors,
   SetProjectCustomCitation,
@@ -93,9 +104,10 @@ import {
     RouterLink,
     FilesWidgetComponent,
     ViewOnlyLinkMessageComponent,
-    ViewOnlyLinkMessageComponent,
+    OverviewParentProjectComponent,
+    CitationAddonCardComponent,
   ],
-  providers: [DialogService],
+  providers: [DatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectOverviewComponent implements OnInit {
@@ -105,11 +117,11 @@ export class ProjectOverviewComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
   private readonly toastService = inject(ToastService);
-  private readonly dialogService = inject(DialogService);
-  private readonly translateService = inject(TranslateService);
+  private readonly customDialogService = inject(CustomDialogService);
   private readonly dataciteService = inject(DataciteService);
+  private readonly metaTags = inject(MetaTagsService);
+  private readonly datePipe = inject(DatePipe);
 
-  isMobile = toSignal(inject(IS_XSMALL));
   submissions = select(CollectionsModerationSelectors.getCollectionSubmissions);
   collectionProvider = select(CollectionsSelectors.getCollectionProvider);
   currentReviewAction = select(CollectionsModerationSelectors.getCurrentReviewAction);
@@ -118,10 +130,18 @@ export class ProjectOverviewComponent implements OnInit {
   isReviewActionsLoading = select(CollectionsModerationSelectors.getCurrentReviewActionLoading);
   components = select(CurrentResourceSelectors.getResourceWithChildren);
   areComponentsLoading = select(CurrentResourceSelectors.isResourceWithChildrenLoading);
-
-  readonly activityPageSize = 5;
-  readonly activityDefaultPage = 1;
-  readonly SubmissionReviewStatus = SubmissionReviewStatus;
+  subjects = select(SubjectsSelectors.getSelectedSubjects);
+  areSubjectsLoading = select(SubjectsSelectors.areSelectedSubjectsLoading);
+  currentProject = select(ProjectOverviewSelectors.getProject);
+  isAnonymous = select(ProjectOverviewSelectors.isProjectAnonymous);
+  hasWriteAccess = select(ProjectOverviewSelectors.hasWriteAccess);
+  hasAdminAccess = select(ProjectOverviewSelectors.hasAdminAccess);
+  isWikiEnabled = select(ProjectOverviewSelectors.isWikiEnabled);
+  parentProject = select(ProjectOverviewSelectors.getParentProject);
+  isParentProjectLoading = select(ProjectOverviewSelectors.getParentProjectLoading);
+  addonsResourceReference = select(AddonsSelectors.getAddonsResourceReference);
+  configuredCitationAddons = select(AddonsSelectors.getConfiguredCitationAddons);
+  operationInvocation = select(AddonsSelectors.getOperationInvocation);
 
   private readonly actions = createDispatchMap({
     getProject: GetProjectById,
@@ -137,14 +157,18 @@ export class ProjectOverviewComponent implements OnInit {
     clearWiki: ClearWiki,
     clearCollections: ClearCollections,
     clearCollectionModeration: ClearCollectionModeration,
+    clearConfiguredAddons: ClearConfiguredAddons,
     getComponentsTree: GetResourceWithChildren,
-    getRootFolders: GetRootFolders,
     getConfiguredStorageAddons: GetConfiguredStorageAddons,
+    getSubjects: FetchSelectedSubjects,
+    getParentProject: GetParentProject,
+    getAddonsResourceReference: GetAddonsResourceReference,
+    getConfiguredCitationAddons: GetConfiguredCitationAddons,
   });
 
-  currentProject = select(ProjectOverviewSelectors.getProject);
-  isAnonymous = select(ProjectOverviewSelectors.isProjectAnonymous);
-  private currentProject$ = toObservable(this.currentProject);
+  readonly activityPageSize = 5;
+  readonly activityDefaultPage = 1;
+  readonly SubmissionReviewStatusOptions = SUBMISSION_REVIEW_STATUS_OPTIONS;
 
   readonly isCollectionsRoute = computed(() => this.router.url.includes('/collections'));
 
@@ -164,34 +188,33 @@ export class ProjectOverviewComponent implements OnInit {
     );
   });
 
-  userPermissions = computed(() => this.currentProject()?.currentUserPermissions || []);
   hasViewOnly = computed(() => hasViewOnlyParam(this.router));
-
-  get isAdmin(): boolean {
-    return this.userPermissions().includes(UserPermissions.Admin);
-  }
-
-  get canWrite(): boolean {
-    return this.userPermissions().includes(UserPermissions.Write);
-  }
 
   resourceOverview = computed(() => {
     const project = this.currentProject();
+    const subjects = this.subjects();
     if (project) {
-      return MapProjectOverview(project, this.isAnonymous());
+      return MapProjectOverview(project, subjects, this.isAnonymous());
     }
     return null;
   });
 
   isLoading = computed(
-    () => this.isProjectLoading() || this.isCollectionProviderLoading() || this.isReviewActionsLoading()
+    () =>
+      this.isProjectLoading() ||
+      this.isCollectionProviderLoading() ||
+      this.isReviewActionsLoading() ||
+      this.areSubjectsLoading()
   );
+
+  currentProject$ = toObservable(this.currentProject);
 
   currentResource = computed(() => {
     const project = this.currentProject();
     if (project) {
       return {
         id: project.id,
+        title: project.title,
         isPublic: project.isPublic,
         storage: project.storage,
         viewOnlyLinksCount: project.viewOnlyLinksCount,
@@ -210,15 +233,47 @@ export class ProjectOverviewComponent implements OnInit {
     };
   });
 
+  private readonly metaTagsData = computed(() => {
+    const project = this.currentProject();
+    if (!project) return null;
+    const keywords = [...(project.tags || [])];
+    if (project.category) {
+      keywords.push(project.category);
+    }
+    return {
+      osfGuid: project.id,
+      title: project.title,
+      description: project.description,
+      url: project.links?.iri,
+      doi: project.doi,
+      license: project.license?.name,
+      publishedDate: this.datePipe.transform(project.dateCreated, 'yyyy-MM-dd'),
+      modifiedDate: this.datePipe.transform(project.dateModified, 'yyyy-MM-dd'),
+      keywords,
+      institution: project.affiliatedInstitutions?.map((institution) => institution.name),
+      contributors: project.contributors.map((contributor) => ({
+        fullName: contributor.fullName,
+        givenName: contributor.givenName,
+        familyName: contributor.familyName,
+      })),
+    };
+  });
+
+  readonly analyticsService = inject(AnalyticsService);
+
   constructor() {
     this.setupCollectionsEffects();
     this.setupCleanup();
+    this.setupProjectEffects();
+    this.setupRouteChangeListener();
+    this.setupAddonsEffects();
 
     effect(() => {
-      const currentProject = this.currentProject();
-      if (currentProject) {
-        const rootParentId = currentProject.rootParentId ?? currentProject.id;
-        this.actions.getComponentsTree(rootParentId, currentProject.id, ResourceType.Project);
+      if (!this.isProjectLoading()) {
+        const metaTagsData = this.metaTagsData();
+        if (metaTagsData) {
+          this.metaTags.updateMetaTags(metaTagsData, this.destroyRef);
+        }
       }
     });
   }
@@ -229,31 +284,30 @@ export class ProjectOverviewComponent implements OnInit {
 
   ngOnInit(): void {
     const projectId = this.route.snapshot.params['id'] || this.route.parent?.snapshot.params['id'];
+
     if (projectId) {
       this.actions.getProject(projectId);
       this.actions.getBookmarksId();
-      this.actions.getHomeWiki(ResourceType.Project, projectId);
       this.actions.getComponents(projectId);
       this.actions.getLinkedProjects(projectId);
       this.actions.getActivityLogs(projectId, this.activityDefaultPage, this.activityPageSize);
     }
+
+    this.dataciteService
+      .logIdentifiableView(this.currentProject$)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
   }
 
   handleOpenMakeDecisionDialog() {
-    const dialogWidth = this.isMobile() ? '95vw' : '600px';
-
-    this.dialogService
+    this.customDialogService
       .open(MakeDecisionDialogComponent, {
-        width: dialogWidth,
-        focusOnShow: false,
-        header: this.translateService.instant('moderation.makeDecision.header'),
-        closeOnEscape: true,
-        modal: true,
-        closable: true,
+        header: 'moderation.makeDecision.header',
+        width: '600px',
       })
       .onClose.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data) => {
-        if (data && data.action) {
+        if (data?.action) {
           this.toastService.showSuccess(`moderation.makeDecision.${data.action}Success`);
           this.goBack();
         }
@@ -264,10 +318,7 @@ export class ProjectOverviewComponent implements OnInit {
     const currentStatus = this.route.snapshot.queryParams['status'];
     const queryParams = currentStatus ? { status: currentStatus } : {};
 
-    this.router.navigate(['../'], {
-      relativeTo: this.route,
-      queryParams,
-    });
+    this.router.navigate(['../'], { relativeTo: this.route, queryParams });
   }
 
   private setupCollectionsEffects(): void {
@@ -291,12 +342,79 @@ export class ProjectOverviewComponent implements OnInit {
     });
   }
 
+  private setupProjectEffects(): void {
+    effect(() => {
+      const currentProject = this.currentProject();
+      if (currentProject) {
+        const rootParentId = currentProject.rootParentId ?? currentProject.id;
+        this.actions.getComponentsTree(rootParentId, currentProject.id, ResourceType.Project);
+        this.actions.getSubjects(currentProject.id, ResourceType.Project);
+        const parentProjectId = currentProject.parentId;
+        if (parentProjectId) {
+          this.actions.getParentProject(parentProjectId);
+        }
+      }
+    });
+    effect(() => {
+      const project = this.currentProject();
+      if (project?.wikiEnabled) {
+        this.actions.getHomeWiki(ResourceType.Project, project.id);
+      }
+    });
+    effect(() => {
+      const currentProject = this.currentProject();
+      if (currentProject && currentProject.isPublic) {
+        this.analyticsService.sendCountedUsage(currentProject.id, 'project.detail').subscribe();
+      }
+    });
+  }
+
+  private setupRouteChangeListener(): void {
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        map(() => this.route.snapshot.params['id'] || this.route.parent?.snapshot.params['id']),
+        filter(Boolean),
+        distinctUntilChanged(),
+        skip(1),
+        tap((projectId) => {
+          this.actions.clearProjectOverview();
+          this.actions.clearConfiguredAddons();
+          this.actions.getProject(projectId);
+          this.actions.getBookmarksId();
+          this.actions.getComponents(projectId);
+          this.actions.getLinkedProjects(projectId);
+          this.actions.getActivityLogs(projectId, this.activityDefaultPage, this.activityPageSize);
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe();
+  }
+
   private setupCleanup(): void {
     this.destroyRef.onDestroy(() => {
       this.actions.clearProjectOverview();
       this.actions.clearWiki();
       this.actions.clearCollections();
       this.actions.clearCollectionModeration();
+      this.actions.clearConfiguredAddons();
+    });
+  }
+
+  private setupAddonsEffects(): void {
+    effect(() => {
+      const currentProject = this.currentProject();
+
+      if (currentProject) {
+        this.actions.getAddonsResourceReference(currentProject.id);
+      }
+    });
+
+    effect(() => {
+      const resourceReference = this.addonsResourceReference();
+      if (resourceReference.length) {
+        this.actions.getConfiguredCitationAddons(resourceReference[0].id);
+      }
     });
   }
 }
