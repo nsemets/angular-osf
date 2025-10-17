@@ -75,6 +75,7 @@ export class RegistriesMetadataStepComponent implements OnDestroy {
     updateStepState: UpdateStepState,
     clearState: ClearState,
   });
+
   readonly INPUT_VALIDATION_MESSAGES = INPUT_VALIDATION_MESSAGES;
 
   metadataForm = this.fb.group({

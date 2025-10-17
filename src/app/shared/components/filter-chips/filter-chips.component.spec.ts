@@ -6,7 +6,7 @@ import { FilterChipsComponent } from './filter-chips.component';
 
 import { OSFTestingModule } from '@testing/osf.testing.module';
 
-describe.skip('FilterChipsComponent', () => {
+describe('FilterChipsComponent', () => {
   let component: FilterChipsComponent;
   let fixture: ComponentFixture<FilterChipsComponent>;
 

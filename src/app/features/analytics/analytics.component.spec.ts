@@ -101,20 +101,4 @@ describe('Component: Analytics', () => {
 
     expect(navigateSpy).toHaveBeenCalledWith(['duplicates'], { relativeTo: expect.any(Object) });
   });
-
-  it('should set selectedRange via onRangeChange', () => {
-    fixture.detectChanges();
-    component.onRangeChange('month');
-    expect(component.selectedRange()).toBe('month');
-  });
-
-  it('should navigate to duplicates with correct relative route', () => {
-    const router = TestBed.inject(Router);
-    const navigateSpy = jest.spyOn(router, 'navigate');
-
-    fixture.detectChanges();
-    component.navigateToDuplicates();
-
-    expect(navigateSpy).toHaveBeenCalledWith(['duplicates'], { relativeTo: expect.any(Object) });
-  });
 });

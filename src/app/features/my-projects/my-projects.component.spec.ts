@@ -66,9 +66,6 @@ describe('MyProjectsComponent', () => {
 
     fixture = TestBed.createComponent(MyProjectsComponent);
     component = fixture.componentInstance;
-
-    (component as any).queryParams = () => ({});
-
     fixture.detectChanges();
   });
 

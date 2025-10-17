@@ -8,6 +8,7 @@ import { FilesService } from '@osf/shared/services';
   selector: 'osf-file-redirect',
   imports: [],
   templateUrl: './file-redirect.component.html',
+  styleUrl: './file-redirect.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileRedirectComponent {

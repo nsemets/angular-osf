@@ -20,5 +20,6 @@ export function handleSectionError<T>(ctx: StateContext<T>, section: keyof T, er
       error: error.message,
     },
   } as Partial<T>);
+
   return throwError(() => error);
 }

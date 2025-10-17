@@ -129,12 +129,6 @@ export const projectRoutes: Routes = [
         loadComponent: () =>
           import('../project/linked-services/linked-services.component').then((mod) => mod.LinkedServicesComponent),
       },
-      {
-        path: 'links',
-        canActivate: [viewOnlyGuard],
-        loadComponent: () =>
-          import('../project/linked-services/linked-services.component').then((mod) => mod.LinkedServicesComponent),
-      },
     ],
   },
 ];

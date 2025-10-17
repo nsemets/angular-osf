@@ -11,6 +11,7 @@
       {{ 'preprints.selectService.learnMore' | translate }}
     </a>
   </p>
+
   <section class="mt-6 grid justify-content-center align-items-start gap-4">
     @if (areProvidersLoading()) {
       @for (_ of skeletonArray; track $index) {
@@ -59,7 +60,7 @@
       }
     }
   </section>
-  <<<<<<< HEAD ======= >>>>>>> origin/main
+
   <section class="mt-6 flex flex-row justify-content-end">
     <p-button
       [label]="'common.buttons.next' | translate"

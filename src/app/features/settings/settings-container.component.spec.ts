@@ -1,5 +1,3 @@
-import { BehaviorSubject } from 'rxjs';
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
@@ -14,8 +12,6 @@ describe('Component: Settings', () => {
   let helpScoutService: HelpScoutService;
 
   beforeEach(async () => {
-    isWebSubject = new BehaviorSubject<boolean>(true);
-
     await TestBed.configureTestingModule({
       imports: [SettingsContainerComponent, OSFTestingModule],
       providers: [

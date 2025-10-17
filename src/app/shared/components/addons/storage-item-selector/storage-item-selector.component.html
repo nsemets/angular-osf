@@ -136,25 +136,6 @@
     </div>
   }
 
-  @if (currentAddonType() === AddonType.LINK) {
-    <div class="flex flex-column gap-1">
-      <div class="flex align-items-center">
-        <h3>
-          {{ 'settings.addons.configureAddon.resourceType' | translate }}
-        </h3>
-        <p-button icon="fas fa-info-circle blue-icon" severity="secondary" text (onClick)="openInfoDialog()"></p-button>
-      </div>
-      <div class="resource-selector">
-        <osf-select
-          [fullWidth]="!!isMobile()"
-          [placeholder]="'settings.addons.configureAddon.chooseResourceType' | translate"
-          [options]="resourceTypeOptions()"
-          [(selectedValue)]="selectedResourceType"
-        ></osf-select>
-      </div>
-    </div>
-  }
-
   <div class="flex gap-4 justify-content-between sm:align-self-end">
     <p-button
       class="btn-full-width sm:w-10rem"

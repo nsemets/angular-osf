@@ -24,7 +24,6 @@ import { FetchInstitutions, InstitutionsSelectors } from '@osf/shared/stores';
     LoadingSpinnerComponent,
     ScheduledBannerComponent,
     RouterLink,
-    ScheduledBannerComponent,
   ],
   templateUrl: './institutions-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -20,6 +20,7 @@ export class GetResourceDetails {
 
 export class GetResourceWithChildren {
   static readonly type = '[Current Resource] Get Resource With Children';
+
   constructor(
     public rootParentId: string,
     public resourceId: string,
