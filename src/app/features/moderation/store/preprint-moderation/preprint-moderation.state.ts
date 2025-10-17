@@ -5,6 +5,7 @@ import { catchError, forkJoin, map, switchMap, tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
+import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
 import { ResourceType } from '@osf/shared/enums';
 import { handleSectionError } from '@osf/shared/helpers';
 import { ContributorsService } from '@osf/shared/services';
@@ -180,38 +181,40 @@ export class PreprintModerationState {
       })
     );
 
-    return this.contributorsService.getAllContributors(ResourceType.Preprint, preprintId, 1, 10).pipe(
-      tap((res) => {
-        ctx.setState(
-          patch({
-            submissions: patch({
-              data: updateItem<PreprintSubmissionModel>(
-                (submission) => submission.id === preprintId,
-                patch({
-                  contributors: res.data,
-                  totalContributors: res.totalCount,
-                  contributorsLoading: false,
-                })
-              ),
-            }),
-          })
-        );
-      }),
-      catchError((error) => {
-        ctx.setState(
-          patch({
-            submissions: patch({
-              data: updateItem<PreprintSubmissionModel>(
-                (submission) => submission.id === preprintId,
-                patch({ contributorsLoading: false })
-              ),
-            }),
-          })
-        );
+    return this.contributorsService
+      .getAllContributors(ResourceType.Preprint, preprintId, 1, DEFAULT_TABLE_PARAMS.rows)
+      .pipe(
+        tap((res) => {
+          ctx.setState(
+            patch({
+              submissions: patch({
+                data: updateItem<PreprintSubmissionModel>(
+                  (submission) => submission.id === preprintId,
+                  patch({
+                    contributors: res.data,
+                    totalContributors: res.totalCount,
+                    contributorsLoading: false,
+                  })
+                ),
+              }),
+            })
+          );
+        }),
+        catchError((error) => {
+          ctx.setState(
+            patch({
+              submissions: patch({
+                data: updateItem<PreprintSubmissionModel>(
+                  (submission) => submission.id === preprintId,
+                  patch({ contributorsLoading: false })
+                ),
+              }),
+            })
+          );
 
-        return handleSectionError(ctx, 'submissions', error);
-      })
-    );
+          return handleSectionError(ctx, 'submissions', error);
+        })
+      );
   }
 
   @Action(GetPreprintWithdrawalSubmissionContributors)
@@ -237,37 +240,39 @@ export class PreprintModerationState {
       })
     );
 
-    return this.contributorsService.getAllContributors(ResourceType.Preprint, preprintId, 1, 10).pipe(
-      tap((res) => {
-        ctx.setState(
-          patch({
-            withdrawalSubmissions: patch({
-              data: updateItem<PreprintWithdrawalSubmission>(
-                (submission) => submission.id === submissionId,
-                patch({
-                  contributors: res.data,
-                  totalContributors: res.totalCount,
-                  contributorsLoading: false,
-                })
-              ),
-            }),
-          })
-        );
-      }),
-      catchError((error) => {
-        ctx.setState(
-          patch({
-            withdrawalSubmissions: patch({
-              data: updateItem<PreprintWithdrawalSubmission>(
-                (submission) => submission.id === submissionId,
-                patch({ contributorsLoading: false })
-              ),
-            }),
-          })
-        );
+    return this.contributorsService
+      .getAllContributors(ResourceType.Preprint, preprintId, 1, DEFAULT_TABLE_PARAMS.rows)
+      .pipe(
+        tap((res) => {
+          ctx.setState(
+            patch({
+              withdrawalSubmissions: patch({
+                data: updateItem<PreprintWithdrawalSubmission>(
+                  (submission) => submission.id === submissionId,
+                  patch({
+                    contributors: res.data,
+                    totalContributors: res.totalCount,
+                    contributorsLoading: false,
+                  })
+                ),
+              }),
+            })
+          );
+        }),
+        catchError((error) => {
+          ctx.setState(
+            patch({
+              withdrawalSubmissions: patch({
+                data: updateItem<PreprintWithdrawalSubmission>(
+                  (submission) => submission.id === submissionId,
+                  patch({ contributorsLoading: false })
+                ),
+              }),
+            })
+          );
 
-        return handleSectionError(ctx, 'withdrawalSubmissions', error);
-      })
-    );
+          return handleSectionError(ctx, 'withdrawalSubmissions', error);
+        })
+      );
   }
 }
