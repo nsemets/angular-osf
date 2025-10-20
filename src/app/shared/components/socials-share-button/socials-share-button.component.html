@@ -1,11 +1,11 @@
 <p-button
-  class="flex"
-  (onClick)="socialsActionMenu.toggle($event)"
+  icon="fas fa-share-nodes text-2xl"
+  styleClass="px-4"
   [pTooltip]="'project.overview.tooltips.share' | translate"
   tooltipPosition="bottom"
   [ariaLabel]="'project.overview.tooltips.share' | translate"
+  (onClick)="socialsActionMenu.toggle($event)"
 >
-  <i class="fas fa-share-nodes text-2xl"></i>
   <p-menu appendTo="body" #socialsActionMenu [model]="socialsActionItems()" popup>
     <ng-template #item let-item>
       <a class="p-menu-item-link" [href]="item.url" target="_blank" rel="noopener noreferrer">
