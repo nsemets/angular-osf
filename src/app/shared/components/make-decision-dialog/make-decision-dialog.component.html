@@ -59,14 +59,18 @@
         </div>
       }
 
-      <div class="flex gap-2">
+      <div class="flex flex-column gap-1 mt-3">
+        <p class="flex justify-content-end">
+          {{ requestForm.controls[ModerationDecisionFormControls.Comment].value.length }}/{{ decisionCommentLimit }}
+        </p>
+
         <textarea
           pTextarea
           [formControlName]="ModerationDecisionFormControls.Comment"
           [placeholder]="'moderation.makeDecision.remarksPlaceholder' | translate"
           [rows]="6"
           [maxlength]="decisionCommentLimit"
-          class="w-full mt-3"
+          class="w-full"
         ></textarea>
       </div>
 
@@ -74,13 +78,13 @@
         <p-button
           [label]="'common.buttons.cancel' | translate"
           severity="info"
-          (click)="dialogRef.close(false)"
+          (onClick)="dialogRef.close(false)"
           [disabled]="isSubmitting()"
           class="btn-full-width"
         />
         <p-button
           [label]="'moderation.makeDecision.submitDecision' | translate"
-          (click)="handleSubmission()"
+          (onClick)="handleSubmission()"
           severity="success"
           [loading]="isSubmitting()"
           [disabled]="isSubmitDisabled"
