@@ -1,0 +1,9 @@
+<p-card>
+  @if (metrics()) {
+    <div class="flex flex-row gap-1 font-bold">
+      <span>{{ 'preprints.details.share.views' | translate }}: {{ metrics()!.views }}</span>
+      <span>|</span>
+      <span>{{ 'preprints.details.share.downloads' | translate }}: {{ metrics()!.downloads }}</span>
+    </div>
+  }
+</p-card>

@@ -42,9 +42,11 @@
 
     <div class="flex flex-column justify-content-end gap-2 md:flex-row">
       @if (isPreprintLoading() || isPreprintProviderLoading() || areContributorsLoading()) {
-        <p-skeleton width="10rem" height="2.25rem" />
-        <p-skeleton width="10rem" height="2.25rem" />
-        <p-skeleton width="10rem" height="2.25rem" />
+        <p-skeleton width="11rem" height="2.75rem" />
+        <p-skeleton width="11rem" height="2.75rem" />
+        <p-skeleton width="11rem" height="2.75rem" />
+        <p-skeleton width="2.75rem" height="2.75rem" />
+        <p-skeleton width="5rem" height="2.75rem" />
       } @else {
         @if (editButtonVisible()) {
           <p-button
@@ -71,6 +73,8 @@
             (click)="handleWithdrawClicked()"
           />
         }
+
+        <osf-preprint-share-and-download [preprintProvider]="preprintProvider()" />
       }
     </div>
   </section>
@@ -99,16 +103,18 @@
 
     @if (!preprint()?.dateWithdrawn) {
       <section class="flex-1 flex flex-column gap-4 align-items-start lg:flex-row">
-        <section class="w-12 lg:w-6">
+        <section class="w-12 lg:w-8">
           <osf-preprint-file-section [providerReviewsWorkflow]="preprintProvider()?.reviewsWorkflow || null" />
         </section>
 
-        <section class="flex flex-column gap-4 w-12 lg:w-6">
-          <osf-preprint-share-and-download [preprintProvider]="preprintProvider()" />
+        <section class="flex flex-column gap-4 w-12 lg:w-4">
           <osf-preprint-general-information
             [preprintProvider]="preprintProvider()"
             (preprintVersionSelected)="fetchPreprint($event)"
           />
+
+          <osf-preprint-metrics-info [metrics]="preprint()?.metrics"></osf-preprint-metrics-info>
+
           <osf-preprint-additional-info [preprintProviderId]="providerId()" />
         </section>
       </section>
