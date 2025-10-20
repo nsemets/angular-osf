@@ -24,27 +24,7 @@
         <osf-affiliated-institutions-view [institutions]="affiliatedInstitutions()" />
       }
 
-      @if (preprintValue.nodeId) {
-        <section class="flex flex-column gap-2">
-          <h3>{{ 'preprints.details.supplementalMaterials' | translate }}</h3>
-          <a class="font-bold flex gap-1" [href]="nodeLink()">
-            {{ nodeLink() }}
-            <osf-icon iconClass="fa fa-external-link-alt" />
-          </a>
-        </section>
-      }
-
       @if (preprintProvider()?.assertionsEnabled) {
-        <section class="flex flex-column gap-2">
-          <h3>{{ 'preprints.preprintStepper.review.sections.authorAssertions.conflictOfInterest' | translate }}</h3>
-
-          @if (preprintValue.hasCoi) {
-            {{ preprintValue.coiStatement }}
-          } @else {
-            <p>{{ 'preprints.preprintStepper.review.sections.authorAssertions.noCoi' | translate }}</p>
-          }
-        </section>
-
         <section class="flex flex-column gap-2">
           <h3>{{ 'preprints.preprintStepper.review.sections.authorAssertions.publicData' | translate }}</h3>
 
@@ -101,6 +81,28 @@
                 </p>
               }
             }
+          }
+        </section>
+      }
+
+      @if (preprintValue.nodeId) {
+        <section class="flex flex-column gap-2">
+          <h3>{{ 'preprints.details.supplementalMaterials' | translate }}</h3>
+          <a class="font-bold flex gap-1" [href]="nodeLink()">
+            {{ nodeLink() }}
+            <osf-icon iconClass="fa fa-external-link-alt" />
+          </a>
+        </section>
+      }
+
+      @if (preprintProvider()?.assertionsEnabled) {
+        <section class="flex flex-column gap-2">
+          <h3>{{ 'preprints.preprintStepper.review.sections.authorAssertions.conflictOfInterest' | translate }}</h3>
+
+          @if (preprintValue.hasCoi) {
+            {{ preprintValue.coiStatement }}
+          } @else {
+            <p>{{ 'preprints.preprintStepper.review.sections.authorAssertions.noCoi' | translate }}</p>
           }
         </section>
       }

@@ -103,7 +103,7 @@
 
     @if (!preprint()?.dateWithdrawn) {
       <section class="flex-1 flex flex-column gap-4 align-items-start lg:flex-row">
-        <section class="w-12 lg:w-8">
+        <section class="flex flex-column flex-1 h-full w-12 lg:w-8">
           <osf-preprint-file-section [providerReviewsWorkflow]="preprintProvider()?.reviewsWorkflow || null" />
         </section>
 
