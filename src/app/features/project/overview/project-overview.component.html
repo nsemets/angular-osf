@@ -12,14 +12,16 @@
     />
   </div>
 
-  <div class="px-3 pb-5 flex flex-column sm:px-5">
-    <osf-overview-toolbar
-      [isCollectionsRoute]="isCollectionsRoute()"
-      [currentResource]="currentResource()"
-      [projectDescription]="project.description"
-      [canEdit]="hasAdminAccess()"
-    />
-  </div>
+  @if (currentProject()) {
+    <div class="px-3 pb-5 flex flex-column sm:px-5">
+      <osf-overview-toolbar
+        [isCollectionsRoute]="isCollectionsRoute()"
+        [currentResource]="currentResource()!"
+        [projectDescription]="project.description"
+        [canEdit]="hasAdminAccess()"
+      />
+    </div>
+  }
 
   <div class="flex flex-wrap gap-4 bg-white h-full p-3 flex-column sm:p-4 lg:flex-row">
     @if (isCollectionsRoute()) {

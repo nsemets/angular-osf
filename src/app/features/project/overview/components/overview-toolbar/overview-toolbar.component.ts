@@ -17,11 +17,11 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { UserSelectors } from '@core/store/user';
 import { ClearDuplicatedProject, ProjectOverviewSelectors } from '@osf/features/project/overview/store';
-import { IconComponent } from '@osf/shared/components';
+import { SocialsShareButtonComponent } from '@osf/shared/components';
 import { ResourceType } from '@osf/shared/enums';
-import { ShareableContent, ToolbarResource } from '@osf/shared/models';
+import { ToolbarResource } from '@osf/shared/models';
 import { FileSizePipe } from '@osf/shared/pipes';
-import { CustomDialogService, SocialShareService, ToastService } from '@osf/shared/services';
+import { CustomDialogService, ToastService } from '@osf/shared/services';
 import {
   AddResourceToBookmarks,
   BookmarksSelectors,
@@ -31,7 +31,6 @@ import {
 } from '@osf/shared/stores';
 import { hasViewOnlyParam } from '@shared/helpers';
 
-import { SocialsShareActionItem } from '../../models';
 import { DuplicateDialogComponent } from '../duplicate-dialog/duplicate-dialog.component';
 import { ForkDialogComponent } from '../fork-dialog/fork-dialog.component';
 import { TogglePublicityDialogComponent } from '../toggle-publicity-dialog/toggle-publicity-dialog.component';
@@ -48,7 +47,7 @@ import { TogglePublicityDialogComponent } from '../toggle-publicity-dialog/toggl
     NgClass,
     RouterLink,
     FileSizePipe,
-    IconComponent,
+    SocialsShareButtonComponent,
   ],
   templateUrl: './overview-toolbar.component.html',
   styleUrl: './overview-toolbar.component.scss',
@@ -58,7 +57,6 @@ export class OverviewToolbarComponent {
   private store = inject(Store);
   private customDialogService = inject(CustomDialogService);
   private toastService = inject(ToastService);
-  private socialShareService = inject(SocialShareService);
 
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
@@ -69,7 +67,7 @@ export class OverviewToolbarComponent {
 
   isCollectionsRoute = input<boolean>(false);
   canEdit = input.required<boolean>();
-  currentResource = input.required<ToolbarResource | null>();
+  currentResource = input.required<ToolbarResource>();
   projectDescription = input<string>('');
   showViewOnlyLinks = input<boolean>(true);
 
@@ -79,10 +77,6 @@ export class OverviewToolbarComponent {
   bookmarkedProjects = select(MyResourcesSelectors.getBookmarks);
   duplicatedProject = select(ProjectOverviewSelectors.getDuplicatedProject);
   isAuthenticated = select(UserSelectors.isAuthenticated);
-  socialsActionItems = computed(() => {
-    const shareableContent = this.createShareableContent();
-    return shareableContent ? this.buildSocialActionItems(shareableContent) : [];
-  });
 
   hasViewOnly = computed(() => hasViewOnlyParam(this.router));
 
@@ -228,69 +222,5 @@ export class OverviewToolbarComponent {
         },
         complete: () => this.actions.clearDuplicatedProject(),
       });
-  }
-
-  private createShareableContent(): ShareableContent | null {
-    const resource = this.currentResource();
-    const description = this.projectDescription();
-
-    if (!resource?.isPublic) {
-      return null;
-    }
-
-    return {
-      id: resource.id,
-      title: resource.title,
-      description,
-      url: this.buildResourceUrl(resource),
-    };
-  }
-
-  private buildResourceUrl(resource: ToolbarResource): string {
-    switch (resource.resourceType) {
-      case ResourceType.Project:
-        return this.socialShareService.createProjectUrl(resource.id);
-      case ResourceType.Registration:
-        return this.socialShareService.createRegistrationUrl(resource.id);
-      default:
-        return `${window.location.origin}/${resource.id}`;
-    }
-  }
-
-  private buildSocialActionItems(shareableContent: ShareableContent): SocialsShareActionItem[] {
-    const shareLinks = this.socialShareService.generateAllSharingLinks(shareableContent);
-
-    return [
-      {
-        label: 'project.overview.actions.socials.email',
-        icon: 'fas fa-envelope',
-        url: shareLinks.email,
-      },
-      {
-        label: 'project.overview.actions.socials.x',
-        icon: 'fab fa-x-twitter',
-        url: shareLinks.twitter,
-      },
-      {
-        label: 'project.overview.actions.socials.linkedIn',
-        icon: 'fab fa-linkedin',
-        url: shareLinks.linkedIn,
-      },
-      {
-        label: 'project.overview.actions.socials.facebook',
-        icon: 'fab fa-facebook-f',
-        url: shareLinks.facebook,
-      },
-      {
-        label: 'project.overview.actions.socials.mastodon',
-        icon: 'fab fa-mastodon',
-        url: shareLinks.mastodon,
-      },
-      {
-        label: 'project.overview.actions.socials.bluesky',
-        icon: 'fab fa-bluesky',
-        url: shareLinks.bluesky,
-      },
-    ];
   }
 }
