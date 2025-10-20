@@ -69,6 +69,7 @@ export class AddContributorDialogComponent implements OnInit, OnDestroy {
   readonly selectedUsers = signal<ContributorAddModel[]>([]);
   readonly components = signal<ComponentCheckboxItemModel[]>([]);
   readonly resourceName = signal<string>('');
+  readonly allowAddingContributorsFromParentProject = signal<boolean>(false);
 
   readonly contributorNames = computed(() =>
     this.selectedUsers()
@@ -113,6 +114,10 @@ export class AddContributorDialogComponent implements OnInit, OnDestroy {
     }
   }
 
+  addSourceProjectContributors(): void {
+    this.closeDialogWithData(AddContributorType.ParentProject);
+  }
+
   addUnregistered(): void {
     this.dialogRef.close({
       data: [],
@@ -129,7 +134,7 @@ export class AddContributorDialogComponent implements OnInit, OnDestroy {
   private initializeDialogData(): void {
     this.selectedUsers.set([]);
 
-    const { components, resourceName } = this.config.data || {};
+    const { components, resourceName, allowAddingContributorsFromParentProject } = this.config.data || {};
 
     if (components) {
       this.components.set(components);
@@ -138,16 +143,20 @@ export class AddContributorDialogComponent implements OnInit, OnDestroy {
     if (resourceName) {
       this.resourceName.set(resourceName);
     }
+
+    if (allowAddingContributorsFromParentProject) {
+      this.allowAddingContributorsFromParentProject.set(allowAddingContributorsFromParentProject);
+    }
   }
 
-  private closeDialogWithData(): void {
+  private closeDialogWithData(AddContributorTypeValue = AddContributorType.Registered): void {
     const childNodeIds = this.components()
       .filter((c) => c.checked && !c.isCurrent)
       .map((c) => c.id);
 
     this.dialogRef.close({
       data: this.selectedUsers(),
-      type: AddContributorType.Registered,
+      type: AddContributorTypeValue,
       childNodeIds: childNodeIds.length > 0 ? childNodeIds : undefined,
     } as ContributorDialogAddModel);
   }

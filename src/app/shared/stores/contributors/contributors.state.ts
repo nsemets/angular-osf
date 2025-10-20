@@ -12,6 +12,7 @@ import {
   AddContributor,
   BulkAddContributors,
   BulkUpdateContributors,
+  BulkAddContributorsFromParentProject,
   ClearUsers,
   DeleteContributor,
   GetAllContributors,
@@ -204,6 +205,29 @@ export class ContributorsState {
         }),
         catchError((error) => handleSectionError(ctx, 'contributorsList', error))
       );
+  }
+
+  @Action(BulkAddContributorsFromParentProject)
+  bulkAddContributorsFromParentProject(
+    ctx: StateContext<ContributorsStateModel>,
+    action: BulkAddContributorsFromParentProject
+  ) {
+    const state = ctx.getState();
+
+    if (!action.resourceId || !action.resourceType) {
+      return;
+    }
+
+    ctx.patchState({
+      contributorsList: { ...state.contributorsList, isLoading: true, error: null },
+    });
+
+    return this.contributorsService.addContributorsFromProject(action.resourceType, action.resourceId).pipe(
+      tap(() => {
+        ctx.dispatch(new GetAllContributors(action.resourceId, action.resourceType));
+      }),
+      catchError((error) => handleSectionError(ctx, 'contributorsList', error))
+    );
   }
 
   @Action(DeleteContributor)
