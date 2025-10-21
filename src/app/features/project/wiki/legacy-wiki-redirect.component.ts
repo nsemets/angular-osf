@@ -2,19 +2,22 @@ import { createDispatchMap, select } from '@ngxs/store';
 
 import { map, of, tap } from 'rxjs';
 
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ResourceType } from '@osf/shared/enums';
+import { LoaderService } from '@osf/shared/services';
 import { GetWikiList, WikiSelectors } from '@osf/shared/stores';
 
 @Component({
   template: '',
 })
-export class WikiRedirectComponent {
+export class LegacyWikiRedirectComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly loaderService = inject(LoaderService);
 
   readonly projectId = toSignal(this.route.parent?.params.pipe(map((params) => params['id'])) ?? of(undefined));
   wikiList = select(WikiSelectors.getWikiList);
@@ -24,7 +27,9 @@ export class WikiRedirectComponent {
   });
 
   constructor() {
+    this.loaderService.show();
     this.redirectWiki();
+    this.loaderService.hide();
   }
 
   redirectWiki() {

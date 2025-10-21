@@ -116,7 +116,7 @@ export const projectRoutes: Routes = [
       {
         path: 'wiki/:wikiName',
         loadComponent: () =>
-          import('../project/wiki/legacy-wiki-redirect.component').then((m) => m.WikiRedirectComponent),
+          import('../project/wiki/legacy-wiki-redirect.component').then((m) => m.LegacyWikiRedirectComponent),
       },
       {
         path: 'wiki',
