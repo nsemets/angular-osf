@@ -29,7 +29,6 @@ export class LegacyWikiRedirectComponent {
   constructor() {
     this.loaderService.show();
     this.redirectWiki();
-    this.loaderService.hide();
   }
 
   redirectWiki() {
@@ -39,13 +38,14 @@ export class LegacyWikiRedirectComponent {
     this.actions
       .getWikiList(ResourceType.Project, this.projectId())
       .pipe(
-        takeUntilDestroyed(),
+        takeUntilDestroyed(this.destroyRef),
         tap(() => {
           const wikiGUID = this.wikiList().find((item) => item.name === wikiName)?.id ?? null;
           this.router.navigate([`/${this.projectId()}/wiki`], {
             queryParams: { wiki: wikiGUID },
             replaceUrl: true,
           });
+          this.loaderService.hide();
         })
       )
       .subscribe();
