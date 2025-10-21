@@ -1,4 +1,3 @@
-// wiki-redirect.component.ts
 import { createDispatchMap, select } from '@ngxs/store';
 
 import { map, of, tap } from 'rxjs';
@@ -11,7 +10,6 @@ import { ResourceType } from '@osf/shared/enums';
 import { GetWikiList, WikiSelectors } from '@osf/shared/stores';
 
 @Component({
-  standalone: true,
   template: '',
 })
 export class WikiRedirectComponent {
@@ -26,6 +24,10 @@ export class WikiRedirectComponent {
   });
 
   constructor() {
+    this.redirectWiki();
+  }
+
+  redirectWiki() {
     const params = this.route.snapshot.params;
     const wikiName = params['wikiName'];
 
