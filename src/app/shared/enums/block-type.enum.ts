@@ -10,8 +10,4 @@ export enum BlockType {
   MultiSelectInput = 'multi-select-input',
   ShortTextInput = 'short-text-input',
   SectionHeading = 'section-heading',
-
-  // [NS] Currently not used
-  ContributorsInput = 'contributors-input',
-  SelectOtherOption = 'select-other-option',
 }
