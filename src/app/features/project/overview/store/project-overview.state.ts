@@ -19,6 +19,7 @@ import {
   GetComponents,
   GetParentProject,
   GetProjectById,
+  LoadMoreComponents,
   SetProjectCustomCitation,
   UpdateProjectPublicStatus,
 } from './project-overview.actions';
@@ -253,18 +254,30 @@ export class ProjectOverviewState {
       },
     });
 
-    return this.projectOverviewService.getComponents(action.projectId).pipe(
-      tap((components) => {
+    return this.projectOverviewService.getComponents(action.projectId, action.page, action.pageSize).pipe(
+      tap((response) => {
+        const data = action.page === 1 ? response.data : [...state.components.data, ...response.data];
+
         ctx.patchState({
           components: {
-            data: components,
+            data,
             isLoading: false,
             error: null,
+            currentPage: action.page,
+            totalCount: response.totalCount,
           },
         });
       }),
       catchError((error) => handleSectionError(ctx, 'components', error))
     );
+  }
+
+  @Action(LoadMoreComponents)
+  loadMoreComponents(ctx: StateContext<ProjectOverviewStateModel>, action: LoadMoreComponents) {
+    const state = ctx.getState();
+    const nextPage = state.components.currentPage + 1;
+
+    return ctx.dispatch(new GetComponents(action.projectId, nextPage, 10));
   }
 
   @Action(GetParentProject)

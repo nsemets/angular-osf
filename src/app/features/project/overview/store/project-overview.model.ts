@@ -1,10 +1,12 @@
-import { AsyncStateModel, BaseNodeModel, ComponentOverview } from '@osf/shared/models';
+import { AsyncStateModel, AsyncStateWithTotalCount, BaseNodeModel, ComponentOverview } from '@osf/shared/models';
 
 import { ProjectOverview } from '../models';
 
 export interface ProjectOverviewStateModel {
   project: AsyncStateModel<ProjectOverview | null>;
-  components: AsyncStateModel<ComponentOverview[]>;
+  components: AsyncStateWithTotalCount<ComponentOverview[]> & {
+    currentPage: number;
+  };
   isAnonymous: boolean;
   duplicatedProject: BaseNodeModel | null;
   parentProject: AsyncStateModel<ProjectOverview | null>;
@@ -22,6 +24,8 @@ export const PROJECT_OVERVIEW_DEFAULTS: ProjectOverviewStateModel = {
     isLoading: false,
     isSubmitting: false,
     error: null,
+    currentPage: 0,
+    totalCount: 0,
   },
   isAnonymous: false,
   duplicatedProject: null,

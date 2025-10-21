@@ -70,6 +70,17 @@
             }
           </div>
         }
+
+        @if (hasMoreComponents()) {
+          <div class="flex justify-content-center">
+            <p-button
+              (onClick)="loadMoreComponents()"
+              severity="secondary"
+              [label]="'common.buttons.loadMore' | translate"
+              [loading]="isComponentsLoading()"
+            />
+          </div>
+        }
       } @else {
         <div [innerHtml]="'project.overview.components.noComponentsMessage' | translate"></div>
       }
