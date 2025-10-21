@@ -5,7 +5,11 @@
         <p-skeleton width="3rem" height="1.5rem" />
         <p-skeleton width="12rem" height="1.5rem" />
       } @else {
-        <img alt="Provider Logo" height="40" [src]="preprintProvider()!.brand.heroLogoImageUrl" />
+        <img
+          height="80"
+          [src]="preprintProvider()!.brand.heroLogoImageUrl"
+          [alt]="'preprints.selectService.providerLogoImageAlt' | translate"
+        />
         <h1 class="preprint-provider-name">{{ preprintProvider()!.name }}</h1>
       }
     </div>
