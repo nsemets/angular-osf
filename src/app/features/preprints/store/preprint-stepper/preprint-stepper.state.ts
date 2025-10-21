@@ -134,6 +134,10 @@ export class PreprintStepperState {
 
     return this.preprintsService.updatePreprint(action.id, action.payload).pipe(
       tap((preprint) => {
+        if (action.payload.isPublished) {
+          ctx.setState(patch({ hasBeenSubmitted: true }));
+        }
+
         ctx.setState(patch({ preprint: patch({ isSubmitting: false, data: preprint }) }));
       }),
       catchError((error) => handleSectionError(ctx, 'preprint', error))
@@ -497,6 +501,7 @@ export class PreprintStepperState {
   submitPreprint(ctx: StateContext<PreprintStepperStateModel>) {
     const createdPreprintId = ctx.getState().preprint.data!.id;
     ctx.setState(patch({ preprint: patch({ isSubmitting: true }) }));
+
     return this.preprintsService.submitPreprint(createdPreprintId).pipe(
       tap(() => {
         ctx.setState(patch({ preprint: patch({ isSubmitting: false }), hasBeenSubmitted: true }));

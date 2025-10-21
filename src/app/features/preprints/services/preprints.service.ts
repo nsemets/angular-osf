@@ -52,6 +52,7 @@ export class PreprintsService {
     preregLinks: 'prereg_links',
     whyNoPrereg: 'why_no_prereg',
     preregLinkInfo: 'prereg_link_info',
+    isPublished: 'is_published',
   };
 
   createPreprint(title: string, abstract: string, providerId: string) {
