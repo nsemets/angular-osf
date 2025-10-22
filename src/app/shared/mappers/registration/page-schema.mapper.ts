@@ -44,7 +44,9 @@ export class PageSchemaMapper {
             currentQuestion.paragraphText = item.attributes.display_text;
             currentQuestion.fieldType = FieldType.Paragraph;
           } else if (currentSection) {
-            currentSection.description = item.attributes.display_text;
+            currentSection.description = currentSection.description
+              ? currentSection.description + '\n \n' + item.attributes.display_text
+              : item.attributes.display_text;
           } else {
             currentPage.description = item.attributes.display_text;
           }
