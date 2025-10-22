@@ -21,5 +21,6 @@ export * from './search-tab-options.const';
 export * from './search-tutorial-steps.const';
 export * from './social-links.const';
 export * from './social-links.const';
+export * from './social-platforms.const';
 export * from './social-share.config';
 export * from './sort-options.const';

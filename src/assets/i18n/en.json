@@ -2317,6 +2317,7 @@
         "noDoi": "No DOI"
       },
       "file": {
+        "renderingDocument": "Rendering document",
         "version": "Version: {{version}}",
         "downloadVersion": "Version {{version}}, {{date}}",
         "downloadPreviousVersion": "Download previous version",

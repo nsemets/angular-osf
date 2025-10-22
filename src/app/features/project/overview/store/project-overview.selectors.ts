@@ -85,4 +85,9 @@ export class ProjectOverviewSelectors {
   static getParentProjectLoading(state: ProjectOverviewStateModel) {
     return state.parentProject.isLoading;
   }
+
+  @Selector([ProjectOverviewState])
+  static hasMoreComponents(state: ProjectOverviewStateModel) {
+    return state.components.data.length < state.components.totalCount && !state.components.isLoading;
+  }
 }

@@ -2,8 +2,8 @@ import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 
-import { SOCIAL_SHARE_URLS } from '../constants';
-import { ShareableContent, SocialShareLinks } from '../models';
+import { SOCIAL_PLATFORMS, SOCIAL_SHARE_URLS } from '../constants';
+import { SocialShareContentModel, SocialShareLinksModel, SocialsShareActionItem } from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -15,46 +15,7 @@ export class SocialShareService {
     return this.environment.webUrl;
   }
 
-  generateEmailLink(content: ShareableContent): string {
-    const subject = encodeURIComponent(content.title);
-    const body = encodeURIComponent(content.url);
-
-    return `${SOCIAL_SHARE_URLS.email}?subject=${subject}&body=${body}`;
-  }
-
-  generateTwitterLink(content: ShareableContent): string {
-    const url = encodeURIComponent(content.url);
-    const text = encodeURIComponent(content.title);
-
-    return `${SOCIAL_SHARE_URLS.twitter.preview_url}?url=${url}&text=${text}&via=${SOCIAL_SHARE_URLS.twitter.viaHandle}`;
-  }
-
-  generateFacebookLink(content: ShareableContent): string {
-    const href = encodeURIComponent(content.url);
-
-    return `${SOCIAL_SHARE_URLS.facebook}?u=${href}`;
-  }
-
-  generateLinkedInLink(content: ShareableContent): string {
-    const url = encodeURIComponent(content.url);
-
-    return `${SOCIAL_SHARE_URLS.linkedIn}?url=${url}`;
-  }
-
-  generateMastodonLink(content: ShareableContent): string {
-    const url = encodeURIComponent(content.url);
-    const text = encodeURIComponent(content.title);
-
-    return `${SOCIAL_SHARE_URLS.mastodon}?url=${url}&text=${text}`;
-  }
-
-  generateBlueskyLink(content: ShareableContent): string {
-    const text = encodeURIComponent(`${content.title} ${content.url}`);
-
-    return `${SOCIAL_SHARE_URLS.bluesky}?text=${text}`;
-  }
-
-  generateAllSharingLinks(content: ShareableContent): SocialShareLinks {
+  generateAllSharingLinks(content: SocialShareContentModel): SocialShareLinksModel {
     return {
       email: this.generateEmailLink(content),
       twitter: this.generateTwitterLink(content),
@@ -69,15 +30,60 @@ export class SocialShareService {
     return `${this.webUrl}/preprints/${providerId}/${preprintId}`;
   }
 
-  createProjectUrl(projectId: string): string {
-    return `${this.webUrl}/${projectId}`;
-  }
-
-  createRegistrationUrl(registrationId: string, providerId = 'osf'): string {
-    return `${this.webUrl}/registries/${providerId}/${registrationId}`;
+  createGuidUrl(guid: string): string {
+    return `${this.webUrl}/${guid}`;
   }
 
   createDownloadUrl(resourceId: string): string {
     return `${this.webUrl}/download/${resourceId}`;
+  }
+
+  generateSocialActionItems(content: SocialShareContentModel): SocialsShareActionItem[] {
+    const shareLinks = this.generateAllSharingLinks(content);
+
+    return SOCIAL_PLATFORMS.map((platform) => ({
+      label: platform.label,
+      icon: platform.icon,
+      url: shareLinks[platform.urlKey],
+    }));
+  }
+
+  private generateEmailLink(content: SocialShareContentModel): string {
+    const subject = encodeURIComponent(content.title);
+    const body = encodeURIComponent(content.url);
+
+    return `${SOCIAL_SHARE_URLS.email}?subject=${subject}&body=${body}`;
+  }
+
+  private generateTwitterLink(content: SocialShareContentModel): string {
+    const url = encodeURIComponent(content.url);
+    const text = encodeURIComponent(content.title);
+
+    return `${SOCIAL_SHARE_URLS.twitter.preview_url}?url=${url}&text=${text}&via=${SOCIAL_SHARE_URLS.twitter.viaHandle}`;
+  }
+
+  private generateFacebookLink(content: SocialShareContentModel): string {
+    const href = encodeURIComponent(content.url);
+
+    return `${SOCIAL_SHARE_URLS.facebook}?u=${href}`;
+  }
+
+  private generateLinkedInLink(content: SocialShareContentModel): string {
+    const url = encodeURIComponent(content.url);
+
+    return `${SOCIAL_SHARE_URLS.linkedIn}?url=${url}`;
+  }
+
+  private generateMastodonLink(content: SocialShareContentModel): string {
+    const url = encodeURIComponent(content.url);
+    const text = encodeURIComponent(content.title);
+
+    return `${SOCIAL_SHARE_URLS.mastodon}?url=${url}&text=${text}`;
+  }
+
+  private generateBlueskyLink(content: SocialShareContentModel): string {
+    const text = encodeURIComponent(`${content.title} ${content.url}`);
+
+    return `${SOCIAL_SHARE_URLS.bluesky}?text=${text}`;
   }
 }

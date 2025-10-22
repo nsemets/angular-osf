@@ -15,7 +15,7 @@
     @if (showToolbar()) {
       <div class="pb-5 pl-4 ml-auto w-full md:pr-4">
         <osf-overview-toolbar
-          [currentResource]="toolbarResource()"
+          [currentResource]="toolbarResource()!"
           [showViewOnlyLinks]="false"
           [canEdit]="hasWriteAccess()"
         />

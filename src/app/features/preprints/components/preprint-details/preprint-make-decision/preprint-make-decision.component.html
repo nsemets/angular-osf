@@ -49,7 +49,11 @@
       </section>
 
       <section class="w-full">
-        <label for="withdrawalJustification">{{ labelRequestDecisionJustification() | translate }}</label>
+        <div class="flex justify-content-between align-items-center gap-4">
+          <label for="withdrawalJustification">{{ labelRequestDecisionJustification() | translate }}</label>
+          <p>{{ reviewerComment()?.length ?? 0 }}/{{ decisionCommentLimit }}</p>
+        </div>
+
         <textarea
           pTextarea
           id="withdrawalJustification"
@@ -110,10 +114,12 @@
         </section>
 
         <section class="w-full mt-4">
+          <p class="flex justify-content-end">{{ reviewerComment()?.length ?? 0 }}/{{ decisionCommentLimit }}</p>
+
           <textarea
             pTextarea
             id="comment"
-            class="w-full"
+            class="w-full mt-1"
             [placeholder]="'preprints.details.decision.commentPlaceholder' | translate"
             [rows]="4"
             [(ngModel)]="reviewerComment"

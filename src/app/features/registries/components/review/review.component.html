@@ -82,7 +82,7 @@
       <h2 class="mb-4">{{ page.title }}</h2>
 
       @if (page.description) {
-        <p class="mb-4">{{ page.description }}</p>
+        <p class="mb-4 preserve-whitespace">{{ page.description }}</p>
       }
 
       @if (page.sections?.length) {
@@ -90,7 +90,7 @@
           <div class="mb-4">
             <h3 class="mb-2">{{ section.title }}</h3>
             @if (section.description) {
-              <p class="mb-4">{{ section.description }}</p>
+              <p class="mb-4 preserve-whitespace">{{ section.description }}</p>
             }
             @if (section.questions?.length) {
               <osf-registration-blocks-data

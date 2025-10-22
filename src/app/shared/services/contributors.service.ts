@@ -37,14 +37,16 @@ export class ContributorsService {
     [ResourceType.DraftRegistration, 'draft_registrations'],
   ]);
 
-  private getBaseUrl(resourceType: ResourceType, resourceId: string): string {
+  private getBaseUrl(resourceType: ResourceType, resourceId: string, isBibliographic = false): string {
     const resourcePath = this.urlMap.get(resourceType);
 
     if (!resourcePath) {
       throw new Error(`Unsupported resource type: ${resourceType}`);
     }
 
-    return `${this.apiUrl}/${resourcePath}/${resourceId}/contributors`;
+    const contributorsUrl = isBibliographic ? 'bibliographic_contributors' : 'contributors';
+
+    return `${this.apiUrl}/${resourcePath}/${resourceId}/${contributorsUrl}`;
   }
 
   getAllContributors(
@@ -69,14 +71,26 @@ export class ContributorsService {
     );
   }
 
-  getRequestAccessContributors(resourceType: ResourceType, resourceId: string): Observable<ContributorModel[]> {
-    const resourcePath = this.urlMap.get(resourceType);
-    const baseUrl = `${this.apiUrl}/${resourcePath}/${resourceId}/requests/`;
-    const params = { 'embed[]': ['creator'] };
+  getBibliographicContributors(
+    resourceType: ResourceType,
+    resourceId: string,
+    page: number,
+    pageSize: number
+  ): Observable<PaginatedData<ContributorModel[]>> {
+    const baseUrl = this.getBaseUrl(resourceType, resourceId, true);
 
-    return this.jsonApiService
-      .get<ContributorsResponseJsonApi>(baseUrl, params)
-      .pipe(map((response) => ContributorsMapper.getContributors(response.data)));
+    const params = {
+      page: page,
+      'page[size]': pageSize,
+    };
+
+    return this.jsonApiService.get<ContributorsResponseJsonApi>(`${baseUrl}/`, params).pipe(
+      map((response) => ({
+        data: ContributorsMapper.getContributors(response.data),
+        totalCount: response.meta.total,
+        pageSize: response.meta.per_page,
+      }))
+    );
   }
 
   searchUsers(value: string, page = 1): Observable<PaginatedData<ContributorAddModel[]>> {
