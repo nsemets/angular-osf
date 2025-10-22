@@ -41,14 +41,18 @@ export class PageSchemaMapper {
 
         case BlockType.Paragraph:
           if (currentQuestion) {
-            currentQuestion.paragraphText = item.attributes.display_text;
+            currentQuestion.paragraphText = currentQuestion.paragraphText
+              ? currentQuestion.paragraphText + '\n \n' + item.attributes.display_text
+              : item.attributes.display_text;
             currentQuestion.fieldType = FieldType.Paragraph;
           } else if (currentSection) {
             currentSection.description = currentSection.description
               ? currentSection.description + '\n \n' + item.attributes.display_text
               : item.attributes.display_text;
           } else {
-            currentPage.description = item.attributes.display_text;
+            currentPage.description = currentPage.description
+              ? currentPage.description + '\n \n' + item.attributes.display_text
+              : item.attributes.display_text;
           }
           break;
 
