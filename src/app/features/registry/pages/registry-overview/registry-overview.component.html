@@ -93,7 +93,18 @@
               <h2 class="mb-4 text-xl">{{ page.title }}</h2>
 
               @if (page.description) {
-                <p class="mb-4">{{ page.description }}</p>
+                <p class="preserve-whitespace mb-4">{{ page.description }}</p>
+              }
+
+              @if (page.questions?.length) {
+                <osf-registration-blocks-data
+                  [class.mb-4]="!$last"
+                  [questions]="page.questions"
+                  [reviewData]="schemaResponse()?.revisionResponses || {}"
+                  [isOverviewPage]="true"
+                  [updatedFields]="updatedFields()"
+                  [isOriginalRevision]="schemaResponse()?.isOriginalResponse!"
+                ></osf-registration-blocks-data>
               }
 
               @if (page.sections?.length) {
@@ -101,7 +112,7 @@
                   <div class="mb-4">
                     <h3 class="mb-2">{{ section.title }}</h3>
                     @if (section.description) {
-                      <p class="mb-4">{{ section.description }}</p>
+                      <p class="preserve-whitespace mb-4">{{ section.description }}</p>
                     }
                     @if (section.questions?.length) {
                       <osf-registration-blocks-data
@@ -114,17 +125,6 @@
                       ></osf-registration-blocks-data>
                     }
                   </div>
-                }
-              } @else {
-                @if (page.questions?.length) {
-                  <osf-registration-blocks-data
-                    [class.mb-4]="!$last"
-                    [questions]="page.questions"
-                    [reviewData]="schemaResponse()?.revisionResponses || {}"
-                    [isOverviewPage]="true"
-                    [updatedFields]="updatedFields()"
-                    [isOriginalRevision]="schemaResponse()?.isOriginalResponse!"
-                  ></osf-registration-blocks-data>
                 }
               }
             }

@@ -13,6 +13,7 @@
         </p-message>
       }
     </div>
+
     <div class="mb-4">
       <h4 class="mb-2">{{ 'common.labels.description' | translate }}</h4>
       <p data-test-review-response="description">{{ draftRegistration()?.description }}</p>
@@ -50,6 +51,7 @@
         </p-message>
       }
     </div>
+
     <div class="mb-4">
       <h4 class="mb-2">{{ 'shared.subjects.title' | translate }}</h4>
       <div class="flex flex-wrap gap-2">
@@ -57,6 +59,7 @@
           <p-tag data-test-selected-subject [value]="subject.name" severity="info" />
         }
       </div>
+
       @if (!subjects().length) {
         <p class="font-italic">{{ 'common.labels.noData' | translate }}</p>
         <p-message class="mt-1" severity="error" variant="simple" size="small">
@@ -77,12 +80,21 @@
       }
     </div>
   </p-card>
+
   @for (page of pages(); track page.id) {
     <p-card class="w-full">
       <h2 class="mb-4">{{ page.title }}</h2>
 
       @if (page.description) {
         <p class="mb-4 preserve-whitespace">{{ page.description }}</p>
+      }
+
+      @if (page.questions?.length) {
+        <osf-registration-blocks-data
+          [isDraft]="true"
+          [questions]="page.questions"
+          [reviewData]="stepsData()"
+        ></osf-registration-blocks-data>
       }
 
       @if (page.sections?.length) {
@@ -100,14 +112,6 @@
               ></osf-registration-blocks-data>
             }
           </div>
-        }
-      } @else {
-        @if (page.questions?.length) {
-          <osf-registration-blocks-data
-            [isDraft]="true"
-            [questions]="page.questions"
-            [reviewData]="stepsData()"
-          ></osf-registration-blocks-data>
         }
       }
     </p-card>
