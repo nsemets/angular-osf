@@ -122,9 +122,7 @@ export class DraftsComponent implements OnDestroy {
     this.route.snapshot.firstChild?.params['step'] ? +this.route.snapshot.firstChild?.params['step'] : 0
   );
 
-  currentStep = computed(() => {
-    return this.steps()[this.currentStepIndex()];
-  });
+  currentStep = computed(() => this.steps()[this.currentStepIndex()]);
 
   registrationId = this.route.snapshot.firstChild?.params['id'] || '';
 

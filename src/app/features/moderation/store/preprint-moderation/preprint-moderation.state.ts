@@ -182,7 +182,7 @@ export class PreprintModerationState {
     );
 
     return this.contributorsService
-      .getAllContributors(ResourceType.Preprint, preprintId, 1, DEFAULT_TABLE_PARAMS.rows)
+      .getBibliographicContributors(ResourceType.Preprint, preprintId, 1, DEFAULT_TABLE_PARAMS.rows)
       .pipe(
         tap((res) => {
           ctx.setState(
@@ -241,7 +241,7 @@ export class PreprintModerationState {
     );
 
     return this.contributorsService
-      .getAllContributors(ResourceType.Preprint, preprintId, 1, DEFAULT_TABLE_PARAMS.rows)
+      .getBibliographicContributors(ResourceType.Preprint, preprintId, 1, DEFAULT_TABLE_PARAMS.rows)
       .pipe(
         tap((res) => {
           ctx.setState(

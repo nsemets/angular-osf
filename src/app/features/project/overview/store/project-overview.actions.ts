@@ -1,3 +1,4 @@
+import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
 import { ResourceType } from '@shared/enums';
 
 import { PrivacyStatusModel } from '../models';
@@ -68,6 +69,16 @@ export class DeleteComponent {
 
 export class GetComponents {
   static readonly type = '[Project Overview] Get Components';
+
+  constructor(
+    public projectId: string,
+    public page = 1,
+    public pageSize = DEFAULT_TABLE_PARAMS.rows
+  ) {}
+}
+
+export class LoadMoreComponents {
+  static readonly type = '[Project Overview] Load More Components';
 
   constructor(public projectId: string) {}
 }

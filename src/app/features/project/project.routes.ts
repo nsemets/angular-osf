@@ -114,6 +114,11 @@ export const projectRoutes: Routes = [
         providers: [provideStates([DuplicatesState])],
       },
       {
+        path: 'wiki/:wikiName',
+        loadComponent: () =>
+          import('../project/wiki/legacy-wiki-redirect.component').then((m) => m.LegacyWikiRedirectComponent),
+      },
+      {
         path: 'wiki',
         loadComponent: () => import('../project/wiki/wiki.component').then((mod) => mod.WikiComponent),
       },

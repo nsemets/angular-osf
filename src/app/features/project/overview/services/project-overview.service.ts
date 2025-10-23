@@ -13,6 +13,8 @@ import {
   ComponentGetResponseJsonApi,
   ComponentOverview,
   JsonApiResponse,
+  PaginatedData,
+  ResponseJsonApi,
 } from '@osf/shared/models';
 import { JsonApiService } from '@osf/shared/services';
 
@@ -153,15 +155,23 @@ export class ProjectOverviewService {
     return this.jsonApiService.delete(`${this.apiUrl}/nodes/${componentId}/`);
   }
 
-  getComponents(projectId: string): Observable<ComponentOverview[]> {
+  getComponents(projectId: string, page = 1, pageSize = 10): Observable<PaginatedData<ComponentOverview[]>> {
     const params: Record<string, unknown> = {
       embed: 'bibliographic_contributors',
       'fields[users]': 'family_name,full_name,given_name,middle_name',
+      page: page,
+      'page[size]': pageSize,
     };
 
     return this.jsonApiService
-      .get<JsonApiResponse<ComponentGetResponseJsonApi[], null>>(`${this.apiUrl}/nodes/${projectId}/children/`, params)
-      .pipe(map((response) => response.data.map((item) => ComponentsMapper.fromGetComponentResponse(item))));
+      .get<ResponseJsonApi<ComponentGetResponseJsonApi[]>>(`${this.apiUrl}/nodes/${projectId}/children/`, params)
+      .pipe(
+        map((response) => ({
+          data: response.data.map((item) => ComponentsMapper.fromGetComponentResponse(item)),
+          totalCount: response.meta?.total || 0,
+          pageSize: response.meta?.per_page || pageSize,
+        }))
+      );
   }
 
   getParentProject(projectId: string): Observable<ProjectOverviewWithMeta> {

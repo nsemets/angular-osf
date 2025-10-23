@@ -65,14 +65,18 @@
         </div>
       </div>
 
-      <div class="flex gap-2">
+      <div class="flex flex-column gap-1">
+        <p class="flex justify-content-end">
+          {{ requestForm.controls[ModerationDecisionFormControls.Comment].value.length }}/{{ decisionCommentLimit }}
+        </p>
+
         <textarea
           pTextarea
           [formControlName]="ModerationDecisionFormControls.Comment"
           [placeholder]="'moderation.makeDecision.remarksPlaceholder' | translate"
           [rows]="6"
           [maxlength]="decisionCommentLimit"
-          class="w-full mt-3"
+          class="w-full"
         ></textarea>
       </div>
     } @else {
@@ -89,7 +93,12 @@
           </label>
         </div>
       </div>
-      <div class="flex flex-column gap-2">
+
+      <div class="flex flex-column gap-1">
+        <p class="flex justify-content-end">
+          {{ requestForm.controls[ModerationDecisionFormControls.Comment].value.length }}/{{ decisionCommentLimit }}
+        </p>
+
         <textarea
           pTextarea
           [formControlName]="ModerationDecisionFormControls.Comment"
