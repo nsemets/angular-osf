@@ -270,6 +270,7 @@ export class ContributorsComponent implements OnInit {
               addedContributorIds,
               components,
               resourceName: resourceDetails.title,
+              parentResourceName: resourceDetails.parent?.title,
               allowAddingContributorsFromParentProject:
                 this.resourceType() === ResourceType.Project &&
                 resourceDetails.rootParentId &&

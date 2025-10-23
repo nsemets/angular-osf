@@ -69,6 +69,7 @@ export class AddContributorDialogComponent implements OnInit, OnDestroy {
   readonly selectedUsers = signal<ContributorAddModel[]>([]);
   readonly components = signal<ComponentCheckboxItemModel[]>([]);
   readonly resourceName = signal<string>('');
+  readonly parentResourceName = signal<string>('');
   readonly allowAddingContributorsFromParentProject = signal<boolean>(false);
 
   readonly contributorNames = computed(() =>
@@ -134,7 +135,8 @@ export class AddContributorDialogComponent implements OnInit, OnDestroy {
   private initializeDialogData(): void {
     this.selectedUsers.set([]);
 
-    const { components, resourceName, allowAddingContributorsFromParentProject } = this.config.data || {};
+    const { components, resourceName, parentResourceName, allowAddingContributorsFromParentProject } =
+      this.config.data || {};
 
     if (components) {
       this.components.set(components);
@@ -146,6 +148,10 @@ export class AddContributorDialogComponent implements OnInit, OnDestroy {
 
     if (allowAddingContributorsFromParentProject) {
       this.allowAddingContributorsFromParentProject.set(allowAddingContributorsFromParentProject);
+    }
+
+    if (parentResourceName) {
+      this.parentResourceName.set(parentResourceName);
     }
   }
 
