@@ -164,6 +164,12 @@ export class ContributorsService {
       .pipe(map((contributor) => ContributorsMapper.getContributor(contributor.data)));
   }
 
+  addContributorsFromProject(resourceType: ResourceType, resourceId: string): Observable<void> {
+    const baseUrl = `${this.getBaseUrl(resourceType, resourceId)}/?copy_contributors_from_parent_project=true`;
+    const contributorData = { data: { type: AddContributorType.ParentProject } };
+    return this.jsonApiService.patch(baseUrl, contributorData);
+  }
+
   deleteContributor(resourceType: ResourceType, resourceId: string, userId: string): Observable<void> {
     const baseUrl = `${this.getBaseUrl(resourceType, resourceId)}/${userId}/`;
 
