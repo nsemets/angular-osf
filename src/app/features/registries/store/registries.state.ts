@@ -245,6 +245,7 @@ export class RegistriesState {
     ctx.patchState({
       pagesSchema: { ...state.pagesSchema, isLoading: true, error: null },
     });
+
     return this.registriesService.getSchemaBlocks(action.registrationSchemaId).pipe(
       tap((schemaBlocks) => {
         ctx.patchState({
