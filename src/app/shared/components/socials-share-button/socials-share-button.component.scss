@@ -1,0 +1,13 @@
+.social-link {
+  background-color: var(--pr-blue-1);
+  border-radius: 0.25rem;
+  color: var(--white);
+  padding: 0.125rem;
+  width: 1.125rem;
+  height: 1.125rem;
+
+  &:hover {
+    background-color: var(--pr-blue-3);
+    text-decoration: none;
+  }
+}

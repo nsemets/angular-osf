@@ -20,6 +20,7 @@ import {
   FetchPreprintProject,
   PreprintStepperSelectors,
   SubmitPreprint,
+  UpdatePreprint,
   UpdatePrimaryFileRelationship,
 } from '@osf/features/preprints/store/preprint-stepper';
 import {
@@ -66,6 +67,7 @@ export class ReviewStepComponent implements OnInit {
     submitPreprint: SubmitPreprint,
     fetchResourceInstitutions: FetchResourceInstitutions,
     updatePrimaryFileRelationship: UpdatePrimaryFileRelationship,
+    updatePreprint: UpdatePreprint,
   });
 
   provider = input.required<PreprintProviderDetails | undefined>();
@@ -101,6 +103,10 @@ export class ReviewStepComponent implements OnInit {
       .updatePrimaryFileRelationship(preprintFile?.id ?? preprint.primaryFileId)
       .pipe(
         switchMap(() => {
+          if (!this.provider()?.reviewsWorkflow) {
+            return this.actions.updatePreprint(preprint.id, { isPublished: true });
+          }
+
           if (preprint.reviewsState !== ReviewsState.Accepted) {
             return this.actions.submitPreprint();
           }

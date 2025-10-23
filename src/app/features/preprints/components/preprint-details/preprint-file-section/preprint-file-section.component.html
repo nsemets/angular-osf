@@ -1,15 +1,10 @@
-<section
-  class="p-card p-card-body card gap-4 file-section-height"
-  [class.medium]="isMedium()"
-  [class.large]="isLarge()"
-  [class.small]="!isMedium() && !isLarge()"
->
+<section class="p-card p-card-body card gap-4 flex flex-1 file-section-height">
   @if (safeLink()) {
     <iframe
       [src]="safeLink()"
       (load)="isIframeLoading = false"
       [hidden]="isIframeLoading"
-      title="Rendering of document"
+      [title]="'preprints.details.file.renderingDocument' | translate"
       allowfullscreen=""
       width="100%"
       class="flex-1 border-none"

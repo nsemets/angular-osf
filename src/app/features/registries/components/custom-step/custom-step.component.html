@@ -10,6 +10,10 @@
       }
     </div>
 
+    @if (currentPage().description?.length) {
+      <p class="preserve-whitespace">{{ currentPage().description }}</p>
+    }
+
     @let questions = currentPage().questions || [];
 
     <ng-container *ngTemplateOutlet="questionList; context: { $implicit: questions }"></ng-container>
@@ -47,10 +51,10 @@
                 </h3>
               </div>
               @if (q.paragraphText) {
-                <p class="mb-3">{{ q.paragraphText }}</p>
+                <p class="mb-3 preserve-whitespace">{{ q.paragraphText }}</p>
               }
-              @if (q.helpText && q.fieldType !== FieldType.Radio && q.fieldType !== FieldType.Checkbox) {
-                <p>{{ q.helpText }}</p>
+              @if (q.helpText) {
+                <p class="preserve-whitespace">{{ q.helpText }}</p>
               }
             </label>
             @if (q.exampleText) {
@@ -87,7 +91,7 @@
                 }
               }
               @case (FieldType.Radio) {
-                <div class="flex flex-column gap-2">
+                <div class="flex flex-column gap-2 mt-3">
                   @for (option of q.options; track option) {
                     <div class="flex align -items-center gap-2">
                       <p-radioButton
@@ -95,7 +99,8 @@
                         [inputId]="option.value"
                         [value]="option.value"
                       ></p-radioButton>
-                      <label [for]="option.value" class="ml-2">{{ option.label }}</label>
+
+                      <label [for]="option.value" class="mb-0 cursor-pointer">{{ option.label }}</label>
                       @if (option.helpText) {
                         <osf-info-icon [tooltipText]="option.helpText" tooltipPosition="top"></osf-info-icon>
                       }
@@ -112,7 +117,7 @@
                 }
               }
               @case (FieldType.Checkbox) {
-                <div class="flex flex-column gap-2">
+                <div class="flex flex-column gap-2 mt-3">
                   @for (option of q.options; track option) {
                     <div class="flex align-items-center gap-2">
                       <p-checkbox
@@ -120,7 +125,8 @@
                         [formControlName]="q.responseKey!"
                         [value]="option.value"
                       ></p-checkbox>
-                      <label [for]="option.value" class="ml-2">{{ option.label }}</label>
+
+                      <label [for]="option.value" class="mb-0 cursor-pointer">{{ option.label }}</label>
                       @if (option.helpText) {
                         <osf-info-icon [tooltipText]="option.helpText" tooltipPosition="top"></osf-info-icon>
                       }
@@ -190,13 +196,14 @@
       [label]="'common.buttons.back' | translate"
       severity="info"
       class="mr-2"
-      (click)="goBack()"
+      (onClick)="goBack()"
     ></p-button>
+
     <p-button
       data-test-goto-next-page
       type="button"
       [label]="'common.buttons.next' | translate"
-      (click)="goNext()"
+      (onClick)="goNext()"
     ></p-button>
   </div>
 </section>

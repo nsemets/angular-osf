@@ -15,7 +15,7 @@ import { CustomDialogService, LoaderService } from '@osf/shared/services';
 import { GetResourceWithChildren } from '@osf/shared/stores';
 import { ComponentOverview } from '@shared/models';
 
-import { ProjectOverviewSelectors } from '../../store';
+import { LoadMoreComponents, ProjectOverviewSelectors } from '../../store';
 import { AddComponentDialogComponent } from '../add-component-dialog/add-component-dialog.component';
 import { DeleteComponentDialogComponent } from '../delete-component-dialog/delete-component-dialog.component';
 
@@ -36,9 +36,13 @@ export class OverviewComponentsComponent {
 
   components = select(ProjectOverviewSelectors.getComponents);
   isComponentsLoading = select(ProjectOverviewSelectors.getComponentsLoading);
+  hasMoreComponents = select(ProjectOverviewSelectors.hasMoreComponents);
   project = select(ProjectOverviewSelectors.getProject);
 
-  actions = createDispatchMap({ getComponentsTree: GetResourceWithChildren });
+  actions = createDispatchMap({
+    getComponentsTree: GetResourceWithChildren,
+    loadMoreComponents: LoadMoreComponents,
+  });
 
   readonly UserPermissions = UserPermissions;
 
@@ -94,6 +98,13 @@ export class OverviewComponentsComponent {
     );
 
     window.open(url, '_self');
+  }
+
+  loadMoreComponents(): void {
+    const project = this.project();
+    if (!project) return;
+
+    this.actions.loadMoreComponents(project.id);
   }
 
   private handleDeleteComponent(componentId: string): void {

@@ -85,6 +85,12 @@ export class CreateNewVersionComponent implements OnInit, OnDestroy, CanDeactiva
     });
   }
 
+  @HostListener('window:beforeunload', ['$event'])
+  onBeforeUnload($event: BeforeUnloadEvent): boolean {
+    $event.preventDefault();
+    return false;
+  }
+
   ngOnInit() {
     this.actions.getPreprintProviderById(this.providerId());
     this.actions.fetchPreprint(this.preprintId());
@@ -117,11 +123,5 @@ export class CreateNewVersionComponent implements OnInit, OnDestroy, CanDeactiva
   moveToPreviousStep() {
     const id = this.preprintId().split('_')[0];
     this.router.navigate([id]);
-  }
-
-  @HostListener('window:beforeunload', ['$event'])
-  public onBeforeUnload($event: BeforeUnloadEvent): boolean {
-    $event.preventDefault();
-    return false;
   }
 }
