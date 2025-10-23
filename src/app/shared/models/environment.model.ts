@@ -13,7 +13,7 @@ export interface EnvironmentModel {
   defaultProvider: string;
   dataciteTrackerRepoId: string | null;
   dataciteTrackerAddress: string;
-
+  newRelic: NewRelicConfig;
   activityLogs?: {
     pageSize?: number;
   };
@@ -49,4 +49,28 @@ export interface EnvironmentModel {
    * @example 123456789012
    */
   googleFilePickerAppId: number;
+}
+
+interface NewRelicConfig {
+  enabled: boolean;
+  init: {
+    distributed_tracing: { enabled: boolean };
+    performance: { capture_measures: boolean };
+    privacy: { cookies_enabled: boolean };
+    ajax: { deny_list: string[] };
+  };
+  info: {
+    beacon: string;
+    errorBeacon: string;
+    licenseKey: string;
+    applicationID: string;
+    sa: number;
+  };
+  loader_config: {
+    accountID: string;
+    trustKey: string;
+    agentID: string;
+    licenseKey: string;
+    applicationID: string;
+  };
 }

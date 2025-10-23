@@ -1,12 +1,38 @@
 {
   "webUrl": "",
   "apiDomainUrl": "",
+  "shareTroveUrl": "",
   "addonsApiUrl": "",
+  "funderApiUrl": "",
   "casUrl": "",
   "recaptchaSiteKey": "",
-  "dataciteTrackerRepoId": "",
+  "dataciteTrackerRepoId": null,
+  "dataciteTrackerAddress": "",
   "sentryDsn": "",
   "googleTagManagerId": "",
   "googleFilePickerApiKey": "",
-  "googleFilePickerAppId": 0
+  "googleFilePickerAppId": 0,
+  "newRelic": {
+    "enabled": false,
+    "init": {
+      "distributed_tracing": { "enabled": false },
+      "performance": { "capture_measures": false },
+      "privacy": { "cookies_enabled": true },
+      "ajax": { "deny_list": [""] }
+    },
+    "info": {
+      "beacon": "",
+      "errorBeacon": "",
+      "licenseKey": "",
+      "applicationID": "",
+      "sa": 1
+    },
+    "loader_config": {
+      "accountID": "",
+      "trustKey": "",
+      "agentID": "",
+      "licenseKey": "",
+      "applicationID": ""
+    }
+  }
 }

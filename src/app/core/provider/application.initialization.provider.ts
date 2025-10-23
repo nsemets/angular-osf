@@ -4,6 +4,7 @@ import { OSFConfigService } from '@core/services/osf-config.service';
 
 import { ENVIRONMENT } from './environment.provider';
 
+import { BrowserAgent } from '@newrelic/browser-agent/loaders/browser-agent';
 import * as Sentry from '@sentry/angular';
 import { GoogleTagManagerConfiguration } from 'angular-google-tag-manager';
 
@@ -25,6 +26,7 @@ export function initializeApplication() {
     await configService.load();
 
     const googleTagManagerId = environment.googleTagManagerId;
+
     if (googleTagManagerId) {
       googleTagManagerConfiguration.set({ id: googleTagManagerId });
     }
@@ -40,6 +42,12 @@ export function initializeApplication() {
         sampleRate: 1.0,
         integrations: [],
       });
+    }
+
+    const { enabled, ...newRelicConfig } = environment.newRelic;
+
+    if (enabled) {
+      new BrowserAgent(newRelicConfig);
     }
   };
 }

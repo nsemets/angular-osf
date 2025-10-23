@@ -13,11 +13,11 @@ export const environment = {
   /**
    * Base URL of the OSF web application.
    */
-  webUrl: 'https://staging4.osf.io',
+  webUrl: 'https://staging3.osf.io',
   /**
    * Domain URL used for JSON:API v2 services.
    */
-  apiDomainUrl: 'https://api.staging4.osf.io',
+  apiDomainUrl: 'https://api.staging3.osf.io',
   /**
    * Base URL for SHARE discovery search (Trove).
    */
@@ -25,7 +25,7 @@ export const environment = {
   /**
    * URL for the OSF Addons API (v1).
    */
-  addonsApiUrl: 'https://addons.staging4.osf.io/v1',
+  addonsApiUrl: 'https://addons.staging3.osf.io/v1',
   /**
    * API endpoint for funder metadata resolution via Crossref.
    */
@@ -33,7 +33,7 @@ export const environment = {
   /**
    * URL for OSF Central Authentication Service (CAS).
    */
-  casUrl: 'https://accounts.staging4.osf.io',
+  casUrl: 'https://accounts.staging3.osf.io',
   /**
    * Site key used for reCAPTCHA v2 validation in staging.
    */
@@ -56,4 +56,27 @@ export const environment = {
   defaultProvider: 'osf',
   dataciteTrackerRepoId: null,
   dataciteTrackerAddress: 'https://analytics.datacite.org/api/metric',
+  newRelic: {
+    enabled: false,
+    init: {
+      distributed_tracing: { enabled: true },
+      performance: { capture_measures: true },
+      privacy: { cookies_enabled: true },
+      ajax: { deny_list: ['bam.nr-data.net'] },
+    },
+    info: {
+      beacon: 'bam.nr-data.net',
+      errorBeacon: 'bam.nr-data.net',
+      licenseKey: '704513e63b',
+      applicationID: '1835137194',
+      sa: 1,
+    },
+    loader_config: {
+      accountID: '772413',
+      trustKey: '772413',
+      agentID: '1835137194',
+      licenseKey: '704513e63b',
+      applicationID: '1835137194',
+    },
+  },
 };
