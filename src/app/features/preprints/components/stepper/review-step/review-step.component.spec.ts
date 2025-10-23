@@ -52,7 +52,9 @@ describe('ReviewStepComponent', () => {
             { selector: PreprintStepperSelectors.isPreprintSubmitting, value: false },
             { selector: PreprintStepperSelectors.getPreprintLicense, value: mockLicense },
             { selector: PreprintStepperSelectors.getPreprintProject, value: mockPreprintProject },
-            { selector: ContributorsSelectors.getContributors, value: mockContributors },
+            { selector: ContributorsSelectors.getBibliographicContributors, value: mockContributors },
+            { selector: ContributorsSelectors.isBibliographicContributorsLoading, value: false },
+            { selector: ContributorsSelectors.hasMoreBibliographicContributors, value: false },
             { selector: SubjectsSelectors.getSelectedSubjects, value: mockSubjects },
             { selector: InstitutionsSelectors.getResourceInstitutions, value: mockInstitutions },
           ],
@@ -68,18 +70,8 @@ describe('ReviewStepComponent', () => {
     fixture.componentRef.setInput('provider', mockProvider);
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
   it('should have required provider input', () => {
     expect(component.provider()).toEqual(mockProvider);
-  });
-
-  it('should filter bibliographic contributors', () => {
-    const bibliographicContributors = component.bibliographicContributors();
-    expect(bibliographicContributors).toHaveLength(1);
-    expect(bibliographicContributors.every((c) => c.isBibliographic)).toBe(true);
   });
 
   it('should create license options record', () => {

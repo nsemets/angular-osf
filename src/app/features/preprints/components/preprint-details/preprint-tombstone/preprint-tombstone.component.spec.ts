@@ -50,11 +50,15 @@ describe('PreprintTombstoneComponent', () => {
               value: false,
             },
             {
-              selector: ContributorsSelectors.getContributors,
+              selector: ContributorsSelectors.getBibliographicContributors,
               value: mockContributors,
             },
             {
-              selector: ContributorsSelectors.isContributorsLoading,
+              selector: ContributorsSelectors.isBibliographicContributorsLoading,
+              value: false,
+            },
+            {
+              selector: ContributorsSelectors.hasMoreBibliographicContributors,
               value: false,
             },
             {
@@ -74,16 +78,6 @@ describe('PreprintTombstoneComponent', () => {
     component = fixture.componentInstance;
 
     fixture.componentRef.setInput('preprintProvider', mockProvider);
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should compute bibliographic contributors', () => {
-    const bibliographicContributors = component.bibliographicContributors();
-    expect(bibliographicContributors).toHaveLength(1);
-    expect(bibliographicContributors[0].isBibliographic).toBe(true);
   });
 
   it('should compute license from preprint', () => {

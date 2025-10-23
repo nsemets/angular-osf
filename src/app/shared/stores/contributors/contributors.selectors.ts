@@ -30,15 +30,6 @@ export class ContributorsSelectors {
 
   @Selector([ContributorsState])
   static getBibliographicContributors(state: ContributorsStateModel) {
-    if (!state?.contributorsList?.data) {
-      return [];
-    }
-
-    return state.contributorsList.data.filter((contributor) => contributor.isBibliographic);
-  }
-
-  @Selector([ContributorsState])
-  static getBibliographicContributorsList(state: ContributorsStateModel) {
     if (!state?.bibliographicContributorsList?.data) {
       return [];
     }

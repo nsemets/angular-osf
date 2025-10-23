@@ -143,7 +143,7 @@ export class ProjectOverviewComponent implements OnInit {
   isWikiEnabled = select(ProjectOverviewSelectors.isWikiEnabled);
   parentProject = select(ProjectOverviewSelectors.getParentProject);
   isParentProjectLoading = select(ProjectOverviewSelectors.getParentProjectLoading);
-  bibliographicContributors = select(ContributorsSelectors.getBibliographicContributorsList);
+  bibliographicContributors = select(ContributorsSelectors.getBibliographicContributors);
   isBibliographicContributorsLoading = select(ContributorsSelectors.isBibliographicContributorsLoading);
   hasMoreBibliographicContributors = select(ContributorsSelectors.hasMoreBibliographicContributors);
   addonsResourceReference = select(AddonsSelectors.getAddonsResourceReference);

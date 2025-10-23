@@ -125,7 +125,7 @@ export class MetadataComponent implements OnInit {
   metadata = select(MetadataSelectors.getResourceMetadata);
   isMetadataLoading = select(MetadataSelectors.getLoading);
   customItemMetadata = select(MetadataSelectors.getCustomItemMetadata);
-  bibliographicContributors = select(ContributorsSelectors.getBibliographicContributorsList);
+  bibliographicContributors = select(ContributorsSelectors.getBibliographicContributors);
   isContributorsLoading = select(ContributorsSelectors.isBibliographicContributorsLoading);
   hasMoreContributors = select(ContributorsSelectors.hasMoreBibliographicContributors);
   cedarRecords = select(MetadataSelectors.getCedarRecords);

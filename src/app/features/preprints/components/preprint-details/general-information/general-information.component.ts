@@ -69,7 +69,7 @@ export class GeneralInformationComponent implements OnDestroy {
 
   affiliatedInstitutions = select(InstitutionsSelectors.getResourceInstitutions);
 
-  bibliographicContributors = select(ContributorsSelectors.getBibliographicContributorsList);
+  bibliographicContributors = select(ContributorsSelectors.getBibliographicContributors);
   areContributorsLoading = select(ContributorsSelectors.isBibliographicContributorsLoading);
   hasMoreBibliographicContributors = select(ContributorsSelectors.hasMoreBibliographicContributors);
 

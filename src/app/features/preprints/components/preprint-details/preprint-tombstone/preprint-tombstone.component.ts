@@ -69,7 +69,7 @@ export class PreprintTombstoneComponent implements OnDestroy {
   preprint = select(PreprintSelectors.getPreprint);
   isPreprintLoading = select(PreprintSelectors.isPreprintLoading);
 
-  bibliographicContributors = select(ContributorsSelectors.getBibliographicContributorsList);
+  bibliographicContributors = select(ContributorsSelectors.getBibliographicContributors);
   areContributorsLoading = select(ContributorsSelectors.isBibliographicContributorsLoading);
   hasMoreBibliographicContributors = select(ContributorsSelectors.hasMoreBibliographicContributors);
   subjects = select(SubjectsSelectors.getSelectedSubjects);

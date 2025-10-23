@@ -97,7 +97,7 @@ export class RegistryOverviewComponent {
   readonly areReviewActionsLoading = select(RegistryOverviewSelectors.areReviewActionsLoading);
   readonly currentRevision = select(RegistriesSelectors.getSchemaResponse);
   readonly isSchemaResponseLoading = select(RegistriesSelectors.getSchemaResponseLoading);
-  bibliographicContributors = select(ContributorsSelectors.getBibliographicContributorsList);
+  bibliographicContributors = select(ContributorsSelectors.getBibliographicContributors);
   isBibliographicContributorsLoading = select(ContributorsSelectors.isBibliographicContributorsLoading);
   hasMoreBibliographicContributors = select(ContributorsSelectors.hasMoreBibliographicContributors);
 
