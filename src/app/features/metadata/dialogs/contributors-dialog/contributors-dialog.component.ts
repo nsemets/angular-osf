@@ -131,13 +131,10 @@ export class ContributorsDialogComponent implements OnInit {
   }
 
   openAddContributorDialog(): void {
-    const addedContributorIds = this.initialContributors().map((x) => x.userId);
-
     this.customDialogService
       .open(AddContributorDialogComponent, {
         header: 'project.contributors.addDialog.addRegisteredContributor',
         width: '448px',
-        data: addedContributorIds,
       })
       .onClose.pipe(
         filter((res: ContributorDialogAddModel) => !!res),

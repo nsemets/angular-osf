@@ -14,6 +14,7 @@ import {
   Component,
   computed,
   DestroyRef,
+  effect,
   inject,
   OnDestroy,
   OnInit,
@@ -82,6 +83,10 @@ export class AddContributorDialogComponent implements OnInit, OnDestroy {
   readonly hasComponents = computed(() => this.components().length > 0);
   readonly buttonLabel = computed(() => (this.isComponentsState() ? 'common.buttons.done' : 'common.buttons.next'));
 
+  constructor() {
+    this.setupEffects();
+  }
+
   ngOnInit(): void {
     this.initializeDialogData();
     this.setSearchSubscription();
@@ -145,8 +150,10 @@ export class AddContributorDialogComponent implements OnInit, OnDestroy {
       .filter((c) => c.checked && !c.isCurrent)
       .map((c) => c.id);
 
+    const filteredUsers = this.selectedUsers().filter((user) => !user.disabled);
+
     this.dialogRef.close({
-      data: this.selectedUsers(),
+      data: filteredUsers,
       type: AddContributorType.Registered,
       childNodeIds: childNodeIds.length > 0 ? childNodeIds : undefined,
     } as ContributorDialogAddModel);
@@ -173,5 +180,19 @@ export class AddContributorDialogComponent implements OnInit, OnDestroy {
   private resetPagination(): void {
     this.currentPage.set(1);
     this.first.set(0);
+  }
+
+  private setupEffects(): void {
+    effect(() => {
+      const usersList = this.users();
+
+      if (usersList.length > 0) {
+        const checkedUsers = usersList.filter((user) => user.checked);
+
+        if (checkedUsers.length > 0) {
+          this.selectedUsers.set(checkedUsers);
+        }
+      }
+    });
   }
 }

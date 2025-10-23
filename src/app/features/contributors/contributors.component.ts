@@ -255,7 +255,6 @@ export class ContributorsComponent implements OnInit, OnDestroy {
   }
 
   openAddContributorDialog() {
-    const addedContributorIds = this.initialContributors().map((x) => x.userId);
     const rootParentId = this.resourceDetails().rootParentId ?? this.resourceId();
 
     this.loaderService.show();
@@ -273,7 +272,6 @@ export class ContributorsComponent implements OnInit, OnDestroy {
             header: 'project.contributors.addDialog.addRegisteredContributor',
             width: '448px',
             data: {
-              addedContributorIds,
               components,
               resourceName: this.resourceDetails().title,
             },

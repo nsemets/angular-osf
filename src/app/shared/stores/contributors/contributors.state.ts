@@ -266,17 +266,21 @@ export class ContributorsState {
       users: { ...state.users, isLoading: true, error: null },
     });
 
-    const addedContributorsIds = state.contributorsList.data.map((contributor) => contributor.userId);
-
     if (!action.searchValue) {
       return of([]);
     }
 
     return this.contributorsService.searchUsers(action.searchValue, action.page).pipe(
       tap((users) => {
+        const addedContributorsIds = state.contributorsList.data.map((contributor) => contributor.userId);
+
         ctx.patchState({
           users: {
-            data: users.data.filter((user) => !addedContributorsIds.includes(user.id!)),
+            data: users.data.map((user) => ({
+              ...user,
+              checked: addedContributorsIds.includes(user.id!),
+              disabled: addedContributorsIds.includes(user.id!),
+            })),
             isLoading: false,
             error: '',
             totalCount: users.totalCount,
@@ -321,7 +325,7 @@ export class ContributorsState {
               isLoading: false,
               error: null,
               page: action.page,
-              pageSize: 10,
+              pageSize: res.pageSize,
               totalCount: res.totalCount,
             },
           });
@@ -337,18 +341,20 @@ export class ContributorsState {
   ) {
     const state = ctx.getState();
     const nextPage = state.bibliographicContributorsList.page + 1;
+    const nextPageSize = state.bibliographicContributorsList.pageSize;
 
-    return ctx.dispatch(new GetBibliographicContributors(action.resourceId, action.resourceType, nextPage, 10));
+    return ctx.dispatch(
+      new GetBibliographicContributors(action.resourceId, action.resourceType, nextPage, nextPageSize)
+    );
   }
 
   @Action(LoadMoreContributors)
   loadMoreContributors(ctx: StateContext<ContributorsStateModel>, action: LoadMoreContributors) {
     const state = ctx.getState();
     const nextPage = state.contributorsList.page + 1;
+    const nextPageSize = state.contributorsList.pageSize;
 
-    return ctx.dispatch(
-      new GetAllContributors(action.resourceId, action.resourceType, nextPage, state.contributorsList.pageSize)
-    );
+    return ctx.dispatch(new GetAllContributors(action.resourceId, action.resourceType, nextPage, nextPageSize));
   }
 
   @Action(ResetContributorsState)
