@@ -72,6 +72,7 @@ export class ContributorsDialogComponent implements OnInit {
   contributors = signal<ContributorModel[]>([]);
   isLoadingMore = select(ContributorsSelectors.isContributorsLoadingMore);
   pageSize = select(ContributorsSelectors.getContributorsPageSize);
+  changesMade = signal<boolean>(false);
 
   currentUser = select(UserSelectors.getCurrentUser);
 
@@ -150,9 +151,10 @@ export class ContributorsDialogComponent implements OnInit {
             this.actions
               .bulkAddContributors(this.resourceId, this.resourceType, res.data)
               .pipe(takeUntilDestroyed(this.destroyRef))
-              .subscribe(() =>
-                this.toastService.showSuccess('project.contributors.toastMessages.multipleAddSuccessMessage')
-              );
+              .subscribe(() => {
+                this.changesMade.set(true);
+                this.toastService.showSuccess('project.contributors.toastMessages.multipleAddSuccessMessage');
+              });
           }
         }
       });
@@ -175,7 +177,10 @@ export class ContributorsDialogComponent implements OnInit {
           const params = { name: res.data[0].fullName };
 
           this.actions.addContributor(this.resourceId, this.resourceType, res.data[0]).subscribe({
-            next: () => this.toastService.showSuccess('project.contributors.toastMessages.addSuccessMessage', params),
+            next: () => {
+              this.changesMade.set(true);
+              this.toastService.showSuccess('project.contributors.toastMessages.addSuccessMessage', params);
+            },
           });
         }
       });
@@ -195,12 +200,13 @@ export class ContributorsDialogComponent implements OnInit {
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             next: () => {
+              this.changesMade.set(true);
               this.toastService.showSuccess('project.contributors.removeDialog.successMessage', {
                 name: contributor.fullName,
               });
 
               if (isDeletingSelf) {
-                this.dialogRef.close();
+                this.dialogRef.close(this.changesMade());
                 this.router.navigate(['/']);
               }
             },
@@ -218,7 +224,7 @@ export class ContributorsDialogComponent implements OnInit {
   }
 
   onClose(): void {
-    this.dialogRef.close();
+    this.dialogRef.close(this.changesMade());
   }
 
   onSave(): void {
@@ -227,8 +233,9 @@ export class ContributorsDialogComponent implements OnInit {
     this.actions
       .bulkUpdateContributors(this.resourceId, this.resourceType, updatedContributors)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() =>
-        this.toastService.showSuccess('project.contributors.toastMessages.multipleUpdateSuccessMessage')
-      );
+      .subscribe(() => {
+        this.changesMade.set(true);
+        this.toastService.showSuccess('project.contributors.toastMessages.multipleUpdateSuccessMessage');
+      });
   }
 }

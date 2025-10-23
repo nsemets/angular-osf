@@ -20,7 +20,8 @@ import { InterpolatePipe } from '@osf/shared/pipes';
 import {
   ContributorsSelectors,
   FetchSelectedSubjects,
-  GetAllContributors,
+  GetBibliographicContributors,
+  LoadMoreBibliographicContributors,
   ResetContributorsState,
   SubjectsSelectors,
 } from '@osf/shared/stores';
@@ -53,10 +54,11 @@ export class PreprintTombstoneComponent implements OnDestroy {
   readonly PreregLinkInfo = PreregLinkInfo;
 
   private actions = createDispatchMap({
-    getContributors: GetAllContributors,
+    getBibliographicContributors: GetBibliographicContributors,
     resetContributorsState: ResetContributorsState,
     fetchPreprintById: FetchPreprintById,
     fetchSubjects: FetchSelectedSubjects,
+    loadMoreBibliographicContributors: LoadMoreBibliographicContributors,
   });
   private router = inject(Router);
 
@@ -67,9 +69,9 @@ export class PreprintTombstoneComponent implements OnDestroy {
   preprint = select(PreprintSelectors.getPreprint);
   isPreprintLoading = select(PreprintSelectors.isPreprintLoading);
 
-  contributors = select(ContributorsSelectors.getContributors);
-  areContributorsLoading = select(ContributorsSelectors.isContributorsLoading);
-  bibliographicContributors = computed(() => this.contributors().filter((contributor) => contributor.isBibliographic));
+  bibliographicContributors = select(ContributorsSelectors.getBibliographicContributorsList);
+  areContributorsLoading = select(ContributorsSelectors.isBibliographicContributorsLoading);
+  hasMoreBibliographicContributors = select(ContributorsSelectors.hasMoreBibliographicContributors);
   subjects = select(SubjectsSelectors.getSelectedSubjects);
   areSelectedSubjectsLoading = select(SubjectsSelectors.areSelectedSubjectsLoading);
 
@@ -88,7 +90,7 @@ export class PreprintTombstoneComponent implements OnDestroy {
       const preprint = this.preprint();
       if (!preprint) return;
 
-      this.actions.getContributors(this.preprint()!.id, ResourceType.Preprint);
+      this.actions.getBibliographicContributors(this.preprint()?.id, ResourceType.Preprint);
       this.actions.fetchSubjects(this.preprint()!.id, ResourceType.Preprint);
     });
   }
@@ -99,5 +101,9 @@ export class PreprintTombstoneComponent implements OnDestroy {
 
   tagClicked(tag: string) {
     this.router.navigate(['/search'], { queryParams: { search: tag } });
+  }
+
+  loadMoreContributors(): void {
+    this.actions.loadMoreBibliographicContributors(this.preprint()?.id, ResourceType.Preprint);
   }
 }
