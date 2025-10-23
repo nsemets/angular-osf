@@ -15,7 +15,10 @@ import {
   ClearUsers,
   DeleteContributor,
   GetAllContributors,
+  GetBibliographicContributors,
   GetRequestAccessContributors,
+  LoadMoreBibliographicContributors,
+  LoadMoreContributors,
   RejectRequestAccess,
   ResetContributorsState,
   SearchUsers,
@@ -48,19 +51,23 @@ export class ContributorsState {
     ctx.patchState({
       contributorsList: {
         ...state.contributorsList,
-        data: [],
-        isLoading: true,
+        data: page === 1 ? [] : state.contributorsList.data,
+        isLoading: page === 1,
+        isLoadingMore: page > 1,
         error: null,
       },
     });
 
     return this.contributorsService.getAllContributors(action.resourceType, action.resourceId, page, pageSize).pipe(
       tap((res) => {
+        const data = page === 1 ? res.data : [...state.contributorsList.data, ...res.data];
+
         ctx.patchState({
           contributorsList: {
             ...state.contributorsList,
-            data: res.data,
+            data,
             isLoading: false,
+            isLoadingMore: false,
             totalCount: res.totalCount,
             page,
             pageSize,
@@ -283,6 +290,65 @@ export class ContributorsState {
   @Action(ClearUsers)
   clearUsers(ctx: StateContext<ContributorsStateModel>) {
     ctx.patchState({ users: { data: [], isLoading: false, error: null, totalCount: 0 } });
+  }
+
+  @Action(GetBibliographicContributors)
+  getBibliographicContributors(ctx: StateContext<ContributorsStateModel>, action: GetBibliographicContributors) {
+    const state = ctx.getState();
+
+    if (!action.resourceId || !action.resourceType) {
+      return;
+    }
+
+    ctx.patchState({
+      bibliographicContributorsList: {
+        ...state.bibliographicContributorsList,
+        data: action.page === 1 ? [] : state.bibliographicContributorsList.data,
+        isLoading: true,
+        error: null,
+      },
+    });
+
+    return this.contributorsService
+      .getBibliographicContributors(action.resourceType, action.resourceId, action.page, action.pageSize)
+      .pipe(
+        tap((res) => {
+          const data = action.page === 1 ? res.data : [...state.bibliographicContributorsList.data, ...res.data];
+
+          ctx.patchState({
+            bibliographicContributorsList: {
+              data,
+              isLoading: false,
+              error: null,
+              page: action.page,
+              pageSize: 10,
+              totalCount: res.totalCount,
+            },
+          });
+        }),
+        catchError((error) => handleSectionError(ctx, 'bibliographicContributorsList', error))
+      );
+  }
+
+  @Action(LoadMoreBibliographicContributors)
+  loadMoreBibliographicContributors(
+    ctx: StateContext<ContributorsStateModel>,
+    action: LoadMoreBibliographicContributors
+  ) {
+    const state = ctx.getState();
+    const nextPage = state.bibliographicContributorsList.page + 1;
+
+    return ctx.dispatch(new GetBibliographicContributors(action.resourceId, action.resourceType, nextPage, 10));
+  }
+
+  @Action(LoadMoreContributors)
+  loadMoreContributors(ctx: StateContext<ContributorsStateModel>, action: LoadMoreContributors) {
+    const state = ctx.getState();
+    const nextPage = state.contributorsList.page + 1;
+
+    return ctx.dispatch(
+      new GetAllContributors(action.resourceId, action.resourceType, nextPage, state.contributorsList.pageSize)
+    );
   }
 
   @Action(ResetContributorsState)

@@ -4,7 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { Select } from 'primeng/select';
-import { TableModule, TablePageEvent } from 'primeng/table';
+import { TableModule } from 'primeng/table';
 
 import { debounceTime, distinctUntilChanged, filter, map, of, switchMap } from 'rxjs';
 
@@ -15,6 +15,7 @@ import {
   DestroyRef,
   effect,
   inject,
+  OnDestroy,
   OnInit,
   signal,
 } from '@angular/core';
@@ -60,7 +61,9 @@ import {
   GetRequestAccessContributors,
   GetResourceDetails,
   GetResourceWithChildren,
+  LoadMoreContributors,
   RejectRequestAccess,
+  ResetContributorsState,
   UpdateBibliographyFilter,
   UpdateContributorsSearchValue,
   UpdatePermissionFilter,
@@ -87,7 +90,7 @@ import { ResourceInfoModel } from './models';
   styleUrl: './contributors.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContributorsComponent implements OnInit {
+export class ContributorsComponent implements OnInit, OnDestroy {
   searchControl = new FormControl<string>('');
 
   readonly destroyRef = inject(DestroyRef);
@@ -123,14 +126,15 @@ export class ContributorsComponent implements OnInit {
   readonly hasAdminAccess = select(CurrentResourceSelectors.hasResourceAdminAccess);
   readonly resourceAccessRequestEnabled = select(CurrentResourceSelectors.resourceAccessRequestEnabled);
   readonly currentUser = select(UserSelectors.getCurrentUser);
-  page = select(ContributorsSelectors.getContributorsPageNumber);
   pageSize = select(ContributorsSelectors.getContributorsPageSize);
+  isLoadingMore = select(ContributorsSelectors.isContributorsLoadingMore);
 
   readonly tableParams = computed<TableParameters>(() => ({
     ...DEFAULT_TABLE_PARAMS,
     totalRecords: this.contributorsTotalCount(),
-    paginator: this.contributorsTotalCount() > DEFAULT_TABLE_PARAMS.rows,
-    firstRowIndex: (this.page() - 1) * this.pageSize(),
+    paginator: false,
+    scrollable: true,
+    firstRowIndex: 0,
     rows: this.pageSize(),
   }));
 
@@ -153,6 +157,7 @@ export class ContributorsComponent implements OnInit {
     getViewOnlyLinks: FetchViewOnlyLinks,
     getResourceDetails: GetResourceDetails,
     getContributors: GetAllContributors,
+    loadMoreContributors: LoadMoreContributors,
     updateSearchValue: UpdateContributorsSearchValue,
     updatePermissionFilter: UpdatePermissionFilter,
     updateBibliographyFilter: UpdateBibliographyFilter,
@@ -166,6 +171,7 @@ export class ContributorsComponent implements OnInit {
     acceptRequestAccess: AcceptRequestAccess,
     rejectRequestAccess: RejectRequestAccess,
     getResourceWithChildren: GetResourceWithChildren,
+    resetContributorsState: ResetContributorsState,
   });
 
   get hasChanges(): boolean {
@@ -185,6 +191,10 @@ export class ContributorsComponent implements OnInit {
     }
 
     this.setSearchSubscription();
+  }
+
+  ngOnDestroy(): void {
+    this.actions.resetContributorsState();
   }
 
   private setSearchSubscription() {
@@ -383,11 +393,8 @@ export class ContributorsComponent implements OnInit {
     });
   }
 
-  pageChanged(event: TablePageEvent) {
-    const page = Math.floor(event.first / event.rows) + 1;
-    const pageSize = event.rows;
-
-    this.actions.getContributors(this.resourceId(), this.resourceType(), page, pageSize);
+  loadMoreContributors(): void {
+    this.actions.loadMoreContributors(this.resourceId(), this.resourceType());
   }
 
   createViewLink() {

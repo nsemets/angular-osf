@@ -8,7 +8,6 @@ import { LicensesService } from '@osf/shared/services';
 import {
   CitationsState,
   CollectionsState,
-  ContributorsState,
   DuplicatesState,
   NodeLinksState,
   SubjectsState,
@@ -53,7 +52,7 @@ export const projectRoutes: Routes = [
       {
         path: 'metadata',
         loadChildren: () => import('@osf/features/metadata/metadata.routes').then((mod) => mod.metadataRoutes),
-        providers: [provideStates([SubjectsState, ContributorsState])],
+        providers: [provideStates([SubjectsState])],
         data: { resourceType: ResourceType.Project },
         canActivate: [viewOnlyGuard],
       },
@@ -87,7 +86,7 @@ export const projectRoutes: Routes = [
         canActivate: [viewOnlyGuard],
         loadComponent: () => import('../contributors/contributors.component').then((mod) => mod.ContributorsComponent),
         data: { resourceType: ResourceType.Project },
-        providers: [provideStates([ContributorsState, ViewOnlyLinkState])],
+        providers: [provideStates([ViewOnlyLinkState])],
       },
       {
         path: 'analytics',

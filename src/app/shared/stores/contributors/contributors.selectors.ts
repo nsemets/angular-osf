@@ -38,13 +38,40 @@ export class ContributorsSelectors {
   }
 
   @Selector([ContributorsState])
+  static getBibliographicContributorsList(state: ContributorsStateModel) {
+    if (!state?.bibliographicContributorsList?.data) {
+      return [];
+    }
+
+    return state.bibliographicContributorsList.data;
+  }
+
+  @Selector([ContributorsState])
+  static isBibliographicContributorsLoading(state: ContributorsStateModel) {
+    return state?.bibliographicContributorsList?.isLoading || false;
+  }
+
+  @Selector([ContributorsState])
+  static getBibliographicContributorsTotalCount(state: ContributorsStateModel) {
+    return state?.bibliographicContributorsList?.totalCount || 0;
+  }
+
+  @Selector([ContributorsState])
+  static hasMoreBibliographicContributors(state: ContributorsStateModel) {
+    return (
+      state?.bibliographicContributorsList?.data?.length < state?.bibliographicContributorsList?.totalCount &&
+      !state?.bibliographicContributorsList?.isLoading
+    );
+  }
+
+  @Selector([ContributorsState])
   static isContributorsLoading(state: ContributorsStateModel) {
     return state?.contributorsList?.isLoading || false;
   }
 
   @Selector([ContributorsState])
-  static getContributorsPageNumber(state: ContributorsStateModel) {
-    return state.contributorsList.page;
+  static isContributorsLoadingMore(state: ContributorsStateModel) {
+    return state?.contributorsList?.isLoadingMore || false;
   }
 
   @Selector([ContributorsState])
@@ -55,6 +82,13 @@ export class ContributorsSelectors {
   @Selector([ContributorsState])
   static getContributorsTotalCount(state: ContributorsStateModel) {
     return state.contributorsList.totalCount;
+  }
+
+  @Selector([ContributorsState])
+  static hasMoreContributors(state: ContributorsStateModel) {
+    return (
+      state?.contributorsList?.data?.length < state?.contributorsList?.totalCount && !state?.contributorsList?.isLoading
+    );
   }
 
   @Selector([ContributorsState])

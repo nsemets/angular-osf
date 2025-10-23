@@ -5,7 +5,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { Message } from 'primeng/message';
-import { TableModule, TablePageEvent } from 'primeng/table';
+import { TableModule } from 'primeng/table';
 
 import { filter } from 'rxjs';
 
@@ -41,6 +41,7 @@ import {
   ContributorsSelectors,
   DeleteContributor,
   GetAllContributors,
+  LoadMoreContributors,
 } from '@osf/shared/stores';
 
 @Component({
@@ -63,14 +64,15 @@ export class PreprintsContributorsComponent implements OnInit {
   contributors = signal<ContributorModel[]>([]);
   contributorsTotalCount = select(ContributorsSelectors.getContributorsTotalCount);
   isContributorsLoading = select(ContributorsSelectors.isContributorsLoading);
-  page = select(ContributorsSelectors.getContributorsPageNumber);
+  isLoadingMore = select(ContributorsSelectors.isContributorsLoadingMore);
   pageSize = select(ContributorsSelectors.getContributorsPageSize);
 
   readonly tableParams = computed<TableParameters>(() => ({
     ...DEFAULT_TABLE_PARAMS,
     totalRecords: this.contributorsTotalCount(),
-    paginator: this.contributorsTotalCount() > DEFAULT_TABLE_PARAMS.rows,
-    firstRowIndex: (this.page() - 1) * this.pageSize(),
+    paginator: false,
+    scrollable: true,
+    firstRowIndex: 0,
     rows: this.pageSize(),
   }));
 
@@ -80,6 +82,7 @@ export class PreprintsContributorsComponent implements OnInit {
     bulkUpdateContributors: BulkUpdateContributors,
     bulkAddContributors: BulkAddContributors,
     addContributor: AddContributor,
+    loadMoreContributors: LoadMoreContributors,
   });
 
   get hasChanges(): boolean {
@@ -182,10 +185,7 @@ export class PreprintsContributorsComponent implements OnInit {
     });
   }
 
-  pageChanged(event: TablePageEvent) {
-    const page = Math.floor(event.first / event.rows) + 1;
-    const pageSize = event.rows;
-
-    this.actions.getContributors(this.preprintId(), ResourceType.Preprint, page, pageSize);
+  loadMoreContributors(): void {
+    this.actions.loadMoreContributors(this.preprintId(), ResourceType.Preprint);
   }
 }

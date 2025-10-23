@@ -4,7 +4,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { TablePageEvent } from 'primeng/table';
 
 import { filter } from 'rxjs';
 
@@ -41,6 +40,7 @@ import {
   ContributorsSelectors,
   DeleteContributor,
   GetAllContributors,
+  LoadMoreContributors,
   UpdateBibliographyFilter,
   UpdateContributorsSearchValue,
   UpdatePermissionFilter,
@@ -70,7 +70,7 @@ export class ContributorsDialogComponent implements OnInit {
   contributorsTotalCount = select(ContributorsSelectors.getContributorsTotalCount);
   hasAdminAccess = select(MetadataSelectors.hasAdminAccess);
   contributors = signal<ContributorModel[]>([]);
-  page = select(ContributorsSelectors.getContributorsPageNumber);
+  isLoadingMore = select(ContributorsSelectors.isContributorsLoadingMore);
   pageSize = select(ContributorsSelectors.getContributorsPageSize);
 
   currentUser = select(UserSelectors.getCurrentUser);
@@ -78,8 +78,9 @@ export class ContributorsDialogComponent implements OnInit {
   readonly tableParams = computed<TableParameters>(() => ({
     ...DEFAULT_TABLE_PARAMS,
     totalRecords: this.contributorsTotalCount(),
-    paginator: this.contributorsTotalCount() > DEFAULT_TABLE_PARAMS.rows,
-    firstRowIndex: (this.page() - 1) * this.pageSize(),
+    paginator: false,
+    scrollable: true,
+    firstRowIndex: 0,
     rows: this.pageSize(),
   }));
 
@@ -92,6 +93,7 @@ export class ContributorsDialogComponent implements OnInit {
     addContributor: AddContributor,
     bulkAddContributors: BulkAddContributors,
     bulkUpdateContributors: BulkUpdateContributors,
+    loadMoreContributors: LoadMoreContributors,
   });
 
   private readonly resourceType: ResourceType;
@@ -117,6 +119,7 @@ export class ContributorsDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.actions.getContributors(this.resourceId, this.resourceType);
     this.setSearchSubscription();
   }
 
@@ -206,11 +209,8 @@ export class ContributorsDialogComponent implements OnInit {
     });
   }
 
-  pageChanged(event: TablePageEvent) {
-    const page = Math.floor(event.first / event.rows) + 1;
-    const pageSize = event.rows;
-
-    this.actions.getContributors(this.resourceId, this.resourceType, page, pageSize);
+  loadMoreContributors(): void {
+    this.actions.loadMoreContributors(this.resourceId, this.resourceType);
   }
 
   cancel() {

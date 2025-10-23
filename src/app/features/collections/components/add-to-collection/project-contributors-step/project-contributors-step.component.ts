@@ -40,6 +40,7 @@ import {
   BulkUpdateContributors,
   ContributorsSelectors,
   DeleteContributor,
+  LoadMoreContributors,
   ProjectsSelectors,
 } from '@osf/shared/stores';
 
@@ -61,20 +62,26 @@ export class ProjectContributorsStepComponent {
   readonly contributorsTotalCount = select(ContributorsSelectors.getContributorsTotalCount);
   readonly selectedProject = select(ProjectsSelectors.getSelectedProject);
   readonly currentUser = select(UserSelectors.getCurrentUser);
+  isLoadingMore = select(ContributorsSelectors.isContributorsLoadingMore);
 
   private initialContributors = select(ContributorsSelectors.getContributors);
   readonly projectContributors = signal<ContributorModel[]>([]);
+  pageSize = select(ContributorsSelectors.getContributorsPageSize);
 
   readonly tableParams = computed<TableParameters>(() => ({
     ...DEFAULT_TABLE_PARAMS,
     totalRecords: this.contributorsTotalCount(),
-    paginator: this.contributorsTotalCount() > DEFAULT_TABLE_PARAMS.rows,
+    paginator: false,
+    scrollable: true,
+    firstRowIndex: 0,
+    rows: this.pageSize(),
   }));
 
   stepperActiveValue = input.required<number>();
   targetStepValue = input.required<number>();
   isDisabled = input.required<boolean>();
   isProjectMetadataSaved = input<boolean>(false);
+  projectId = input<string | undefined>();
 
   stepChange = output<number>();
   contributorsSaved = output<void>();
@@ -84,6 +91,7 @@ export class ProjectContributorsStepComponent {
     bulkAddContributors: BulkAddContributors,
     bulkUpdateContributors: BulkUpdateContributors,
     deleteContributor: DeleteContributor,
+    loadMoreContributors: LoadMoreContributors,
   });
 
   constructor() {
@@ -148,6 +156,10 @@ export class ProjectContributorsStepComponent {
 
   handleEditStep() {
     this.stepChange.emit(this.targetStepValue());
+  }
+
+  loadMoreContributors(): void {
+    this.actions.loadMoreContributors(this.projectId(), ResourceType.Project);
   }
 
   private openAddContributorDialog() {
