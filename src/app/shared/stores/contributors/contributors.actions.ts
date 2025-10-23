@@ -128,3 +128,32 @@ export class RejectRequestAccess {
     public resourceType: ResourceType | undefined
   ) {}
 }
+
+export class GetBibliographicContributors {
+  static readonly type = '[Contributors] Get Bibliographic Contributors';
+
+  constructor(
+    public resourceId: string | undefined | null,
+    public resourceType: ResourceType | undefined,
+    public page = 1,
+    public pageSize = DEFAULT_TABLE_PARAMS.rows
+  ) {}
+}
+
+export class LoadMoreBibliographicContributors {
+  static readonly type = '[Contributors] Load More Bibliographic Contributors';
+
+  constructor(
+    public resourceId: string | undefined | null,
+    public resourceType: ResourceType | undefined
+  ) {}
+}
+
+export class LoadMoreContributors {
+  static readonly type = '[Contributors] Load More Contributors';
+
+  constructor(
+    public resourceId: string | undefined | null,
+    public resourceType: ResourceType | undefined
+  ) {}
+}

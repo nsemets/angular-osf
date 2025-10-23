@@ -3,7 +3,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
 import { Checkbox } from 'primeng/checkbox';
 import { Skeleton } from 'primeng/skeleton';
-import { TableModule, TablePageEvent } from 'primeng/table';
+import { TableModule } from 'primeng/table';
 import { Tooltip } from 'primeng/tooltip';
 
 import { ChangeDetectionStrategy, Component, computed, inject, input, model, output } from '@angular/core';
@@ -41,6 +41,7 @@ import { InfoIconComponent } from '../../info-icon/info-icon.component';
 export class ContributorsTableComponent {
   contributors = model<ContributorModel[]>([]);
   isLoading = input(false);
+  isLoadingMore = input(false);
   tableParams = input.required<TableParameters>();
   showCurator = input(false);
   showEducation = input(true);
@@ -52,7 +53,7 @@ export class ContributorsTableComponent {
   hasAdminAccess = input<boolean>(true);
 
   remove = output<ContributorModel>();
-  pageChanged = output<TablePageEvent>();
+  loadMore = output<void>();
 
   customDialogService = inject(CustomDialogService);
 
@@ -64,6 +65,12 @@ export class ContributorsTableComponent {
   isProject = computed(() => this.resourceType() === ResourceType.Project);
 
   deactivatedContributors = computed(() => this.contributors().some((contributor) => contributor.deactivated));
+
+  showLoadMore = computed(() => {
+    const currentLoadedItems = this.contributors().length;
+    const totalRecords = this.tableParams().totalRecords;
+    return currentLoadedItems > 0 && currentLoadedItems < totalRecords;
+  });
 
   removeContributor(contributor: ContributorModel) {
     this.remove.emit(contributor);
@@ -91,7 +98,7 @@ export class ContributorsTableComponent {
     this.contributors.set(reorderedContributors);
   }
 
-  onPageChange(event: TablePageEvent): void {
-    this.pageChanged.emit(event);
+  loadMoreItems() {
+    this.loadMore.emit();
   }
 }

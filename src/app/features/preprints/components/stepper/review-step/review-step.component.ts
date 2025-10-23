@@ -31,7 +31,13 @@ import {
 import { ResourceType } from '@shared/enums';
 import { InterpolatePipe } from '@shared/pipes';
 import { ToastService } from '@shared/services';
-import { ContributorsSelectors, FetchSelectedSubjects, GetAllContributors, SubjectsSelectors } from '@shared/stores';
+import {
+  ContributorsSelectors,
+  FetchSelectedSubjects,
+  GetBibliographicContributors,
+  LoadMoreBibliographicContributors,
+  SubjectsSelectors,
+} from '@shared/stores';
 import { FetchResourceInstitutions, InstitutionsSelectors } from '@shared/stores/institutions';
 
 @Component({
@@ -60,7 +66,7 @@ export class ReviewStepComponent implements OnInit {
   private router = inject(Router);
   private toastService = inject(ToastService);
   private actions = createDispatchMap({
-    getContributors: GetAllContributors,
+    getBibliographicContributors: GetBibliographicContributors,
     fetchSubjects: FetchSelectedSubjects,
     fetchLicenses: FetchLicenses,
     fetchPreprintProject: FetchPreprintProject,
@@ -68,6 +74,7 @@ export class ReviewStepComponent implements OnInit {
     fetchResourceInstitutions: FetchResourceInstitutions,
     updatePrimaryFileRelationship: UpdatePrimaryFileRelationship,
     updatePreprint: UpdatePreprint,
+    loadMoreBibliographicContributors: LoadMoreBibliographicContributors,
   });
 
   provider = input.required<PreprintProviderDetails | undefined>();
@@ -76,8 +83,9 @@ export class ReviewStepComponent implements OnInit {
   preprintFile = select(PreprintStepperSelectors.getPreprintFile);
   isPreprintSubmitting = select(PreprintStepperSelectors.isPreprintSubmitting);
 
-  contributors = select(ContributorsSelectors.getContributors);
-  bibliographicContributors = computed(() => this.contributors().filter((contributor) => contributor.isBibliographic));
+  bibliographicContributors = select(ContributorsSelectors.getBibliographicContributors);
+  areContributorsLoading = select(ContributorsSelectors.isBibliographicContributorsLoading);
+  hasMoreBibliographicContributors = select(ContributorsSelectors.hasMoreBibliographicContributors);
   subjects = select(SubjectsSelectors.getSelectedSubjects);
   affiliatedInstitutions = select(InstitutionsSelectors.getResourceInstitutions);
   license = select(PreprintStepperSelectors.getPreprintLicense);
@@ -88,7 +96,7 @@ export class ReviewStepComponent implements OnInit {
   readonly PreregLinkInfo = PreregLinkInfo;
 
   ngOnInit(): void {
-    this.actions.getContributors(this.preprint()!.id, ResourceType.Preprint);
+    this.actions.getBibliographicContributors(this.preprint()?.id, ResourceType.Preprint);
     this.actions.fetchSubjects(this.preprint()!.id, ResourceType.Preprint);
     this.actions.fetchLicenses();
     this.actions.fetchPreprintProject();
@@ -122,5 +130,9 @@ export class ReviewStepComponent implements OnInit {
 
   cancelSubmission() {
     this.router.navigateByUrl('/preprints');
+  }
+
+  loadMoreContributors(): void {
+    this.actions.loadMoreBibliographicContributors(this.preprint()?.id, ResourceType.Preprint);
   }
 }

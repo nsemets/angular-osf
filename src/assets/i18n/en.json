@@ -57,7 +57,8 @@
       "removeAll": "Remove All",
       "accept": "Accept",
       "reject": "Reject",
-      "loadMore": "Load more"
+      "loadMore": "Load more",
+      "seeMore": "See more"
     },
     "accessibility": {
       "help": "Help",

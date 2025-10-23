@@ -28,7 +28,12 @@
     <div class="mb-4">
       <h4 class="mb-2">{{ 'common.labels.contributors' | translate }}</h4>
 
-      <osf-contributors-list [contributors]="contributors()"></osf-contributors-list>
+      <osf-contributors-list
+        [contributors]="contributors()"
+        [isLoading]="areContributorsLoading()"
+        [hasLoadMore]="hasMoreContributors()"
+        (loadMoreContributors)="loadMoreContributors()"
+      ></osf-contributors-list>
     </div>
 
     <div class="license mb-4">

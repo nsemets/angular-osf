@@ -39,9 +39,11 @@ import {
   ClearConfiguredAddons,
   ClearWiki,
   CollectionsSelectors,
+  ContributorsSelectors,
   CurrentResourceSelectors,
   FetchSelectedSubjects,
   GetAddonsResourceReference,
+  GetBibliographicContributors,
   GetBookmarksCollectionId,
   GetCollectionProvider,
   GetConfiguredCitationAddons,
@@ -49,6 +51,8 @@ import {
   GetHomeWiki,
   GetLinkedResources,
   GetResourceWithChildren,
+  LoadMoreBibliographicContributors,
+  ResetContributorsState,
   SubjectsSelectors,
 } from '@osf/shared/stores';
 import { GetActivityLogs } from '@osf/shared/stores/activity-logs';
@@ -139,6 +143,9 @@ export class ProjectOverviewComponent implements OnInit {
   isWikiEnabled = select(ProjectOverviewSelectors.isWikiEnabled);
   parentProject = select(ProjectOverviewSelectors.getParentProject);
   isParentProjectLoading = select(ProjectOverviewSelectors.getParentProjectLoading);
+  bibliographicContributors = select(ContributorsSelectors.getBibliographicContributors);
+  isBibliographicContributorsLoading = select(ContributorsSelectors.isBibliographicContributorsLoading);
+  hasMoreBibliographicContributors = select(ContributorsSelectors.hasMoreBibliographicContributors);
   addonsResourceReference = select(AddonsSelectors.getAddonsResourceReference);
   configuredCitationAddons = select(AddonsSelectors.getConfiguredCitationAddons);
   operationInvocation = select(AddonsSelectors.getOperationInvocation);
@@ -164,6 +171,9 @@ export class ProjectOverviewComponent implements OnInit {
     getParentProject: GetParentProject,
     getAddonsResourceReference: GetAddonsResourceReference,
     getConfiguredCitationAddons: GetConfiguredCitationAddons,
+    getBibliographicContributors: GetBibliographicContributors,
+    loadMoreBibliographicContributors: LoadMoreBibliographicContributors,
+    resetContributorsState: ResetContributorsState,
   });
 
   readonly activityPageSize = 5;
@@ -193,8 +203,9 @@ export class ProjectOverviewComponent implements OnInit {
   resourceOverview = computed(() => {
     const project = this.currentProject();
     const subjects = this.subjects();
+    const bibliographicContributors = this.bibliographicContributors();
     if (project) {
-      return MapProjectOverview(project, subjects, this.isAnonymous());
+      return MapProjectOverview(project, subjects, this.isAnonymous(), bibliographicContributors);
     }
     return null;
   });
@@ -282,6 +293,10 @@ export class ProjectOverviewComponent implements OnInit {
     this.actions.setProjectCustomCitation(citation);
   }
 
+  handleLoadMoreContributors(): void {
+    this.actions.loadMoreBibliographicContributors(this.currentProject()?.id, ResourceType.Project);
+  }
+
   ngOnInit(): void {
     const projectId = this.route.snapshot.params['id'] || this.route.parent?.snapshot.params['id'];
 
@@ -291,6 +306,7 @@ export class ProjectOverviewComponent implements OnInit {
       this.actions.getComponents(projectId);
       this.actions.getLinkedProjects(projectId);
       this.actions.getActivityLogs(projectId, this.activityDefaultPage, this.activityPageSize);
+      this.actions.getBibliographicContributors(projectId, ResourceType.Project);
     }
 
     this.dataciteService
@@ -385,6 +401,7 @@ export class ProjectOverviewComponent implements OnInit {
           this.actions.getComponents(projectId);
           this.actions.getLinkedProjects(projectId);
           this.actions.getActivityLogs(projectId, this.activityDefaultPage, this.activityPageSize);
+          this.actions.getBibliographicContributors(projectId, ResourceType.Project);
         }),
         takeUntilDestroyed(this.destroyRef)
       )
@@ -398,6 +415,7 @@ export class ProjectOverviewComponent implements OnInit {
       this.actions.clearCollections();
       this.actions.clearCollectionModeration();
       this.actions.clearConfiguredAddons();
+      this.actions.resetContributorsState();
     });
   }
 

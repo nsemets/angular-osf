@@ -34,14 +34,7 @@ export class ProjectOverviewService {
 
   getProjectById(projectId: string): Observable<ProjectOverviewWithMeta> {
     const params: Record<string, unknown> = {
-      'embed[]': [
-        'bibliographic_contributors',
-        'affiliated_institutions',
-        'identifiers',
-        'license',
-        'storage',
-        'preprints',
-      ],
+      'embed[]': ['affiliated_institutions', 'identifiers', 'license', 'storage', 'preprints'],
       'fields[institutions]': 'assets,description,name',
       'fields[preprints]': 'title,date_created',
       'fields[users]': 'family_name,full_name,given_name,middle_name',

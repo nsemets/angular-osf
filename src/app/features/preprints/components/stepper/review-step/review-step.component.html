@@ -62,7 +62,12 @@
     <section class="flex flex-column gap-2">
       <h3>{{ 'common.labels.contributors' | translate }}</h3>
 
-      <osf-contributors-list [contributors]="bibliographicContributors()"></osf-contributors-list>
+      <osf-contributors-list
+        [contributors]="bibliographicContributors()"
+        [isLoading]="areContributorsLoading()"
+        [hasLoadMore]="hasMoreBibliographicContributors()"
+        (loadMoreContributors)="loadMoreContributors()"
+      ></osf-contributors-list>
     </section>
 
     @if (affiliatedInstitutions().length) {

@@ -4,7 +4,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { TablePageEvent } from 'primeng/table';
 
 import { filter } from 'rxjs';
 
@@ -41,6 +40,7 @@ import {
   ContributorsSelectors,
   DeleteContributor,
   GetAllContributors,
+  LoadMoreContributors,
   UpdateBibliographyFilter,
   UpdateContributorsSearchValue,
   UpdatePermissionFilter,
@@ -70,16 +70,18 @@ export class ContributorsDialogComponent implements OnInit {
   contributorsTotalCount = select(ContributorsSelectors.getContributorsTotalCount);
   hasAdminAccess = select(MetadataSelectors.hasAdminAccess);
   contributors = signal<ContributorModel[]>([]);
-  page = select(ContributorsSelectors.getContributorsPageNumber);
+  isLoadingMore = select(ContributorsSelectors.isContributorsLoadingMore);
   pageSize = select(ContributorsSelectors.getContributorsPageSize);
+  changesMade = signal<boolean>(false);
 
   currentUser = select(UserSelectors.getCurrentUser);
 
   readonly tableParams = computed<TableParameters>(() => ({
     ...DEFAULT_TABLE_PARAMS,
     totalRecords: this.contributorsTotalCount(),
-    paginator: this.contributorsTotalCount() > DEFAULT_TABLE_PARAMS.rows,
-    firstRowIndex: (this.page() - 1) * this.pageSize(),
+    paginator: false,
+    scrollable: true,
+    firstRowIndex: 0,
     rows: this.pageSize(),
   }));
 
@@ -92,6 +94,7 @@ export class ContributorsDialogComponent implements OnInit {
     addContributor: AddContributor,
     bulkAddContributors: BulkAddContributors,
     bulkUpdateContributors: BulkUpdateContributors,
+    loadMoreContributors: LoadMoreContributors,
   });
 
   private readonly resourceType: ResourceType;
@@ -117,6 +120,7 @@ export class ContributorsDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.actions.getContributors(this.resourceId, this.resourceType);
     this.setSearchSubscription();
   }
 
@@ -127,13 +131,10 @@ export class ContributorsDialogComponent implements OnInit {
   }
 
   openAddContributorDialog(): void {
-    const addedContributorIds = this.initialContributors().map((x) => x.userId);
-
     this.customDialogService
       .open(AddContributorDialogComponent, {
         header: 'project.contributors.addDialog.addRegisteredContributor',
         width: '448px',
-        data: addedContributorIds,
       })
       .onClose.pipe(
         filter((res: ContributorDialogAddModel) => !!res),
@@ -147,9 +148,10 @@ export class ContributorsDialogComponent implements OnInit {
             this.actions
               .bulkAddContributors(this.resourceId, this.resourceType, res.data)
               .pipe(takeUntilDestroyed(this.destroyRef))
-              .subscribe(() =>
-                this.toastService.showSuccess('project.contributors.toastMessages.multipleAddSuccessMessage')
-              );
+              .subscribe(() => {
+                this.changesMade.set(true);
+                this.toastService.showSuccess('project.contributors.toastMessages.multipleAddSuccessMessage');
+              });
           }
         }
       });
@@ -172,7 +174,10 @@ export class ContributorsDialogComponent implements OnInit {
           const params = { name: res.data[0].fullName };
 
           this.actions.addContributor(this.resourceId, this.resourceType, res.data[0]).subscribe({
-            next: () => this.toastService.showSuccess('project.contributors.toastMessages.addSuccessMessage', params),
+            next: () => {
+              this.changesMade.set(true);
+              this.toastService.showSuccess('project.contributors.toastMessages.addSuccessMessage', params);
+            },
           });
         }
       });
@@ -192,12 +197,13 @@ export class ContributorsDialogComponent implements OnInit {
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             next: () => {
+              this.changesMade.set(true);
               this.toastService.showSuccess('project.contributors.removeDialog.successMessage', {
                 name: contributor.fullName,
               });
 
               if (isDeletingSelf) {
-                this.dialogRef.close();
+                this.dialogRef.close(this.changesMade());
                 this.router.navigate(['/']);
               }
             },
@@ -206,11 +212,8 @@ export class ContributorsDialogComponent implements OnInit {
     });
   }
 
-  pageChanged(event: TablePageEvent) {
-    const page = Math.floor(event.first / event.rows) + 1;
-    const pageSize = event.rows;
-
-    this.actions.getContributors(this.resourceId, this.resourceType, page, pageSize);
+  loadMoreContributors(): void {
+    this.actions.loadMoreContributors(this.resourceId, this.resourceType);
   }
 
   cancel() {
@@ -218,7 +221,7 @@ export class ContributorsDialogComponent implements OnInit {
   }
 
   onClose(): void {
-    this.dialogRef.close();
+    this.dialogRef.close(this.changesMade());
   }
 
   onSave(): void {
@@ -227,8 +230,9 @@ export class ContributorsDialogComponent implements OnInit {
     this.actions
       .bulkUpdateContributors(this.resourceId, this.resourceType, updatedContributors)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() =>
-        this.toastService.showSuccess('project.contributors.toastMessages.multipleUpdateSuccessMessage')
-      );
+      .subscribe(() => {
+        this.changesMade.set(true);
+        this.toastService.showSuccess('project.contributors.toastMessages.multipleUpdateSuccessMessage');
+      });
   }
 }

@@ -2,16 +2,21 @@ import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
 import { ContributorAddModel, ContributorModel, RequestAccessModel } from '@osf/shared/models';
 import { AsyncStateModel, AsyncStateWithTotalCount } from '@osf/shared/models/store';
 
-export interface ContributorsListModel extends AsyncStateWithTotalCount<ContributorModel[]> {
-  searchValue: string | null;
-  permissionFilter: string | null;
-  bibliographyFilter: boolean | null;
+export interface ContributorsList extends AsyncStateWithTotalCount<ContributorModel[]> {
   page: number;
   pageSize: number;
 }
 
+export interface ContributorsListWithFiltersModel extends ContributorsList {
+  searchValue: string | null;
+  permissionFilter: string | null;
+  bibliographyFilter: boolean | null;
+  isLoadingMore: boolean;
+}
+
 export interface ContributorsStateModel {
-  contributorsList: ContributorsListModel;
+  contributorsList: ContributorsListWithFiltersModel;
+  bibliographicContributorsList: ContributorsList;
   requestAccessList: AsyncStateModel<RequestAccessModel[]>;
   users: AsyncStateWithTotalCount<ContributorAddModel[]>;
 }
@@ -26,6 +31,16 @@ export const CONTRIBUTORS_STATE_DEFAULTS: ContributorsStateModel = {
     bibliographyFilter: null,
     totalCount: 0,
     page: 1,
+    pageSize: DEFAULT_TABLE_PARAMS.rows,
+    isLoadingMore: false,
+  },
+  bibliographicContributorsList: {
+    data: [],
+    isLoading: false,
+    isSubmitting: false,
+    error: null,
+    totalCount: 0,
+    page: 0,
     pageSize: DEFAULT_TABLE_PARAMS.rows,
   },
   requestAccessList: {
