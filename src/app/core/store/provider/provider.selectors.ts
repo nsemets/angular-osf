@@ -1,5 +1,6 @@
 import { Selector } from '@ngxs/store';
 
+import { ReviewPermissions } from '@osf/shared/enums';
 import { ProviderShortInfoModel } from '@osf/shared/models';
 
 import { ProviderStateModel } from './provider.model';
@@ -9,5 +10,13 @@ export class ProviderSelectors {
   @Selector([ProviderState])
   static getCurrentProvider(state: ProviderStateModel): ProviderShortInfoModel | null {
     return state.currentProvider;
+  }
+
+  @Selector([ProviderState])
+  static hasAdminAccess(state: ProviderStateModel): boolean {
+    return (
+      state.currentProvider?.permissions?.some((permission) => permission === ReviewPermissions.SetUpModeration) ||
+      false
+    );
   }
 }

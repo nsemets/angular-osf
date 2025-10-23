@@ -3,7 +3,7 @@ import { catchError, forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
-import { JsonApiResponse, PaginatedData, ResponseJsonApi } from '@osf/shared/models';
+import { PaginatedData, ResponseJsonApi } from '@osf/shared/models';
 import { JsonApiService } from '@osf/shared/services';
 
 import { PreprintSubmissionsSort } from '../enums';
@@ -36,7 +36,7 @@ export class PreprintModerationService {
     const baseUrl = `${this.apiUrl}/providers/preprints/?filter[permissions]=view_actions,set_up_moderation`;
 
     return this.jsonApiService
-      .get<JsonApiResponse<PreprintRelatedCountJsonApi[], null>>(baseUrl)
+      .get<ResponseJsonApi<PreprintRelatedCountJsonApi[]>>(baseUrl)
       .pipe(map((response) => response.data.map((x) => PreprintModerationMapper.fromPreprintRelatedCounts(x))));
   }
 
@@ -44,7 +44,7 @@ export class PreprintModerationService {
     const baseUrl = `${this.apiUrl}/providers/preprints/${id}/?related_counts=true`;
 
     return this.jsonApiService
-      .get<JsonApiResponse<PreprintRelatedCountJsonApi, null>>(baseUrl)
+      .get<ResponseJsonApi<PreprintRelatedCountJsonApi>>(baseUrl)
       .pipe(map((response) => PreprintModerationMapper.fromPreprintRelatedCounts(response.data)));
   }
 
