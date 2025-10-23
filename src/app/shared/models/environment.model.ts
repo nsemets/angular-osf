@@ -13,7 +13,21 @@ export interface EnvironmentModel {
   defaultProvider: string;
   dataciteTrackerRepoId: string | null;
   dataciteTrackerAddress: string;
-  newRelic: NewRelicConfig;
+  newRelicEnabled: boolean;
+  newRelicInitDistributedTracingEnabled: boolean;
+  newRelicInitPerformanceCaptureMeasures: boolean;
+  newRelicInitPrivacyCookiesEnabled: boolean;
+  newRelicInitAjaxDenyList: string[];
+  newRelicInfoBeacon: string;
+  newRelicInfoErrorBeacon: string;
+  newRelicInfoLicenseKey: string;
+  newRelicInfoApplicationID: string;
+  newRelicInfoSa: number;
+  newRelicLoaderConfigAccountID: string;
+  newRelicLoaderConfigTrustKey: string;
+  newRelicLoaderConfigAgengID: string;
+  newRelicLoaderConfigLicenseKey: string;
+  newRelicLoaderConfigApplicationID: string;
   activityLogs?: {
     pageSize?: number;
   };
@@ -49,28 +63,4 @@ export interface EnvironmentModel {
    * @example 123456789012
    */
   googleFilePickerAppId: number;
-}
-
-interface NewRelicConfig {
-  enabled: boolean;
-  init: {
-    distributed_tracing: { enabled: boolean };
-    performance: { capture_measures: boolean };
-    privacy: { cookies_enabled: boolean };
-    ajax: { deny_list: string[] };
-  };
-  info: {
-    beacon: string;
-    errorBeacon: string;
-    licenseKey: string;
-    applicationID: string;
-    sa: number;
-  };
-  loader_config: {
-    accountID: string;
-    trustKey: string;
-    agentID: string;
-    licenseKey: string;
-    applicationID: string;
-  };
 }

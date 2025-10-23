@@ -44,8 +44,31 @@ export function initializeApplication() {
       });
     }
 
-    if (environment.newRelic?.enabled) {
-      new BrowserAgent(environment.newRelic);
+    if (environment.newRelicEnabled) {
+      const newRelicConfig = {
+        enabled: environment.newRelicEnabled,
+        init: {
+          distributed_tracing: { enabled: environment.newRelicInitDistributedTracingEnabled },
+          performance: { capture_measures: environment.newRelicInitPerformanceCaptureMeasures },
+          privacy: { cookies_enabled: environment.newRelicInitPrivacyCookiesEnabled },
+          ajax: { deny_list: environment.newRelicInitAjaxDenyList },
+        },
+        info: {
+          beacon: environment.newRelicInfoBeacon,
+          errorBeacon: environment.newRelicInfoErrorBeacon,
+          licenseKey: environment.newRelicInfoLicenseKey,
+          applicationID: environment.newRelicInfoApplicationID,
+          sa: environment.newRelicInfoSa,
+        },
+        loader_config: {
+          accountID: environment.newRelicLoaderConfigAccountID,
+          trustKey: environment.newRelicLoaderConfigTrustKey,
+          agentID: environment.newRelicLoaderConfigAgengID,
+          licenseKey: environment.newRelicLoaderConfigLicenseKey,
+          applicationID: environment.newRelicLoaderConfigApplicationID,
+        },
+      };
+      new BrowserAgent(newRelicConfig);
     }
   };
 }
