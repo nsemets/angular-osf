@@ -44,10 +44,8 @@ export function initializeApplication() {
       });
     }
 
-    const { enabled, ...newRelicConfig } = environment.newRelic;
-
-    if (enabled) {
-      new BrowserAgent(newRelicConfig);
+    if (environment.newRelic?.enabled) {
+      new BrowserAgent(environment.newRelic);
     }
   };
 }

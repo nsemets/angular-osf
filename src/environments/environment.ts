@@ -56,31 +56,4 @@ export const environment = {
   defaultProvider: 'osf',
   dataciteTrackerRepoId: null,
   dataciteTrackerAddress: 'https://analytics.datacite.org/api/metric',
-  newRelic: {
-    enabled: true,
-    init: {
-      distributed_tracing: { enabled: true },
-      performance: { capture_measures: true },
-      privacy: { cookies_enabled: true },
-      ajax: { deny_list: ['bam.nr-data.net'] },
-    },
-    info: {
-      beacon: 'bam.nr-data.net',
-      errorBeacon: 'bam.nr-data.net',
-      licenseKey: '704513e63b',
-      applicationID: '1835137194',
-      sa: 1,
-    },
-    loader_config: {
-      accountID: '772413',
-      trustKey: '772413',
-      agentID: '1835137194',
-      licenseKey: '704513e63b',
-      applicationID: '1835137194',
-    },
-  },
-  sentryDsn: '',
-  googleTagManagerId: '',
-  googleFilePickerApiKey: '',
-  googleFilePickerAppId: 0,
 };
