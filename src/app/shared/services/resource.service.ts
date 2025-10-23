@@ -66,9 +66,11 @@ export class ResourceGuidService {
 
   getResourceDetails(resourceId: string, resourceType: ResourceType): Observable<BaseNodeModel> {
     const resourcePath = this.urlMap.get(resourceType);
-
+    const params: Record<string, unknown> = {
+      embed: 'parent',
+    };
     return this.jsonApiService
-      .get<ResponseDataJsonApi<BaseNodeDataJsonApi>>(`${this.apiUrl}/${resourcePath}/${resourceId}/`)
+      .get<ResponseDataJsonApi<BaseNodeDataJsonApi>>(`${this.apiUrl}/${resourcePath}/${resourceId}/`, params)
       .pipe(map((response) => BaseNodeMapper.getNodeData(response.data)));
   }
 

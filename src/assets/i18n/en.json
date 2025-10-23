@@ -607,7 +607,8 @@
         "bibliographicContributor": "Bibliographic Contributor",
         "addUnregisteredContributor": "Add Unregistered Contributor",
         "addRegisteredContributor": "Add Registered Contributor",
-        "unregisteredContributorNotification": "We will notify the user that they have been added to your project"
+        "unregisteredContributorNotification": "We will notify the user that they have been added to your project",
+        "addingContributorsFromParentProject": "Import contributors from {{projectName}}"
       },
       "removeDialog": {
         "title": "Remove contributor",
@@ -1158,7 +1159,9 @@
         "storage": "OSF Storage",
         "pathError": "Path is not specified!",
         "success": "Successfully moved.",
-        "noMovePermission": "Cannot move or copy to this file provider"
+        "noMovePermission": "Cannot move or copy to this file provider",
+        "movingHeader": "Moving...",
+        "copingHeader": "Coping..."
       },
       "copyFile": {
         "success": "File successfully copied."

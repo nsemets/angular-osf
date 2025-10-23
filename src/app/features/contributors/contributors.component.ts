@@ -50,6 +50,7 @@ import {
   AcceptRequestAccess,
   AddContributor,
   BulkAddContributors,
+  BulkAddContributorsFromParentProject,
   BulkUpdateContributors,
   ContributorsSelectors,
   CreateViewOnlyLink,
@@ -164,6 +165,7 @@ export class ContributorsComponent implements OnInit, OnDestroy {
     deleteContributor: DeleteContributor,
     bulkUpdateContributors: BulkUpdateContributors,
     bulkAddContributors: BulkAddContributors,
+    bulkAddContributorsFromParentProject: BulkAddContributorsFromParentProject,
     addContributor: AddContributor,
     createViewOnlyLink: CreateViewOnlyLink,
     deleteViewOnlyLink: DeleteViewOnlyLink,
@@ -255,17 +257,19 @@ export class ContributorsComponent implements OnInit, OnDestroy {
   }
 
   openAddContributorDialog() {
-    const rootParentId = this.resourceDetails().rootParentId ?? this.resourceId();
+    const resourceDetails = this.resourceDetails();
+    const resourceId = this.resourceId();
+    const rootParentId = resourceDetails.rootParentId ?? resourceId;
 
     this.loaderService.show();
 
     this.actions
-      .getResourceWithChildren(rootParentId, this.resourceId(), this.resourceType())
+      .getResourceWithChildren(rootParentId, resourceId, this.resourceType())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.loaderService.hide();
 
-        const components = this.mapNodesToComponentCheckboxItems(this.resourceChildren(), this.resourceId());
+        const components = this.mapNodesToComponentCheckboxItems(this.resourceChildren(), resourceId);
 
         this.customDialogService
           .open(AddContributorDialogComponent, {
@@ -273,7 +277,12 @@ export class ContributorsComponent implements OnInit, OnDestroy {
             width: '448px',
             data: {
               components,
-              resourceName: this.resourceDetails().title,
+              resourceName: resourceDetails.title,
+              parentResourceName: resourceDetails.parent?.title,
+              allowAddingContributorsFromParentProject:
+                this.resourceType() === ResourceType.Project &&
+                resourceDetails.rootParentId &&
+                resourceDetails.rootParentId !== resourceId,
             },
           })
           .onClose.pipe(
@@ -281,7 +290,9 @@ export class ContributorsComponent implements OnInit, OnDestroy {
             takeUntilDestroyed(this.destroyRef)
           )
           .subscribe((res: ContributorDialogAddModel) => {
-            if (res.type === AddContributorType.Unregistered) {
+            if (res.type === AddContributorType.ParentProject) {
+              this.addContributorsFromParentProjectToComponents();
+            } else if (res.type === AddContributorType.Unregistered) {
               this.openAddUnregisteredContributorDialog();
             } else {
               this.addContributorsToComponents(res);
@@ -307,6 +318,13 @@ export class ContributorsComponent implements OnInit, OnDestroy {
   private addContributorsToComponents(result: ContributorDialogAddModel): void {
     this.actions
       .bulkAddContributors(this.resourceId(), this.resourceType(), result.data, result.childNodeIds)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.toastService.showSuccess('project.contributors.toastMessages.multipleAddSuccessMessage'));
+  }
+
+  private addContributorsFromParentProjectToComponents(): void {
+    this.actions
+      .bulkAddContributorsFromParentProject(this.resourceId(), this.resourceType())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.toastService.showSuccess('project.contributors.toastMessages.multipleAddSuccessMessage'));
   }

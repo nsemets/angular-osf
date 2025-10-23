@@ -1,4 +1,5 @@
 import {
+  BaseNodeDataJsonApi,
   ContributorDataJsonApi,
   IdentifierAttributes,
   IdentifiersJsonApiData,
@@ -22,6 +23,9 @@ export interface BaseNodeEmbedsJsonApi {
   };
   region?: {
     data: RegionDataJsonApi;
+  };
+  parent?: {
+    data: BaseNodeDataJsonApi;
   };
 }
 

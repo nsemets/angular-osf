@@ -23,6 +23,7 @@ export interface BaseNodeModel {
   wikiEnabled: boolean;
   rootParentId?: string;
   type: string;
+  parent?: BaseNodeModel;
 }
 
 export interface NodeModel extends BaseNodeModel {
