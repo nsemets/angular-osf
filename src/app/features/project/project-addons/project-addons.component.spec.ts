@@ -4,7 +4,7 @@ import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UserSelectors, UserState } from '@core/store/user';
-import { AddonsState } from '@osf/shared/stores';
+import { AddonsState } from '@osf/shared/stores/addons';
 
 import { ProjectAddonsComponent } from './project-addons.component';
 

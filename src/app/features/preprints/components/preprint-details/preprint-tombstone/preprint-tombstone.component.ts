@@ -19,12 +19,11 @@ import { ResourceType } from '@osf/shared/enums';
 import { InterpolatePipe } from '@osf/shared/pipes';
 import {
   ContributorsSelectors,
-  FetchSelectedSubjects,
   GetBibliographicContributors,
   LoadMoreBibliographicContributors,
   ResetContributorsState,
-  SubjectsSelectors,
-} from '@osf/shared/stores';
+} from '@osf/shared/stores/contributors';
+import { FetchSelectedSubjects, SubjectsSelectors } from '@osf/shared/stores/subjects';
 
 import { PreprintDoiSectionComponent } from '../preprint-doi-section/preprint-doi-section.component';
 

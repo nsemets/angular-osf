@@ -6,7 +6,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ResourceOverview } from '@shared/models';
 import { ToastService } from '@shared/services';
-import { CitationsSelectors } from '@shared/stores';
+import { CitationsSelectors } from '@shared/stores/citations';
 
 import { ResourceCitationsComponent } from './resource-citations.component';
 

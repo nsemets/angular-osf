@@ -9,6 +9,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 
 import { UserSelectors } from '@osf/core/store/user';
+import { SubHeaderComponent } from '@osf/shared/components';
+import { ToastService } from '@osf/shared/services';
+import { RegionsSelectors } from '@osf/shared/stores/regions';
+
+import { AccountSettingsComponent } from './account-settings.component';
 import {
   AffiliatedInstitutionsComponent,
   ChangePasswordComponent,
@@ -18,13 +23,8 @@ import {
   DefaultStorageLocationComponent,
   ShareIndexingComponent,
   TwoFactorAuthComponent,
-} from '@osf/features/settings/account-settings/components';
-import { AccountSettingsSelectors } from '@osf/features/settings/account-settings/store';
-import { SubHeaderComponent } from '@osf/shared/components';
-import { RegionsSelectors } from '@osf/shared/stores';
-import { ToastService } from '@shared/services';
-
-import { AccountSettingsComponent } from './account-settings.component';
+} from './components';
+import { AccountSettingsSelectors } from './store';
 
 import { MOCK_STORE, MOCK_USER, MockCustomConfirmationServiceProvider, TranslateServiceMock } from '@testing/mocks';
 

@@ -36,7 +36,7 @@ import {
   GetDefaultCitations,
   GetStyledCitation,
   UpdateCustomCitation,
-} from '@shared/stores';
+} from '@shared/stores/citations';
 
 @Component({
   selector: 'osf-resource-citations',

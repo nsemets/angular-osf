@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CitationStyle } from '@shared/models';
-import { CitationsSelectors } from '@shared/stores';
+import { CitationsSelectors } from '@shared/stores/citations';
 
 import { CitationSectionComponent } from './citation-section.component';
 

@@ -9,7 +9,7 @@ import { CustomPaginatorComponent, LoadingSpinnerComponent, SearchInputComponent
 import { AddContributorItemComponent } from '@shared/components/contributors/add-contributor-item/add-contributor-item.component';
 import { AddContributorType, AddDialogState } from '@shared/enums/contributors';
 import { ContributorAddModel } from '@shared/models';
-import { ContributorsSelectors } from '@shared/stores';
+import { ContributorsSelectors } from '@shared/stores/contributors';
 
 import { AddContributorDialogComponent } from './add-contributor-dialog.component';
 

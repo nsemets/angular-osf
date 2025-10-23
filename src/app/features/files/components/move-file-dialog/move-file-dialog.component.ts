@@ -23,7 +23,11 @@ import {
 import { FileKind, ResourceType, SupportedFeature } from '@osf/shared/enums';
 import { FilesMapper } from '@osf/shared/mappers/files/files.mapper';
 import { FileFolderModel, FileModel } from '@osf/shared/models';
-import { CurrentResourceSelectors, GetResourceDetails, GetResourceWithChildren } from '@osf/shared/stores';
+import {
+  CurrentResourceSelectors,
+  GetResourceDetails,
+  GetResourceWithChildren,
+} from '@osf/shared/stores/current-resource';
 import { FileSelectDestinationComponent, IconComponent, LoadingSpinnerComponent } from '@shared/components';
 import { CustomConfirmationService, FilesService, ToastService } from '@shared/services';
 

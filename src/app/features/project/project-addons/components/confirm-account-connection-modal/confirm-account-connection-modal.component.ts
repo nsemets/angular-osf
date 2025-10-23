@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { AddonOperationInvocationService } from '@osf/shared/services';
-import { AddonsSelectors, CreateAddonOperationInvocation } from '@osf/shared/stores';
+import { AddonsSelectors, CreateAddonOperationInvocation } from '@osf/shared/stores/addons';
 import { OperationNames } from '@shared/enums';
 
 @Component({

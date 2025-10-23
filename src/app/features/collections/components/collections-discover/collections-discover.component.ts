@@ -25,7 +25,7 @@ import {
   SearchCollectionSubmissions,
   SetPageNumber,
   SetSearchValue,
-} from '@osf/shared/stores';
+} from '@osf/shared/stores/collections';
 
 import { CollectionsQuerySyncService } from '../../services';
 import { CollectionsHelpDialogComponent } from '../collections-help-dialog/collections-help-dialog.component';

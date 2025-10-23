@@ -35,14 +35,13 @@ import { hasViewOnlyParam, toCamelCase } from '@osf/shared/helpers';
 import { MapRegistryOverview } from '@osf/shared/mappers';
 import { SchemaResponse, ToolbarResource } from '@osf/shared/models';
 import { CustomDialogService, ToastService } from '@osf/shared/services';
+import { GetBookmarksCollectionId } from '@osf/shared/stores/bookmarks';
 import {
   ContributorsSelectors,
-  FetchSelectedSubjects,
   GetBibliographicContributors,
-  GetBookmarksCollectionId,
   LoadMoreBibliographicContributors,
-  SubjectsSelectors,
-} from '@osf/shared/stores';
+} from '@osf/shared/stores/contributors';
+import { FetchSelectedSubjects, SubjectsSelectors } from '@osf/shared/stores/subjects';
 
 import { ArchivingMessageComponent, RegistryRevisionsComponent, RegistryStatusesComponent } from '../../components';
 import { RegistryMakeDecisionComponent } from '../../components/registry-make-decision/registry-make-decision.component';

@@ -39,7 +39,7 @@ import {
   GetAuthorizedStorageAddons,
   UpdateAuthorizedAddon,
   UpdateConfiguredAddon,
-} from '@osf/shared/stores';
+} from '@osf/shared/stores/addons';
 
 import { AddonConfigMap } from '../../models';
 import { AddonDialogService } from '../../services';

@@ -6,7 +6,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProjectSelectorComponent } from '@shared/components';
 import { ToastService } from '@shared/services';
-import { CollectionsSelectors } from '@shared/stores';
+import { CollectionsSelectors } from '@shared/stores/collections';
 import { ProjectsSelectors } from '@shared/stores/projects/projects.selectors';
 
 import { SelectProjectStepComponent } from './select-project-step.component';

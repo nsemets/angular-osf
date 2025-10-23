@@ -24,18 +24,22 @@ import { MetadataTabsModel, SubjectModel } from '@osf/shared/models';
 import { CustomConfirmationService, CustomDialogService, ToastService } from '@osf/shared/services';
 import {
   ContributorsSelectors,
-  FetchChildrenSubjects,
+  GetBibliographicContributors,
+  LoadMoreBibliographicContributors,
+  UpdateContributorsSearchValue,
+} from '@osf/shared/stores/contributors';
+import {
   FetchResourceInstitutions,
+  InstitutionsSelectors,
+  UpdateResourceInstitutions,
+} from '@osf/shared/stores/institutions';
+import {
+  FetchChildrenSubjects,
   FetchSelectedSubjects,
   FetchSubjects,
-  GetBibliographicContributors,
-  InstitutionsSelectors,
-  LoadMoreBibliographicContributors,
   SubjectsSelectors,
-  UpdateContributorsSearchValue,
-  UpdateResourceInstitutions,
   UpdateResourceSubjects,
-} from '@osf/shared/stores';
+} from '@osf/shared/stores/subjects';
 
 import { EditTitleDialogComponent } from './dialogs/edit-title-dialog/edit-title-dialog.component';
 import {

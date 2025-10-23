@@ -21,12 +21,11 @@ import {
 import { ResourceType } from '@osf/shared/enums';
 import {
   ContributorsSelectors,
-  FetchResourceInstitutions,
   GetBibliographicContributors,
-  InstitutionsSelectors,
   LoadMoreBibliographicContributors,
   ResetContributorsState,
-} from '@osf/shared/stores';
+} from '@osf/shared/stores/contributors';
+import { FetchResourceInstitutions, InstitutionsSelectors } from '@osf/shared/stores/institutions';
 
 import { PreprintDoiSectionComponent } from '../preprint-doi-section/preprint-doi-section.component';
 

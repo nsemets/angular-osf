@@ -19,7 +19,7 @@ import {
   FetchSubjects,
   SubjectsSelectors,
   UpdateResourceSubjects,
-} from '@osf/shared/stores';
+} from '@osf/shared/stores/subjects';
 
 @Component({
   selector: 'osf-preprints-subjects',

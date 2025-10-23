@@ -43,7 +43,7 @@ import {
   GetAllContributors,
   LoadMoreContributors,
   ResetContributorsState,
-} from '@osf/shared/stores';
+} from '@osf/shared/stores/contributors';
 
 @Component({
   selector: 'osf-registries-contributors',

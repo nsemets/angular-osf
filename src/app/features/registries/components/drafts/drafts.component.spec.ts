@@ -7,7 +7,8 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 import { RegistriesSelectors } from '@osf/features/registries/store';
 import { StepperComponent, SubHeaderComponent } from '@osf/shared/components';
-import { ContributorsSelectors, SubjectsSelectors } from '@shared/stores';
+import { ContributorsSelectors } from '@shared/stores/contributors';
+import { SubjectsSelectors } from '@shared/stores/subjects';
 
 import { DraftsComponent } from './drafts.component';
 

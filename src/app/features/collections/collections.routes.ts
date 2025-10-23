@@ -6,8 +6,12 @@ import { authGuard } from '@osf/core/guards';
 import { AddToCollectionState } from '@osf/features/collections/store/add-to-collection';
 import { CollectionsModerationState } from '@osf/features/moderation/store/collections-moderation';
 import { ConfirmLeavingGuard } from '@shared/guards';
-import { BookmarksState, CitationsState, NodeLinksState, ProjectsState, SubjectsState } from '@shared/stores';
+import { BookmarksState } from '@shared/stores/bookmarks';
+import { CitationsState } from '@shared/stores/citations';
 import { CollectionsState } from '@shared/stores/collections';
+import { NodeLinksState } from '@shared/stores/node-links';
+import { ProjectsState } from '@shared/stores/projects';
+import { SubjectsState } from '@shared/stores/subjects';
 
 export const collectionsRoutes: Routes = [
   {
