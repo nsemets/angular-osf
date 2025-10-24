@@ -3,15 +3,18 @@ import { MockComponents, MockProvider } from 'ng-mocks';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { RegistriesContributorsComponent } from '@osf/features/registries/components/registries-metadata-step/registries-contributors/registries-contributors.component';
-import { RegistriesLicenseComponent } from '@osf/features/registries/components/registries-metadata-step/registries-license/registries-license.component';
-import { RegistriesSubjectsComponent } from '@osf/features/registries/components/registries-metadata-step/registries-subjects/registries-subjects.component';
-import { RegistriesTagsComponent } from '@osf/features/registries/components/registries-metadata-step/registries-tags/registries-tags.component';
-import { RegistriesSelectors } from '@osf/features/registries/store';
 import { CustomConfirmationService } from '@osf/shared/services';
-import { ContributorsSelectors, InstitutionsSelectors, SubjectsSelectors } from '@osf/shared/stores';
+import { ContributorsSelectors } from '@osf/shared/stores/contributors';
+import { InstitutionsSelectors } from '@osf/shared/stores/institutions';
+import { SubjectsSelectors } from '@osf/shared/stores/subjects';
 import { TextInputComponent } from '@shared/components';
 
+import { RegistriesSelectors } from '../../store';
+
+import { RegistriesContributorsComponent } from './registries-contributors/registries-contributors.component';
+import { RegistriesLicenseComponent } from './registries-license/registries-license.component';
+import { RegistriesSubjectsComponent } from './registries-subjects/registries-subjects.component';
+import { RegistriesTagsComponent } from './registries-tags/registries-tags.component';
 import { RegistriesMetadataStepComponent } from './registries-metadata-step.component';
 
 import { OSFTestingModule } from '@testing/osf.testing.module';

@@ -16,7 +16,7 @@ import { RegistryOverviewSelectors } from '@osf/features/registry/store/registry
 import { ScientistsNames } from '@osf/shared/constants';
 import { ResourceType, UserPermissions } from '@osf/shared/enums';
 import { ToastService } from '@osf/shared/services';
-import { CurrentResourceSelectors } from '@osf/shared/stores';
+import { CurrentResourceSelectors } from '@osf/shared/stores/current-resource';
 
 import { GetComponents, ProjectOverviewSelectors } from '../../store';
 

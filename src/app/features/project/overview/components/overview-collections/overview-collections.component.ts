@@ -14,7 +14,7 @@ import { collectionFilterNames } from '@osf/features/collections/constants';
 import { SubmissionReviewStatus } from '@osf/features/moderation/enums';
 import { StopPropagationDirective } from '@osf/shared/directives';
 import { CollectionSubmission, ResourceOverview } from '@osf/shared/models';
-import { CollectionsSelectors, GetProjectSubmissions } from '@osf/shared/stores';
+import { CollectionsSelectors, GetProjectSubmissions } from '@osf/shared/stores/collections';
 
 @Component({
   selector: 'osf-overview-collections',

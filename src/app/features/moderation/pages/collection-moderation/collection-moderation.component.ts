@@ -12,7 +12,7 @@ import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { ClearCurrentProvider } from '@core/store/provider';
 import { SelectComponent, SubHeaderComponent } from '@osf/shared/components';
 import { IS_MEDIUM, Primitive } from '@osf/shared/helpers';
-import { GetCollectionProvider } from '@osf/shared/stores';
+import { GetCollectionProvider } from '@osf/shared/stores/collections';
 
 import { COLLECTION_MODERATION_TABS } from '../../constants';
 import { CollectionModerationTab } from '../../enums';

@@ -33,12 +33,11 @@ import { InterpolatePipe } from '@shared/pipes';
 import { ToastService } from '@shared/services';
 import {
   ContributorsSelectors,
-  FetchSelectedSubjects,
   GetBibliographicContributors,
   LoadMoreBibliographicContributors,
-  SubjectsSelectors,
-} from '@shared/stores';
+} from '@shared/stores/contributors';
 import { FetchResourceInstitutions, InstitutionsSelectors } from '@shared/stores/institutions';
+import { FetchSelectedSubjects, SubjectsSelectors } from '@shared/stores/subjects';
 
 @Component({
   selector: 'osf-review-step',

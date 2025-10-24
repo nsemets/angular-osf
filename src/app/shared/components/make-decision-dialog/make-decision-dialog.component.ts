@@ -18,7 +18,7 @@ import {
 import { InputLimits } from '@osf/shared/constants';
 import { ModerationDecisionFormControls, ModerationSubmitType } from '@osf/shared/enums';
 import { DateAgoPipe } from '@osf/shared/pipes';
-import { CollectionsSelectors } from '@osf/shared/stores';
+import { CollectionsSelectors } from '@osf/shared/stores/collections';
 
 @Component({
   selector: 'osf-make-decision-dialog',

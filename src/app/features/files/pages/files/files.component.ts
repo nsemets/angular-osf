@@ -45,7 +45,7 @@ import {
 import { ALL_SORT_OPTIONS, FILE_SIZE_LIMIT } from '@osf/shared/constants';
 import { FileMenuType, ResourceType, SupportedFeature, UserPermissions } from '@osf/shared/enums';
 import { getViewOnlyParamFromUrl, hasViewOnlyParam } from '@osf/shared/helpers';
-import { CurrentResourceSelectors, GetResourceDetails } from '@osf/shared/stores';
+import { CurrentResourceSelectors, GetResourceDetails } from '@osf/shared/stores/current-resource';
 import {
   FilesTreeComponent,
   FileUploadDialogComponent,

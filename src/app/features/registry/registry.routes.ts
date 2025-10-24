@@ -5,7 +5,10 @@ import { Routes } from '@angular/router';
 import { viewOnlyGuard } from '@osf/core/guards';
 import { ResourceType } from '@osf/shared/enums';
 import { LicensesService } from '@osf/shared/services';
-import { CitationsState, DuplicatesState, SubjectsState, ViewOnlyLinkState } from '@osf/shared/stores';
+import { CitationsState } from '@osf/shared/stores/citations';
+import { DuplicatesState } from '@osf/shared/stores/duplicates';
+import { SubjectsState } from '@osf/shared/stores/subjects';
+import { ViewOnlyLinkState } from '@osf/shared/stores/view-only-links';
 import { ActivityLogsState } from '@shared/stores/activity-logs';
 
 import { AnalyticsState } from '../analytics/store';

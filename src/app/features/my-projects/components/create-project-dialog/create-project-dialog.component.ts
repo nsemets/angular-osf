@@ -13,7 +13,7 @@ import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
 import { ProjectFormControls } from '@osf/shared/enums';
 import { CustomValidators } from '@osf/shared/helpers';
 import { ProjectForm } from '@osf/shared/models';
-import { CreateProject, GetMyProjects, MyResourcesSelectors } from '@osf/shared/stores';
+import { CreateProject, GetMyProjects, MyResourcesSelectors } from '@osf/shared/stores/my-resources';
 
 @Component({
   selector: 'osf-create-project-dialog',

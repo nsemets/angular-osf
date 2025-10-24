@@ -8,7 +8,9 @@ import { PreprintProviderDetails } from '@osf/features/preprints/models';
 import { PreprintStepperSelectors } from '@osf/features/preprints/store/preprint-stepper';
 import { InterpolatePipe } from '@shared/pipes';
 import { ToastService } from '@shared/services';
-import { ContributorsSelectors, InstitutionsSelectors, SubjectsSelectors } from '@shared/stores';
+import { ContributorsSelectors } from '@shared/stores/contributors';
+import { InstitutionsSelectors } from '@shared/stores/institutions';
+import { SubjectsSelectors } from '@shared/stores/subjects';
 
 import { ReviewStepComponent } from './review-step.component';
 

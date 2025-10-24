@@ -24,8 +24,7 @@ import { FormsModule } from '@angular/forms';
 import { UserSelectors } from '@core/store/user';
 import { CustomOption } from '@shared/models';
 import { ProjectModel } from '@shared/models/projects';
-import { GetProjects } from '@shared/stores';
-import { ProjectsSelectors } from '@shared/stores/projects/projects.selectors';
+import { GetProjects, ProjectsSelectors } from '@shared/stores/projects';
 
 @Component({
   selector: 'osf-project-selector',

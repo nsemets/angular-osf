@@ -19,8 +19,8 @@ import { ComponentFormControls } from '@osf/shared/enums';
 import { CustomValidators } from '@osf/shared/helpers';
 import { ComponentForm, Institution } from '@osf/shared/models';
 import { ToastService } from '@osf/shared/services';
-import { FetchRegions, RegionsSelectors } from '@osf/shared/stores';
 import { FetchUserInstitutions, InstitutionsSelectors } from '@osf/shared/stores/institutions';
+import { FetchRegions, RegionsSelectors } from '@osf/shared/stores/regions';
 
 import { CreateComponent, GetComponents, ProjectOverviewSelectors } from '../../store';
 

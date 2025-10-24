@@ -18,7 +18,8 @@ import { INPUT_VALIDATION_MESSAGES, InputLimits } from '@osf/shared/constants';
 import { CustomValidators, findChangedFields } from '@osf/shared/helpers';
 import { ContributorModel, DraftRegistrationModel, SubjectModel } from '@osf/shared/models';
 import { CustomConfirmationService } from '@osf/shared/services';
-import { ContributorsSelectors, SubjectsSelectors } from '@osf/shared/stores';
+import { ContributorsSelectors } from '@osf/shared/stores/contributors';
+import { SubjectsSelectors } from '@osf/shared/stores/subjects';
 import { UserPermissions } from '@shared/enums';
 
 import { ClearState, DeleteDraft, RegistriesSelectors, UpdateDraft, UpdateStepState } from '../../store';

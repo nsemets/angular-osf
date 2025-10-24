@@ -11,7 +11,9 @@ import { ProjectFormControls } from '@osf/shared/enums';
 import { CustomValidators } from '@osf/shared/helpers';
 import { ProjectForm } from '@osf/shared/models';
 import { ProjectModel } from '@osf/shared/models/projects';
-import { InstitutionsSelectors, ProjectsSelectors, RegionsSelectors } from '@osf/shared/stores';
+import { InstitutionsSelectors } from '@osf/shared/stores/institutions';
+import { ProjectsSelectors } from '@osf/shared/stores/projects';
+import { RegionsSelectors } from '@osf/shared/stores/regions';
 import { AffiliatedInstitutionSelectComponent, ProjectSelectorComponent } from '@shared/components';
 
 import { AddProjectFormComponent } from './add-project-form.component';

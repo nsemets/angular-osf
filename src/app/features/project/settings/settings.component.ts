@@ -14,13 +14,8 @@ import { LoadingSpinnerComponent, SubHeaderComponent } from '@osf/shared/compone
 import { ResourceType, SubscriptionEvent, SubscriptionFrequency } from '@osf/shared/enums';
 import { Institution, UpdateNodeRequestModel, ViewOnlyLinkModel } from '@osf/shared/models';
 import { CustomConfirmationService, CustomDialogService, LoaderService, ToastService } from '@osf/shared/services';
-import {
-  DeleteViewOnlyLink,
-  FetchViewOnlyLinks,
-  GetResource,
-  GetResourceWithChildren,
-  ViewOnlyLinkSelectors,
-} from '@osf/shared/stores';
+import { GetResource, GetResourceWithChildren } from '@osf/shared/stores/current-resource';
+import { DeleteViewOnlyLink, FetchViewOnlyLinks, ViewOnlyLinkSelectors } from '@osf/shared/stores/view-only-links';
 
 import {
   DeleteProjectDialogComponent,

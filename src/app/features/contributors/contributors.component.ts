@@ -53,23 +53,27 @@ import {
   BulkAddContributorsFromParentProject,
   BulkUpdateContributors,
   ContributorsSelectors,
-  CreateViewOnlyLink,
-  CurrentResourceSelectors,
   DeleteContributor,
-  DeleteViewOnlyLink,
-  FetchViewOnlyLinks,
   GetAllContributors,
   GetRequestAccessContributors,
-  GetResourceDetails,
-  GetResourceWithChildren,
   LoadMoreContributors,
   RejectRequestAccess,
   ResetContributorsState,
   UpdateBibliographyFilter,
   UpdateContributorsSearchValue,
   UpdatePermissionFilter,
+} from '@osf/shared/stores/contributors';
+import {
+  CurrentResourceSelectors,
+  GetResourceDetails,
+  GetResourceWithChildren,
+} from '@osf/shared/stores/current-resource';
+import {
+  CreateViewOnlyLink,
+  DeleteViewOnlyLink,
+  FetchViewOnlyLinks,
   ViewOnlyLinkSelectors,
-} from '@osf/shared/stores';
+} from '@osf/shared/stores/view-only-links';
 
 import { CreateViewLinkDialogComponent } from './components';
 import { ResourceInfoModel } from './models';

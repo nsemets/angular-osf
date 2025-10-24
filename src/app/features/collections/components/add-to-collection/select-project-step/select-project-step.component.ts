@@ -8,7 +8,7 @@ import { Step, StepItem, StepPanel } from 'primeng/stepper';
 import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 
 import { AddToCollectionSteps } from '@osf/features/collections/enums';
-import { SetSelectedProject } from '@osf/shared/stores';
+import { SetSelectedProject } from '@osf/shared/stores/projects';
 import { ProjectSelectorComponent } from '@shared/components';
 import { ProjectModel } from '@shared/models/projects';
 import { CollectionsSelectors, GetUserCollectionSubmissions } from '@shared/stores/collections';

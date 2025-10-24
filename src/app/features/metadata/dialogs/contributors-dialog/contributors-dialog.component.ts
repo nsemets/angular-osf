@@ -44,7 +44,7 @@ import {
   UpdateBibliographyFilter,
   UpdateContributorsSearchValue,
   UpdatePermissionFilter,
-} from '@osf/shared/stores';
+} from '@osf/shared/stores/contributors';
 
 import { MetadataSelectors } from '../../store';
 

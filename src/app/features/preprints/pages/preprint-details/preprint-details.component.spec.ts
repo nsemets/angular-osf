@@ -9,7 +9,7 @@ import { UserSelectors } from '@core/store/user';
 import { UserPermissions } from '@osf/shared/enums';
 import { CustomDialogService, MetaTagsService } from '@osf/shared/services';
 import { DataciteService } from '@osf/shared/services/datacite/datacite.service';
-import { ContributorsSelectors } from '@osf/shared/stores';
+import { ContributorsSelectors } from '@osf/shared/stores/contributors';
 
 import {
   AdditionalInfoComponent,
