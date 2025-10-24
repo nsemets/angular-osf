@@ -11,7 +11,6 @@ import { handleSectionError } from '@shared/helpers';
 import { FilesService } from '@shared/services';
 
 import {
-  FetchMyPreprints,
   FetchPreprintById,
   FetchPreprintFile,
   FetchPreprintFileVersions,
@@ -34,26 +33,6 @@ import { DefaultState, PreprintStateModel } from './preprint.model';
 export class PreprintState {
   private preprintsService = inject(PreprintsService);
   private fileService = inject(FilesService);
-
-  @Action(FetchMyPreprints)
-  fetchMyPreprints(ctx: StateContext<PreprintStateModel>, action: FetchMyPreprints) {
-    ctx.setState(patch({ myPreprints: patch({ isLoading: true }) }));
-
-    return this.preprintsService.getMyPreprints(action.pageNumber, action.pageSize, action.filters).pipe(
-      tap((preprints) => {
-        ctx.setState(
-          patch({
-            myPreprints: patch({
-              isLoading: false,
-              data: preprints.data,
-              totalCount: preprints.totalCount,
-            }),
-          })
-        );
-      }),
-      catchError((error) => handleSectionError(ctx, 'myPreprints', error))
-    );
-  }
 
   @Action(FetchPreprintById)
   fetchPreprintById(ctx: StateContext<PreprintStateModel>, action: FetchPreprintById) {
