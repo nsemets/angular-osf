@@ -11,7 +11,7 @@ import { collectionFilterNames } from '@osf/features/collections/constants';
 import { IconComponent, TruncatedTextComponent } from '@osf/shared/components';
 import { CollectionSubmissionWithGuid } from '@osf/shared/models';
 import { DateAgoPipe } from '@osf/shared/pipes';
-import { CollectionsSelectors } from '@osf/shared/stores';
+import { CollectionsSelectors } from '@osf/shared/stores/collections';
 
 import { ReviewStatusIcon } from '../../constants';
 import { SubmissionReviewStatus } from '../../enums';

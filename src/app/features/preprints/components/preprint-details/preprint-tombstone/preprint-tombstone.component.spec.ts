@@ -6,7 +6,8 @@ import { PreprintProviderDetails } from '@osf/features/preprints/models';
 import { PreprintSelectors } from '@osf/features/preprints/store/preprint';
 import { ContributorsListComponent, TruncatedTextComponent } from '@osf/shared/components';
 import { InterpolatePipe } from '@osf/shared/pipes';
-import { ContributorsSelectors, SubjectsSelectors } from '@osf/shared/stores';
+import { ContributorsSelectors } from '@osf/shared/stores/contributors';
+import { SubjectsSelectors } from '@osf/shared/stores/subjects';
 
 import { PreprintDoiSectionComponent } from '../preprint-doi-section/preprint-doi-section.component';
 

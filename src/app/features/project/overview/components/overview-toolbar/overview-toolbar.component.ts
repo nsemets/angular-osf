@@ -22,13 +22,8 @@ import { ResourceType } from '@osf/shared/enums';
 import { ToolbarResource } from '@osf/shared/models';
 import { FileSizePipe } from '@osf/shared/pipes';
 import { CustomDialogService, ToastService } from '@osf/shared/services';
-import {
-  AddResourceToBookmarks,
-  BookmarksSelectors,
-  GetMyBookmarks,
-  MyResourcesSelectors,
-  RemoveResourceFromBookmarks,
-} from '@osf/shared/stores';
+import { AddResourceToBookmarks, BookmarksSelectors, RemoveResourceFromBookmarks } from '@osf/shared/stores/bookmarks';
+import { GetMyBookmarks, MyResourcesSelectors } from '@osf/shared/stores/my-resources';
 import { hasViewOnlyParam } from '@shared/helpers';
 
 import { DuplicateDialogComponent } from '../duplicate-dialog/duplicate-dialog.component';

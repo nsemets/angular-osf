@@ -42,7 +42,7 @@ import { ReviewPermissions } from '@shared/enums';
 import { CustomDialogService, MetaTagsService, ToastService } from '@shared/services';
 import { AnalyticsService } from '@shared/services/analytics.service';
 import { DataciteService } from '@shared/services/datacite/datacite.service';
-import { ContributorsSelectors } from '@shared/stores';
+import { ContributorsSelectors } from '@shared/stores/contributors';
 
 import {
   AdditionalInfoComponent,

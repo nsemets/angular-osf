@@ -11,7 +11,7 @@ import { UserSelectors } from '@core/store/user';
 import { LoadingSpinnerComponent, SubHeaderComponent } from '@shared/components';
 import { AddonServiceNames } from '@shared/enums';
 import { convertCamelCaseToNormal } from '@shared/helpers';
-import { AddonsSelectors, GetAddonsResourceReference, GetConfiguredLinkAddons } from '@shared/stores';
+import { AddonsSelectors, GetAddonsResourceReference, GetConfiguredLinkAddons } from '@shared/stores/addons';
 import { CurrentResourceSelectors } from '@shared/stores/current-resource';
 
 @Component({

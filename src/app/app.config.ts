@@ -1,4 +1,3 @@
-import { withNgxsReduxDevtoolsPlugin } from '@ngxs/devtools-plugin';
 import { provideStore } from '@ngxs/store';
 
 import { TranslateModule } from '@ngx-translate/core';
@@ -49,7 +48,7 @@ export const appConfig: ApplicationConfig = {
     }),
     provideHttpClient(withInterceptors([authInterceptor, viewOnlyInterceptor, errorInterceptor])),
     provideRouter(routes, withInMemoryScrolling({ scrollPositionRestoration: 'top', anchorScrolling: 'enabled' })),
-    provideStore(STATES, withNgxsReduxDevtoolsPlugin({ disabled: true })),
+    provideStore(STATES),
     provideZoneChangeDetection({ eventCoalescing: true }),
     SENTRY_PROVIDER,
   ],

@@ -7,7 +7,7 @@ import { SENTRY_TOKEN } from '@core/provider/sentry.provider';
 import { CollectionsMainContentComponent } from '@osf/features/collections/components';
 import { LoadingSpinnerComponent, SearchInputComponent } from '@shared/components';
 import { CustomDialogService, ToastService } from '@shared/services';
-import { CollectionsSelectors } from '@shared/stores';
+import { CollectionsSelectors } from '@shared/stores/collections';
 
 import { CollectionsDiscoverComponent } from './collections-discover.component';
 

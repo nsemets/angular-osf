@@ -6,7 +6,7 @@ import { UserSelectors } from '@core/store/user';
 import { ContributorsTableComponent } from '@osf/shared/components/contributors';
 import { ContributorModel } from '@shared/models';
 import { CustomConfirmationService, CustomDialogService, ToastService } from '@shared/services';
-import { ContributorsSelectors } from '@shared/stores';
+import { ContributorsSelectors } from '@shared/stores/contributors';
 
 import { PreprintsContributorsComponent } from './preprints-contributors.component';
 

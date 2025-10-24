@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core
 
 import { ContributorsListComponent, IconComponent, TruncatedTextComponent } from '@osf/shared/components';
 import { CustomDialogService } from '@osf/shared/services';
-import { NodeLinksSelectors } from '@osf/shared/stores';
+import { NodeLinksSelectors } from '@osf/shared/stores/node-links';
 
 import { DeleteNodeLinkDialogComponent } from '../delete-node-link-dialog/delete-node-link-dialog.component';
 import { LinkResourceDialogComponent } from '../link-resource-dialog/link-resource-dialog.component';

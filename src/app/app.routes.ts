@@ -3,7 +3,6 @@ import { provideStates } from '@ngxs/store';
 import { Routes } from '@angular/router';
 
 import { isFileGuard } from '@core/guards/is-file.guard';
-import { BookmarksState, ProjectsState } from '@shared/stores';
 
 import { authGuard, redirectIfLoggedInGuard } from './core/guards';
 import { isProjectGuard } from './core/guards/is-project.guard';
@@ -14,6 +13,8 @@ import { RegistriesState } from './features/registries/store';
 import { LicensesHandlers, ProjectsHandlers, ProvidersHandlers } from './features/registries/store/handlers';
 import { FilesHandlers } from './features/registries/store/handlers/files.handlers';
 import { LicensesService } from './shared/services';
+import { BookmarksState } from './shared/stores/bookmarks';
+import { ProjectsState } from './shared/stores/projects';
 
 export const routes: Routes = [
   {

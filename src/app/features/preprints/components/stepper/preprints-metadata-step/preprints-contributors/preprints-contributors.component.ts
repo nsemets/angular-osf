@@ -42,7 +42,7 @@ import {
   DeleteContributor,
   GetAllContributors,
   LoadMoreContributors,
-} from '@osf/shared/stores';
+} from '@osf/shared/stores/contributors';
 
 @Component({
   selector: 'osf-preprints-contributors',

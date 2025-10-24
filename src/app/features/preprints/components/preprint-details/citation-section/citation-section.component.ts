@@ -30,7 +30,7 @@ import {
   GetCitationStyles,
   GetStyledCitation,
   UpdateCustomCitation,
-} from '@shared/stores';
+} from '@shared/stores/citations';
 
 @Component({
   selector: 'osf-preprint-citation-section',

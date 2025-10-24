@@ -38,7 +38,7 @@ import { FileFolderModel, FileLabelModel, FileMenuAction, FileMenuFlags, FileMod
 import { FileSizePipe } from '@osf/shared/pipes';
 import { CustomConfirmationService, CustomDialogService, FilesService, ToastService } from '@osf/shared/services';
 import { DataciteService } from '@osf/shared/services/datacite/datacite.service';
-import { CurrentResourceSelectors } from '@shared/stores';
+import { CurrentResourceSelectors } from '@shared/stores/current-resource';
 
 import { FileMenuComponent } from '../file-menu/file-menu.component';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';

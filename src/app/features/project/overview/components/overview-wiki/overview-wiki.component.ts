@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input } from '@an
 import { Router } from '@angular/router';
 
 import { MarkdownComponent, TruncatedTextComponent } from '@osf/shared/components';
-import { WikiSelectors } from '@osf/shared/stores';
+import { WikiSelectors } from '@osf/shared/stores/wiki';
 
 @Component({
   selector: 'osf-overview-wiki',

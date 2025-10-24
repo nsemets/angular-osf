@@ -33,29 +33,26 @@ import { Mode, ResourceType } from '@osf/shared/enums';
 import { hasViewOnlyParam } from '@osf/shared/helpers';
 import { MapProjectOverview } from '@osf/shared/mappers';
 import { CustomDialogService, MetaTagsService, ToastService } from '@osf/shared/services';
+import { GetActivityLogs } from '@osf/shared/stores/activity-logs';
 import {
   AddonsSelectors,
-  ClearCollections,
   ClearConfiguredAddons,
-  ClearWiki,
-  CollectionsSelectors,
-  ContributorsSelectors,
-  CurrentResourceSelectors,
-  FetchSelectedSubjects,
   GetAddonsResourceReference,
-  GetBibliographicContributors,
-  GetBookmarksCollectionId,
-  GetCollectionProvider,
   GetConfiguredCitationAddons,
   GetConfiguredStorageAddons,
-  GetHomeWiki,
-  GetLinkedResources,
-  GetResourceWithChildren,
+} from '@osf/shared/stores/addons';
+import { GetBookmarksCollectionId } from '@osf/shared/stores/bookmarks';
+import { ClearCollections, CollectionsSelectors, GetCollectionProvider } from '@osf/shared/stores/collections';
+import {
+  ContributorsSelectors,
+  GetBibliographicContributors,
   LoadMoreBibliographicContributors,
   ResetContributorsState,
-  SubjectsSelectors,
-} from '@osf/shared/stores';
-import { GetActivityLogs } from '@osf/shared/stores/activity-logs';
+} from '@osf/shared/stores/contributors';
+import { CurrentResourceSelectors, GetResourceWithChildren } from '@osf/shared/stores/current-resource';
+import { GetLinkedResources } from '@osf/shared/stores/node-links';
+import { FetchSelectedSubjects, SubjectsSelectors } from '@osf/shared/stores/subjects';
+import { ClearWiki, GetHomeWiki } from '@osf/shared/stores/wiki';
 import {
   LoadingSpinnerComponent,
   MakeDecisionDialogComponent,

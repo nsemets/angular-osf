@@ -24,12 +24,11 @@ import { FieldType, ResourceType, UserPermissions } from '@osf/shared/enums';
 import { CustomConfirmationService, CustomDialogService, ToastService } from '@osf/shared/services';
 import {
   ContributorsSelectors,
-  FetchSelectedSubjects,
   GetAllContributors,
   LoadMoreContributors,
   ResetContributorsState,
-  SubjectsSelectors,
-} from '@osf/shared/stores';
+} from '@osf/shared/stores/contributors';
+import { FetchSelectedSubjects, SubjectsSelectors } from '@osf/shared/stores/subjects';
 
 import {
   ClearState,

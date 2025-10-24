@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { CollectionSubmissionsListComponent } from '@osf/features/moderation/components';
-import { CollectionsSelectors } from '@osf/shared/stores';
+import { CollectionsSelectors } from '@osf/shared/stores/collections';
 import { CustomPaginatorComponent, IconComponent, LoadingSpinnerComponent, SelectComponent } from '@shared/components';
 
 import { SubmissionReviewStatus } from '../../enums';

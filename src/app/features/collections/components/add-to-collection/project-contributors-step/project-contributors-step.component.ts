@@ -41,8 +41,8 @@ import {
   ContributorsSelectors,
   DeleteContributor,
   LoadMoreContributors,
-  ProjectsSelectors,
-} from '@osf/shared/stores';
+} from '@osf/shared/stores/contributors';
+import { ProjectsSelectors } from '@osf/shared/stores/projects';
 
 @Component({
   selector: 'osf-project-contributors-step',

@@ -13,7 +13,7 @@ import {
   SearchInputComponent,
   SubHeaderComponent,
 } from '@shared/components';
-import { MyResourcesSelectors } from '@shared/stores';
+import { MyResourcesSelectors } from '@shared/stores/my-resources';
 
 import { DashboardComponent } from './dashboard.component';
 

@@ -10,11 +10,12 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { CitationSectionComponent } from '@osf/features/preprints/components/preprint-details/citation-section/citation-section.component';
 import { PreprintSelectors } from '@osf/features/preprints/store/preprint';
 import { LicenseDisplayComponent } from '@osf/shared/components';
 import { ResourceType } from '@shared/enums';
-import { FetchSelectedSubjects, SubjectsSelectors } from '@shared/stores';
+import { FetchSelectedSubjects, SubjectsSelectors } from '@shared/stores/subjects';
+
+import { CitationSectionComponent } from '../citation-section/citation-section.component';
 
 @Component({
   selector: 'osf-preprint-additional-info',

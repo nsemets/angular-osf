@@ -11,7 +11,8 @@ import {
   IconComponent,
   TruncatedTextComponent,
 } from '@shared/components';
-import { ContributorsSelectors, InstitutionsSelectors } from '@shared/stores';
+import { ContributorsSelectors } from '@shared/stores/contributors';
+import { InstitutionsSelectors } from '@shared/stores/institutions';
 
 import { PreprintDoiSectionComponent } from '../preprint-doi-section/preprint-doi-section.component';
 

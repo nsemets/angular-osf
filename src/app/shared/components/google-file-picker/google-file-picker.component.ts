@@ -13,7 +13,7 @@ import { StorageItem } from '@shared/models';
 import { GoogleFileDataModel } from '@shared/models/files/google-file.data.model';
 import { GoogleFilePickerModel } from '@shared/models/files/google-file.picker.model';
 import { GoogleFilePickerDownloadService } from '@shared/services';
-import { AddonsSelectors, GetAuthorizedStorageOauthToken } from '@shared/stores';
+import { AddonsSelectors, GetAuthorizedStorageOauthToken } from '@shared/stores/addons';
 
 @Component({
   selector: 'osf-google-file-picker',

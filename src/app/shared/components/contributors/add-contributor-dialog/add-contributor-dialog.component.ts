@@ -26,7 +26,7 @@ import { FormControl, FormsModule } from '@angular/forms';
 import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
 import { AddContributorType, AddDialogState } from '@osf/shared/enums';
 import { ComponentCheckboxItemModel, ContributorAddModel, ContributorDialogAddModel } from '@osf/shared/models';
-import { ClearUsers, ContributorsSelectors, SearchUsers } from '@osf/shared/stores';
+import { ClearUsers, ContributorsSelectors, SearchUsers } from '@osf/shared/stores/contributors';
 
 import { ComponentsSelectionListComponent } from '../../components-selection-list/components-selection-list.component';
 import { CustomPaginatorComponent } from '../../custom-paginator/custom-paginator.component';

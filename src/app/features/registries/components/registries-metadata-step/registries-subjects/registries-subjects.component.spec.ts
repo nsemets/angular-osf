@@ -8,7 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { RegistriesSelectors } from '@osf/features/registries/store';
 import { ResourceType } from '@osf/shared/enums';
-import { SubjectsSelectors } from '@osf/shared/stores';
+import { SubjectsSelectors } from '@osf/shared/stores/subjects';
 
 import { RegistriesSubjectsComponent } from './registries-subjects.component';
 

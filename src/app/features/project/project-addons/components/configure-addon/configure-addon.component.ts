@@ -33,7 +33,7 @@ import {
   CreateAddonOperationInvocation,
   GetLinkAddons,
   UpdateConfiguredAddon,
-} from '@osf/shared/stores';
+} from '@osf/shared/stores/addons';
 
 import { AddonDialogService } from '../../services/addon-dialog.service';
 
