@@ -14,11 +14,11 @@ import { JsonApiService } from '@osf/shared/services';
 import { preprintSortFieldMap } from '../constants';
 import { PreprintRequestMapper, PreprintsMapper } from '../mappers';
 import {
-  Preprint,
   PreprintAttributesJsonApi,
   PreprintEmbedsJsonApi,
   PreprintLinksJsonApi,
   PreprintMetaJsonApi,
+  PreprintModel,
   PreprintRelationshipsJsonApi,
   PreprintRequest,
   PreprintRequestActionsJsonApiResponse,
@@ -99,7 +99,7 @@ export class PreprintsService {
     return this.jsonApiService.delete(`${this.apiUrl}/preprints/${id}/`);
   }
 
-  updatePreprint(id: string, payload: Partial<Preprint>): Observable<Preprint> {
+  updatePreprint(id: string, payload: Partial<PreprintModel>): Observable<PreprintModel> {
     const apiPayload = this.mapPreprintDomainToApiPayload(payload);
 
     return this.jsonApiService
@@ -132,7 +132,7 @@ export class PreprintsService {
       .pipe(map((response) => PreprintsMapper.fromPreprintJsonApi(response.data)));
   }
 
-  private mapPreprintDomainToApiPayload(domainPayload: Partial<Preprint>): Partial<PreprintAttributesJsonApi> {
+  private mapPreprintDomainToApiPayload(domainPayload: Partial<PreprintModel>): Partial<PreprintAttributesJsonApi> {
     const apiPayload: Record<string, unknown> = {};
     Object.entries(domainPayload).forEach(([key, value]) => {
       if (value !== undefined && this.domainToApiFieldMap[key]) {

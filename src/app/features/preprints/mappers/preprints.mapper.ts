@@ -3,11 +3,11 @@ import { ApiData, JsonApiResponseWithMeta, ResponseJsonApi } from '@osf/shared/m
 import { StringOrNull } from '@shared/helpers';
 
 import {
-  Preprint,
   PreprintAttributesJsonApi,
   PreprintEmbedsJsonApi,
   PreprintLinksJsonApi,
   PreprintMetaJsonApi,
+  PreprintModel,
   PreprintRelationshipsJsonApi,
   PreprintShortInfoWithTotalCount,
 } from '../models';
@@ -35,7 +35,7 @@ export class PreprintsMapper {
 
   static fromPreprintJsonApi(
     response: ApiData<PreprintAttributesJsonApi, null, PreprintRelationshipsJsonApi, PreprintLinksJsonApi>
-  ): Preprint {
+  ): PreprintModel {
     return {
       id: response.id,
       dateCreated: response.attributes.date_created,
@@ -87,7 +87,7 @@ export class PreprintsMapper {
       PreprintMetaJsonApi,
       null
     >
-  ): Preprint {
+  ): PreprintModel {
     const data = response.data;
     const meta = response.meta;
     const links = response.data.links;

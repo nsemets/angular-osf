@@ -1,5 +1,5 @@
 import { PreprintFileSource } from '@osf/features/preprints/enums';
-import { Preprint } from '@osf/features/preprints/models';
+import { PreprintModel } from '@osf/features/preprints/models';
 import { StringOrNull } from '@shared/helpers';
 import { FileFolderModel, FileModel, LicenseOptions } from '@shared/models';
 
@@ -24,7 +24,7 @@ export class UpdatePreprint {
 
   constructor(
     public id: string,
-    public payload: Partial<Preprint>
+    public payload: Partial<PreprintModel>
   ) {}
 }
 

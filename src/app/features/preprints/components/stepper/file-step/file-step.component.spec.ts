@@ -3,7 +3,7 @@ import { MockComponents, MockProvider } from 'ng-mocks';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PreprintFileSource } from '@osf/features/preprints/enums';
-import { Preprint, PreprintProviderDetails } from '@osf/features/preprints/models';
+import { PreprintModel, PreprintProviderDetails } from '@osf/features/preprints/models';
 import { PreprintStepperSelectors } from '@osf/features/preprints/store/preprint-stepper';
 import { FilesTreeComponent, IconComponent } from '@shared/components';
 import { FileFolderModel } from '@shared/models';
@@ -26,7 +26,7 @@ describe('FileStepComponent', () => {
   let confirmationServiceMock: ReturnType<CustomConfirmationServiceMockBuilder['build']>;
 
   const mockProvider: PreprintProviderDetails = PREPRINT_PROVIDER_DETAILS_MOCK;
-  const mockPreprint: Preprint = PREPRINT_MOCK;
+  const mockPreprint: PreprintModel = PREPRINT_MOCK;
   const mockProjectFiles: FileFolderModel[] = [OSF_FILE_MOCK];
   const mockPreprintFile: FileFolderModel = OSF_FILE_MOCK;
 

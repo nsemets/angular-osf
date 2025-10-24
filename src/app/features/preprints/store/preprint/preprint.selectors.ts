@@ -1,5 +1,7 @@
 import { Selector } from '@ngxs/store';
 
+import { UserPermissions } from '@osf/shared/enums';
+
 import { PreprintStateModel } from './preprint.model';
 import { PreprintState } from './preprint.state';
 
@@ -92,5 +94,10 @@ export class PreprintSelectors {
   @Selector([PreprintState])
   static arePreprintRequestActionsLoading(state: PreprintStateModel) {
     return state.preprintRequestsActions.isLoading;
+  }
+
+  @Selector([PreprintState])
+  static hasAdminAccess(state: PreprintStateModel) {
+    return state.preprint.data?.currentUserPermissions.includes(UserPermissions.Admin) || false;
   }
 }

@@ -4,7 +4,7 @@ import { Identifier, IdName, LicenseModel, LicenseOptions } from '@osf/shared/mo
 
 import { ApplicabilityStatus, PreregLinkInfo, ReviewsState } from '../enums';
 
-export interface Preprint {
+export interface PreprintModel {
   id: string;
   dateCreated: string;
   dateModified: string;
