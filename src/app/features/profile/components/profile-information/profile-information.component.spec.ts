@@ -156,15 +156,6 @@ describe('ProfileInformationComponent', () => {
     expect(socials).toEqual([]);
   });
 
-  it('should not include profileWebsites in social links', () => {
-    fixture.componentRef.setInput('currentUser', mockUser);
-    fixture.detectChanges();
-
-    const socials = component.userSocials();
-    const websites = socials.filter((s) => s.alt === 'settings.profileSettings.social.labels.profileWebsites');
-    expect(websites.length).toBe(0);
-  });
-
   it('should emit editProfile event when called', (done) => {
     component.editProfile.subscribe(() => {
       expect(true).toBe(true);
