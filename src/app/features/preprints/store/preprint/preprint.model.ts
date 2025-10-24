@@ -1,7 +1,7 @@
 import { ReviewAction } from '@osf/features/moderation/models';
 import { AsyncStateModel, FileModel, FileVersionModel } from '@shared/models';
 
-import { PreprintModel, PreprintRequest, PreprintRequestAction } from '../../models';
+import { PreprintMetrics, PreprintModel, PreprintRequest, PreprintRequestAction } from '../../models';
 
 export interface PreprintStateModel {
   preprint: AsyncStateModel<PreprintModel | null>;
@@ -11,10 +11,17 @@ export interface PreprintStateModel {
   preprintReviewActions: AsyncStateModel<ReviewAction[]>;
   preprintRequests: AsyncStateModel<PreprintRequest[]>;
   preprintRequestsActions: AsyncStateModel<PreprintRequestAction[]>;
+  metrics: AsyncStateModel<PreprintMetrics | null>;
 }
 
 export const DefaultState: PreprintStateModel = {
   preprint: {
+    data: null,
+    isLoading: false,
+    error: null,
+    isSubmitting: false,
+  },
+  metrics: {
     data: null,
     isLoading: false,
     error: null,

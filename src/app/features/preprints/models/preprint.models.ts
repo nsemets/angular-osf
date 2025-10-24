@@ -40,7 +40,7 @@ export interface PreprintModel {
   preregLinks: string[];
   preregLinkInfo: PreregLinkInfo | null;
   metrics?: PreprintMetrics;
-  embeddedLicense?: LicenseModel;
+  embeddedLicense: LicenseModel | null;
   preprintDoiLink?: string;
   articleDoiLink?: string;
   identifiers?: Identifier[];

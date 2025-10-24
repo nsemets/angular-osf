@@ -79,11 +79,7 @@ export class PreprintsService {
   }
 
   getByIdWithEmbeds(id: string) {
-    const params = {
-      'metrics[views]': 'total',
-      'metrics[downloads]': 'total',
-      'embed[]': ['license', 'identifiers'],
-    };
+    const params = { 'embed[]': ['license', 'identifiers'] };
     return this.jsonApiService
       .get<
         JsonApiResponseWithMeta<
@@ -93,6 +89,21 @@ export class PreprintsService {
         >
       >(`${this.apiUrl}/preprints/${id}/`, params)
       .pipe(map((response) => PreprintsMapper.fromPreprintWithEmbedsJsonApi(response)));
+  }
+
+  getPreprintMetrics(id: string) {
+    const params = { 'metrics[views]': 'total', 'metrics[downloads]': 'total' };
+
+    return this.jsonApiService
+      .get<
+        JsonApiResponseWithMeta<ApiData<PreprintAttributesJsonApi, null, null, null>, PreprintMetaJsonApi, null>
+      >(`${this.apiUrl}/preprints/${id}/`, params)
+      .pipe(
+        map((response) => ({
+          downloads: response.meta.metrics.downloads,
+          views: response.meta.metrics.views,
+        }))
+      );
   }
 
   deletePreprint(id: string) {

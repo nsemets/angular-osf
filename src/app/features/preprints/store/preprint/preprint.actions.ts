@@ -32,6 +32,10 @@ export class FetchPreprintRequestActions {
   constructor(public requestId: string) {}
 }
 
+export class FetchPreprintMetrics {
+  static readonly type = '[Preprint] Fetch Preprint Metrics';
+}
+
 export class WithdrawPreprint {
   static readonly type = '[Preprint] Withdraw Preprint';
 

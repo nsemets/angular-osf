@@ -85,4 +85,19 @@ export class PreprintSelectors {
   static hasAdminAccess(state: PreprintStateModel) {
     return state.preprint.data?.currentUserPermissions.includes(UserPermissions.Admin) || false;
   }
+
+  @Selector([PreprintState])
+  static hasWriteAccess(state: PreprintStateModel) {
+    return state.preprint.data?.currentUserPermissions.includes(UserPermissions.Write) || false;
+  }
+
+  @Selector([PreprintState])
+  static getPreprintMetrics(state: PreprintStateModel) {
+    return state.metrics.data;
+  }
+
+  @Selector([PreprintState])
+  static arePreprintMetricsLoading(state: PreprintStateModel) {
+    return state.metrics.isLoading;
+  }
 }
