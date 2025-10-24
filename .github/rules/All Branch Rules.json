@@ -8,7 +8,7 @@
   "conditions": {
     "ref_name": {
       "exclude": ["refs/heads/main", "refs/heads/develop"],
-      "include": ["~ALL"]
+      "include": ["~DEFAULT_BRANCH", "refs/heads/main"]
     }
   },
   "rules": [
@@ -29,7 +29,7 @@
         "require_code_owner_review": false,
         "require_last_push_approval": true,
         "automatic_copilot_code_review_enabled": false,
-        "allowed_merge_methods": ["squash"]
+        "allowed_merge_methods": ["merge", "squash", "rebase"]
       }
     }
   ],
