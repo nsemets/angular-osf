@@ -5,15 +5,16 @@ import { of } from 'rxjs';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
+import { ProviderSelectors } from '@core/store/provider';
 import { UserSelectors } from '@core/store/user';
-import { ModeratorsTableComponent } from '@osf/features/moderation/components';
+import { SearchInputComponent } from '@osf/shared/components';
 import { ResourceType } from '@osf/shared/enums';
-import { SearchInputComponent } from '@shared/components';
 import { CustomConfirmationService, CustomDialogService } from '@shared/services';
 
 import { ModeratorPermission } from '../../enums';
 import { ModeratorModel } from '../../models';
 import { ModeratorsSelectors } from '../../store/moderators';
+import { ModeratorsTableComponent } from '../moderators-table/moderators-table.component';
 
 import { ModeratorsListComponent } from './moderators-list.component';
 
@@ -71,6 +72,7 @@ describe('ModeratorsListComponent', () => {
           signals: [
             { selector: UserSelectors.getCurrentUser, value: mockCurrentUser },
             { selector: ModeratorsSelectors.getModerators, value: mockModerators },
+            { selector: ProviderSelectors.hasAdminAccess, value: false },
             { selector: ModeratorsSelectors.isModeratorsLoading, value: false },
           ],
         }),
@@ -110,7 +112,7 @@ describe('ModeratorsListComponent', () => {
 
     fixture.detectChanges();
 
-    expect(component.isCurrentUserAdminModerator()).toBe(false);
+    expect(component.hasAdminAccess()).toBe(false);
   });
 
   it('should return false for admin moderator when user is not found', () => {
@@ -121,7 +123,7 @@ describe('ModeratorsListComponent', () => {
 
     fixture.detectChanges();
 
-    expect(component.isCurrentUserAdminModerator()).toBe(false);
+    expect(component.hasAdminAccess()).toBe(false);
   });
 
   it('should load moderators on initialization', () => {
