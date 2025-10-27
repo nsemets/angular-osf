@@ -16,4 +16,5 @@ export interface PreprintWithdrawalSubmission {
   contributors: ContributorModel[];
   totalContributors: number;
   contributorsLoading?: boolean;
+  contributorsPage?: number;
 }

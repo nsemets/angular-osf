@@ -27,6 +27,7 @@ import { PreprintWithdrawalSubmission } from '../../models';
 import {
   GetPreprintWithdrawalSubmissionContributors,
   GetPreprintWithdrawalSubmissions,
+  LoadMorePreprintWithdrawalSubmissionContributors,
   PreprintModerationSelectors,
 } from '../../store/preprint-moderation';
 import { PreprintSubmissionItemComponent } from '../preprint-submission-item/preprint-submission-item.component';
@@ -60,6 +61,7 @@ export class PreprintWithdrawalSubmissionsComponent implements OnInit {
   readonly actions = createDispatchMap({
     getPreprintWithdrawalSubmissions: GetPreprintWithdrawalSubmissions,
     getPreprintWithdrawalSubmissionContributors: GetPreprintWithdrawalSubmissionContributors,
+    loadMorePreprintWithdrawalSubmissionContributors: LoadMorePreprintWithdrawalSubmissionContributors,
   });
 
   readonly submissions = select(PreprintModerationSelectors.getPreprintWithdrawalSubmissions);
@@ -126,6 +128,10 @@ export class PreprintWithdrawalSubmissionsComponent implements OnInit {
 
   loadContributors(item: PreprintWithdrawalSubmission) {
     this.actions.getPreprintWithdrawalSubmissionContributors(item.id, item.preprintId);
+  }
+
+  loadMoreContributors(item: PreprintWithdrawalSubmission) {
+    this.actions.loadMorePreprintWithdrawalSubmissionContributors(item.id, item.preprintId);
   }
 
   private getStatusFromQueryParams() {
