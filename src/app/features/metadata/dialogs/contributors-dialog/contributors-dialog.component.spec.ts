@@ -6,7 +6,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ContributorModel } from '@osf/shared/models';
 import { CustomDialogService } from '@osf/shared/services';
-import { ContributorsSelectors } from '@osf/shared/stores';
+import { ContributorsSelectors } from '@osf/shared/stores/contributors';
 import { SearchInputComponent } from '@shared/components';
 import { ContributorsTableComponent } from '@shared/components/contributors';
 

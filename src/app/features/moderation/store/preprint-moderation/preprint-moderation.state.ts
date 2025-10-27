@@ -5,8 +5,9 @@ import { catchError, forkJoin, map, switchMap, tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
+import { SetCurrentProvider } from '@core/store/provider';
 import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
-import { ResourceType } from '@osf/shared/enums';
+import { CurrentResourceType, ResourceType } from '@osf/shared/enums';
 import { handleSectionError } from '@osf/shared/helpers';
 import { ContributorsService } from '@osf/shared/services';
 
@@ -91,6 +92,16 @@ export class PreprintModerationState {
     return this.preprintModerationService.getPreprintProvider(providerId).pipe(
       tap((data) => {
         const exists = ctx.getState().preprintProviders.data.some((p) => p.id === data.id);
+
+        ctx.dispatch(
+          new SetCurrentProvider({
+            id: data.id,
+            name: data.name,
+            type: CurrentResourceType.Preprints,
+            permissions: data.permissions,
+            reviewsWorkflow: data.reviewsWorkflow,
+          })
+        );
 
         ctx.setState(
           patch({

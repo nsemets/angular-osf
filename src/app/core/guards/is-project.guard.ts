@@ -6,8 +6,8 @@ import { inject } from '@angular/core';
 import { CanMatchFn, Route, Router, UrlSegment } from '@angular/router';
 
 import { UserSelectors } from '@core/store/user';
+import { CurrentResourceSelectors, GetResource } from '@osf/shared/stores/current-resource';
 import { CurrentResourceType } from '@shared/enums';
-import { CurrentResourceSelectors, GetResource } from '@shared/stores';
 
 export const isProjectGuard: CanMatchFn = (route: Route, segments: UrlSegment[]) => {
   const store = inject(Store);

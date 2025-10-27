@@ -22,11 +22,11 @@ import { ResourceType } from '@osf/shared/enums';
 import { hasViewOnlyParam } from '@osf/shared/helpers';
 import { WikiModes } from '@osf/shared/models';
 import { ToastService } from '@osf/shared/services';
+import { CurrentResourceSelectors } from '@osf/shared/stores/current-resource';
 import {
   ClearWiki,
   CreateWiki,
   CreateWikiVersion,
-  CurrentResourceSelectors,
   DeleteWiki,
   GetCompareVersionContent,
   GetComponentsWikiList,
@@ -39,7 +39,7 @@ import {
   ToggleMode,
   UpdateWikiPreviewContent,
   WikiSelectors,
-} from '@osf/shared/stores';
+} from '@osf/shared/stores/wiki';
 import { ViewOnlyLinkMessageComponent } from '@shared/components/view-only-link-message/view-only-link-message.component';
 
 @Component({

@@ -6,8 +6,11 @@ import { FilesState } from '@osf/features/files/store';
 import { MetadataState } from '@osf/features/metadata/store';
 import { ProjectOverviewState } from '@osf/features/project/overview/store';
 import { RegistrationsState } from '@osf/features/project/registrations/store';
-import { AddonsState, CurrentResourceState, WikiState } from '@osf/shared/stores';
+import { AddonsState } from '@osf/shared/stores/addons';
 import { BannersState } from '@osf/shared/stores/banners';
+import { ContributorsState } from '@osf/shared/stores/contributors';
+import { CurrentResourceState } from '@osf/shared/stores/current-resource';
+import { WikiState } from '@osf/shared/stores/wiki';
 import { GlobalSearchState } from '@shared/stores/global-search';
 import { InstitutionsState } from '@shared/stores/institutions';
 import { InstitutionsSearchState } from '@shared/stores/institutions-search';
@@ -36,4 +39,5 @@ export const STATES = [
   GlobalSearchState,
   BannersState,
   LinkedProjectsState,
+  ContributorsState,
 ];

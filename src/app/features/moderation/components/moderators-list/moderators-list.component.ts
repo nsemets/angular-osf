@@ -22,6 +22,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
+import { ProviderSelectors } from '@core/store/provider';
 import { UserSelectors } from '@core/store/user';
 import { SearchInputComponent } from '@osf/shared/components';
 import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
@@ -29,7 +30,7 @@ import { ResourceType } from '@osf/shared/enums';
 import { TableParameters } from '@osf/shared/models';
 import { CustomConfirmationService, CustomDialogService, ToastService } from '@osf/shared/services';
 
-import { AddModeratorType, ModeratorPermission } from '../../enums';
+import { AddModeratorType } from '../../enums';
 import { ModeratorDialogAddModel, ModeratorModel } from '../../models';
 import {
   AddModerator,
@@ -70,6 +71,7 @@ export class ModeratorsListComponent implements OnInit {
   initialModerators = select(ModeratorsSelectors.getModerators);
   isModeratorsLoading = select(ModeratorsSelectors.isModeratorsLoading);
   moderatorsTotalCount = select(ModeratorsSelectors.getModeratorsTotalCount);
+  hasAdminAccess = select(ProviderSelectors.hasAdminAccess);
   currentUser = select(UserSelectors.getCurrentUser);
 
   readonly tableParams = computed<TableParameters>(() => ({
@@ -77,17 +79,6 @@ export class ModeratorsListComponent implements OnInit {
     totalRecords: this.moderatorsTotalCount(),
     paginator: this.moderatorsTotalCount() > DEFAULT_TABLE_PARAMS.rows,
   }));
-
-  isCurrentUserAdminModerator = computed(() => {
-    const currentUserId = this.currentUser()?.id;
-    const initialModerators = this.initialModerators();
-    if (!currentUserId) return false;
-
-    return initialModerators.some(
-      (moderator: ModeratorModel) =>
-        moderator.userId === currentUserId && moderator.permission === ModeratorPermission.Admin
-    );
-  });
 
   actions = createDispatchMap({
     loadModerators: LoadModerators,

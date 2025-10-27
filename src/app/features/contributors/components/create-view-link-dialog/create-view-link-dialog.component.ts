@@ -13,7 +13,7 @@ import { ComponentCheckboxItemComponent, LoadingSpinnerComponent, TextInputCompo
 import { InputLimits } from '@osf/shared/constants';
 import { CustomValidators } from '@osf/shared/helpers';
 import { ComponentCheckboxItemModel } from '@osf/shared/models';
-import { CurrentResourceSelectors, GetResourceWithChildren } from '@osf/shared/stores';
+import { CurrentResourceSelectors, GetResourceWithChildren } from '@osf/shared/stores/current-resource';
 
 import { ResourceInfoModel, ViewOnlyLinkComponentItem } from '../../models';
 

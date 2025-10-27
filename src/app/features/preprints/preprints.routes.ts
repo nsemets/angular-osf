@@ -9,7 +9,9 @@ import { PreprintState } from '@osf/features/preprints/store/preprint';
 import { PreprintProvidersState } from '@osf/features/preprints/store/preprint-providers';
 import { PreprintStepperState } from '@osf/features/preprints/store/preprint-stepper';
 import { ConfirmLeavingGuard } from '@shared/guards';
-import { CitationsState, ContributorsState, ProjectsState, SubjectsState } from '@shared/stores';
+import { CitationsState } from '@shared/stores/citations';
+import { ProjectsState } from '@shared/stores/projects';
+import { SubjectsState } from '@shared/stores/subjects';
 
 import { PreprintModerationState } from '../moderation/store/preprint-moderation';
 
@@ -18,14 +20,7 @@ export const preprintsRoutes: Routes = [
     path: '',
     component: PreprintsComponent,
     providers: [
-      provideStates([
-        PreprintProvidersState,
-        PreprintStepperState,
-        ContributorsState,
-        SubjectsState,
-        PreprintState,
-        CitationsState,
-      ]),
+      provideStates([PreprintProvidersState, PreprintStepperState, SubjectsState, PreprintState, CitationsState]),
     ],
     children: [
       {

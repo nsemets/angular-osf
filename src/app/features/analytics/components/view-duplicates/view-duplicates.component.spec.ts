@@ -10,7 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectOverviewSelectors } from '@osf/features/project/overview/store';
 import { RegistryOverviewSelectors } from '@osf/features/registry/store/registry-overview';
 import { ResourceType } from '@osf/shared/enums';
-import { DuplicatesSelectors } from '@osf/shared/stores';
+import { DuplicatesSelectors } from '@osf/shared/stores/duplicates';
 import {
   ContributorsListComponent,
   CustomPaginatorComponent,

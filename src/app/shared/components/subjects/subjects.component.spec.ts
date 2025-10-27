@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SubjectsSelectors } from '@osf/shared/stores';
+import { SubjectsSelectors } from '@osf/shared/stores/subjects';
 
 import { SubjectsComponent } from './subjects.component';
 

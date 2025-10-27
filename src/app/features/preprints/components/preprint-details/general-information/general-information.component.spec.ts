@@ -11,7 +11,8 @@ import {
   IconComponent,
   TruncatedTextComponent,
 } from '@shared/components';
-import { ContributorsSelectors, InstitutionsSelectors } from '@shared/stores';
+import { ContributorsSelectors } from '@shared/stores/contributors';
+import { InstitutionsSelectors } from '@shared/stores/institutions';
 
 import { PreprintDoiSectionComponent } from '../preprint-doi-section/preprint-doi-section.component';
 
@@ -47,9 +48,7 @@ describe('GeneralInformationComponent', () => {
         ),
       ],
       providers: [
-        MockProvider(ENVIRONMENT, {
-          webUrl: mockWebUrl,
-        }),
+        MockProvider(ENVIRONMENT, { webUrl: mockWebUrl }),
         provideMockStore({
           signals: [
             {
@@ -61,11 +60,15 @@ describe('GeneralInformationComponent', () => {
               value: false,
             },
             {
-              selector: ContributorsSelectors.getContributors,
+              selector: ContributorsSelectors.getBibliographicContributors,
               value: mockContributors,
             },
             {
-              selector: ContributorsSelectors.isContributorsLoading,
+              selector: ContributorsSelectors.isBibliographicContributorsLoading,
+              value: false,
+            },
+            {
+              selector: ContributorsSelectors.hasMoreBibliographicContributors,
               value: false,
             },
             {
@@ -83,24 +86,14 @@ describe('GeneralInformationComponent', () => {
     fixture.componentRef.setInput('preprintProvider', mockPreprintProvider);
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
   it('should return preprint from store', () => {
     const preprint = component.preprint();
     expect(preprint).toBe(mockPreprint);
   });
 
   it('should return contributors from store', () => {
-    const contributors = component.contributors();
+    const contributors = component.bibliographicContributors();
     expect(contributors).toBe(mockContributors);
-  });
-
-  it('should filter bibliographic contributors', () => {
-    const bibliographicContributors = component.bibliographicContributors();
-    expect(bibliographicContributors).toHaveLength(1);
-    expect(bibliographicContributors.every((contributor) => contributor.isBibliographic)).toBe(true);
   });
 
   it('should return affiliated institutions from store', () => {

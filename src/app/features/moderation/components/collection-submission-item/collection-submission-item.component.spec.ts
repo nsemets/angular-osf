@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { CollectionSubmissionWithGuid } from '@osf/shared/models';
-import { CollectionsSelectors } from '@osf/shared/stores';
+import { CollectionsSelectors } from '@osf/shared/stores/collections';
 import { IconComponent } from '@shared/components';
 import { DateAgoPipe } from '@shared/pipes';
 

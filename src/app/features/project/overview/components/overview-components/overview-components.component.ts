@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 import { ContributorsListComponent, IconComponent, TruncatedTextComponent } from '@osf/shared/components';
 import { ResourceType, UserPermissions } from '@osf/shared/enums';
 import { CustomDialogService, LoaderService } from '@osf/shared/services';
-import { GetResourceWithChildren } from '@osf/shared/stores';
+import { GetResourceWithChildren } from '@osf/shared/stores/current-resource';
 import { ComponentOverview } from '@shared/models';
 
 import { LoadMoreComponents, ProjectOverviewSelectors } from '../../store';

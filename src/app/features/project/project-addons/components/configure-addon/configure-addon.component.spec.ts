@@ -8,7 +8,7 @@ import { HttpTestingController } from '@angular/common/http/testing';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { AddonsState } from '@osf/shared/stores';
+import { AddonsState } from '@osf/shared/stores/addons';
 
 import { ConfigureAddonComponent } from './configure-addon.component';
 

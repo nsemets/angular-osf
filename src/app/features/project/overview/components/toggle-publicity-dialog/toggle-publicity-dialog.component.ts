@@ -21,7 +21,7 @@ import { ComponentsSelectionListComponent, LoadingSpinnerComponent } from '@osf/
 import { UserPermissions } from '@osf/shared/enums';
 import { ComponentCheckboxItemModel } from '@osf/shared/models';
 import { ToastService } from '@osf/shared/services';
-import { CurrentResourceSelectors } from '@osf/shared/stores';
+import { CurrentResourceSelectors } from '@osf/shared/stores/current-resource';
 
 import { TogglePublicityStep } from '../../enums';
 import { PrivacyStatusModel } from '../../models';

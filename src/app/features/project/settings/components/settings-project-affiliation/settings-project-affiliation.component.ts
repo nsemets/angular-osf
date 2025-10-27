@@ -9,7 +9,7 @@ import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, OnInit, output } from '@angular/core';
 
 import { Institution } from '@osf/shared/models';
-import { FetchUserInstitutions, InstitutionsSelectors } from '@shared/stores';
+import { FetchUserInstitutions, InstitutionsSelectors } from '@shared/stores/institutions';
 
 @Component({
   selector: 'osf-settings-project-affiliation',

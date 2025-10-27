@@ -10,7 +10,7 @@ import { Tag } from 'primeng/tag';
 
 import { map, of } from 'rxjs';
 
-import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, OnDestroy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -22,10 +22,11 @@ import { InterpolatePipe } from '@osf/shared/pipes';
 import { CustomConfirmationService, CustomDialogService, ToastService } from '@osf/shared/services';
 import {
   ContributorsSelectors,
-  FetchSelectedSubjects,
   GetAllContributors,
-  SubjectsSelectors,
-} from '@osf/shared/stores';
+  LoadMoreContributors,
+  ResetContributorsState,
+} from '@osf/shared/stores/contributors';
+import { FetchSelectedSubjects, SubjectsSelectors } from '@osf/shared/stores/subjects';
 import { FixSpecialCharPipe } from '@shared/pipes';
 
 import {
@@ -60,7 +61,7 @@ import { SelectComponentsDialogComponent } from '../select-components-dialog/sel
   styleUrl: './review.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReviewComponent {
+export class ReviewComponent implements OnDestroy {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly customConfirmationService = inject(CustomConfirmationService);
@@ -75,6 +76,8 @@ export class ReviewComponent {
   readonly stepsData = select(RegistriesSelectors.getStepsData);
   readonly INPUT_VALIDATION_MESSAGES = INPUT_VALIDATION_MESSAGES;
   readonly contributors = select(ContributorsSelectors.getContributors);
+  readonly areContributorsLoading = select(ContributorsSelectors.isContributorsLoading);
+  readonly hasMoreContributors = select(ContributorsSelectors.hasMoreContributors);
   readonly subjects = select(SubjectsSelectors.getSelectedSubjects);
   readonly components = select(RegistriesSelectors.getRegistrationComponents);
   readonly license = select(RegistriesSelectors.getRegistrationLicense);
@@ -90,6 +93,8 @@ export class ReviewComponent {
     getProjectsComponents: FetchProjectChildren,
     fetchLicenses: FetchLicenses,
     updateStepState: UpdateStepState,
+    loadMoreContributors: LoadMoreContributors,
+    resetContributorsState: ResetContributorsState,
   });
 
   private readonly draftId = toSignal(this.route.params.pipe(map((params) => params['id'])) ?? of(undefined));
@@ -134,6 +139,10 @@ export class ReviewComponent {
         }
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.actions.resetContributorsState();
   }
 
   goBack(): void {
@@ -207,5 +216,9 @@ export class ReviewComponent {
           }
         }
       });
+  }
+
+  loadMoreContributors(): void {
+    this.actions.loadMoreContributors(this.draftId(), ResourceType.DraftRegistration);
   }
 }

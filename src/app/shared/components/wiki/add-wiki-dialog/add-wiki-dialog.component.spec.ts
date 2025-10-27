@@ -7,7 +7,7 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { WikiSelectors } from '@osf/shared/stores';
+import { WikiSelectors } from '@osf/shared/stores/wiki';
 import { ToastService } from '@shared/services';
 
 import { AddWikiDialogComponent } from './add-wiki-dialog.component';

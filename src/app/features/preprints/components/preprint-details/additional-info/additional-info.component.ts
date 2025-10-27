@@ -15,7 +15,7 @@ import { CitationSectionComponent } from '@osf/features/preprints/components/pre
 import { PreprintSelectors } from '@osf/features/preprints/store/preprint';
 import { ResourceType } from '@shared/enums';
 import { InterpolatePipe } from '@shared/pipes';
-import { FetchSelectedSubjects, SubjectsSelectors } from '@shared/stores';
+import { FetchSelectedSubjects, SubjectsSelectors } from '@shared/stores/subjects';
 
 @Component({
   selector: 'osf-preprint-additional-info',

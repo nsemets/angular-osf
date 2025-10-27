@@ -19,8 +19,11 @@
 
       <div class="flex flex-wrap gap-1 line-height-2">
         <osf-contributors-list
-          [contributors]="resource.contributors"
+          [contributors]="bibliographicContributors()"
+          [isLoading]="isBibliographicContributorsLoading()"
+          [hasLoadMore]="hasMoreBibliographicContributors()"
           [anonymous]="!!resource.isAnonymous"
+          (loadMoreContributors)="loadMoreContributors.emit()"
         ></osf-contributors-list>
       </div>
     </div>

@@ -4,7 +4,7 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CurrentResourceSelectors } from '@osf/shared/stores';
+import { CurrentResourceSelectors } from '@osf/shared/stores/current-resource';
 
 import { CreateViewLinkDialogComponent } from './create-view-link-dialog.component';
 

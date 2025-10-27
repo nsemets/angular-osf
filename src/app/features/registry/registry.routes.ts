@@ -5,13 +5,10 @@ import { Routes } from '@angular/router';
 import { viewOnlyGuard } from '@osf/core/guards';
 import { ResourceType } from '@osf/shared/enums';
 import { LicensesService } from '@osf/shared/services';
-import {
-  CitationsState,
-  ContributorsState,
-  DuplicatesState,
-  SubjectsState,
-  ViewOnlyLinkState,
-} from '@osf/shared/stores';
+import { CitationsState } from '@osf/shared/stores/citations';
+import { DuplicatesState } from '@osf/shared/stores/duplicates';
+import { SubjectsState } from '@osf/shared/stores/subjects';
+import { ViewOnlyLinkState } from '@osf/shared/stores/view-only-links';
 import { ActivityLogsState } from '@shared/stores/activity-logs';
 
 import { AnalyticsState } from '../analytics/store';
@@ -52,7 +49,7 @@ export const registryRoutes: Routes = [
       {
         path: 'metadata',
         loadChildren: () => import('@osf/features/metadata/metadata.routes').then((mod) => mod.metadataRoutes),
-        providers: [provideStates([SubjectsState, ContributorsState])],
+        providers: [provideStates([SubjectsState])],
         data: { resourceType: ResourceType.Registration },
         canActivate: [viewOnlyGuard],
       },
@@ -68,7 +65,7 @@ export const registryRoutes: Routes = [
         canActivate: [viewOnlyGuard],
         loadComponent: () => import('../contributors/contributors.component').then((mod) => mod.ContributorsComponent),
         data: { resourceType: ResourceType.Registration },
-        providers: [provideStates([ContributorsState, ViewOnlyLinkState])],
+        providers: [provideStates([ViewOnlyLinkState])],
       },
       {
         path: 'analytics',

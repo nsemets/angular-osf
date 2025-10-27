@@ -5,7 +5,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CitationSectionComponent } from '@osf/features/preprints/components/preprint-details/citation-section/citation-section.component';
 import { PreprintSelectors } from '@osf/features/preprints/store/preprint';
 import { InterpolatePipe } from '@shared/pipes';
-import { SubjectsSelectors } from '@shared/stores';
+import { SubjectsSelectors } from '@shared/stores/subjects';
 
 import { AdditionalInfoComponent } from './additional-info.component';
 

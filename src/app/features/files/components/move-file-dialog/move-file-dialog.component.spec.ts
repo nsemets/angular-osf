@@ -7,7 +7,7 @@ import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CustomConfirmationService, FilesService, ToastService } from '@osf/shared/services';
-import { CurrentResourceSelectors } from '@shared/stores';
+import { CurrentResourceSelectors } from '@shared/stores/current-resource';
 
 import { FilesSelectors } from '../../store';
 
