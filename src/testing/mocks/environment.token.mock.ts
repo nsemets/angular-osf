@@ -44,7 +44,7 @@ export const EnvironmentTokenMock = {
     newRelicInfoSa: 1,
     newRelicLoaderConfigAccountID: '',
     newRelicLoaderConfigTrustKey: '',
-    newRelicLoaderConfigAgengID: '',
+    newRelicLoaderConfigAgentID: '',
     newRelicLoaderConfigLicenseKey: '',
     newRelicLoaderConfigApplicationID: '',
   },

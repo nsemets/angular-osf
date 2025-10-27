@@ -11,7 +11,7 @@ export const NEW_RELIC_CONFIG_MOCK = {
   newRelicInfoSa: 1,
   newRelicLoaderConfigAccountID: 'test-account-id',
   newRelicLoaderConfigTrustKey: 'test-trust-key',
-  newRelicLoaderConfigAgengID: 'test-agent-id',
+  newRelicLoaderConfigAgentID: 'test-agent-id',
   newRelicLoaderConfigLicenseKey: 'test-loader-license-key',
   newRelicLoaderConfigApplicationID: 'test-loader-app-id',
 };
