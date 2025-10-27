@@ -21,7 +21,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { UserSelectors } from '@core/store/user';
 import { RequestAccessErrorDialogComponent } from '@osf/features/admin-institutions/components/request-access-error-dialog/request-access-error-dialog.component';
-import { ResourceType, SortOrder } from '@osf/shared/enums';
+import { CurrentResourceType, ResourceType, SortOrder } from '@osf/shared/enums';
 import { PaginationLinksModel, ResourceModel, SearchFilters } from '@osf/shared/models';
 import { CustomDialogService, ToastService } from '@osf/shared/services';
 import {
@@ -39,7 +39,7 @@ import { FiltersSectionComponent } from '../../components/filters-section/filter
 import { projectTableColumns } from '../../constants';
 import { ContactDialogComponent } from '../../dialogs';
 import { ContactOption, DownloadType } from '../../enums';
-import { downloadResults } from '../../helpers';
+import { INSTITUTIONS_CSV_TSV_FIELDS, downloadResults, INSTITUTIONS_DOWNLOAD_CSV_TSV_RESOURCE } from '../../helpers';
 import { mapProjectResourceToTableCellData } from '../../mappers/institution-project-to-table-data.mapper';
 import { ContactDialogData, TableCellData, TableCellLink, TableIconClickEvent } from '../../models';
 import { InstitutionsAdminSelectors, RequestProjectAccess, SendUserMessage } from '../../store';
@@ -128,23 +128,12 @@ export class InstitutionsProjectsComponent implements OnInit, OnDestroy {
   }
 
   download(type: DownloadType) {
-    const fields = [
-      'title',
-      'dateCreated',
-      'dateModified',
-      'sameAs',
-      'storageRegion.prefLabel',
-      'storageByteCount',
-      'creator.@id',
-      'creator.name',
-      'usage.viewCount',
-      'resourceNature.displayLabel',
-      'rights.name',
-      'hasOsfAddon.prefLabel',
-      'funder.name',
-    ];
-    const resourceType = 'Project';
-    downloadResults(this.selfLink(), type, fields, resourceType);
+    downloadResults(
+      this.selfLink(),
+      type,
+      INSTITUTIONS_CSV_TSV_FIELDS[CurrentResourceType.Projects],
+      INSTITUTIONS_DOWNLOAD_CSV_TSV_RESOURCE[CurrentResourceType.Projects]
+    );
   }
 
   onIconClick(event: TableIconClickEvent): void {

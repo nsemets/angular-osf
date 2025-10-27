@@ -7,7 +7,7 @@ import { Button } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, OnDestroy, OnInit, signal } from '@angular/core';
 
-import { ResourceType, SortOrder } from '@osf/shared/enums';
+import { CurrentResourceType, ResourceType, SortOrder } from '@osf/shared/enums';
 import { PaginationLinksModel, ResourceModel, SearchFilters } from '@osf/shared/models';
 import {
   FetchResources,
@@ -23,10 +23,11 @@ import { AdminTableComponent } from '../../components';
 import { FiltersSectionComponent } from '../../components/filters-section/filters-section.component';
 import { preprintsTableColumns } from '../../constants';
 import { DownloadType } from '../../enums';
-import { downloadResults } from '../../helpers';
+import { INSTITUTIONS_CSV_TSV_FIELDS, INSTITUTIONS_DOWNLOAD_CSV_TSV_RESOURCE, downloadResults } from '../../helpers';
 import { mapPreprintResourceToTableData } from '../../mappers/institution-preprint-to-table-data.mapper';
 import { TableCellData } from '../../models';
 import { InstitutionsAdminSelectors } from '../../store';
+import { CurrentResourceSelectors } from '@shared/stores/current-resource';
 
 @Component({
   selector: 'osf-institutions-preprints',
@@ -105,18 +106,11 @@ export class InstitutionsPreprintsComponent implements OnInit, OnDestroy {
   }
 
   download(type: DownloadType) {
-    const fields = [
-      'title',
-      'dateCreated',
-      'dateModified',
-      'sameAs',
-      'rights.name',
-      'creator.@id',
-      'creator.name',
-      'usage.viewCount',
-      'usage.downloadCount',
-    ];
-    const resourceType = 'Preprint';
-    downloadResults(this.selfLink(), type, fields, resourceType);
+    downloadResults(
+      this.selfLink(),
+      type,
+      INSTITUTIONS_CSV_TSV_FIELDS[CurrentResourceType.Preprints],
+      INSTITUTIONS_DOWNLOAD_CSV_TSV_RESOURCE[CurrentResourceType.Preprints]
+    );
   }
 }
