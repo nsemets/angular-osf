@@ -1,12 +1,12 @@
 import { PreprintFileSource } from '@osf/features/preprints/enums';
-import { Preprint, PreprintFilesLinks } from '@osf/features/preprints/models';
+import { PreprintFilesLinks, PreprintModel } from '@osf/features/preprints/models';
 import { StringOrNull } from '@shared/helpers';
 import { AsyncStateModel, FileFolderModel, FileModel, IdName } from '@shared/models';
 import { LicenseModel } from '@shared/models/license.model';
 
 export interface PreprintStepperStateModel {
   selectedProviderId: StringOrNull;
-  preprint: AsyncStateModel<Preprint | null>;
+  preprint: AsyncStateModel<PreprintModel | null>;
   fileSource: PreprintFileSource;
   preprintFilesLinks: AsyncStateModel<PreprintFilesLinks | null>;
   preprintFile: AsyncStateModel<FileModel | null>;

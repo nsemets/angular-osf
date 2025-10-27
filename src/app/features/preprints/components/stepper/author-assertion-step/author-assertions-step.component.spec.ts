@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ArrayInputComponent } from '@osf/features/preprints/components/stepper/author-assertion-step/array-input/array-input.component';
 import { ApplicabilityStatus } from '@osf/features/preprints/enums';
-import { Preprint } from '@osf/features/preprints/models';
+import { PreprintModel } from '@osf/features/preprints/models';
 import { PreprintStepperSelectors } from '@osf/features/preprints/store/preprint-stepper';
 import { FormSelectComponent } from '@shared/components';
 import { CustomConfirmationService, ToastService } from '@shared/services';
@@ -24,7 +24,7 @@ describe('AuthorAssertionsStepComponent', () => {
   let toastServiceMock: ReturnType<ToastServiceMockBuilder['build']>;
   let customConfirmationServiceMock: ReturnType<CustomConfirmationServiceMockBuilder['build']>;
 
-  const mockPreprint: Preprint = PREPRINT_MOCK;
+  const mockPreprint: PreprintModel = PREPRINT_MOCK;
 
   beforeEach(async () => {
     toastServiceMock = ToastServiceMockBuilder.create().build();

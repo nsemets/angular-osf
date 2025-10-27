@@ -14,7 +14,12 @@ import {
 import { JsonApiService } from '@osf/shared/services';
 
 import { PreprintsMapper } from '../mappers';
-import { Preprint, PreprintAttributesJsonApi, PreprintLinksJsonApi, PreprintRelationshipsJsonApi } from '../models';
+import {
+  PreprintAttributesJsonApi,
+  PreprintLinksJsonApi,
+  PreprintModel,
+  PreprintRelationshipsJsonApi,
+} from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -62,7 +67,7 @@ export class PreprintsProjectsService {
     });
   }
 
-  updatePreprintProjectRelationship(preprintId: string, projectId: string): Observable<Preprint> {
+  updatePreprintProjectRelationship(preprintId: string, projectId: string): Observable<PreprintModel> {
     return this.jsonApiService
       .patch<ApiData<PreprintAttributesJsonApi, null, PreprintRelationshipsJsonApi, PreprintLinksJsonApi>>(
         `${this.apiUrl}/preprints/${preprintId}/`,
