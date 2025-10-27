@@ -1,11 +1,13 @@
 import { MockComponent, MockPipe } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
 
-import { CitationSectionComponent } from '@osf/features/preprints/components/preprint-details/citation-section/citation-section.component';
 import { PreprintSelectors } from '@osf/features/preprints/store/preprint';
-import { InterpolatePipe } from '@shared/pipes';
-import { SubjectsSelectors } from '@shared/stores/subjects';
+import { InterpolatePipe } from '@osf/shared/pipes';
+import { SubjectsSelectors } from '@osf/shared/stores/subjects';
+
+import { CitationSectionComponent } from '../citation-section/citation-section.component';
 
 import { AdditionalInfoComponent } from './additional-info.component';
 
@@ -76,13 +78,14 @@ describe('AdditionalInfoComponent', () => {
     expect(component.skeletonData.every((item) => item === null)).toBe(true);
   });
 
-  it('should return license from preprint when available', () => {
-    const license = component.license();
-    expect(license).toBe(mockPreprint.embeddedLicense);
-  });
+  it('should navigate to search page with tag when tagClicked is called', () => {
+    const router = TestBed.inject(Router);
+    const navigateSpy = jest.spyOn(router, 'navigate');
 
-  it('should return license options record from preprint when available', () => {
-    const licenseOptionsRecord = component.licenseOptionsRecord();
-    expect(licenseOptionsRecord).toEqual(mockPreprint.licenseOptions);
+    component.tagClicked('test-tag');
+
+    expect(navigateSpy).toHaveBeenCalledWith(['/search'], {
+      queryParams: { search: 'test-tag' },
+    });
   });
 });
