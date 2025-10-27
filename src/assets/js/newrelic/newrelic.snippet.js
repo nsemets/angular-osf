@@ -2,22 +2,23 @@ window.NREUM || (NREUM = {});
 NREUM.init = {
   distributed_tracing: { enabled: true },
   performance: { capture_measures: true },
+  browser_consent_mode: { enabled: false },
   privacy: { cookies_enabled: true },
-  ajax: { deny_list: ['bam.nr-data.net'] },
+  ajax: { deny_list: ['bam.eu01.nr-data.net'] },
 };
 
 NREUM.loader_config = {
-  accountID: '772413',
-  trustKey: '772413',
-  agentID: '1835137194',
-  licenseKey: '704513e63b',
-  applicationID: '1835137194',
+  accountID: '7277747',
+  trustKey: '7277747',
+  agentID: '538778554',
+  licenseKey: 'NRJS-b070d3f5cf17ee5e575',
+  applicationID: '538778554',
 };
 NREUM.info = {
-  beacon: 'bam.nr-data.net',
-  errorBeacon: 'bam.nr-data.net',
-  licenseKey: '704513e63b',
-  applicationID: '1835137194',
+  beacon: 'bam.eu01.nr-data.net',
+  errorBeacon: 'bam.eu01.nr-data.net',
+  licenseKey: 'NRJS-b070d3f5cf17ee5e575',
+  applicationID: '538778554',
   sa: 1,
 }; /*! For license information please see nr-loader-spa-1.301.0.min.js.LICENSE.txt */
 (() => {
