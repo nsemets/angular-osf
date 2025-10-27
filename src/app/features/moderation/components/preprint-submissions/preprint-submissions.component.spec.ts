@@ -1,18 +1,24 @@
+import { Store } from '@ngxs/store';
+
 import { MockComponents, MockProvider } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PreprintSubmissionItemComponent } from '@osf/features/moderation/components';
-import { RegistryModeration } from '@osf/features/moderation/models';
+import { PreprintSubmissionModel } from '@osf/features/moderation/models';
 import { CustomPaginatorComponent, IconComponent, LoadingSpinnerComponent, SelectComponent } from '@shared/components';
 
 import { PreprintSubmissionsSort, SubmissionReviewStatus } from '../../enums';
-import { PreprintModerationSelectors } from '../../store/preprint-moderation';
+import {
+  GetPreprintSubmissionContributors,
+  LoadMorePreprintSubmissionContributors,
+  PreprintModerationSelectors,
+} from '../../store/preprint-moderation';
 
 import { PreprintSubmissionsComponent } from './preprint-submissions.component';
 
-import { MOCK_REGISTRY_MODERATIONS } from '@testing/mocks/registry-moderation.mock';
+import { MOCK_PREPRINT_SUBMISSIONS } from '@testing/mocks/preprint-submission.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
@@ -23,9 +29,10 @@ describe('PreprintSubmissionsComponent', () => {
   let fixture: ComponentFixture<PreprintSubmissionsComponent>;
   let mockRouter: ReturnType<RouterMockBuilder['build']>;
   let mockActivatedRoute: ReturnType<ActivatedRouteMockBuilder['build']>;
+  let store: Store;
 
   const mockProviderId = 'test-provider-id';
-  const mockSubmissions: RegistryModeration[] = MOCK_REGISTRY_MODERATIONS;
+  const mockSubmissions: PreprintSubmissionModel[] = MOCK_PREPRINT_SUBMISSIONS;
 
   beforeEach(async () => {
     mockRouter = RouterMockBuilder.create().build();
@@ -64,6 +71,7 @@ describe('PreprintSubmissionsComponent', () => {
 
     fixture = TestBed.createComponent(PreprintSubmissionsComponent);
     component = fixture.componentInstance;
+    store = TestBed.inject(Store);
     fixture.detectChanges();
   });
 
@@ -142,5 +150,23 @@ describe('PreprintSubmissionsComponent', () => {
 
     expect(component.currentPage()).toBe(1);
     expect(component.first()).toBe(0);
+  });
+
+  it('should load contributors for a submission', () => {
+    const mockItem = mockSubmissions[0];
+    const dispatchSpy = jest.spyOn(store, 'dispatch');
+
+    component.loadContributors(mockItem);
+
+    expect(dispatchSpy).toHaveBeenCalledWith(new GetPreprintSubmissionContributors(mockItem.id));
+  });
+
+  it('should load more contributors for a submission', () => {
+    const mockItem = mockSubmissions[0];
+    const dispatchSpy = jest.spyOn(store, 'dispatch');
+
+    component.loadMoreContributors(mockItem);
+
+    expect(dispatchSpy).toHaveBeenCalledWith(new LoadMorePreprintSubmissionContributors(mockItem.id));
   });
 });
