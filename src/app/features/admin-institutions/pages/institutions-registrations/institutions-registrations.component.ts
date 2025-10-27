@@ -113,6 +113,7 @@ export class InstitutionsRegistrationsComponent implements OnInit, OnDestroy {
       'sameAs',
       'storageRegion.prefLabel',
       'storageByteCount',
+      'creator.@id',
       'creator.name',
       'usage.viewCount',
       'resourceNature.displayLabel',

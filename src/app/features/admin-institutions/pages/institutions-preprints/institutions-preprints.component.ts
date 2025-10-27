@@ -111,6 +111,7 @@ export class InstitutionsPreprintsComponent implements OnInit, OnDestroy {
       'dateModified',
       'sameAs',
       'rights.name',
+      'creator.@id',
       'creator.name',
       'usage.viewCount',
       'usage.downloadCount',
