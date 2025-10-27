@@ -128,7 +128,22 @@ export class InstitutionsProjectsComponent implements OnInit, OnDestroy {
   }
 
   download(type: DownloadType) {
-    downloadResults(this.selfLink(), type);
+    const fields = [
+      'title',
+      'dateCreated',
+      'dateModified',
+      'sameAs',
+      'storageRegion.prefLabel',
+      'storageByteCount',
+      'creator.name',
+      'usage.viewCount',
+      'resourceNature.displayLabel',
+      'rights.name',
+      'hasOsfAddon.prefLabel',
+      'funder.name',
+    ];
+    const resourceType = 'Project';
+    downloadResults(this.selfLink(), type, fields, resourceType);
   }
 
   onIconClick(event: TableIconClickEvent): void {

@@ -105,6 +105,17 @@ export class InstitutionsPreprintsComponent implements OnInit, OnDestroy {
   }
 
   download(type: DownloadType) {
-    downloadResults(this.selfLink(), type);
+    const fields = [
+      'title',
+      'dateCreated',
+      'dateModified',
+      'sameAs',
+      'rights.name',
+      'creator.name',
+      'usage.viewCount',
+      'usage.downloadCount',
+    ];
+    const resourceType = 'Preprint';
+    downloadResults(this.selfLink(), type, fields, resourceType);
   }
 }

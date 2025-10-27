@@ -106,6 +106,21 @@ export class InstitutionsRegistrationsComponent implements OnInit, OnDestroy {
   }
 
   download(type: DownloadType) {
-    downloadResults(this.selfLink(), type);
+    const fields = [
+      'title',
+      'dateCreated',
+      'dateModified',
+      'sameAs',
+      'storageRegion.prefLabel',
+      'storageByteCount',
+      'creator.name',
+      'usage.viewCount',
+      'resourceNature.displayLabel',
+      'rights.name',
+      'funder.name',
+      'conformsTo.title',
+    ];
+    const resourceType = 'Registration';
+    downloadResults(this.selfLink(), type, fields, resourceType);
   }
 }
