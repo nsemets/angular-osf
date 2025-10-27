@@ -50,10 +50,6 @@ describe('PreprintDoiSectionComponent', () => {
     fixture.componentRef.setInput('preprintProvider', mockProvider);
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
   it('should compute versions dropdown options from version IDs', () => {
     const options = component.versionsDropdownOptions();
     expect(options).toEqual([
