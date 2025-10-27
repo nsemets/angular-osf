@@ -3,6 +3,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { Textarea } from 'primeng/textarea';
+import { NgIf } from '@angular/common';
 
 import { ChangeDetectionStrategy, Component, computed, effect, input, output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -16,7 +17,7 @@ import { NodeDetailsModel, ProjectDetailsModel } from '../../models';
 
 @Component({
   selector: 'osf-settings-project-form-card',
-  imports: [Button, Card, Textarea, TranslatePipe, ReactiveFormsModule, TextInputComponent],
+  imports: [Button, Card, Textarea, TranslatePipe, ReactiveFormsModule, TextInputComponent, NgIf],
   templateUrl: './settings-project-form-card.component.html',
   styleUrl: 'settings-project-form-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,6 +26,7 @@ export class SettingsProjectFormCardComponent {
   projectDetails = input.required<NodeDetailsModel>();
   submitForm = output<ProjectDetailsModel>();
   deleteProject = output<void>();
+  canDelete = input<boolean>(false);
 
   readonly ProjectFormControls = ProjectFormControls;
   readonly inputLimits = InputLimits;
