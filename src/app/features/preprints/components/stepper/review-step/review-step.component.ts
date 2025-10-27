@@ -2,7 +2,6 @@ import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { Accordion, AccordionContent, AccordionHeader, AccordionPanel } from 'primeng/accordion';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { Tag } from 'primeng/tag';
@@ -26,10 +25,10 @@ import {
 import {
   AffiliatedInstitutionsViewComponent,
   ContributorsListComponent,
+  LicenseDisplayComponent,
   TruncatedTextComponent,
 } from '@shared/components';
 import { ResourceType } from '@shared/enums';
-import { InterpolatePipe } from '@shared/pipes';
 import { ToastService } from '@shared/services';
 import {
   ContributorsSelectors,
@@ -49,13 +48,9 @@ import { FetchSelectedSubjects, SubjectsSelectors } from '@shared/stores/subject
     Button,
     TitleCasePipe,
     TranslatePipe,
-    Accordion,
-    AccordionContent,
-    AccordionHeader,
-    AccordionPanel,
-    InterpolatePipe,
     AffiliatedInstitutionsViewComponent,
     ContributorsListComponent,
+    LicenseDisplayComponent,
   ],
   templateUrl: './review-step.component.html',
   styleUrl: './review-step.component.scss',

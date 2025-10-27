@@ -7,7 +7,7 @@ import { isFileGuard } from '@core/guards/is-file.guard';
 import { authGuard, redirectIfLoggedInGuard } from './core/guards';
 import { isProjectGuard } from './core/guards/is-project.guard';
 import { isRegistryGuard } from './core/guards/is-registry.guard';
-import { PreprintState } from './features/preprints/store/preprint';
+import { MyPreprintsState } from './features/preprints/store/my-preprints';
 import { ProfileState } from './features/profile/store';
 import { RegistriesState } from './features/registries/store';
 import { LicensesHandlers, ProjectsHandlers, ProvidersHandlers } from './features/registries/store/handlers';
@@ -90,7 +90,7 @@ export const routes: Routes = [
           import('@osf/features/preprints/pages/my-preprints/my-preprints.component').then(
             (m) => m.MyPreprintsComponent
           ),
-        providers: [provideStates([PreprintState])],
+        providers: [provideStates([MyPreprintsState])],
       },
       {
         path: 'preprints',

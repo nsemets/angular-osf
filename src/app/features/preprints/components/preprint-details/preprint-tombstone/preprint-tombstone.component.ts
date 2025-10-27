@@ -2,7 +2,6 @@ import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { Accordion, AccordionContent, AccordionHeader, AccordionPanel } from 'primeng/accordion';
 import { Card } from 'primeng/card';
 import { Skeleton } from 'primeng/skeleton';
 import { Tag } from 'primeng/tag';
@@ -14,9 +13,8 @@ import { Router } from '@angular/router';
 import { ApplicabilityStatus, PreregLinkInfo } from '@osf/features/preprints/enums';
 import { PreprintProviderDetails } from '@osf/features/preprints/models';
 import { FetchPreprintById, PreprintSelectors } from '@osf/features/preprints/store/preprint';
-import { ContributorsListComponent, TruncatedTextComponent } from '@osf/shared/components';
+import { ContributorsListComponent, LicenseDisplayComponent, TruncatedTextComponent } from '@osf/shared/components';
 import { ResourceType } from '@osf/shared/enums';
-import { InterpolatePipe } from '@osf/shared/pipes';
 import {
   ContributorsSelectors,
   GetBibliographicContributors,
@@ -35,14 +33,10 @@ import { PreprintDoiSectionComponent } from '../preprint-doi-section/preprint-do
     Skeleton,
     TranslatePipe,
     TruncatedTextComponent,
-    Accordion,
-    AccordionContent,
     Tag,
-    AccordionPanel,
-    AccordionHeader,
-    InterpolatePipe,
     DatePipe,
     ContributorsListComponent,
+    LicenseDisplayComponent,
   ],
   templateUrl: './preprint-tombstone.component.html',
   styleUrl: './preprint-tombstone.component.scss',
