@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 
 import { AddonType } from '@osf/shared/enums';
 import { getAddonTypeString } from '@osf/shared/helpers';
-import { AddonsSelectors, DeleteConfiguredAddon } from '@osf/shared/stores';
+import { AddonsSelectors, DeleteConfiguredAddon } from '@osf/shared/stores/addons';
 
 @Component({
   selector: 'osf-disconnect-addon-modal',
@@ -31,9 +31,8 @@ export class DisconnectAddonModalComponent {
       ? 'settings.addons.configureAddon.linkedItem'
       : 'settings.addons.configureAddon.selectedFolder';
   });
-  actions = createDispatchMap({
-    deleteConfiguredAddon: DeleteConfiguredAddon,
-  });
+
+  actions = createDispatchMap({ deleteConfiguredAddon: DeleteConfiguredAddon });
 
   handleDisconnectAddonAccount(): void {
     if (!this.addon) return;

@@ -26,6 +26,7 @@ export { GoogleFilePickerComponent } from './google-file-picker/google-file-pick
 export { IconComponent } from './icon/icon.component';
 export { InfoIconComponent } from './info-icon/info-icon.component';
 export { LicenseComponent } from './license/license.component';
+export { LicenseDisplayComponent } from './license-display/license-display.component';
 export { LineChartComponent } from './line-chart/line-chart.component';
 export { ListInfoShortenerComponent } from './list-info-shortener/list-info-shortener.component';
 export { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';

@@ -10,7 +10,7 @@ import { Router, RouterLink } from '@angular/router';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { OverviewCollectionsComponent } from '@osf/features/project/overview/components/overview-collections/overview-collections.component';
 import { CurrentResourceType } from '@osf/shared/enums';
-import { ResourceOverview } from '@shared/models';
+import { ContributorModel, ResourceOverview } from '@shared/models';
 
 import { AffiliatedInstitutionsViewComponent } from '../affiliated-institutions-view/affiliated-institutions-view.component';
 import { ContributorsListComponent } from '../contributors-list/contributors-list.component';
@@ -44,6 +44,10 @@ export class ResourceMetadataComponent {
   isCollectionsRoute = input<boolean>(false);
   canEdit = input.required<boolean>();
   showEditButton = input<boolean>();
+  bibliographicContributors = input<ContributorModel[]>([]);
+  isBibliographicContributorsLoading = input<boolean>(false);
+  hasMoreBibliographicContributors = input<boolean>(false);
+  loadMoreContributors = output<void>();
 
   readonly resourceTypes = CurrentResourceType;
   readonly dateFormat = 'MMM d, y, h:mm a';

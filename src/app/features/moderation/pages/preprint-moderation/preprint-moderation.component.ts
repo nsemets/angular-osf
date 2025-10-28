@@ -1,3 +1,5 @@
+import { createDispatchMap } from '@ngxs/store';
+
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { Tab, TabList, TabPanels, Tabs } from 'primeng/tabs';
@@ -13,6 +15,7 @@ import { IS_MEDIUM, Primitive } from '@osf/shared/helpers';
 
 import { PREPRINT_MODERATION_TABS } from '../../constants';
 import { PreprintModerationTab } from '../../enums';
+import { GetPreprintProvider } from '../../store/preprint-moderation';
 
 @Component({
   selector: 'osf-preprint-moderation',
@@ -41,8 +44,19 @@ export class PreprintModerationComponent implements OnInit {
 
   selectedTab = PreprintModerationTab.Submissions;
 
+  private readonly actions = createDispatchMap({ getPreprintProvider: GetPreprintProvider });
+
   ngOnInit(): void {
     this.selectedTab = this.route.snapshot.firstChild?.data['tab'] as PreprintModerationTab;
+
+    const id = this.route.snapshot.params['providerId'];
+
+    if (!id) {
+      this.router.navigate(['/not-found']);
+      return;
+    }
+
+    this.actions.getPreprintProvider(id);
   }
 
   onTabChange(value: Primitive): void {

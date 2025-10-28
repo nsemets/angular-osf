@@ -50,6 +50,7 @@ export class PreprintModerationMapper {
     return {
       id: response.id,
       name: response.attributes.name,
+      permissions: response.attributes.permissions,
       reviewsCommentsAnonymous: response.attributes.reviews_comments_anonymous,
       reviewsCommentsPrivate: response.attributes.reviews_comments_private,
       reviewsWorkflow: response.attributes.reviews_workflow,

@@ -18,7 +18,7 @@ import {
   RegistrationCardComponent,
   SubHeaderComponent,
 } from '@osf/shared/components';
-import { CurrentResourceSelectors } from '@shared/stores';
+import { CurrentResourceSelectors } from '@shared/stores/current-resource';
 
 import { GetRegistrations, RegistrationsSelectors } from './store';
 

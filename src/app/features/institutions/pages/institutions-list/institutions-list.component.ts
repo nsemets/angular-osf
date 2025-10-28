@@ -12,7 +12,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { ScheduledBannerComponent } from '@core/components/osf-banners/scheduled-banner/scheduled-banner.component';
 import { LoadingSpinnerComponent, SearchInputComponent, SubHeaderComponent } from '@osf/shared/components';
-import { FetchInstitutions, InstitutionsSelectors } from '@osf/shared/stores';
+import { FetchInstitutions, InstitutionsSelectors } from '@osf/shared/stores/institutions';
 
 @Component({
   selector: 'osf-institutions-list',

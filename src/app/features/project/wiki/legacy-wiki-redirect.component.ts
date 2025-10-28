@@ -8,7 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { ResourceType } from '@osf/shared/enums';
 import { LoaderService } from '@osf/shared/services';
-import { GetWikiList, WikiSelectors } from '@osf/shared/stores';
+import { GetWikiList, WikiSelectors } from '@osf/shared/stores/wiki';
 
 @Component({
   template: '',

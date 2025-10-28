@@ -25,8 +25,8 @@ import { OperationNames, StorageItemType } from '@shared/enums';
 import { formatCitation, getItemUrl } from '@shared/helpers';
 import { CitationStyle, ConfiguredAddonModel, CustomOption, StorageItem } from '@shared/models';
 import { AddonOperationInvocationService, CslStyleManagerService } from '@shared/services';
-import { CitationsSelectors, GetCitationStyles } from '@shared/stores';
 import { AddonsSelectors, CreateCitationAddonOperationInvocation } from '@shared/stores/addons';
+import { CitationsSelectors, GetCitationStyles } from '@shared/stores/citations';
 
 import '@citation-js/plugin-csl';
 

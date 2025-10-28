@@ -27,7 +27,7 @@ import {
   SetCurrentWiki,
   ToggleMode,
   WikiSelectors,
-} from '@osf/shared/stores';
+} from '@osf/shared/stores/wiki';
 
 @Component({
   selector: 'osf-registry-wiki',

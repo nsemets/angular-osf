@@ -30,7 +30,7 @@ import { LoadingSpinnerComponent } from '@shared/components';
 import { HeaderStyleHelper } from '@shared/helpers';
 import { CanDeactivateComponent } from '@shared/models';
 import { BrandService, CustomDialogService } from '@shared/services';
-import { CollectionsSelectors, GetCollectionProvider } from '@shared/stores';
+import { CollectionsSelectors, GetCollectionProvider } from '@shared/stores/collections';
 import { ProjectsSelectors } from '@shared/stores/projects/projects.selectors';
 
 import {

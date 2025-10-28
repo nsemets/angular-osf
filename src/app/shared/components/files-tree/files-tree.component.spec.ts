@@ -9,7 +9,7 @@ import { FileKind } from '@shared/enums';
 import { FileFolderModel, FileLabelModel } from '@shared/models';
 import { CustomConfirmationService, FilesService, ToastService } from '@shared/services';
 import { DataciteService } from '@shared/services/datacite/datacite.service';
-import { CurrentResourceSelectors } from '@shared/stores';
+import { CurrentResourceSelectors } from '@shared/stores/current-resource';
 
 import { FilesTreeComponent } from './files-tree.component';
 

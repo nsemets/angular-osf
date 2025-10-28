@@ -79,7 +79,7 @@ export const SOCIAL_LINKS: SocialLinksModel[] = [
     address: '',
     placeholder: 'https://yourwebsite.com',
     key: 'profileWebsites',
-    icon: '',
+    icon: 'globe.svg',
   },
   {
     id: 11,

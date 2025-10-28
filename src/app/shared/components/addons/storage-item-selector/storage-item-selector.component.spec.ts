@@ -7,7 +7,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { GoogleFilePickerComponent, SelectComponent } from '@shared/components';
 import { StorageItemSelectorComponent } from '@shared/components/addons';
 import { OperationNames } from '@shared/enums';
-import { AddonsSelectors } from '@shared/stores';
+import { AddonsSelectors } from '@shared/stores/addons';
 
 import { OSFTestingModule } from '@testing/osf.testing.module';
 import { DialogServiceMockBuilder } from '@testing/providers/dialog-provider.mock';

@@ -21,7 +21,7 @@ import {
   ViewOnlyLinkMessageComponent,
 } from '@osf/shared/components';
 import { CustomConfirmationService, FilesService } from '@osf/shared/services';
-import { CurrentResourceSelectors } from '@osf/shared/stores';
+import { CurrentResourceSelectors } from '@osf/shared/stores/current-resource';
 import { GoogleFilePickerComponent } from '@shared/components/google-file-picker/google-file-picker.component';
 
 import { FilesSelectors } from '../../store';

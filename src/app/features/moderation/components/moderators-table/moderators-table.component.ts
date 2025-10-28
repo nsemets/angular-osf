@@ -31,7 +31,7 @@ export class ModeratorsTableComponent {
   isLoading = input(false);
   tableParams = input.required<TableParameters>();
   currentUserId = input.required<string | undefined>();
-  isCurrentUserAdminModerator = input.required<boolean>();
+  hasAdminAccess = input.required<boolean>();
 
   update = output<ModeratorModel>();
   remove = output<ModeratorModel>();

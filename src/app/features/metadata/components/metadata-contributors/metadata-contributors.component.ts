@@ -15,7 +15,11 @@ import { ContributorModel } from '@osf/shared/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataContributorsComponent {
-  openEditContributorDialog = output<void>();
   contributors = input<ContributorModel[]>([]);
+  isLoading = input(false);
+  hasMoreContributors = input(false);
   readonly = input<boolean>(false);
+
+  openEditContributorDialog = output<void>();
+  loadMoreContributors = output<void>();
 }

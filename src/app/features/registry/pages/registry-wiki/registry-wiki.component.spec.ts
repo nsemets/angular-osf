@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { WikiModes } from '@osf/shared/models';
 import { SubHeaderComponent, ViewOnlyLinkMessageComponent } from '@shared/components';
 import { CompareSectionComponent, ViewSectionComponent, WikiListComponent } from '@shared/components/wiki';
-import { WikiSelectors } from '@shared/stores';
+import { WikiSelectors } from '@shared/stores/wiki';
 
 import { RegistryWikiComponent } from './registry-wiki.component';
 

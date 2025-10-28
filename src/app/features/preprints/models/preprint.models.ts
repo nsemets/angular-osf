@@ -4,7 +4,7 @@ import { Identifier, IdName, LicenseModel, LicenseOptions } from '@osf/shared/mo
 
 import { ApplicabilityStatus, PreregLinkInfo, ReviewsState } from '../enums';
 
-export interface Preprint {
+export interface PreprintModel {
   id: string;
   dateCreated: string;
   dateModified: string;
@@ -40,7 +40,7 @@ export interface Preprint {
   preregLinks: string[];
   preregLinkInfo: PreregLinkInfo | null;
   metrics?: PreprintMetrics;
-  embeddedLicense?: LicenseModel;
+  embeddedLicense: LicenseModel | null;
   preprintDoiLink?: string;
   articleDoiLink?: string;
   identifiers?: Identifier[];

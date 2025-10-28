@@ -41,7 +41,8 @@ import {
 import { ResourceType, UserPermissions } from '@osf/shared/enums';
 import { BaseNodeModel, ToolbarResource } from '@osf/shared/models';
 import { CustomDialogService, LoaderService } from '@osf/shared/services';
-import { ClearDuplicates, DuplicatesSelectors, GetAllDuplicates, GetResourceWithChildren } from '@osf/shared/stores';
+import { GetResourceWithChildren } from '@osf/shared/stores/current-resource';
+import { ClearDuplicates, DuplicatesSelectors, GetAllDuplicates } from '@osf/shared/stores/duplicates';
 
 @Component({
   selector: 'osf-view-duplicates',
