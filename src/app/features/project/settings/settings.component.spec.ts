@@ -14,7 +14,7 @@ import {
 } from '@osf/features/project/settings/components';
 import { LoadingSpinnerComponent, SubHeaderComponent } from '@osf/shared/components';
 import { CustomConfirmationService, LoaderService, ToastService } from '@osf/shared/services';
-import { ViewOnlyLinkSelectors } from '@osf/shared/stores';
+import { ViewOnlyLinkSelectors } from '@osf/shared/stores/view-only-links';
 
 import { SettingsComponent } from './settings.component';
 import { SettingsSelectors } from './store';

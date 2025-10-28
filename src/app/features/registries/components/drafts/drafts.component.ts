@@ -22,12 +22,8 @@ import { StepperComponent, SubHeaderComponent } from '@osf/shared/components';
 import { ResourceType } from '@osf/shared/enums';
 import { PageSchema, Question, StepOption } from '@osf/shared/models';
 import { LoaderService } from '@osf/shared/services';
-import {
-  ContributorsSelectors,
-  FetchSelectedSubjects,
-  GetAllContributors,
-  SubjectsSelectors,
-} from '@osf/shared/stores';
+import { ContributorsSelectors, GetAllContributors } from '@osf/shared/stores/contributors';
+import { FetchSelectedSubjects, SubjectsSelectors } from '@osf/shared/stores/subjects';
 
 import { DEFAULT_STEPS } from '../../constants';
 import { ClearState, FetchDraft, FetchSchemaBlocks, RegistriesSelectors, UpdateStepState } from '../../store';

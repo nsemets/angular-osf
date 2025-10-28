@@ -20,7 +20,7 @@ import { IconComponent } from '@osf/shared/components';
 import { CurrentResourceType, ReviewPermissions } from '@osf/shared/enums';
 import { getViewOnlyParam } from '@osf/shared/helpers';
 import { WrapFnPipe } from '@osf/shared/pipes';
-import { CurrentResourceSelectors, GetResourceDetails } from '@osf/shared/stores';
+import { CurrentResourceSelectors, GetResourceDetails } from '@osf/shared/stores/current-resource';
 
 @Component({
   selector: 'osf-nav-menu',

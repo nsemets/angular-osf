@@ -33,25 +33,26 @@ import { Mode, ResourceType } from '@osf/shared/enums';
 import { hasViewOnlyParam } from '@osf/shared/helpers';
 import { MapProjectOverview } from '@osf/shared/mappers';
 import { CustomDialogService, MetaTagsService, ToastService } from '@osf/shared/services';
+import { GetActivityLogs } from '@osf/shared/stores/activity-logs';
 import {
   AddonsSelectors,
-  ClearCollections,
   ClearConfiguredAddons,
-  ClearWiki,
-  CollectionsSelectors,
-  CurrentResourceSelectors,
-  FetchSelectedSubjects,
   GetAddonsResourceReference,
-  GetBookmarksCollectionId,
-  GetCollectionProvider,
   GetConfiguredCitationAddons,
   GetConfiguredStorageAddons,
-  GetHomeWiki,
-  GetLinkedResources,
-  GetResourceWithChildren,
-  SubjectsSelectors,
-} from '@osf/shared/stores';
-import { GetActivityLogs } from '@osf/shared/stores/activity-logs';
+} from '@osf/shared/stores/addons';
+import { GetBookmarksCollectionId } from '@osf/shared/stores/bookmarks';
+import { ClearCollections, CollectionsSelectors, GetCollectionProvider } from '@osf/shared/stores/collections';
+import {
+  ContributorsSelectors,
+  GetBibliographicContributors,
+  LoadMoreBibliographicContributors,
+  ResetContributorsState,
+} from '@osf/shared/stores/contributors';
+import { CurrentResourceSelectors, GetResourceWithChildren } from '@osf/shared/stores/current-resource';
+import { GetLinkedResources } from '@osf/shared/stores/node-links';
+import { FetchSelectedSubjects, SubjectsSelectors } from '@osf/shared/stores/subjects';
+import { ClearWiki, GetHomeWiki } from '@osf/shared/stores/wiki';
 import {
   LoadingSpinnerComponent,
   MakeDecisionDialogComponent,
@@ -139,6 +140,9 @@ export class ProjectOverviewComponent implements OnInit {
   isWikiEnabled = select(ProjectOverviewSelectors.isWikiEnabled);
   parentProject = select(ProjectOverviewSelectors.getParentProject);
   isParentProjectLoading = select(ProjectOverviewSelectors.getParentProjectLoading);
+  bibliographicContributors = select(ContributorsSelectors.getBibliographicContributors);
+  isBibliographicContributorsLoading = select(ContributorsSelectors.isBibliographicContributorsLoading);
+  hasMoreBibliographicContributors = select(ContributorsSelectors.hasMoreBibliographicContributors);
   addonsResourceReference = select(AddonsSelectors.getAddonsResourceReference);
   configuredCitationAddons = select(AddonsSelectors.getConfiguredCitationAddons);
   operationInvocation = select(AddonsSelectors.getOperationInvocation);
@@ -164,6 +168,9 @@ export class ProjectOverviewComponent implements OnInit {
     getParentProject: GetParentProject,
     getAddonsResourceReference: GetAddonsResourceReference,
     getConfiguredCitationAddons: GetConfiguredCitationAddons,
+    getBibliographicContributors: GetBibliographicContributors,
+    loadMoreBibliographicContributors: LoadMoreBibliographicContributors,
+    resetContributorsState: ResetContributorsState,
   });
 
   readonly activityPageSize = 5;
@@ -193,8 +200,9 @@ export class ProjectOverviewComponent implements OnInit {
   resourceOverview = computed(() => {
     const project = this.currentProject();
     const subjects = this.subjects();
+    const bibliographicContributors = this.bibliographicContributors();
     if (project) {
-      return MapProjectOverview(project, subjects, this.isAnonymous());
+      return MapProjectOverview(project, subjects, this.isAnonymous(), bibliographicContributors);
     }
     return null;
   });
@@ -282,6 +290,10 @@ export class ProjectOverviewComponent implements OnInit {
     this.actions.setProjectCustomCitation(citation);
   }
 
+  handleLoadMoreContributors(): void {
+    this.actions.loadMoreBibliographicContributors(this.currentProject()?.id, ResourceType.Project);
+  }
+
   ngOnInit(): void {
     const projectId = this.route.snapshot.params['id'] || this.route.parent?.snapshot.params['id'];
 
@@ -291,6 +303,7 @@ export class ProjectOverviewComponent implements OnInit {
       this.actions.getComponents(projectId);
       this.actions.getLinkedProjects(projectId);
       this.actions.getActivityLogs(projectId, this.activityDefaultPage, this.activityPageSize);
+      this.actions.getBibliographicContributors(projectId, ResourceType.Project);
     }
 
     this.dataciteService
@@ -385,6 +398,7 @@ export class ProjectOverviewComponent implements OnInit {
           this.actions.getComponents(projectId);
           this.actions.getLinkedProjects(projectId);
           this.actions.getActivityLogs(projectId, this.activityDefaultPage, this.activityPageSize);
+          this.actions.getBibliographicContributors(projectId, ResourceType.Project);
         }),
         takeUntilDestroyed(this.destroyRef)
       )
@@ -398,6 +412,7 @@ export class ProjectOverviewComponent implements OnInit {
       this.actions.clearCollections();
       this.actions.clearCollectionModeration();
       this.actions.clearConfiguredAddons();
+      this.actions.resetContributorsState();
     });
   }
 

@@ -88,7 +88,7 @@ export class ModeratorsState {
   }
 
   @Action(UpdateModerator)
-  updateCollectionModerator(ctx: StateContext<ModeratorsStateModel>, action: UpdateModerator) {
+  updateModerator(ctx: StateContext<ModeratorsStateModel>, action: UpdateModerator) {
     const state = ctx.getState();
 
     if (!action.resourceType) {
@@ -108,7 +108,7 @@ export class ModeratorsState {
   }
 
   @Action(DeleteModerator)
-  deleteCollectionModerator(ctx: StateContext<ModeratorsStateModel>, action: DeleteModerator) {
+  deleteModerator(ctx: StateContext<ModeratorsStateModel>, action: DeleteModerator) {
     const state = ctx.getState();
 
     if (!action.resourceType) {

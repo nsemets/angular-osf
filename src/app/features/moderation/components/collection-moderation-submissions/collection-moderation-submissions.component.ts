@@ -24,7 +24,7 @@ import {
   GetCollectionDetails,
   SearchCollectionSubmissions,
   SetPageNumber,
-} from '@osf/shared/stores';
+} from '@osf/shared/stores/collections';
 
 import { COLLECTIONS_SUBMISSIONS_REVIEW_OPTIONS } from '../../constants';
 import { SubmissionReviewStatus } from '../../enums';

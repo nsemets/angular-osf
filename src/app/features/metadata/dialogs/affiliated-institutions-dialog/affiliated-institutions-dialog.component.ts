@@ -10,7 +10,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { AffiliatedInstitutionSelectComponent } from '@osf/shared/components';
 import { Institution } from '@osf/shared/models';
-import { FetchUserInstitutions, InstitutionsSelectors } from '@osf/shared/stores';
+import { FetchUserInstitutions, InstitutionsSelectors } from '@osf/shared/stores/institutions';
 
 @Component({
   selector: 'osf-affiliated-institutions-dialog',

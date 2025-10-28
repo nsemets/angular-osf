@@ -15,7 +15,7 @@ import {
   FetchUserInstitutions,
   InstitutionsSelectors,
   UpdateResourceInstitutions,
-} from '@osf/shared/stores';
+} from '@osf/shared/stores/institutions';
 
 @Component({
   selector: 'osf-registries-affiliated-institution',

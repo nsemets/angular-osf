@@ -26,7 +26,7 @@ import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
 import { SortOrder } from '@osf/shared/enums';
 import { MyResourcesItem, MyResourcesSearchFilters, TableParameters } from '@osf/shared/models';
 import { CustomDialogService, ProjectRedirectDialogService } from '@osf/shared/services';
-import { ClearMyResources, GetMyProjects, MyResourcesSelectors } from '@osf/shared/stores';
+import { ClearMyResources, GetMyProjects, MyResourcesSelectors } from '@osf/shared/stores/my-resources';
 
 @Component({
   selector: 'osf-dashboard',

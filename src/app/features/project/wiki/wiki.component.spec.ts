@@ -19,7 +19,7 @@ import {
   ViewSectionComponent,
   WikiListComponent,
 } from '@shared/components/wiki';
-import { WikiState } from '@shared/stores';
+import { WikiState } from '@shared/stores/wiki';
 
 describe('WikiComponent', () => {
   let component: WikiComponent;

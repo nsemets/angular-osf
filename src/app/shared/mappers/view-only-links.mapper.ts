@@ -24,7 +24,7 @@ export class ViewOnlyLinksMapper {
           id: creator?.id || '',
           fullName: creator?.fullName || '',
         },
-        nodes: item.embeds.nodes.data.map(
+        nodes: item.embeds?.nodes?.data?.map(
           (node) =>
             ({
               id: node.id,
@@ -59,7 +59,7 @@ export class ViewOnlyLinksMapper {
         id: creator?.id || '',
         fullName: creator?.fullName || '',
       },
-      nodes: item.embeds.nodes.data.map(
+      nodes: item.embeds?.nodes?.data?.map(
         (node) =>
           ({
             id: node.id,

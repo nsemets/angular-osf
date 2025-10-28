@@ -28,19 +28,6 @@ import { HelpScoutService } from '@core/services/help-scout.service';
 import { ClearCurrentProvider } from '@core/store/provider';
 import { UserSelectors } from '@core/store/user';
 import {
-  AdditionalInfoComponent,
-  GeneralInformationComponent,
-  ModerationStatusBannerComponent,
-  PreprintFileSectionComponent,
-  PreprintMakeDecisionComponent,
-  PreprintMetricsInfoComponent,
-  PreprintTombstoneComponent,
-  ShareAndDownloadComponent,
-  StatusBannerComponent,
-  WithdrawDialogComponent,
-} from '@osf/features/preprints/components';
-import { PreprintRequestMachineState, ProviderReviewsWorkflow, ReviewsState } from '@osf/features/preprints/enums';
-import {
   FetchPreprintById,
   FetchPreprintRequestActions,
   FetchPreprintRequests,
@@ -51,13 +38,26 @@ import {
 import { GetPreprintProviderById, PreprintProvidersSelectors } from '@osf/features/preprints/store/preprint-providers';
 import { CreateNewVersion, PreprintStepperSelectors } from '@osf/features/preprints/store/preprint-stepper';
 import { pathJoin } from '@osf/shared/helpers';
-import { ReviewPermissions, UserPermissions } from '@shared/enums';
+import { ReviewPermissions } from '@shared/enums';
 import { CustomDialogService, MetaTagsService, ToastService } from '@shared/services';
 import { AnalyticsService } from '@shared/services/analytics.service';
 import { DataciteService } from '@shared/services/datacite/datacite.service';
-import { ContributorsSelectors } from '@shared/stores';
+import { ContributorsSelectors } from '@shared/stores/contributors';
 
+import {
+  AdditionalInfoComponent,
+  GeneralInformationComponent,
+  ModerationStatusBannerComponent,
+  PreprintFileSectionComponent,
+  PreprintMakeDecisionComponent,
+  PreprintMetricsInfoComponent,
+  PreprintTombstoneComponent,
+  ShareAndDownloadComponent,
+  StatusBannerComponent,
+  WithdrawDialogComponent,
+} from '../../components';
 import { PreprintWarningBannerComponent } from '../../components/preprint-details/preprint-warning-banner/preprint-warning-banner.component';
+import { PreprintRequestMachineState, ProviderReviewsWorkflow, ReviewsState } from '../../enums';
 
 @Component({
   selector: 'osf-preprint-details',
@@ -96,6 +96,8 @@ export class PreprintDetailsComponent implements OnInit, OnDestroy {
   private readonly metaTags = inject(MetaTagsService);
   private readonly datePipe = inject(DatePipe);
   private readonly dataciteService = inject(DataciteService);
+  private readonly analyticsService = inject(AnalyticsService);
+
   private readonly environment = inject(ENVIRONMENT);
 
   private preprintId = toSignal(this.route.params.pipe(map((params) => params['id'])) ?? of(undefined));
@@ -110,6 +112,7 @@ export class PreprintDetailsComponent implements OnInit, OnDestroy {
     fetchPreprintRequestActions: FetchPreprintRequestActions,
     clearCurrentProvider: ClearCurrentProvider,
   });
+
   providerId = toSignal(this.route.params.pipe(map((params) => params['providerId'])) ?? of(undefined));
   currentUser = select(UserSelectors.getCurrentUser);
   preprintProvider = select(PreprintProvidersSelectors.getPreprintProviderDetails(this.providerId()));
@@ -125,8 +128,13 @@ export class PreprintDetailsComponent implements OnInit, OnDestroy {
   areWithdrawalRequestsLoading = select(PreprintSelectors.arePreprintRequestsLoading);
   requestActions = select(PreprintSelectors.getPreprintRequestActions);
   areRequestActionsLoading = select(PreprintSelectors.arePreprintRequestActionsLoading);
+  hasAdminAccess = select(PreprintSelectors.hasAdminAccess);
+  hasWriteAccess = select(PreprintSelectors.hasWriteAccess);
+  metrics = select(PreprintSelectors.getPreprintMetrics);
+  areMetricsLoading = select(PreprintSelectors.arePreprintMetricsLoading);
 
   isPresentModeratorQueryParam = toSignal(this.route.queryParams.pipe(map((params) => params['mode'] === 'moderator')));
+
   moderationMode = computed(() => {
     const provider = this.preprintProvider();
     return this.isPresentModeratorQueryParam() && provider?.permissions.includes(ReviewPermissions.ViewSubmissions);
@@ -156,36 +164,17 @@ export class PreprintDetailsComponent implements OnInit, OnDestroy {
     return actions[0];
   });
 
-  private readonly analyticsService = inject(AnalyticsService);
-
   constructor() {
     this.helpScoutService.setResourceType('preprint');
+
     effect(() => {
       const currentPreprint = this.preprint();
+
       if (currentPreprint && currentPreprint.isPublic) {
         this.analyticsService.sendCountedUsage(currentPreprint.id, 'preprint.detail').subscribe();
       }
     });
   }
-
-  private currentUserIsAdmin = computed(() => {
-    return this.preprint()?.currentUserPermissions.includes(UserPermissions.Admin) || false;
-  });
-
-  private currentUserIsContributor = computed(() => {
-    const contributors = this.contributors();
-    const currentUser = this.currentUser();
-
-    if (this.currentUserIsAdmin()) {
-      return true;
-    } else if (contributors.length) {
-      const authorIds = contributors.map((author) => author.id);
-      return currentUser?.id
-        ? authorIds.some((id) => id.endsWith(currentUser!.id)) && this.hasReadWriteAccess()
-        : false;
-    }
-    return false;
-  });
 
   private preprintWithdrawableState = computed(() => {
     const preprint = this.preprint();
@@ -197,7 +186,7 @@ export class PreprintDetailsComponent implements OnInit, OnDestroy {
     const preprint = this.preprint();
     if (!preprint) return false;
 
-    return this.currentUserIsAdmin() && preprint.datePublished && preprint.isLatestVersion;
+    return this.hasAdminAccess() && preprint.datePublished && preprint.isLatestVersion;
   });
 
   editButtonVisible = computed(() => {
@@ -208,7 +197,7 @@ export class PreprintDetailsComponent implements OnInit, OnDestroy {
     const providerIsPremod = provider.reviewsWorkflow === ProviderReviewsWorkflow.PreModeration;
     const preprintIsRejected = preprint.reviewsState === ReviewsState.Rejected;
 
-    if (!this.currentUserIsContributor()) {
+    if (!this.hasWriteAccess()) {
       return false;
     }
 
@@ -224,7 +213,7 @@ export class PreprintDetailsComponent implements OnInit, OnDestroy {
         return true;
       }
 
-      if (preprintIsRejected && this.currentUserIsAdmin()) {
+      if (preprintIsRejected && this.hasAdminAccess()) {
         return true;
       }
     }
@@ -235,7 +224,7 @@ export class PreprintDetailsComponent implements OnInit, OnDestroy {
     const providerIsPremod = this.preprintProvider()?.reviewsWorkflow === ProviderReviewsWorkflow.PreModeration;
     const preprintIsRejected = this.preprint()?.reviewsState === ReviewsState.Rejected;
 
-    return providerIsPremod && preprintIsRejected && this.currentUserIsAdmin()
+    return providerIsPremod && preprintIsRejected && this.hasAdminAccess()
       ? 'common.buttons.editAndResubmit'
       : 'common.buttons.edit';
   });
@@ -255,8 +244,9 @@ export class PreprintDetailsComponent implements OnInit, OnDestroy {
 
   withdrawalButtonVisible = computed(() => {
     if (this.areWithdrawalRequestsLoading() || this.areRequestActionsLoading()) return false;
+
     return (
-      this.currentUserIsAdmin() &&
+      this.hasAdminAccess() &&
       this.preprintWithdrawableState() &&
       !this.isWithdrawalRejected() &&
       !this.isPendingWithdrawal()
@@ -293,18 +283,16 @@ export class PreprintDetailsComponent implements OnInit, OnDestroy {
     return (
       provider.reviewsWorkflow &&
       preprint.isPublic &&
-      this.currentUserIsContributor() &&
+      this.hasWriteAccess() &&
       preprint.reviewsState !== ReviewsState.Initial &&
       !preprint.isPreprintOrphan
     );
   });
 
   ngOnInit() {
-    this.actions.getPreprintProviderById(this.providerId()).subscribe({
-      next: () => {
-        this.fetchPreprint(this.preprintId());
-      },
-    });
+    this.actions.getPreprintProviderById(this.providerId());
+    this.fetchPreprint(this.preprintId());
+
     this.dataciteService.logIdentifiableView(this.preprint$).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
   }
 
@@ -362,12 +350,15 @@ export class PreprintDetailsComponent implements OnInit, OnDestroy {
     this.actions.fetchPreprintById(preprintId).subscribe({
       next: () => {
         this.checkAndSetVersionToTheUrl();
+
         if (this.preprint()!.currentUserPermissions.length > 0 || this.moderationMode()) {
           this.actions.fetchPreprintReviewActions();
-          if (this.preprintWithdrawableState() && (this.currentUserIsAdmin() || this.moderationMode())) {
+
+          if (this.preprintWithdrawableState() && (this.hasAdminAccess() || this.moderationMode())) {
             this.actions.fetchPreprintRequests().subscribe({
               next: () => {
                 const latestWithdrawalRequest = this.latestWithdrawalRequest();
+
                 if (latestWithdrawalRequest) {
                   this.actions.fetchPreprintRequestActions(latestWithdrawalRequest.id);
                 }
@@ -402,10 +393,6 @@ export class PreprintDetailsComponent implements OnInit, OnDestroy {
       },
       this.destroyRef
     );
-  }
-
-  private hasReadWriteAccess(): boolean {
-    return this.preprint()?.currentUserPermissions.includes(UserPermissions.Write) || false;
   }
 
   private checkAndSetVersionToTheUrl() {

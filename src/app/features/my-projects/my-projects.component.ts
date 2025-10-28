@@ -33,16 +33,15 @@ import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
 import { ResourceType, SortOrder } from '@osf/shared/enums';
 import { IS_MEDIUM } from '@osf/shared/helpers';
 import { MyResourcesItem, MyResourcesSearchFilters, QueryParams, TableParameters } from '@osf/shared/models';
+import { BookmarksSelectors, GetBookmarksCollectionId } from '@osf/shared/stores/bookmarks';
 import {
-  BookmarksSelectors,
   ClearMyResources,
-  GetBookmarksCollectionId,
   GetMyBookmarks,
   GetMyPreprints,
   GetMyProjects,
   GetMyRegistrations,
   MyResourcesSelectors,
-} from '@osf/shared/stores';
+} from '@osf/shared/stores/my-resources';
 import { CustomDialogService, ProjectRedirectDialogService } from '@shared/services';
 
 import { PROJECT_FILTER_OPTIONS } from './constants/project-filter-options.const';

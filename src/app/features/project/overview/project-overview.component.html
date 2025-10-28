@@ -89,6 +89,10 @@
         [isCollectionsRoute]="isCollectionsRoute()"
         [canEdit]="hasAdminAccess()"
         [showEditButton]="hasWriteAccess()"
+        [bibliographicContributors]="bibliographicContributors()"
+        [isBibliographicContributorsLoading]="isBibliographicContributorsLoading()"
+        [hasMoreBibliographicContributors]="hasMoreBibliographicContributors()"
+        (loadMoreContributors)="handleLoadMoreContributors()"
       />
     </div>
   </div>

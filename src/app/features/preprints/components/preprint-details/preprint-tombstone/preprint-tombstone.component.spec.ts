@@ -6,7 +6,8 @@ import { PreprintProviderDetails } from '@osf/features/preprints/models';
 import { PreprintSelectors } from '@osf/features/preprints/store/preprint';
 import { ContributorsListComponent, TruncatedTextComponent } from '@osf/shared/components';
 import { InterpolatePipe } from '@osf/shared/pipes';
-import { ContributorsSelectors, SubjectsSelectors } from '@osf/shared/stores';
+import { ContributorsSelectors } from '@osf/shared/stores/contributors';
+import { SubjectsSelectors } from '@osf/shared/stores/subjects';
 
 import { PreprintDoiSectionComponent } from '../preprint-doi-section/preprint-doi-section.component';
 
@@ -50,11 +51,15 @@ describe('PreprintTombstoneComponent', () => {
               value: false,
             },
             {
-              selector: ContributorsSelectors.getContributors,
+              selector: ContributorsSelectors.getBibliographicContributors,
               value: mockContributors,
             },
             {
-              selector: ContributorsSelectors.isContributorsLoading,
+              selector: ContributorsSelectors.isBibliographicContributorsLoading,
+              value: false,
+            },
+            {
+              selector: ContributorsSelectors.hasMoreBibliographicContributors,
               value: false,
             },
             {
@@ -74,16 +79,6 @@ describe('PreprintTombstoneComponent', () => {
     component = fixture.componentInstance;
 
     fixture.componentRef.setInput('preprintProvider', mockProvider);
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should compute bibliographic contributors', () => {
-    const bibliographicContributors = component.bibliographicContributors();
-    expect(bibliographicContributors).toHaveLength(1);
-    expect(bibliographicContributors[0].isBibliographic).toBe(true);
   });
 
   it('should compute license from preprint', () => {

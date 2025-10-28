@@ -12,7 +12,7 @@ import { SelectProjectStepComponent } from '@osf/features/collections/components
 import { AddToCollectionSteps } from '@osf/features/collections/enums';
 import { LoadingSpinnerComponent } from '@shared/components';
 import { CustomDialogService } from '@shared/services';
-import { CollectionsSelectors } from '@shared/stores';
+import { CollectionsSelectors } from '@shared/stores/collections';
 import { ProjectsSelectors } from '@shared/stores/projects/projects.selectors';
 
 import { AddToCollectionComponent } from './add-to-collection.component';

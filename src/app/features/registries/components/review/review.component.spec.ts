@@ -14,7 +14,8 @@ import {
 } from '@osf/shared/components';
 import { FieldType } from '@osf/shared/enums';
 import { CustomConfirmationService, CustomDialogService, ToastService } from '@osf/shared/services';
-import { ContributorsSelectors, SubjectsSelectors } from '@osf/shared/stores';
+import { ContributorsSelectors } from '@osf/shared/stores/contributors';
+import { SubjectsSelectors } from '@osf/shared/stores/subjects';
 
 import { ReviewComponent } from './review.component';
 

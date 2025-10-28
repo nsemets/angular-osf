@@ -60,6 +60,7 @@ export class BaseNodeMapper {
       wikiEnabled: data.attributes.wiki_enabled,
       customCitation: data.attributes.custom_citation || undefined,
       rootParentId: data.relationships.root?.data?.id,
+      parent: data.embeds?.parent?.data ? this.getNodeData(data.embeds?.parent.data) : undefined,
     };
   }
 

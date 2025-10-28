@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
 import { ScientistsNames } from '@osf/shared/constants';
 import { UserPermissions } from '@osf/shared/enums';
 import { ToastService } from '@osf/shared/services';
-import { CurrentResourceSelectors } from '@osf/shared/stores';
+import { CurrentResourceSelectors } from '@osf/shared/stores/current-resource';
 
 import { DeleteProject, SettingsSelectors } from '../../store';
 

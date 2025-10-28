@@ -35,7 +35,13 @@ import { hasViewOnlyParam, toCamelCase } from '@osf/shared/helpers';
 import { MapRegistryOverview } from '@osf/shared/mappers';
 import { SchemaResponse, ToolbarResource } from '@osf/shared/models';
 import { CustomDialogService, ToastService } from '@osf/shared/services';
-import { FetchSelectedSubjects, GetBookmarksCollectionId, SubjectsSelectors } from '@osf/shared/stores';
+import { GetBookmarksCollectionId } from '@osf/shared/stores/bookmarks';
+import {
+  ContributorsSelectors,
+  GetBibliographicContributors,
+  LoadMoreBibliographicContributors,
+} from '@osf/shared/stores/contributors';
+import { FetchSelectedSubjects, SubjectsSelectors } from '@osf/shared/stores/subjects';
 
 import { ArchivingMessageComponent, RegistryRevisionsComponent, RegistryStatusesComponent } from '../../components';
 import { RegistryMakeDecisionComponent } from '../../components/registry-make-decision/registry-make-decision.component';
@@ -90,6 +96,9 @@ export class RegistryOverviewComponent {
   readonly areReviewActionsLoading = select(RegistryOverviewSelectors.areReviewActionsLoading);
   readonly currentRevision = select(RegistriesSelectors.getSchemaResponse);
   readonly isSchemaResponseLoading = select(RegistriesSelectors.getSchemaResponseLoading);
+  bibliographicContributors = select(ContributorsSelectors.getBibliographicContributors);
+  isBibliographicContributorsLoading = select(ContributorsSelectors.isBibliographicContributorsLoading);
+  hasMoreBibliographicContributors = select(ContributorsSelectors.hasMoreBibliographicContributors);
 
   readonly hasWriteAccess = select(RegistryOverviewSelectors.hasWriteAccess);
   readonly hasAdminAccess = select(RegistryOverviewSelectors.hasAdminAccess);
@@ -180,6 +189,8 @@ export class RegistryOverviewComponent {
     getRegistryReviewActions: GetRegistryReviewActions,
     getSchemaResponse: FetchAllSchemaResponses,
     createSchemaResponse: CreateSchemaResponse,
+    getBibliographicContributors: GetBibliographicContributors,
+    loadMoreBibliographicContributors: LoadMoreBibliographicContributors,
   });
 
   revisionId: string | null = null;
@@ -213,6 +224,7 @@ export class RegistryOverviewComponent {
     effect(() => {
       if (this.registryId()) {
         this.actions.getRegistryById(this.registryId());
+        this.actions.getBibliographicContributors(this.registryId(), ResourceType.Registration);
       }
     });
 
@@ -270,6 +282,10 @@ export class RegistryOverviewComponent {
         })
       )
       .subscribe();
+  }
+
+  handleLoadMoreContributors(): void {
+    this.actions.loadMoreBibliographicContributors(this.registry()?.id, ResourceType.Registration);
   }
 
   private navigateToJustificationPage(): void {

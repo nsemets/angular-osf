@@ -28,15 +28,8 @@ import { FormControl, FormsModule } from '@angular/forms';
 import { SearchInputComponent } from '@osf/shared/components';
 import { ResourceSearchMode, ResourceType } from '@osf/shared/enums';
 import { MyResourcesItem, MyResourcesSearchFilters } from '@osf/shared/models';
-import {
-  CreateNodeLink,
-  DeleteNodeLink,
-  GetLinkedResources,
-  GetMyProjects,
-  GetMyRegistrations,
-  MyResourcesSelectors,
-  NodeLinksSelectors,
-} from '@osf/shared/stores';
+import { GetMyProjects, GetMyRegistrations, MyResourcesSelectors } from '@osf/shared/stores/my-resources';
+import { CreateNodeLink, DeleteNodeLink, GetLinkedResources, NodeLinksSelectors } from '@osf/shared/stores/node-links';
 
 import { ProjectOverviewSelectors } from '../../store';
 

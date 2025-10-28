@@ -7,11 +7,12 @@
         <h3>{{ 'preprints.preprintStepper.review.sections.metadata.authors' | translate }}</h3>
 
         <div class="flex flex-column gap-1 line-height-2 md:flex-row">
-          <osf-contributors-list [contributors]="bibliographicContributors()"></osf-contributors-list>
-
-          @if (areContributorsLoading()) {
-            <p-skeleton width="10rem" height="1.25rem" />
-          }
+          <osf-contributors-list
+            [contributors]="bibliographicContributors()"
+            [isLoading]="areContributorsLoading()"
+            [hasLoadMore]="hasMoreBibliographicContributors()"
+            (loadMoreContributors)="handleLoadMoreContributors()"
+          ></osf-contributors-list>
         </div>
       </section>
 
@@ -118,8 +119,8 @@
     <div class="flex flex-column gap-4">
       @for (i of skeletonData; track $index) {
         <section class="flex flex-column gap-2">
-          <p-skeleton width="5rem" height="1.3rem" />
-          <p-skeleton width="25rem" height="5rem" />
+          <p-skeleton height="1.3rem" />
+          <p-skeleton height="5rem" />
         </section>
       }
     </div>

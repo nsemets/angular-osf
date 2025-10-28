@@ -10,7 +10,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ContributorPermission } from '@shared/enums';
 import { ContributorModel } from '@shared/models';
 import { CustomConfirmationService } from '@shared/services';
-import { ContributorsSelectors, CurrentResourceSelectors, ViewOnlyLinkSelectors } from '@shared/stores';
+import { ContributorsSelectors } from '@shared/stores/contributors';
+import { CurrentResourceSelectors } from '@shared/stores/current-resource';
+import { ViewOnlyLinkSelectors } from '@shared/stores/view-only-links';
 
 import { ContributorsComponent } from './contributors.component';
 

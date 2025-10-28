@@ -8,7 +8,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MyProjectsTab } from '@osf/features/my-projects/enums';
 import { SortOrder } from '@osf/shared/enums';
 import { IS_MEDIUM } from '@osf/shared/helpers';
-import { BookmarksSelectors, MyResourcesSelectors } from '@osf/shared/stores';
+import { BookmarksSelectors } from '@osf/shared/stores/bookmarks';
+import { MyResourcesSelectors } from '@osf/shared/stores/my-resources';
 import {
   MyProjectsTableComponent,
   SearchInputComponent,

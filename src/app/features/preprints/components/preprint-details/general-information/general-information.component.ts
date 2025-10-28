@@ -21,11 +21,11 @@ import {
 import { ResourceType } from '@osf/shared/enums';
 import {
   ContributorsSelectors,
-  FetchResourceInstitutions,
-  GetAllContributors,
-  InstitutionsSelectors,
+  GetBibliographicContributors,
+  LoadMoreBibliographicContributors,
   ResetContributorsState,
-} from '@osf/shared/stores';
+} from '@osf/shared/stores/contributors';
+import { FetchResourceInstitutions, InstitutionsSelectors } from '@osf/shared/stores/institutions';
 
 import { PreprintDoiSectionComponent } from '../preprint-doi-section/preprint-doi-section.component';
 
@@ -53,10 +53,11 @@ export class GeneralInformationComponent implements OnDestroy {
   readonly PreregLinkInfo = PreregLinkInfo;
 
   private actions = createDispatchMap({
-    getContributors: GetAllContributors,
+    getBibliographicContributors: GetBibliographicContributors,
     resetContributorsState: ResetContributorsState,
     fetchPreprintById: FetchPreprintById,
     fetchResourceInstitutions: FetchResourceInstitutions,
+    loadMoreBibliographicContributors: LoadMoreBibliographicContributors,
   });
 
   preprintProvider = input.required<PreprintProviderDetails | undefined>();
@@ -67,9 +68,9 @@ export class GeneralInformationComponent implements OnDestroy {
 
   affiliatedInstitutions = select(InstitutionsSelectors.getResourceInstitutions);
 
-  contributors = select(ContributorsSelectors.getContributors);
-  areContributorsLoading = select(ContributorsSelectors.isContributorsLoading);
-  bibliographicContributors = computed(() => this.contributors().filter((contributor) => contributor.isBibliographic));
+  bibliographicContributors = select(ContributorsSelectors.getBibliographicContributors);
+  areContributorsLoading = select(ContributorsSelectors.isBibliographicContributorsLoading);
+  hasMoreBibliographicContributors = select(ContributorsSelectors.hasMoreBibliographicContributors);
 
   skeletonData = Array.from({ length: 5 }, () => null);
 
@@ -80,12 +81,16 @@ export class GeneralInformationComponent implements OnDestroy {
       const preprint = this.preprint();
       if (!preprint) return;
 
-      this.actions.getContributors(this.preprint()!.id, ResourceType.Preprint);
+      this.actions.getBibliographicContributors(this.preprint()!.id, ResourceType.Preprint);
       this.actions.fetchResourceInstitutions(this.preprint()!.id, ResourceType.Preprint);
     });
   }
 
   ngOnDestroy(): void {
     this.actions.resetContributorsState();
+  }
+
+  handleLoadMoreContributors(): void {
+    this.actions.loadMoreBibliographicContributors(this.preprint()?.id, ResourceType.Preprint);
   }
 }

@@ -40,7 +40,8 @@ import { LicenseModel } from '@shared/models';
 import { ProjectModel } from '@shared/models/projects';
 import { InterpolatePipe } from '@shared/pipes';
 import { ToastService } from '@shared/services';
-import { ClearProjects, GetAllContributors, UpdateProjectMetadata } from '@shared/stores';
+import { GetAllContributors } from '@shared/stores/contributors';
+import { ClearProjects, UpdateProjectMetadata } from '@shared/stores/projects';
 import { ProjectsSelectors } from '@shared/stores/projects/projects.selectors';
 
 @Component({

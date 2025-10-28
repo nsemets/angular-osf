@@ -8,7 +8,7 @@ import { HttpEventType } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
 import { PreprintFileSource } from '@osf/features/preprints/enums';
-import { Preprint } from '@osf/features/preprints/models';
+import { PreprintModel } from '@osf/features/preprints/models';
 import {
   PreprintFilesService,
   PreprintLicensesService,
@@ -198,7 +198,7 @@ export class PreprintStepperState {
     ctx.setState(patch({ preprint: patch({ isSubmitting: true }) }));
 
     return this.preprintFilesService.updateFileRelationship(state.preprint.data!.id, action.fileId).pipe(
-      tap((preprint: Preprint) => {
+      tap((preprint: PreprintModel) => {
         ctx.patchState({
           preprint: {
             ...ctx.getState().preprint,
@@ -344,7 +344,7 @@ export class PreprintStepperState {
           const fileIdAfterCopy = file.id.split('/')[1];
 
           return this.preprintFilesService.updateFileRelationship(createdPreprintId, fileIdAfterCopy).pipe(
-            tap((preprint: Preprint) => {
+            tap((preprint: PreprintModel) => {
               ctx.patchState({
                 preprint: {
                   ...ctx.getState().preprint,

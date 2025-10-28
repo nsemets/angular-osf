@@ -26,7 +26,7 @@ import {
 import { ArrayInputComponent } from '@osf/features/preprints/components/stepper/author-assertion-step/array-input/array-input.component';
 import { formInputLimits, preregLinksOptions } from '@osf/features/preprints/constants';
 import { ApplicabilityStatus, PreregLinkInfo } from '@osf/features/preprints/enums';
-import { Preprint } from '@osf/features/preprints/models';
+import { PreprintModel } from '@osf/features/preprints/models';
 import { PreprintStepperSelectors, UpdatePreprint } from '@osf/features/preprints/store/preprint-stepper';
 import { CustomValidators, findChangedFields } from '@osf/shared/helpers';
 import { FormSelectComponent } from '@shared/components';
@@ -228,7 +228,7 @@ export class AuthorAssertionsStepComponent {
 
   backButtonClicked() {
     const formValue = this.authorAssertionsForm.getRawValue();
-    const changedFields = findChangedFields<Preprint>(formValue, this.createdPreprint()!);
+    const changedFields = findChangedFields<PreprintModel>(formValue, this.createdPreprint()!);
 
     if (!Object.keys(changedFields).length) {
       this.backClicked.emit();

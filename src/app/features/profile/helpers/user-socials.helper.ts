@@ -26,7 +26,7 @@ export function mapUserSocials(
       url = social.address + value;
     }
 
-    if (url && social.key !== 'profileWebsites') {
+    if (url) {
       acc.push({
         url,
         icon: `assets/icons/socials/${social.icon}`,
