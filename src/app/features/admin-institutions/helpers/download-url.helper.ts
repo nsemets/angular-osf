@@ -1,6 +1,7 @@
+import { CurrentResourceType } from '@shared/enums';
+
 import { DOWNLOAD_FORMATS } from '../constants';
 import { DownloadType } from '../enums';
-import { CurrentResourceType } from '@shared/enums';
 
 interface ResourceNameText {
   singular_upper: string;

@@ -39,7 +39,7 @@ import { FiltersSectionComponent } from '../../components/filters-section/filter
 import { projectTableColumns } from '../../constants';
 import { ContactDialogComponent } from '../../dialogs';
 import { ContactOption, DownloadType } from '../../enums';
-import { INSTITUTIONS_CSV_TSV_FIELDS, downloadResults, INSTITUTIONS_DOWNLOAD_CSV_TSV_RESOURCE } from '../../helpers';
+import { downloadResults, INSTITUTIONS_CSV_TSV_FIELDS, INSTITUTIONS_DOWNLOAD_CSV_TSV_RESOURCE } from '../../helpers';
 import { mapProjectResourceToTableCellData } from '../../mappers/institution-project-to-table-data.mapper';
 import { ContactDialogData, TableCellData, TableCellLink, TableIconClickEvent } from '../../models';
 import { InstitutionsAdminSelectors, RequestProjectAccess, SendUserMessage } from '../../store';

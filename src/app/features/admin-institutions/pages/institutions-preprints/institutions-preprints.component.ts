@@ -23,11 +23,10 @@ import { AdminTableComponent } from '../../components';
 import { FiltersSectionComponent } from '../../components/filters-section/filters-section.component';
 import { preprintsTableColumns } from '../../constants';
 import { DownloadType } from '../../enums';
-import { INSTITUTIONS_CSV_TSV_FIELDS, INSTITUTIONS_DOWNLOAD_CSV_TSV_RESOURCE, downloadResults } from '../../helpers';
+import { downloadResults, INSTITUTIONS_CSV_TSV_FIELDS, INSTITUTIONS_DOWNLOAD_CSV_TSV_RESOURCE } from '../../helpers';
 import { mapPreprintResourceToTableData } from '../../mappers/institution-preprint-to-table-data.mapper';
 import { TableCellData } from '../../models';
 import { InstitutionsAdminSelectors } from '../../store';
-import { CurrentResourceSelectors } from '@shared/stores/current-resource';
 
 @Component({
   selector: 'osf-institutions-preprints',

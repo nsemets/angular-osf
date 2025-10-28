@@ -25,7 +25,7 @@ import { AdminTableComponent } from '../../components';
 import { FiltersSectionComponent } from '../../components/filters-section/filters-section.component';
 import { registrationTableColumns } from '../../constants';
 import { DownloadType } from '../../enums';
-import { INSTITUTIONS_CSV_TSV_FIELDS, downloadResults, INSTITUTIONS_DOWNLOAD_CSV_TSV_RESOURCE } from '../../helpers';
+import { downloadResults, INSTITUTIONS_CSV_TSV_FIELDS, INSTITUTIONS_DOWNLOAD_CSV_TSV_RESOURCE } from '../../helpers';
 import { mapRegistrationResourceToTableData } from '../../mappers/institution-registration-to-table-data.mapper';
 import { InstitutionsAdminSelectors } from '../../store';
 
