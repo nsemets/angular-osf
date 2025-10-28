@@ -2,7 +2,6 @@ import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { Accordion, AccordionContent, AccordionHeader, AccordionPanel } from 'primeng/accordion';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { Message } from 'primeng/message';
@@ -15,10 +14,13 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
-import { ContributorsListComponent, RegistrationBlocksDataComponent } from '@osf/shared/components';
+import {
+  ContributorsListComponent,
+  LicenseDisplayComponent,
+  RegistrationBlocksDataComponent,
+} from '@osf/shared/components';
 import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants';
 import { FieldType, ResourceType, UserPermissions } from '@osf/shared/enums';
-import { InterpolatePipe } from '@osf/shared/pipes';
 import { CustomConfirmationService, CustomDialogService, ToastService } from '@osf/shared/services';
 import {
   ContributorsSelectors,
@@ -48,13 +50,9 @@ import { SelectComponentsDialogComponent } from '../select-components-dialog/sel
     Message,
     Tag,
     Button,
-    Accordion,
-    AccordionContent,
-    AccordionHeader,
-    AccordionPanel,
-    InterpolatePipe,
     RegistrationBlocksDataComponent,
     ContributorsListComponent,
+    LicenseDisplayComponent,
     FixSpecialCharPipe,
   ],
   templateUrl: './review.component.html',

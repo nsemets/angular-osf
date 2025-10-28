@@ -6,10 +6,10 @@ import { inject, Injectable } from '@angular/core';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { PreprintsMapper } from '@osf/features/preprints/mappers';
 import {
-  Preprint,
   PreprintAttributesJsonApi,
   PreprintFilesLinks,
   PreprintLinksJsonApi,
+  PreprintModel,
   PreprintRelationshipsJsonApi,
 } from '@osf/features/preprints/models';
 import { ApiData, FileFolderModel, FileFolderResponseJsonApi, FileFoldersResponseJsonApi } from '@osf/shared/models';
@@ -28,7 +28,7 @@ export class PreprintFilesService {
     return `${this.environment.apiDomainUrl}/v2`;
   }
 
-  updateFileRelationship(preprintId: string, fileId: string): Observable<Preprint> {
+  updateFileRelationship(preprintId: string, fileId: string): Observable<PreprintModel> {
     return this.jsonApiService
       .patch<ApiData<PreprintAttributesJsonApi, null, PreprintRelationshipsJsonApi, PreprintLinksJsonApi>>(
         `${this.apiUrl}/preprints/${preprintId}/`,

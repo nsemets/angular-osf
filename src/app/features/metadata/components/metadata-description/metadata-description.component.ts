@@ -2,8 +2,10 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
-import { FixSpecialCharPipe } from '@shared/pipes';
+
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+
+import { FixSpecialCharPipe } from '@shared/pipes';
 
 @Component({
   selector: 'osf-metadata-description',

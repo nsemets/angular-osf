@@ -13,7 +13,7 @@ import { ChangeDetectionStrategy, Component, inject, input, OnInit, output } fro
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { formInputLimits } from '@osf/features/preprints/constants';
-import { MetadataForm, Preprint, PreprintProviderDetails } from '@osf/features/preprints/models';
+import { MetadataForm, PreprintModel, PreprintProviderDetails } from '@osf/features/preprints/models';
 import {
   CreatePreprint,
   FetchLicenses,
@@ -115,7 +115,7 @@ export class PreprintsMetadataStepComponent implements OnInit {
 
     const model = this.metadataForm.value;
 
-    const changedFields = findChangedFields<Preprint>(model, this.createdPreprint()!);
+    const changedFields = findChangedFields<PreprintModel>(model, this.createdPreprint()!);
 
     this.actions.updatePreprint(this.createdPreprint()!.id, changedFields).subscribe({
       complete: () => {
@@ -145,7 +145,7 @@ export class PreprintsMetadataStepComponent implements OnInit {
   backButtonClicked() {
     const formValue = this.metadataForm.value;
     delete formValue.subjects;
-    const changedFields = findChangedFields<Preprint>(formValue, this.createdPreprint()!);
+    const changedFields = findChangedFields<PreprintModel>(formValue, this.createdPreprint()!);
 
     if (!Object.keys(changedFields).length) {
       this.backClicked.emit();

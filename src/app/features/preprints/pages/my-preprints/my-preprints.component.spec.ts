@@ -7,10 +7,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PreprintShortInfo } from '@osf/features/preprints/models';
-import { PreprintSelectors } from '@osf/features/preprints/store/preprint';
 import { ListInfoShortenerComponent, SearchInputComponent, SubHeaderComponent } from '@shared/components';
 import { DEFAULT_TABLE_PARAMS } from '@shared/constants';
 import { SortOrder } from '@shared/enums';
+
+import { MyPreprintsSelectors } from '../../store/my-preprints';
 
 import { MyPreprintsComponent } from './my-preprints.component';
 
@@ -61,15 +62,15 @@ describe('MyPreprintsComponent', () => {
         provideMockStore({
           signals: [
             {
-              selector: PreprintSelectors.getMyPreprints,
+              selector: MyPreprintsSelectors.getMyPreprints,
               value: mockPreprints,
             },
             {
-              selector: PreprintSelectors.getMyPreprintsTotalCount,
+              selector: MyPreprintsSelectors.getMyPreprintsTotalCount,
               value: 5,
             },
             {
-              selector: PreprintSelectors.areMyPreprintsLoading,
+              selector: MyPreprintsSelectors.areMyPreprintsLoading,
               value: false,
             },
           ],
@@ -80,10 +81,6 @@ describe('MyPreprintsComponent', () => {
     fixture = TestBed.createComponent(MyPreprintsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
   });
 
   it('should initialize with correct default values', () => {

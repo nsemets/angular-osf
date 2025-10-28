@@ -7,7 +7,6 @@ import { Skeleton } from 'primeng/skeleton';
 import { TableModule, TablePageEvent } from 'primeng/table';
 
 import { debounceTime, distinctUntilChanged, skip } from 'rxjs';
-import { FixSpecialCharPipe } from '@shared/pipes';
 
 import { DatePipe, TitleCasePipe } from '@angular/common';
 import {
@@ -29,9 +28,10 @@ import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
 import { SortOrder } from '@osf/shared/enums';
 import { parseQueryFilterParams } from '@osf/shared/helpers';
 import { QueryParams, SearchFilters, TableParameters } from '@osf/shared/models';
+import { FixSpecialCharPipe } from '@shared/pipes';
 
 import { PreprintShortInfo } from '../../models';
-import { FetchMyPreprints, PreprintSelectors } from '../../store/preprint';
+import { FetchMyPreprints, MyPreprintsSelectors } from '../../store/my-preprints';
 
 @Component({
   selector: 'osf-my-preprints',
@@ -67,9 +67,9 @@ export class MyPreprintsComponent {
   currentPageSize = signal(DEFAULT_TABLE_PARAMS.rows);
   tableParams = signal<TableParameters>({ ...DEFAULT_TABLE_PARAMS, firstRowIndex: 0 });
 
-  preprints = select(PreprintSelectors.getMyPreprints);
-  preprintsTotalCount = select(PreprintSelectors.getMyPreprintsTotalCount);
-  areMyPreprintsLoading = select(PreprintSelectors.areMyPreprintsLoading);
+  preprints = select(MyPreprintsSelectors.getMyPreprints);
+  preprintsTotalCount = select(MyPreprintsSelectors.getMyPreprintsTotalCount);
+  areMyPreprintsLoading = select(MyPreprintsSelectors.areMyPreprintsLoading);
   skeletonData: PreprintShortInfo[] = Array.from({ length: 10 }, () => ({}) as PreprintShortInfo);
 
   constructor() {

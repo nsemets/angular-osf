@@ -4,6 +4,7 @@ import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
 
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+
 import { FixSpecialCharPipe } from '@shared/pipes';
 
 @Component({
