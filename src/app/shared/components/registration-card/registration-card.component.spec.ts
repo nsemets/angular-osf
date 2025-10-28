@@ -1,12 +1,17 @@
-import { MockProvider } from 'ng-mocks';
+import { MockComponents, MockProvider } from 'ng-mocks';
 
-import { NO_ERRORS_SCHEMA, signal } from '@angular/core';
+import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { RegistriesSelectors } from '@osf/features/registries/store';
 import { RegistrationReviewStates, RevisionReviewStates } from '@osf/shared/enums';
 import { RegistrationCard } from '@osf/shared/models';
+
+import { ContributorsListComponent } from '../contributors-list/contributors-list.component';
+import { DataResourcesComponent } from '../data-resources/data-resources.component';
+import { IconComponent } from '../icon/icon.component';
+import { StatusBadgeComponent } from '../status-badge/status-badge.component';
 
 import { RegistrationCardComponent } from './registration-card.component';
 
@@ -22,8 +27,11 @@ describe('RegistrationCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RegistrationCardComponent, OSFTestingModule],
-      schemas: [NO_ERRORS_SCHEMA],
+      imports: [
+        RegistrationCardComponent,
+        OSFTestingModule,
+        ...MockComponents(StatusBadgeComponent, DataResourcesComponent, IconComponent, ContributorsListComponent),
+      ],
       providers: [
         provideMockStore({
           signals: [{ selector: RegistriesSelectors.getSchemaResponse, value: signal(null) }],

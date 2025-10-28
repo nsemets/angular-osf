@@ -4,15 +4,16 @@ import { map } from 'rxjs/operators';
 import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
-import { ResourceType } from '@shared/enums';
-import { InstitutionsMapper } from '@shared/mappers';
+
+import { ResourceType } from '../enums';
+import { InstitutionsMapper } from '../mappers';
 import {
   Institution,
   InstitutionJsonApiResponse,
   InstitutionsJsonApiResponse,
   InstitutionsWithMetaJsonApiResponse,
   InstitutionsWithTotalCount,
-} from '@shared/models';
+} from '../models';
 
 import { JsonApiService } from './json-api.service';
 

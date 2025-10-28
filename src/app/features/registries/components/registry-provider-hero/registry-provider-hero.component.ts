@@ -9,11 +9,12 @@ import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { PreprintsHelpDialogComponent } from '@osf/features/preprints/components';
+import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
 import { HeaderStyleHelper } from '@osf/shared/helpers';
 import { RegistryProviderDetails } from '@osf/shared/models';
-import { SearchInputComponent } from '@shared/components';
+import { BrandService } from '@osf/shared/services/brand.service';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { DecodeHtmlPipe } from '@shared/pipes';
-import { BrandService, CustomDialogService } from '@shared/services';
 
 @Component({
   selector: 'osf-registry-provider-hero',

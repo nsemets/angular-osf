@@ -11,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { FetchLicenses, RegistriesSelectors, SaveLicense } from '@osf/features/registries/store';
-import { LicenseComponent } from '@osf/shared/components';
+import { LicenseComponent } from '@osf/shared/components/license/license.component';
 import { INPUT_VALIDATION_MESSAGES, InputLimits } from '@osf/shared/constants';
 import { LicenseModel, LicenseOptions } from '@osf/shared/models';
 

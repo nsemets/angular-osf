@@ -5,7 +5,7 @@ import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { TextInputComponent } from '@osf/shared/components';
+import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
 import { InputLimits } from '@osf/shared/constants';
 
 import { CreateFolderDialogComponent } from './create-folder-dialog.component';

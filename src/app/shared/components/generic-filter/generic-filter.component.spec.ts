@@ -1,8 +1,12 @@
+import { MockComponent } from 'ng-mocks';
+
 import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { FilterOperator, FilterOption } from '@shared/models';
+
+import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 
 import { GenericFilterComponent } from './generic-filter.component';
 
@@ -21,7 +25,7 @@ describe('GenericFilterComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GenericFilterComponent, OSFTestingModule],
+      imports: [GenericFilterComponent, OSFTestingModule, MockComponent(LoadingSpinnerComponent)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(GenericFilterComponent);

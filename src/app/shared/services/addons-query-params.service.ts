@@ -1,9 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { AddonCategory, AddonTabValue, AddonType } from '@shared/enums';
-import { addonCategoryToQueryParam, queryParamToAddonCategory } from '@shared/helpers';
-import { AddonsQueryParams } from '@shared/models';
+import { AddonCategory, AddonTabValue, AddonType } from '../enums';
+import { addonCategoryToQueryParam, queryParamToAddonCategory } from '../helpers';
+import { AddonsQueryParams } from '../models';
 
 @Injectable({
   providedIn: 'root',

@@ -12,7 +12,7 @@ import { ProfileState } from './features/profile/store';
 import { RegistriesState } from './features/registries/store';
 import { LicensesHandlers, ProjectsHandlers, ProvidersHandlers } from './features/registries/store/handlers';
 import { FilesHandlers } from './features/registries/store/handlers/files.handlers';
-import { LicensesService } from './shared/services';
+import { LicensesService } from './shared/services/licenses.service';
 import { BookmarksState } from './shared/stores/bookmarks';
 import { ProjectsState } from './shared/stores/projects';
 

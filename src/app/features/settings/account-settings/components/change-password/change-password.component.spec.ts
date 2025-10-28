@@ -1,7 +1,7 @@
 import { provideStore, Store } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
-import { MockPipe, MockProvider } from 'ng-mocks';
+import { MockComponent, MockPipe, MockProvider } from 'ng-mocks';
 
 import { of, throwError } from 'rxjs';
 
@@ -9,7 +9,9 @@ import { HttpErrorResponse, provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LoaderService, ToastService } from '@shared/services';
+import { PasswordInputHintComponent } from '@osf/shared/components/password-input-hint/password-input-hint.component';
+import { LoaderService } from '@osf/shared/services/loader.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 
 import { AccountSettingsState } from '../../store';
 
@@ -24,7 +26,7 @@ describe('ChangePasswordComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ChangePasswordComponent, MockPipe(TranslatePipe)],
+      imports: [ChangePasswordComponent, MockComponent(PasswordInputHintComponent), MockPipe(TranslatePipe)],
       providers: [
         provideStore([AccountSettingsState]),
         provideHttpClient(),

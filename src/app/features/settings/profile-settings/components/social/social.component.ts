@@ -19,7 +19,9 @@ import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular
 import { UpdateProfileSettingsSocialLinks, UserSelectors } from '@osf/core/store/user';
 import { SOCIAL_LINKS } from '@osf/shared/constants';
 import { SocialLinksForm, SocialModel } from '@osf/shared/models';
-import { CustomConfirmationService, LoaderService, ToastService } from '@osf/shared/services';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
+import { LoaderService } from '@osf/shared/services/loader.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 
 import { hasSocialLinkChanges, mapSocialLinkToPayload } from '../../helpers';
 import { SocialFormComponent } from '../social-form/social-form.component';

@@ -16,7 +16,7 @@ import { filterMenuItems, updateMenuItems } from '@osf/core/helpers';
 import { CustomMenuItem, RouteContext } from '@osf/core/models';
 import { AuthService } from '@osf/core/services';
 import { UserSelectors } from '@osf/core/store/user';
-import { IconComponent } from '@osf/shared/components';
+import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { CurrentResourceType, ReviewPermissions } from '@osf/shared/enums';
 import { getViewOnlyParam } from '@osf/shared/helpers';
 import { WrapFnPipe } from '@osf/shared/pipes';

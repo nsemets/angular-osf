@@ -1,4 +1,4 @@
-import { MockProvider } from 'ng-mocks';
+import { MockComponent, MockProvider } from 'ng-mocks';
 
 import { of } from 'rxjs';
 
@@ -7,6 +7,7 @@ import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { RegistriesSelectors } from '@osf/features/registries/store';
+import { SubjectsComponent } from '@osf/shared/components/subjects/subjects.component';
 import { ResourceType } from '@osf/shared/enums';
 import { SubjectsSelectors } from '@osf/shared/stores/subjects';
 
@@ -24,7 +25,7 @@ describe('RegistriesSubjectsComponent', () => {
   beforeEach(async () => {
     mockActivatedRoute = ActivatedRouteMockBuilder.create().withParams({ id: 'draft-1' }).build();
     await TestBed.configureTestingModule({
-      imports: [RegistriesSubjectsComponent, OSFTestingModule],
+      imports: [RegistriesSubjectsComponent, OSFTestingModule, MockComponent(SubjectsComponent)],
       providers: [
         MockProvider(ActivatedRoute, mockActivatedRoute),
         provideMockStore({

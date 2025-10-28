@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { GlobalSearchComponent } from '@shared/components';
+import { GlobalSearchComponent } from '@osf/shared/components/global-search/global-search.component';
 import { SEARCH_TAB_OPTIONS } from '@shared/constants';
 
 @Component({

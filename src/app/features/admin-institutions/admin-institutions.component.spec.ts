@@ -7,8 +7,9 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
+import { SelectComponent } from '@osf/shared/components/select/select.component';
 import { InstitutionsSearchState } from '@osf/shared/stores/institutions-search';
-import { LoadingSpinnerComponent, SelectComponent } from '@shared/components';
 
 import { AdminInstitutionsComponent } from './admin-institutions.component';
 

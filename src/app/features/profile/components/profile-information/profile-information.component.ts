@@ -6,7 +6,8 @@ import { DatePipe, NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 
-import { EducationHistoryComponent, EmploymentHistoryComponent } from '@osf/shared/components';
+import { EducationHistoryComponent } from '@osf/shared/components/education-history/education-history.component';
+import { EmploymentHistoryComponent } from '@osf/shared/components/employment-history/employment-history.component';
 import { SOCIAL_LINKS } from '@osf/shared/constants';
 import { IS_MEDIUM } from '@osf/shared/helpers';
 import { UserModel } from '@osf/shared/models';

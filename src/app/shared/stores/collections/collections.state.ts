@@ -7,7 +7,7 @@ import { inject, Injectable } from '@angular/core';
 import { SetCurrentProvider } from '@core/store/provider';
 import { CurrentResourceType } from '@osf/shared/enums';
 import { handleSectionError } from '@osf/shared/helpers';
-import { CollectionsService } from '@osf/shared/services';
+import { CollectionsService } from '@osf/shared/services/collections.service';
 
 import {
   ClearCollections,

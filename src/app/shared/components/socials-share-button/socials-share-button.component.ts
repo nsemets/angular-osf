@@ -8,7 +8,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input } from '@an
 
 import { ResourceType } from '@osf/shared/enums';
 import { SocialShareContentModel } from '@osf/shared/models';
-import { SocialShareService } from '@osf/shared/services';
+import { SocialShareService } from '@osf/shared/services/social-share.service';
 
 import { IconComponent } from '../icon/icon.component';
 

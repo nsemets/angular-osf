@@ -5,7 +5,9 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { LoadingSpinnerComponent, SubHeaderComponent, ViewOnlyLinkMessageComponent } from '@osf/shared/components';
+import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
+import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
+import { ViewOnlyLinkMessageComponent } from '@osf/shared/components/view-only-link-message/view-only-link-message.component';
 import { hasViewOnlyParam } from '@osf/shared/helpers';
 
 import { RegistrationLinksCardComponent } from '../../components';

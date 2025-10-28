@@ -10,7 +10,8 @@ import { RouterLink } from '@angular/router';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { RegistrationReviewStates, RegistryStatus, RevisionReviewStates } from '@osf/shared/enums';
-import { CustomConfirmationService, CustomDialogService } from '@osf/shared/services';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 
 import { RegistryOverview } from '../../models';
 import { MakePublic } from '../../store/registry-overview';

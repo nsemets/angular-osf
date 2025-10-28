@@ -16,6 +16,9 @@ import {
   OsfFileRevision,
   PatchFileMetadata,
 } from '@osf/features/files/models';
+
+import { FileKind } from '../enums';
+import { AddonMapper, ContributorsMapper, FilesMapper } from '../mappers';
 import {
   AddonGetResponseJsonApi,
   AddonModel,
@@ -37,20 +40,15 @@ import {
   FileVersionsResponseJsonApi,
   JsonApiResponse,
   MetaJsonApi,
-} from '@shared/models';
-
-import { FileKind } from '../enums';
-import { AddonMapper, ContributorsMapper, FilesMapper } from '../mappers';
+} from '../models';
 
 import { JsonApiService } from './json-api.service';
-import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FilesService {
   readonly jsonApiService = inject(JsonApiService);
-  readonly toastService = inject(ToastService);
   private readonly environment = inject(ENVIRONMENT);
 
   get apiUrl() {

@@ -14,7 +14,9 @@ import { ProjectModel } from '@osf/shared/models/projects';
 import { InstitutionsSelectors } from '@osf/shared/stores/institutions';
 import { ProjectsSelectors } from '@osf/shared/stores/projects';
 import { RegionsSelectors } from '@osf/shared/stores/regions';
-import { AffiliatedInstitutionSelectComponent, ProjectSelectorComponent } from '@shared/components';
+
+import { AffiliatedInstitutionSelectComponent } from '../affiliated-institution-select/affiliated-institution-select.component';
+import { ProjectSelectorComponent } from '../project-selector/project-selector.component';
 
 import { AddProjectFormComponent } from './add-project-form.component';
 

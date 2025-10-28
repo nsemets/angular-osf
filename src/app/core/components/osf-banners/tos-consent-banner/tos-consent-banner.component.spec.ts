@@ -9,7 +9,7 @@ import { By } from '@angular/platform-browser';
 
 import { AcceptTermsOfServiceByUser } from '@core/store/user';
 import { UserSelectors } from '@osf/core/store/user';
-import { IconComponent } from '@shared/components';
+import { IconComponent } from '@osf/shared/components/icon/icon.component';
 
 import { TosConsentBannerComponent } from './tos-consent-banner.component';
 

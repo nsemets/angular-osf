@@ -6,7 +6,7 @@ import { Tooltip } from 'primeng/tooltip';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 
-import { ToastService } from '@osf/shared/services';
+import { ToastService } from '@osf/shared/services/toast.service';
 import { SeverityType } from '@shared/models';
 
 @Component({

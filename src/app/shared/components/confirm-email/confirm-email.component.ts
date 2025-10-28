@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 
 import { DeleteEmail, UserEmailsSelectors, VerifyEmail } from '@core/store/user-emails';
 import { AccountEmailModel } from '@osf/shared/models';
-import { ToastService } from '@osf/shared/services';
+import { ToastService } from '@osf/shared/services/toast.service';
 
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 

@@ -6,7 +6,8 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { SelectComponent, SubHeaderComponent } from '@osf/shared/components';
+import { SelectComponent } from '@osf/shared/components/select/select.component';
+import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { IS_MEDIUM } from '@osf/shared/helpers';
 
 import { EducationComponent, EmploymentComponent, NameComponent, SocialComponent } from './components';

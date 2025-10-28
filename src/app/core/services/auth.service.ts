@@ -7,7 +7,8 @@ import { inject, Injectable } from '@angular/core';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { ClearCurrentUser } from '@osf/core/store/user';
 import { urlParam } from '@osf/shared/helpers';
-import { JsonApiService, LoaderService } from '@osf/shared/services';
+import { JsonApiService } from '@osf/shared/services/json-api.service';
+import { LoaderService } from '@osf/shared/services/loader.service';
 
 import { SignUpModel } from '../models';
 

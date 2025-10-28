@@ -10,8 +10,9 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UpdateProfileSettingsEmployment, UserSelectors } from '@core/store/user';
-import { EmploymentFormComponent } from '@osf/features/settings/profile-settings/components';
-import { ToastService } from '@shared/services';
+import { ToastService } from '@osf/shared/services/toast.service';
+
+import { EmploymentFormComponent } from '../employment-form/employment-form.component';
 
 import { EmploymentComponent } from './employment.component';
 

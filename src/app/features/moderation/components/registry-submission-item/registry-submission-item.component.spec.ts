@@ -1,8 +1,9 @@
-import { MockComponent, MockPipe } from 'ng-mocks';
+import { TranslatePipe } from '@ngx-translate/core';
+import { MockComponents, MockPipe } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { IconComponent } from '@osf/shared/components';
+import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { DateAgoPipe } from '@osf/shared/pipes';
 
 import { SubmissionReviewStatus } from '../../enums';
@@ -21,7 +22,13 @@ describe('RegistrySubmissionItemComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RegistrySubmissionItemComponent, OSFTestingModule, MockComponent(IconComponent), MockPipe(DateAgoPipe)],
+      imports: [
+        RegistrySubmissionItemComponent,
+        OSFTestingModule,
+        ...MockComponents(IconComponent),
+        MockPipe(DateAgoPipe),
+        MockPipe(TranslatePipe),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RegistrySubmissionItemComponent);

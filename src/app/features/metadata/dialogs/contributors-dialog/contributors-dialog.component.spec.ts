@@ -4,10 +4,10 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
 import { ContributorModel } from '@osf/shared/models';
-import { CustomDialogService } from '@osf/shared/services';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { ContributorsSelectors } from '@osf/shared/stores/contributors';
-import { SearchInputComponent } from '@shared/components';
 import { ContributorsTableComponent } from '@shared/components/contributors';
 
 import { ContributorsDialogComponent } from './contributors-dialog.component';

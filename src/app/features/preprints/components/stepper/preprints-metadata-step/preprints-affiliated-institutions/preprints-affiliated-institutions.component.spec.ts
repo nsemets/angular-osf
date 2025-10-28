@@ -5,7 +5,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReviewsState } from '@osf/features/preprints/enums';
 import { PreprintProviderDetails } from '@osf/features/preprints/models';
 import { PreprintStepperSelectors } from '@osf/features/preprints/store/preprint-stepper';
-import { AffiliatedInstitutionSelectComponent } from '@shared/components';
+import { AffiliatedInstitutionSelectComponent } from '@osf/shared/components/affiliated-institution-select/affiliated-institution-select.component';
 import { Institution } from '@shared/models';
 import { InstitutionsSelectors } from '@shared/stores/institutions';
 

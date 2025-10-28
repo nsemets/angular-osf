@@ -15,10 +15,11 @@ import { RouterLink } from '@angular/router';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { SignUpModel } from '@osf/core/models';
 import { AuthService } from '@osf/core/services';
-import { PasswordInputHintComponent, TextInputComponent } from '@osf/shared/components';
+import { PasswordInputHintComponent } from '@osf/shared/components/password-input-hint/password-input-hint.component';
+import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
 import { InputLimits } from '@osf/shared/constants';
 import { CustomValidators, PASSWORD_REGEX } from '@osf/shared/helpers';
-import { ToastService } from '@osf/shared/services';
+import { ToastService } from '@osf/shared/services/toast.service';
 
 import { SignUpForm } from '../../models';
 

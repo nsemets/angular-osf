@@ -4,8 +4,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UserSelectors } from '@core/store/user';
 import { ContributorsTableComponent } from '@osf/shared/components/contributors';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 import { ContributorModel } from '@shared/models';
-import { CustomConfirmationService, CustomDialogService, ToastService } from '@shared/services';
 import { ContributorsSelectors } from '@shared/stores/contributors';
 
 import { PreprintsContributorsComponent } from './preprints-contributors.component';

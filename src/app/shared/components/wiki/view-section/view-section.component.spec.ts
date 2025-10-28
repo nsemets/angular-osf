@@ -3,8 +3,9 @@ import { MockComponent } from 'ng-mocks';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 
-import { MarkdownComponent } from '@shared/components';
 import { WikiVersion } from '@shared/models';
+
+import { MarkdownComponent } from '../../markdown/markdown.component';
 
 import { ViewSectionComponent } from './view-section.component';
 

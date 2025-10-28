@@ -18,10 +18,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
-import { MetadataTabsComponent, SubHeaderComponent } from '@osf/shared/components';
+import { MetadataTabsComponent } from '@osf/shared/components/metadata-tabs/metadata-tabs.component';
+import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { MetadataResourceEnum, ResourceType } from '@osf/shared/enums';
 import { MetadataTabsModel, SubjectModel } from '@osf/shared/models';
-import { CustomConfirmationService, CustomDialogService, ToastService } from '@osf/shared/services';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 import {
   ContributorsSelectors,
   GetBibliographicContributors,

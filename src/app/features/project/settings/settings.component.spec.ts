@@ -3,6 +3,13 @@ import { MockComponents, MockProvider } from 'ng-mocks';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
+import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
+import { LoaderService } from '@osf/shared/services/loader.service';
+import { ToastService } from '@osf/shared/services/toast.service';
+import { ViewOnlyLinkSelectors } from '@osf/shared/stores/view-only-links';
+
 import {
   ProjectSettingNotificationsComponent,
   SettingsAccessRequestsCardComponent,
@@ -11,11 +18,7 @@ import {
   SettingsStorageLocationCardComponent,
   SettingsViewOnlyLinksCardComponent,
   SettingsWikiCardComponent,
-} from '@osf/features/project/settings/components';
-import { LoadingSpinnerComponent, SubHeaderComponent } from '@osf/shared/components';
-import { CustomConfirmationService, LoaderService, ToastService } from '@osf/shared/services';
-import { ViewOnlyLinkSelectors } from '@osf/shared/stores/view-only-links';
-
+} from './components';
 import { SettingsComponent } from './settings.component';
 import { SettingsSelectors } from './store';
 

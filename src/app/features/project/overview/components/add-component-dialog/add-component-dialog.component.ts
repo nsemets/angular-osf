@@ -14,11 +14,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { UserSelectors } from '@core/store/user';
-import { AffiliatedInstitutionSelectComponent } from '@osf/shared/components';
+import { AffiliatedInstitutionSelectComponent } from '@osf/shared/components/affiliated-institution-select/affiliated-institution-select.component';
 import { ComponentFormControls } from '@osf/shared/enums';
 import { CustomValidators } from '@osf/shared/helpers';
 import { ComponentForm, Institution } from '@osf/shared/models';
-import { ToastService } from '@osf/shared/services';
+import { ToastService } from '@osf/shared/services/toast.service';
 import { FetchUserInstitutions, InstitutionsSelectors } from '@osf/shared/stores/institutions';
 import { FetchRegions, RegionsSelectors } from '@osf/shared/stores/regions';
 

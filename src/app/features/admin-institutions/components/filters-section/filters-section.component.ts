@@ -7,7 +7,8 @@ import { Card } from 'primeng/card';
 
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 
-import { FilterChipsComponent, SearchFiltersComponent } from '@shared/components';
+import { FilterChipsComponent } from '@osf/shared/components/filter-chips/filter-chips.component';
+import { SearchFiltersComponent } from '@osf/shared/components/search-filters/search-filters.component';
 import { DiscoverableFilter, FilterOption } from '@shared/models';
 import {
   ClearFilterSearchResults,

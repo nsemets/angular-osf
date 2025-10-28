@@ -7,7 +7,8 @@ import { Router } from '@angular/router';
 
 import { SENTRY_TOKEN } from '@core/provider/sentry.provider';
 import { hasViewOnlyParam } from '@osf/shared/helpers';
-import { LoaderService, ToastService } from '@osf/shared/services';
+import { LoaderService } from '@osf/shared/services/loader.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 
 import { ERROR_MESSAGES } from '../constants';
 import { AuthService } from '../services';

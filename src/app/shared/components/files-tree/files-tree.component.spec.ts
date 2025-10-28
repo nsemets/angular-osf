@@ -1,15 +1,20 @@
-import { MockProvider } from 'ng-mocks';
+import { MockComponents, MockProvider } from 'ng-mocks';
 
 import { DialogService } from 'primeng/dynamicdialog';
 
 import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
+import { FilesService } from '@osf/shared/services/files.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 import { FileKind } from '@shared/enums';
 import { FileFolderModel, FileLabelModel } from '@shared/models';
-import { CustomConfirmationService, FilesService, ToastService } from '@shared/services';
 import { DataciteService } from '@shared/services/datacite/datacite.service';
 import { CurrentResourceSelectors } from '@shared/stores/current-resource';
+
+import { FileMenuComponent } from '../file-menu/file-menu.component';
+import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 
 import { FilesTreeComponent } from './files-tree.component';
 
@@ -37,7 +42,7 @@ describe('FilesTreeComponent', () => {
   beforeEach(async () => {
     dataciteMock = DataciteMockFactory();
     await TestBed.configureTestingModule({
-      imports: [FilesTreeComponent, OSFTestingModule],
+      imports: [FilesTreeComponent, OSFTestingModule, ...MockComponents(LoadingSpinnerComponent, FileMenuComponent)],
       providers: [
         provideMockStore({
           signals: [{ selector: CurrentResourceSelectors.getCurrentResource, value: signal(null) }],

@@ -29,7 +29,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AddonType, OperationNames, StorageItemType } from '@osf/shared/enums';
 import { convertCamelCaseToNormal, IS_XSMALL } from '@osf/shared/helpers';
 import { OperationInvokeData, StorageItem } from '@osf/shared/models';
-import { CustomDialogService } from '@osf/shared/services';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { AddonsSelectors, ClearOperationInvocations } from '@osf/shared/stores/addons';
 
 import { GoogleFilePickerComponent } from '../../google-file-picker/google-file-picker.component';

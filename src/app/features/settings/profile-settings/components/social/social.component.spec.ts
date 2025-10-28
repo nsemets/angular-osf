@@ -1,7 +1,7 @@
 import { Store } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
-import { MockPipe, MockProvider } from 'ng-mocks';
+import { MockComponent, MockPipe, MockProvider } from 'ng-mocks';
 
 import { of } from 'rxjs';
 
@@ -9,6 +9,8 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { SocialFormComponent } from '../social-form/social-form.component';
 
 import { SocialComponent } from './social.component';
 
@@ -28,13 +30,8 @@ describe.skip('SocialComponent', () => {
     });
 
     await TestBed.configureTestingModule({
-      imports: [SocialComponent, MockPipe(TranslatePipe)],
-      providers: [
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        MockProvider(TranslatePipe),
-        MockProvider(Store, store),
-      ],
+      imports: [SocialComponent, MockComponent(SocialFormComponent), MockPipe(TranslatePipe)],
+      providers: [provideHttpClient(), provideHttpClientTesting(), MockProvider(Store, store)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SocialComponent);

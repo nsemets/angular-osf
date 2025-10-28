@@ -16,7 +16,7 @@ import {
   PaginatedData,
   ResponseJsonApi,
 } from '@osf/shared/models';
-import { JsonApiService } from '@osf/shared/services';
+import { JsonApiService } from '@osf/shared/services/json-api.service';
 
 import { ProjectOverviewMapper } from '../mappers';
 import { PrivacyStatusModel, ProjectOverviewResponseJsonApi, ProjectOverviewWithMeta } from '../models';

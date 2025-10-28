@@ -22,7 +22,6 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 
 import {
   AddContributorDialogComponent,
@@ -33,7 +32,9 @@ import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
 import { AddContributorType, ResourceType } from '@osf/shared/enums';
 import { findChangedItems } from '@osf/shared/helpers';
 import { ContributorDialogAddModel, ContributorModel, TableParameters } from '@osf/shared/models';
-import { CustomConfirmationService, CustomDialogService, ToastService } from '@osf/shared/services';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 import {
   AddContributor,
   BulkAddContributors,
@@ -58,7 +59,6 @@ export class PreprintsContributorsComponent implements OnInit {
   readonly customDialogService = inject(CustomDialogService);
   readonly toastService = inject(ToastService);
   readonly customConfirmationService = inject(CustomConfirmationService);
-  private readonly router = inject(Router);
 
   initialContributors = select(ContributorsSelectors.getContributors);
   contributors = signal<ContributorModel[]>([]);

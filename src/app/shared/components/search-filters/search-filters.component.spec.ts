@@ -1,7 +1,12 @@
+import { MockComponents } from 'ng-mocks';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FILTER_PLACEHOLDERS } from '@shared/constants/filter-placeholders';
 import { DiscoverableFilter, FilterOperator, FilterOption } from '@shared/models';
+
+import { GenericFilterComponent } from '../generic-filter/generic-filter.component';
+import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 
 import { SearchFiltersComponent } from './search-filters.component';
 
@@ -46,7 +51,11 @@ describe('SearchFiltersComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SearchFiltersComponent, OSFTestingModule],
+      imports: [
+        SearchFiltersComponent,
+        OSFTestingModule,
+        ...MockComponents(GenericFilterComponent, LoadingSpinnerComponent),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SearchFiltersComponent);

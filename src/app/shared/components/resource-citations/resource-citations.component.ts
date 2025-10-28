@@ -26,9 +26,9 @@ import {
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
+import { ToastService } from '@osf/shared/services/toast.service';
 import { hasViewOnlyParam } from '@shared/helpers';
 import { CitationStyle, CustomOption, ResourceOverview } from '@shared/models';
-import { ToastService } from '@shared/services';
 import {
   CitationsSelectors,
   ClearStyledCitation,

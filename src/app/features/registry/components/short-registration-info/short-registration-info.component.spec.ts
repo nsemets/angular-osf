@@ -2,7 +2,7 @@ import { MockComponent } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ContributorsListComponent } from '@shared/components';
+import { ContributorsListComponent } from '@osf/shared/components/contributors-list/contributors-list.component';
 import { RegistryStatus } from '@shared/enums';
 
 import { RegistryOverview } from '../../models';

@@ -11,7 +11,7 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, input } f
 import { Router } from '@angular/router';
 
 import { PreprintSelectors } from '@osf/features/preprints/store/preprint';
-import { LicenseDisplayComponent } from '@osf/shared/components';
+import { LicenseDisplayComponent } from '@osf/shared/components/license-display/license-display.component';
 import { ResourceType } from '@shared/enums';
 import { FetchSelectedSubjects, SubjectsSelectors } from '@shared/stores/subjects';
 

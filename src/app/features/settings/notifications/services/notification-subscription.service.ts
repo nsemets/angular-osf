@@ -10,7 +10,7 @@ import {
   NotificationSubscription,
   NotificationSubscriptionGetResponseJsonApi,
 } from '@osf/shared/models';
-import { JsonApiService } from '@osf/shared/services';
+import { JsonApiService } from '@osf/shared/services/json-api.service';
 
 @Injectable({
   providedIn: 'root',

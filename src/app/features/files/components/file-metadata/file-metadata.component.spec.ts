@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { languageCodes } from '@osf/shared/constants';
-import { CustomDialogService } from '@osf/shared/services';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 
 import { FileMetadataFields } from '../../constants';
 import { PatchFileMetadata } from '../../models';

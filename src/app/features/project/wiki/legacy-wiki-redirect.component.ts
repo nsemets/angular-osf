@@ -7,7 +7,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ResourceType } from '@osf/shared/enums';
-import { LoaderService } from '@osf/shared/services';
+import { LoaderService } from '@osf/shared/services/loader.service';
 import { GetWikiList, WikiSelectors } from '@osf/shared/stores/wiki';
 
 @Component({
@@ -22,9 +22,7 @@ export class LegacyWikiRedirectComponent {
   readonly projectId = toSignal(this.route.parent?.params.pipe(map((params) => params['id'])) ?? of(undefined));
   wikiList = select(WikiSelectors.getWikiList);
 
-  actions = createDispatchMap({
-    getWikiList: GetWikiList,
-  });
+  actions = createDispatchMap({ getWikiList: GetWikiList });
 
   constructor() {
     this.loaderService.show();

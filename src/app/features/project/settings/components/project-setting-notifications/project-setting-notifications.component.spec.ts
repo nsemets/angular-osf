@@ -2,9 +2,10 @@ import { MockComponent, MockPipe } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProjectDetailSettingAccordionComponent } from '@osf/features/project/settings/components';
-import { NotificationDescriptionPipe } from '@osf/features/project/settings/pipes';
 import { SubscriptionEvent, SubscriptionFrequency } from '@osf/shared/enums';
+
+import { NotificationDescriptionPipe } from '../../pipes';
+import { ProjectDetailSettingAccordionComponent } from '../project-detail-setting-accordion/project-detail-setting-accordion.component';
 
 import { ProjectSettingNotificationsComponent } from './project-setting-notifications.component';
 

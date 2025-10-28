@@ -7,7 +7,7 @@ import { Textarea } from 'primeng/textarea';
 import { ChangeDetectionStrategy, Component, computed, effect, input, output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
-import { TextInputComponent } from '@osf/shared/components';
+import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
 import { InputLimits } from '@osf/shared/constants';
 import { ProjectFormControls } from '@osf/shared/enums';
 import { CustomValidators } from '@osf/shared/helpers';

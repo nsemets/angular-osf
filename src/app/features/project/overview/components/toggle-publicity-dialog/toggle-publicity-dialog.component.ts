@@ -17,10 +17,11 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { ComponentsSelectionListComponent, LoadingSpinnerComponent } from '@osf/shared/components';
+import { ComponentsSelectionListComponent } from '@osf/shared/components/components-selection-list/components-selection-list.component';
+import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { UserPermissions } from '@osf/shared/enums';
 import { ComponentCheckboxItemModel } from '@osf/shared/models';
-import { ToastService } from '@osf/shared/services';
+import { ToastService } from '@osf/shared/services/toast.service';
 import { CurrentResourceSelectors } from '@osf/shared/stores/current-resource';
 
 import { TogglePublicityStep } from '../../enums';

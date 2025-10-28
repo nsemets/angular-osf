@@ -10,9 +10,9 @@ import {
   PreprintLinksJsonApi,
   PreprintRelationshipsJsonApi,
 } from '@osf/features/preprints/models';
+import { JsonApiService } from '@osf/shared/services/json-api.service';
 import { LicensesMapper } from '@shared/mappers';
 import { ApiData, LicenseModel, LicenseOptions, LicensesResponseJsonApi } from '@shared/models';
-import { JsonApiService } from '@shared/services';
 
 @Injectable({
   providedIn: 'root',

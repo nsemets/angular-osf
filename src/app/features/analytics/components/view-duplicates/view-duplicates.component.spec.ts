@@ -9,17 +9,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { ProjectOverviewSelectors } from '@osf/features/project/overview/store';
 import { RegistryOverviewSelectors } from '@osf/features/registry/store/registry-overview';
+import { ContributorsListComponent } from '@osf/shared/components/contributors-list/contributors-list.component';
+import { CustomPaginatorComponent } from '@osf/shared/components/custom-paginator/custom-paginator.component';
+import { IconComponent } from '@osf/shared/components/icon/icon.component';
+import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
+import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
+import { TruncatedTextComponent } from '@osf/shared/components/truncated-text/truncated-text.component';
 import { ResourceType } from '@osf/shared/enums';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { DuplicatesSelectors } from '@osf/shared/stores/duplicates';
-import {
-  ContributorsListComponent,
-  CustomPaginatorComponent,
-  IconComponent,
-  LoadingSpinnerComponent,
-  SubHeaderComponent,
-  TruncatedTextComponent,
-} from '@shared/components';
-import { CustomDialogService } from '@shared/services';
 
 import { ViewDuplicatesComponent } from './view-duplicates.component';
 

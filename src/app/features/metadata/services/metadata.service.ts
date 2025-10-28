@@ -6,7 +6,7 @@ import { inject, Injectable } from '@angular/core';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { ResourceType } from '@osf/shared/enums';
 import { BaseNodeAttributesJsonApi, Identifier, LicenseOptions } from '@osf/shared/models';
-import { JsonApiService } from '@osf/shared/services';
+import { JsonApiService } from '@osf/shared/services/json-api.service';
 
 import { CedarRecordsMapper, MetadataMapper } from '../mappers';
 import {

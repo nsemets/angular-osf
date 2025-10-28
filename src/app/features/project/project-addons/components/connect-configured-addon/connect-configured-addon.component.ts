@@ -14,21 +14,17 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
-import { SubHeaderComponent } from '@osf/shared/components';
 import {
   AddonSetupAccountFormComponent,
   AddonTermsComponent,
   StorageItemSelectorComponent,
 } from '@osf/shared/components/addons';
+import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { AddonServiceNames, AddonType, OperationNames, ProjectAddonsStepperValue } from '@osf/shared/enums';
 import { getAddonTypeString } from '@osf/shared/helpers';
 import { AddonModel, AddonTerm, AuthorizedAccountModel, AuthorizedAddonRequestJsonApi } from '@osf/shared/models';
-import {
-  AddonFormService,
-  AddonOAuthService,
-  AddonOperationInvocationService,
-  ToastService,
-} from '@osf/shared/services';
+import { AddonFormService, AddonOAuthService, AddonOperationInvocationService } from '@osf/shared/services/addons';
+import { ToastService } from '@osf/shared/services/toast.service';
 import {
   AddonsSelectors,
   CreateAddonOperationInvocation,

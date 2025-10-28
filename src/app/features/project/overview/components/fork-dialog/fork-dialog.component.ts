@@ -11,7 +11,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { ToolbarResource } from '@osf/shared/models';
-import { ToastService } from '@osf/shared/services';
+import { ToastService } from '@osf/shared/services/toast.service';
 
 import { ForkResource, ProjectOverviewSelectors } from '../../store';
 

@@ -14,7 +14,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { INPUT_VALIDATION_MESSAGES, InputLimits } from '@osf/shared/constants';
 import { CustomValidators, findChangedFields } from '@osf/shared/helpers';
-import { CustomConfirmationService, ToastService } from '@osf/shared/services';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 
 import {
   ClearState,

@@ -25,7 +25,8 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import { SearchInputComponent, SubHeaderComponent } from '@osf/shared/components';
+import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
+import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { SortOrder } from '@osf/shared/enums';
 import { parseQueryFilterParams } from '@osf/shared/helpers';
 import { QueryParams, SearchFilters, TableParameters } from '@osf/shared/models';

@@ -4,7 +4,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PreprintProviderDetails } from '@osf/features/preprints/models';
 import { PreprintSelectors } from '@osf/features/preprints/store/preprint';
-import { ContributorsListComponent, TruncatedTextComponent } from '@osf/shared/components';
+import { ContributorsListComponent } from '@osf/shared/components/contributors-list/contributors-list.component';
+import { LicenseDisplayComponent } from '@osf/shared/components/license-display/license-display.component';
+import { TruncatedTextComponent } from '@osf/shared/components/truncated-text/truncated-text.component';
 import { InterpolatePipe } from '@osf/shared/pipes';
 import { ContributorsSelectors } from '@osf/shared/stores/contributors';
 import { SubjectsSelectors } from '@osf/shared/stores/subjects';
@@ -35,7 +37,12 @@ describe('PreprintTombstoneComponent', () => {
       imports: [
         PreprintTombstoneComponent,
         OSFTestingModule,
-        ...MockComponents(PreprintDoiSectionComponent, TruncatedTextComponent, ContributorsListComponent),
+        ...MockComponents(
+          PreprintDoiSectionComponent,
+          TruncatedTextComponent,
+          ContributorsListComponent,
+          LicenseDisplayComponent
+        ),
         MockPipes(InterpolatePipe),
       ],
       providers: [

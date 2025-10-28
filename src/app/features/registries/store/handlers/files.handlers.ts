@@ -5,7 +5,7 @@ import { catchError, finalize, tap } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { handleSectionError } from '@osf/shared/helpers';
-import { FilesService } from '@osf/shared/services';
+import { FilesService } from '@osf/shared/services/files.service';
 
 import { CreateFolder, GetFiles, GetRootFolders } from '../registries.actions';
 import { RegistriesStateModel } from '../registries.model';

@@ -5,7 +5,7 @@ import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 
-import { TextInputComponent } from '@shared/components';
+import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
 
 import { EducationFormComponent } from './education-form.component';
 

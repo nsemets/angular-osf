@@ -23,16 +23,16 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import {
-  MyProjectsTableComponent,
-  SearchInputComponent,
-  SelectComponent,
-  SubHeaderComponent,
-} from '@osf/shared/components';
+import { MyProjectsTableComponent } from '@osf/shared/components/my-projects-table/my-projects-table.component';
+import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
+import { SelectComponent } from '@osf/shared/components/select/select.component';
+import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
 import { ResourceType, SortOrder } from '@osf/shared/enums';
 import { IS_MEDIUM } from '@osf/shared/helpers';
 import { MyResourcesItem, MyResourcesSearchFilters, QueryParams, TableParameters } from '@osf/shared/models';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
+import { ProjectRedirectDialogService } from '@osf/shared/services/project-redirect-dialog.service';
 import { BookmarksSelectors, GetBookmarksCollectionId } from '@osf/shared/stores/bookmarks';
 import {
   ClearMyResources,
@@ -42,7 +42,6 @@ import {
   GetMyRegistrations,
   MyResourcesSelectors,
 } from '@osf/shared/stores/my-resources';
-import { CustomDialogService, ProjectRedirectDialogService } from '@shared/services';
 
 import { PROJECT_FILTER_OPTIONS } from './constants/project-filter-options.const';
 import { MyProjectsQueryService } from './services/my-projects-query.service';

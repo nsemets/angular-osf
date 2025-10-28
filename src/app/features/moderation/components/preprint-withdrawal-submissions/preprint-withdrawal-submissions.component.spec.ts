@@ -3,12 +3,15 @@ import { MockComponents, MockProvider } from 'ng-mocks';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { PreprintSubmissionItemComponent } from '@osf/features/moderation/components';
-import { PreprintWithdrawalSubmission } from '@osf/features/moderation/models';
-import { CustomPaginatorComponent, IconComponent, LoadingSpinnerComponent, SelectComponent } from '@shared/components';
+import { CustomPaginatorComponent } from '@osf/shared/components/custom-paginator/custom-paginator.component';
+import { IconComponent } from '@osf/shared/components/icon/icon.component';
+import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
+import { SelectComponent } from '@osf/shared/components/select/select.component';
 
 import { PreprintSubmissionsSort, SubmissionReviewStatus } from '../../enums';
+import { PreprintWithdrawalSubmission } from '../../models';
 import { PreprintModerationSelectors } from '../../store/preprint-moderation';
+import { PreprintSubmissionItemComponent } from '../preprint-submission-item/preprint-submission-item.component';
 
 import { PreprintWithdrawalSubmissionsComponent } from './preprint-withdrawal-submissions.component';
 

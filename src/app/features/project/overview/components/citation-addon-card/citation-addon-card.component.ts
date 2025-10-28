@@ -20,16 +20,17 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { DEFAULT_CITATION_STYLE } from '@osf/features/project/overview/constants';
-import { OperationNames, StorageItemType } from '@shared/enums';
-import { formatCitation, getItemUrl } from '@shared/helpers';
-import { CitationStyle, ConfiguredAddonModel, CustomOption, StorageItem } from '@shared/models';
-import { AddonOperationInvocationService, CslStyleManagerService } from '@shared/services';
-import { AddonsSelectors, CreateCitationAddonOperationInvocation } from '@shared/stores/addons';
-import { CitationsSelectors, GetCitationStyles } from '@shared/stores/citations';
+import { OperationNames, StorageItemType } from '@osf/shared/enums';
+import { formatCitation, getItemUrl } from '@osf/shared/helpers';
+import { CitationStyle, ConfiguredAddonModel, CustomOption, StorageItem } from '@osf/shared/models';
+import { AddonOperationInvocationService } from '@osf/shared/services/addons';
+import { CslStyleManagerService } from '@osf/shared/services/csl-style-manager.service';
+import { AddonsSelectors, CreateCitationAddonOperationInvocation } from '@osf/shared/stores/addons';
+import { CitationsSelectors, GetCitationStyles } from '@osf/shared/stores/citations';
 
 import '@citation-js/plugin-csl';
 
+import { DEFAULT_CITATION_STYLE } from '../../constants';
 import { FormattedCitationItem } from '../../models';
 import { CitationCollectionItemComponent } from '../citation-collection-item/citation-collection-item.component';
 import { CitationItemComponent } from '../citation-item/citation-item.component';

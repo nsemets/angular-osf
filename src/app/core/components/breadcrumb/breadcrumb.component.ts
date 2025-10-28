@@ -9,7 +9,7 @@ import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@
 import { ProviderSelectors } from '@core/store/provider';
 import { RouteData } from '@osf/core/models';
 import { InstitutionsAdminSelectors } from '@osf/features/admin-institutions/store';
-import { IconComponent } from '@osf/shared/components';
+import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { InstitutionsSearchSelectors } from '@shared/stores/institutions-search';
 
 @Component({

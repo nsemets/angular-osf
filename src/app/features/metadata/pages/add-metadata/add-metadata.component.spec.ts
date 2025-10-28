@@ -4,9 +4,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { CedarTemplateFormComponent } from '@osf/features/metadata/components';
+import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
+import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { ResourceType } from '@osf/shared/enums';
-import { ToastService } from '@osf/shared/services';
-import { LoadingSpinnerComponent, SubHeaderComponent } from '@shared/components';
+import { ToastService } from '@osf/shared/services/toast.service';
 
 import { CedarMetadataDataTemplateJsonApi } from '../../models';
 import { MetadataSelectors } from '../../store';

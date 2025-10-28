@@ -2,7 +2,7 @@ import { MockComponent } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AffiliatedInstitutionsViewComponent } from '@osf/shared/components';
+import { AffiliatedInstitutionsViewComponent } from '@osf/shared/components/affiliated-institutions-view/affiliated-institutions-view.component';
 
 import { MetadataAffiliatedInstitutionsComponent } from './metadata-affiliated-institutions.component';
 

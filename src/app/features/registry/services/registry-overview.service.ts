@@ -5,18 +5,19 @@ import { inject, Injectable } from '@angular/core';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { RegistryModerationMapper } from '@osf/features/moderation/mappers';
 import { ReviewAction, ReviewActionsResponseJsonApi } from '@osf/features/moderation/models';
-import { MapRegistryOverview } from '@osf/features/registry/mappers';
+import { InstitutionsMapper, ReviewActionsMapper } from '@osf/shared/mappers';
+import { PageSchemaMapper } from '@osf/shared/mappers/registration';
+import { Institution, InstitutionsJsonApiResponse, PageSchema, SchemaBlocksResponseJsonApi } from '@osf/shared/models';
+import { ReviewActionPayload } from '@osf/shared/models/review-action';
+import { JsonApiService } from '@osf/shared/services/json-api.service';
+
+import { MapRegistryOverview } from '../mappers';
 import {
   GetRegistryOverviewJsonApi,
   RegistryOverview,
   RegistryOverviewJsonApiData,
   RegistryOverviewWithMeta,
-} from '@osf/features/registry/models';
-import { InstitutionsMapper, ReviewActionsMapper } from '@osf/shared/mappers';
-import { PageSchemaMapper } from '@osf/shared/mappers/registration';
-import { Institution, InstitutionsJsonApiResponse, PageSchema, SchemaBlocksResponseJsonApi } from '@osf/shared/models';
-import { ReviewActionPayload } from '@osf/shared/models/review-action';
-import { JsonApiService } from '@shared/services';
+} from '../models';
 
 @Injectable({
   providedIn: 'root',

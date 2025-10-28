@@ -9,7 +9,9 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ChangeDetectionStrategy, Component, effect, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { ComponentCheckboxItemComponent, LoadingSpinnerComponent, TextInputComponent } from '@osf/shared/components';
+import { ComponentCheckboxItemComponent } from '@osf/shared/components/component-checkbox-item/component-checkbox-item.component';
+import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
+import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
 import { InputLimits } from '@osf/shared/constants';
 import { CustomValidators } from '@osf/shared/helpers';
 import { ComponentCheckboxItemModel } from '@osf/shared/models';

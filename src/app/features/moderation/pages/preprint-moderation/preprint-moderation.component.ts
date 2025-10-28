@@ -9,7 +9,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 
-import { SelectComponent, SubHeaderComponent } from '@osf/shared/components';
+import { SelectComponent } from '@osf/shared/components/select/select.component';
+import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { ResourceType } from '@osf/shared/enums';
 import { IS_MEDIUM, Primitive } from '@osf/shared/helpers';
 

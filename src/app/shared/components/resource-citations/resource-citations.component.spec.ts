@@ -4,8 +4,8 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { ToastService } from '@osf/shared/services/toast.service';
 import { ResourceOverview } from '@shared/models';
-import { ToastService } from '@shared/services';
 import { CitationsSelectors } from '@shared/stores/citations';
 
 import { ResourceCitationsComponent } from './resource-citations.component';

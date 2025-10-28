@@ -22,17 +22,19 @@ import { FormControl, FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { UserSelectors } from '@core/store/user';
-import { SearchInputComponent } from '@osf/shared/components';
 import {
   AddContributorDialogComponent,
   AddUnregisteredContributorDialogComponent,
   ContributorsTableComponent,
 } from '@osf/shared/components/contributors';
+import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
 import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
 import { AddContributorType, ResourceType } from '@osf/shared/enums';
 import { findChangedItems } from '@osf/shared/helpers';
 import { ContributorDialogAddModel, ContributorModel, TableParameters } from '@osf/shared/models';
-import { CustomConfirmationService, CustomDialogService, ToastService } from '@osf/shared/services';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 import {
   AddContributor,
   BulkAddContributors,

@@ -1,9 +1,14 @@
+import { MockComponents } from 'ng-mocks';
+
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { CedarTemplateFormComponent } from '@osf/features/metadata/components';
 import { CedarMetadataDataTemplateJsonApi, CedarRecordDataBinding } from '@osf/features/metadata/models';
 import { MetadataResourceEnum } from '@osf/shared/enums';
 import { MetadataTabsModel } from '@osf/shared/models';
+
+import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 
 import { MetadataTabsComponent } from './metadata-tabs.component';
 
@@ -27,7 +32,11 @@ describe('MetadataTabsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MetadataTabsComponent, OSFTestingModule],
+      imports: [
+        MetadataTabsComponent,
+        OSFTestingModule,
+        ...MockComponents(LoadingSpinnerComponent, CedarTemplateFormComponent),
+      ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 

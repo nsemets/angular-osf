@@ -4,9 +4,10 @@ import { of } from 'rxjs';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { EducationHistoryComponent } from '@osf/shared/components/education-history/education-history.component';
+import { EmploymentHistoryComponent } from '@osf/shared/components/employment-history/employment-history.component';
 import { IS_MEDIUM } from '@osf/shared/helpers';
 import { SocialModel, UserModel } from '@osf/shared/models';
-import { EducationHistoryComponent, EmploymentHistoryComponent } from '@shared/components';
 
 import { ProfileInformationComponent } from './profile-information.component';
 

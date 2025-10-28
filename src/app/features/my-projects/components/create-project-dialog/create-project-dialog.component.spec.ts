@@ -8,10 +8,10 @@ import { of } from 'rxjs';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { AddProjectFormComponent } from '@osf/shared/components/add-project-form/add-project-form.component';
 import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
 import { ProjectFormControls } from '@osf/shared/enums';
 import { CreateProject, GetMyProjects, MyResourcesSelectors } from '@osf/shared/stores/my-resources';
-import { AddProjectFormComponent } from '@shared/components';
 
 import { CreateProjectDialogComponent } from './create-project-dialog.component';
 

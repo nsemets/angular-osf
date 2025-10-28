@@ -9,8 +9,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 
 import { UserSelectors } from '@osf/core/store/user';
-import { SubHeaderComponent } from '@osf/shared/components';
-import { ToastService } from '@osf/shared/services';
+import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
+import { ToastService } from '@osf/shared/services/toast.service';
 import { RegionsSelectors } from '@osf/shared/stores/regions';
 
 import { AccountSettingsComponent } from './account-settings.component';

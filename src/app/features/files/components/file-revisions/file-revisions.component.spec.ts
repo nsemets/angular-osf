@@ -2,7 +2,7 @@ import { MockComponents } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CopyButtonComponent } from '@osf/shared/components';
+import { CopyButtonComponent } from '@osf/shared/components/copy-button/copy-button.component';
 import { InfoIconComponent } from '@osf/shared/components/info-icon/info-icon.component';
 import { StopPropagationDirective } from '@osf/shared/directives';
 

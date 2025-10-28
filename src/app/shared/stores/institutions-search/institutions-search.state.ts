@@ -7,7 +7,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { handleSectionError } from '@osf/shared/helpers';
 import { Institution } from '@osf/shared/models';
-import { InstitutionsService } from '@osf/shared/services';
+import { InstitutionsService } from '@osf/shared/services/institutions.service';
 
 import { FetchInstitutionById } from './institutions-search.actions';
 import { INSTITUTIONS_SEARCH_STATE_DEFAULTS, InstitutionsSearchModel } from './institutions-search.model';

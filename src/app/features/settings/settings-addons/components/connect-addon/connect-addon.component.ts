@@ -10,12 +10,13 @@ import { Component, computed, DestroyRef, effect, inject, signal, viewChild } fr
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
-import { SubHeaderComponent } from '@osf/shared/components';
+import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { AddonServiceNames, AddonType, ProjectAddonsStepperValue } from '@osf/shared/enums';
 import { getAddonTypeString, isAuthorizedAddon } from '@osf/shared/helpers';
+import { AddonOAuthService } from '@osf/shared/services/addons';
+import { ToastService } from '@osf/shared/services/toast.service';
 import { AddonSetupAccountFormComponent, AddonTermsComponent } from '@shared/components/addons';
 import { AddonModel, AddonTerm, AuthorizedAccountModel, AuthorizedAddonRequestJsonApi } from '@shared/models';
-import { AddonOAuthService, ToastService } from '@shared/services';
 import { AddonsSelectors, CreateAuthorizedAddon, UpdateAuthorizedAddon } from '@shared/stores/addons';
 
 @Component({

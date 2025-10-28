@@ -7,7 +7,7 @@ import { Card } from 'primeng/card';
 import { ChangeDetectionStrategy, Component, effect, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { AffiliatedInstitutionSelectComponent } from '@osf/shared/components';
+import { AffiliatedInstitutionSelectComponent } from '@osf/shared/components/affiliated-institution-select/affiliated-institution-select.component';
 import { ResourceType } from '@osf/shared/enums';
 import { Institution } from '@osf/shared/models';
 import {

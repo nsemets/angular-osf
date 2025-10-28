@@ -1,14 +1,15 @@
 import { Store } from '@ngxs/store';
 
-import { MockProvider } from 'ng-mocks';
+import { MockComponent, MockProvider } from 'ng-mocks';
 
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
 
+import { ToastService } from '@osf/shared/services/toast.service';
 import { WikiSelectors } from '@osf/shared/stores/wiki';
-import { ToastService } from '@shared/services';
+
+import { TextInputComponent } from '../../text-input/text-input.component';
 
 import { AddWikiDialogComponent } from './add-wiki-dialog.component';
 
@@ -27,7 +28,7 @@ describe('AddWikiDialogComponent', () => {
     });
 
     await TestBed.configureTestingModule({
-      imports: [AddWikiDialogComponent, ReactiveFormsModule],
+      imports: [AddWikiDialogComponent, MockComponent(TextInputComponent)],
       providers: [
         TranslateServiceMock,
         MockProvider(DynamicDialogRef),

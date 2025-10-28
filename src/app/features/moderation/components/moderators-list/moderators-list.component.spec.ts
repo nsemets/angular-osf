@@ -7,9 +7,10 @@ import { ActivatedRoute } from '@angular/router';
 
 import { ProviderSelectors } from '@core/store/provider';
 import { UserSelectors } from '@core/store/user';
-import { SearchInputComponent } from '@osf/shared/components';
+import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
 import { ResourceType } from '@osf/shared/enums';
-import { CustomConfirmationService, CustomDialogService } from '@shared/services';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 
 import { ModeratorPermission } from '../../enums';
 import { ModeratorModel } from '../../models';

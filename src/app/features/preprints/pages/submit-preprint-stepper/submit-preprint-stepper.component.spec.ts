@@ -1,4 +1,4 @@
-import { MockProvider } from 'ng-mocks';
+import { MockComponents, MockProvider } from 'ng-mocks';
 
 import { of } from 'rxjs';
 
@@ -6,14 +6,24 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { submitPreprintSteps } from '@osf/features/preprints/constants';
-import { PreprintSteps } from '@osf/features/preprints/enums';
-import { PreprintProviderDetails } from '@osf/features/preprints/models';
-import { PreprintProvidersSelectors } from '@osf/features/preprints/store/preprint-providers';
-import { PreprintStepperSelectors } from '@osf/features/preprints/store/preprint-stepper';
-import { BrowserTabHelper, HeaderStyleHelper, IS_WEB } from '@shared/helpers';
-import { StepOption } from '@shared/models';
-import { BrandService } from '@shared/services';
+import { StepperComponent } from '@osf/shared/components/stepper/stepper.component';
+import { BrowserTabHelper, HeaderStyleHelper, IS_WEB } from '@osf/shared/helpers';
+import { StepOption } from '@osf/shared/models';
+import { BrandService } from '@osf/shared/services/brand.service';
+
+import {
+  AuthorAssertionsStepComponent,
+  FileStepComponent,
+  PreprintsMetadataStepComponent,
+  ReviewStepComponent,
+  SupplementsStepComponent,
+  TitleAndAbstractStepComponent,
+} from '../../components';
+import { submitPreprintSteps } from '../../constants';
+import { PreprintSteps } from '../../enums';
+import { PreprintProviderDetails } from '../../models';
+import { PreprintProvidersSelectors } from '../../store/preprint-providers';
+import { PreprintStepperSelectors } from '../../store/preprint-stepper';
 
 import { SubmitPreprintStepperComponent } from './submit-preprint-stepper.component';
 
@@ -47,7 +57,20 @@ describe('SubmitPreprintStepperComponent', () => {
       .build();
 
     await TestBed.configureTestingModule({
-      imports: [SubmitPreprintStepperComponent, OSFTestingModule],
+      imports: [
+        SubmitPreprintStepperComponent,
+        OSFTestingModule,
+        ...MockComponents(
+          StepperComponent,
+          TitleAndAbstractStepComponent,
+          FileStepComponent,
+          PreprintsMetadataStepComponent,
+          AuthorAssertionsStepComponent,
+          SupplementsStepComponent,
+          AuthorAssertionsStepComponent,
+          ReviewStepComponent
+        ),
+      ],
       providers: [
         MockProvider(BrandService),
         MockProvider(Router, routerMock),

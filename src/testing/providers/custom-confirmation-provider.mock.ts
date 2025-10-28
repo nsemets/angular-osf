@@ -1,4 +1,4 @@
-import { CustomConfirmationService } from '@osf/shared/services';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { AcceptConfirmationOptions, ContinueConfirmationOptions, DeleteConfirmationOptions } from '@shared/models';
 
 export type CustomConfirmationServiceMockType = Partial<CustomConfirmationService> & {

@@ -9,8 +9,9 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UpdateProfileSettingsEducation, UserSelectors } from '@core/store/user';
-import { EducationFormComponent } from '@osf/features/settings/profile-settings/components';
-import { ToastService } from '@shared/services';
+import { ToastService } from '@osf/shared/services/toast.service';
+
+import { EducationFormComponent } from '../education-form/education-form.component';
 
 import { EducationComponent } from './education.component';
 

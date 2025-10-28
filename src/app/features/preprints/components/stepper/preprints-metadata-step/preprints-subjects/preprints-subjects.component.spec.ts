@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl } from '@angular/forms';
 
 import { PreprintStepperSelectors } from '@osf/features/preprints/store/preprint-stepper';
-import { SubjectsComponent } from '@osf/shared/components';
+import { SubjectsComponent } from '@osf/shared/components/subjects/subjects.component';
 import { SubjectModel } from '@osf/shared/models';
 import { SubjectsSelectors } from '@osf/shared/stores/subjects';
 

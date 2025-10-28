@@ -5,8 +5,9 @@ import { BehaviorSubject } from 'rxjs';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { SelectComponent } from '@osf/shared/components/select/select.component';
+import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { IS_MEDIUM } from '@osf/shared/helpers';
-import { SelectComponent, SubHeaderComponent } from '@shared/components';
 
 import { CollectionModerationTab } from '../../enums';
 

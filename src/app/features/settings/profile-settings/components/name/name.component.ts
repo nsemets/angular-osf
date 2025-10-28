@@ -12,7 +12,9 @@ import { UpdateProfileSettingsUser, UserSelectors } from '@osf/core/store/user';
 import { forbiddenFileNameCharacters } from '@osf/shared/constants';
 import { CustomValidators } from '@osf/shared/helpers';
 import { UserModel } from '@osf/shared/models';
-import { CustomConfirmationService, LoaderService, ToastService } from '@osf/shared/services';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
+import { LoaderService } from '@osf/shared/services/loader.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 
 import { hasNameChanges } from '../../helpers';
 import { NameForm } from '../../models';

@@ -1,7 +1,7 @@
 import { provideStore, Store } from '@ngxs/store';
 
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { MockPipe, MockProviders } from 'ng-mocks';
+import { MockComponent, MockPipe, MockProviders } from 'ng-mocks';
 
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
@@ -12,12 +12,15 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { DestroyRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { SetCurrentUser, UserState } from '@core/store/user';
 import { UserEmailsState } from '@core/store/user-emails';
-import { SetCurrentUser, UserState } from '@osf/core/store/user';
-import { AddEmailComponent, ConfirmationSentDialogComponent } from '@osf/features/settings/account-settings/components';
-import { CustomConfirmationService, LoaderService, ToastService } from '@shared/services';
+import { ReadonlyInputComponent } from '@osf/shared/components/readonly-input/readonly-input.component';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
+import { LoaderService } from '@osf/shared/services/loader.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 
-import { AccountSettingsState } from '../../store';
+import { AddEmailComponent } from '../add-email/add-email.component';
+import { ConfirmationSentDialogComponent } from '../confirmation-sent-dialog/confirmation-sent-dialog.component';
 
 import { ConnectedEmailsComponent } from './connected-emails.component';
 
@@ -42,9 +45,9 @@ describe('ConnectedEmailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ConnectedEmailsComponent, MockPipe(TranslatePipe)],
+      imports: [ConnectedEmailsComponent, MockComponent(ReadonlyInputComponent), MockPipe(TranslatePipe)],
       providers: [
-        provideStore([AccountSettingsState, UserState, UserEmailsState]),
+        provideStore([UserState, UserEmailsState]),
         provideHttpClient(),
         provideHttpClientTesting(),
         MockProviders(DialogService, TranslateService, DestroyRef, LoaderService, ToastService),

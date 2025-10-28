@@ -38,8 +38,10 @@ import {
 import { GetPreprintProviderById, PreprintProvidersSelectors } from '@osf/features/preprints/store/preprint-providers';
 import { CreateNewVersion, PreprintStepperSelectors } from '@osf/features/preprints/store/preprint-stepper';
 import { pathJoin } from '@osf/shared/helpers';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
+import { MetaTagsService } from '@osf/shared/services/meta-tags.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 import { ReviewPermissions } from '@shared/enums';
-import { CustomDialogService, MetaTagsService, ToastService } from '@shared/services';
 import { AnalyticsService } from '@shared/services/analytics.service';
 import { DataciteService } from '@shared/services/datacite/datacite.service';
 import { ContributorsSelectors } from '@shared/stores/contributors';

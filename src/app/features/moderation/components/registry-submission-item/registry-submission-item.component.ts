@@ -5,7 +5,8 @@ import { Button } from 'primeng/button';
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
-import { IconComponent, TruncatedTextComponent } from '@osf/shared/components';
+import { IconComponent } from '@osf/shared/components/icon/icon.component';
+import { TruncatedTextComponent } from '@osf/shared/components/truncated-text/truncated-text.component';
 import { DateAgoPipe } from '@osf/shared/pipes';
 
 import { REGISTRY_ACTION_LABEL, ReviewStatusIcon } from '../../constants';

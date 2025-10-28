@@ -5,7 +5,7 @@ import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { ClearCurrentProvider } from '@core/store/provider';
-import { GlobalSearchComponent } from '@osf/shared/components';
+import { GlobalSearchComponent } from '@osf/shared/components/global-search/global-search.component';
 import { ResourceType } from '@osf/shared/enums';
 import { SetDefaultFilterValue, SetResourceType } from '@osf/shared/stores/global-search';
 import {

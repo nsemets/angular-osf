@@ -11,8 +11,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 
 import { GetResourceMetadata, MetadataSelectors } from '@osf/features/metadata/store';
-import { IconComponent, LoadingSpinnerComponent, SubHeaderComponent } from '@osf/shared/components';
-import { CustomConfirmationService, CustomDialogService, ToastService } from '@osf/shared/services';
+import { IconComponent } from '@osf/shared/components/icon/icon.component';
+import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
+import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 import { ResourceType, UserPermissions } from '@shared/enums';
 
 import { AddResourceDialogComponent, EditResourceDialogComponent } from '../../components';

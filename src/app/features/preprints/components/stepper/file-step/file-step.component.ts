@@ -40,10 +40,12 @@ import {
   SetSelectedPreprintFileSource,
   UploadFile,
 } from '@osf/features/preprints/store/preprint-stepper';
+import { FilesTreeComponent } from '@osf/shared/components/files-tree/files-tree.component';
+import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { FileFolderModel, FileModel } from '@osf/shared/models';
-import { FilesTreeComponent, IconComponent } from '@shared/components';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 import { StringOrNull } from '@shared/helpers';
-import { CustomConfirmationService, ToastService } from '@shared/services';
 
 @Component({
   selector: 'osf-file-step',

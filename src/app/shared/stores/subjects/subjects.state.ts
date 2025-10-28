@@ -5,7 +5,7 @@ import { catchError, tap, throwError } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { SubjectModel } from '@osf/shared/models';
-import { SubjectsService } from '@osf/shared/services';
+import { SubjectsService } from '@osf/shared/services/subjects.service';
 
 import {
   FetchChildrenSubjects,

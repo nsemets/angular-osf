@@ -8,7 +8,8 @@ import { ChangeDetectionStrategy, Component, computed, inject, input } from '@an
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { collectionFilterNames } from '@osf/features/collections/constants';
-import { IconComponent, TruncatedTextComponent } from '@osf/shared/components';
+import { IconComponent } from '@osf/shared/components/icon/icon.component';
+import { TruncatedTextComponent } from '@osf/shared/components/truncated-text/truncated-text.component';
 import { CollectionSubmissionWithGuid } from '@osf/shared/models';
 import { DateAgoPipe } from '@osf/shared/pipes';
 import { CollectionsSelectors } from '@osf/shared/stores/collections';

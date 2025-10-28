@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 
 import { FileMenuType } from '@osf/shared/enums';
 import { FileMenuAction, FileMenuData, FileMenuFlags } from '@osf/shared/models';
-import { MenuManagerService } from '@osf/shared/services';
+import { MenuManagerService } from '@osf/shared/services/menu-manager.service';
 import { hasViewOnlyParam } from '@shared/helpers';
 
 @Component({

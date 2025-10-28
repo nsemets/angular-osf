@@ -36,8 +36,11 @@ import { hasViewOnlyParam } from '@osf/shared/helpers';
 import { FilesMapper } from '@osf/shared/mappers';
 import { FileFolderModel, FileLabelModel, FileMenuAction, FileMenuFlags, FileModel } from '@osf/shared/models';
 import { FileSizePipe } from '@osf/shared/pipes';
-import { CustomConfirmationService, CustomDialogService, FilesService, ToastService } from '@osf/shared/services';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { DataciteService } from '@osf/shared/services/datacite/datacite.service';
+import { FilesService } from '@osf/shared/services/files.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 import { CurrentResourceSelectors } from '@shared/stores/current-resource';
 
 import { FileMenuComponent } from '../file-menu/file-menu.component';

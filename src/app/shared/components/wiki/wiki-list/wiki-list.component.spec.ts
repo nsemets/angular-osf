@@ -3,8 +3,9 @@ import { MockProvider } from 'ng-mocks';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { ComponentWiki, Wiki, WikiItemType } from '@shared/models';
-import { CustomConfirmationService, CustomDialogService } from '@shared/services';
 
 import { WikiListComponent } from './wiki-list.component';
 

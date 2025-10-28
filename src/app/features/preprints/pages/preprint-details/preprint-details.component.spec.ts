@@ -6,8 +6,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { UserPermissions } from '@osf/shared/enums';
-import { CustomDialogService, MetaTagsService } from '@osf/shared/services';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { DataciteService } from '@osf/shared/services/datacite/datacite.service';
+import { MetaTagsService } from '@osf/shared/services/meta-tags.service';
 import { ContributorsSelectors } from '@osf/shared/stores/contributors';
 
 import {
@@ -16,6 +17,7 @@ import {
   ModerationStatusBannerComponent,
   PreprintFileSectionComponent,
   PreprintMakeDecisionComponent,
+  PreprintMetricsInfoComponent,
   PreprintTombstoneComponent,
   PreprintWarningBannerComponent,
   ShareAndDownloadComponent,
@@ -90,7 +92,8 @@ describe('PreprintDetailsComponent', () => {
           PreprintTombstoneComponent,
           PreprintWarningBannerComponent,
           ModerationStatusBannerComponent,
-          PreprintMakeDecisionComponent
+          PreprintMakeDecisionComponent,
+          PreprintMetricsInfoComponent
         ),
       ],
       providers: [

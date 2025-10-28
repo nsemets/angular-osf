@@ -22,19 +22,18 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { OverviewToolbarComponent } from '@osf/features/project/overview/components';
 import { CreateSchemaResponse, FetchAllSchemaResponses, RegistriesSelectors } from '@osf/features/registries/store';
-import {
-  DataResourcesComponent,
-  LoadingSpinnerComponent,
-  RegistrationBlocksDataComponent,
-  ResourceMetadataComponent,
-  SubHeaderComponent,
-  ViewOnlyLinkMessageComponent,
-} from '@osf/shared/components';
+import { DataResourcesComponent } from '@osf/shared/components/data-resources/data-resources.component';
+import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
+import { RegistrationBlocksDataComponent } from '@osf/shared/components/registration-blocks-data/registration-blocks-data.component';
+import { ResourceMetadataComponent } from '@osf/shared/components/resource-metadata/resource-metadata.component';
+import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
+import { ViewOnlyLinkMessageComponent } from '@osf/shared/components/view-only-link-message/view-only-link-message.component';
 import { RegistrationReviewStates, ResourceType, RevisionReviewStates, UserPermissions } from '@osf/shared/enums';
 import { hasViewOnlyParam, toCamelCase } from '@osf/shared/helpers';
 import { MapRegistryOverview } from '@osf/shared/mappers';
 import { SchemaResponse, ToolbarResource } from '@osf/shared/models';
-import { CustomDialogService, ToastService } from '@osf/shared/services';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 import { GetBookmarksCollectionId } from '@osf/shared/stores/bookmarks';
 import {
   ContributorsSelectors,

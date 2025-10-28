@@ -2,7 +2,7 @@ import { MockComponent } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SubjectsComponent } from '@osf/shared/components';
+import { SubjectsComponent } from '@osf/shared/components/subjects/subjects.component';
 import { SubjectModel } from '@osf/shared/models';
 
 import { MetadataSubjectsComponent } from './metadata-subjects.component';

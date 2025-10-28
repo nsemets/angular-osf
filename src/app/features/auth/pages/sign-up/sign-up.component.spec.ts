@@ -5,8 +5,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { AuthService } from '@osf/core/services';
-import { PasswordInputHintComponent } from '@osf/shared/components';
-import { ToastService } from '@osf/shared/services';
+import { PasswordInputHintComponent } from '@osf/shared/components/password-input-hint/password-input-hint.component';
+import { ToastService } from '@osf/shared/services/toast.service';
 
 import { SignUpComponent } from './sign-up.component';
 

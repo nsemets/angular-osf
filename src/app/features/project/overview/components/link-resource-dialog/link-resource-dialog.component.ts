@@ -25,7 +25,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule } from '@angular/forms';
 
-import { SearchInputComponent } from '@osf/shared/components';
+import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
 import { ResourceSearchMode, ResourceType } from '@osf/shared/enums';
 import { MyResourcesItem, MyResourcesSearchFilters } from '@osf/shared/models';
 import { GetMyProjects, GetMyRegistrations, MyResourcesSelectors } from '@osf/shared/stores/my-resources';

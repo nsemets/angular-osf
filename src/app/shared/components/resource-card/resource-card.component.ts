@@ -15,7 +15,7 @@ import { CardLabelTranslationKeys } from '@osf/shared/constants';
 import { ResourceType } from '@osf/shared/enums';
 import { getSortedContributorsByPermissions, IS_XSMALL } from '@osf/shared/helpers';
 import { ResourceModel, UserRelatedCounts } from '@osf/shared/models';
-import { ResourceCardService } from '@osf/shared/services';
+import { ResourceCardService } from '@osf/shared/services/resource-card.service';
 import { StopPropagationDirective } from '@shared/directives';
 
 import { DataResourcesComponent } from '../data-resources/data-resources.component';

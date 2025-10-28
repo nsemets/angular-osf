@@ -5,11 +5,15 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CustomPaginatorComponent, LoadingSpinnerComponent, SearchInputComponent } from '@shared/components';
 import { AddContributorItemComponent } from '@shared/components/contributors/add-contributor-item/add-contributor-item.component';
 import { AddContributorType, AddDialogState } from '@shared/enums/contributors';
 import { ContributorAddModel } from '@shared/models';
 import { ContributorsSelectors } from '@shared/stores/contributors';
+
+import { ComponentsSelectionListComponent } from '../../components-selection-list/components-selection-list.component';
+import { CustomPaginatorComponent } from '../../custom-paginator/custom-paginator.component';
+import { LoadingSpinnerComponent } from '../../loading-spinner/loading-spinner.component';
+import { SearchInputComponent } from '../../search-input/search-input.component';
 
 import { AddContributorDialogComponent } from './add-contributor-dialog.component';
 
@@ -31,7 +35,8 @@ describe('AddContributorDialogComponent', () => {
           SearchInputComponent,
           LoadingSpinnerComponent,
           CustomPaginatorComponent,
-          AddContributorItemComponent
+          AddContributorItemComponent,
+          ComponentsSelectionListComponent
         ),
       ],
       providers: [

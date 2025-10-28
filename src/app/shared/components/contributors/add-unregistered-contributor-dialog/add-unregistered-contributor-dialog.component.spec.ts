@@ -1,4 +1,4 @@
-import { MockProviders } from 'ng-mocks';
+import { MockComponent, MockProviders } from 'ng-mocks';
 
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
@@ -7,6 +7,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { InputLimits } from '@shared/constants';
 import { AddContributorType, ContributorPermission } from '@shared/enums/contributors';
 import { ContributorAddModel } from '@shared/models';
+
+import { TextInputComponent } from '../../text-input/text-input.component';
 
 import { AddUnregisteredContributorDialogComponent } from './add-unregistered-contributor-dialog.component';
 
@@ -20,7 +22,7 @@ describe('AddUnregisteredContributorDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AddUnregisteredContributorDialogComponent, OSFTestingModule],
+      imports: [AddUnregisteredContributorDialogComponent, OSFTestingModule, MockComponent(TextInputComponent)],
       providers: [MockProviders(DynamicDialogRef)],
     }).compileComponents();
 

@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 
 import { WikiVersion } from '@shared/models';
@@ -30,7 +29,7 @@ describe('CompareSectionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CompareSectionComponent, FormsModule],
+      imports: [CompareSectionComponent],
       providers: [TranslateServiceMock, provideNoopAnimations()],
     }).compileComponents();
 

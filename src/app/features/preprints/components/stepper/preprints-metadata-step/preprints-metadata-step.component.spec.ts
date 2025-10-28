@@ -7,10 +7,13 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { formInputLimits } from '@osf/features/preprints/constants';
 import { PreprintProviderDetails } from '@osf/features/preprints/models';
 import { PreprintStepperSelectors } from '@osf/features/preprints/store/preprint-stepper';
-import { IconComponent, LicenseComponent, TextInputComponent } from '@shared/components';
-import { INPUT_VALIDATION_MESSAGES } from '@shared/constants';
+import { IconComponent } from '@osf/shared/components/icon/icon.component';
+import { LicenseComponent } from '@osf/shared/components/license/license.component';
+import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
+import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 import { LicenseModel } from '@shared/models';
-import { CustomConfirmationService, ToastService } from '@shared/services';
 
 import { PreprintsAffiliatedInstitutionsComponent } from './preprints-affiliated-institutions/preprints-affiliated-institutions.component';
 import { PreprintsContributorsComponent } from './preprints-contributors/preprints-contributors.component';
@@ -47,11 +50,11 @@ describe('PreprintsMetadataStepComponent', () => {
         OSFTestingModule,
         ...MockComponents(
           PreprintsContributorsComponent,
-          PreprintsAffiliatedInstitutionsComponent,
-          PreprintsSubjectsComponent,
           IconComponent,
+          TextInputComponent,
           LicenseComponent,
-          TextInputComponent
+          PreprintsSubjectsComponent,
+          PreprintsAffiliatedInstitutionsComponent
         ),
       ],
       providers: [

@@ -13,11 +13,11 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, OnDestroy
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { TextInputComponent } from '@osf/shared/components';
+import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
 import { INPUT_VALIDATION_MESSAGES, InputLimits } from '@osf/shared/constants';
 import { CustomValidators, findChangedFields } from '@osf/shared/helpers';
 import { ContributorModel, DraftRegistrationModel, SubjectModel } from '@osf/shared/models';
-import { CustomConfirmationService } from '@osf/shared/services';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { ContributorsSelectors } from '@osf/shared/stores/contributors';
 import { SubjectsSelectors } from '@osf/shared/stores/subjects';
 import { UserPermissions } from '@shared/enums';

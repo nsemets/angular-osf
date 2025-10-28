@@ -1,7 +1,7 @@
 import { Store } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
-import { MockPipe, MockProvider } from 'ng-mocks';
+import { MockComponents, MockPipe, MockProvider } from 'ng-mocks';
 
 import { of } from 'rxjs';
 
@@ -9,10 +9,13 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 
 import { UserSelectors } from '@osf/core/store/user';
-import { LoaderService, ToastService } from '@osf/shared/services';
+import { InfoIconComponent } from '@osf/shared/components/info-icon/info-icon.component';
+import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
+import { LoaderService } from '@osf/shared/services/loader.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 import { SubscriptionEvent, SubscriptionFrequency } from '@shared/enums';
 
 import { AccountSettings } from '../account-settings/models';
@@ -74,7 +77,11 @@ describe('NotificationsComponent', () => {
     MOCK_STORE.dispatch.mockImplementation(() => of());
 
     await TestBed.configureTestingModule({
-      imports: [NotificationsComponent, MockPipe(TranslatePipe), ReactiveFormsModule],
+      imports: [
+        NotificationsComponent,
+        ...MockComponents(InfoIconComponent, SubHeaderComponent),
+        MockPipe(TranslatePipe),
+      ],
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),

@@ -18,10 +18,11 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 
-import { StepperComponent, SubHeaderComponent } from '@osf/shared/components';
+import { StepperComponent } from '@osf/shared/components/stepper/stepper.component';
+import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { RevisionReviewStates } from '@osf/shared/enums';
 import { StepOption } from '@osf/shared/models';
-import { LoaderService } from '@osf/shared/services';
+import { LoaderService } from '@osf/shared/services/loader.service';
 
 import { ClearState, FetchSchemaBlocks, FetchSchemaResponse, RegistriesSelectors, UpdateStepState } from '../../store';
 

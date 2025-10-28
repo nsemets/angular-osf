@@ -3,7 +3,9 @@ import { map, Observable } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
-import { MapResources } from '@shared/mappers/search';
+
+import { mapFilterOptions, MapFilters } from '../mappers';
+import { MapResources } from '../mappers/search';
 import {
   FilterOption,
   FilterOptionItem,
@@ -11,9 +13,7 @@ import {
   IndexCardSearchResponseJsonApi,
   ResourcesData,
   SearchResultDataJsonApi,
-} from '@shared/models';
-
-import { mapFilterOptions, MapFilters } from '../mappers';
+} from '../models';
 
 import { JsonApiService } from './json-api.service';
 

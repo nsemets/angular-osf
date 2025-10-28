@@ -1,10 +1,11 @@
-import { MockComponent, MockDirective } from 'ng-mocks';
+import { TranslatePipe } from '@ngx-translate/core';
+import { MockComponent, MockDirective, MockPipe } from 'ng-mocks';
 
 import { Textarea } from 'primeng/textarea';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TextInputComponent } from '@osf/shared/components';
+import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
 import { ProjectFormControls } from '@osf/shared/enums';
 
 import { NodeDetailsModel } from '../../models';
@@ -26,6 +27,7 @@ describe('SettingsProjectFormCardComponent', () => {
         SettingsProjectFormCardComponent,
         OSFTestingModule,
         MockComponent(TextInputComponent),
+        MockPipe(TranslatePipe),
         MockDirective(Textarea),
       ],
     }).compileComponents();

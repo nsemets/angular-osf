@@ -10,7 +10,8 @@ import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { ClearCurrentProvider } from '@core/store/provider';
 import { pathJoin } from '@osf/shared/helpers';
-import { AnalyticsService, MetaTagsService } from '@osf/shared/services';
+import { AnalyticsService } from '@osf/shared/services/analytics.service';
+import { MetaTagsService } from '@osf/shared/services/meta-tags.service';
 import { DataciteService } from '@shared/services/datacite/datacite.service';
 
 import { GetRegistryById, RegistryOverviewSelectors } from './store/registry-overview';

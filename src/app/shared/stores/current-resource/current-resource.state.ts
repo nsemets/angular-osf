@@ -5,7 +5,7 @@ import { catchError, tap } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { handleSectionError } from '@osf/shared/helpers';
-import { ResourceGuidService } from '@osf/shared/services';
+import { ResourceGuidService } from '@osf/shared/services/resource.service';
 
 import { GetResource, GetResourceDetails, GetResourceWithChildren } from './current-resource.actions';
 import { CURRENT_RESOURCE_DEFAULTS, CurrentResourceStateModel } from './current-resource.model';

@@ -2,9 +2,7 @@ import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { ButtonModule } from 'primeng/button';
-import { CheckboxModule } from 'primeng/checkbox';
-import { InputTextModule } from 'primeng/inputtext';
+import { InputText } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
 import { Textarea } from 'primeng/textarea';
 
@@ -27,9 +25,7 @@ import { ProjectSelectorComponent } from '../project-selector/project-selector.c
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    ButtonModule,
-    InputTextModule,
-    CheckboxModule,
+    InputText,
     Select,
     Textarea,
     TranslatePipe,

@@ -9,7 +9,7 @@ import { SetCurrentProvider } from '@core/store/provider';
 import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
 import { CurrentResourceType, ResourceType } from '@osf/shared/enums';
 import { handleSectionError } from '@osf/shared/helpers';
-import { ContributorsService } from '@osf/shared/services';
+import { ContributorsService } from '@osf/shared/services/contributors.service';
 
 import { PreprintSubmissionModel, PreprintWithdrawalSubmission } from '../../models';
 import { PreprintModerationService } from '../../services';

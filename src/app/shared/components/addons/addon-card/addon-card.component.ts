@@ -8,7 +8,8 @@ import { Component, computed, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { getAddonTypeString, isConfiguredAddon } from '@osf/shared/helpers';
-import { CustomConfirmationService, LoaderService } from '@osf/shared/services';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
+import { LoaderService } from '@osf/shared/services/loader.service';
 import { AddonCardModel, AddonModel, AuthorizedAccountModel, ConfiguredAddonModel } from '@shared/models';
 import { DeleteAuthorizedAddon } from '@shared/stores/addons';
 

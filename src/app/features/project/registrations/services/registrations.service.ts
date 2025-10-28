@@ -5,7 +5,7 @@ import { inject, Injectable } from '@angular/core';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { RegistrationMapper } from '@osf/shared/mappers/registration';
 import { PaginatedData, RegistrationCard, RegistrationDataJsonApi, ResponseJsonApi } from '@osf/shared/models';
-import { JsonApiService } from '@osf/shared/services';
+import { JsonApiService } from '@osf/shared/services/json-api.service';
 
 @Injectable({
   providedIn: 'root',

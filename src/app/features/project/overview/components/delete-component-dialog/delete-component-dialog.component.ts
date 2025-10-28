@@ -15,7 +15,7 @@ import { DeleteProject, SettingsSelectors } from '@osf/features/project/settings
 import { RegistryOverviewSelectors } from '@osf/features/registry/store/registry-overview';
 import { ScientistsNames } from '@osf/shared/constants';
 import { ResourceType, UserPermissions } from '@osf/shared/enums';
-import { ToastService } from '@osf/shared/services';
+import { ToastService } from '@osf/shared/services/toast.service';
 import { CurrentResourceSelectors } from '@osf/shared/stores/current-resource';
 
 import { GetComponents, ProjectOverviewSelectors } from '../../store';
@@ -30,16 +30,19 @@ import { GetComponents, ProjectOverviewSelectors } from '../../store';
 export class DeleteComponentDialogComponent {
   private dialogConfig = inject(DynamicDialogConfig);
   private toastService = inject(ToastService);
+
   dialogRef = inject(DynamicDialogRef);
   destroyRef = inject(DestroyRef);
-  private componentId = signal(this.dialogConfig.data.componentId);
+
   scientistNames = ScientistsNames;
+
   project = select(ProjectOverviewSelectors.getProject);
   registration = select(RegistryOverviewSelectors.getRegistry);
   isSubmitting = select(SettingsSelectors.isSettingsSubmitting);
   isLoading = select(CurrentResourceSelectors.isResourceWithChildrenLoading);
   components = select(CurrentResourceSelectors.getResourceWithChildren);
   userInput = signal('');
+
   selectedScientist = computed(() => {
     const names = Object.values(this.scientistNames);
     return names[Math.floor(Math.random() * names.length)];

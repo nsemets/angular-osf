@@ -1,4 +1,5 @@
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { MockPipe } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -15,7 +16,7 @@ describe('RegistrationBlocksDataComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RegistrationBlocksDataComponent, TranslateModule.forRoot()],
+      imports: [RegistrationBlocksDataComponent, MockPipe(TranslatePipe)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RegistrationBlocksDataComponent);

@@ -10,7 +10,8 @@ import { finalize, take } from 'rxjs';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { IconComponent, LoadingSpinnerComponent } from '@osf/shared/components';
+import { IconComponent } from '@osf/shared/components/icon/icon.component';
+import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { InputLimits } from '@osf/shared/constants';
 import { RegistryResourceType } from '@osf/shared/enums';
 import { CustomValidators } from '@osf/shared/helpers';

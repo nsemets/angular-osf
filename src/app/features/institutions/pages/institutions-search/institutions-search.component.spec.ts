@@ -7,8 +7,9 @@ import { of } from 'rxjs';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
+import { GlobalSearchComponent } from '@osf/shared/components/global-search/global-search.component';
+import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { InstitutionsSearchSelectors } from '@osf/shared/stores/institutions-search';
-import { GlobalSearchComponent, LoadingSpinnerComponent } from '@shared/components';
 
 import { InstitutionsSearchComponent } from './institutions-search.component';
 

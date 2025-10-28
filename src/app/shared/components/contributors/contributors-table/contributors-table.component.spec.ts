@@ -1,4 +1,4 @@
-import { MockProvider } from 'ng-mocks';
+import { MockComponents, MockProvider } from 'ng-mocks';
 
 import { DialogService } from 'primeng/dynamicdialog';
 
@@ -6,6 +6,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ContributorPermission } from '@osf/shared/enums';
 import { ContributorModel, TableParameters } from '@osf/shared/models';
+
+import { IconComponent } from '../../icon/icon.component';
+import { InfoIconComponent } from '../../info-icon/info-icon.component';
+import { SelectComponent } from '../../select/select.component';
 
 import { ContributorsTableComponent } from './contributors-table.component';
 
@@ -33,7 +37,11 @@ describe('ContributorsTableComponent', () => {
     mockDialogService = DialogServiceMockBuilder.create().withOpenMock().build();
 
     await TestBed.configureTestingModule({
-      imports: [ContributorsTableComponent, OSFTestingModule],
+      imports: [
+        ContributorsTableComponent,
+        OSFTestingModule,
+        ...MockComponents(SelectComponent, IconComponent, InfoIconComponent),
+      ],
       providers: [MockProvider(DialogService, mockDialogService)],
     }).compileComponents();
 

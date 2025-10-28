@@ -20,9 +20,10 @@ import {
 } from '@angular/forms';
 
 import { AuthService } from '@osf/core/services';
-import { PasswordInputHintComponent } from '@osf/shared/components';
+import { PasswordInputHintComponent } from '@osf/shared/components/password-input-hint/password-input-hint.component';
 import { CustomValidators, FormValidationHelper, PASSWORD_REGEX } from '@osf/shared/helpers';
-import { LoaderService, ToastService } from '@osf/shared/services';
+import { LoaderService } from '@osf/shared/services/loader.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 
 import { AccountSettingsPasswordForm, AccountSettingsPasswordFormControls } from '../../models';
 import { UpdatePassword } from '../../store';

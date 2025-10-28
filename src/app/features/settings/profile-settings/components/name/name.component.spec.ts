@@ -10,8 +10,11 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UpdateProfileSettingsUser, UserSelectors } from '@core/store/user';
-import { CitationPreviewComponent, NameFormComponent } from '@osf/features/settings/profile-settings/components';
-import { CustomConfirmationService, ToastService } from '@shared/services';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
+import { ToastService } from '@osf/shared/services/toast.service';
+
+import { CitationPreviewComponent } from '../citation-preview/citation-preview.component';
+import { NameFormComponent } from '../name-form/name-form.component';
 
 import { NameComponent } from './name.component';
 

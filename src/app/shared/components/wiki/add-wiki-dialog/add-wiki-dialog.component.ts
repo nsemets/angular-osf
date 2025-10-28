@@ -11,7 +11,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { InputLimits } from '@osf/shared/constants';
 import { ResourceType } from '@osf/shared/enums';
 import { CustomValidators } from '@osf/shared/helpers';
-import { ToastService } from '@osf/shared/services';
+import { ToastService } from '@osf/shared/services/toast.service';
 import { CreateWiki, WikiSelectors } from '@osf/shared/stores/wiki';
 
 import { TextInputComponent } from '../../text-input/text-input.component';

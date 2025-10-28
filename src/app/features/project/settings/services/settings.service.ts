@@ -14,7 +14,7 @@ import {
   ResponseJsonApi,
   UpdateNodeRequestModel,
 } from '@osf/shared/models';
-import { JsonApiService } from '@shared/services';
+import { JsonApiService } from '@osf/shared/services/json-api.service';
 
 import { SettingsMapper } from '../mappers';
 import {

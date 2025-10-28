@@ -5,8 +5,8 @@ import { ConfirmationService } from 'primeng/api';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PreprintStepperSelectors } from '@osf/features/preprints/store/preprint-stepper';
-import { AddProjectFormComponent } from '@shared/components';
-import { ToastService } from '@shared/services';
+import { AddProjectFormComponent } from '@osf/shared/components/add-project-form/add-project-form.component';
+import { ToastService } from '@osf/shared/services/toast.service';
 
 import { SupplementsStepComponent } from './supplements-step.component';
 

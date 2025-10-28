@@ -10,8 +10,8 @@ import { ProjectContributorsStepComponent } from '@osf/features/collections/comp
 import { ProjectMetadataStepComponent } from '@osf/features/collections/components/add-to-collection/project-metadata-step/project-metadata-step.component';
 import { SelectProjectStepComponent } from '@osf/features/collections/components/add-to-collection/select-project-step/select-project-step.component';
 import { AddToCollectionSteps } from '@osf/features/collections/enums';
-import { LoadingSpinnerComponent } from '@shared/components';
-import { CustomDialogService } from '@shared/services';
+import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { CollectionsSelectors } from '@shared/stores/collections';
 import { ProjectsSelectors } from '@shared/stores/projects/projects.selectors';
 

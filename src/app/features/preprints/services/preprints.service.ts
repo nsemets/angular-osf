@@ -9,7 +9,7 @@ import { PreprintRequestActionsMapper } from '@osf/features/preprints/mappers/pr
 import { PreprintRequestAction } from '@osf/features/preprints/models/preprint-request-action.models';
 import { searchPreferencesToJsonApiQueryParams, StringOrNull } from '@osf/shared/helpers';
 import { ApiData, JsonApiResponse, JsonApiResponseWithMeta, ResponseJsonApi, SearchFilters } from '@osf/shared/models';
-import { JsonApiService } from '@osf/shared/services';
+import { JsonApiService } from '@osf/shared/services/json-api.service';
 
 import { preprintSortFieldMap } from '../constants';
 import { PreprintRequestMapper, PreprintsMapper } from '../mappers';

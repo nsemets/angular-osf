@@ -3,16 +3,17 @@ import { MockComponents, MockProvider } from 'ng-mocks';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { BrowserTabHelper, HeaderStyleHelper } from '@osf/shared/helpers';
+import { BrandService } from '@osf/shared/services/brand.service';
+
 import {
   AdvisoryBoardComponent,
   BrowseBySubjectsComponent,
   PreprintProviderFooterComponent,
   PreprintProviderHeroComponent,
-} from '@osf/features/preprints/components';
-import { PreprintProviderDetails } from '@osf/features/preprints/models';
-import { PreprintProvidersSelectors } from '@osf/features/preprints/store/preprint-providers';
-import { BrowserTabHelper, HeaderStyleHelper } from '@shared/helpers';
-import { BrandService } from '@shared/services';
+} from '../../components';
+import { PreprintProviderDetails } from '../../models';
+import { PreprintProvidersSelectors } from '../../store/preprint-providers';
 
 import { PreprintProviderOverviewComponent } from './preprint-provider-overview.component';
 

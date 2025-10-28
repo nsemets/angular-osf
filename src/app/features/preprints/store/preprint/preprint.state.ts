@@ -7,7 +7,7 @@ import { catchError } from 'rxjs/operators';
 import { inject, Injectable } from '@angular/core';
 
 import { handleSectionError } from '@osf/shared/helpers';
-import { FilesService } from '@osf/shared/services';
+import { FilesService } from '@osf/shared/services/files.service';
 
 import { PreprintsService } from '../../services';
 

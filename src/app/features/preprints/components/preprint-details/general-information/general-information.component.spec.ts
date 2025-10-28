@@ -5,12 +5,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { PreprintProviderDetails } from '@osf/features/preprints/models';
 import { PreprintSelectors } from '@osf/features/preprints/store/preprint';
-import {
-  AffiliatedInstitutionsViewComponent,
-  ContributorsListComponent,
-  IconComponent,
-  TruncatedTextComponent,
-} from '@shared/components';
+import { AffiliatedInstitutionsViewComponent } from '@osf/shared/components/affiliated-institutions-view/affiliated-institutions-view.component';
+import { ContributorsListComponent } from '@osf/shared/components/contributors-list/contributors-list.component';
+import { IconComponent } from '@osf/shared/components/icon/icon.component';
+import { TruncatedTextComponent } from '@osf/shared/components/truncated-text/truncated-text.component';
 import { ContributorsSelectors } from '@shared/stores/contributors';
 import { InstitutionsSelectors } from '@shared/stores/institutions';
 

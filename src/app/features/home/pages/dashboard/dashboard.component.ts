@@ -15,17 +15,16 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { ScheduledBannerComponent } from '@core/components/osf-banners/scheduled-banner/scheduled-banner.component';
 import { CreateProjectDialogComponent } from '@osf/features/my-projects/components';
-import {
-  IconComponent,
-  LoadingSpinnerComponent,
-  MyProjectsTableComponent,
-  SearchInputComponent,
-  SubHeaderComponent,
-} from '@osf/shared/components';
+import { IconComponent } from '@osf/shared/components/icon/icon.component';
+import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
+import { MyProjectsTableComponent } from '@osf/shared/components/my-projects-table/my-projects-table.component';
+import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
+import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
 import { SortOrder } from '@osf/shared/enums';
 import { MyResourcesItem, MyResourcesSearchFilters, TableParameters } from '@osf/shared/models';
-import { CustomDialogService, ProjectRedirectDialogService } from '@osf/shared/services';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
+import { ProjectRedirectDialogService } from '@osf/shared/services/project-redirect-dialog.service';
 import { ClearMyResources, GetMyProjects, MyResourcesSelectors } from '@osf/shared/stores/my-resources';
 
 @Component({

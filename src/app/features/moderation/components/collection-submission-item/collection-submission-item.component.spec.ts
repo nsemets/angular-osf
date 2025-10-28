@@ -1,11 +1,11 @@
-import { MockComponent, MockPipe, MockProvider } from 'ng-mocks';
+import { MockComponents, MockPipe, MockProvider } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { CollectionSubmissionWithGuid } from '@osf/shared/models';
 import { CollectionsSelectors } from '@osf/shared/stores/collections';
-import { IconComponent } from '@shared/components';
 import { DateAgoPipe } from '@shared/pipes';
 
 import { SubmissionReviewStatus } from '../../enums';
@@ -39,7 +39,7 @@ describe('CollectionSubmissionItemComponent', () => {
       imports: [
         CollectionSubmissionItemComponent,
         OSFTestingModule,
-        MockComponent(IconComponent),
+        ...MockComponents(IconComponent),
         MockPipe(DateAgoPipe),
       ],
       providers: [

@@ -8,7 +8,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { handleSectionError } from '@osf/shared/helpers';
 import { PaginatedViewOnlyLinksModel } from '@osf/shared/models';
-import { ViewOnlyLinksService } from '@osf/shared/services';
+import { ViewOnlyLinksService } from '@osf/shared/services/view-only-links.service';
 
 import { CreateViewOnlyLink, DeleteViewOnlyLink, FetchViewOnlyLinks } from './view-only-link.actions';
 import { VIEW_ONLY_LINK_STATE_DEFAULTS, ViewOnlyLinkStateModel } from './view-only-link.model';

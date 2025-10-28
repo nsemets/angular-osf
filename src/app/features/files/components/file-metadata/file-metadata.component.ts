@@ -15,7 +15,7 @@ import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { languageCodes } from '@osf/shared/constants';
 import { hasViewOnlyParam } from '@osf/shared/helpers';
 import { LanguageCodeModel } from '@osf/shared/models';
-import { CustomDialogService } from '@osf/shared/services';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 
 import { FileMetadataFields } from '../../constants';
 import { PatchFileMetadata } from '../../models';

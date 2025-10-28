@@ -1,7 +1,7 @@
 import { provideStore, Store } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
-import { MockPipe, MockProviders } from 'ng-mocks';
+import { MockComponent, MockPipe, MockProviders } from 'ng-mocks';
 
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
@@ -10,7 +10,8 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UserEmailsState } from '@core/store/user-emails';
-import { ToastService } from '@shared/services';
+import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
+import { ToastService } from '@osf/shared/services/toast.service';
 
 import { AccountSettingsState } from '../../store';
 
@@ -25,7 +26,7 @@ describe('AddEmailComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AddEmailComponent, MockPipe(TranslatePipe)],
+      imports: [AddEmailComponent, MockComponent(TextInputComponent), MockPipe(TranslatePipe)],
       providers: [
         provideStore([AccountSettingsState, UserEmailsState]),
         MockProviders(DynamicDialogRef, ToastService),

@@ -42,22 +42,23 @@ import {
   SetSearch,
   SetSort,
 } from '@osf/features/files/store';
+import { FileUploadDialogComponent } from '@osf/shared/components/file-upload-dialog/file-upload-dialog.component';
+import { FilesTreeComponent } from '@osf/shared/components/files-tree/files-tree.component';
+import { FormSelectComponent } from '@osf/shared/components/form-select/form-select.component';
+import { GoogleFilePickerComponent } from '@osf/shared/components/google-file-picker/google-file-picker.component';
+import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
+import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
+import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
+import { ViewOnlyLinkMessageComponent } from '@osf/shared/components/view-only-link-message/view-only-link-message.component';
 import { ALL_SORT_OPTIONS, FILE_SIZE_LIMIT } from '@osf/shared/constants';
 import { FileMenuType, ResourceType, SupportedFeature, UserPermissions } from '@osf/shared/enums';
 import { getViewOnlyParamFromUrl, hasViewOnlyParam } from '@osf/shared/helpers';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
+import { FilesService } from '@osf/shared/services/files.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 import { CurrentResourceSelectors, GetResourceDetails } from '@osf/shared/stores/current-resource';
-import {
-  FilesTreeComponent,
-  FileUploadDialogComponent,
-  FormSelectComponent,
-  GoogleFilePickerComponent,
-  LoadingSpinnerComponent,
-  SearchInputComponent,
-  SubHeaderComponent,
-  ViewOnlyLinkMessageComponent,
-} from '@shared/components';
 import { ConfiguredAddonModel, FileFolderModel, FileLabelModel, FileModel, StorageItem } from '@shared/models';
-import { CustomConfirmationService, CustomDialogService, FilesService, ToastService } from '@shared/services';
 import { DataciteService } from '@shared/services/datacite/datacite.service';
 
 import {

@@ -7,7 +7,7 @@ import { inject, Injectable } from '@angular/core';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { ResourceType } from '@osf/shared/enums';
 import { getResourceTypeStringFromEnum, handleSectionError } from '@osf/shared/helpers';
-import { GlobalSearchService } from '@osf/shared/services';
+import { GlobalSearchService } from '@osf/shared/services/global-search.service';
 
 import { RegistriesService } from '../services';
 

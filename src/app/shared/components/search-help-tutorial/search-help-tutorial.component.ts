@@ -2,7 +2,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 
-import { CommonModule } from '@angular/common';
+import { NgStyle } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, model, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -12,7 +12,7 @@ import { IS_MEDIUM } from '@shared/helpers';
 
 @Component({
   selector: 'osf-search-help-tutorial',
-  imports: [Button, TranslatePipe, CommonModule],
+  imports: [Button, TranslatePipe, NgStyle],
   templateUrl: './search-help-tutorial.component.html',
   styleUrl: './search-help-tutorial.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

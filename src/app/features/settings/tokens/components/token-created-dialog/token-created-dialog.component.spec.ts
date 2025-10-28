@@ -5,7 +5,7 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { NgZone } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CopyButtonComponent } from '@shared/components';
+import { CopyButtonComponent } from '@osf/shared/components/copy-button/copy-button.component';
 
 import { TokenCreatedDialogComponent } from './token-created-dialog.component';
 

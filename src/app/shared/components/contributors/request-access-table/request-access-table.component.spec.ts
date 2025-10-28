@@ -1,4 +1,4 @@
-import { MockProvider } from 'ng-mocks';
+import { MockComponent, MockProvider } from 'ng-mocks';
 
 import { DialogService } from 'primeng/dynamicdialog';
 
@@ -6,6 +6,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ContributorPermission, ResourceType } from '@osf/shared/enums';
 import { RequestAccessModel } from '@osf/shared/models';
+
+import { SelectComponent } from '../../select/select.component';
 
 import { RequestAccessTableComponent } from './request-access-table.component';
 
@@ -50,7 +52,7 @@ describe('RequestAccessTableComponent', () => {
     mockDialogService = DialogServiceMockBuilder.create().withOpenMock().build();
 
     await TestBed.configureTestingModule({
-      imports: [RequestAccessTableComponent, OSFTestingModule],
+      imports: [RequestAccessTableComponent, OSFTestingModule, MockComponent(SelectComponent)],
       providers: [MockProvider(DialogService, mockDialogService)],
     }).compileComponents();
 
@@ -184,7 +186,7 @@ describe('RequestAccessTableComponent', () => {
       expect.objectContaining({
         header: 'project.contributors.table.headers.education',
         width: '552px',
-        data: mockRequestAccessItem.creator.education,
+        data: mockRequestAccessItem?.creator?.education,
       })
     );
   });
@@ -197,7 +199,7 @@ describe('RequestAccessTableComponent', () => {
       expect.objectContaining({
         header: 'project.contributors.table.headers.employment',
         width: '552px',
-        data: mockRequestAccessItem.creator.employment,
+        data: mockRequestAccessItem?.creator?.employment,
       })
     );
   });

@@ -38,12 +38,16 @@ import {
   MetadataSelectors,
   UpdateCedarMetadataRecord,
 } from '@osf/features/metadata/store';
-import { LoadingSpinnerComponent, MetadataTabsComponent, SubHeaderComponent } from '@osf/shared/components';
+import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
+import { MetadataTabsComponent } from '@osf/shared/components/metadata-tabs/metadata-tabs.component';
+import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { MetadataResourceEnum, ResourceType } from '@osf/shared/enums';
 import { getViewOnlyParam, hasViewOnlyParam, pathJoin } from '@osf/shared/helpers';
 import { FileDetailsModel, MetadataTabsModel } from '@osf/shared/models';
-import { CustomConfirmationService, MetaTagsService, ToastService } from '@osf/shared/services';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { DataciteService } from '@osf/shared/services/datacite/datacite.service';
+import { MetaTagsService } from '@osf/shared/services/meta-tags.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 
 import {
   FileKeywordsComponent,

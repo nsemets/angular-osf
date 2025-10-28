@@ -14,14 +14,14 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
-import {
-  ContributorsListComponent,
-  LicenseDisplayComponent,
-  RegistrationBlocksDataComponent,
-} from '@osf/shared/components';
+import { ContributorsListComponent } from '@osf/shared/components/contributors-list/contributors-list.component';
+import { LicenseDisplayComponent } from '@osf/shared/components/license-display/license-display.component';
+import { RegistrationBlocksDataComponent } from '@osf/shared/components/registration-blocks-data/registration-blocks-data.component';
 import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants';
 import { FieldType, ResourceType, UserPermissions } from '@osf/shared/enums';
-import { CustomConfirmationService, CustomDialogService, ToastService } from '@osf/shared/services';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 import {
   ContributorsSelectors,
   GetAllContributors,

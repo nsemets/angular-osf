@@ -8,7 +8,7 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { ContributorsListComponent } from '@osf/shared/components';
+import { ContributorsListComponent } from '@osf/shared/components/contributors-list/contributors-list.component';
 import { hasViewOnlyParam } from '@osf/shared/helpers';
 
 import { FilesSelectors } from '../../store';

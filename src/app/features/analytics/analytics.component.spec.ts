@@ -8,14 +8,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AnalyticsComponent } from '@osf/features/analytics/analytics.component';
 import { AnalyticsKpiComponent } from '@osf/features/analytics/components';
 import { AnalyticsSelectors } from '@osf/features/analytics/store';
-import {
-  BarChartComponent,
-  LineChartComponent,
-  PieChartComponent,
-  SelectComponent,
-  SubHeaderComponent,
-  ViewOnlyLinkMessageComponent,
-} from '@shared/components';
+import { BarChartComponent } from '@osf/shared/components/bar-chart/bar-chart.component';
+import { LineChartComponent } from '@osf/shared/components/line-chart/line-chart.component';
+import { PieChartComponent } from '@osf/shared/components/pie-chart/pie-chart.component';
+import { SelectComponent } from '@osf/shared/components/select/select.component';
+import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
+import { ViewOnlyLinkMessageComponent } from '@osf/shared/components/view-only-link-message/view-only-link-message.component';
 import { IS_WEB } from '@shared/helpers';
 
 import { MOCK_ANALYTICS_METRICS, MOCK_RELATED_COUNTS, MOCK_RESOURCE_OVERVIEW } from '@testing/mocks';

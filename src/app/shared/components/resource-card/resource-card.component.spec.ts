@@ -1,14 +1,22 @@
-import { MockProvider } from 'ng-mocks';
+import { MockComponents, MockProvider } from 'ng-mocks';
 
 import { of } from 'rxjs';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IS_XSMALL } from '@osf/shared/helpers';
-import { ResourceCardComponent } from '@shared/components';
+import { ResourceCardService } from '@osf/shared/services/resource-card.service';
 import { ResourceType } from '@shared/enums';
 import { ResourceModel } from '@shared/models';
-import { ResourceCardService } from '@shared/services';
+
+import { DataResourcesComponent } from '../data-resources/data-resources.component';
+
+import { FileSecondaryMetadataComponent } from './components/file-secondary-metadata/file-secondary-metadata.component';
+import { PreprintSecondaryMetadataComponent } from './components/preprint-secondary-metadata/preprint-secondary-metadata.component';
+import { ProjectSecondaryMetadataComponent } from './components/project-secondary-metadata/project-secondary-metadata.component';
+import { RegistrationSecondaryMetadataComponent } from './components/registration-secondary-metadata/registration-secondary-metadata.component';
+import { UserSecondaryMetadataComponent } from './components/user-secondary-metadata/user-secondary-metadata.component';
+import { ResourceCardComponent } from './resource-card.component';
 
 import { MOCK_AGENT_RESOURCE, MOCK_RESOURCE, MOCK_USER_RELATED_COUNTS } from '@testing/mocks';
 import { OSFTestingModule } from '@testing/osf.testing.module';
@@ -24,7 +32,18 @@ describe('ResourceCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ResourceCardComponent, OSFTestingModule],
+      imports: [
+        ResourceCardComponent,
+        OSFTestingModule,
+        ...MockComponents(
+          DataResourcesComponent,
+          UserSecondaryMetadataComponent,
+          RegistrationSecondaryMetadataComponent,
+          ProjectSecondaryMetadataComponent,
+          PreprintSecondaryMetadataComponent,
+          FileSecondaryMetadataComponent
+        ),
+      ],
       providers: [
         MockProvider(ResourceCardService, {
           getUserRelatedCounts: jest.fn().mockReturnValue(of(mockUserCounts)),

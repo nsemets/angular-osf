@@ -13,7 +13,7 @@ import { SelectComponent } from '@osf/shared/components/select/select.component'
 import { PERMISSION_OPTIONS } from '@osf/shared/constants';
 import { ContributorPermission, ResourceType } from '@osf/shared/enums';
 import { ContributorModel, SelectOption, TableParameters } from '@osf/shared/models';
-import { CustomDialogService } from '@osf/shared/services';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 
 import { EducationHistoryDialogComponent } from '../../education-history-dialog/education-history-dialog.component';
 import { EmploymentHistoryDialogComponent } from '../../employment-history-dialog/employment-history-dialog.component';

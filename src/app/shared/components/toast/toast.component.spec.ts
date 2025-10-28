@@ -4,7 +4,7 @@ import { ToastModule } from 'primeng/toast';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ToastService } from '@shared/services';
+import { ToastService } from '@osf/shared/services/toast.service';
 
 import { ToastComponent } from './toast.component';
 

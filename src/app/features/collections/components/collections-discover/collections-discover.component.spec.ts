@@ -5,8 +5,10 @@ import { ActivatedRoute } from '@angular/router';
 
 import { SENTRY_TOKEN } from '@core/provider/sentry.provider';
 import { CollectionsMainContentComponent } from '@osf/features/collections/components';
-import { LoadingSpinnerComponent, SearchInputComponent } from '@shared/components';
-import { CustomDialogService, ToastService } from '@shared/services';
+import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
+import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 import { CollectionsSelectors } from '@shared/stores/collections';
 
 import { CollectionsDiscoverComponent } from './collections-discover.component';

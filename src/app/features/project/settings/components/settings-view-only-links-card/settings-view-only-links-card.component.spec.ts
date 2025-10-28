@@ -2,7 +2,7 @@ import { MockComponent } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewOnlyTableComponent } from '@osf/shared/components';
+import { ViewOnlyTableComponent } from '@osf/shared/components/view-only-table/view-only-table.component';
 import { PaginatedViewOnlyLinksModel } from '@osf/shared/models';
 
 import { SettingsViewOnlyLinksCardComponent } from './settings-view-only-links-card.component';

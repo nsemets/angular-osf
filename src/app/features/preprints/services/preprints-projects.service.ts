@@ -11,7 +11,7 @@ import {
   NodeResponseJsonApi,
   NodesResponseJsonApi,
 } from '@osf/shared/models';
-import { JsonApiService } from '@osf/shared/services';
+import { JsonApiService } from '@osf/shared/services/json-api.service';
 
 import { PreprintsMapper } from '../mappers';
 import {

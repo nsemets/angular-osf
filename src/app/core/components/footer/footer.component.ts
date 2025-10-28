@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { SOCIAL_ICONS } from '@osf/core/constants';
-import { IconComponent } from '@osf/shared/components';
+import { IconComponent } from '@osf/shared/components/icon/icon.component';
 
 @Component({
   selector: 'osf-footer',

@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { PERMISSION_OPTIONS } from '@osf/shared/constants';
 import { ResourceType } from '@osf/shared/enums';
 import { RequestAccessModel, SelectOption } from '@osf/shared/models';
-import { CustomDialogService } from '@osf/shared/services';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 
 import { EducationHistoryDialogComponent } from '../../education-history-dialog/education-history-dialog.component';
 import { EmploymentHistoryDialogComponent } from '../../employment-history-dialog/employment-history-dialog.component';

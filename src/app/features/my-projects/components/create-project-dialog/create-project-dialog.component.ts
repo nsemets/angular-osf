@@ -8,7 +8,7 @@ import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { AddProjectFormComponent } from '@osf/shared/components';
+import { AddProjectFormComponent } from '@osf/shared/components/add-project-form/add-project-form.component';
 import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
 import { ProjectFormControls } from '@osf/shared/enums';
 import { CustomValidators } from '@osf/shared/helpers';

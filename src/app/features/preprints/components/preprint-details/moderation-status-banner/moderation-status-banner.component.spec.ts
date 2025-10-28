@@ -7,7 +7,7 @@ import { ReviewAction } from '@osf/features/moderation/models';
 import { ProviderReviewsWorkflow, ReviewsState } from '@osf/features/preprints/enums';
 import { PreprintRequest } from '@osf/features/preprints/models';
 import { PreprintSelectors } from '@osf/features/preprints/store/preprint';
-import { IconComponent } from '@shared/components';
+import { IconComponent } from '@osf/shared/components/icon/icon.component';
 
 import { ModerationStatusBannerComponent } from './moderation-status-banner.component';
 

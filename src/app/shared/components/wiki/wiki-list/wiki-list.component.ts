@@ -9,7 +9,8 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, output, si
 import { Router } from '@angular/router';
 
 import { ComponentWiki, Wiki, WikiItemType, WikiMenuItem } from '@osf/shared/models';
-import { CustomConfirmationService, CustomDialogService } from '@osf/shared/services';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 
 import { AddWikiDialogComponent } from '../add-wiki-dialog/add-wiki-dialog.component';
 

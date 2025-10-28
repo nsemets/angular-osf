@@ -3,7 +3,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { InputGroup } from 'primeng/inputgroup';
 import { InputGroupAddon } from 'primeng/inputgroupaddon';
 import { InputText } from 'primeng/inputtext';
-import { SelectModule } from 'primeng/select';
 
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -12,7 +11,7 @@ import { InputLimits } from '@osf/shared/constants';
 
 @Component({
   selector: 'osf-social-form',
-  imports: [SelectModule, InputGroup, InputGroupAddon, InputText, ReactiveFormsModule, TranslatePipe],
+  imports: [InputGroup, InputGroupAddon, InputText, ReactiveFormsModule, TranslatePipe],
   templateUrl: './social-form.component.html',
   styleUrl: './social-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

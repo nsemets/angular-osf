@@ -11,9 +11,9 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 
 import { WithdrawRegistration } from '@osf/features/registry/store/registry-overview';
+import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
 import { InputLimits } from '@osf/shared/constants';
 import { CustomValidators } from '@osf/shared/helpers';
-import { TextInputComponent } from '@shared/components';
 
 @Component({
   selector: 'osf-withdraw-dialog',

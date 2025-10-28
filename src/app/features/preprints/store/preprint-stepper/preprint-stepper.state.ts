@@ -16,8 +16,8 @@ import {
   PreprintsService,
 } from '@osf/features/preprints/services';
 import { FileFolderModel, FileModel } from '@osf/shared/models';
+import { FilesService } from '@osf/shared/services/files.service';
 import { handleSectionError } from '@shared/helpers';
-import { FilesService } from '@shared/services';
 
 import {
   ConnectProject,

@@ -1,4 +1,4 @@
-import { MockProvider } from 'ng-mocks';
+import { MockComponents, MockProvider } from 'ng-mocks';
 
 import { ConfirmationService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -7,9 +7,12 @@ import { of } from 'rxjs';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { ContributorsTableComponent, RequestAccessTableComponent } from '@osf/shared/components/contributors';
+import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
+import { ViewOnlyTableComponent } from '@osf/shared/components/view-only-table/view-only-table.component';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { ContributorPermission } from '@shared/enums';
 import { ContributorModel } from '@shared/models';
-import { CustomConfirmationService } from '@shared/services';
 import { ContributorsSelectors } from '@shared/stores/contributors';
 import { CurrentResourceSelectors } from '@shared/stores/current-resource';
 import { ViewOnlyLinkSelectors } from '@shared/stores/view-only-links';
@@ -49,7 +52,16 @@ describe('Component: Contributors', () => {
     customConfirmationServiceMock = CustomConfirmationServiceMockBuilder.create().build();
 
     await TestBed.configureTestingModule({
-      imports: [ContributorsComponent, OSFTestingModule],
+      imports: [
+        ContributorsComponent,
+        OSFTestingModule,
+        MockComponents(
+          SearchInputComponent,
+          ContributorsTableComponent,
+          RequestAccessTableComponent,
+          ViewOnlyTableComponent
+        ),
+      ],
       providers: [
         MockProvider(DialogService, {
           open: jest.fn().mockReturnValue({ onClose: of({}) }),

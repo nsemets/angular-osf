@@ -28,12 +28,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { InfoIconComponent } from '@osf/shared/components';
+import { InfoIconComponent } from '@osf/shared/components/info-icon/info-icon.component';
 import { FILE_COUNT_ATTACHMENTS_LIMIT, INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants';
 import { FieldType } from '@osf/shared/enums';
 import { CustomValidators, findChangedFields } from '@osf/shared/helpers';
 import { FileModel, FilePayloadJsonApi, PageSchema } from '@osf/shared/models';
-import { ToastService } from '@osf/shared/services';
+import { ToastService } from '@osf/shared/services/toast.service';
 
 import { FilesMapper } from '../../mappers/files.mapper';
 import { RegistriesSelectors, SetUpdatedFields, UpdateStepState } from '../../store';

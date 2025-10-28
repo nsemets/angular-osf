@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, signal } from '@angular/core';
 
-import { IconComponent } from '@shared/components';
+import { IconComponent } from '@osf/shared/components/icon/icon.component';
+import { AddonOperationInvocationService, AddonsService } from '@osf/shared/services/addons';
 import { OperationNames, StorageItemType } from '@shared/enums';
 import { formatCitation, getItemUrl } from '@shared/helpers';
 import { ConfiguredAddonModel, OperationInvocation, StorageItem } from '@shared/models';
-import { AddonOperationInvocationService, AddonsService } from '@shared/services';
 
 import { AddonTreeItem, FormattedCitationItem } from '../../models';
 import { CitationItemComponent } from '../citation-item/citation-item.component';

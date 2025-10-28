@@ -10,7 +10,7 @@ import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { RegistriesSelectors } from '@osf/features/registries/store';
-import { SubjectsComponent } from '@osf/shared/components';
+import { SubjectsComponent } from '@osf/shared/components/subjects/subjects.component';
 import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants';
 import { ResourceType } from '@osf/shared/enums';
 import { SubjectModel } from '@osf/shared/models';

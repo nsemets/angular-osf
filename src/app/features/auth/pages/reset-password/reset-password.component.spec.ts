@@ -8,7 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { AuthService } from '@osf/core/services';
 import { ResetPasswordComponent } from '@osf/features/auth/pages';
-import { PasswordInputHintComponent } from '@osf/shared/components';
+import { PasswordInputHintComponent } from '@osf/shared/components/password-input-hint/password-input-hint.component';
 
 import { TranslateServiceMock } from '@testing/mocks';
 
@@ -18,11 +18,7 @@ describe('ResetPasswordComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        ResetPasswordComponent,
-        MockComponent(PasswordInputHintComponent),
-        MockPipe(TranslatePipe, (value) => value),
-      ],
+      imports: [ResetPasswordComponent, MockComponent(PasswordInputHintComponent), MockPipe(TranslatePipe)],
       providers: [
         TranslateServiceMock,
         MockProvider(AuthService),

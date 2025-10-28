@@ -4,7 +4,8 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LicenseComponent, LoadingSpinnerComponent } from '@shared/components';
+import { LicenseComponent } from '@osf/shared/components/license/license.component';
+import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { LicensesSelectors } from '@shared/stores/licenses';
 
 import { LicenseDialogComponent } from './license-dialog.component';

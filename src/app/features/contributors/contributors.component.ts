@@ -24,13 +24,14 @@ import { FormControl, FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { UserSelectors } from '@core/store/user';
-import { SearchInputComponent, ViewOnlyTableComponent } from '@osf/shared/components';
 import {
   AddContributorDialogComponent,
   AddUnregisteredContributorDialogComponent,
   ContributorsTableComponent,
   RequestAccessTableComponent,
 } from '@osf/shared/components/contributors';
+import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
+import { ViewOnlyTableComponent } from '@osf/shared/components/view-only-table/view-only-table.component';
 import { BIBLIOGRAPHY_OPTIONS, DEFAULT_TABLE_PARAMS, PERMISSION_OPTIONS } from '@osf/shared/constants';
 import { AddContributorType, ContributorPermission, ResourceType, UserPermissions } from '@osf/shared/enums';
 import { findChangedItems } from '@osf/shared/helpers';
@@ -45,7 +46,10 @@ import {
   ViewOnlyLinkJsonApi,
   ViewOnlyLinkModel,
 } from '@osf/shared/models';
-import { CustomConfirmationService, CustomDialogService, LoaderService, ToastService } from '@osf/shared/services';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
+import { LoaderService } from '@osf/shared/services/loader.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 import {
   AcceptRequestAccess,
   AddContributor,

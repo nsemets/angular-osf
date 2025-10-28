@@ -3,7 +3,7 @@ import { MockComponent } from 'ng-mocks';
 import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ContributorsListComponent } from '@osf/shared/components';
+import { ContributorsListComponent } from '@osf/shared/components/contributors-list/contributors-list.component';
 import { CollectionSubmissionWithGuid } from '@shared/models';
 
 import { CollectionsSearchResultCardComponent } from './collections-search-result-card.component';

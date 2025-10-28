@@ -34,12 +34,13 @@ import {
   FetchPreprintProject,
   PreprintStepperSelectors,
 } from '@osf/features/preprints/store/preprint-stepper';
+import { AddProjectFormComponent } from '@osf/shared/components/add-project-form/add-project-form.component';
 import { CustomValidators } from '@osf/shared/helpers';
-import { AddProjectFormComponent } from '@shared/components';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 import { ProjectFormControls } from '@shared/enums';
 import { StringOrNull } from '@shared/helpers';
 import { ProjectForm } from '@shared/models';
-import { CustomConfirmationService, ToastService } from '@shared/services';
 
 @Component({
   selector: 'osf-supplements-step',

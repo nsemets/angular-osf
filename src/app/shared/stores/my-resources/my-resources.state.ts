@@ -6,7 +6,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { ResourceType } from '@osf/shared/enums';
 import { handleSectionError } from '@osf/shared/helpers';
-import { MyResourcesService } from '@osf/shared/services';
+import { MyResourcesService } from '@osf/shared/services/my-resources.service';
 
 import {
   ClearMyResources,

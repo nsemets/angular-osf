@@ -19,7 +19,7 @@ import {
   TableColumn,
   TableIconClickEvent,
 } from '@osf/features/admin-institutions/models';
-import { CustomPaginatorComponent } from '@osf/shared/components';
+import { CustomPaginatorComponent } from '@osf/shared/components/custom-paginator/custom-paginator.component';
 import { StopPropagationDirective } from '@shared/directives';
 import { PaginationLinksModel, SearchFilters } from '@shared/models';
 

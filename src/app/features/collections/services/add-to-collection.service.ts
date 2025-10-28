@@ -3,9 +3,9 @@ import { map, Observable } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
+import { JsonApiService } from '@osf/shared/services/json-api.service';
 import { CollectionsMapper, LicensesMapper } from '@shared/mappers';
 import { CollectionSubmissionPayload, LicenseModel, LicensesResponseJsonApi } from '@shared/models';
-import { JsonApiService } from '@shared/services';
 
 @Injectable({
   providedIn: 'root',

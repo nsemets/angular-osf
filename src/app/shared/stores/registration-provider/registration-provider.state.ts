@@ -6,9 +6,8 @@ import { inject, Injectable } from '@angular/core';
 
 import { SetCurrentProvider } from '@core/store/provider';
 import { CurrentResourceType } from '@osf/shared/enums';
+import { RegistrationProviderService } from '@osf/shared/services/registration-provider.service';
 import { handleSectionError } from '@shared/helpers';
-
-import { RegistrationProviderService } from '../../services';
 
 import { ClearRegistryProvider, GetRegistryProvider } from './registration-provider.actions';
 import {

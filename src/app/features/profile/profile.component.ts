@@ -5,7 +5,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { UserSelectors } from '@core/store/user';
-import { GlobalSearchComponent, LoadingSpinnerComponent } from '@osf/shared/components';
+import { GlobalSearchComponent } from '@osf/shared/components/global-search/global-search.component';
+import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { SEARCH_TAB_OPTIONS } from '@osf/shared/constants';
 import { ResourceType } from '@osf/shared/enums';
 import { UserModel } from '@osf/shared/models';

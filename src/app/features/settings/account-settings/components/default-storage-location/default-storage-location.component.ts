@@ -13,7 +13,8 @@ import { FormsModule } from '@angular/forms';
 
 import { UserSelectors } from '@osf/core/store/user';
 import { IdName } from '@osf/shared/models';
-import { LoaderService, ToastService } from '@osf/shared/services';
+import { LoaderService } from '@osf/shared/services/loader.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 import { RegionsSelectors } from '@osf/shared/stores/regions';
 
 import { UpdateRegion } from '../../store';
