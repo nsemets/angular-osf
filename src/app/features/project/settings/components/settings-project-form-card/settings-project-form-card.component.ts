@@ -3,7 +3,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { Textarea } from 'primeng/textarea';
-import { NgIf } from '@angular/common';
 
 import { ChangeDetectionStrategy, Component, computed, effect, input, output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -17,7 +16,7 @@ import { NodeDetailsModel, ProjectDetailsModel } from '../../models';
 
 @Component({
   selector: 'osf-settings-project-form-card',
-  imports: [Button, Card, Textarea, TranslatePipe, ReactiveFormsModule, TextInputComponent, NgIf],
+  imports: [Button, Card, Textarea, TranslatePipe, ReactiveFormsModule, TextInputComponent],
   templateUrl: './settings-project-form-card.component.html',
   styleUrl: 'settings-project-form-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
