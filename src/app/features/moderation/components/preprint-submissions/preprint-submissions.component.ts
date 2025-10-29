@@ -28,6 +28,7 @@ import { PreprintSubmissionModel } from '../../models';
 import {
   GetPreprintSubmissionContributors,
   GetPreprintSubmissions,
+  LoadMorePreprintSubmissionContributors,
   PreprintModerationSelectors,
 } from '../../store/preprint-moderation';
 
@@ -60,6 +61,7 @@ export class PreprintSubmissionsComponent implements OnInit {
   readonly actions = createDispatchMap({
     getPreprintSubmissions: GetPreprintSubmissions,
     getPreprintSubmissionContributors: GetPreprintSubmissionContributors,
+    loadMorePreprintSubmissionContributors: LoadMorePreprintSubmissionContributors,
   });
 
   readonly submissions = select(PreprintModerationSelectors.getPreprintSubmissions);
@@ -129,6 +131,10 @@ export class PreprintSubmissionsComponent implements OnInit {
 
   loadContributors(item: PreprintSubmissionModel) {
     this.actions.getPreprintSubmissionContributors(item.id);
+  }
+
+  loadMoreContributors(item: PreprintSubmissionModel) {
+    this.actions.loadMorePreprintSubmissionContributors(item.id);
   }
 
   private getStatusFromQueryParams() {

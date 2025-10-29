@@ -2,9 +2,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { Accordion, AccordionContent, AccordionHeader, AccordionPanel } from 'primeng/accordion';
 import { Button } from 'primeng/button';
-import { Skeleton } from 'primeng/skeleton';
 
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
 import { ContributorsListComponent, IconComponent, TruncatedTextComponent } from '@osf/shared/components';
 import { StopPropagationDirective } from '@osf/shared/directives';
@@ -27,7 +26,6 @@ import { PreprintSubmissionModel, PreprintWithdrawalSubmission } from '../../mod
     AccordionHeader,
     AccordionContent,
     ContributorsListComponent,
-    Skeleton,
     StopPropagationDirective,
   ],
   templateUrl: './preprint-submission-item.component.html',
@@ -39,6 +37,7 @@ export class PreprintSubmissionItemComponent {
   submission = input.required<PreprintSubmissionModel | PreprintWithdrawalSubmission>();
   selected = output<void>();
   loadContributors = output<void>();
+  loadMoreContributors = output<void>();
 
   readonly reviewStatusIcon = ReviewStatusIcon;
   readonly actionLabel = PREPRINT_ACTION_LABEL;
@@ -46,6 +45,11 @@ export class PreprintSubmissionItemComponent {
 
   limitValue = 1;
   showAll = false;
+
+  hasMoreContributors = computed(() => {
+    const submission = this.submission();
+    return submission.contributors.length < submission.totalContributors;
+  });
 
   toggleHistory() {
     this.showAll = !this.showAll;

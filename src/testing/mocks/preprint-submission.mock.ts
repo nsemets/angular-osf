@@ -1,14 +1,11 @@
-import { PreprintWithdrawalSubmission } from '@osf/features/moderation/models';
+import { PreprintSubmissionModel } from '@osf/features/moderation/models';
 
-export const MOCK_PREPRINT_WITHDRAWAL_SUBMISSIONS: PreprintWithdrawalSubmission[] = [
+export const MOCK_PREPRINT_SUBMISSIONS: PreprintSubmissionModel[] = [
   {
     id: '1',
-    title: 'Test Withdrawal 1',
-    preprintId: 'preprint-1',
-    contributors: [],
-    contributorsLoading: false,
-    contributorsPage: 1,
-    totalContributors: 0,
+    title: 'Test Preprint Submission 1',
+    reviewsState: 'pending',
+    public: false,
     actions: [
       {
         id: '1',
@@ -20,18 +17,17 @@ export const MOCK_PREPRINT_WITHDRAWAL_SUBMISSIONS: PreprintWithdrawalSubmission[
           id: 'user-1',
           name: 'John Doe',
         },
-        comment: 'Withdrawal request',
+        comment: 'Test comment',
       },
     ],
+    contributors: [],
+    totalContributors: 0,
   },
   {
     id: '2',
-    preprintId: 'preprint-2',
-    title: 'Test Withdrawal 2',
-    contributors: [],
-    contributorsLoading: false,
-    contributorsPage: 1,
-    totalContributors: 0,
+    title: 'Test Preprint Submission 2',
+    reviewsState: 'accepted',
+    public: true,
     actions: [
       {
         id: '2',
@@ -43,18 +39,17 @@ export const MOCK_PREPRINT_WITHDRAWAL_SUBMISSIONS: PreprintWithdrawalSubmission[
           id: 'user-2',
           name: 'Jane Doe',
         },
-        comment: 'Withdrawal approved',
+        comment: 'Approved submission',
       },
     ],
+    contributors: [],
+    totalContributors: 0,
   },
   {
     id: '3',
-    preprintId: 'preprint-3',
-    title: 'Test Withdrawal 3',
-    contributors: [],
-    contributorsLoading: false,
-    contributorsPage: 1,
-    totalContributors: 0,
+    title: 'Test Preprint Submission 3',
+    reviewsState: 'rejected',
+    public: false,
     actions: [
       {
         id: '3',
@@ -66,8 +61,10 @@ export const MOCK_PREPRINT_WITHDRAWAL_SUBMISSIONS: PreprintWithdrawalSubmission[
           id: 'user-3',
           name: 'Bob Smith',
         },
-        comment: 'Withdrawal rejected',
+        comment: 'Rejected submission',
       },
     ],
+    contributors: [],
+    totalContributors: 0,
   },
 ];
