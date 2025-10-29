@@ -16,9 +16,10 @@ import { StopPropagationDirective } from '@osf/shared/directives/stop-propagatio
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { IS_XSMALL } from '@osf/shared/helpers/breakpoints.tokens';
 import { getSortedContributorsByPermissions } from '@osf/shared/helpers/sort-contributors-by-permissions';
+import { ResourceModel } from '@osf/shared/models/search/resource.model';
+import { UserRelatedCounts } from '@osf/shared/models/user-related-counts/user-related-counts.model';
+import { FixSpecialCharPipe } from '@osf/shared/pipes/fix-special-char.pipe';
 import { ResourceCardService } from '@osf/shared/services/resource-card.service';
-import { ResourceModel } from '@shared/models/search/resource.model';
-import { UserRelatedCounts } from '@shared/models/user-related-counts/user-related-counts.model';
 
 import { DataResourcesComponent } from '../data-resources/data-resources.component';
 
@@ -46,6 +47,7 @@ import { UserSecondaryMetadataComponent } from './components/user-secondary-meta
     PreprintSecondaryMetadataComponent,
     FileSecondaryMetadataComponent,
     StopPropagationDirective,
+    FixSpecialCharPipe,
   ],
   templateUrl: './resource-card.component.html',
   styleUrl: './resource-card.component.scss',

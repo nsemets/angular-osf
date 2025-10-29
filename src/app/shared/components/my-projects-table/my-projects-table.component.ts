@@ -8,14 +8,15 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
 import { SortOrder } from '@osf/shared/enums/sort-order.enum';
-import { MyResourcesItem } from '@shared/models/my-resources/my-resources.models';
-import { TableParameters } from '@shared/models/table-parameters.model';
+import { MyResourcesItem } from '@osf/shared/models/my-resources/my-resources.models';
+import { TableParameters } from '@osf/shared/models/table-parameters.model';
+import { FixSpecialCharPipe } from '@osf/shared/pipes/fix-special-char.pipe';
 
 import { IconComponent } from '../icon/icon.component';
 
 @Component({
   selector: 'osf-my-projects-table',
-  imports: [CommonModule, TableModule, IconComponent, Skeleton, TranslatePipe],
+  imports: [CommonModule, TableModule, IconComponent, Skeleton, TranslatePipe, FixSpecialCharPipe],
   templateUrl: './my-projects-table.component.html',
   styleUrl: './my-projects-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

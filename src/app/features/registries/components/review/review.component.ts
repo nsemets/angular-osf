@@ -31,6 +31,7 @@ import {
   ResetContributorsState,
 } from '@osf/shared/stores/contributors';
 import { FetchSelectedSubjects, SubjectsSelectors } from '@osf/shared/stores/subjects';
+import { FixSpecialCharPipe } from '@shared/pipes';
 
 import {
   ClearState,
@@ -54,6 +55,7 @@ import { SelectComponentsDialogComponent } from '../select-components-dialog/sel
     RegistrationBlocksDataComponent,
     ContributorsListComponent,
     LicenseDisplayComponent,
+    FixSpecialCharPipe,
   ],
   templateUrl: './review.component.html',
   styleUrl: './review.component.scss',

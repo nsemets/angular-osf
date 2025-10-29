@@ -29,9 +29,10 @@ import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header
 import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants/default-table-params.constants';
 import { SortOrder } from '@osf/shared/enums/sort-order.enum';
 import { parseQueryFilterParams } from '@osf/shared/helpers/http.helper';
-import { QueryParams } from '@shared/models/query-params.model';
-import { SearchFilters } from '@shared/models/search-filters.model';
-import { TableParameters } from '@shared/models/table-parameters.model';
+import { QueryParams } from '@osf/shared/models/query-params.model';
+import { SearchFilters } from '@osf/shared/models/search-filters.model';
+import { TableParameters } from '@osf/shared/models/table-parameters.model';
+import { FixSpecialCharPipe } from '@osf/shared/pipes/fix-special-char.pipe';
 
 import { PreprintShortInfo } from '../../models';
 import { FetchMyPreprints, MyPreprintsSelectors } from '../../store/my-preprints';
@@ -47,6 +48,7 @@ import { FetchMyPreprints, MyPreprintsSelectors } from '../../store/my-preprints
     DatePipe,
     ListInfoShortenerComponent,
     TitleCasePipe,
+    FixSpecialCharPipe,
   ],
   templateUrl: './my-preprints.component.html',
   styleUrl: './my-preprints.component.scss',

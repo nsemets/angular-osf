@@ -7,11 +7,12 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 
 import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants/input-validation-messages.const';
 import { FieldType } from '@osf/shared/enums/field-type.enum';
-import { Question } from '@shared/models/registration/page-schema.model';
+import { Question } from '@osf/shared/models/registration/page-schema.model';
+import { FixSpecialCharPipe } from '@osf/shared/pipes/fix-special-char.pipe';
 
 @Component({
   selector: 'osf-registration-blocks-data',
-  imports: [Tag, TranslatePipe, Message],
+  imports: [FixSpecialCharPipe, Tag, TranslatePipe, Message],
   templateUrl: './registration-blocks-data.component.html',
   styleUrl: './registration-blocks-data.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

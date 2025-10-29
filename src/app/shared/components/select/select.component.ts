@@ -7,10 +7,11 @@ import { FormsModule } from '@angular/forms';
 
 import { Primitive } from '@osf/shared/helpers/types.helper';
 import { SelectOption } from '@osf/shared/models/select-option.model';
+import { FixSpecialCharPipe } from '@osf/shared/pipes/fix-special-char.pipe';
 
 @Component({
   selector: 'osf-select',
-  imports: [FormsModule, Select, TranslatePipe],
+  imports: [FormsModule, Select, TranslatePipe, FixSpecialCharPipe],
   templateUrl: './select.component.html',
   styleUrl: './select.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
