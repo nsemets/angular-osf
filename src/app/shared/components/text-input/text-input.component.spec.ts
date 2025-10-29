@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, Validators } from '@angular/forms';
 
-import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants';
+import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants/input-validation-messages.const';
 
 import { TextInputComponent } from './text-input.component';
 

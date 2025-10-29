@@ -1,4 +1,5 @@
-import { AddonCategory, AuthorizedAccountType, ConfiguredAddonType } from '../enums';
+import { AuthorizedAccountType, ConfiguredAddonType } from '../enums/addon-type.enum';
+import { AddonCategory } from '../enums/addons-category.enum';
 import {
   AddonGetResponseJsonApi,
   AddonModel,

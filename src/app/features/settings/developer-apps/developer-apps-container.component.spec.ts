@@ -13,7 +13,7 @@ import { ToastService } from '@osf/shared/services/toast.service';
 
 import { DeveloperAppsContainerComponent } from './developer-apps-container.component';
 
-import { TranslateServiceMock } from '@testing/mocks';
+import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
 
 describe('DeveloperAppsContainerComponent', () => {
   let component: DeveloperAppsContainerComponent;

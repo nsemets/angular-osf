@@ -1,5 +1,5 @@
 import { MetadataModel } from '@osf/features/metadata/models';
-import { UserPermissions } from '@osf/shared/enums';
+import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
 import { Identifier, Institution } from '@osf/shared/models';
 
 export const MOCK_PROJECT_METADATA: MetadataModel = {

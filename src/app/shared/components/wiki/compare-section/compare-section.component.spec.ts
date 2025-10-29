@@ -5,7 +5,7 @@ import { WikiVersion } from '@shared/models';
 
 import { CompareSectionComponent } from './compare-section.component';
 
-import { TranslateServiceMock } from '@testing/mocks';
+import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
 
 describe('CompareSectionComponent', () => {
   let component: CompareSectionComponent;

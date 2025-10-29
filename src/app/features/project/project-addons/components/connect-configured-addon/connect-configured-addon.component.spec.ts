@@ -11,9 +11,9 @@ import { ActivatedRoute, Navigation, Router, UrlTree } from '@angular/router';
 
 import { AddonSetupAccountFormComponent, StorageItemSelectorComponent } from '@osf/shared/components/addons';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
-import { CredentialsFormat } from '@shared/enums';
-import { AddonModel } from '@shared/models';
-import { AddonsSelectors } from '@shared/stores/addons';
+import { CredentialsFormat } from '@osf/shared/enums/addons-credentials-format.enum';
+import { AddonModel } from '@osf/shared/models';
+import { AddonsSelectors } from '@osf/shared/stores/addons';
 
 import { ConnectConfiguredAddonComponent } from './connect-configured-addon.component';
 

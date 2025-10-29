@@ -25,7 +25,7 @@ import {
 
 import { FileDetailComponent } from './file-detail.component';
 
-import { MOCK_STORE } from '@testing/mocks';
+import { MOCK_STORE } from '@testing/mocks/mock-store.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 
 describe('FileDetailComponent', () => {

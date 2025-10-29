@@ -3,7 +3,7 @@ import { MockComponent, MockPipe, MockProvider } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ResourceType } from '@osf/shared/enums';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { SocialShareService } from '@osf/shared/services/social-share.service';
 
 import { IconComponent } from '../icon/icon.component';

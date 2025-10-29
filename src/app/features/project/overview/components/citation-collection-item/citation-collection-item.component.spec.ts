@@ -3,8 +3,8 @@ import { MockComponents, MockProvider } from 'ng-mocks';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
+import { StorageItemType } from '@osf/shared/enums/storage-item-type.enum';
 import { AddonOperationInvocationService, AddonsService } from '@osf/shared/services/addons';
-import { StorageItemType } from '@shared/enums';
 
 import { CitationItemComponent } from '../citation-item/citation-item.component';
 

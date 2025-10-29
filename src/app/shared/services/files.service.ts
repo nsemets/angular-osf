@@ -17,8 +17,10 @@ import {
   PatchFileMetadata,
 } from '@osf/features/files/models';
 
-import { FileKind } from '../enums';
-import { AddonMapper, ContributorsMapper, FilesMapper } from '../mappers';
+import { FileKind } from '../enums/file-kind.enum';
+import { AddonMapper } from '../mappers/addon.mapper';
+import { ContributorsMapper } from '../mappers/contributors';
+import { FilesMapper } from '../mappers/files/files.mapper';
 import {
   AddonGetResponseJsonApi,
   AddonModel,

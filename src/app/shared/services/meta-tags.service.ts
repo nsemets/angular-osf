@@ -6,7 +6,7 @@ import { Meta, MetaDefinition, Title } from '@angular/platform-browser';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 
-import { MetadataRecordFormat } from '../enums';
+import { MetadataRecordFormat } from '../enums/metadata-record-format.enum';
 import { Content, DataContent, HeadTagDef, MetaTagAuthor, MetaTagsData } from '../models/meta-tags';
 
 import { MetadataRecordsService } from './metadata-records.service';

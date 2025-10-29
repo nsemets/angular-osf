@@ -1,4 +1,4 @@
-import { CredentialsFormat } from '@osf/shared/enums';
+import { CredentialsFormat } from '@osf/shared/enums/addons-credentials-format.enum';
 import { AddonModel } from '@osf/shared/models';
 
 export const MOCK_ADDON: AddonModel = {

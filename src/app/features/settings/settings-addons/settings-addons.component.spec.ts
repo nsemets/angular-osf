@@ -13,7 +13,7 @@ import { AddonsSelectors } from '@shared/stores/addons';
 
 import { SettingsAddonsComponent } from './settings-addons.component';
 
-import { TranslateServiceMock } from '@testing/mocks';
+import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
 
 describe.skip('AddonsComponent', () => {
   let component: SettingsAddonsComponent;

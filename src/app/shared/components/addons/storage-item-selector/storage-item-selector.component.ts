@@ -26,8 +26,11 @@ import {
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { AddonType, OperationNames, StorageItemType } from '@osf/shared/enums';
-import { convertCamelCaseToNormal, IS_XSMALL } from '@osf/shared/helpers';
+import { AddonType } from '@osf/shared/enums/addon-type.enum';
+import { OperationNames } from '@osf/shared/enums/operation-names.enum';
+import { StorageItemType } from '@osf/shared/enums/storage-item-type.enum';
+import { IS_XSMALL } from '@osf/shared/helpers/breakpoints.tokens';
+import { convertCamelCaseToNormal } from '@osf/shared/helpers/camel-case-to-normal.helper';
 import { OperationInvokeData, StorageItem } from '@osf/shared/models';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { AddonsSelectors, ClearOperationInvocations } from '@osf/shared/stores/addons';

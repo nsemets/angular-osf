@@ -6,7 +6,7 @@ import { MessageModule } from 'primeng/message';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
-import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants';
+import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants/input-validation-messages.const';
 import { ValidationParams } from '@osf/shared/models';
 
 @Component({

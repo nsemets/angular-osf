@@ -8,7 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { ViewOnlyLinkMessageComponent } from '@osf/shared/components/view-only-link-message/view-only-link-message.component';
-import { hasViewOnlyParam } from '@osf/shared/helpers';
+import { hasViewOnlyParam } from '@osf/shared/helpers/view-only.helper';
 
 import { RegistrationLinksCardComponent } from '../../components';
 import { GetRegistryComponents, RegistryComponentsSelectors } from '../../store/registry-components';

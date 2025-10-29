@@ -1,4 +1,4 @@
-import { ResourceType } from '../enums';
+import { ResourceType } from '../enums/resource-type.enum';
 import { TabOption } from '../models';
 
 export const SEARCH_TAB_OPTIONS: TabOption[] = [

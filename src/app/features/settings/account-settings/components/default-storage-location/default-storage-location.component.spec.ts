@@ -17,7 +17,7 @@ import { AccountSettingsState } from '../../store';
 
 import { DefaultStorageLocationComponent } from './default-storage-location.component';
 
-import { MOCK_STORE } from '@testing/mocks';
+import { MOCK_STORE } from '@testing/mocks/mock-store.mock';
 
 describe('DefaultStorageLocationComponent', () => {
   let component: DefaultStorageLocationComponent;

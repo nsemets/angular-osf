@@ -1,4 +1,4 @@
-import { findChangedFields } from '@osf/shared/helpers';
+import { findChangedFields } from '@osf/shared/helpers/find-changed-fields';
 import { UserModel } from '@osf/shared/models';
 
 import { NameForm } from '../models';

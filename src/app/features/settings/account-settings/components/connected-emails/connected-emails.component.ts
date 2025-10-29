@@ -14,7 +14,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { DeleteEmail, GetEmails, MakePrimary, ResendConfirmation, UserEmailsSelectors } from '@core/store/user-emails';
 import { UserSelectors } from '@osf/core/store/user';
 import { ReadonlyInputComponent } from '@osf/shared/components/readonly-input/readonly-input.component';
-import { IS_SMALL } from '@osf/shared/helpers';
+import { IS_SMALL } from '@osf/shared/helpers/breakpoints.tokens';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { LoaderService } from '@osf/shared/services/loader.service';

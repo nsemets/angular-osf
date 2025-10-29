@@ -10,8 +10,9 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, model, out
 import { FormsModule } from '@angular/forms';
 
 import { SelectComponent } from '@osf/shared/components/select/select.component';
-import { PERMISSION_OPTIONS } from '@osf/shared/constants';
-import { ContributorPermission, ResourceType } from '@osf/shared/enums';
+import { PERMISSION_OPTIONS } from '@osf/shared/constants/contributors.constants';
+import { ContributorPermission } from '@osf/shared/enums/contributors/contributor-permission.enum';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { ContributorModel, SelectOption, TableParameters } from '@osf/shared/models';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 

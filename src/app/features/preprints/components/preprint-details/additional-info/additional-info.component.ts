@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 
 import { PreprintSelectors } from '@osf/features/preprints/store/preprint';
 import { LicenseDisplayComponent } from '@osf/shared/components/license-display/license-display.component';
-import { ResourceType } from '@shared/enums';
+import { ResourceType } from '@shared/enums/resource-type.enum';
 import { FetchSelectedSubjects, SubjectsSelectors } from '@shared/stores/subjects';
 
 import { CitationSectionComponent } from '../citation-section/citation-section.component';

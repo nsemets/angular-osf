@@ -19,7 +19,7 @@ import { CustomPaginatorComponent } from '@osf/shared/components/custom-paginato
 import { RegistrationCardComponent } from '@osf/shared/components/registration-card/registration-card.component';
 import { SelectComponent } from '@osf/shared/components/select/select.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
-import { IS_XSMALL } from '@osf/shared/helpers';
+import { IS_XSMALL } from '@osf/shared/helpers/breakpoints.tokens';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 

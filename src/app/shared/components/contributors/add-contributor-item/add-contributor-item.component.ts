@@ -6,7 +6,7 @@ import { Select } from 'primeng/select';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { PERMISSION_OPTIONS } from '@osf/shared/constants';
+import { PERMISSION_OPTIONS } from '@osf/shared/constants/contributors.constants';
 import { ContributorAddModel } from '@osf/shared/models';
 
 @Component({

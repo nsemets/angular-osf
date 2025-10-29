@@ -12,7 +12,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { UserSelectors } from '@core/store/user';
-import { ProjectFormControls } from '@osf/shared/enums';
+import { ProjectFormControls } from '@osf/shared/enums/create-project-form-controls.enum';
 import { Institution, ProjectForm, ProjectModel } from '@osf/shared/models';
 import { FetchUserInstitutions, InstitutionsSelectors } from '@osf/shared/stores/institutions';
 import { FetchRegions, RegionsSelectors } from '@osf/shared/stores/regions';

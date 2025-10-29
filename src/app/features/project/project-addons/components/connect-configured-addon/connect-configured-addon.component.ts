@@ -20,8 +20,11 @@ import {
   StorageItemSelectorComponent,
 } from '@osf/shared/components/addons';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
-import { AddonServiceNames, AddonType, OperationNames, ProjectAddonsStepperValue } from '@osf/shared/enums';
-import { getAddonTypeString } from '@osf/shared/helpers';
+import { AddonServiceNames } from '@osf/shared/enums/addon-service-names.enum';
+import { AddonType } from '@osf/shared/enums/addon-type.enum';
+import { OperationNames } from '@osf/shared/enums/operation-names.enum';
+import { ProjectAddonsStepperValue } from '@osf/shared/enums/profile-addons-stepper.enum';
+import { getAddonTypeString } from '@osf/shared/helpers/addon-type.helper';
 import { AddonModel, AddonTerm, AuthorizedAccountModel, AuthorizedAddonRequestJsonApi } from '@osf/shared/models';
 import { AddonFormService, AddonOAuthService, AddonOperationInvocationService } from '@osf/shared/services/addons';
 import { ToastService } from '@osf/shared/services/toast.service';

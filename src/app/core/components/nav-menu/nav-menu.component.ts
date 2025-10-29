@@ -11,14 +11,15 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { MENU_ITEMS } from '@core/constants';
+import { AuthService } from '@core/services/auth.service';
 import { ProviderSelectors } from '@core/store/provider';
 import { filterMenuItems, updateMenuItems } from '@osf/core/helpers';
 import { CustomMenuItem, RouteContext } from '@osf/core/models';
-import { AuthService } from '@osf/core/services';
 import { UserSelectors } from '@osf/core/store/user';
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
-import { CurrentResourceType, ReviewPermissions } from '@osf/shared/enums';
-import { getViewOnlyParam } from '@osf/shared/helpers';
+import { CurrentResourceType } from '@osf/shared/enums/resource-type.enum';
+import { ReviewPermissions } from '@osf/shared/enums/review-permissions.enum';
+import { getViewOnlyParam } from '@osf/shared/helpers/view-only.helper';
 import { WrapFnPipe } from '@osf/shared/pipes';
 import { CurrentResourceSelectors, GetResourceDetails } from '@osf/shared/stores/current-resource';
 

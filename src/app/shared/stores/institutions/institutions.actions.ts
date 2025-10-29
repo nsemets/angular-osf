@@ -1,4 +1,4 @@
-import { ResourceType } from '@shared/enums';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { Institution } from '@shared/models';
 
 export class FetchUserInstitutions {

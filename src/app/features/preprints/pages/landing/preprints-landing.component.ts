@@ -12,8 +12,8 @@ import { Router, RouterLink } from '@angular/router';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
-import { ResourceType } from '@osf/shared/enums';
-import { normalizeQuotes } from '@osf/shared/helpers';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
+import { normalizeQuotes } from '@osf/shared/helpers/normalize-quotes';
 import { BrandService } from '@osf/shared/services/brand.service';
 
 import { AdvisoryBoardComponent, BrowseBySubjectsComponent, PreprintServicesComponent } from '../../components';

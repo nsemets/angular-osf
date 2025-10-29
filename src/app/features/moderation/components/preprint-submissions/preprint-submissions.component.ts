@@ -20,7 +20,7 @@ import { CustomPaginatorComponent } from '@osf/shared/components/custom-paginato
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { SelectComponent } from '@osf/shared/components/select/select.component';
-import { Primitive } from '@osf/shared/helpers';
+import { Primitive } from '@osf/shared/helpers/types.helper';
 
 import { PreprintSubmissionModel } from '../../models';
 import {

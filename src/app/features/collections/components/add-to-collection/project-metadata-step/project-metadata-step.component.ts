@@ -35,8 +35,8 @@ import { AddToCollectionSelectors, GetCollectionLicenses } from '@osf/features/c
 import { TagsInputComponent } from '@osf/shared/components/tags-input/tags-input.component';
 import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
 import { TruncatedTextComponent } from '@osf/shared/components/truncated-text/truncated-text.component';
-import { InputLimits } from '@osf/shared/constants';
-import { ResourceType } from '@osf/shared/enums';
+import { InputLimits } from '@osf/shared/constants/input-limits.const';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { LicenseModel, ProjectModel } from '@osf/shared/models';
 import { InterpolatePipe } from '@osf/shared/pipes';
 import { ToastService } from '@osf/shared/services/toast.service';

@@ -1,5 +1,5 @@
-import { ResourceType } from '@shared/enums';
-import { StringOrNull } from '@shared/helpers';
+import { StringOrNull } from '@osf/shared/helpers/types.helper';
+import { ResourceType } from '@shared/enums/resource-type.enum';
 import { FilterOption } from '@shared/models';
 
 export class FetchResources {

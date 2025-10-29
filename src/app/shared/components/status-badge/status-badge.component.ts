@@ -4,8 +4,8 @@ import { Tag } from 'primeng/tag';
 
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-import { RegistryStatusMap } from '@osf/shared/constants';
-import { RegistryStatus } from '@osf/shared/enums';
+import { RegistryStatusMap } from '@osf/shared/constants/registration-statuses';
+import { RegistryStatus } from '@osf/shared/enums/registry-status.enum';
 import { SeverityType } from '@osf/shared/models';
 
 @Component({

@@ -50,9 +50,13 @@ import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/
 import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { ViewOnlyLinkMessageComponent } from '@osf/shared/components/view-only-link-message/view-only-link-message.component';
-import { ALL_SORT_OPTIONS, FILE_SIZE_LIMIT } from '@osf/shared/constants';
-import { FileMenuType, ResourceType, SupportedFeature, UserPermissions } from '@osf/shared/enums';
-import { getViewOnlyParamFromUrl, hasViewOnlyParam } from '@osf/shared/helpers';
+import { FILE_SIZE_LIMIT } from '@osf/shared/constants/files-limits.const';
+import { ALL_SORT_OPTIONS } from '@osf/shared/constants/sort-options.const';
+import { SupportedFeature } from '@osf/shared/enums/addon-supported-features.enum';
+import { FileMenuType } from '@osf/shared/enums/file-menu-type.enum';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
+import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
+import { getViewOnlyParamFromUrl, hasViewOnlyParam } from '@osf/shared/helpers/view-only.helper';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { FilesService } from '@osf/shared/services/files.service';

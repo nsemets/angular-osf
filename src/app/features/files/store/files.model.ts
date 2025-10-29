@@ -1,4 +1,4 @@
-import { SupportedFeature } from '@osf/shared/enums';
+import { SupportedFeature } from '@osf/shared/enums/addon-supported-features.enum';
 import { ContributorModel, FileDetailsModel, FileFolderModel, FileModel, ResourceMetadata } from '@shared/models';
 import { ConfiguredAddonModel } from '@shared/models/addons';
 import { AsyncStateModel, AsyncStateWithTotalCount } from '@shared/models/store';

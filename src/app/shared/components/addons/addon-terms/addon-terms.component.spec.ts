@@ -1,14 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { isCitationAddon } from '@osf/shared/helpers';
+import { ADDON_TERMS } from '@osf/shared/constants/addon-terms.const';
+import { isCitationAddon } from '@osf/shared/helpers/addon-type.helper';
 import { AddonTermsComponent } from '@shared/components/addons';
-import { ADDON_TERMS } from '@shared/constants';
 import { AddonModel, AddonTerm } from '@shared/models';
 
-import { MOCK_ADDON } from '@testing/mocks';
+import { MOCK_ADDON } from '@testing/mocks/addon.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 
-jest.mock('@shared/helpers', () => ({
+jest.mock('@shared/helpers/addon-type.helper.ts', () => ({
   isCitationAddon: jest.fn(),
 }));
 

@@ -1,5 +1,5 @@
-import { ResourceType } from '@osf/shared/enums';
-import { StringOrNull } from '@osf/shared/helpers';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
+import { StringOrNull } from '@osf/shared/helpers/types.helper';
 import { AsyncStateModel, DiscoverableFilter, FilterOption, ResourceModel } from '@osf/shared/models';
 
 export interface GlobalSearchStateModel {

@@ -26,7 +26,7 @@ import { FilesComponent } from './files.component';
 
 import { getConfiguredAddonsMappedData } from '@testing/data/addons/addons.configured.data';
 import { getNodeFilesMappedData } from '@testing/data/files/node.data';
-import { testNode } from '@testing/mocks';
+import { testNode } from '@testing/mocks/base-node.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 import { MockComponentWithSignal } from '@testing/providers/component-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';

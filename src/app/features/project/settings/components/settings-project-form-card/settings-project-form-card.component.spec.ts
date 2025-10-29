@@ -6,13 +6,13 @@ import { Textarea } from 'primeng/textarea';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
-import { ProjectFormControls } from '@osf/shared/enums';
+import { ProjectFormControls } from '@osf/shared/enums/create-project-form-controls.enum';
 
 import { NodeDetailsModel } from '../../models';
 
 import { SettingsProjectFormCardComponent } from './settings-project-form-card.component';
 
-import { MOCK_NODE_DETAILS } from '@testing/mocks';
+import { MOCK_NODE_DETAILS } from '@testing/mocks/node-details.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 
 describe('SettingsProjectFormCardComponent', () => {

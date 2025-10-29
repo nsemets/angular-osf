@@ -3,8 +3,8 @@ import { map, Observable } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
-import { ProfileSettingsKey } from '@osf/shared/enums';
-import { UserMapper } from '@osf/shared/mappers';
+import { ProfileSettingsKey } from '@osf/shared/enums/profile-settings-key.enum';
+import { UserMapper } from '@osf/shared/mappers/user';
 import {
   ProfileSettingsUpdate,
   UserAcceptedTermsOfServiceJsonApi,

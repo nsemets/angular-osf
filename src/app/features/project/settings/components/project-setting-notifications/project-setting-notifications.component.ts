@@ -4,7 +4,7 @@ import { Card } from 'primeng/card';
 
 import { ChangeDetectionStrategy, Component, effect, input, output } from '@angular/core';
 
-import { SubscriptionEvent, SubscriptionFrequency } from '@osf/shared/enums';
+import { SubscriptionEvent, SubscriptionFrequency } from '@osf/shared/enums/subscriptions';
 import { NotificationSubscription } from '@osf/shared/models';
 
 import { RightControl } from '../../models';

@@ -1,4 +1,4 @@
-import { RegistryStatus } from '@osf/shared/enums';
+import { RegistryStatus } from '@osf/shared/enums/registry-status.enum';
 import {
   DraftRegistrationDataJsonApi,
   DraftRegistrationModel,

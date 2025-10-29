@@ -17,10 +17,10 @@ import { EducationComponent } from './education.component';
 
 import {
   CustomConfirmationServiceMock,
-  MOCK_EDUCATION,
   MockCustomConfirmationServiceProvider,
-  TranslateServiceMock,
-} from '@testing/mocks';
+} from '@testing/mocks/custom-confirmation.service.mock';
+import { MOCK_EDUCATION } from '@testing/mocks/education.mock';
+import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
 
 describe('EducationComponent', () => {
   let component: EducationComponent;

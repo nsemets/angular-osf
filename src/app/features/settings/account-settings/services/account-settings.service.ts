@@ -3,7 +3,7 @@ import { map, Observable } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
-import { UserMapper } from '@osf/shared/mappers';
+import { UserMapper } from '@osf/shared/mappers/user';
 import { UserDataJsonApi, UserModel } from '@osf/shared/models';
 import { JsonApiService } from '@osf/shared/services/json-api.service';
 

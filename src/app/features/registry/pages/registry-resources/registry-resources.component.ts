@@ -14,10 +14,11 @@ import { GetResourceMetadata, MetadataSelectors } from '@osf/features/metadata/s
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
+import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { ToastService } from '@osf/shared/services/toast.service';
-import { ResourceType, UserPermissions } from '@shared/enums';
 
 import { AddResourceDialogComponent, EditResourceDialogComponent } from '../../components';
 import { RegistryResource } from '../../models';

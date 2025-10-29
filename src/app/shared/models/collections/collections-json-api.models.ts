@@ -1,10 +1,11 @@
 import {
   BaseNodeDataJsonApi,
-  BrandDataJsonApi,
   CollectionsProviderAttributesJsonApi,
   JsonApiResponse,
   UserDataErrorResponseJsonApi,
 } from '@shared/models';
+
+import { BrandDataJsonApi } from '../brand';
 
 export interface CollectionProviderResponseJsonApi {
   id: string;

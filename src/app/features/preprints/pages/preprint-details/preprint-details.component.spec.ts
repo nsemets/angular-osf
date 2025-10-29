@@ -5,7 +5,7 @@ import { of } from 'rxjs';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { UserPermissions } from '@osf/shared/enums';
+import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { DataciteService } from '@osf/shared/services/datacite/datacite.service';
 import { MetaTagsService } from '@osf/shared/services/meta-tags.service';
@@ -29,7 +29,7 @@ import { PreprintProvidersSelectors } from '../../store/preprint-providers';
 
 import { PreprintDetailsComponent } from './preprint-details.component';
 
-import { MOCK_CONTRIBUTOR } from '@testing/mocks';
+import { MOCK_CONTRIBUTOR } from '@testing/mocks/contributors.mock';
 import { PREPRINT_MOCK } from '@testing/mocks/preprint.mock';
 import { PREPRINT_PROVIDER_DETAILS_MOCK } from '@testing/mocks/preprint-provider-details';
 import { PREPRINT_REQUEST_MOCK } from '@testing/mocks/preprint-request.mock';

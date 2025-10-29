@@ -10,7 +10,7 @@ import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { SelectComponent } from '@osf/shared/components/select/select.component';
-import { Primitive } from '@osf/shared/helpers';
+import { Primitive } from '@osf/shared/helpers/types.helper';
 
 import { resourceTabOptions } from './constants';
 import { AdminInstitutionResourceTab } from './enums';

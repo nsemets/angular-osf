@@ -12,7 +12,9 @@ import {
   CollectionSubmissionReviewActionJsonApi,
 } from '@osf/features/moderation/models';
 
-import { CollectionsMapper, ContributorsMapper, ReviewActionsMapper } from '../mappers';
+import { CollectionsMapper } from '../mappers/collections';
+import { ContributorsMapper } from '../mappers/contributors';
+import { ReviewActionsMapper } from '../mappers/review-actions.mapper';
 import {
   CollectionDetails,
   CollectionDetailsGetResponseJsonApi,
@@ -33,7 +35,7 @@ import {
   ResponseJsonApi,
 } from '../models';
 import { ReviewActionPayload, ReviewActionPayloadJsonApi } from '../models/review-action';
-import { SetTotalSubmissions } from '../stores/collections';
+import { SetTotalSubmissions } from '../stores/collections/collections.actions';
 
 import { JsonApiService } from './json-api.service';
 

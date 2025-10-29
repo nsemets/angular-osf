@@ -3,7 +3,7 @@ import { MockComponent, MockPipe, MockProvider } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AuthService } from '@osf/core/services';
+import { AuthService } from '@core/services/auth.service';
 import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
 
 import { ForgotPasswordComponent } from './forgot-password.component';

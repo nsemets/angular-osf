@@ -9,8 +9,9 @@ import { ChangeDetectionStrategy, Component, effect, input, model, output, signa
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { CustomValidators, StringOrNullOrUndefined } from '@osf/shared/helpers';
-import { InputLimits } from '@shared/constants';
+import { InputLimits } from '@osf/shared/constants/input-limits.const';
+import { CustomValidators } from '@osf/shared/helpers/custom-form-validators.helper';
+import { StringOrNullOrUndefined } from '@osf/shared/helpers/types.helper';
 import { LicenseForm, LicenseModel, LicenseOptions } from '@shared/models';
 import { InterpolatePipe } from '@shared/pipes';
 

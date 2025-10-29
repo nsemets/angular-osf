@@ -29,9 +29,10 @@ import {
   AddUnregisteredContributorDialogComponent,
   ContributorsTableComponent,
 } from '@osf/shared/components/contributors';
-import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
-import { AddContributorType, ResourceType } from '@osf/shared/enums';
-import { findChangedItems } from '@osf/shared/helpers';
+import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants/default-table-params.constants';
+import { AddContributorType } from '@osf/shared/enums/contributors';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
+import { findChangedItems } from '@osf/shared/helpers/find-changed-items.helper';
 import { ContributorDialogAddModel, ContributorModel, TableParameters } from '@osf/shared/models';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';

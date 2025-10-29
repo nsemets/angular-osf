@@ -12,7 +12,8 @@ import { ContributorsSelectors } from '@shared/stores/contributors';
 
 import { PreprintsContributorsComponent } from './preprints-contributors.component';
 
-import { MOCK_CONTRIBUTOR, MOCK_USER } from '@testing/mocks';
+import { MOCK_CONTRIBUTOR } from '@testing/mocks/contributors.mock';
+import { MOCK_USER } from '@testing/mocks/data.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 import { CustomConfirmationServiceMockBuilder } from '@testing/providers/custom-confirmation-provider.mock';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';

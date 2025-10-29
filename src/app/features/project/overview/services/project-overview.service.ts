@@ -6,7 +6,8 @@ import { inject, Injectable } from '@angular/core';
 
 import { BYPASS_ERROR_INTERCEPTOR } from '@core/interceptors/error-interceptor.tokens';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
-import { BaseNodeMapper, ComponentsMapper } from '@osf/shared/mappers';
+import { ComponentsMapper } from '@osf/shared/mappers/components';
+import { BaseNodeMapper } from '@osf/shared/mappers/nodes';
 import {
   BaseNodeDataJsonApi,
   BaseNodeModel,

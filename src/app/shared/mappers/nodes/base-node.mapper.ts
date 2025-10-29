@@ -6,7 +6,8 @@ import {
   PaginatedData,
   ResponseJsonApi,
 } from '@osf/shared/models';
-import { ContributorsMapper } from '@shared/mappers';
+
+import { ContributorsMapper } from '../contributors';
 
 export class BaseNodeMapper {
   static getNodesData(data: BaseNodeDataJsonApi[]): BaseNodeModel[] {

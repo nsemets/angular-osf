@@ -9,8 +9,8 @@ import { Tooltip } from 'primeng/tooltip';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { PERMISSION_OPTIONS } from '@osf/shared/constants';
-import { ResourceType } from '@osf/shared/enums';
+import { PERMISSION_OPTIONS } from '@osf/shared/constants/contributors.constants';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { RequestAccessModel, SelectOption } from '@osf/shared/models';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 

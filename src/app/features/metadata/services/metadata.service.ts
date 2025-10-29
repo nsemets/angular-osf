@@ -4,7 +4,7 @@ import { map } from 'rxjs/operators';
 import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
-import { ResourceType } from '@osf/shared/enums';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { BaseNodeAttributesJsonApi, Identifier, LicenseOptions } from '@osf/shared/models';
 import { JsonApiService } from '@osf/shared/services/json-api.service';
 

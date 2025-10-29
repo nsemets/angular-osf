@@ -5,8 +5,8 @@ import { TableModule } from 'primeng/table';
 import { NgClass } from '@angular/common';
 import { Component, computed, input } from '@angular/core';
 
-import { isCitationAddon } from '@osf/shared/helpers';
-import { ADDON_TERMS as addonTerms } from '@shared/constants';
+import { ADDON_TERMS } from '@osf/shared/constants/addon-terms.const';
+import { isCitationAddon } from '@osf/shared/helpers/addon-type.helper';
 import { AddonModel, AddonTerm, AuthorizedAccountModel } from '@shared/models';
 
 @Component({
@@ -30,7 +30,7 @@ export class AddonTermsComponent {
     const provider = addon.providerName;
     const isCitationService = isCitationAddon(addon);
 
-    const relevantTerms = isCitationService ? addonTerms.filter((term) => term.citation) : addonTerms;
+    const relevantTerms = isCitationService ? ADDON_TERMS.filter((term) => term.citation) : ADDON_TERMS;
 
     return relevantTerms.map((term) => {
       const feature = term.supportedFeature;

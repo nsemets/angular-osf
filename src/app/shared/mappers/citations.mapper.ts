@@ -1,5 +1,5 @@
-import { CITATION_TITLES } from '../constants';
-import { CitationTypes } from '../enums';
+import { CITATION_TITLES } from '../constants/default-citation-titles.const';
+import { CitationTypes } from '../enums/citation-types.enum';
 import {
   CitationStyle,
   CitationStyleJsonApi,

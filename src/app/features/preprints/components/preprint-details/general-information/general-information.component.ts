@@ -16,7 +16,7 @@ import { AffiliatedInstitutionsViewComponent } from '@osf/shared/components/affi
 import { ContributorsListComponent } from '@osf/shared/components/contributors-list/contributors-list.component';
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { TruncatedTextComponent } from '@osf/shared/components/truncated-text/truncated-text.component';
-import { ResourceType } from '@osf/shared/enums';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import {
   ContributorsSelectors,
   GetBibliographicContributors,

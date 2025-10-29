@@ -3,7 +3,7 @@ import { map, Observable } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
-import { Primitive, StringOrNull } from '@osf/shared/helpers';
+import { Primitive, StringOrNull } from '@osf/shared/helpers/types.helper';
 import {
   ApiData,
   CreateProjectPayloadJsoApi,

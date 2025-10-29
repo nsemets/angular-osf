@@ -13,7 +13,7 @@ import { CollectionsSelectors } from '@shared/stores/collections';
 
 import { CollectionsDiscoverComponent } from './collections-discover.component';
 
-import { MOCK_PROVIDER } from '@testing/mocks';
+import { MOCK_PROVIDER } from '@testing/mocks/provider.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';

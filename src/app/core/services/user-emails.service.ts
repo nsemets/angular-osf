@@ -3,7 +3,7 @@ import { map, Observable } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
-import { MapEmail, MapEmails } from '@osf/shared/mappers';
+import { MapEmail, MapEmails } from '@osf/shared/mappers/emails.mapper';
 import { AccountEmailModel, EmailResponseJsonApi, EmailsDataJsonApi, EmailsResponseJsonApi } from '@osf/shared/models';
 import { JsonApiService } from '@osf/shared/services/json-api.service';
 

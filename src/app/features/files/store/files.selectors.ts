@@ -1,6 +1,7 @@
 import { Selector } from '@ngxs/store';
 
-import { SupportedFeature, UserPermissions } from '@osf/shared/enums';
+import { SupportedFeature } from '@osf/shared/enums/addon-supported-features.enum';
+import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
 import {
   ConfiguredAddonModel,
   ContributorModel,

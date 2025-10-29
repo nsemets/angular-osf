@@ -1,4 +1,4 @@
-import { ApiData, MetaJsonApi, PaginationLinksJsonApi } from './common';
+import { ApiData, MetaJsonApi, PaginationLinksJsonApi } from '../common';
 
 export interface LicensesResponseJsonApi {
   data: LicenseDataJsonApi[];

@@ -8,7 +8,8 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, OnDestroy, OnInit, signal } from '@angular/core';
 
 import { TableCellData } from '@osf/features/admin-institutions/models';
-import { ResourceType, SortOrder } from '@osf/shared/enums';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
+import { SortOrder } from '@osf/shared/enums/sort-order.enum';
 import { PaginationLinksModel, ResourceModel, SearchFilters } from '@osf/shared/models';
 import {
   ClearFilterSearchResults,

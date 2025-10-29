@@ -9,7 +9,7 @@ import { MarkdownComponent } from '../../markdown/markdown.component';
 
 import { ViewSectionComponent } from './view-section.component';
 
-import { TranslateServiceMock } from '@testing/mocks';
+import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
 
 describe('ViewSectionComponent', () => {
   let component: ViewSectionComponent;

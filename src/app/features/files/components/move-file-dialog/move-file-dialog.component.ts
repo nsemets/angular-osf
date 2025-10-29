@@ -23,7 +23,9 @@ import {
 import { FileSelectDestinationComponent } from '@osf/shared/components/file-select-destination/file-select-destination.component';
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
-import { FileKind, ResourceType, SupportedFeature } from '@osf/shared/enums';
+import { SupportedFeature } from '@osf/shared/enums/addon-supported-features.enum';
+import { FileKind } from '@osf/shared/enums/file-kind.enum';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { FilesMapper } from '@osf/shared/mappers/files/files.mapper';
 import { FileFolderModel, FileModel } from '@osf/shared/models';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';

@@ -1,4 +1,5 @@
-import { ContributorsMapper, InstitutionsMapper } from '@shared/mappers';
+import { ContributorsMapper } from '@osf/shared/mappers/contributors';
+import { InstitutionsMapper } from '@osf/shared/mappers/institutions';
 import { LicenseModel } from '@shared/models';
 
 import { ProjectOverview, ProjectOverviewGetResponseJsonApi } from '../models';

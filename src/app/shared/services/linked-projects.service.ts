@@ -5,7 +5,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 
-import { BaseNodeMapper } from '../mappers';
+import { BaseNodeMapper } from '../mappers/nodes';
 import { BaseNodeDataJsonApi, NodeModel, PaginatedData, ResponseJsonApi } from '../models';
 
 import { JsonApiService } from './json-api.service';

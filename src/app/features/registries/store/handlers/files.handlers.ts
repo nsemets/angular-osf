@@ -4,7 +4,7 @@ import { catchError, finalize, tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { handleSectionError } from '@osf/shared/helpers';
+import { handleSectionError } from '@osf/shared/helpers/state-error.handler';
 import { FilesService } from '@osf/shared/services/files.service';
 
 import { CreateFolder, GetFiles, GetRootFolders } from '../registries.actions';

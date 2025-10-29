@@ -11,8 +11,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
-import { AddonServiceNames, AddonType, ProjectAddonsStepperValue } from '@osf/shared/enums';
-import { getAddonTypeString, isAuthorizedAddon } from '@osf/shared/helpers';
+import { AddonServiceNames } from '@osf/shared/enums/addon-service-names.enum';
+import { AddonType } from '@osf/shared/enums/addon-type.enum';
+import { ProjectAddonsStepperValue } from '@osf/shared/enums/profile-addons-stepper.enum';
+import { getAddonTypeString, isAuthorizedAddon } from '@osf/shared/helpers/addon-type.helper';
 import { AddonOAuthService } from '@osf/shared/services/addons';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { AddonSetupAccountFormComponent, AddonTermsComponent } from '@shared/components/addons';

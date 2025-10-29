@@ -20,8 +20,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
-import { ResourceType } from '@osf/shared/enums';
-import { IS_MEDIUM } from '@osf/shared/helpers';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
+import { IS_MEDIUM } from '@osf/shared/helpers/breakpoints.tokens';
 import { ToastService } from '@osf/shared/services/toast.service';
 
 import { CedarTemplateFormComponent } from '../../components';

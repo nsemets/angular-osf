@@ -1,8 +1,9 @@
-import { RegistryStatus, RevisionReviewStates } from '@osf/shared/enums';
+import { RegistryStatus } from '@osf/shared/enums/registry-status.enum';
+import { RevisionReviewStates } from '@osf/shared/enums/revision-review-states.enum';
 
 import { IdTypeModel } from '../common';
 import { ContributorModel } from '../contributors';
-import { LicensesOption } from '../license.model';
+import { LicensesOption } from '../license/license.model';
 import { SubjectModel } from '../subject';
 
 export type RegistrationQuestions = Record<string, string | string[] | { file_id: string; file_name: string }[]>;

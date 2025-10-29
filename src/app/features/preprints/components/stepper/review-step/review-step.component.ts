@@ -27,7 +27,7 @@ import { ContributorsListComponent } from '@osf/shared/components/contributors-l
 import { LicenseDisplayComponent } from '@osf/shared/components/license-display/license-display.component';
 import { TruncatedTextComponent } from '@osf/shared/components/truncated-text/truncated-text.component';
 import { ToastService } from '@osf/shared/services/toast.service';
-import { ResourceType } from '@shared/enums';
+import { ResourceType } from '@shared/enums/resource-type.enum';
 import {
   ContributorsSelectors,
   GetBibliographicContributors,

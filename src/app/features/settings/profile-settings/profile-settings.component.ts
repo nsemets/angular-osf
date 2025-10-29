@@ -8,7 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SelectComponent } from '@osf/shared/components/select/select.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
-import { IS_MEDIUM } from '@osf/shared/helpers';
+import { IS_MEDIUM } from '@osf/shared/helpers/breakpoints.tokens';
 
 import { EducationComponent, EmploymentComponent, NameComponent, SocialComponent } from './components';
 import { PROFILE_SETTINGS_TAB_OPTIONS } from './constants';

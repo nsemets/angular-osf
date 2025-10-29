@@ -7,7 +7,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 
 import { RESOURCE_TYPE_OPTIONS } from '@osf/features/metadata/constants';
 import { CustomItemMetadataRecord } from '@osf/features/metadata/models';
-import { languageCodes } from '@osf/shared/constants';
+import { languageCodes } from '@osf/shared/constants/language.const';
 import { LanguageCodeModel } from '@osf/shared/models';
 
 @Component({

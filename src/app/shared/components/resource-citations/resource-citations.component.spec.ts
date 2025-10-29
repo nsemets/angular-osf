@@ -10,7 +10,7 @@ import { CitationsSelectors } from '@shared/stores/citations';
 
 import { ResourceCitationsComponent } from './resource-citations.component';
 
-import { MOCK_RESOURCE_OVERVIEW } from '@testing/mocks';
+import { MOCK_RESOURCE_OVERVIEW } from '@testing/mocks/resource.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 import { ToastServiceMockBuilder } from '@testing/providers/toast-provider.mock';

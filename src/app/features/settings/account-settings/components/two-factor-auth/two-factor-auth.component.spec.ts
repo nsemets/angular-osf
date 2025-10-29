@@ -19,7 +19,7 @@ import { AccountSettingsState } from '../../store';
 
 import { TwoFactorAuthComponent } from './two-factor-auth.component';
 
-import { MockCustomConfirmationServiceProvider } from '@testing/mocks';
+import { MockCustomConfirmationServiceProvider } from '@testing/mocks/custom-confirmation.service.mock';
 import { QRCodeComponent } from 'angularx-qrcode';
 
 describe('TwoFactorAuthComponent', () => {

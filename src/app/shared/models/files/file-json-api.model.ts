@@ -1,4 +1,4 @@
-import { FileKind } from '@osf/shared/enums';
+import { FileKind } from '@osf/shared/enums/file-kind.enum';
 
 import { ResponseJsonApi } from '../common';
 import { BaseNodeDataJsonApi } from '../nodes';

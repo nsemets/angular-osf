@@ -1,4 +1,4 @@
-import { ContributorPermission } from '@osf/shared/enums';
+import { ContributorPermission } from '@osf/shared/enums/contributors/contributor-permission.enum';
 import { Education, Employment } from '@osf/shared/models';
 
 export interface ContributorModel {

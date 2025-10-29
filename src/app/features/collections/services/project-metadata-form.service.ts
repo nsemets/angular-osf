@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { ProjectMetadataFormControls } from '@osf/features/collections/enums';
 import { ProjectMetadataForm } from '@osf/features/collections/models';
-import { CustomValidators } from '@osf/shared/helpers';
+import { CustomValidators } from '@osf/shared/helpers/custom-form-validators.helper';
 import { LicenseModel, ProjectMetadataUpdatePayload } from '@shared/models';
 import { ProjectModel } from '@shared/models/projects';
 

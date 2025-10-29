@@ -13,8 +13,8 @@ import { CustomPaginatorComponent } from '@osf/shared/components/custom-paginato
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { SelectComponent } from '@osf/shared/components/select/select.component';
-import { COLLECTION_SUBMISSIONS_SORT_OPTIONS } from '@osf/shared/constants';
-import { Primitive } from '@osf/shared/helpers';
+import { COLLECTION_SUBMISSIONS_SORT_OPTIONS } from '@osf/shared/constants/sort-options.const';
+import { Primitive } from '@osf/shared/helpers/types.helper';
 import {
   ClearCollections,
   ClearCollectionSubmissions,

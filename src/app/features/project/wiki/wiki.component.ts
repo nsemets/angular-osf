@@ -16,8 +16,8 @@ import { CompareSectionComponent } from '@osf/shared/components/wiki/compare-sec
 import { EditSectionComponent } from '@osf/shared/components/wiki/edit-section/edit-section.component';
 import { ViewSectionComponent } from '@osf/shared/components/wiki/view-section/view-section.component';
 import { WikiListComponent } from '@osf/shared/components/wiki/wiki-list/wiki-list.component';
-import { ResourceType } from '@osf/shared/enums';
-import { hasViewOnlyParam } from '@osf/shared/helpers';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
+import { hasViewOnlyParam } from '@osf/shared/helpers/view-only.helper';
 import { WikiModes } from '@osf/shared/models';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { CurrentResourceSelectors } from '@osf/shared/stores/current-resource';

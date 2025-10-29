@@ -6,12 +6,12 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { SENTRY_TOKEN } from '@core/provider/sentry.provider';
-import { hasViewOnlyParam } from '@osf/shared/helpers';
+import { AuthService } from '@core/services/auth.service';
+import { hasViewOnlyParam } from '@osf/shared/helpers/view-only.helper';
 import { LoaderService } from '@osf/shared/services/loader.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 
 import { ERROR_MESSAGES } from '../constants';
-import { AuthService } from '../services';
 
 import { BYPASS_ERROR_INTERCEPTOR } from './error-interceptor.tokens';
 

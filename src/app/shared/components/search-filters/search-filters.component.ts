@@ -11,7 +11,7 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { FILTER_PLACEHOLDERS } from '@osf/shared/constants';
+import { FILTER_PLACEHOLDERS } from '@osf/shared/constants/filter-placeholders';
 import { DiscoverableFilter, FilterOperator, FilterOption } from '@osf/shared/models';
 
 import { GenericFilterComponent } from '../generic-filter/generic-filter.component';

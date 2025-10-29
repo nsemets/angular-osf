@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
+import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants/default-table-params.constants';
 import { TableParameters } from '@osf/shared/models';
 
 @Injectable({ providedIn: 'root' })

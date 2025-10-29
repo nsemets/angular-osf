@@ -6,7 +6,7 @@ import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { ResourceType } from '@osf/shared/enums';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { LoaderService } from '@osf/shared/services/loader.service';
 import { GetWikiList, WikiSelectors } from '@osf/shared/stores/wiki';
 

@@ -27,7 +27,7 @@ import { CreateFolderDialogComponent } from '@osf/features/files/components';
 import { FileUploadDialogComponent } from '@osf/shared/components/file-upload-dialog/file-upload-dialog.component';
 import { FilesTreeComponent } from '@osf/shared/components/files-tree/files-tree.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
-import { FILE_SIZE_LIMIT } from '@osf/shared/constants';
+import { FILE_SIZE_LIMIT } from '@osf/shared/constants/files-limits.const';
 import { ClearFileDirective } from '@osf/shared/directives';
 import { FileFolderModel, FileModel } from '@osf/shared/models';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';

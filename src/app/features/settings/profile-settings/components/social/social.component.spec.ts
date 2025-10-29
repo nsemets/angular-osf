@@ -14,7 +14,7 @@ import { SocialFormComponent } from '../social-form/social-form.component';
 
 import { SocialComponent } from './social.component';
 
-import { MOCK_STORE } from '@testing/mocks';
+import { MOCK_STORE } from '@testing/mocks/mock-store.mock';
 
 describe.skip('SocialComponent', () => {
   let component: SocialComponent;

@@ -34,9 +34,10 @@ import { MakeDecisionDialogComponent } from '@osf/shared/components/make-decisio
 import { ResourceMetadataComponent } from '@osf/shared/components/resource-metadata/resource-metadata.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { ViewOnlyLinkMessageComponent } from '@osf/shared/components/view-only-link-message/view-only-link-message.component';
-import { Mode, ResourceType } from '@osf/shared/enums';
-import { hasViewOnlyParam } from '@osf/shared/helpers';
-import { MapProjectOverview } from '@osf/shared/mappers';
+import { Mode } from '@osf/shared/enums/mode.enum';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
+import { hasViewOnlyParam } from '@osf/shared/helpers/view-only.helper';
+import { MapProjectOverview } from '@osf/shared/mappers/resource-overview.mappers';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { MetaTagsService } from '@osf/shared/services/meta-tags.service';
 import { ToastService } from '@osf/shared/services/toast.service';

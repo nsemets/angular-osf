@@ -1,4 +1,4 @@
-import { ResourceType } from '@shared/enums';
+import { ResourceType } from '@shared/enums/resource-type.enum';
 import {
   IndexCardDataJsonApi,
   IndexCardSearchResponseJsonApi,

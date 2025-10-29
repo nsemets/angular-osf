@@ -1,8 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { isAuthorizedAddon } from '@osf/shared/helpers';
-import { AddonFormControls, AddonType, CredentialsFormat } from '@shared/enums';
+import { AddonFormControls } from '@osf/shared/enums/addon-form-controls.enum';
+import { AddonType } from '@osf/shared/enums/addon-type.enum';
+import { CredentialsFormat } from '@osf/shared/enums/addons-credentials-format.enum';
+import { isAuthorizedAddon } from '@osf/shared/helpers/addon-type.helper';
 import {
   AddonForm,
   AddonModel,
@@ -10,7 +12,7 @@ import {
   AuthorizedAddonRequestJsonApi,
   ConfiguredAddonModel,
   ConfiguredAddonRequestJsonApi,
-} from '@shared/models';
+} from '@osf/shared/models';
 
 @Injectable({
   providedIn: 'root',

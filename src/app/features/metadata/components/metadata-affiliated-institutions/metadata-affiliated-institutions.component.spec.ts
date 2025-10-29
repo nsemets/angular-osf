@@ -6,7 +6,7 @@ import { AffiliatedInstitutionsViewComponent } from '@osf/shared/components/affi
 
 import { MetadataAffiliatedInstitutionsComponent } from './metadata-affiliated-institutions.component';
 
-import { MOCK_PROJECT_AFFILIATED_INSTITUTIONS } from '@testing/mocks';
+import { MOCK_PROJECT_AFFILIATED_INSTITUTIONS } from '@testing/mocks/project-overview.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 
 describe('MetadataAffiliatedInstitutionsComponent', () => {

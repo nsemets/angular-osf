@@ -1,4 +1,5 @@
-import { ResourceSearchMode, ResourceType } from '@shared/enums';
+import { ResourceSearchMode } from '@osf/shared/enums/resource-search-mode.enum';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 
 import { MyResourcesSearchFilters } from 'src/app/shared/models/my-resources';
 

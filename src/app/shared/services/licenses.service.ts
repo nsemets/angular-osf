@@ -5,7 +5,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 
-import { LicensesMapper } from '../mappers';
+import { LicensesMapper } from '../mappers/licenses.mapper';
 import { LicenseModel, LicensesResponseJsonApi } from '../models';
 
 @Injectable({

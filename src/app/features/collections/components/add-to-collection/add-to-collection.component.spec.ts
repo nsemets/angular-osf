@@ -17,8 +17,9 @@ import { ProjectsSelectors } from '@shared/stores/projects/projects.selectors';
 
 import { AddToCollectionComponent } from './add-to-collection.component';
 
-import { MOCK_PROVIDER, MOCK_USER } from '@testing/mocks';
+import { MOCK_USER } from '@testing/mocks/data.mock';
 import { MOCK_PROJECT } from '@testing/mocks/project.mock';
+import { MOCK_PROVIDER } from '@testing/mocks/provider.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';

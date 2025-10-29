@@ -1,6 +1,6 @@
 import { Selector } from '@ngxs/store';
 
-import { ReviewPermissions } from '@osf/shared/enums';
+import { ReviewPermissions } from '@osf/shared/enums/review-permissions.enum';
 import { ProviderShortInfoModel } from '@osf/shared/models';
 
 import { ProviderStateModel } from './provider.model';

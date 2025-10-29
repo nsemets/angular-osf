@@ -1,13 +1,6 @@
-import { DEFAULT_TABLE_PARAMS } from '../constants';
-import {
-  ActivityLog,
-  ActivityLogJsonApi,
-  JsonApiResponseWithMeta,
-  LogContributor,
-  LogContributorJsonApi,
-  MetaAnonymousJsonApi,
-  PaginatedData,
-} from '../models';
+import { DEFAULT_TABLE_PARAMS } from '../constants/default-table-params.constants';
+import { JsonApiResponseWithMeta, MetaAnonymousJsonApi, PaginatedData } from '../models';
+import { ActivityLog, ActivityLogJsonApi, LogContributor, LogContributorJsonApi } from '../models/activity-logs';
 
 export class ActivityLogsMapper {
   static fromActivityLogJsonApi(log: ActivityLogJsonApi, isAnonymous?: boolean): ActivityLog {

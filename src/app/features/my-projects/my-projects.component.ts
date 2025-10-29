@@ -27,9 +27,10 @@ import { MyProjectsTableComponent } from '@osf/shared/components/my-projects-tab
 import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
 import { SelectComponent } from '@osf/shared/components/select/select.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
-import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
-import { ResourceType, SortOrder } from '@osf/shared/enums';
-import { IS_MEDIUM } from '@osf/shared/helpers';
+import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants/default-table-params.constants';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
+import { SortOrder } from '@osf/shared/enums/sort-order.enum';
+import { IS_MEDIUM } from '@osf/shared/helpers/breakpoints.tokens';
 import { MyResourcesItem, MyResourcesSearchFilters, QueryParams, TableParameters } from '@osf/shared/models';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { ProjectRedirectDialogService } from '@osf/shared/services/project-redirect-dialog.service';

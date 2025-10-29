@@ -4,8 +4,8 @@ import { catchError, finalize, forkJoin, of, tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { SupportedFeature } from '@osf/shared/enums';
-import { handleSectionError } from '@osf/shared/helpers';
+import { SupportedFeature } from '@osf/shared/enums/addon-supported-features.enum';
+import { handleSectionError } from '@osf/shared/helpers/state-error.handler';
 import { FilesService } from '@osf/shared/services/files.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 

@@ -3,8 +3,8 @@ import { map, Observable } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
-import { SubscriptionFrequency } from '@osf/shared/enums';
-import { NotificationSubscriptionMapper } from '@osf/shared/mappers';
+import { SubscriptionFrequency } from '@osf/shared/enums/subscriptions/subscription-frequency.enum';
+import { NotificationSubscriptionMapper } from '@osf/shared/mappers/notification-subscription.mapper';
 import {
   JsonApiResponse,
   NotificationSubscription,
@@ -25,7 +25,7 @@ export class NotificationSubscriptionService {
 
   getAllGlobalNotificationSubscriptions(): Observable<NotificationSubscription[]> {
     const params: Record<string, string> = {
-      'filter[event_name]': 'global_reviews,global_comments,global_comment_replies,global_file_updated,global_mentions',
+      'filter[event_name]': 'global_reviews,global_file_updated',
     };
 
     return this.jsonApiService

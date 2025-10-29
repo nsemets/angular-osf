@@ -20,7 +20,8 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { UserSelectors } from '@core/store/user';
-import { ResourceType, SortOrder } from '@osf/shared/enums';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
+import { SortOrder } from '@osf/shared/enums/sort-order.enum';
 import { PaginationLinksModel, ResourceModel, SearchFilters } from '@osf/shared/models';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { ToastService } from '@osf/shared/services/toast.service';

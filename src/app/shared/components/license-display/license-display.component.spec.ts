@@ -7,7 +7,7 @@ import { InterpolatePipe } from '@osf/shared/pipes';
 
 import { LicenseDisplayComponent } from './license-display.component';
 
-import { MOCK_LICENSE } from '@testing/mocks';
+import { MOCK_LICENSE } from '@testing/mocks/license.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 
 describe('LicenseDisplayComponent', () => {

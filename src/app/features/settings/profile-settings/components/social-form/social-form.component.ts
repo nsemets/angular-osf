@@ -7,7 +7,7 @@ import { InputText } from 'primeng/inputtext';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
-import { InputLimits } from '@osf/shared/constants';
+import { InputLimits } from '@osf/shared/constants/input-limits.const';
 
 @Component({
   selector: 'osf-social-form',

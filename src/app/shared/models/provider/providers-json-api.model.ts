@@ -1,4 +1,4 @@
-import { ReviewPermissions } from '@osf/shared/enums';
+import { ReviewPermissions } from '@osf/shared/enums/review-permissions.enum';
 
 import { ApiData, MetaJsonApi, PaginationLinksJsonApi } from '../common';
 

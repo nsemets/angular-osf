@@ -18,8 +18,8 @@ import {
 import { FormsModule } from '@angular/forms';
 
 import { PreprintProviderDetails } from '@osf/features/preprints/models';
-import { searchSortingOptions } from '@osf/shared/constants';
-import { ResourceType } from '@osf/shared/enums';
+import { searchSortingOptions } from '@osf/shared/constants/search-sort-options.const';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { DiscoverableFilter, FilterOption, ResourceModel, TabOption } from '@osf/shared/models';
 
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';

@@ -10,8 +10,8 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { UserSelectors } from '@core/store/user';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
-import { AddonServiceNames } from '@osf/shared/enums';
-import { convertCamelCaseToNormal } from '@osf/shared/helpers';
+import { AddonServiceNames } from '@osf/shared/enums/addon-service-names.enum';
+import { convertCamelCaseToNormal } from '@osf/shared/helpers/camel-case-to-normal.helper';
 import { AddonsSelectors, GetAddonsResourceReference, GetConfiguredLinkAddons } from '@osf/shared/stores/addons';
 import { CurrentResourceSelectors } from '@osf/shared/stores/current-resource';
 

@@ -13,7 +13,7 @@ import { InstitutionsSearchSelectors } from '@osf/shared/stores/institutions-sea
 
 import { InstitutionsSearchComponent } from './institutions-search.component';
 
-import { MOCK_INSTITUTION } from '@testing/mocks';
+import { MOCK_INSTITUTION } from '@testing/mocks/institution.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';

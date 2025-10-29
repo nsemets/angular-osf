@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 
-import { OperationNames, StorageItemType } from '@osf/shared/enums';
-import { isCitationAddon } from '@osf/shared/helpers';
+import { OperationNames } from '@osf/shared/enums/operation-names.enum';
+import { StorageItemType } from '@osf/shared/enums/storage-item-type.enum';
+import { isCitationAddon } from '@osf/shared/helpers/addon-type.helper';
 import { AuthorizedAccountModel, ConfiguredAddonModel, OperationInvocationRequestJsonApi } from '@shared/models';
 
 @Injectable({

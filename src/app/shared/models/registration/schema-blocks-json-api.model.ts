@@ -1,4 +1,4 @@
-import { BlockType } from '@osf/shared/enums';
+import { BlockType } from '@osf/shared/enums/block-type.enum';
 
 import { ApiData, MetaJsonApi, PaginationLinksJsonApi } from '../common';
 

@@ -15,7 +15,7 @@ import {
 import { ApiData, FileFolderModel, FileFolderResponseJsonApi, FileFoldersResponseJsonApi } from '@osf/shared/models';
 import { FilesService } from '@osf/shared/services/files.service';
 import { JsonApiService } from '@osf/shared/services/json-api.service';
-import { FilesMapper } from '@shared/mappers';
+import { FilesMapper } from '@shared/mappers/files/files.mapper';
 
 @Injectable({
   providedIn: 'root',

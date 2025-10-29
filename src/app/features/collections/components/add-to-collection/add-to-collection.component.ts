@@ -29,7 +29,7 @@ import {
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { BrandService } from '@osf/shared/services/brand.service';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
-import { HeaderStyleHelper } from '@shared/helpers';
+import { HeaderStyleHelper } from '@shared/helpers/header-style.helper';
 import { CanDeactivateComponent } from '@shared/models';
 import { CollectionsSelectors, GetCollectionProvider } from '@shared/stores/collections';
 import { ProjectsSelectors } from '@shared/stores/projects/projects.selectors';

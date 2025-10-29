@@ -13,7 +13,7 @@ import { IconComponent } from '@osf/shared/components/icon/icon.component';
 
 import { TosConsentBannerComponent } from './tos-consent-banner.component';
 
-import { MOCK_USER } from '@testing/mocks';
+import { MOCK_USER } from '@testing/mocks/data.mock';
 import { TranslationServiceMock } from '@testing/mocks/translation.service.mock';
 import { OSFTestingStoreModule } from '@testing/osf.testing.module';
 import { provideMockStore } from '@testing/providers/store-provider.mock';

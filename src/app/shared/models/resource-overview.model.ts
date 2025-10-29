@@ -1,8 +1,8 @@
+import { LicensesOption } from './license/license.model';
 import { IdTypeModel } from './common';
 import { ContributorModel } from './contributors';
 import { Identifier } from './identifiers';
 import { Institution } from './institutions';
-import { LicensesOption } from './license.model';
 import { SubjectModel } from './subject';
 
 export interface ResourceOverview {

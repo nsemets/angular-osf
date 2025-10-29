@@ -17,7 +17,7 @@ import { InstitutionsSearchState } from '@osf/shared/stores/institutions-search'
 
 import { InstitutionsUsersComponent } from './institutions-users.component';
 
-import { TranslateServiceMock } from '@testing/mocks';
+import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
 

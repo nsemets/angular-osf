@@ -8,7 +8,7 @@ import { inject, Injectable } from '@angular/core';
 import { BYPASS_ERROR_INTERCEPTOR } from '@core/interceptors/error-interceptor.tokens';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { UserSelectors } from '@core/store/user';
-import { AddonMapper } from '@osf/shared/mappers';
+import { AddonMapper } from '@osf/shared/mappers/addon.mapper';
 import {
   AddonGetResponseJsonApi,
   AddonModel,

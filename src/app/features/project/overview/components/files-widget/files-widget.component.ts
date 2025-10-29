@@ -31,7 +31,8 @@ import {
 } from '@osf/features/files/store';
 import { FilesTreeComponent } from '@osf/shared/components/files-tree/files-tree.component';
 import { SelectComponent } from '@osf/shared/components/select/select.component';
-import { getViewOnlyParamFromUrl, hasViewOnlyParam, Primitive } from '@osf/shared/helpers';
+import { Primitive } from '@osf/shared/helpers/types.helper';
+import { getViewOnlyParamFromUrl, hasViewOnlyParam } from '@osf/shared/helpers/view-only.helper';
 import {
   ConfiguredAddonModel,
   FileFolderModel,

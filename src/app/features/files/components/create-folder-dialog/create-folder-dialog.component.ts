@@ -7,8 +7,8 @@ import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
-import { forbiddenFileNameCharacters, InputLimits } from '@osf/shared/constants';
-import { CustomValidators } from '@osf/shared/helpers';
+import { forbiddenFileNameCharacters, InputLimits } from '@osf/shared/constants/input-limits.const';
+import { CustomValidators } from '@osf/shared/helpers/custom-form-validators.helper';
 
 @Component({
   selector: 'osf-create-folder-dialog',

@@ -20,7 +20,7 @@ import { DeactivationWarningComponent } from '../deactivation-warning/deactivati
 
 import { DeactivateAccountComponent } from './deactivate-account.component';
 
-import { MOCK_STORE } from '@testing/mocks';
+import { MOCK_STORE } from '@testing/mocks/mock-store.mock';
 
 describe('DeactivateAccountComponent', () => {
   let component: DeactivateAccountComponent;

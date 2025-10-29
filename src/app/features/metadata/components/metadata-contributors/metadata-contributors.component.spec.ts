@@ -8,7 +8,7 @@ import { ContributorModel } from '@osf/shared/models';
 
 import { MetadataContributorsComponent } from './metadata-contributors.component';
 
-import { MOCK_CONTRIBUTOR } from '@testing/mocks';
+import { MOCK_CONTRIBUTOR } from '@testing/mocks/contributors.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 

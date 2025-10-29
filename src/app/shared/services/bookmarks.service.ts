@@ -4,7 +4,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 
-import { ResourceType } from '../enums';
+import { ResourceType } from '../enums/resource-type.enum';
 import { SparseCollectionsResponseJsonApi } from '../models';
 
 import { JsonApiService } from './json-api.service';

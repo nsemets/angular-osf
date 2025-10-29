@@ -14,9 +14,9 @@ import { FormBuilder } from '@angular/forms';
 import { UserSelectors } from '@osf/core/store/user';
 import { InfoIconComponent } from '@osf/shared/components/info-icon/info-icon.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
+import { SubscriptionEvent, SubscriptionFrequency } from '@osf/shared/enums/subscriptions';
 import { LoaderService } from '@osf/shared/services/loader.service';
 import { ToastService } from '@osf/shared/services/toast.service';
-import { SubscriptionEvent, SubscriptionFrequency } from '@shared/enums';
 
 import { AccountSettings } from '../account-settings/models';
 import { AccountSettingsSelectors } from '../account-settings/store';
@@ -24,7 +24,9 @@ import { AccountSettingsSelectors } from '../account-settings/store';
 import { NotificationsComponent } from './notifications.component';
 import { NotificationSubscriptionSelectors } from './store';
 
-import { MOCK_STORE, MOCK_USER, TranslateServiceMock } from '@testing/mocks';
+import { MOCK_USER } from '@testing/mocks/data.mock';
+import { MOCK_STORE } from '@testing/mocks/mock-store.mock';
+import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
 import { ToastServiceMockBuilder } from '@testing/providers/toast-provider.mock';
 
 describe('NotificationsComponent', () => {
@@ -39,10 +41,10 @@ describe('NotificationsComponent', () => {
   };
 
   const mockNotificationSubscriptions = [
-    { id: 'id1', event: SubscriptionEvent.GlobalMentions, frequency: SubscriptionFrequency.Daily },
+    { id: 'id1', event: SubscriptionEvent.GlobalFileUpdated, frequency: SubscriptionFrequency.Daily },
     {
       id: 'id2',
-      event: SubscriptionEvent.GlobalMentions,
+      event: SubscriptionEvent.GlobalFileUpdated,
       frequency: SubscriptionFrequency.Instant,
     },
   ];
@@ -133,7 +135,7 @@ describe('NotificationsComponent', () => {
   it('should call dispatch only once per subscription change', () => {
     const mockDispatch = jest.fn().mockReturnValue(of({}));
     MOCK_STORE.dispatch.mockImplementation(mockDispatch);
-    const event = SubscriptionEvent.GlobalMentions;
+    const event = SubscriptionEvent.GlobalFileUpdated;
     const frequency = SubscriptionFrequency.Daily;
 
     component.onSubscriptionChange(event, frequency);

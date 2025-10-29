@@ -10,7 +10,7 @@ import { LicensesSelectors } from '@shared/stores/licenses';
 
 import { LicenseDialogComponent } from './license-dialog.component';
 
-import { MOCK_LICENSE } from '@testing/mocks';
+import { MOCK_LICENSE } from '@testing/mocks/license.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 

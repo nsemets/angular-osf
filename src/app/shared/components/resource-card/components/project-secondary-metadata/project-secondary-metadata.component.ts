@@ -2,7 +2,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
-import { languageCodes } from '@shared/constants';
+import { languageCodes } from '@osf/shared/constants/language.const';
 import { ResourceModel } from '@shared/models';
 
 @Component({

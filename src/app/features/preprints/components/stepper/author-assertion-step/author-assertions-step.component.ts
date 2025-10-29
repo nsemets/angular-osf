@@ -28,8 +28,10 @@ import { ApplicabilityStatus, PreregLinkInfo } from '@osf/features/preprints/enu
 import { PreprintModel } from '@osf/features/preprints/models';
 import { PreprintStepperSelectors, UpdatePreprint } from '@osf/features/preprints/store/preprint-stepper';
 import { FormSelectComponent } from '@osf/shared/components/form-select/form-select.component';
-import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants';
-import { CustomValidators, findChangedFields, StringOrNull } from '@osf/shared/helpers';
+import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants/input-validation-messages.const';
+import { CustomValidators } from '@osf/shared/helpers/custom-form-validators.helper';
+import { findChangedFields } from '@osf/shared/helpers/find-changed-fields';
+import { StringOrNull } from '@osf/shared/helpers/types.helper';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 

@@ -7,7 +7,7 @@ import { TableModule, TablePageEvent } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
-import { SortOrder } from '@osf/shared/enums';
+import { SortOrder } from '@osf/shared/enums/sort-order.enum';
 import { MyResourcesItem, TableParameters } from '@osf/shared/models';
 
 import { IconComponent } from '../icon/icon.component';

@@ -6,7 +6,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { ClearCurrentUser } from '@osf/core/store/user';
-import { urlParam } from '@osf/shared/helpers';
+import { urlParam } from '@osf/shared/helpers/url-param.helper';
 import { JsonApiService } from '@osf/shared/services/json-api.service';
 import { LoaderService } from '@osf/shared/services/loader.service';
 

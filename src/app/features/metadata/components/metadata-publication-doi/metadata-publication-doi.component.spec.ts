@@ -4,7 +4,7 @@ import { Identifier } from '@osf/shared/models';
 
 import { MetadataPublicationDoiComponent } from './metadata-publication-doi.component';
 
-import { MOCK_PROJECT_IDENTIFIERS } from '@testing/mocks';
+import { MOCK_PROJECT_IDENTIFIERS } from '@testing/mocks/project-overview.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 
 describe('MetadataPublicationDoiComponent', () => {

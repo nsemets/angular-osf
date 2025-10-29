@@ -17,7 +17,7 @@ import { AccountSettingsState } from '../../store';
 
 import { ChangePasswordComponent } from './change-password.component';
 
-import { TranslateServiceMock } from '@testing/mocks';
+import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
 
 describe('ChangePasswordComponent', () => {
   let component: ChangePasswordComponent;

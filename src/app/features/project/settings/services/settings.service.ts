@@ -3,8 +3,8 @@ import { map, Observable } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
-import { SubscriptionFrequency } from '@osf/shared/enums';
-import { NotificationSubscriptionMapper } from '@osf/shared/mappers';
+import { SubscriptionFrequency } from '@osf/shared/enums/subscriptions/subscription-frequency.enum';
+import { NotificationSubscriptionMapper } from '@osf/shared/mappers/notification-subscription.mapper';
 import {
   BaseNodeDataJsonApi,
   NodeResponseJsonApi,

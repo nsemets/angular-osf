@@ -8,8 +8,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
 
 import { EducationHistoryComponent } from '@osf/shared/components/education-history/education-history.component';
 import { EmploymentHistoryComponent } from '@osf/shared/components/employment-history/employment-history.component';
-import { SOCIAL_LINKS } from '@osf/shared/constants';
-import { IS_MEDIUM } from '@osf/shared/helpers';
+import { SOCIAL_LINKS } from '@osf/shared/constants/social-links.const';
+import { IS_MEDIUM } from '@osf/shared/helpers/breakpoints.tokens';
 import { UserModel } from '@osf/shared/models';
 import { SortByDatePipe } from '@osf/shared/pipes';
 

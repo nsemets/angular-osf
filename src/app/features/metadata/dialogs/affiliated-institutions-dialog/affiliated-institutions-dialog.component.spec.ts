@@ -10,7 +10,8 @@ import { InstitutionsSelectors } from '@osf/shared/stores/institutions';
 
 import { AffiliatedInstitutionsDialogComponent } from './affiliated-institutions-dialog.component';
 
-import { MOCK_INSTITUTION, TranslateServiceMock } from '@testing/mocks';
+import { MOCK_INSTITUTION } from '@testing/mocks/institution.mock';
+import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 

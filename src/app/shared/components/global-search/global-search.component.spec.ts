@@ -5,7 +5,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { ResourceType } from '@shared/enums';
+import { ResourceType } from '@shared/enums/resource-type.enum';
 import { DiscoverableFilter, FilterOperator, FilterOption } from '@shared/models';
 import { GlobalSearchSelectors } from '@shared/stores/global-search';
 

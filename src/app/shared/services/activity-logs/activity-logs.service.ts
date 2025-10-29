@@ -4,15 +4,9 @@ import { map } from 'rxjs/operators';
 import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
-import { ActivityLogsMapper } from '@osf/shared/mappers';
-import {
-  ActivityLog,
-  ActivityLogJsonApi,
-  ActivityLogWithDisplay,
-  JsonApiResponseWithMeta,
-  MetaAnonymousJsonApi,
-  PaginatedData,
-} from '@osf/shared/models';
+import { ActivityLogsMapper } from '@osf/shared/mappers/activity-logs.mapper';
+import { JsonApiResponseWithMeta, MetaAnonymousJsonApi, PaginatedData } from '@osf/shared/models';
+import { ActivityLog, ActivityLogJsonApi, ActivityLogWithDisplay } from '@osf/shared/models/activity-logs';
 
 import { JsonApiService } from '../json-api.service';
 

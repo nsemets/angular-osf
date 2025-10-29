@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { SubscriptionEvent, SubscriptionFrequency } from '@shared/enums';
+import { SubscriptionEvent, SubscriptionFrequency } from '@osf/shared/enums/subscriptions';
 
 @Pipe({
   name: 'notificationDescription',

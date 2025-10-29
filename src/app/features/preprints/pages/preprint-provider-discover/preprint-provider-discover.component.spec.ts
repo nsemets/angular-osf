@@ -5,7 +5,8 @@ import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { GlobalSearchComponent } from '@osf/shared/components/global-search/global-search.component';
-import { BrowserTabHelper, HeaderStyleHelper } from '@osf/shared/helpers';
+import { BrowserTabHelper } from '@osf/shared/helpers/browser-tab.helper';
+import { HeaderStyleHelper } from '@osf/shared/helpers/header-style.helper';
 import { BrandService } from '@osf/shared/services/brand.service';
 
 import { PreprintProviderHeroComponent } from '../../components';

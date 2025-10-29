@@ -29,9 +29,11 @@ import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, 
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { InfoIconComponent } from '@osf/shared/components/info-icon/info-icon.component';
-import { FILE_COUNT_ATTACHMENTS_LIMIT, INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants';
-import { FieldType } from '@osf/shared/enums';
-import { CustomValidators, findChangedFields } from '@osf/shared/helpers';
+import { FILE_COUNT_ATTACHMENTS_LIMIT } from '@osf/shared/constants/files-limits.const';
+import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants/input-validation-messages.const';
+import { FieldType } from '@osf/shared/enums/field-type.enum';
+import { CustomValidators } from '@osf/shared/helpers/custom-form-validators.helper';
+import { findChangedFields } from '@osf/shared/helpers/find-changed-fields';
 import { FileModel, FilePayloadJsonApi, PageSchema } from '@osf/shared/models';
 import { ToastService } from '@osf/shared/services/toast.service';
 

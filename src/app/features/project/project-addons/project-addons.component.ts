@@ -26,11 +26,13 @@ import { UserSelectors } from '@core/store/user';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { SelectComponent } from '@osf/shared/components/select/select.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
-import { createAddonCardModel, sortAddonCardsAlphabetically } from '@osf/shared/helpers';
+import { ADDON_CATEGORY_OPTIONS } from '@osf/shared/constants/addons-category-options.const';
+import { ADDON_TAB_OPTIONS } from '@osf/shared/constants/addons-tab-options.const';
+import { AddonTabValue } from '@osf/shared/enums/addon-tab.enum';
+import { AddonCategory } from '@osf/shared/enums/addons-category.enum';
+import { createAddonCardModel, sortAddonCardsAlphabetically } from '@osf/shared/helpers/addon-card.helper';
+import { isAddonServiceConfigured } from '@osf/shared/helpers/addon-type.helper';
 import { AddonCardListComponent, AddonsToolbarComponent } from '@shared/components/addons';
-import { ADDON_CATEGORY_OPTIONS, ADDON_TAB_OPTIONS } from '@shared/constants';
-import { AddonCategory, AddonTabValue } from '@shared/enums';
-import { isAddonServiceConfigured } from '@shared/helpers';
 import { AddonCardModel } from '@shared/models';
 import { AddonsQueryParamsService } from '@shared/services/addons-query-params.service';
 import {

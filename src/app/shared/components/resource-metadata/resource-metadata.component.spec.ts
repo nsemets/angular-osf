@@ -12,7 +12,7 @@ import { TruncatedTextComponent } from '../truncated-text/truncated-text.compone
 
 import { ResourceMetadataComponent } from './resource-metadata.component';
 
-import { MOCK_RESOURCE_OVERVIEW } from '@testing/mocks';
+import { MOCK_RESOURCE_OVERVIEW } from '@testing/mocks/resource.mock';
 
 describe('ResourceMetadataComponent', () => {
   let component: ResourceMetadataComponent;

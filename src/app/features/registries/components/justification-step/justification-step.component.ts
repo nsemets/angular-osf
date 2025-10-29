@@ -12,8 +12,10 @@ import { ChangeDetectionStrategy, Component, effect, inject, OnDestroy } from '@
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { INPUT_VALIDATION_MESSAGES, InputLimits } from '@osf/shared/constants';
-import { CustomValidators, findChangedFields } from '@osf/shared/helpers';
+import { InputLimits } from '@osf/shared/constants/input-limits.const';
+import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants/input-validation-messages.const';
+import { CustomValidators } from '@osf/shared/helpers/custom-form-validators.helper';
+import { findChangedFields } from '@osf/shared/helpers/find-changed-fields';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 

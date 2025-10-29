@@ -5,7 +5,7 @@ import {
   LicenseDataJsonApi,
   LicenseRecordJsonApi,
 } from '@osf/shared/models';
-import { UserPermissions } from '@shared/enums';
+import { UserPermissions } from '@shared/enums/user-permissions.enum';
 
 export interface MetadataJsonApiResponse {
   data: MetadataJsonApi;

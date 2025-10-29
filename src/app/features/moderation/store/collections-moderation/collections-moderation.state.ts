@@ -6,7 +6,7 @@ import { catchError, forkJoin, map, of, switchMap, tap } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { CollectionsService } from '@osf/shared/services/collections.service';
-import { handleSectionError } from '@shared/helpers';
+import { handleSectionError } from '@shared/helpers/state-error.handler';
 
 import {
   ClearCollectionModeration,

@@ -16,7 +16,9 @@ import { SubjectsSelectors } from '@shared/stores/subjects';
 
 import { ReviewStepComponent } from './review-step.component';
 
-import { MOCK_CONTRIBUTOR, MOCK_INSTITUTION, MOCK_LICENSE } from '@testing/mocks';
+import { MOCK_CONTRIBUTOR } from '@testing/mocks/contributors.mock';
+import { MOCK_INSTITUTION } from '@testing/mocks/institution.mock';
+import { MOCK_LICENSE } from '@testing/mocks/license.mock';
 import { OSF_FILE_MOCK } from '@testing/mocks/osf-file.mock';
 import { PREPRINT_MOCK } from '@testing/mocks/preprint.mock';
 import { PREPRINT_PROVIDER_DETAILS_MOCK } from '@testing/mocks/preprint-provider-details';

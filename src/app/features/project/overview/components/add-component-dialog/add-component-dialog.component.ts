@@ -15,8 +15,8 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 
 import { UserSelectors } from '@core/store/user';
 import { AffiliatedInstitutionSelectComponent } from '@osf/shared/components/affiliated-institution-select/affiliated-institution-select.component';
-import { ComponentFormControls } from '@osf/shared/enums';
-import { CustomValidators } from '@osf/shared/helpers';
+import { ComponentFormControls } from '@osf/shared/enums/create-component-form-controls.enum';
+import { CustomValidators } from '@osf/shared/helpers/custom-form-validators.helper';
 import { ComponentForm, Institution } from '@osf/shared/models';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { FetchUserInstitutions, InstitutionsSelectors } from '@osf/shared/stores/institutions';

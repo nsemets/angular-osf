@@ -5,8 +5,8 @@ import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 
-import { ResourceType } from '../enums';
-import { InstitutionsMapper } from '../mappers';
+import { ResourceType } from '../enums/resource-type.enum';
+import { InstitutionsMapper } from '../mappers/institutions';
 import {
   Institution,
   InstitutionJsonApiResponse,

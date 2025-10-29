@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SEARCH_TUTORIAL_STEPS } from '@shared/constants';
+import { SEARCH_TUTORIAL_STEPS } from '@osf/shared/constants/search-tutorial-steps.const';
 import { TutorialStep } from '@shared/models';
 
 import { SearchHelpTutorialComponent } from './search-help-tutorial.component';

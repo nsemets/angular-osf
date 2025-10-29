@@ -23,8 +23,8 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule } from '@angular/forms';
 
-import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
-import { AddContributorType, AddDialogState } from '@osf/shared/enums';
+import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants/default-table-params.constants';
+import { AddContributorType, AddDialogState } from '@osf/shared/enums/contributors';
 import { ComponentCheckboxItemModel, ContributorAddModel, ContributorDialogAddModel } from '@osf/shared/models';
 import { ClearUsers, ContributorsSelectors, SearchUsers } from '@osf/shared/stores/contributors';
 

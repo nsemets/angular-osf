@@ -1,6 +1,6 @@
 import { Selector } from '@ngxs/store';
 
-import { UserPermissions } from '@osf/shared/enums';
+import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
 import { NotificationSubscription } from '@osf/shared/models';
 
 import { SettingsStateModel } from './settings.model';

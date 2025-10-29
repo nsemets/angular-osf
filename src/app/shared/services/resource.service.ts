@@ -3,7 +3,6 @@ import { finalize, map, Observable } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
-import { BaseNodeMapper } from '@osf/shared/mappers';
 import {
   BaseNodeDataJsonApi,
   BaseNodeModel,
@@ -14,7 +13,8 @@ import {
   ResponseJsonApi,
 } from '@osf/shared/models';
 
-import { CurrentResourceType, ResourceType } from '../enums';
+import { CurrentResourceType, ResourceType } from '../enums/resource-type.enum';
+import { BaseNodeMapper } from '../mappers/nodes';
 
 import { JsonApiService } from './json-api.service';
 import { LoaderService } from './loader.service';

@@ -31,9 +31,10 @@ import { MoveFileDialogComponent } from '@osf/features/files/components/move-fil
 import { RenameFileDialogComponent } from '@osf/features/files/components/rename-file-dialog/rename-file-dialog.component';
 import { embedDynamicJs, embedStaticHtml } from '@osf/features/files/constants';
 import { StopPropagationDirective } from '@osf/shared/directives';
-import { FileKind, FileMenuType } from '@osf/shared/enums';
-import { hasViewOnlyParam } from '@osf/shared/helpers';
-import { FilesMapper } from '@osf/shared/mappers';
+import { FileKind } from '@osf/shared/enums/file-kind.enum';
+import { FileMenuType } from '@osf/shared/enums/file-menu-type.enum';
+import { hasViewOnlyParam } from '@osf/shared/helpers/view-only.helper';
+import { FilesMapper } from '@osf/shared/mappers/files/files.mapper';
 import { FileFolderModel, FileLabelModel, FileMenuAction, FileMenuFlags, FileModel } from '@osf/shared/models';
 import { FileSizePipe } from '@osf/shared/pipes';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';

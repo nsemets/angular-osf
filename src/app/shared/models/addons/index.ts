@@ -3,6 +3,7 @@ export * from './addon-card.model';
 export * from './addon-json-api.models';
 export * from './addon-operations-json-api.models';
 export * from './addon-utils.models';
+export * from './addons-query-params.model';
 export * from './authorized-account.model';
 export * from './configured-addon.model';
 export * from './operation-invocation.model';

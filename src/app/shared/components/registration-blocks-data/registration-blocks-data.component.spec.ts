@@ -6,7 +6,7 @@ import { By } from '@angular/platform-browser';
 
 import { RegistrationBlocksDataComponent } from './registration-blocks-data.component';
 
-import { MOCK_REVIEW } from '@testing/mocks';
+import { MOCK_REVIEW } from '@testing/mocks/review.mock';
 
 describe('RegistrationBlocksDataComponent', () => {
   let component: RegistrationBlocksDataComponent;

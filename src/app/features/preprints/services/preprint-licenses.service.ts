@@ -11,7 +11,7 @@ import {
   PreprintRelationshipsJsonApi,
 } from '@osf/features/preprints/models';
 import { JsonApiService } from '@osf/shared/services/json-api.service';
-import { LicensesMapper } from '@shared/mappers';
+import { LicensesMapper } from '@shared/mappers/licenses.mapper';
 import { ApiData, LicenseModel, LicenseOptions, LicensesResponseJsonApi } from '@shared/models';
 
 @Injectable({

@@ -12,7 +12,7 @@ import { CustomDialogService } from '@osf/shared/services/custom-dialog.service'
 import { GetScopes } from './store';
 import { TokensComponent } from './tokens.component';
 
-import { MOCK_STORE } from '@testing/mocks';
+import { MOCK_STORE } from '@testing/mocks/mock-store.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
 import { DialogServiceMockBuilder } from '@testing/providers/dialog-provider.mock';

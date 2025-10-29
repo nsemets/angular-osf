@@ -8,7 +8,7 @@ import { ChangeDetectionStrategy, Component, effect, inject, OnInit, signal } fr
 import { ActivatedRoute } from '@angular/router';
 
 import { AffiliatedInstitutionSelectComponent } from '@osf/shared/components/affiliated-institution-select/affiliated-institution-select.component';
-import { ResourceType } from '@osf/shared/enums';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { Institution } from '@osf/shared/models';
 import {
   FetchResourceInstitutions,

@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input } from '@an
 import { Router } from '@angular/router';
 
 import { ContributorsListComponent } from '@osf/shared/components/contributors-list/contributors-list.component';
-import { hasViewOnlyParam } from '@osf/shared/helpers';
+import { hasViewOnlyParam } from '@osf/shared/helpers/view-only.helper';
 
 import { FilesSelectors } from '../../store';
 

@@ -1,4 +1,4 @@
-import { SortType } from '../enums';
+import { SortType } from '../enums/sort-type.enum';
 import { CustomOption } from '../models';
 
 export const ALL_SORT_OPTIONS: CustomOption<string>[] = [

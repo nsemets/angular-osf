@@ -4,7 +4,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 
-import { RegistrationProviderMapper } from '../mappers';
+import { RegistrationProviderMapper } from '../mappers/registration-provider.mapper';
 import {
   JsonApiResponse,
   ProviderSchema,

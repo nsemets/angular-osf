@@ -1,4 +1,4 @@
-import { findChangedFields } from '@osf/shared/helpers';
+import { findChangedFields } from '@osf/shared/helpers/find-changed-fields';
 import { Education } from '@osf/shared/models';
 
 import { EducationForm } from '../models';

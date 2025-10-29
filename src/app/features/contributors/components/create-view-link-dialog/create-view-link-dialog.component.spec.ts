@@ -11,7 +11,7 @@ import { CurrentResourceSelectors } from '@osf/shared/stores/current-resource';
 
 import { CreateViewLinkDialogComponent } from './create-view-link-dialog.component';
 
-import { MOCK_RESOURCE_INFO, MOCK_RESOURCE_WITH_CHILDREN } from '@testing/mocks';
+import { MOCK_RESOURCE_INFO, MOCK_RESOURCE_WITH_CHILDREN } from '@testing/mocks/resource.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 

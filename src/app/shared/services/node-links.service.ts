@@ -5,7 +5,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 
-import { ComponentsMapper } from '../mappers';
+import { ComponentsMapper } from '../mappers/components';
 import { ComponentGetResponseJsonApi, ComponentOverview, JsonApiResponse, MyResourcesItem } from '../models';
 import { NodeLinkJsonApi } from '../models/node-links';
 

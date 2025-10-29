@@ -4,9 +4,9 @@ import { of } from 'rxjs';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { IS_XSMALL } from '@osf/shared/helpers';
+import { IS_XSMALL } from '@osf/shared/helpers/breakpoints.tokens';
 import { ResourceCardService } from '@osf/shared/services/resource-card.service';
-import { ResourceType } from '@shared/enums';
+import { ResourceType } from '@shared/enums/resource-type.enum';
 import { ResourceModel } from '@shared/models';
 
 import { DataResourcesComponent } from '../data-resources/data-resources.component';
@@ -18,7 +18,8 @@ import { RegistrationSecondaryMetadataComponent } from './components/registratio
 import { UserSecondaryMetadataComponent } from './components/user-secondary-metadata/user-secondary-metadata.component';
 import { ResourceCardComponent } from './resource-card.component';
 
-import { MOCK_AGENT_RESOURCE, MOCK_RESOURCE, MOCK_USER_RELATED_COUNTS } from '@testing/mocks';
+import { MOCK_USER_RELATED_COUNTS } from '@testing/mocks/data.mock';
+import { MOCK_AGENT_RESOURCE, MOCK_RESOURCE } from '@testing/mocks/resource.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 
 describe('ResourceCardComponent', () => {

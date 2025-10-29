@@ -5,14 +5,14 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CedarTemplateFormComponent } from '@osf/features/metadata/components';
 import { CedarMetadataDataTemplateJsonApi, CedarRecordDataBinding } from '@osf/features/metadata/models';
-import { MetadataResourceEnum } from '@osf/shared/enums';
+import { MetadataResourceEnum } from '@osf/shared/enums/metadata-resource.enum';
 import { MetadataTabsModel } from '@osf/shared/models';
 
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 
 import { MetadataTabsComponent } from './metadata-tabs.component';
 
-import { CEDAR_METADATA_DATA_TEMPLATE_JSON_API_MOCK } from '@testing/mocks';
+import { CEDAR_METADATA_DATA_TEMPLATE_JSON_API_MOCK } from '@testing/mocks/cedar-metadata-data-template-json-api.mock';
 import { MOCK_CEDAR_METADATA_RECORD_DATA } from '@testing/mocks/cedar-metadata-record.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 

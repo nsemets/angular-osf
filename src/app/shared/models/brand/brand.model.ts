@@ -1,4 +1,4 @@
-export interface Brand {
+export interface BrandModel {
   id: string;
   name: string;
   heroLogoImageUrl: string;

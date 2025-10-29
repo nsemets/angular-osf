@@ -16,8 +16,8 @@ import { ViewOnlyLinkMessageComponent } from '@osf/shared/components/view-only-l
 import { CompareSectionComponent } from '@osf/shared/components/wiki/compare-section/compare-section.component';
 import { ViewSectionComponent } from '@osf/shared/components/wiki/view-section/view-section.component';
 import { WikiListComponent } from '@osf/shared/components/wiki/wiki-list/wiki-list.component';
-import { ResourceType } from '@osf/shared/enums';
-import { hasViewOnlyParam } from '@osf/shared/helpers';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
+import { hasViewOnlyParam } from '@osf/shared/helpers/view-only.helper';
 import { WikiModes } from '@osf/shared/models';
 import {
   ClearWiki,

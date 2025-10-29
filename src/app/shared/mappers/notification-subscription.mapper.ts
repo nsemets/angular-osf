@@ -1,4 +1,4 @@
-import { SubscriptionEvent, SubscriptionFrequency, SubscriptionType } from '../enums';
+import { SubscriptionEvent, SubscriptionFrequency, SubscriptionType } from '../enums/subscriptions';
 import {
   NotificationSubscription,
   NotificationSubscriptionGetResponseJsonApi,

@@ -1,5 +1,5 @@
 import { IdName } from '../common';
-import { LicensesOption } from '../license.model';
+import { LicensesOption } from '../license/license.model';
 
 export interface ActivityLog {
   id: string;

@@ -5,7 +5,7 @@ import { Select } from 'primeng/select';
 import { ChangeDetectionStrategy, Component, input, model, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { Primitive } from '@osf/shared/helpers';
+import { Primitive } from '@osf/shared/helpers/types.helper';
 import { SelectOption } from '@osf/shared/models';
 
 @Component({

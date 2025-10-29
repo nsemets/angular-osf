@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
-import { InputLimits } from '@osf/shared/constants';
+import { InputLimits } from '@osf/shared/constants/input-limits.const';
 
 import { NameForm } from '../../models';
 

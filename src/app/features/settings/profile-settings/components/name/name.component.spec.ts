@@ -18,7 +18,8 @@ import { NameFormComponent } from '../name-form/name-form.component';
 
 import { NameComponent } from './name.component';
 
-import { MOCK_USER, MockCustomConfirmationServiceProvider } from '@testing/mocks';
+import { MockCustomConfirmationServiceProvider } from '@testing/mocks/custom-confirmation.service.mock';
+import { MOCK_USER } from '@testing/mocks/data.mock';
 
 describe('NameComponent', () => {
   let component: NameComponent;

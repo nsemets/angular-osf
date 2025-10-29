@@ -9,7 +9,7 @@ import { TextInputComponent } from '@osf/shared/components/text-input/text-input
 
 import { EmploymentFormComponent } from './employment-form.component';
 
-import { MOCK_EDUCATION, MOCK_EMPLOYMENT } from '@testing/mocks';
+import { MOCK_EDUCATION, MOCK_EMPLOYMENT } from '@testing/mocks/user-employment-education.mock';
 
 describe('EmploymentFormComponent', () => {
   let component: EmploymentFormComponent;

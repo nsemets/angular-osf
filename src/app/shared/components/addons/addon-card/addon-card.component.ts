@@ -7,7 +7,7 @@ import { Button } from 'primeng/button';
 import { Component, computed, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { getAddonTypeString, isConfiguredAddon } from '@osf/shared/helpers';
+import { getAddonTypeString, isConfiguredAddon } from '@osf/shared/helpers/addon-type.helper';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { LoaderService } from '@osf/shared/services/loader.service';
 import { AddonCardModel, AddonModel, AuthorizedAccountModel, ConfiguredAddonModel } from '@shared/models';

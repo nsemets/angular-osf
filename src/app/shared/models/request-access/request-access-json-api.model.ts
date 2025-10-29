@@ -1,4 +1,4 @@
-import { ContributorPermission } from '@osf/shared/enums';
+import { ContributorPermission } from '@osf/shared/enums/contributors/contributor-permission.enum';
 
 import { ResponseJsonApi } from '../common';
 import { UserDataErrorResponseJsonApi } from '../user';

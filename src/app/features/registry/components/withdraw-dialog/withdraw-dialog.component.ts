@@ -12,8 +12,8 @@ import { FormControl, FormGroup } from '@angular/forms';
 
 import { WithdrawRegistration } from '@osf/features/registry/store/registry-overview';
 import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
-import { InputLimits } from '@osf/shared/constants';
-import { CustomValidators } from '@osf/shared/helpers';
+import { InputLimits } from '@osf/shared/constants/input-limits.const';
+import { CustomValidators } from '@osf/shared/helpers/custom-form-validators.helper';
 
 @Component({
   selector: 'osf-withdraw-dialog',

@@ -12,7 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { TokenCreatedDialogComponent } from '@osf/features/settings/tokens/components';
 import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
-import { InputLimits } from '@osf/shared/constants';
+import { InputLimits } from '@osf/shared/constants/input-limits.const';
 import { ToastService } from '@osf/shared/services/toast.service';
 
 import { TokenFormControls, TokenModel } from '../../models';
@@ -20,7 +20,10 @@ import { CreateToken, TokensSelectors } from '../../store';
 
 import { TokenAddEditFormComponent } from './token-add-edit-form.component';
 
-import { MOCK_SCOPES, MOCK_STORE, MOCK_TOKEN, TranslateServiceMock } from '@testing/mocks';
+import { MOCK_STORE } from '@testing/mocks/mock-store.mock';
+import { MOCK_SCOPES } from '@testing/mocks/scope.mock';
+import { MOCK_TOKEN } from '@testing/mocks/token.mock';
+import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
 import { OSFTestingStoreModule } from '@testing/osf.testing.module';
 import { ToastServiceMockBuilder } from '@testing/providers/toast-provider.mock';
 

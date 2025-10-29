@@ -1,7 +1,8 @@
-import { PreprintFileSource } from '@osf/features/preprints/enums';
-import { PreprintModel } from '@osf/features/preprints/models';
-import { StringOrNull } from '@shared/helpers';
-import { FileFolderModel, FileModel, LicenseOptions } from '@shared/models';
+import { StringOrNull } from '@osf/shared/helpers/types.helper';
+import { FileFolderModel, FileModel, LicenseOptions } from '@osf/shared/models';
+
+import { PreprintFileSource } from '../../enums';
+import { PreprintModel } from '../../models';
 
 export class SetSelectedPreprintProviderId {
   static readonly type = '[Preprint Stepper] Set Selected Preprint Provider Id';

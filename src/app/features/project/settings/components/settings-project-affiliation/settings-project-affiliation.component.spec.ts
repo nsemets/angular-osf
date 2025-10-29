@@ -5,7 +5,7 @@ import { InstitutionsSelectors } from '@osf/shared/stores/institutions';
 
 import { SettingsProjectAffiliationComponent } from './settings-project-affiliation.component';
 
-import { MOCK_INSTITUTION } from '@testing/mocks';
+import { MOCK_INSTITUTION } from '@testing/mocks/institution.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 

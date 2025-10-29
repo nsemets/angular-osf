@@ -15,7 +15,7 @@ import { AddonsSelectors } from '@shared/stores/addons';
 
 import { ConnectAddonComponent } from './connect-addon.component';
 
-import { MOCK_ADDON } from '@testing/mocks';
+import { MOCK_ADDON } from '@testing/mocks/addon.mock';
 
 describe.skip('ConnectAddonComponent', () => {
   let component: ConnectAddonComponent;

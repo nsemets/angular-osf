@@ -32,9 +32,12 @@ import {
 } from '@osf/shared/components/contributors';
 import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
 import { ViewOnlyTableComponent } from '@osf/shared/components/view-only-table/view-only-table.component';
-import { BIBLIOGRAPHY_OPTIONS, DEFAULT_TABLE_PARAMS, PERMISSION_OPTIONS } from '@osf/shared/constants';
-import { AddContributorType, ContributorPermission, ResourceType, UserPermissions } from '@osf/shared/enums';
-import { findChangedItems } from '@osf/shared/helpers';
+import { BIBLIOGRAPHY_OPTIONS, PERMISSION_OPTIONS } from '@osf/shared/constants/contributors.constants';
+import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants/default-table-params.constants';
+import { AddContributorType, ContributorPermission } from '@osf/shared/enums/contributors';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
+import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
+import { findChangedItems } from '@osf/shared/helpers/find-changed-items.helper';
 import {
   ComponentCheckboxItemModel,
   ContributorDialogAddModel,

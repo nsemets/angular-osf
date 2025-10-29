@@ -1,4 +1,4 @@
-import { RegistryStatus } from '../enums';
+import { RegistryStatus } from '../enums/registry-status.enum';
 import { StatusInfo } from '../models';
 
 export const RegistryStatusMap: Record<RegistryStatus, StatusInfo> = {

@@ -1,4 +1,4 @@
-import { RegistryResourceType } from '@shared/enums';
+import { RegistryResourceType } from '@shared/enums/registry-resource.enum';
 import { SelectOption } from '@shared/models';
 
 export const resourceTypeOptions: SelectOption[] = [

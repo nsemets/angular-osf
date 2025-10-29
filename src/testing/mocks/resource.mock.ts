@@ -1,5 +1,5 @@
-import { ResourceInfoModel } from '@osf/features/project/contributors/models';
-import { ResourceType } from '@shared/enums';
+import { ResourceInfoModel } from '@osf/features/contributors/models';
+import { ResourceType } from '@shared/enums/resource-type.enum';
 import { ResourceModel, ResourceOverview } from '@shared/models';
 
 export const MOCK_RESOURCE: ResourceModel = {
@@ -10,8 +10,8 @@ export const MOCK_RESOURCE: ResourceModel = {
   dateCreated: new Date('2024-01-15'),
   dateModified: new Date('2024-01-20'),
   creators: [
-    { absoluteUrl: 'https://api.osf.io/v2/users/user1', name: 'John Doe' },
-    { absoluteUrl: 'https://api.osf.io/v2/users/user2', name: 'Jane Smith' },
+    { absoluteUrl: 'https://api.osf.io/v2/users/user1', name: 'John Doe', affiliationsAbsoluteUrl: [] },
+    { absoluteUrl: 'https://api.osf.io/v2/users/user2', name: 'Jane Smith', affiliationsAbsoluteUrl: [] },
   ],
   provider: { absoluteUrl: 'https://api.osf.io/v2/providers/provider1', name: 'Test Provider' },
   license: { absoluteUrl: 'https://api.osf.io/v2/licenses/license1', name: 'MIT License' },
@@ -37,8 +37,10 @@ export const MOCK_RESOURCE: ResourceModel = {
     {
       agentId: 'agentId',
       order: 1,
+      hadRole: '',
     },
   ],
+  context: '',
 };
 
 export const MOCK_AGENT_RESOURCE: ResourceModel = {
@@ -70,8 +72,10 @@ export const MOCK_AGENT_RESOURCE: ResourceModel = {
     {
       agentId: 'agentId',
       order: 1,
+      hadRole: '',
     },
   ],
+  context: '',
 };
 
 export const MOCK_RESOURCE_OVERVIEW: ResourceOverview = {

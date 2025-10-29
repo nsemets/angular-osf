@@ -5,8 +5,8 @@ import { inject, Injectable } from '@angular/core';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { JsonApiResponse } from '@shared/models';
 
-import { ResourceType } from '../enums';
-import { ViewOnlyLinksMapper } from '../mappers';
+import { ResourceType } from '../enums/resource-type.enum';
+import { ViewOnlyLinksMapper } from '../mappers/view-only-links.mapper';
 import {
   PaginatedViewOnlyLinksModel,
   ViewOnlyLinkJsonApi,

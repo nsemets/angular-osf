@@ -5,13 +5,13 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { FileKind } from '@osf/shared/enums/file-kind.enum';
+import { FileFolderModel, FileLabelModel } from '@osf/shared/models';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
+import { DataciteService } from '@osf/shared/services/datacite/datacite.service';
 import { FilesService } from '@osf/shared/services/files.service';
 import { ToastService } from '@osf/shared/services/toast.service';
-import { FileKind } from '@shared/enums';
-import { FileFolderModel, FileLabelModel } from '@shared/models';
-import { DataciteService } from '@shared/services/datacite/datacite.service';
-import { CurrentResourceSelectors } from '@shared/stores/current-resource';
+import { CurrentResourceSelectors } from '@osf/shared/stores/current-resource';
 
 import { FileMenuComponent } from '../file-menu/file-menu.component';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';

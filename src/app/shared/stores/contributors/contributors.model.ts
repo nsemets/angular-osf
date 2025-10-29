@@ -1,4 +1,4 @@
-import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
+import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants/default-table-params.constants';
 import { ContributorAddModel, ContributorModel, RequestAccessModel } from '@osf/shared/models';
 import { AsyncStateModel, AsyncStateWithTotalCount } from '@osf/shared/models/store';
 

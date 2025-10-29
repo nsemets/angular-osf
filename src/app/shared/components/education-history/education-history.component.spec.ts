@@ -6,7 +6,7 @@ import { MonthYearPipe } from '@osf/shared/pipes';
 
 import { EducationHistoryComponent } from './education-history.component';
 
-import { MOCK_EDUCATION } from '@testing/mocks';
+import { MOCK_EDUCATION } from '@testing/mocks/user-employment-education.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 
 describe('EducationHistoryComponent', () => {

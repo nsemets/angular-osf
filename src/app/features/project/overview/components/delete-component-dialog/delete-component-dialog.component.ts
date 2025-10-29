@@ -13,8 +13,9 @@ import { FormsModule } from '@angular/forms';
 
 import { DeleteProject, SettingsSelectors } from '@osf/features/project/settings/store';
 import { RegistryOverviewSelectors } from '@osf/features/registry/store/registry-overview';
-import { ScientistsNames } from '@osf/shared/constants';
-import { ResourceType, UserPermissions } from '@osf/shared/enums';
+import { ScientistsNames } from '@osf/shared/constants/scientists.const';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
+import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { CurrentResourceSelectors } from '@osf/shared/stores/current-resource';
 

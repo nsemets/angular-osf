@@ -6,9 +6,9 @@ import { NgStyle } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, model, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 
-import { SEARCH_TUTORIAL_STEPS } from '@osf/shared/constants';
+import { SEARCH_TUTORIAL_STEPS } from '@osf/shared/constants/search-tutorial-steps.const';
+import { IS_MEDIUM } from '@osf/shared/helpers/breakpoints.tokens';
 import { TutorialStep } from '@osf/shared/models';
-import { IS_MEDIUM } from '@shared/helpers';
 
 @Component({
   selector: 'osf-search-help-tutorial',

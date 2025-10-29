@@ -1,6 +1,6 @@
 import { CollectionSubmissionReviewAction } from '@osf/features/moderation/models';
 
-import { Brand } from '../brand.model';
+import { BrandModel } from '../brand/brand.model';
 import { ContributorModel } from '../contributors';
 import { BaseProviderModel } from '../provider';
 
@@ -15,7 +15,7 @@ export interface CollectionProvider extends BaseProviderModel {
     id: string;
     type: string;
   };
-  brand: Brand | null;
+  brand: BrandModel | null;
 }
 
 export interface CollectionFilters {

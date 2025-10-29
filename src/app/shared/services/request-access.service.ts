@@ -4,7 +4,8 @@ import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 
-import { RequestAccessTrigger, ResourceType } from '../enums';
+import { RequestAccessTrigger } from '../enums/request-access-trigger.enum';
+import { ResourceType } from '../enums/resource-type.enum';
 import { RequestAccessMapper } from '../mappers/request-access';
 import { RequestAccessModel, RequestAccessPayload, RequestAccessResponseJsonApi } from '../models';
 

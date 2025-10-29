@@ -1,5 +1,5 @@
-import { UserPermissions } from '@osf/shared/enums';
-import { getViewOnlyParamFromUrl } from '@osf/shared/helpers';
+import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
+import { getViewOnlyParamFromUrl } from '@osf/shared/helpers/view-only.helper';
 
 import {
   AUTHENTICATED_MENU_ITEMS,

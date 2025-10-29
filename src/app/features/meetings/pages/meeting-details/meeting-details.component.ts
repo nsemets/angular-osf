@@ -27,8 +27,8 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
-import { SortOrder } from '@osf/shared/enums';
-import { parseQueryFilterParams } from '@osf/shared/helpers';
+import { SortOrder } from '@osf/shared/enums/sort-order.enum';
+import { parseQueryFilterParams } from '@osf/shared/helpers/http.helper';
 import { QueryParams, SearchFilters, TableParameters } from '@osf/shared/models';
 
 import { MEETING_SUBMISSIONS_TABLE_PARAMS } from '../../constants';

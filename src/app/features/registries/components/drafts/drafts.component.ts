@@ -20,7 +20,7 @@ import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/ro
 
 import { StepperComponent } from '@osf/shared/components/stepper/stepper.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
-import { ResourceType } from '@osf/shared/enums';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { PageSchema, Question, StepOption } from '@osf/shared/models';
 import { LoaderService } from '@osf/shared/services/loader.service';
 import { ContributorsSelectors, GetAllContributors } from '@osf/shared/stores/contributors';

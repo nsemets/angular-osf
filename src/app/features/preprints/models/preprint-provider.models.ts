@@ -1,6 +1,6 @@
+import { BrandModel } from '@osf/shared/models/brand';
 import { ReviewPermissions } from '@shared/enums/review-permissions.enum';
-import { StringOrNull } from '@shared/helpers';
-import { Brand } from '@shared/models';
+import { StringOrNull } from '@shared/helpers/types.helper';
 
 import { ProviderReviewsWorkflow } from '../enums';
 
@@ -20,7 +20,7 @@ export interface PreprintProviderDetails {
   assertionsEnabled: boolean;
   reviewsWorkflow: ProviderReviewsWorkflow | null;
   permissions: ReviewPermissions[];
-  brand: Brand;
+  brand: BrandModel;
   lastFetched?: number;
   iri: string;
   faviconUrl: string;

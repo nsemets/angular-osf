@@ -2,7 +2,7 @@ import {
   CollectionSubmissionReviewAction,
   CollectionSubmissionReviewActionJsonApi,
 } from '@osf/features/moderation/models';
-import { convertToSnakeCase } from '@osf/shared/helpers';
+import { convertToSnakeCase } from '@osf/shared/helpers/convert-to-snake-case.helper';
 import {
   CollectionDetails,
   CollectionDetailsResponseJsonApi,

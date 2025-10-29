@@ -1,3 +1,7 @@
+import { RegistrationReviewStates } from '@osf/shared/enums/registration-review-states.enum';
+import { RegistryStatus } from '@osf/shared/enums/registry-status.enum';
+import { RevisionReviewStates } from '@osf/shared/enums/revision-review-states.enum';
+import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
 import {
   ContributorModel,
   Identifier,
@@ -11,7 +15,6 @@ import {
   SchemaResponse,
   SubjectModel,
 } from '@osf/shared/models';
-import { RegistrationReviewStates, RegistryStatus, RevisionReviewStates, UserPermissions } from '@shared/enums';
 
 export interface RegistryOverview {
   id: string;

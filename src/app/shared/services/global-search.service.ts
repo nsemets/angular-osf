@@ -4,7 +4,8 @@ import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 
-import { mapFilterOptions, MapFilters } from '../mappers';
+import { mapFilterOptions } from '../mappers/filters/filter-option.mapper';
+import { MapFilters } from '../mappers/filters/filters.mapper';
 import { MapResources } from '../mappers/search';
 import {
   FilterOption,

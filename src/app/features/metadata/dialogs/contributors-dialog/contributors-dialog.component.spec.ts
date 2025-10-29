@@ -12,7 +12,9 @@ import { ContributorsTableComponent } from '@shared/components/contributors';
 
 import { ContributorsDialogComponent } from './contributors-dialog.component';
 
-import { MOCK_CONTRIBUTOR, MockCustomConfirmationServiceProvider, TranslateServiceMock } from '@testing/mocks';
+import { MOCK_CONTRIBUTOR } from '@testing/mocks/contributors.mock';
+import { MockCustomConfirmationServiceProvider } from '@testing/mocks/custom-confirmation.service.mock';
+import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';

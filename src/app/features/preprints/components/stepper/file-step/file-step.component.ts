@@ -42,10 +42,10 @@ import {
 } from '@osf/features/preprints/store/preprint-stepper';
 import { FilesTreeComponent } from '@osf/shared/components/files-tree/files-tree.component';
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
+import { StringOrNull } from '@osf/shared/helpers/types.helper';
 import { FileFolderModel, FileModel } from '@osf/shared/models';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { ToastService } from '@osf/shared/services/toast.service';
-import { StringOrNull } from '@shared/helpers';
 
 @Component({
   selector: 'osf-file-step',

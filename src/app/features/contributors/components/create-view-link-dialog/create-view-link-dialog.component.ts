@@ -12,8 +12,8 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ComponentCheckboxItemComponent } from '@osf/shared/components/component-checkbox-item/component-checkbox-item.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
-import { InputLimits } from '@osf/shared/constants';
-import { CustomValidators } from '@osf/shared/helpers';
+import { InputLimits } from '@osf/shared/constants/input-limits.const';
+import { CustomValidators } from '@osf/shared/helpers/custom-form-validators.helper';
 import { ComponentCheckboxItemModel } from '@osf/shared/models';
 import { CurrentResourceSelectors, GetResourceWithChildren } from '@osf/shared/stores/current-resource';
 

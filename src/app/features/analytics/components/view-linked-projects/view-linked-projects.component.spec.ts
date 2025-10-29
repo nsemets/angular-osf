@@ -13,12 +13,12 @@ import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { TruncatedTextComponent } from '@osf/shared/components/truncated-text/truncated-text.component';
-import { ResourceType } from '@osf/shared/enums';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { LinkedProjectsSelectors } from '@osf/shared/stores/linked-projects';
 
 import { ViewLinkedProjectsComponent } from './view-linked-projects.component';
 
-import { MOCK_PROJECT_OVERVIEW } from '@testing/mocks';
+import { MOCK_PROJECT_OVERVIEW } from '@testing/mocks/project-overview.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';

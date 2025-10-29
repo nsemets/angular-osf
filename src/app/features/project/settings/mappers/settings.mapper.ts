@@ -1,5 +1,5 @@
-import { UserPermissions } from '@osf/shared/enums';
-import { InstitutionsMapper } from '@osf/shared/mappers';
+import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
+import { InstitutionsMapper } from '@osf/shared/mappers/institutions';
 import { RegionsMapper } from '@osf/shared/mappers/regions';
 import { BaseNodeDataJsonApi } from '@shared/models';
 

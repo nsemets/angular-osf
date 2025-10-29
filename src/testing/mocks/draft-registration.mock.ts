@@ -1,3 +1,4 @@
+import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
 import { DraftRegistrationModel } from '@shared/models';
 
 export const MOCK_DRAFT_REGISTRATION: DraftRegistrationModel = {
@@ -23,4 +24,5 @@ export const MOCK_DRAFT_REGISTRATION: DraftRegistrationModel = {
   },
   tags: [],
   title: 'This is a title',
+  currentUserPermissions: [UserPermissions.Admin, UserPermissions.Write, UserPermissions.Read],
 };

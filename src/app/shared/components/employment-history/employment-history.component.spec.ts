@@ -7,7 +7,7 @@ import { MonthYearPipe } from '@osf/shared/pipes';
 
 import { EmploymentHistoryComponent } from './employment-history.component';
 
-import { MOCK_EMPLOYMENT } from '@testing/mocks';
+import { MOCK_EMPLOYMENT } from '@testing/mocks/user-employment-education.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 
 describe('EmploymentHistoryComponent', () => {

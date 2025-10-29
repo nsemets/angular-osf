@@ -20,8 +20,8 @@ import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/
 import { MyProjectsTableComponent } from '@osf/shared/components/my-projects-table/my-projects-table.component';
 import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
-import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
-import { SortOrder } from '@osf/shared/enums';
+import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants/default-table-params.constants';
+import { SortOrder } from '@osf/shared/enums/sort-order.enum';
 import { MyResourcesItem, MyResourcesSearchFilters, TableParameters } from '@osf/shared/models';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { ProjectRedirectDialogService } from '@osf/shared/services/project-redirect-dialog.service';

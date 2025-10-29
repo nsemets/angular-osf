@@ -8,9 +8,9 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { InputLimits } from '@osf/shared/constants';
-import { ResourceType } from '@osf/shared/enums';
-import { CustomValidators } from '@osf/shared/helpers';
+import { InputLimits } from '@osf/shared/constants/input-limits.const';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
+import { CustomValidators } from '@osf/shared/helpers/custom-form-validators.helper';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { CreateWiki, WikiSelectors } from '@osf/shared/stores/wiki';
 

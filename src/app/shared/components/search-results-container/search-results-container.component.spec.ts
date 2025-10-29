@@ -3,7 +3,7 @@ import { MockComponents } from 'ng-mocks';
 import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ResourceType } from '@shared/enums';
+import { ResourceType } from '@shared/enums/resource-type.enum';
 
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 import { ResourceCardComponent } from '../resource-card/resource-card.component';

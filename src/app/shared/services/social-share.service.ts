@@ -2,7 +2,8 @@ import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 
-import { SOCIAL_PLATFORMS, SOCIAL_SHARE_URLS } from '../constants';
+import { SOCIAL_PLATFORMS } from '../constants/social-platforms.const';
+import { SOCIAL_SHARE_URLS } from '../constants/social-share.config';
 import { SocialShareContentModel, SocialShareLinksModel, SocialsShareActionItem } from '../models';
 
 @Injectable({

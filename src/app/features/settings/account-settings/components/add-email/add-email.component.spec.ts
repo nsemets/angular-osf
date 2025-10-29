@@ -17,7 +17,7 @@ import { AccountSettingsState } from '../../store';
 
 import { AddEmailComponent } from './add-email.component';
 
-import { TranslateServiceMock } from '@testing/mocks';
+import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
 
 describe('AddEmailComponent', () => {
   let component: AddEmailComponent;

@@ -4,8 +4,8 @@ import { catchError, switchMap, tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { AddonType } from '@osf/shared/enums';
-import { handleSectionError } from '@osf/shared/helpers';
+import { AddonType } from '@osf/shared/enums/addon-type.enum';
+import { handleSectionError } from '@osf/shared/helpers/state-error.handler';
 import { AuthorizedAccountModel } from '@osf/shared/models';
 import { AddonsService } from '@osf/shared/services/addons';
 

@@ -17,7 +17,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { UpdateProfileSettingsSocialLinks, UserSelectors } from '@osf/core/store/user';
-import { SOCIAL_LINKS } from '@osf/shared/constants';
+import { SOCIAL_LINKS } from '@osf/shared/constants/social-links.const';
 import { SocialLinksForm, SocialModel } from '@osf/shared/models';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { LoaderService } from '@osf/shared/services/loader.service';

@@ -19,9 +19,11 @@ import {
   Validators,
 } from '@angular/forms';
 
-import { AuthService } from '@osf/core/services';
+import { AuthService } from '@core/services/auth.service';
 import { PasswordInputHintComponent } from '@osf/shared/components/password-input-hint/password-input-hint.component';
-import { CustomValidators, FormValidationHelper, PASSWORD_REGEX } from '@osf/shared/helpers';
+import { CustomValidators } from '@osf/shared/helpers/custom-form-validators.helper';
+import { FormValidationHelper } from '@osf/shared/helpers/form-validation.helper';
+import { PASSWORD_REGEX } from '@osf/shared/helpers/password.helper';
 import { LoaderService } from '@osf/shared/services/loader.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 

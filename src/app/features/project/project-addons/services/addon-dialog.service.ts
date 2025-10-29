@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { AddonServiceNames } from '@osf/shared/enums';
+import { AddonServiceNames } from '@osf/shared/enums/addon-service-names.enum';
 import { AuthorizedAccountModel, ConfiguredAddonModel } from '@osf/shared/models';
 
 import { ConfirmAccountConnectionModalComponent } from '../components/confirm-account-connection-modal/confirm-account-connection-modal.component';

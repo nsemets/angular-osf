@@ -1,4 +1,4 @@
-import { CurrentResourceType } from '@osf/shared/enums';
+import { CurrentResourceType } from '@osf/shared/enums/resource-type.enum';
 import {
   ProviderShortInfoModel,
   RegistrationNodeAttributesJsonApi,

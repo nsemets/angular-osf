@@ -15,7 +15,7 @@ import { ModeratorsSelectors } from '../../store/moderators';
 
 import { AddModeratorDialogComponent } from './add-moderator-dialog.component';
 
-import { MOCK_USER } from '@testing/mocks';
+import { MOCK_USER } from '@testing/mocks/data.mock';
 import { DynamicDialogRefMock } from '@testing/mocks/dynamic-dialog-ref.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 import { provideMockStore } from '@testing/providers/store-provider.mock';

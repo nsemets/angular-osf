@@ -6,9 +6,9 @@ import { catchError, forkJoin, map, switchMap, tap } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { SetCurrentProvider } from '@core/store/provider';
-import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
-import { CurrentResourceType, ResourceType } from '@osf/shared/enums';
-import { handleSectionError } from '@osf/shared/helpers';
+import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants/default-table-params.constants';
+import { CurrentResourceType, ResourceType } from '@osf/shared/enums/resource-type.enum';
+import { handleSectionError } from '@osf/shared/helpers/state-error.handler';
 import { ContributorsService } from '@osf/shared/services/contributors.service';
 
 import { PreprintSubmissionModel, PreprintWithdrawalSubmission } from '../../models';

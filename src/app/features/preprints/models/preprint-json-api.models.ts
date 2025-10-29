@@ -1,5 +1,5 @@
-import { UserPermissions } from '@osf/shared/enums';
-import { BooleanOrNull, StringOrNull } from '@osf/shared/helpers';
+import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
+import { BooleanOrNull, StringOrNull } from '@osf/shared/helpers/types.helper';
 import {
   ContributorDataJsonApi,
   IdentifiersResponseJsonApi,

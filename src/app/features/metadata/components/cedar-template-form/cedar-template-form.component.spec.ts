@@ -5,8 +5,11 @@ import { CedarMetadataDataTemplateJsonApi } from '@osf/features/metadata/models'
 
 import { CedarTemplateFormComponent } from './cedar-template-form.component';
 
-import { CEDAR_METADATA_DATA_TEMPLATE_JSON_API_MOCK } from '@testing/mocks';
+import { CEDAR_METADATA_DATA_TEMPLATE_JSON_API_MOCK } from '@testing/mocks/cedar-metadata-data-template-json-api.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
+
+jest.mock('cedar-artifact-viewer');
+jest.mock('cedar-embeddable-editor');
 
 describe('CedarTemplateFormComponent', () => {
   let component: CedarTemplateFormComponent;

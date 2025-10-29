@@ -4,7 +4,7 @@ import { Institution } from '@shared/models';
 
 import { AffiliatedInstitutionsViewComponent } from './affiliated-institutions-view.component';
 
-import { MOCK_INSTITUTION } from '@testing/mocks';
+import { MOCK_INSTITUTION } from '@testing/mocks/institution.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 
 describe('AffiliatedInstitutionsViewComponent', () => {

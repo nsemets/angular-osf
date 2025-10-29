@@ -4,8 +4,9 @@ import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 
-import { AddContributorType, ResourceType } from '../enums';
-import { ContributorsMapper } from '../mappers';
+import { AddContributorType } from '../enums/contributors';
+import { ResourceType } from '../enums/resource-type.enum';
+import { ContributorsMapper } from '../mappers/contributors';
 import {
   ContributorAddModel,
   ContributorDataJsonApi,

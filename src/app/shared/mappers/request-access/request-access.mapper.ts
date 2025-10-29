@@ -1,4 +1,6 @@
-import { ContributorPermission, RequestAccessTrigger, RequestAccessType } from '@osf/shared/enums';
+import { ContributorPermission } from '@osf/shared/enums/contributors/contributor-permission.enum';
+import { RequestAccessTrigger } from '@osf/shared/enums/request-access-trigger.enum';
+import { RequestAccessType } from '@osf/shared/enums/request-access-type.enum';
 import { RequestAccessDataJsonApi, RequestAccessModel, RequestAccessPayload } from '@osf/shared/models';
 
 import { UserMapper } from '../user';

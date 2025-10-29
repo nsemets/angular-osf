@@ -8,9 +8,9 @@ import { ChangeDetectionStrategy, Component, computed, effect, input, output } f
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
-import { InputLimits } from '@osf/shared/constants';
-import { ProjectFormControls } from '@osf/shared/enums';
-import { CustomValidators } from '@osf/shared/helpers';
+import { InputLimits } from '@osf/shared/constants/input-limits.const';
+import { ProjectFormControls } from '@osf/shared/enums/create-project-form-controls.enum';
+import { CustomValidators } from '@osf/shared/helpers/custom-form-validators.helper';
 
 import { NodeDetailsModel, ProjectDetailsModel } from '../../models';
 

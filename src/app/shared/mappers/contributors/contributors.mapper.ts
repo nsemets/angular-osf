@@ -1,4 +1,4 @@
-import { AddContributorType, ContributorPermission } from '@osf/shared/enums';
+import { AddContributorType, ContributorPermission } from '@osf/shared/enums/contributors';
 import {
   ContributorAddModel,
   ContributorAddRequestModel,

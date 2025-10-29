@@ -1,4 +1,4 @@
-import { ContributorPermission } from '@shared/enums';
+import { ContributorPermission } from '@osf/shared/enums/contributors';
 
 import { ContributorModel } from '../../app/shared/models';
 

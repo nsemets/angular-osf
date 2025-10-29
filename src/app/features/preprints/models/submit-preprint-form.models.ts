@@ -1,6 +1,6 @@
 import { FormControl } from '@angular/forms';
 
-import { StringOrNull } from '@shared/helpers';
+import { StringOrNull } from '@osf/shared/helpers/types.helper';
 import { SubjectModel } from '@shared/models';
 
 export interface TitleAndAbstractForm {

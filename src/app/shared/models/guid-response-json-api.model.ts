@@ -1,4 +1,4 @@
-import { UserPermissions } from '../enums';
+import { UserPermissions } from '../enums/user-permissions.enum';
 
 import { JsonApiResponse } from './common';
 

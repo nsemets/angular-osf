@@ -8,7 +8,7 @@ import { CitationFormatPipe } from '@shared/pipes';
 
 import { CitationPreviewComponent } from './citation-preview.component';
 
-import { MOCK_USER } from '@testing/mocks';
+import { MOCK_USER } from '@testing/mocks/data.mock';
 
 describe('CitationPreviewComponent', () => {
   let component: CitationPreviewComponent;

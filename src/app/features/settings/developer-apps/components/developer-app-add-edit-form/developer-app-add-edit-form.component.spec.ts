@@ -16,7 +16,7 @@ import { DeveloperAppsState } from '../../store';
 
 import { DeveloperAppAddEditFormComponent } from './developer-app-add-edit-form.component';
 
-import { TranslateServiceMock } from '@testing/mocks';
+import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
 
 describe('CreateDeveloperAppComponent', () => {
   let component: DeveloperAppAddEditFormComponent;

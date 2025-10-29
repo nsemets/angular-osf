@@ -1,4 +1,4 @@
-import { UserMapper } from '@osf/shared/mappers';
+import { UserMapper } from '@osf/shared/mappers/user';
 import { PaginatedData, ResponseJsonApi } from '@osf/shared/models';
 
 import {

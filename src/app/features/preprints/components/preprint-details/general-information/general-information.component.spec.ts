@@ -3,7 +3,6 @@ import { MockComponents, MockProvider } from 'ng-mocks';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
-import { PreprintProviderDetails } from '@osf/features/preprints/models';
 import { PreprintSelectors } from '@osf/features/preprints/store/preprint';
 import { AffiliatedInstitutionsViewComponent } from '@osf/shared/components/affiliated-institutions-view/affiliated-institutions-view.component';
 import { ContributorsListComponent } from '@osf/shared/components/contributors-list/contributors-list.component';
@@ -16,7 +15,8 @@ import { PreprintDoiSectionComponent } from '../preprint-doi-section/preprint-do
 
 import { GeneralInformationComponent } from './general-information.component';
 
-import { MOCK_CONTRIBUTOR, MOCK_INSTITUTION } from '@testing/mocks';
+import { MOCK_CONTRIBUTOR } from '@testing/mocks/contributors.mock';
+import { MOCK_INSTITUTION } from '@testing/mocks/institution.mock';
 import { PREPRINT_MOCK } from '@testing/mocks/preprint.mock';
 import { PREPRINT_PROVIDER_DETAILS_MOCK } from '@testing/mocks/preprint-provider-details';
 import { OSFTestingModule } from '@testing/osf.testing.module';
@@ -29,7 +29,7 @@ describe('GeneralInformationComponent', () => {
   const mockPreprint = PREPRINT_MOCK;
   const mockContributors = [MOCK_CONTRIBUTOR];
   const mockInstitutions = [MOCK_INSTITUTION];
-  const mockPreprintProvider: PreprintProviderDetails = PREPRINT_PROVIDER_DETAILS_MOCK;
+  const mockPreprintProvider = PREPRINT_PROVIDER_DETAILS_MOCK;
   const mockWebUrl = 'https://staging4.osf.io';
 
   beforeEach(async () => {

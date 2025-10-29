@@ -5,6 +5,9 @@ export const MOCK_PREPRINT_WITHDRAWAL_SUBMISSIONS: PreprintWithdrawalSubmission[
     id: '1',
     title: 'Test Withdrawal 1',
     preprintId: 'preprint-1',
+    contributors: [],
+    contributorsLoading: false,
+    totalContributors: 0,
     actions: [
       {
         id: '1',
@@ -24,6 +27,9 @@ export const MOCK_PREPRINT_WITHDRAWAL_SUBMISSIONS: PreprintWithdrawalSubmission[
     id: '2',
     preprintId: 'preprint-2',
     title: 'Test Withdrawal 2',
+    contributors: [],
+    contributorsLoading: false,
+    totalContributors: 0,
     actions: [
       {
         id: '2',
@@ -43,6 +49,9 @@ export const MOCK_PREPRINT_WITHDRAWAL_SUBMISSIONS: PreprintWithdrawalSubmission[
     id: '3',
     preprintId: 'preprint-3',
     title: 'Test Withdrawal 3',
+    contributors: [],
+    contributorsLoading: false,
+    totalContributors: 0,
     actions: [
       {
         id: '3',

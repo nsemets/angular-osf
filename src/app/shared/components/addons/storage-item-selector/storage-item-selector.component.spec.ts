@@ -5,7 +5,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StorageItemSelectorComponent } from '@shared/components/addons';
-import { OperationNames } from '@shared/enums';
+import { OperationNames } from '@shared/enums/operation-names.enum';
 import { AddonsSelectors } from '@shared/stores/addons';
 
 import { GoogleFilePickerComponent } from '../../google-file-picker/google-file-picker.component';

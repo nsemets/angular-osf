@@ -8,7 +8,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterOutlet } from '@angular/router';
 
 import { ScrollTopOnRouteChangeDirective } from '@osf/shared/directives';
-import { IS_MEDIUM, IS_WEB } from '@osf/shared/helpers';
+import { IS_MEDIUM, IS_WEB } from '@osf/shared/helpers/breakpoints.tokens';
 
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 import { FooterComponent } from '../footer/footer.component';

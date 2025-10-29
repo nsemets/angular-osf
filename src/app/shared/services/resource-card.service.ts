@@ -3,8 +3,9 @@ import { map, Observable } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
-import { MapUserCounts } from '@shared/mappers';
 import { UserRelatedCounts, UserRelatedCountsResponseJsonApi } from '@shared/models';
+
+import { MapUserCounts } from '../mappers/user-related-counts';
 
 import { JsonApiService } from './json-api.service';
 

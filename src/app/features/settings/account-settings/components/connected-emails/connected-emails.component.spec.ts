@@ -24,7 +24,8 @@ import { ConfirmationSentDialogComponent } from '../confirmation-sent-dialog/con
 
 import { ConnectedEmailsComponent } from './connected-emails.component';
 
-import { MOCK_USER, MockCustomConfirmationServiceProvider } from '@testing/mocks';
+import { MockCustomConfirmationServiceProvider } from '@testing/mocks/custom-confirmation.service.mock';
+import { MOCK_USER } from '@testing/mocks/data.mock';
 
 describe('ConnectedEmailsComponent', () => {
   let component: ConnectedEmailsComponent;

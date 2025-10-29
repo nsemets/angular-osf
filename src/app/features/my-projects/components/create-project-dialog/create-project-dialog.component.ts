@@ -9,9 +9,9 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { AddProjectFormComponent } from '@osf/shared/components/add-project-form/add-project-form.component';
-import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
-import { ProjectFormControls } from '@osf/shared/enums';
-import { CustomValidators } from '@osf/shared/helpers';
+import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants/default-table-params.constants';
+import { ProjectFormControls } from '@osf/shared/enums/create-project-form-controls.enum';
+import { CustomValidators } from '@osf/shared/helpers/custom-form-validators.helper';
 import { ProjectForm } from '@osf/shared/models';
 import { CreateProject, GetMyProjects, MyResourcesSelectors } from '@osf/shared/stores/my-resources';
 

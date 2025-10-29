@@ -1,11 +1,11 @@
 import {
+  AsyncStateModel,
   CollectionDetails,
   CollectionProvider,
   CollectionsFilters,
   CollectionSubmission,
   CollectionSubmissionWithGuid,
-} from '@shared/models';
-import { AsyncStateModel } from '@shared/models/store';
+} from '@osf/shared/models';
 
 export interface CollectionsStateModel {
   currentFilters: CollectionsFilters;

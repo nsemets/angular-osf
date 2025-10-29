@@ -1,6 +1,6 @@
 import { ContributorModel } from '@shared/models';
 
-import { LicensesOption } from '../license.model';
+import { LicensesOption } from '../license/license.model';
 
 export interface BaseNodeModel {
   id: string;

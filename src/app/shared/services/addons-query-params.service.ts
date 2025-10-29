@@ -1,8 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { AddonCategory, AddonTabValue, AddonType } from '../enums';
-import { addonCategoryToQueryParam, queryParamToAddonCategory } from '../helpers';
+import { AddonTabValue } from '../enums/addon-tab.enum';
+import { AddonType } from '../enums/addon-type.enum';
+import { AddonCategory } from '../enums/addons-category.enum';
+import { addonCategoryToQueryParam, queryParamToAddonCategory } from '../helpers/addons-query-params.helper';
 import { AddonsQueryParams } from '../models';
 
 @Injectable({

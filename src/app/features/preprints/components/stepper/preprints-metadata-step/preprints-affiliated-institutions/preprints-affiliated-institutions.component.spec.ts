@@ -11,7 +11,7 @@ import { InstitutionsSelectors } from '@shared/stores/institutions';
 
 import { PreprintsAffiliatedInstitutionsComponent } from './preprints-affiliated-institutions.component';
 
-import { MOCK_INSTITUTION } from '@testing/mocks';
+import { MOCK_INSTITUTION } from '@testing/mocks/institution.mock';
 import { PREPRINT_PROVIDER_DETAILS_MOCK } from '@testing/mocks/preprint-provider-details';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 import { provideMockStore } from '@testing/providers/store-provider.mock';

@@ -8,8 +8,8 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 
 import { FormSelectComponent } from '@osf/shared/components/form-select/form-select.component';
 import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
-import { InputLimits } from '@osf/shared/constants';
-import { CustomValidators } from '@osf/shared/helpers';
+import { InputLimits } from '@osf/shared/constants/input-limits.const';
+import { CustomValidators } from '@osf/shared/helpers/custom-form-validators.helper';
 
 import { MODERATION_PERMISSIONS } from '../../constants';
 import { AddModeratorType, ModeratorPermission } from '../../enums';

@@ -28,9 +28,13 @@ import { RegistrationBlocksDataComponent } from '@osf/shared/components/registra
 import { ResourceMetadataComponent } from '@osf/shared/components/resource-metadata/resource-metadata.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { ViewOnlyLinkMessageComponent } from '@osf/shared/components/view-only-link-message/view-only-link-message.component';
-import { RegistrationReviewStates, ResourceType, RevisionReviewStates, UserPermissions } from '@osf/shared/enums';
-import { hasViewOnlyParam, toCamelCase } from '@osf/shared/helpers';
-import { MapRegistryOverview } from '@osf/shared/mappers';
+import { RegistrationReviewStates } from '@osf/shared/enums/registration-review-states.enum';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
+import { RevisionReviewStates } from '@osf/shared/enums/revision-review-states.enum';
+import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
+import { toCamelCase } from '@osf/shared/helpers/camel-case';
+import { hasViewOnlyParam } from '@osf/shared/helpers/view-only.helper';
+import { MapRegistryOverview } from '@osf/shared/mappers/resource-overview.mappers';
 import { SchemaResponse, ToolbarResource } from '@osf/shared/models';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { ToastService } from '@osf/shared/services/toast.service';

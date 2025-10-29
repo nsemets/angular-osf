@@ -5,8 +5,8 @@ import { Tag } from 'primeng/tag';
 
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
-import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants';
-import { FieldType } from '@osf/shared/enums';
+import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants/input-validation-messages.const';
+import { FieldType } from '@osf/shared/enums/field-type.enum';
 import { Question } from '@osf/shared/models';
 
 @Component({

@@ -5,7 +5,7 @@ import { catchError, tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
-import { handleSectionError } from '@osf/shared/helpers';
+import { handleSectionError } from '@osf/shared/helpers/state-error.handler';
 import { Institution } from '@osf/shared/models';
 import { InstitutionsService } from '@osf/shared/services/institutions.service';
 

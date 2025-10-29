@@ -15,7 +15,7 @@ import { CollectionsModerationSelectors } from '../../store/collections-moderati
 
 import { CollectionModerationSubmissionsComponent } from './collection-moderation-submissions.component';
 
-import { MOCK_PROVIDER } from '@testing/mocks';
+import { MOCK_PROVIDER } from '@testing/mocks/provider.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';

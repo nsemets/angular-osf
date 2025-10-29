@@ -1,4 +1,4 @@
-import { getSortedContributorsByPermissions } from '@shared/helpers';
+import { getSortedContributorsByPermissions } from '@osf/shared/helpers/sort-contributors-by-permissions';
 import { ResourceModel } from '@shared/models';
 
 export function mapCreators(project: ResourceModel, currentInstitutionId: string) {

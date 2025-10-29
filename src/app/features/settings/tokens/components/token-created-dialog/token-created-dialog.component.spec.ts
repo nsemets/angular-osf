@@ -9,7 +9,7 @@ import { CopyButtonComponent } from '@osf/shared/components/copy-button/copy-but
 
 import { TokenCreatedDialogComponent } from './token-created-dialog.component';
 
-import { MOCK_TOKEN } from '@testing/mocks';
+import { MOCK_TOKEN } from '@testing/mocks/token.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 
 describe('TokenCreatedDialogComponent', () => {

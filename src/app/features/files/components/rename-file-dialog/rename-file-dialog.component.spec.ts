@@ -6,7 +6,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
-import { InputLimits } from '@osf/shared/constants';
+import { InputLimits } from '@osf/shared/constants/input-limits.const';
 
 import { RenameFileDialogComponent } from './rename-file-dialog.component';
 

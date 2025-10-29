@@ -10,7 +10,7 @@ import { ToastService } from '@osf/shared/services/toast.service';
 
 import { SupplementsStepComponent } from './supplements-step.component';
 
-import { TranslateServiceMock } from '@testing/mocks';
+import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 import { ToastServiceMock } from '@testing/providers/toast-provider.mock';

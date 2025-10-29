@@ -3,7 +3,8 @@ import {
   PreprintProviderDetailsJsonApi,
   PreprintProviderShortInfo,
 } from '@osf/features/preprints/models';
-import { Brand, BrandDataJsonApi, SubjectDataJsonApi, SubjectModel } from '@shared/models';
+import { SubjectDataJsonApi, SubjectModel } from '@osf/shared/models';
+import { BrandDataJsonApi, BrandModel } from '@osf/shared/models/brand';
 
 export class PreprintProvidersMapper {
   static fromPreprintProviderDetailsGetResponse(response: PreprintProviderDetailsJsonApi): PreprintProviderDetails {
@@ -31,12 +32,12 @@ export class PreprintProvidersMapper {
     };
   }
 
-  static parseBrand(brandRaw: BrandDataJsonApi): Brand {
+  static parseBrand(brandRaw: BrandDataJsonApi): BrandModel {
     if (!brandRaw) {
       return {
         primaryColor: 'var(--osf-provider-primary-color)',
         secondaryColor: 'var(--osf-provider-secondary-color)',
-      } as Brand;
+      } as BrandModel;
     }
 
     return {

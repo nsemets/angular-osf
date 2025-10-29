@@ -18,7 +18,8 @@ import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header
 
 import { MeetingDetailsComponent } from './meeting-details.component';
 
-import { MOCK_MEETING, MOCK_MEETING_SUBMISSIONS, MOCK_STORE } from '@testing/mocks';
+import { MOCK_MEETING, MOCK_MEETING_SUBMISSIONS } from '@testing/mocks/meeting.mock';
+import { MOCK_STORE } from '@testing/mocks/mock-store.mock';
 
 const mockActivatedRoute = {
   params: of({ id: 'test-meeting-id' }),

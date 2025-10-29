@@ -16,14 +16,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { SubmissionReviewStatus } from '@osf/features/moderation/enums';
-import { INPUT_VALIDATION_MESSAGES, InputLimits } from '@osf/shared/constants';
-import {
-  ModerationDecisionFormControls,
-  RegistrationReviewStates,
-  ReviewActionTrigger,
-  RevisionReviewStates,
-  SchemaResponseActionTrigger,
-} from '@osf/shared/enums';
+import { InputLimits } from '@osf/shared/constants/input-limits.const';
+import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants/input-validation-messages.const';
+import { ModerationDecisionFormControls } from '@osf/shared/enums/moderation-decision-form-controls.enum';
+import { RegistrationReviewStates } from '@osf/shared/enums/registration-review-states.enum';
+import { RevisionReviewStates } from '@osf/shared/enums/revision-review-states.enum';
+import { ReviewActionTrigger, SchemaResponseActionTrigger } from '@osf/shared/enums/trigger-action.enum';
 import { DateAgoPipe } from '@osf/shared/pipes';
 
 import { RegistryOverview } from '../../models';

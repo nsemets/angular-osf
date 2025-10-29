@@ -35,7 +35,7 @@ import {
 } from '@osf/features/files/store';
 import { SupportedFeature } from '@osf/shared/enums/addon-supported-features.enum';
 import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
-import { Primitive } from '@osf/shared/helpers';
+import { Primitive } from '@osf/shared/helpers/types.helper';
 import { ConfiguredAddonModel, FileLabelModel, NodeShortInfoModel, SelectOption } from '@osf/shared/models';
 
 import { SelectComponent } from '../select/select.component';

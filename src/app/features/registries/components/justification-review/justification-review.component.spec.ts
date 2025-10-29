@@ -8,7 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SchemaActionTrigger } from '@osf/features/registries/enums';
 import { RegistriesSelectors } from '@osf/features/registries/store';
 import { RegistrationBlocksDataComponent } from '@osf/shared/components/registration-blocks-data/registration-blocks-data.component';
-import { RevisionReviewStates } from '@osf/shared/enums';
+import { RevisionReviewStates } from '@osf/shared/enums/revision-review-states.enum';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { ToastService } from '@osf/shared/services/toast.service';

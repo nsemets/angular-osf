@@ -4,14 +4,15 @@ import { DialogService } from 'primeng/dynamicdialog';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ContributorPermission, ResourceType } from '@osf/shared/enums';
+import { ContributorPermission } from '@osf/shared/enums/contributors';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { RequestAccessModel } from '@osf/shared/models';
 
 import { SelectComponent } from '../../select/select.component';
 
 import { RequestAccessTableComponent } from './request-access-table.component';
 
-import { MOCK_USER } from '@testing/mocks';
+import { MOCK_USER } from '@testing/mocks/data.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 import { DialogServiceMockBuilder } from '@testing/providers/dialog-provider.mock';
 

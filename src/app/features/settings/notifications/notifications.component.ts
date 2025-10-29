@@ -13,7 +13,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angul
 import { UserSelectors } from '@core/store/user';
 import { InfoIconComponent } from '@osf/shared/components/info-icon/info-icon.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
-import { SubscriptionEvent, SubscriptionFrequency } from '@osf/shared/enums';
+import { SubscriptionEvent, SubscriptionFrequency } from '@osf/shared/enums/subscriptions';
 import { LoaderService } from '@osf/shared/services/loader.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 

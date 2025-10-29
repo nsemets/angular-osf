@@ -20,8 +20,9 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { OperationNames, StorageItemType } from '@osf/shared/enums';
-import { formatCitation, getItemUrl } from '@osf/shared/helpers';
+import { OperationNames } from '@osf/shared/enums/operation-names.enum';
+import { StorageItemType } from '@osf/shared/enums/storage-item-type.enum';
+import { formatCitation, getItemUrl } from '@osf/shared/helpers/citation-formatter.helper';
 import { CitationStyle, ConfiguredAddonModel, CustomOption, StorageItem } from '@osf/shared/models';
 import { AddonOperationInvocationService } from '@osf/shared/services/addons';
 import { CslStyleManagerService } from '@osf/shared/services/csl-style-manager.service';

@@ -17,8 +17,9 @@ import { CustomPaginatorComponent } from '@osf/shared/components/custom-paginato
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { SelectComponent } from '@osf/shared/components/select/select.component';
-import { RegistrationReviewStates, RevisionReviewStates } from '@osf/shared/enums';
-import { Primitive } from '@osf/shared/helpers';
+import { RegistrationReviewStates } from '@osf/shared/enums/registration-review-states.enum';
+import { RevisionReviewStates } from '@osf/shared/enums/revision-review-states.enum';
+import { Primitive } from '@osf/shared/helpers/types.helper';
 
 import { REGISTRY_SORT_OPTIONS, SUBMITTED_SUBMISSION_REVIEW_OPTIONS } from '../../constants';
 import { RegistrySort, SubmissionReviewStatus } from '../../enums';
