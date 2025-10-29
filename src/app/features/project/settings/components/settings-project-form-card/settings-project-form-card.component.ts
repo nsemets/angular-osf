@@ -25,6 +25,7 @@ export class SettingsProjectFormCardComponent {
   projectDetails = input.required<NodeDetailsModel>();
   submitForm = output<ProjectDetailsModel>();
   deleteProject = output<void>();
+  canDelete = input<boolean>(false);
 
   readonly ProjectFormControls = ProjectFormControls;
   readonly inputLimits = InputLimits;
