@@ -39,6 +39,7 @@ import { GetPreprintProviderById, PreprintProvidersSelectors } from '@osf/featur
 import { CreateNewVersion, PreprintStepperSelectors } from '@osf/features/preprints/store/preprint-stepper';
 import { pathJoin } from '@osf/shared/helpers';
 import { ReviewPermissions } from '@shared/enums';
+import { FixSpecialCharPipe } from '@shared/pipes';
 import { CustomDialogService, MetaTagsService, ToastService } from '@shared/services';
 import { AnalyticsService } from '@shared/services/analytics.service';
 import { DataciteService } from '@shared/services/datacite/datacite.service';
@@ -76,6 +77,7 @@ import { PreprintRequestMachineState, ProviderReviewsWorkflow, ReviewsState } fr
     PreprintMakeDecisionComponent,
     PreprintMetricsInfoComponent,
     RouterLink,
+    FixSpecialCharPipe,
   ],
   templateUrl: './preprint-details.component.html',
   styleUrl: './preprint-details.component.scss',

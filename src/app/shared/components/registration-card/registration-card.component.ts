@@ -14,6 +14,7 @@ import { Router, RouterLink } from '@angular/router';
 import { CreateSchemaResponse, FetchAllSchemaResponses, RegistriesSelectors } from '@osf/features/registries/store';
 import { RegistrationReviewStates, RevisionReviewStates, UserPermissions } from '@osf/shared/enums';
 import { RegistrationCard } from '@osf/shared/models';
+import { FixSpecialCharPipe } from '@shared/pipes';
 
 import { ContributorsListComponent } from '../contributors-list/contributors-list.component';
 import { DataResourcesComponent } from '../data-resources/data-resources.component';
@@ -34,6 +35,7 @@ import { TruncatedTextComponent } from '../truncated-text/truncated-text.compone
     IconComponent,
     TruncatedTextComponent,
     ContributorsListComponent,
+    FixSpecialCharPipe,
   ],
   templateUrl: './registration-card.component.html',
   styleUrl: './registration-card.component.scss',

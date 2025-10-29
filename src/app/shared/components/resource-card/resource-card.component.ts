@@ -17,6 +17,7 @@ import { getSortedContributorsByPermissions, IS_XSMALL } from '@osf/shared/helpe
 import { ResourceModel, UserRelatedCounts } from '@osf/shared/models';
 import { ResourceCardService } from '@osf/shared/services';
 import { StopPropagationDirective } from '@shared/directives';
+import { FixSpecialCharPipe } from '@shared/pipes';
 
 import { DataResourcesComponent } from '../data-resources/data-resources.component';
 
@@ -44,6 +45,7 @@ import { UserSecondaryMetadataComponent } from './components/user-secondary-meta
     PreprintSecondaryMetadataComponent,
     FileSecondaryMetadataComponent,
     StopPropagationDirective,
+    FixSpecialCharPipe,
   ],
   templateUrl: './resource-card.component.html',
   styleUrl: './resource-card.component.scss',

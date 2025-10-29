@@ -28,6 +28,7 @@ import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants';
 import { SortOrder } from '@osf/shared/enums';
 import { parseQueryFilterParams } from '@osf/shared/helpers';
 import { QueryParams, SearchFilters, TableParameters } from '@osf/shared/models';
+import { FixSpecialCharPipe } from '@shared/pipes';
 
 import { PreprintShortInfo } from '../../models';
 import { FetchMyPreprints, MyPreprintsSelectors } from '../../store/my-preprints';
@@ -43,6 +44,7 @@ import { FetchMyPreprints, MyPreprintsSelectors } from '../../store/my-preprints
     DatePipe,
     ListInfoShortenerComponent,
     TitleCasePipe,
+    FixSpecialCharPipe,
   ],
   templateUrl: './my-preprints.component.html',
   styleUrl: './my-preprints.component.scss',
