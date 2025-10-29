@@ -1,5 +1,5 @@
 import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
-import { IdName } from '@shared/models/common/id-name.model';
+import { IdNameModel } from '@shared/models/common/id-name.model';
 import { Institution } from '@shared/models/institutions/institutions.models';
 
 export interface NodeDetailsModel {
@@ -7,7 +7,7 @@ export interface NodeDetailsModel {
   title: string;
   description: string;
   isPublic: boolean;
-  region: IdName | null;
+  region: IdNameModel | null;
   affiliatedInstitutions: Institution[];
   currentUserPermissions: UserPermissions[];
   rootId?: string;

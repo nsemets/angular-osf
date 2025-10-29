@@ -5,7 +5,7 @@ import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
 import { IdTypeModel } from '@shared/models/common/id-type.model';
 import { MetaAnonymousJsonApi } from '@shared/models/common/json-api.model';
 import { ContributorModel } from '@shared/models/contributors/contributor.model';
-import { Identifier } from '@shared/models/identifiers/identifier.model';
+import { IdentifierModel } from '@shared/models/identifiers/identifier.model';
 import { LicenseModel, LicensesOption } from '@shared/models/license/license.model';
 import { ProviderShortInfoModel } from '@shared/models/provider/provider.model';
 import { RegistrationNodeModel, RegistrationResponses } from '@shared/models/registration/registration-node.model';
@@ -34,7 +34,7 @@ export interface RegistryOverview {
   nodeLicense?: LicensesOption;
   license?: LicenseModel;
   licenseUrl?: string;
-  identifiers?: Identifier[];
+  identifiers?: IdentifierModel[];
   analyticsKey: string;
   currentUserCanComment: boolean;
   currentUserPermissions: UserPermissions[];
@@ -73,7 +73,7 @@ export interface RegistrationOverviewModel extends RegistrationNodeModel {
   provider?: ProviderShortInfoModel;
   contributors: ContributorModel[];
   license?: LicenseModel;
-  identifiers?: Identifier[];
+  identifiers?: IdentifierModel[];
   schemaResponses: SchemaResponse[];
   status: RegistryStatus;
 }

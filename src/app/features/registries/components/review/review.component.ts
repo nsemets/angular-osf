@@ -21,6 +21,7 @@ import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants/input-validatio
 import { FieldType } from '@osf/shared/enums/field-type.enum';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
+import { FixSpecialCharPipe } from '@osf/shared/pipes/fix-special-char.pipe';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { ToastService } from '@osf/shared/services/toast.service';
@@ -31,7 +32,6 @@ import {
   ResetContributorsState,
 } from '@osf/shared/stores/contributors';
 import { FetchSelectedSubjects, SubjectsSelectors } from '@osf/shared/stores/subjects';
-import { FixSpecialCharPipe } from '@shared/pipes';
 
 import {
   ClearState,

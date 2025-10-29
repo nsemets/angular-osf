@@ -1,4 +1,4 @@
-import { IdName } from '@osf/shared/models/common/id-name.model';
+import { IdNameModel } from '@osf/shared/models/common/id-name.model';
 
 import { PreprintRequestMachineState, PreprintRequestType } from '../enums';
 
@@ -8,5 +8,5 @@ export interface PreprintRequest {
   machineState: PreprintRequestMachineState;
   requestType: PreprintRequestType;
   dateLastTransitioned: Date;
-  creator: IdName;
+  creator: IdNameModel;
 }

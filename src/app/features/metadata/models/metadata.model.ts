@@ -1,5 +1,5 @@
 import { UserPermissions } from '@shared/enums/user-permissions.enum';
-import { Identifier } from '@shared/models/identifiers/identifier.model';
+import { IdentifierModel } from '@shared/models/identifiers/identifier.model';
 import { Institution } from '@shared/models/institutions/institutions.models';
 import { LicenseModel } from '@shared/models/license/license.model';
 
@@ -15,7 +15,7 @@ export interface MetadataModel {
   category?: string;
   dateCreated: string;
   dateModified: string;
-  identifiers: Identifier[];
+  identifiers: IdentifierModel[];
   affiliatedInstitutions?: Institution[];
   provider?: string;
   nodeLicense?: {

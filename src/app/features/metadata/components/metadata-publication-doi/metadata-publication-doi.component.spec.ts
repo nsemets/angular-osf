@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Identifier } from '@shared/models/identifiers/identifier.model';
+import { IdentifierModel } from '@shared/models/identifiers/identifier.model';
 
 import { MetadataPublicationDoiComponent } from './metadata-publication-doi.component';
 
@@ -11,7 +11,7 @@ describe('MetadataPublicationDoiComponent', () => {
   let component: MetadataPublicationDoiComponent;
   let fixture: ComponentFixture<MetadataPublicationDoiComponent>;
 
-  const mockIdentifiers: Identifier = MOCK_PROJECT_IDENTIFIERS;
+  const mockIdentifiers: IdentifierModel = MOCK_PROJECT_IDENTIFIERS;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

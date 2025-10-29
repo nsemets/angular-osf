@@ -12,7 +12,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { FILTER_PLACEHOLDERS } from '@osf/shared/constants/filter-placeholders';
-import { DiscoverableFilter, FilterOperator, FilterOption } from '@shared/models/search/discaverable-filter.model';
+import {
+  DiscoverableFilter,
+  FilterOperatorOption,
+  FilterOption,
+} from '@shared/models/search/discaverable-filter.model';
 
 import { GenericFilterComponent } from '../generic-filter/generic-filter.component';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
@@ -81,7 +85,7 @@ export class SearchFiltersComponent {
     const groupedFilters: DiscoverableFilter[] = [];
 
     filters.forEach((filter) => {
-      if (filter.operator === FilterOperator.IsPresent) {
+      if (filter.operator === FilterOperatorOption.IsPresent) {
         groupedFilters.push(filter);
       } else {
         individualFilters.push(filter);

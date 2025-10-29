@@ -6,7 +6,7 @@ import { inject, Injectable } from '@angular/core';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 
 import { RegionsMapper } from '../mappers/regions';
-import { IdName } from '../models/common/id-name.model';
+import { IdNameModel } from '../models/common/id-name.model';
 import { RegionsResponseJsonApi } from '../models/regions/regions.json-api.model';
 
 @Injectable({
@@ -20,7 +20,7 @@ export class RegionsService {
     return `${this.environment.apiDomainUrl}/v2`;
   }
 
-  getAllRegions(): Observable<IdName[]> {
+  getAllRegions(): Observable<IdNameModel[]> {
     return this.http
       .get<RegionsResponseJsonApi>(`${this.apiUrl}/regions/`)
       .pipe(map((regions) => RegionsMapper.fromRegionsResponseJsonApi(regions)));

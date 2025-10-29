@@ -4,7 +4,7 @@ import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { FilterOperator, FilterOption } from '@osf/shared/models/search/discaverable-filter.model';
+import { FilterOperatorOption, FilterOption } from '@osf/shared/models/search/discaverable-filter.model';
 
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 
@@ -47,7 +47,7 @@ describe('GenericFilterComponent', () => {
       expect(component.isSearchLoading()).toBe(false);
       expect(component.selectedOptions()).toEqual([]);
       expect(component.placeholder()).toBe('');
-      expect(component.filterOperator()).toBe(FilterOperator.AnyOf);
+      expect(component.filterOperator()).toBe(FilterOperatorOption.AnyOf);
     });
 
     it('should accept options input', () => {
@@ -72,10 +72,10 @@ describe('GenericFilterComponent', () => {
     });
 
     it('should accept filterOperator input', () => {
-      componentRef.setInput('filterOperator', FilterOperator.Date);
+      componentRef.setInput('filterOperator', FilterOperatorOption.Date);
       fixture.detectChanges();
 
-      expect(component.filterOperator()).toBe(FilterOperator.Date);
+      expect(component.filterOperator()).toBe(FilterOperatorOption.Date);
     });
 
     it('should accept selectedOptions input', () => {

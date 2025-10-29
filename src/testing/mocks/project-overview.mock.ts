@@ -1,5 +1,5 @@
 import { ProjectOverview } from '@osf/features/project/overview/models';
-import { Identifier } from '@osf/shared/models/identifiers/identifier.model';
+import { IdentifierModel } from '@osf/shared/models/identifiers/identifier.model';
 
 export const MOCK_PROJECT_AFFILIATED_INSTITUTIONS = [
   {
@@ -25,7 +25,7 @@ export const MOCK_PROJECT_AFFILIATED_INSTITUTIONS = [
   },
 ];
 
-export const MOCK_PROJECT_IDENTIFIERS: Identifier = {
+export const MOCK_PROJECT_IDENTIFIERS: IdentifierModel = {
   id: 'identifier-1',
   type: 'identifiers',
   category: 'doi',

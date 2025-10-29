@@ -1,6 +1,6 @@
 import { IdTypeModel } from './common/id-type.model';
 import { ContributorModel } from './contributors/contributor.model';
-import { Identifier } from './identifiers/identifier.model';
+import { IdentifierModel } from './identifiers/identifier.model';
 import { Institution } from './institutions/institutions.models';
 import { LicensesOption } from './license/license.model';
 import { SubjectModel } from './subject/subject.model';
@@ -33,7 +33,7 @@ export interface ResourceOverview {
     storageLimitStatus: string;
     storageUsage: string;
   };
-  identifiers?: Identifier[];
+  identifiers?: IdentifierModel[];
   supplements?: {
     id: string;
     type: string;

@@ -5,7 +5,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
-import { Identifier } from '@osf/shared/models/identifiers/identifier.model';
+import { IdentifierModel } from '@osf/shared/models/identifiers/identifier.model';
 import { LicenseOptions } from '@osf/shared/models/license/license.model';
 import { BaseNodeAttributesJsonApi } from '@osf/shared/models/nodes/base-node-attributes-json-api.model';
 import { JsonApiService } from '@osf/shared/services/json-api.service';
@@ -62,7 +62,7 @@ export class MetadataService {
       .pipe(map((response) => MetadataMapper.fromCustomMetadataApiResponse(response)));
   }
 
-  createDoi(resourceId: string, resourceType: ResourceType): Observable<Identifier> {
+  createDoi(resourceId: string, resourceType: ResourceType): Observable<IdentifierModel> {
     const payload = {
       data: {
         type: 'identifiers',

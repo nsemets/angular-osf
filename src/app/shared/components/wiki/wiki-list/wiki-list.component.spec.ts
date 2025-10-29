@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
-import { ComponentWiki, Wiki } from '@shared/models/wiki/wiki.model';
+import { ComponentWiki, WikiModel } from '@shared/models/wiki/wiki.model';
 import { WikiItemType } from '@shared/models/wiki/wiki-type.model';
 
 import { WikiListComponent } from './wiki-list.component';
@@ -22,7 +22,7 @@ describe('WikiListComponent', () => {
   let mockCustomConfirmationService: ReturnType<CustomConfirmationServiceMockBuilder['build']>;
   let mockRouter: ReturnType<RouterMockBuilder['build']>;
 
-  const mockWikiList: Wiki[] = [
+  const mockWikiList: WikiModel[] = [
     { id: 'wiki1', name: 'Home', kind: 'Home content' },
     { id: 'wiki2', name: 'Getting Started', kind: 'Getting started content' },
     { id: 'wiki3', name: 'API Documentation', kind: 'API docs' },

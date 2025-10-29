@@ -10,9 +10,9 @@ import {
   ComponentsWikiJsonApiResponse,
   ComponentWiki,
   HomeWikiJsonApiResponse,
-  Wiki,
   WikiGetResponse,
   WikiJsonApiResponseWithMeta,
+  WikiModel,
   WikisWithMeta,
   WikiVersion,
   WikiVersionJsonApiResponse,
@@ -50,7 +50,7 @@ export class WikiService {
     return `${this.apiUrl}/${resourcePath}/${resourceId}/wikis/`;
   }
 
-  createWiki(projectId: string, name: string): Observable<Wiki> {
+  createWiki(projectId: string, name: string): Observable<WikiModel> {
     const body = {
       data: {
         type: 'wikis',

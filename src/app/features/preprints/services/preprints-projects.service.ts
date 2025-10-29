@@ -4,7 +4,7 @@ import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { Primitive, StringOrNull } from '@osf/shared/helpers/types.helper';
-import { IdName } from '@osf/shared/models/common/id-name.model';
+import { IdNameModel } from '@osf/shared/models/common/id-name.model';
 import { ApiData } from '@osf/shared/models/common/json-api.model';
 import {
   CreateProjectPayloadJsoApi,
@@ -32,7 +32,7 @@ export class PreprintsProjectsService {
     return `${this.environment.apiDomainUrl}/v2`;
   }
 
-  getAvailableProjects(searchTerm: StringOrNull): Observable<IdName[]> {
+  getAvailableProjects(searchTerm: StringOrNull): Observable<IdNameModel[]> {
     const params: Record<string, Primitive> = {};
     params['page'] = 1;
 
@@ -50,7 +50,7 @@ export class PreprintsProjectsService {
     );
   }
 
-  getProjectById(projectId: string): Observable<IdName> {
+  getProjectById(projectId: string): Observable<IdNameModel> {
     return this.jsonApiService.get<NodeResponseJsonApi>(`${this.apiUrl}/nodes/${projectId}/`).pipe(
       map((response) => {
         return {
@@ -96,7 +96,7 @@ export class PreprintsProjectsService {
     templateFrom: string,
     regionId: string,
     affiliationsId: string[]
-  ): Observable<IdName> {
+  ): Observable<IdNameModel> {
     const payload: CreateProjectPayloadJsoApi = {
       data: {
         type: 'nodes',

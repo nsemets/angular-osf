@@ -2,7 +2,11 @@ import { MockComponents } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DiscoverableFilter, FilterOperator, FilterOption } from '@osf/shared/models/search/discaverable-filter.model';
+import {
+  DiscoverableFilter,
+  FilterOperatorOption,
+  FilterOption,
+} from '@osf/shared/models/search/discaverable-filter.model';
 import { FILTER_PLACEHOLDERS } from '@shared/constants/filter-placeholders';
 
 import { GenericFilterComponent } from '../generic-filter/generic-filter.component';
@@ -20,7 +24,7 @@ describe('SearchFiltersComponent', () => {
     {
       key: 'subject',
       label: 'Subject',
-      operator: FilterOperator.IsPresent,
+      operator: FilterOperatorOption.IsPresent,
       resultCount: 150,
       options: [
         { label: 'Psychology', value: 'psychology', cardSearchResultCount: 10 },
@@ -30,7 +34,7 @@ describe('SearchFiltersComponent', () => {
     {
       key: 'resourceType',
       label: 'Resource Type',
-      operator: FilterOperator.IsPresent,
+      operator: FilterOperatorOption.IsPresent,
       resultCount: 100,
       options: [
         { label: 'Project', value: 'project', cardSearchResultCount: 50 },
@@ -40,7 +44,7 @@ describe('SearchFiltersComponent', () => {
     {
       key: 'hasData',
       label: 'Has Data',
-      operator: FilterOperator.IsPresent,
+      operator: FilterOperatorOption.IsPresent,
       resultCount: 75,
     },
   ];
@@ -99,11 +103,11 @@ describe('SearchFiltersComponent', () => {
   it('should filter out invalid filters in visibleFilters', () => {
     const filtersWithInvalid = [
       ...mockFilters,
-      { key: '', label: 'Invalid', operator: FilterOperator.IsPresent } as DiscoverableFilter,
+      { key: '', label: 'Invalid', operator: FilterOperatorOption.IsPresent } as DiscoverableFilter,
       {
         key: 'noCount',
         label: 'No Count',
-        operator: FilterOperator.IsPresent,
+        operator: FilterOperatorOption.IsPresent,
         resultCount: 0,
         options: [],
       } as DiscoverableFilter,
@@ -125,7 +129,7 @@ describe('SearchFiltersComponent', () => {
 
     expect(splitFilters.individual.length).toBe(0);
     expect(splitFilters.grouped.length).toBe(3);
-    expect(splitFilters.grouped[0].operator).toBe(FilterOperator.IsPresent);
+    expect(splitFilters.grouped[0].operator).toBe(FilterOperatorOption.IsPresent);
   });
 
   it('should compute selectedOptionValues from selectedOptions', () => {

@@ -7,7 +7,7 @@ import { inject, Injectable } from '@angular/core';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { getResourceTypeStringFromEnum } from '@osf/shared/helpers/get-resource-types.helper';
 import { GlobalSearchService } from '@osf/shared/services/global-search.service';
-import { FilterOperator } from '@shared/models/search/discaverable-filter.model';
+import { FilterOperatorOption } from '@shared/models/search/discaverable-filter.model';
 import { ResourcesData } from '@shared/models/search/resource.model';
 
 import {
@@ -304,7 +304,7 @@ export class GlobalSearchState {
 
       const firstOptionValue = options[0]?.value;
       const isOptionValueBoolean = firstOptionValue === 'true' || firstOptionValue === 'false';
-      if (filter?.operator === FilterOperator.IsPresent || isOptionValueBoolean) {
+      if (filter?.operator === FilterOperatorOption.IsPresent || isOptionValueBoolean) {
         if (firstOptionValue) {
           filtersParams[`cardSearchFilter[${key}][is-present]`] = firstOptionValue;
         }

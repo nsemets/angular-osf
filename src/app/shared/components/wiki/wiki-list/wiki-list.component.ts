@@ -8,7 +8,7 @@ import { Skeleton } from 'primeng/skeleton';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Wiki } from '@osf/shared/models/wiki/wiki.model';
+import { WikiModel } from '@osf/shared/models/wiki/wiki.model';
 import { WikiMenuItem } from '@osf/shared/models/wiki/wiki-menu.model';
 import { WikiItemType } from '@osf/shared/models/wiki/wiki-type.model';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
@@ -25,7 +25,7 @@ import { AddWikiDialogComponent } from '../add-wiki-dialog/add-wiki-dialog.compo
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WikiListComponent {
-  readonly list = input.required<Wiki[]>();
+  readonly list = input.required<WikiModel[]>();
   readonly resourceId = input.required<string>();
   readonly currentWikiId = input.required<string>();
   readonly componentsList = input.required<ComponentWiki[]>();

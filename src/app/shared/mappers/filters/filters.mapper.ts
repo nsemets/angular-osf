@@ -1,4 +1,4 @@
-import { DiscoverableFilter, FilterOperator } from '@osf/shared/models/search/discaverable-filter.model';
+import { DiscoverableFilter, FilterOperatorOption } from '@osf/shared/models/search/discaverable-filter.model';
 import {
   IndexCardSearchResponseJsonApi,
   RelatedPropertyPathDataJsonApi,
@@ -20,7 +20,7 @@ export function MapFilters(indexCardSearchResponseJsonApi: IndexCardSearchRespon
 
 export function RelatedPropertyPathMapper(relatedPropertyPath: RelatedPropertyPathDataJsonApi): DiscoverableFilter {
   const key = relatedPropertyPath.attributes.propertyPathKey;
-  const operator = relatedPropertyPath.attributes.suggestedFilterOperator as FilterOperator;
+  const operator = relatedPropertyPath.attributes.suggestedFilterOperator as FilterOperatorOption;
   const propertyPath = relatedPropertyPath.attributes.propertyPath?.at(-1);
 
   const label = propertyPath?.displayLabel?.[0]?.['@value'] ?? key;
