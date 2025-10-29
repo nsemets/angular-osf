@@ -21,12 +21,17 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
-import { SubHeaderComponent } from '@osf/shared/components';
-import { StorageItemSelectorComponent } from '@osf/shared/components/addons';
-import { AddonServiceNames, AddonType, OperationNames } from '@osf/shared/enums';
-import { getAddonTypeString } from '@osf/shared/helpers';
-import { AddonModel, ConfiguredAddonModel } from '@osf/shared/models';
-import { AddonFormService, AddonOperationInvocationService, ToastService } from '@osf/shared/services';
+import { StorageItemSelectorComponent } from '@osf/shared/components/addons/storage-item-selector/storage-item-selector.component';
+import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
+import { AddonServiceNames } from '@osf/shared/enums/addon-service-names.enum';
+import { AddonType } from '@osf/shared/enums/addon-type.enum';
+import { OperationNames } from '@osf/shared/enums/operation-names.enum';
+import { getAddonTypeString } from '@osf/shared/helpers/addon-type.helper';
+import { AddonModel } from '@osf/shared/models/addons/addon.model';
+import { ConfiguredAddonModel } from '@osf/shared/models/addons/configured-addon.model';
+import { AddonFormService } from '@osf/shared/services/addons/addon-form.service';
+import { AddonOperationInvocationService } from '@osf/shared/services/addons/addon-operation-invocation.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 import {
   AddonsSelectors,
   ClearOperationInvocations,

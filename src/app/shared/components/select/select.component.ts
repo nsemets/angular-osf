@@ -5,9 +5,9 @@ import { Select } from 'primeng/select';
 import { ChangeDetectionStrategy, Component, input, model, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { Primitive } from '@osf/shared/helpers';
-import { SelectOption } from '@osf/shared/models';
-import { FixSpecialCharPipe } from '@shared/pipes';
+import { Primitive } from '@osf/shared/helpers/types.helper';
+import { SelectOption } from '@osf/shared/models/select-option.model';
+import { FixSpecialCharPipe } from '@osf/shared/pipes/fix-special-char.pipe';
 
 @Component({
   selector: 'osf-select',

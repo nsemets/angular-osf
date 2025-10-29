@@ -5,9 +5,11 @@ import { Button } from 'primeng/button';
 
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
-import { ContributorsListComponent, IconComponent, TruncatedTextComponent } from '@osf/shared/components';
-import { StopPropagationDirective } from '@osf/shared/directives';
-import { DateAgoPipe } from '@osf/shared/pipes';
+import { ContributorsListComponent } from '@osf/shared/components/contributors-list/contributors-list.component';
+import { IconComponent } from '@osf/shared/components/icon/icon.component';
+import { TruncatedTextComponent } from '@osf/shared/components/truncated-text/truncated-text.component';
+import { StopPropagationDirective } from '@osf/shared/directives/stop-propagation.directive';
+import { DateAgoPipe } from '@osf/shared/pipes/date-ago.pipe';
 
 import { PREPRINT_ACTION_LABEL, ReviewStatusIcon } from '../../constants';
 import { ActionStatus, SubmissionReviewStatus } from '../../enums';

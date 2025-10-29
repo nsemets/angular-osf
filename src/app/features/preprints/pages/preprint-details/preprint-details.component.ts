@@ -27,23 +27,16 @@ import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { HelpScoutService } from '@core/services/help-scout.service';
 import { ClearCurrentProvider } from '@core/store/provider';
 import { UserSelectors } from '@core/store/user';
-import {
-  FetchPreprintById,
-  FetchPreprintRequestActions,
-  FetchPreprintRequests,
-  FetchPreprintReviewActions,
-  PreprintSelectors,
-  ResetState,
-} from '@osf/features/preprints/store/preprint';
-import { GetPreprintProviderById, PreprintProvidersSelectors } from '@osf/features/preprints/store/preprint-providers';
-import { CreateNewVersion, PreprintStepperSelectors } from '@osf/features/preprints/store/preprint-stepper';
-import { pathJoin } from '@osf/shared/helpers';
-import { ReviewPermissions } from '@shared/enums';
-import { FixSpecialCharPipe } from '@shared/pipes';
-import { CustomDialogService, MetaTagsService, ToastService } from '@shared/services';
-import { AnalyticsService } from '@shared/services/analytics.service';
-import { DataciteService } from '@shared/services/datacite/datacite.service';
-import { ContributorsSelectors } from '@shared/stores/contributors';
+import { ResetState } from '@osf/features/files/store';
+import { ReviewPermissions } from '@osf/shared/enums/review-permissions.enum';
+import { pathJoin } from '@osf/shared/helpers/path-join.helper';
+import { FixSpecialCharPipe } from '@osf/shared/pipes/fix-special-char.pipe';
+import { AnalyticsService } from '@osf/shared/services/analytics.service';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
+import { DataciteService } from '@osf/shared/services/datacite/datacite.service';
+import { MetaTagsService } from '@osf/shared/services/meta-tags.service';
+import { ToastService } from '@osf/shared/services/toast.service';
+import { ContributorsSelectors } from '@osf/shared/stores/contributors';
 
 import {
   AdditionalInfoComponent,
@@ -53,12 +46,21 @@ import {
   PreprintMakeDecisionComponent,
   PreprintMetricsInfoComponent,
   PreprintTombstoneComponent,
+  PreprintWarningBannerComponent,
   ShareAndDownloadComponent,
   StatusBannerComponent,
   WithdrawDialogComponent,
 } from '../../components';
-import { PreprintWarningBannerComponent } from '../../components/preprint-details/preprint-warning-banner/preprint-warning-banner.component';
 import { PreprintRequestMachineState, ProviderReviewsWorkflow, ReviewsState } from '../../enums';
+import {
+  FetchPreprintById,
+  FetchPreprintRequestActions,
+  FetchPreprintRequests,
+  FetchPreprintReviewActions,
+  PreprintSelectors,
+} from '../../store/preprint';
+import { GetPreprintProviderById, PreprintProvidersSelectors } from '../../store/preprint-providers';
+import { CreateNewVersion, PreprintStepperSelectors } from '../../store/preprint-stepper';
 
 @Component({
   selector: 'osf-preprint-details',

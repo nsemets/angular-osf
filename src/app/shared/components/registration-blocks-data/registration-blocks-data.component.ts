@@ -5,10 +5,10 @@ import { Tag } from 'primeng/tag';
 
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
-import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants';
-import { FieldType } from '@osf/shared/enums';
-import { Question } from '@osf/shared/models';
-import { FixSpecialCharPipe } from '@shared/pipes';
+import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants/input-validation-messages.const';
+import { FieldType } from '@osf/shared/enums/field-type.enum';
+import { Question } from '@osf/shared/models/registration/page-schema.model';
+import { FixSpecialCharPipe } from '@osf/shared/pipes/fix-special-char.pipe';
 
 @Component({
   selector: 'osf-registration-blocks-data',

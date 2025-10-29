@@ -5,18 +5,20 @@ import { MockComponents, MockProvider } from 'ng-mocks';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { PreprintSubmissionItemComponent } from '@osf/features/moderation/components';
-import { PreprintSubmissionModel } from '@osf/features/moderation/models';
-import { CustomPaginatorComponent, IconComponent, LoadingSpinnerComponent, SelectComponent } from '@shared/components';
+import { CustomPaginatorComponent } from '@osf/shared/components/custom-paginator/custom-paginator.component';
+import { IconComponent } from '@osf/shared/components/icon/icon.component';
+import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
+import { SelectComponent } from '@osf/shared/components/select/select.component';
 
 import { PreprintSubmissionsSort, SubmissionReviewStatus } from '../../enums';
+import { PreprintSubmissionModel } from '../../models';
 import {
   GetPreprintSubmissionContributors,
   LoadMorePreprintSubmissionContributors,
   PreprintModerationSelectors,
 } from '../../store/preprint-moderation';
-
-import { PreprintSubmissionsComponent } from './preprint-submissions.component';
+import { PreprintSubmissionItemComponent } from '../preprint-submission-item/preprint-submission-item.component';
+import { PreprintSubmissionsComponent } from '..';
 
 import { MOCK_PREPRINT_SUBMISSIONS } from '@testing/mocks/preprint-submission.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
