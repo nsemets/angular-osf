@@ -111,6 +111,7 @@ export class FilesTreeComponent implements OnDestroy, AfterViewInit {
   readonly resourceMetadata = select(CurrentResourceSelectors.getCurrentResource);
 
   foldersStack: FileFolderModel[] = [];
+  lastSelectedFile: FileModel | null = null;
   itemsPerPage = 10;
   virtualScrollItemSize = 46;
 
@@ -437,7 +438,24 @@ export class FilesTreeComponent implements OnDestroy, AfterViewInit {
   }
 
   onNodeSelect(event: TreeNodeSelectEvent) {
-    this.selectFile.emit(event.node as FileModel);
+    const files = this.files();
+    const selectedNode = event.node as FileModel;
+    if ((event.originalEvent as PointerEvent).shiftKey && this.lastSelectedFile) {
+      const lastIndex = files.indexOf(this.lastSelectedFile);
+      const currentIndex = files.indexOf(selectedNode);
+      if (lastIndex == currentIndex) {
+        return;
+      }
+
+      const start = Math.min(lastIndex, currentIndex);
+      const end = Math.max(lastIndex, currentIndex);
+
+      for (const file of files.slice(start, end)) {
+        this.selectFile.emit(file);
+      }
+    }
+    this.selectFile.emit(selectedNode);
+    this.lastSelectedFile = selectedNode;
   }
 
   onNodeUnselect(event: TreeNodeSelectEvent) {
