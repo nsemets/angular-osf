@@ -1,4 +1,5 @@
-import { AsyncStateModel, IdName } from '@shared/models';
+import { IdName } from '@osf/shared/models/common/id-name.model';
+import { AsyncStateModel } from '@osf/shared/models/store/async-state.model';
 
 export interface RegionsStateModel {
   regions: AsyncStateModel<IdName[]>;

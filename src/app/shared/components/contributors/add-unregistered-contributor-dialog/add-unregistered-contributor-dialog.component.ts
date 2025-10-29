@@ -7,9 +7,12 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { InputLimits } from '@osf/shared/constants/input-limits.const';
-import { AddContributorType, ContributorPermission } from '@osf/shared/enums/contributors';
+import { AddContributorType } from '@osf/shared/enums/contributors/add-contributor-type.enum';
+import { ContributorPermission } from '@osf/shared/enums/contributors/contributor-permission.enum';
 import { CustomValidators } from '@osf/shared/helpers/custom-form-validators.helper';
-import { ContributorAddModel, ContributorDialogAddModel, UnregisteredContributorForm } from '@osf/shared/models';
+import { ContributorAddModel } from '@shared/models/contributors/contributor-add.model';
+import { ContributorDialogAddModel } from '@shared/models/contributors/contributor-dialog-add.model';
+import { UnregisteredContributorForm } from '@shared/models/contributors/unregistered-contributor-form.model';
 
 import { TextInputComponent } from '../../text-input/text-input.component';
 

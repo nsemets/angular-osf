@@ -10,8 +10,8 @@ import { ChangeDetectionStrategy, Component, inject, OnInit, signal, viewChild }
 import { MetadataModel } from '@osf/features/metadata/models';
 import { LicenseComponent } from '@osf/shared/components/license/license.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
-import { LicenseModel, LicenseOptions } from '@shared/models';
-import { LicensesSelectors, LoadAllLicenses } from '@shared/stores/licenses';
+import { LicenseModel, LicenseOptions } from '@osf/shared/models/license/license.model';
+import { LicensesSelectors, LoadAllLicenses } from '@osf/shared/stores/licenses';
 
 @Component({
   selector: 'osf-license-dialog',

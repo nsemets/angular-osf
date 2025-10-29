@@ -2,8 +2,8 @@ import { MockComponents } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { DiscoverableFilter, FilterOperator, FilterOption } from '@osf/shared/models/search/discaverable-filter.model';
 import { FILTER_PLACEHOLDERS } from '@shared/constants/filter-placeholders';
-import { DiscoverableFilter, FilterOperator, FilterOption } from '@shared/models';
 
 import { GenericFilterComponent } from '../generic-filter/generic-filter.component';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';

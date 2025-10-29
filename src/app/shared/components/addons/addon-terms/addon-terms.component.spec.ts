@@ -2,8 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ADDON_TERMS } from '@osf/shared/constants/addon-terms.const';
 import { isCitationAddon } from '@osf/shared/helpers/addon-type.helper';
-import { AddonTermsComponent } from '@shared/components/addons';
-import { AddonModel, AddonTerm } from '@shared/models';
+import { AddonModel } from '@osf/shared/models/addons/addon.model';
+import { AddonTerm } from '@osf/shared/models/addons/addon-utils.models';
+
+import { AddonTermsComponent } from './addon-terms.component';
 
 import { MOCK_ADDON } from '@testing/mocks/addon.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';

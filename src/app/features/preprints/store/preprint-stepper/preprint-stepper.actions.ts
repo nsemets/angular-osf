@@ -1,5 +1,7 @@
 import { StringOrNull } from '@osf/shared/helpers/types.helper';
-import { FileFolderModel, FileModel, LicenseOptions } from '@osf/shared/models';
+import { FileModel } from '@osf/shared/models/files/file.model';
+import { FileFolderModel } from '@osf/shared/models/files/file-folder.model';
+import { LicenseOptions } from '@osf/shared/models/license/license.model';
 
 import { PreprintFileSource } from '../../enums';
 import { PreprintModel } from '../../models';

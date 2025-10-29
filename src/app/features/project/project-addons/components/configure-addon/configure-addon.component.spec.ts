@@ -10,7 +10,7 @@ import { HttpTestingController } from '@angular/common/http/testing';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { StorageItemSelectorComponent } from '@osf/shared/components/addons';
+import { StorageItemSelectorComponent } from '@osf/shared/components/addons/storage-item-selector/storage-item-selector.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { AddonsState } from '@osf/shared/stores/addons';
 

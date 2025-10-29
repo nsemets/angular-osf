@@ -4,7 +4,9 @@ import { ENVIRONMENT } from '@core/provider/environment.provider';
 
 import { SOCIAL_PLATFORMS } from '../constants/social-platforms.const';
 import { SOCIAL_SHARE_URLS } from '../constants/social-share.config';
-import { SocialShareContentModel, SocialShareLinksModel, SocialsShareActionItem } from '../models';
+import { SocialShareContentModel } from '../models/socials/social-share-content.model';
+import { SocialShareLinksModel } from '../models/socials/social-share-links.model';
+import { SocialsShareActionItem } from '../models/socials/socials-share-action-item.model';
 
 @Injectable({
   providedIn: 'root',

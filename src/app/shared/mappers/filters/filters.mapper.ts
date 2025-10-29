@@ -1,9 +1,8 @@
+import { DiscoverableFilter, FilterOperator } from '@osf/shared/models/search/discaverable-filter.model';
 import {
-  DiscoverableFilter,
-  FilterOperator,
   IndexCardSearchResponseJsonApi,
   RelatedPropertyPathDataJsonApi,
-} from '@shared/models';
+} from '@osf/shared/models/search/index-card-search-json-api.models';
 
 export function MapFilters(indexCardSearchResponseJsonApi: IndexCardSearchResponseJsonApi): DiscoverableFilter[] {
   const relatedPropertiesIds = indexCardSearchResponseJsonApi.data.relationships.relatedProperties.data.map(

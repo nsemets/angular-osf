@@ -1,4 +1,4 @@
-import { ContributorModel } from '@shared/models';
+import { ContributorModel } from '@shared/models/contributors/contributor.model';
 
 import { LicensesOption } from '../license/license.model';
 

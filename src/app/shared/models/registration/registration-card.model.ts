@@ -3,7 +3,7 @@ import { RegistryStatus } from '@osf/shared/enums/registry-status.enum';
 import { RevisionReviewStates } from '@osf/shared/enums/revision-review-states.enum';
 import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
 
-import { ContributorModel } from '../contributors';
+import { ContributorModel } from '../contributors/contributor.model';
 
 export interface RegistrationCard {
   id: string;

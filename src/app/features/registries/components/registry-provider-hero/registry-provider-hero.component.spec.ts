@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 
 import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
-import { DecodeHtmlPipe } from '@shared/pipes';
+import { DecodeHtmlPipe } from '@shared/pipes/decode-html.pipe';
 
 import { RegistryProviderHeroComponent } from './registry-provider-hero.component';
 

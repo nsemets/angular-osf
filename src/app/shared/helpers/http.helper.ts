@@ -1,6 +1,6 @@
 import { Params } from '@angular/router';
 
-import { QueryParams } from '@osf/shared/models';
+import { QueryParams } from '@shared/models/query-params.model';
 
 import { SortOrder } from '../enums/sort-order.enum';
 

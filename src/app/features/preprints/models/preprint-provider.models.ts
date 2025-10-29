@@ -1,6 +1,6 @@
-import { BrandModel } from '@osf/shared/models/brand';
-import { ReviewPermissions } from '@shared/enums/review-permissions.enum';
-import { StringOrNull } from '@shared/helpers/types.helper';
+import { ReviewPermissions } from '@osf/shared/enums/review-permissions.enum';
+import { StringOrNull } from '@osf/shared/helpers/types.helper';
+import { BrandModel } from '@osf/shared/models/brand/brand.model';
 
 import { ProviderReviewsWorkflow } from '../enums';
 

@@ -27,7 +27,6 @@ import { SupportedFeature } from '@osf/shared/enums/addon-supported-features.enu
 import { FileKind } from '@osf/shared/enums/file-kind.enum';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { FilesMapper } from '@osf/shared/mappers/files/files.mapper';
-import { FileFolderModel, FileModel } from '@osf/shared/models';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { FilesService } from '@osf/shared/services/files.service';
 import { ToastService } from '@osf/shared/services/toast.service';
@@ -36,6 +35,8 @@ import {
   GetResourceDetails,
   GetResourceWithChildren,
 } from '@osf/shared/stores/current-resource';
+import { FileModel } from '@shared/models/files/file.model';
+import { FileFolderModel } from '@shared/models/files/file-folder.model';
 
 import { FileProvider } from '../../constants';
 

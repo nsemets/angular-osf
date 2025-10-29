@@ -3,7 +3,7 @@ import { MockPipe } from 'ng-mocks';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { MonthYearPipe } from '@osf/shared/pipes';
+import { MonthYearPipe } from '@osf/shared/pipes/month-year.pipe';
 
 import { EmploymentHistoryComponent } from './employment-history.component';
 

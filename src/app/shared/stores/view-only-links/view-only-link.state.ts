@@ -7,7 +7,7 @@ import { catchError, tap } from 'rxjs/operators';
 import { inject, Injectable } from '@angular/core';
 
 import { handleSectionError } from '@osf/shared/helpers/state-error.handler';
-import { PaginatedViewOnlyLinksModel } from '@osf/shared/models';
+import { PaginatedViewOnlyLinksModel } from '@osf/shared/models/view-only-links/view-only-link.model';
 import { ViewOnlyLinksService } from '@osf/shared/services/view-only-links.service';
 
 import { CreateViewOnlyLink, DeleteViewOnlyLink, FetchViewOnlyLinks } from './view-only-link.actions';

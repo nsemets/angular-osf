@@ -3,7 +3,8 @@ import { catchError, forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
-import { PaginatedData, ResponseJsonApi } from '@osf/shared/models';
+import { ResponseJsonApi } from '@osf/shared/models/common/json-api.model';
+import { PaginatedData } from '@osf/shared/models/paginated-data.model';
 import { JsonApiService } from '@osf/shared/services/json-api.service';
 
 import { PreprintSubmissionsSort } from '../enums';

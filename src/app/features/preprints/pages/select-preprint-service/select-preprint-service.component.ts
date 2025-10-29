@@ -12,7 +12,7 @@ import { ChangeDetectionStrategy, Component, HostBinding, OnInit } from '@angula
 import { RouterLink } from '@angular/router';
 
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
-import { DecodeHtmlPipe } from '@osf/shared/pipes';
+import { DecodeHtmlPipe } from '@osf/shared/pipes/decode-html.pipe';
 
 import { PreprintProviderShortInfo } from '../../models';
 import { GetPreprintProvidersAllowingSubmissions, PreprintProvidersSelectors } from '../../store/preprint-providers';

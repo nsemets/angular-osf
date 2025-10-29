@@ -18,7 +18,7 @@ import { ViewSectionComponent } from '@osf/shared/components/wiki/view-section/v
 import { WikiListComponent } from '@osf/shared/components/wiki/wiki-list/wiki-list.component';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { hasViewOnlyParam } from '@osf/shared/helpers/view-only.helper';
-import { WikiModes } from '@osf/shared/models';
+import { WikiModes } from '@osf/shared/models/wiki/wiki.model';
 import {
   ClearWiki,
   GetCompareVersionContent,

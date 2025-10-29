@@ -4,13 +4,13 @@ import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { Primitive, StringOrNull } from '@osf/shared/helpers/types.helper';
+import { IdName } from '@osf/shared/models/common/id-name.model';
+import { ApiData } from '@osf/shared/models/common/json-api.model';
 import {
-  ApiData,
   CreateProjectPayloadJsoApi,
-  IdName,
   NodeResponseJsonApi,
   NodesResponseJsonApi,
-} from '@osf/shared/models';
+} from '@osf/shared/models/nodes/nodes-json-api.model';
 import { JsonApiService } from '@osf/shared/services/json-api.service';
 
 import { PreprintsMapper } from '../mappers';

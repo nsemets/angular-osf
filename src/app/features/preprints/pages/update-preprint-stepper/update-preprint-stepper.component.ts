@@ -27,8 +27,9 @@ import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
 import { IS_WEB } from '@osf/shared/helpers/breakpoints.tokens';
 import { BrowserTabHelper } from '@osf/shared/helpers/browser-tab.helper';
 import { HeaderStyleHelper } from '@osf/shared/helpers/header-style.helper';
-import { CanDeactivateComponent, StepOption } from '@osf/shared/models';
 import { BrandService } from '@osf/shared/services/brand.service';
+import { CanDeactivateComponent } from '@shared/models/can-deactivate.interface';
+import { StepOption } from '@shared/models/step-option.model';
 
 import {
   AuthorAssertionsStepComponent,

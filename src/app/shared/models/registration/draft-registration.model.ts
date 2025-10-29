@@ -1,7 +1,7 @@
 import { UserPermissions } from '@shared/enums/user-permissions.enum';
 
 import { LicenseOptions } from '../license/license.model';
-import { ProjectModel } from '../projects';
+import { ProjectModel } from '../projects/projects.models';
 
 export interface DraftRegistrationModel {
   id: string;

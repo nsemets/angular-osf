@@ -9,10 +9,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { ActivatedRoute, Navigation, Router, UrlTree } from '@angular/router';
 
-import { AddonSetupAccountFormComponent, StorageItemSelectorComponent } from '@osf/shared/components/addons';
+import { AddonSetupAccountFormComponent } from '@osf/shared/components/addons/addon-setup-account-form/addon-setup-account-form.component';
+import { StorageItemSelectorComponent } from '@osf/shared/components/addons/storage-item-selector/storage-item-selector.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { CredentialsFormat } from '@osf/shared/enums/addons-credentials-format.enum';
-import { AddonModel } from '@osf/shared/models';
+import { AddonModel } from '@osf/shared/models/addons/addon.model';
 import { AddonsSelectors } from '@osf/shared/stores/addons';
 
 import { ConnectConfiguredAddonComponent } from './connect-configured-addon.component';

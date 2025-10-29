@@ -1,4 +1,4 @@
-import { BaseNodeModel } from '@osf/shared/models';
+import { BaseNodeModel } from '@shared/models/nodes/base-node.model';
 
 export const testNode: BaseNodeModel = {
   id: 'abc123',

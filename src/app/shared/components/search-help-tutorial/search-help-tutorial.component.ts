@@ -8,7 +8,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 
 import { SEARCH_TUTORIAL_STEPS } from '@osf/shared/constants/search-tutorial-steps.const';
 import { IS_MEDIUM } from '@osf/shared/helpers/breakpoints.tokens';
-import { TutorialStep } from '@osf/shared/models';
+import { TutorialStep } from '@shared/models/tutorial-step.model';
 
 @Component({
   selector: 'osf-search-help-tutorial',

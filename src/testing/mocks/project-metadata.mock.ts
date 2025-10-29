@@ -1,6 +1,7 @@
 import { MetadataModel } from '@osf/features/metadata/models';
 import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
-import { Identifier, Institution } from '@osf/shared/models';
+import { Identifier } from '@shared/models/identifiers/identifier.model';
+import { Institution } from '@shared/models/institutions/institutions.models';
 
 export const MOCK_PROJECT_METADATA: MetadataModel = {
   id: 'project-123',

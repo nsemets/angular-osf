@@ -45,11 +45,12 @@ import { MetadataResourceEnum } from '@osf/shared/enums/metadata-resource.enum';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { pathJoin } from '@osf/shared/helpers/path-join.helper';
 import { getViewOnlyParam, hasViewOnlyParam } from '@osf/shared/helpers/view-only.helper';
-import { FileDetailsModel, MetadataTabsModel } from '@osf/shared/models';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { DataciteService } from '@osf/shared/services/datacite/datacite.service';
 import { MetaTagsService } from '@osf/shared/services/meta-tags.service';
 import { ToastService } from '@osf/shared/services/toast.service';
+import { FileDetailsModel } from '@shared/models/files/file.model';
+import { MetadataTabsModel } from '@shared/models/metadata-tabs.model';
 
 import {
   FileKeywordsComponent,

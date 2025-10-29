@@ -2,7 +2,7 @@ import { MockPipe } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MonthYearPipe } from '@osf/shared/pipes';
+import { MonthYearPipe } from '@osf/shared/pipes/month-year.pipe';
 
 import { EducationHistoryComponent } from './education-history.component';
 

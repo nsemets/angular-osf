@@ -2,7 +2,7 @@ import { MockComponents } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LicenseModel, LicenseOptions } from '@shared/models';
+import { LicenseModel, LicenseOptions } from '@shared/models/license/license.model';
 
 import { TextInputComponent } from '../text-input/text-input.component';
 import { TruncatedTextComponent } from '../truncated-text/truncated-text.component';

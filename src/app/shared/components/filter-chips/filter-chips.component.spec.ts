@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DiscoverableFilter, FilterOperator, FilterOption } from '@shared/models';
+import { DiscoverableFilter, FilterOperator, FilterOption } from '@osf/shared/models/search/discaverable-filter.model';
 
 import { FilterChipsComponent } from './filter-chips.component';
 

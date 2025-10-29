@@ -9,7 +9,7 @@ import { FilesTreeComponent } from '@osf/shared/components/files-tree/files-tree
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { ToastService } from '@osf/shared/services/toast.service';
-import { FileFolderModel } from '@shared/models';
+import { FileFolderModel } from '@shared/models/files/file-folder.model';
 
 import { FileStepComponent } from './file-step.component';
 

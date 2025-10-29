@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Identifier } from '@osf/shared/models';
+import { Identifier } from '@shared/models/identifiers/identifier.model';
 
 import { MetadataPublicationDoiComponent } from './metadata-publication-doi.component';
 

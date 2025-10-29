@@ -1,9 +1,9 @@
+import { IdTypeModel } from './common/id-type.model';
+import { ContributorModel } from './contributors/contributor.model';
+import { Identifier } from './identifiers/identifier.model';
+import { Institution } from './institutions/institutions.models';
 import { LicensesOption } from './license/license.model';
-import { IdTypeModel } from './common';
-import { ContributorModel } from './contributors';
-import { Identifier } from './identifiers';
-import { Institution } from './institutions';
-import { SubjectModel } from './subject';
+import { SubjectModel } from './subject/subject.model';
 
 export interface ResourceOverview {
   id: string;

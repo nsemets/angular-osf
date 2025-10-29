@@ -14,7 +14,8 @@ import { FormBuilder } from '@angular/forms';
 import { UserSelectors } from '@osf/core/store/user';
 import { InfoIconComponent } from '@osf/shared/components/info-icon/info-icon.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
-import { SubscriptionEvent, SubscriptionFrequency } from '@osf/shared/enums/subscriptions';
+import { SubscriptionEvent } from '@osf/shared/enums/subscriptions/subscription-event.enum';
+import { SubscriptionFrequency } from '@osf/shared/enums/subscriptions/subscription-frequency.enum';
 import { LoaderService } from '@osf/shared/services/loader.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 

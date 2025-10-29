@@ -6,12 +6,13 @@ import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FileKind } from '@osf/shared/enums/file-kind.enum';
-import { FileFolderModel, FileLabelModel } from '@osf/shared/models';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { DataciteService } from '@osf/shared/services/datacite/datacite.service';
 import { FilesService } from '@osf/shared/services/files.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { CurrentResourceSelectors } from '@osf/shared/stores/current-resource';
+import { FileFolderModel } from '@shared/models/files/file-folder.model';
+import { FileLabelModel } from '@shared/models/files/file-label.model';
 
 import { FileMenuComponent } from '../file-menu/file-menu.component';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';

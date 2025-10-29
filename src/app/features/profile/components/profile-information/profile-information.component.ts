@@ -10,8 +10,8 @@ import { EducationHistoryComponent } from '@osf/shared/components/education-hist
 import { EmploymentHistoryComponent } from '@osf/shared/components/employment-history/employment-history.component';
 import { SOCIAL_LINKS } from '@osf/shared/constants/social-links.const';
 import { IS_MEDIUM } from '@osf/shared/helpers/breakpoints.tokens';
-import { UserModel } from '@osf/shared/models';
-import { SortByDatePipe } from '@osf/shared/pipes';
+import { UserModel } from '@osf/shared/models/user/user.models';
+import { SortByDatePipe } from '@osf/shared/pipes/sort-by-date.pipe';
 
 import { mapUserSocials } from '../../helpers';
 

@@ -4,7 +4,7 @@ import { SafeHtmlPipe } from 'primeng/menu';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FixSpecialCharPipe } from '@osf/shared/pipes';
+import { FixSpecialCharPipe } from '@osf/shared/pipes/fix-special-char.pipe';
 
 import { SubHeaderComponent } from './sub-header.component';
 

@@ -4,7 +4,7 @@ import { Card } from 'primeng/card';
 
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
-import { Identifier } from '@osf/shared/models';
+import { Identifier } from '@osf/shared/models/identifiers/identifier.model';
 
 @Component({
   selector: 'osf-metadata-registration-doi',

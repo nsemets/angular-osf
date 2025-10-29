@@ -1,7 +1,7 @@
 import { Selector } from '@ngxs/store';
 
 import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
-import { NotificationSubscription } from '@osf/shared/models';
+import { NotificationSubscription } from '@shared/models/notifications/notification-subscription.model';
 
 import { SettingsStateModel } from './settings.model';
 import { SettingsState } from './settings.state';

@@ -1,13 +1,13 @@
 import {
   ComponentsWikiGetResponse,
-  ComponentWiki,
   HomeWiki,
   HomeWikiGetResponse,
   Wiki,
   WikiGetResponse,
   WikiVersion,
   WikiVersionJsonApi,
-} from '@osf/shared/models';
+} from '@osf/shared/models/wiki/wiki.model';
+import { ComponentWiki } from '@osf/shared/stores/wiki';
 
 export class WikiMapper {
   static fromCreateWikiResponse(response: WikiGetResponse): Wiki {

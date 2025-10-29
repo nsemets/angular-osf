@@ -12,7 +12,9 @@ import {
 } from '@osf/features/preprints/models';
 import { JsonApiService } from '@osf/shared/services/json-api.service';
 import { LicensesMapper } from '@shared/mappers/licenses.mapper';
-import { ApiData, LicenseModel, LicenseOptions, LicensesResponseJsonApi } from '@shared/models';
+import { ApiData } from '@shared/models/common/json-api.model';
+import { LicenseModel, LicenseOptions } from '@shared/models/license/license.model';
+import { LicensesResponseJsonApi } from '@shared/models/license/licenses-json-api.model';
 
 @Injectable({
   providedIn: 'root',

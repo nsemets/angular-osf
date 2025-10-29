@@ -14,7 +14,7 @@ import { FetchLicenses, RegistriesSelectors, SaveLicense } from '@osf/features/r
 import { LicenseComponent } from '@osf/shared/components/license/license.component';
 import { InputLimits } from '@osf/shared/constants/input-limits.const';
 import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants/input-validation-messages.const';
-import { LicenseModel, LicenseOptions } from '@osf/shared/models';
+import { LicenseModel, LicenseOptions } from '@shared/models/license/license.model';
 
 @Component({
   selector: 'osf-registries-license',

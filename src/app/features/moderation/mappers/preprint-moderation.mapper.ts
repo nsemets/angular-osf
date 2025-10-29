@@ -1,5 +1,6 @@
 import { UserMapper } from '@osf/shared/mappers/user';
-import { PaginatedData, ResponseJsonApi } from '@osf/shared/models';
+import { ResponseJsonApi } from '@osf/shared/models/common/json-api.model';
+import { PaginatedData } from '@osf/shared/models/paginated-data.model';
 
 import {
   PreprintProviderModerationInfo,

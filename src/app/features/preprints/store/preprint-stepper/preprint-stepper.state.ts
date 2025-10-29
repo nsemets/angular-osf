@@ -16,7 +16,8 @@ import {
   PreprintsService,
 } from '@osf/features/preprints/services';
 import { handleSectionError } from '@osf/shared/helpers/state-error.handler';
-import { FileFolderModel, FileModel } from '@osf/shared/models';
+import { FileModel } from '@osf/shared/models/files/file.model';
+import { FileFolderModel } from '@osf/shared/models/files/file-folder.model';
 import { FilesService } from '@osf/shared/services/files.service';
 
 import {

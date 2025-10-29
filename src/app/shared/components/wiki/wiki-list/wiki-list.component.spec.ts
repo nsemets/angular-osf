@@ -5,7 +5,8 @@ import { Router } from '@angular/router';
 
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
-import { ComponentWiki, Wiki, WikiItemType } from '@shared/models';
+import { ComponentWiki, Wiki } from '@shared/models/wiki/wiki.model';
+import { WikiItemType } from '@shared/models/wiki/wiki-type.model';
 
 import { WikiListComponent } from './wiki-list.component';
 

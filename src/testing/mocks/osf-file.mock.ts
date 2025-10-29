@@ -1,5 +1,5 @@
 import { FileKind } from '@osf/shared/enums/file-kind.enum';
-import { FileFolderModel } from '@osf/shared/models';
+import { FileFolderModel } from '@shared/models/files/file-folder.model';
 
 export const OSF_FILE_MOCK: FileFolderModel = {
   id: 'file-123',

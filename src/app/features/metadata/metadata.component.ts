@@ -22,7 +22,6 @@ import { MetadataTabsComponent } from '@osf/shared/components/metadata-tabs/meta
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { MetadataResourceEnum } from '@osf/shared/enums/metadata-resource.enum';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
-import { MetadataTabsModel, SubjectModel } from '@osf/shared/models';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { ToastService } from '@osf/shared/services/toast.service';
@@ -44,6 +43,8 @@ import {
   SubjectsSelectors,
   UpdateResourceSubjects,
 } from '@osf/shared/stores/subjects';
+import { MetadataTabsModel } from '@shared/models/metadata-tabs.model';
+import { SubjectModel } from '@shared/models/subject/subject.model';
 
 import { EditTitleDialogComponent } from './dialogs/edit-title-dialog/edit-title-dialog.component';
 import {

@@ -4,13 +4,12 @@ import { CookieService } from 'ngx-cookie-service';
 
 import { inject, Injectable } from '@angular/core';
 
+import { SignUpModel } from '@core/models/sign-up.model';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { ClearCurrentUser } from '@osf/core/store/user';
 import { urlParam } from '@osf/shared/helpers/url-param.helper';
 import { JsonApiService } from '@osf/shared/services/json-api.service';
 import { LoaderService } from '@osf/shared/services/loader.service';
-
-import { SignUpModel } from '../models';
 
 @Injectable({
   providedIn: 'root',

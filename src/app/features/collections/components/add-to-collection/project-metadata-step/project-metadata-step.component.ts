@@ -37,8 +37,9 @@ import { TextInputComponent } from '@osf/shared/components/text-input/text-input
 import { TruncatedTextComponent } from '@osf/shared/components/truncated-text/truncated-text.component';
 import { InputLimits } from '@osf/shared/constants/input-limits.const';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
-import { LicenseModel, ProjectModel } from '@osf/shared/models';
-import { InterpolatePipe } from '@osf/shared/pipes';
+import { LicenseModel } from '@osf/shared/models/license/license.model';
+import { ProjectModel } from '@osf/shared/models/projects/projects.models';
+import { InterpolatePipe } from '@osf/shared/pipes/interpolate.pipe';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { GetAllContributors } from '@osf/shared/stores/contributors';
 import { ClearProjects, ProjectsSelectors, UpdateProjectMetadata } from '@osf/shared/stores/projects';

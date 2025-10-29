@@ -26,7 +26,8 @@ import { StepperComponent } from '@osf/shared/components/stepper/stepper.compone
 import { IS_WEB } from '@osf/shared/helpers/breakpoints.tokens';
 import { BrowserTabHelper } from '@osf/shared/helpers/browser-tab.helper';
 import { HeaderStyleHelper } from '@osf/shared/helpers/header-style.helper';
-import { CanDeactivateComponent, StepOption } from '@osf/shared/models';
+import { CanDeactivateComponent } from '@osf/shared/models/can-deactivate.interface';
+import { StepOption } from '@osf/shared/models/step-option.model';
 import { BrandService } from '@osf/shared/services/brand.service';
 
 import {

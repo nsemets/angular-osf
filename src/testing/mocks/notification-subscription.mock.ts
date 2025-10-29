@@ -1,5 +1,6 @@
-import { SubscriptionEvent, SubscriptionFrequency } from '@osf/shared/enums/subscriptions';
-import { NotificationSubscription } from '@osf/shared/models';
+import { SubscriptionEvent } from '@osf/shared/enums/subscriptions/subscription-event.enum';
+import { SubscriptionFrequency } from '@osf/shared/enums/subscriptions/subscription-frequency.enum';
+import { NotificationSubscription } from '@shared/models/notifications/notification-subscription.model';
 
 export const MOCK_NOTIFICATION_SUBSCRIPTIONS: NotificationSubscription[] = [
   {

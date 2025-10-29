@@ -12,9 +12,9 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
+import { SignUpModel } from '@core/models/sign-up.model';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { AuthService } from '@core/services/auth.service';
-import { SignUpModel } from '@osf/core/models';
 import { PasswordInputHintComponent } from '@osf/shared/components/password-input-hint/password-input-hint.component';
 import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
 import { InputLimits } from '@osf/shared/constants/input-limits.const';

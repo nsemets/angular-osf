@@ -1,7 +1,7 @@
 import { StringOrNull } from '@osf/shared/helpers/types.helper';
 import { IdentifiersMapper } from '@osf/shared/mappers/identifiers.mapper';
 import { LicensesMapper } from '@osf/shared/mappers/licenses.mapper';
-import { ApiData, JsonApiResponseWithMeta, ResponseJsonApi } from '@osf/shared/models';
+import { ApiData, JsonApiResponseWithMeta, ResponseJsonApi } from '@osf/shared/models/common/json-api.model';
 
 import {
   PreprintAttributesJsonApi,

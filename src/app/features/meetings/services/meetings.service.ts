@@ -4,7 +4,8 @@ import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { searchPreferencesToJsonApiQueryParams } from '@osf/shared/helpers/search-pref-to-json-api-query-params.helper';
-import { JsonApiResponse, ResponseJsonApi, SearchFilters } from '@osf/shared/models';
+import { JsonApiResponse, ResponseJsonApi } from '@osf/shared/models/common/json-api.model';
+import { SearchFilters } from '@osf/shared/models/search-filters.model';
 import { JsonApiService } from '@osf/shared/services/json-api.service';
 
 import { meetingSortFieldMap, meetingSubmissionSortFieldMap } from '../constants';

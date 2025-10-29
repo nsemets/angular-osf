@@ -2,7 +2,7 @@ import { MockComponent } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PaginatedViewOnlyLinksModel } from '@shared/models';
+import { PaginatedViewOnlyLinksModel } from '@shared/models/view-only-links/view-only-link.model';
 
 import { CopyButtonComponent } from '../copy-button/copy-button.component';
 

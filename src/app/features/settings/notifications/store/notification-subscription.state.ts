@@ -6,7 +6,7 @@ import { catchError, tap } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { handleSectionError } from '@osf/shared/helpers/state-error.handler';
-import { NotificationSubscription } from '@osf/shared/models';
+import { NotificationSubscription } from '@osf/shared/models/notifications/notification-subscription.model';
 
 import { NotificationSubscriptionService } from '../services';
 

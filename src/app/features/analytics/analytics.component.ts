@@ -29,7 +29,7 @@ import { ViewOnlyLinkMessageComponent } from '@osf/shared/components/view-only-l
 import { IS_WEB } from '@osf/shared/helpers/breakpoints.tokens';
 import { Primitive } from '@osf/shared/helpers/types.helper';
 import { hasViewOnlyParam } from '@osf/shared/helpers/view-only.helper';
-import { DatasetInput } from '@osf/shared/models';
+import { DatasetInput } from '@osf/shared/models/charts/dataset-input';
 
 import { AnalyticsKpiComponent } from './components';
 import { DATE_RANGE_OPTIONS } from './constants';

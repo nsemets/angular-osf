@@ -62,7 +62,11 @@ import { CustomDialogService } from '@osf/shared/services/custom-dialog.service'
 import { FilesService } from '@osf/shared/services/files.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { CurrentResourceSelectors, GetResourceDetails } from '@osf/shared/stores/current-resource';
-import { ConfiguredAddonModel, FileFolderModel, FileLabelModel, FileModel, StorageItem } from '@shared/models';
+import { ConfiguredAddonModel } from '@shared/models/addons/configured-addon.model';
+import { StorageItem } from '@shared/models/addons/storage-item.model';
+import { FileModel } from '@shared/models/files/file.model';
+import { FileFolderModel } from '@shared/models/files/file-folder.model';
+import { FileLabelModel } from '@shared/models/files/file-label.model';
 import { DataciteService } from '@shared/services/datacite/datacite.service';
 
 import {

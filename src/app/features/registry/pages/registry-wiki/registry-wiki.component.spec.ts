@@ -9,7 +9,7 @@ import { ViewOnlyLinkMessageComponent } from '@osf/shared/components/view-only-l
 import { CompareSectionComponent } from '@osf/shared/components/wiki/compare-section/compare-section.component';
 import { ViewSectionComponent } from '@osf/shared/components/wiki/view-section/view-section.component';
 import { WikiListComponent } from '@osf/shared/components/wiki/wiki-list/wiki-list.component';
-import { WikiModes } from '@osf/shared/models';
+import { WikiModes } from '@osf/shared/models/wiki/wiki.model';
 import { WikiSelectors } from '@osf/shared/stores/wiki';
 
 import { RegistryWikiComponent } from './registry-wiki.component';

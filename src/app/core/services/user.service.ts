@@ -5,16 +5,15 @@ import { inject, Injectable } from '@angular/core';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { ProfileSettingsKey } from '@osf/shared/enums/profile-settings-key.enum';
 import { UserMapper } from '@osf/shared/mappers/user';
+import { JsonApiService } from '@osf/shared/services/json-api.service';
+import { ProfileSettingsUpdate } from '@shared/models/profile-settings-update.model';
+import { UserData, UserModel } from '@shared/models/user/user.models';
 import {
-  ProfileSettingsUpdate,
   UserAcceptedTermsOfServiceJsonApi,
-  UserData,
   UserDataJsonApi,
   UserDataResponseJsonApi,
-  UserModel,
   UserResponseJsonApi,
-} from '@osf/shared/models';
-import { JsonApiService } from '@osf/shared/services/json-api.service';
+} from '@shared/models/user/user-json-api.model';
 
 @Injectable({
   providedIn: 'root',

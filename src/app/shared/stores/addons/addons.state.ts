@@ -6,8 +6,8 @@ import { inject, Injectable } from '@angular/core';
 
 import { AddonType } from '@osf/shared/enums/addon-type.enum';
 import { handleSectionError } from '@osf/shared/helpers/state-error.handler';
-import { AuthorizedAccountModel } from '@osf/shared/models';
-import { AddonsService } from '@osf/shared/services/addons';
+import { AddonsService } from '@osf/shared/services/addons/addons.service';
+import { AuthorizedAccountModel } from '@shared/models/addons/authorized-account.model';
 
 import {
   ClearAuthorizedAddons,

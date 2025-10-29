@@ -5,8 +5,11 @@ import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { ActivityLogsMapper } from '@osf/shared/mappers/activity-logs.mapper';
-import { JsonApiResponseWithMeta, MetaAnonymousJsonApi, PaginatedData } from '@osf/shared/models';
-import { ActivityLog, ActivityLogJsonApi, ActivityLogWithDisplay } from '@osf/shared/models/activity-logs';
+import { ActivityLogWithDisplay } from '@osf/shared/models/activity-logs/activity-log-with-display.model';
+import { ActivityLog } from '@osf/shared/models/activity-logs/activity-logs.model';
+import { ActivityLogJsonApi } from '@osf/shared/models/activity-logs/activity-logs-json-api.model';
+import { JsonApiResponseWithMeta, MetaAnonymousJsonApi } from '@osf/shared/models/common/json-api.model';
+import { PaginatedData } from '@osf/shared/models/paginated-data.model';
 
 import { JsonApiService } from '../json-api.service';
 

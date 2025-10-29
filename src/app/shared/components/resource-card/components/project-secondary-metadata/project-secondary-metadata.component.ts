@@ -3,7 +3,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
 import { languageCodes } from '@osf/shared/constants/language.const';
-import { ResourceModel } from '@shared/models';
+import { ResourceModel } from '@shared/models/search/resource.model';
 
 @Component({
   selector: 'osf-project-secondary-metadata',

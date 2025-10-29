@@ -5,13 +5,12 @@ import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { ERROR_MESSAGES } from '@core/constants/error-messages';
 import { SENTRY_TOKEN } from '@core/provider/sentry.provider';
 import { AuthService } from '@core/services/auth.service';
 import { hasViewOnlyParam } from '@osf/shared/helpers/view-only.helper';
 import { LoaderService } from '@osf/shared/services/loader.service';
 import { ToastService } from '@osf/shared/services/toast.service';
-
-import { ERROR_MESSAGES } from '../constants';
 
 import { BYPASS_ERROR_INTERCEPTOR } from './error-interceptor.tokens';
 

@@ -35,7 +35,6 @@ import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
 import { toCamelCase } from '@osf/shared/helpers/camel-case';
 import { hasViewOnlyParam } from '@osf/shared/helpers/view-only.helper';
 import { MapRegistryOverview } from '@osf/shared/mappers/resource-overview.mappers';
-import { SchemaResponse, ToolbarResource } from '@osf/shared/models';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { GetBookmarksCollectionId } from '@osf/shared/stores/bookmarks';
@@ -45,6 +44,8 @@ import {
   LoadMoreBibliographicContributors,
 } from '@osf/shared/stores/contributors';
 import { FetchSelectedSubjects, SubjectsSelectors } from '@osf/shared/stores/subjects';
+import { SchemaResponse } from '@shared/models/registration/schema-response.model';
+import { ToolbarResource } from '@shared/models/toolbar-resource.model';
 
 import { ArchivingMessageComponent, RegistryRevisionsComponent, RegistryStatusesComponent } from '../../components';
 import { RegistryMakeDecisionComponent } from '../../components/registry-make-decision/registry-make-decision.component';

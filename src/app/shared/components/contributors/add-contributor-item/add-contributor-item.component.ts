@@ -7,7 +7,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { PERMISSION_OPTIONS } from '@osf/shared/constants/contributors.constants';
-import { ContributorAddModel } from '@osf/shared/models';
+import { ContributorAddModel } from '@shared/models/contributors/contributor-add.model';
 
 @Component({
   selector: 'osf-add-contributor-item',

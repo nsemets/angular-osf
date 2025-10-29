@@ -1,5 +1,5 @@
 import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
-import { DraftRegistrationModel } from '@shared/models';
+import { DraftRegistrationModel } from '@shared/models/registration/draft-registration.model';
 
 export const MOCK_DRAFT_REGISTRATION: DraftRegistrationModel = {
   branchedFrom: {

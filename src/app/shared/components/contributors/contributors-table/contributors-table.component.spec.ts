@@ -4,8 +4,9 @@ import { DialogService } from 'primeng/dynamicdialog';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ContributorPermission } from '@osf/shared/enums/contributors';
-import { ContributorModel, TableParameters } from '@osf/shared/models';
+import { ContributorPermission } from '@osf/shared/enums/contributors/contributor-permission.enum';
+import { ContributorModel } from '@shared/models/contributors/contributor.model';
+import { TableParameters } from '@shared/models/table-parameters.model';
 
 import { IconComponent } from '../../icon/icon.component';
 import { InfoIconComponent } from '../../info-icon/info-icon.component';

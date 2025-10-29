@@ -7,7 +7,8 @@ import { inject, Injectable } from '@angular/core';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { getResourceTypeStringFromEnum } from '@osf/shared/helpers/get-resource-types.helper';
 import { GlobalSearchService } from '@osf/shared/services/global-search.service';
-import { FilterOperator, ResourcesData } from '@shared/models';
+import { FilterOperator } from '@shared/models/search/discaverable-filter.model';
+import { ResourcesData } from '@shared/models/search/resource.model';
 
 import {
   ClearFilterSearchResults,

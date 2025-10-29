@@ -4,7 +4,7 @@ import { MockPipes } from 'ng-mocks';
 import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CitationFormatPipe } from '@shared/pipes';
+import { CitationFormatPipe } from '@shared/pipes/citation-format.pipe';
 
 import { CitationPreviewComponent } from './citation-preview.component';
 

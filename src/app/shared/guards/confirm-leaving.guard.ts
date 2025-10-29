@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { inject } from '@angular/core';
 import { CanDeactivateFn } from '@angular/router';
 
-import { CanDeactivateComponent } from '@shared/models';
+import { CanDeactivateComponent } from '@shared/models/can-deactivate.interface';
 
 import { CustomConfirmationService } from '../services/custom-confirmation.service';
 

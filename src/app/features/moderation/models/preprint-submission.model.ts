@@ -1,4 +1,5 @@
-import { ContributorModel, PaginatedData } from '@osf/shared/models';
+import { ContributorModel } from '@osf/shared/models/contributors/contributor.model';
+import { PaginatedData } from '@osf/shared/models/paginated-data.model';
 
 import { ReviewAction } from './review-action.model';
 

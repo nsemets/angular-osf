@@ -14,7 +14,7 @@ import { ModeratorModel } from '@osf/features/moderation/models';
 import { EducationHistoryDialogComponent } from '@osf/shared/components/education-history-dialog/education-history-dialog.component';
 import { EmploymentHistoryDialogComponent } from '@osf/shared/components/employment-history-dialog/employment-history-dialog.component';
 import { SelectComponent } from '@osf/shared/components/select/select.component';
-import { TableParameters } from '@osf/shared/models';
+import { TableParameters } from '@osf/shared/models/table-parameters.model';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 
 @Component({

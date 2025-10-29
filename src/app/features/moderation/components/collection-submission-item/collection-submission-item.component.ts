@@ -10,8 +10,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { collectionFilterNames } from '@osf/features/collections/constants';
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { TruncatedTextComponent } from '@osf/shared/components/truncated-text/truncated-text.component';
-import { CollectionSubmissionWithGuid } from '@osf/shared/models';
-import { DateAgoPipe } from '@osf/shared/pipes';
+import { CollectionSubmissionWithGuid } from '@osf/shared/models/collections/collections.models';
+import { DateAgoPipe } from '@osf/shared/pipes/date-ago.pipe';
 import { CollectionsSelectors } from '@osf/shared/stores/collections';
 
 import { ReviewStatusIcon } from '../../constants';

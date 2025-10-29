@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ResourceType } from '@shared/enums/resource-type.enum';
-import { ResourceModel } from '@shared/models';
+import { ResourceModel } from '@shared/models/search/resource.model';
 
 import { UserSecondaryMetadataComponent } from './user-secondary-metadata.component';
 

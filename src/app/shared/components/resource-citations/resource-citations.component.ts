@@ -28,7 +28,9 @@ import { Router } from '@angular/router';
 
 import { hasViewOnlyParam } from '@osf/shared/helpers/view-only.helper';
 import { ToastService } from '@osf/shared/services/toast.service';
-import { CitationStyle, CustomOption, ResourceOverview } from '@shared/models';
+import { CitationStyle } from '@shared/models/citations/citation-style.model';
+import { ResourceOverview } from '@shared/models/resource-overview.model';
+import { CustomOption } from '@shared/models/select-option.model';
 import {
   CitationsSelectors,
   ClearStyledCitation,

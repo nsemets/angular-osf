@@ -7,7 +7,7 @@ import { TestBed } from '@angular/core/testing';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { SENTRY_TOKEN } from '@core/provider/sentry.provider';
 import { DataciteEvent } from '@osf/shared/enums/datacite/datacite-event.enum';
-import { Identifier } from '@shared/models';
+import { Identifier } from '@shared/models/identifiers/identifier.model';
 
 import { DataciteService } from './datacite.service';
 

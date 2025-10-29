@@ -1,7 +1,9 @@
 import { ContributorPermission } from '@osf/shared/enums/contributors/contributor-permission.enum';
 import { RequestAccessTrigger } from '@osf/shared/enums/request-access-trigger.enum';
 import { RequestAccessType } from '@osf/shared/enums/request-access-type.enum';
-import { RequestAccessDataJsonApi, RequestAccessModel, RequestAccessPayload } from '@osf/shared/models';
+import { RequestAccessModel } from '@shared/models/request-access/request-access.model';
+import { RequestAccessDataJsonApi } from '@shared/models/request-access/request-access-json-api.model';
+import { RequestAccessPayload } from '@shared/models/request-access/request-access-payload.model';
 
 import { UserMapper } from '../user';
 

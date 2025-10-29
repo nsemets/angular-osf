@@ -1,4 +1,5 @@
-import { AsyncStateModel, Wiki, WikiVersion } from '@osf/shared/models';
+import { AsyncStateModel } from '@osf/shared/models/store/async-state.model';
+import { Wiki, WikiVersion } from '@osf/shared/models/wiki/wiki.model';
 
 export interface WikiModesStateModel {
   view: boolean;

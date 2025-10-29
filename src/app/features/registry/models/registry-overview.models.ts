@@ -2,19 +2,15 @@ import { RegistrationReviewStates } from '@osf/shared/enums/registration-review-
 import { RegistryStatus } from '@osf/shared/enums/registry-status.enum';
 import { RevisionReviewStates } from '@osf/shared/enums/revision-review-states.enum';
 import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
-import {
-  ContributorModel,
-  Identifier,
-  IdTypeModel,
-  LicenseModel,
-  LicensesOption,
-  MetaAnonymousJsonApi,
-  ProviderShortInfoModel,
-  RegistrationNodeModel,
-  RegistrationResponses,
-  SchemaResponse,
-  SubjectModel,
-} from '@osf/shared/models';
+import { IdTypeModel } from '@shared/models/common/id-type.model';
+import { MetaAnonymousJsonApi } from '@shared/models/common/json-api.model';
+import { ContributorModel } from '@shared/models/contributors/contributor.model';
+import { Identifier } from '@shared/models/identifiers/identifier.model';
+import { LicenseModel, LicensesOption } from '@shared/models/license/license.model';
+import { ProviderShortInfoModel } from '@shared/models/provider/provider.model';
+import { RegistrationNodeModel, RegistrationResponses } from '@shared/models/registration/registration-node.model';
+import { SchemaResponse } from '@shared/models/registration/schema-response.model';
+import { SubjectModel } from '@shared/models/subject/subject.model';
 
 export interface RegistryOverview {
   id: string;

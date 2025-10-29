@@ -6,7 +6,8 @@ import { inject, Injectable } from '@angular/core';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 
 import { RegionsMapper } from '../mappers/regions';
-import { IdName, RegionsResponseJsonApi } from '../models';
+import { IdName } from '../models/common/id-name.model';
+import { RegionsResponseJsonApi } from '../models/regions/regions.json-api.model';
 
 @Injectable({
   providedIn: 'root',

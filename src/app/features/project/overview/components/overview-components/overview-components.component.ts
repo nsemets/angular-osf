@@ -14,10 +14,10 @@ import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { TruncatedTextComponent } from '@osf/shared/components/truncated-text/truncated-text.component';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
-import { ComponentOverview } from '@osf/shared/models';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { LoaderService } from '@osf/shared/services/loader.service';
 import { GetResourceWithChildren } from '@osf/shared/stores/current-resource';
+import { ComponentOverview } from '@shared/models/components/components.models';
 
 import { LoadMoreComponents, ProjectOverviewSelectors } from '../../store';
 import { AddComponentDialogComponent } from '../add-component-dialog/add-component-dialog.component';

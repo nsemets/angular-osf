@@ -6,7 +6,8 @@ import { inject, Injectable } from '@angular/core';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 
 import { LicensesMapper } from '../mappers/licenses.mapper';
-import { LicenseModel, LicensesResponseJsonApi } from '../models';
+import { LicenseModel } from '../models/license/license.model';
+import { LicensesResponseJsonApi } from '../models/license/licenses-json-api.model';
 
 @Injectable({
   providedIn: 'root',

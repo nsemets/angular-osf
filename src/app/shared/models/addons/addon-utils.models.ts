@@ -2,7 +2,7 @@ import { FormControl } from '@angular/forms';
 
 import { AddonFormControls } from '@osf/shared/enums/addon-form-controls.enum';
 import { OperationNames } from '@osf/shared/enums/operation-names.enum';
-import { AuthorizedAccountModel } from '@shared/models';
+import { AuthorizedAccountModel } from '@shared/models/addons/authorized-account.model';
 
 export interface AddonForm {
   [AddonFormControls.AccessKey]?: FormControl<string | null>;

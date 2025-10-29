@@ -12,7 +12,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { FILTER_PLACEHOLDERS } from '@osf/shared/constants/filter-placeholders';
-import { DiscoverableFilter, FilterOperator, FilterOption } from '@osf/shared/models';
+import { DiscoverableFilter, FilterOperator, FilterOption } from '@shared/models/search/discaverable-filter.model';
 
 import { GenericFilterComponent } from '../generic-filter/generic-filter.component';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';

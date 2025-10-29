@@ -12,12 +12,13 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { getPreprintDocumentType } from '@osf/features/preprints/helpers';
 import { PreprintProviderDetails } from '@osf/features/preprints/models';
 import { CardLabelTranslationKeys } from '@osf/shared/constants/resource-card-labels.const';
+import { StopPropagationDirective } from '@osf/shared/directives/stop-propagation.directive';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { IS_XSMALL } from '@osf/shared/helpers/breakpoints.tokens';
 import { getSortedContributorsByPermissions } from '@osf/shared/helpers/sort-contributors-by-permissions';
-import { ResourceModel, UserRelatedCounts } from '@osf/shared/models';
 import { ResourceCardService } from '@osf/shared/services/resource-card.service';
-import { StopPropagationDirective } from '@shared/directives';
+import { ResourceModel } from '@shared/models/search/resource.model';
+import { UserRelatedCounts } from '@shared/models/user-related-counts/user-related-counts.model';
 
 import { DataResourcesComponent } from '../data-resources/data-resources.component';
 

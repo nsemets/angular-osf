@@ -23,6 +23,8 @@ import { FormControl, FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { UserSelectors } from '@osf/core/store/user';
+import { AddonCardListComponent } from '@osf/shared/components/addons/addon-card-list/addon-card-list.component';
+import { AddonsToolbarComponent } from '@osf/shared/components/addons/addons-toolbar/addons-toolbar.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { SelectComponent } from '@osf/shared/components/select/select.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
@@ -31,7 +33,6 @@ import { ADDON_TAB_OPTIONS } from '@osf/shared/constants/addons-tab-options.cons
 import { AddonTabValue } from '@osf/shared/enums/addon-tab.enum';
 import { AddonCategory } from '@osf/shared/enums/addons-category.enum';
 import { sortAddonCardsAlphabetically } from '@osf/shared/helpers/addon-card.helper';
-import { AddonCardListComponent, AddonsToolbarComponent } from '@shared/components/addons';
 import { AddonsQueryParamsService } from '@shared/services/addons-query-params.service';
 import {
   AddonsSelectors,

@@ -1,16 +1,12 @@
 import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
-import {
-  ContributorDataJsonApi,
-  ContributorModel,
-  Identifier,
-  IdTypeModel,
-  Institution,
-  InstitutionsJsonApiResponse,
-  JsonApiResponseWithMeta,
-  LicenseModel,
-  LicensesOption,
-  MetaAnonymousJsonApi,
-} from '@osf/shared/models';
+import { IdTypeModel } from '@shared/models/common/id-type.model';
+import { JsonApiResponseWithMeta, MetaAnonymousJsonApi } from '@shared/models/common/json-api.model';
+import { ContributorModel } from '@shared/models/contributors/contributor.model';
+import { ContributorDataJsonApi } from '@shared/models/contributors/contributor-response-json-api.model';
+import { Identifier } from '@shared/models/identifiers/identifier.model';
+import { InstitutionsJsonApiResponse } from '@shared/models/institutions/institution-json-api.model';
+import { Institution } from '@shared/models/institutions/institutions.models';
+import { LicenseModel, LicensesOption } from '@shared/models/license/license.model';
 
 export interface ProjectOverview {
   id: string;

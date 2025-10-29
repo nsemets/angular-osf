@@ -15,7 +15,7 @@ import { CreateSchemaResponse, FetchAllSchemaResponses, RegistriesSelectors } fr
 import { RegistrationReviewStates } from '@osf/shared/enums/registration-review-states.enum';
 import { RevisionReviewStates } from '@osf/shared/enums/revision-review-states.enum';
 import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
-import { RegistrationCard } from '@osf/shared/models';
+import { RegistrationCard } from '@shared/models/registration/registration-card.model';
 
 import { ContributorsListComponent } from '../contributors-list/contributors-list.component';
 import { DataResourcesComponent } from '../data-resources/data-resources.component';

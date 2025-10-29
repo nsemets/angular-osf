@@ -13,7 +13,6 @@ import { RegistriesSelectors } from '@osf/features/registries/store';
 import { SubjectsComponent } from '@osf/shared/components/subjects/subjects.component';
 import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants/input-validation-messages.const';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
-import { SubjectModel } from '@osf/shared/models';
 import {
   FetchChildrenSubjects,
   FetchSelectedSubjects,
@@ -21,6 +20,7 @@ import {
   SubjectsSelectors,
   UpdateResourceSubjects,
 } from '@osf/shared/stores/subjects';
+import { SubjectModel } from '@shared/models/subject/subject.model';
 
 @Component({
   selector: 'osf-registries-subjects',

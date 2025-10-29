@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Institution } from '@shared/models';
+import { Institution } from '@shared/models/institutions/institutions.models';
 
 import { AffiliatedInstitutionSelectComponent } from './affiliated-institution-select.component';
 

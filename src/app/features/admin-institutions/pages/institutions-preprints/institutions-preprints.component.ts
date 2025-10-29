@@ -9,7 +9,9 @@ import { ChangeDetectionStrategy, Component, computed, OnDestroy, OnInit, signal
 
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { SortOrder } from '@osf/shared/enums/sort-order.enum';
-import { PaginationLinksModel, ResourceModel, SearchFilters } from '@osf/shared/models';
+import { PaginationLinksModel } from '@shared/models/pagination-links.model';
+import { ResourceModel } from '@shared/models/search/resource.model';
+import { SearchFilters } from '@shared/models/search-filters.model';
 import {
   FetchResources,
   FetchResourcesByLink,

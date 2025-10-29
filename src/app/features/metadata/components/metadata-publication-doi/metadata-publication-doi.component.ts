@@ -6,7 +6,7 @@ import { Card } from 'primeng/card';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
-import { Identifier } from '@osf/shared/models';
+import { Identifier } from '@osf/shared/models/identifiers/identifier.model';
 
 @Component({
   selector: 'osf-metadata-publication-doi',

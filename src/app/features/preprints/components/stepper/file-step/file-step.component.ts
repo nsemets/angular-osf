@@ -43,7 +43,8 @@ import {
 import { FilesTreeComponent } from '@osf/shared/components/files-tree/files-tree.component';
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { StringOrNull } from '@osf/shared/helpers/types.helper';
-import { FileFolderModel, FileModel } from '@osf/shared/models';
+import { FileModel } from '@osf/shared/models/files/file.model';
+import { FileFolderModel } from '@osf/shared/models/files/file-folder.model';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 

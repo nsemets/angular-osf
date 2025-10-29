@@ -10,7 +10,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, signal } f
 import { ActivatedRoute } from '@angular/router';
 
 import { CustomPaginatorComponent } from '@osf/shared/components/custom-paginator/custom-paginator.component';
-import { ActivityLogDisplayService } from '@osf/shared/services/activity-logs';
+import { ActivityLogDisplayService } from '@osf/shared/services/activity-logs/activity-log-display.service';
 import { ActivityLogsSelectors, GetActivityLogs } from '@osf/shared/stores/activity-logs';
 
 @Component({

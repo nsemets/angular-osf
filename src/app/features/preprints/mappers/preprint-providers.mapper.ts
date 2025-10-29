@@ -1,10 +1,9 @@
-import {
-  PreprintProviderDetails,
-  PreprintProviderDetailsJsonApi,
-  PreprintProviderShortInfo,
-} from '@osf/features/preprints/models';
-import { SubjectDataJsonApi, SubjectModel } from '@osf/shared/models';
-import { BrandDataJsonApi, BrandModel } from '@osf/shared/models/brand';
+import { BrandDataJsonApi } from '@osf/shared/models/brand/brand.json-api.model';
+import { BrandModel } from '@osf/shared/models/brand/brand.model';
+import { SubjectModel } from '@osf/shared/models/subject/subject.model';
+import { SubjectDataJsonApi } from '@osf/shared/models/subject/subjects-json-api.model';
+
+import { PreprintProviderDetails, PreprintProviderDetailsJsonApi, PreprintProviderShortInfo } from '../models';
 
 export class PreprintProvidersMapper {
   static fromPreprintProviderDetailsGetResponse(response: PreprintProviderDetailsJsonApi): PreprintProviderDetails {

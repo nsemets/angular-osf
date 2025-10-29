@@ -7,7 +7,7 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 
 import { ToastService } from '@osf/shared/services/toast.service';
-import { SeverityType } from '@shared/models';
+import { SeverityType } from '@shared/models/severity.type';
 
 @Component({
   selector: 'osf-copy-button',

@@ -4,7 +4,7 @@ import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { FilterOperator, FilterOption } from '@shared/models';
+import { FilterOperator, FilterOption } from '@osf/shared/models/search/discaverable-filter.model';
 
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 

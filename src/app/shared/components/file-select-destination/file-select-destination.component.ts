@@ -36,7 +36,10 @@ import {
 import { SupportedFeature } from '@osf/shared/enums/addon-supported-features.enum';
 import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
 import { Primitive } from '@osf/shared/helpers/types.helper';
-import { ConfiguredAddonModel, FileLabelModel, NodeShortInfoModel, SelectOption } from '@osf/shared/models';
+import { ConfiguredAddonModel } from '@osf/shared/models/addons/configured-addon.model';
+import { FileLabelModel } from '@osf/shared/models/files/file-label.model';
+import { NodeShortInfoModel } from '@osf/shared/models/nodes/node-with-children.model';
+import { SelectOption } from '@osf/shared/models/select-option.model';
 
 import { SelectComponent } from '../select/select.component';
 

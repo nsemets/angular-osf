@@ -6,7 +6,8 @@ import { inject, Injectable } from '@angular/core';
 import { BYPASS_ERROR_INTERCEPTOR } from '@core/interceptors/error-interceptor.tokens';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { DataciteEvent } from '@osf/shared/enums/datacite/datacite-event.enum';
-import { Identifier, IdentifiersResponseJsonApi } from '@osf/shared/models';
+import { Identifier } from '@osf/shared/models/identifiers/identifier.model';
+import { IdentifiersResponseJsonApi } from '@osf/shared/models/identifiers/identifier-json-api.model';
 
 @Injectable({
   providedIn: 'root',

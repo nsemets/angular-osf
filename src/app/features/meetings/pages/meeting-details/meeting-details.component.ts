@@ -29,7 +29,9 @@ import { SearchInputComponent } from '@osf/shared/components/search-input/search
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { SortOrder } from '@osf/shared/enums/sort-order.enum';
 import { parseQueryFilterParams } from '@osf/shared/helpers/http.helper';
-import { QueryParams, SearchFilters, TableParameters } from '@osf/shared/models';
+import { QueryParams } from '@shared/models/query-params.model';
+import { SearchFilters } from '@shared/models/search-filters.model';
+import { TableParameters } from '@shared/models/table-parameters.model';
 
 import { MEETING_SUBMISSIONS_TABLE_PARAMS } from '../../constants';
 import { MeetingSubmission } from '../../models';

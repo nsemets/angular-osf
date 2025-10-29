@@ -2,7 +2,7 @@ import { RegistrationReviewStates } from '@osf/shared/enums/registration-review-
 import { RegistryStatus } from '@osf/shared/enums/registry-status.enum';
 import { RevisionReviewStates } from '@osf/shared/enums/revision-review-states.enum';
 import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
-import { RegistrationCard } from '@shared/models';
+import { RegistrationCard } from '@shared/models/registration/registration-card.model';
 
 import { MOCK_CONTRIBUTOR, MOCK_CONTRIBUTOR_WITHOUT_HISTORY } from './contributors.mock';
 

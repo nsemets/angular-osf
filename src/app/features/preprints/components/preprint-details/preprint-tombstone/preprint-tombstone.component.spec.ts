@@ -6,7 +6,7 @@ import { PreprintSelectors } from '@osf/features/preprints/store/preprint';
 import { ContributorsListComponent } from '@osf/shared/components/contributors-list/contributors-list.component';
 import { LicenseDisplayComponent } from '@osf/shared/components/license-display/license-display.component';
 import { TruncatedTextComponent } from '@osf/shared/components/truncated-text/truncated-text.component';
-import { InterpolatePipe } from '@osf/shared/pipes';
+import { InterpolatePipe } from '@osf/shared/pipes/interpolate.pipe';
 import { ContributorsSelectors } from '@osf/shared/stores/contributors';
 import { SubjectsSelectors } from '@osf/shared/stores/subjects';
 

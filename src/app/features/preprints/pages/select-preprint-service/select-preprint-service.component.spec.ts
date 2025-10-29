@@ -5,7 +5,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
-import { DecodeHtmlPipe } from '@osf/shared/pipes';
+import { DecodeHtmlPipe } from '@osf/shared/pipes/decode-html.pipe';
 
 import { PreprintProviderShortInfo } from '../../models';
 import { PreprintProvidersSelectors } from '../../store/preprint-providers';

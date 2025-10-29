@@ -7,7 +7,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { IS_XSMALL } from '@osf/shared/helpers/breakpoints.tokens';
 import { ResourceCardService } from '@osf/shared/services/resource-card.service';
 import { ResourceType } from '@shared/enums/resource-type.enum';
-import { ResourceModel } from '@shared/models';
+import { ResourceModel } from '@shared/models/search/resource.model';
 
 import { DataResourcesComponent } from '../data-resources/data-resources.component';
 

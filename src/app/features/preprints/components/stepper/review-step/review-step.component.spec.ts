@@ -9,7 +9,7 @@ import { AffiliatedInstitutionsViewComponent } from '@osf/shared/components/affi
 import { ContributorsListComponent } from '@osf/shared/components/contributors-list/contributors-list.component';
 import { LicenseDisplayComponent } from '@osf/shared/components/license-display/license-display.component';
 import { ToastService } from '@osf/shared/services/toast.service';
-import { InterpolatePipe } from '@shared/pipes';
+import { InterpolatePipe } from '@shared/pipes/interpolate.pipe';
 import { ContributorsSelectors } from '@shared/stores/contributors';
 import { InstitutionsSelectors } from '@shared/stores/institutions';
 import { SubjectsSelectors } from '@shared/stores/subjects';

@@ -8,9 +8,12 @@ import { Skeleton } from 'primeng/skeleton';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { ComponentWiki, Wiki, WikiItemType, WikiMenuItem } from '@osf/shared/models';
+import { Wiki } from '@osf/shared/models/wiki/wiki.model';
+import { WikiMenuItem } from '@osf/shared/models/wiki/wiki-menu.model';
+import { WikiItemType } from '@osf/shared/models/wiki/wiki-type.model';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
+import { ComponentWiki } from '@osf/shared/stores/wiki';
 
 import { AddWikiDialogComponent } from '../add-wiki-dialog/add-wiki-dialog.component';
 

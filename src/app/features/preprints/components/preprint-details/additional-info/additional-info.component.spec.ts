@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 
 import { PreprintSelectors } from '@osf/features/preprints/store/preprint';
 import { LicenseDisplayComponent } from '@osf/shared/components/license-display/license-display.component';
-import { InterpolatePipe } from '@osf/shared/pipes';
+import { InterpolatePipe } from '@osf/shared/pipes/interpolate.pipe';
 import { SubjectsSelectors } from '@osf/shared/stores/subjects';
 
 import { CitationSectionComponent } from '../citation-section/citation-section.component';

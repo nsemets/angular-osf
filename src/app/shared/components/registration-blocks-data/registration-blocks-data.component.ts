@@ -7,7 +7,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 
 import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants/input-validation-messages.const';
 import { FieldType } from '@osf/shared/enums/field-type.enum';
-import { Question } from '@osf/shared/models';
+import { Question } from '@shared/models/registration/page-schema.model';
 
 @Component({
   selector: 'osf-registration-blocks-data',

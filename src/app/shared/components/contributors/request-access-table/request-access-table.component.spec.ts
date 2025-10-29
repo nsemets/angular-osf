@@ -4,9 +4,9 @@ import { DialogService } from 'primeng/dynamicdialog';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ContributorPermission } from '@osf/shared/enums/contributors';
+import { ContributorPermission } from '@osf/shared/enums/contributors/contributor-permission.enum';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
-import { RequestAccessModel } from '@osf/shared/models';
+import { RequestAccessModel } from '@shared/models/request-access/request-access.model';
 
 import { SelectComponent } from '../../select/select.component';
 

@@ -2,8 +2,8 @@ import { MockPipe } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LicenseModel } from '@osf/shared/models';
-import { InterpolatePipe } from '@osf/shared/pipes';
+import { LicenseModel } from '@osf/shared/models/license/license.model';
+import { InterpolatePipe } from '@osf/shared/pipes/interpolate.pipe';
 
 import { LicenseDisplayComponent } from './license-display.component';
 

@@ -1,6 +1,6 @@
 import { ContributorsMapper } from '@osf/shared/mappers/contributors';
 import { InstitutionsMapper } from '@osf/shared/mappers/institutions';
-import { LicenseModel } from '@shared/models';
+import { LicenseModel } from '@shared/models/license/license.model';
 
 import { ProjectOverview, ProjectOverviewGetResponseJsonApi } from '../models';
 

@@ -5,9 +5,10 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { AddContributorType } from '@osf/shared/enums/contributors/add-contributor-type.enum';
+import { AddDialogState } from '@osf/shared/enums/contributors/add-dialog-state.enum';
+import { ContributorAddModel } from '@osf/shared/models/contributors/contributor-add.model';
 import { AddContributorItemComponent } from '@shared/components/contributors/add-contributor-item/add-contributor-item.component';
-import { AddContributorType, AddDialogState } from '@shared/enums/contributors';
-import { ContributorAddModel } from '@shared/models';
 import { ContributorsSelectors } from '@shared/stores/contributors';
 
 import { ComponentsSelectionListComponent } from '../../components-selection-list/components-selection-list.component';

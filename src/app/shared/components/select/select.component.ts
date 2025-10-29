@@ -6,7 +6,7 @@ import { ChangeDetectionStrategy, Component, input, model, output } from '@angul
 import { FormsModule } from '@angular/forms';
 
 import { Primitive } from '@osf/shared/helpers/types.helper';
-import { SelectOption } from '@osf/shared/models';
+import { SelectOption } from '@osf/shared/models/select-option.model';
 
 @Component({
   selector: 'osf-select',

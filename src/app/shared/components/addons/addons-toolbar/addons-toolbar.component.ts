@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, effect, inject, input, model, OnIni
 import { FormControl, FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { SelectOption } from '@osf/shared/models';
+import { SelectOption } from '@osf/shared/models/select-option.model';
 import { AddonsQueryParamsService } from '@osf/shared/services/addons-query-params.service';
 
 import { SearchInputComponent } from '../../search-input/search-input.component';

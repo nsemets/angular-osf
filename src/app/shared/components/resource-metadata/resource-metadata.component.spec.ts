@@ -3,7 +3,7 @@ import { MockComponents } from 'ng-mocks';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OverviewCollectionsComponent } from '@osf/features/project/overview/components/overview-collections/overview-collections.component';
-import { ResourceOverview } from '@shared/models';
+import { ResourceOverview } from '@shared/models/resource-overview.model';
 
 import { AffiliatedInstitutionsViewComponent } from '../affiliated-institutions-view/affiliated-institutions-view.component';
 import { ContributorsListComponent } from '../contributors-list/contributors-list.component';

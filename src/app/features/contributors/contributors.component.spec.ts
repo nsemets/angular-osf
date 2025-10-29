@@ -10,12 +10,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ContributorsTableComponent, RequestAccessTableComponent } from '@osf/shared/components/contributors';
 import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
 import { ViewOnlyTableComponent } from '@osf/shared/components/view-only-table/view-only-table.component';
-import { ContributorPermission } from '@osf/shared/enums/contributors';
-import { ContributorModel } from '@osf/shared/models';
+import { ContributorPermission } from '@osf/shared/enums/contributors/contributor-permission.enum';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { ContributorsSelectors } from '@osf/shared/stores/contributors';
 import { CurrentResourceSelectors } from '@osf/shared/stores/current-resource';
 import { ViewOnlyLinkSelectors } from '@osf/shared/stores/view-only-links';
+import { ContributorModel } from '@shared/models/contributors/contributor.model';
 
 import { ContributorsComponent } from './contributors.component';
 

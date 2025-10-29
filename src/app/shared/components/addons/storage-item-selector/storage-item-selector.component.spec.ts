@@ -4,12 +4,13 @@ import { DialogService } from 'primeng/dynamicdialog';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StorageItemSelectorComponent } from '@shared/components/addons';
 import { OperationNames } from '@shared/enums/operation-names.enum';
 import { AddonsSelectors } from '@shared/stores/addons';
 
 import { GoogleFilePickerComponent } from '../../google-file-picker/google-file-picker.component';
 import { SelectComponent } from '../../select/select.component';
+
+import { StorageItemSelectorComponent } from './storage-item-selector.component';
 
 import { OSFTestingModule } from '@testing/osf.testing.module';
 import { DialogServiceMockBuilder } from '@testing/providers/dialog-provider.mock';

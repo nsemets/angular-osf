@@ -7,7 +7,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UserEmailsSelectors } from '@core/store/user-emails';
 import { ToastService } from '@osf/shared/services/toast.service';
-import { AccountEmailModel } from '@shared/models';
+import { AccountEmailModel } from '@shared/models/emails/account-email.model';
 
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 

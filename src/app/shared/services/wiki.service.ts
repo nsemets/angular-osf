@@ -5,10 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
-import { JsonApiResponse, WikisWithMeta } from '@shared/models';
-
-import { ResourceType } from '../enums/resource-type.enum';
-import { WikiMapper } from '../mappers/wiki';
+import { JsonApiResponse } from '@shared/models/common/json-api.model';
 import {
   ComponentsWikiJsonApiResponse,
   ComponentWiki,
@@ -16,9 +13,13 @@ import {
   Wiki,
   WikiGetResponse,
   WikiJsonApiResponseWithMeta,
+  WikisWithMeta,
   WikiVersion,
   WikiVersionJsonApiResponse,
-} from '../models';
+} from '@shared/models/wiki/wiki.model';
+
+import { ResourceType } from '../enums/resource-type.enum';
+import { WikiMapper } from '../mappers/wiki';
 
 import { JsonApiService } from './json-api.service';
 

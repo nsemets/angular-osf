@@ -7,7 +7,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { RouterLink } from '@angular/router';
 
 import { ResourceType } from '@shared/enums/resource-type.enum';
-import { SubjectModel } from '@shared/models';
+import { SubjectModel } from '@shared/models/subject/subject.model';
 
 @Component({
   selector: 'osf-browse-by-subjects',

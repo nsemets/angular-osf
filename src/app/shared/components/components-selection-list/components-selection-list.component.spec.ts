@@ -2,7 +2,7 @@ import { MockComponent } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ComponentCheckboxItemModel } from '@shared/models';
+import { ComponentCheckboxItemModel } from '@osf/shared/models/component-checkbox-item.model';
 
 import { ComponentCheckboxItemComponent } from '../component-checkbox-item/component-checkbox-item.component';
 

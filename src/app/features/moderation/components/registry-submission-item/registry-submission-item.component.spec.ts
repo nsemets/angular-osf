@@ -4,7 +4,7 @@ import { MockComponents, MockPipe } from 'ng-mocks';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
-import { DateAgoPipe } from '@osf/shared/pipes';
+import { DateAgoPipe } from '@osf/shared/pipes/date-ago.pipe';
 
 import { SubmissionReviewStatus } from '../../enums';
 import { RegistryModeration } from '../../models';

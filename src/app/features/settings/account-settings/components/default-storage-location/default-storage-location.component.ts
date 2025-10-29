@@ -12,7 +12,7 @@ import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@ang
 import { FormsModule } from '@angular/forms';
 
 import { UserSelectors } from '@osf/core/store/user';
-import { IdName } from '@osf/shared/models';
+import { IdName } from '@osf/shared/models/common/id-name.model';
 import { LoaderService } from '@osf/shared/services/loader.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { RegionsSelectors } from '@osf/shared/stores/regions';

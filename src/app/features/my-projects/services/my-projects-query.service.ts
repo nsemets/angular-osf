@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { SortOrder } from '@osf/shared/enums/sort-order.enum';
 import { parseQueryFilterParams } from '@osf/shared/helpers/http.helper';
-import { QueryParams } from '@osf/shared/models';
+import { QueryParams } from '@shared/models/query-params.model';
 
 import { MyProjectsTab } from '../enums';
 

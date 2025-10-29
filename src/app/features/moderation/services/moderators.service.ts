@@ -4,7 +4,9 @@ import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
-import { JsonApiResponse, PaginatedData, ResponseJsonApi, UserDataJsonApi } from '@osf/shared/models';
+import { JsonApiResponse, ResponseJsonApi } from '@osf/shared/models/common/json-api.model';
+import { PaginatedData } from '@osf/shared/models/paginated-data.model';
+import { UserDataJsonApi } from '@osf/shared/models/user/user-json-api.model';
 import { JsonApiService } from '@osf/shared/services/json-api.service';
 import { StringOrNull } from '@shared/helpers/types.helper';
 

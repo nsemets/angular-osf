@@ -4,8 +4,11 @@ import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { OperationNames } from '@osf/shared/enums/operation-names.enum';
 import { StorageItemType } from '@osf/shared/enums/storage-item-type.enum';
 import { formatCitation, getItemUrl } from '@osf/shared/helpers/citation-formatter.helper';
-import { AddonOperationInvocationService, AddonsService } from '@osf/shared/services/addons';
-import { ConfiguredAddonModel, OperationInvocation, StorageItem } from '@shared/models';
+import { AddonOperationInvocationService } from '@osf/shared/services/addons/addon-operation-invocation.service';
+import { AddonsService } from '@osf/shared/services/addons/addons.service';
+import { ConfiguredAddonModel } from '@shared/models/addons/configured-addon.model';
+import { OperationInvocation } from '@shared/models/addons/operation-invocation.model';
+import { StorageItem } from '@shared/models/addons/storage-item.model';
 
 import { AddonTreeItem, FormattedCitationItem } from '../../models';
 import { CitationItemComponent } from '../citation-item/citation-item.component';

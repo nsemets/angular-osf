@@ -1,4 +1,4 @@
-import { BrandModel } from '../models/brand';
+import { BrandModel } from '../models/brand/brand.model';
 
 export class BrandService {
   static applyBranding(brand: BrandModel): void {

@@ -2,7 +2,7 @@ import { RegistryOverviewJsonApiAttributes } from '@osf/features/registry/models
 import { RegistrationReviewStates } from '@osf/shared/enums/registration-review-states.enum';
 import { RegistryStatus } from '@osf/shared/enums/registry-status.enum';
 import { RevisionReviewStates } from '@osf/shared/enums/revision-review-states.enum';
-import { RegistrationAttributesJsonApi } from '@osf/shared/models';
+import { RegistrationAttributesJsonApi } from '@shared/models/registration/registration-json-api.model';
 
 export function MapRegistryStatus(
   registry: RegistryOverviewJsonApiAttributes | RegistrationAttributesJsonApi

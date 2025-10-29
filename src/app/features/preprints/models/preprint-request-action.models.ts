@@ -1,4 +1,4 @@
-import { IdName } from '@shared/models';
+import { IdName } from '@osf/shared/models/common/id-name.model';
 
 export interface PreprintRequestAction {
   id: string;

@@ -9,7 +9,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormSelectComponent } from '@osf/shared/components/form-select/form-select.component';
 import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
 import { InputLimits } from '@osf/shared/constants/input-limits.const';
-import { SelectOption } from '@osf/shared/models';
+import { SelectOption } from '@shared/models/select-option.model';
 
 import { resourceTypeOptions } from '../../constants';
 import { RegistryResourceFormModel } from '../../models';

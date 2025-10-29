@@ -6,7 +6,7 @@ import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ResourceType } from '@shared/enums/resource-type.enum';
-import { DiscoverableFilter, FilterOperator, FilterOption } from '@shared/models';
+import { DiscoverableFilter, FilterOperator, FilterOption } from '@shared/models/search/discaverable-filter.model';
 import { GlobalSearchSelectors } from '@shared/stores/global-search';
 
 import { FilterChipsComponent } from '../filter-chips/filter-chips.component';

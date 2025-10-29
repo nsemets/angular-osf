@@ -1,4 +1,4 @@
-import { Identifier } from './identifiers';
+import { Identifier } from './identifiers/identifier.model';
 
 export interface ResourceMetadata {
   title: string;

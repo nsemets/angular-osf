@@ -7,7 +7,7 @@ import { ContributorsTableComponent } from '@osf/shared/components/contributors'
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { ToastService } from '@osf/shared/services/toast.service';
-import { ContributorModel } from '@shared/models';
+import { ContributorModel } from '@shared/models/contributors/contributor.model';
 import { ContributorsSelectors } from '@shared/stores/contributors';
 
 import { PreprintsContributorsComponent } from './preprints-contributors.component';

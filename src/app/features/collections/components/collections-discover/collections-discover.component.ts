@@ -15,7 +15,7 @@ import { ClearCurrentProvider } from '@core/store/provider';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
 import { HeaderStyleHelper } from '@osf/shared/helpers/header-style.helper';
-import { CollectionsFilters } from '@osf/shared/models';
+import { CollectionsFilters } from '@osf/shared/models/collections/collections-filters.model';
 import { BrandService } from '@osf/shared/services/brand.service';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import {

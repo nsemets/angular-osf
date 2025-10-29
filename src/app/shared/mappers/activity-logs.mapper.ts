@@ -1,6 +1,8 @@
 import { DEFAULT_TABLE_PARAMS } from '../constants/default-table-params.constants';
-import { JsonApiResponseWithMeta, MetaAnonymousJsonApi, PaginatedData } from '../models';
-import { ActivityLog, ActivityLogJsonApi, LogContributor, LogContributorJsonApi } from '../models/activity-logs';
+import { ActivityLog, LogContributor } from '../models/activity-logs/activity-logs.model';
+import { ActivityLogJsonApi, LogContributorJsonApi } from '../models/activity-logs/activity-logs-json-api.model';
+import { JsonApiResponseWithMeta, MetaAnonymousJsonApi } from '../models/common/json-api.model';
+import { PaginatedData } from '../models/paginated-data.model';
 
 export class ActivityLogsMapper {
   static fromActivityLogJsonApi(log: ActivityLogJsonApi, isAnonymous?: boolean): ActivityLog {

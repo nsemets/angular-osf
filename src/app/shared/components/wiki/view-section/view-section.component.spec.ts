@@ -3,7 +3,7 @@ import { MockComponent } from 'ng-mocks';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 
-import { WikiVersion } from '@shared/models';
+import { WikiVersion } from '@shared/models/wiki/wiki.model';
 
 import { MarkdownComponent } from '../../markdown/markdown.component';
 

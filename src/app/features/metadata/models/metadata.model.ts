@@ -1,5 +1,7 @@
-import { Identifier, Institution, LicenseModel } from '@osf/shared/models';
 import { UserPermissions } from '@shared/enums/user-permissions.enum';
+import { Identifier } from '@shared/models/identifiers/identifier.model';
+import { Institution } from '@shared/models/institutions/institutions.models';
+import { LicenseModel } from '@shared/models/license/license.model';
 
 export interface MetadataModel {
   id: string;

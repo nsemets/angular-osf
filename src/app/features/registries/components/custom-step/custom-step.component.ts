@@ -34,8 +34,10 @@ import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants/input-validatio
 import { FieldType } from '@osf/shared/enums/field-type.enum';
 import { CustomValidators } from '@osf/shared/helpers/custom-form-validators.helper';
 import { findChangedFields } from '@osf/shared/helpers/find-changed-fields';
-import { FileModel, FilePayloadJsonApi, PageSchema } from '@osf/shared/models';
 import { ToastService } from '@osf/shared/services/toast.service';
+import { FileModel } from '@shared/models/files/file.model';
+import { FilePayloadJsonApi } from '@shared/models/files/file-payload-json-api.model';
+import { PageSchema } from '@shared/models/registration/page-schema.model';
 
 import { FilesMapper } from '../../mappers/files.mapper';
 import { RegistriesSelectors, SetUpdatedFields, UpdateStepState } from '../../store';

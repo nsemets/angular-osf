@@ -1,4 +1,4 @@
-import { JsonApiResponse, JsonApiResponseWithMeta, MetaAnonymousJsonApi } from '../common';
+import { JsonApiResponse, JsonApiResponseWithMeta, MetaAnonymousJsonApi } from '../common/json-api.model';
 
 export enum WikiModes {
   View = 'view',

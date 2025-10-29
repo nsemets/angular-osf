@@ -7,7 +7,9 @@ import { Component, computed, input } from '@angular/core';
 
 import { ADDON_TERMS } from '@osf/shared/constants/addon-terms.const';
 import { isCitationAddon } from '@osf/shared/helpers/addon-type.helper';
-import { AddonModel, AddonTerm, AuthorizedAccountModel } from '@shared/models';
+import { AddonModel } from '@shared/models/addons/addon.model';
+import { AddonTerm } from '@shared/models/addons/addon-utils.models';
+import { AuthorizedAccountModel } from '@shared/models/addons/authorized-account.model';
 
 @Component({
   selector: 'osf-addon-terms',

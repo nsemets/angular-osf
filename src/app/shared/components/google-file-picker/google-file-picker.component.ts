@@ -10,7 +10,7 @@ import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { SENTRY_TOKEN } from '@core/provider/sentry.provider';
 import { AddonType } from '@osf/shared/enums/addon-type.enum';
 import { GoogleFilePickerDownloadService } from '@osf/shared/services/google-file-picker.download.service';
-import { StorageItem } from '@shared/models';
+import { StorageItem } from '@shared/models/addons/storage-item.model';
 import { GoogleFileDataModel } from '@shared/models/files/google-file.data.model';
 import { GoogleFilePickerModel } from '@shared/models/files/google-file.picker.model';
 import { AddonsSelectors, GetAuthorizedStorageOauthToken } from '@shared/stores/addons';

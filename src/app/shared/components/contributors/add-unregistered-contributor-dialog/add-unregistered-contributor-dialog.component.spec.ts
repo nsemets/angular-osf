@@ -5,8 +5,9 @@ import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { InputLimits } from '@osf/shared/constants/input-limits.const';
-import { AddContributorType, ContributorPermission } from '@shared/enums/contributors';
-import { ContributorAddModel } from '@shared/models';
+import { AddContributorType } from '@osf/shared/enums/contributors/add-contributor-type.enum';
+import { ContributorPermission } from '@osf/shared/enums/contributors/contributor-permission.enum';
+import { ContributorAddModel } from '@shared/models/contributors/contributor-add.model';
 
 import { TextInputComponent } from '../../text-input/text-input.component';
 

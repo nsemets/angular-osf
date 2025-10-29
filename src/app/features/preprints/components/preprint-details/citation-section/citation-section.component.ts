@@ -23,7 +23,8 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { ResourceType } from '@shared/enums/resource-type.enum';
-import { CitationStyle, CustomOption } from '@shared/models';
+import { CitationStyle } from '@shared/models/citations/citation-style.model';
+import { CustomOption } from '@shared/models/select-option.model';
 import {
   CitationsSelectors,
   FetchDefaultProviderCitationStyles,

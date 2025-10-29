@@ -4,7 +4,12 @@ import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { MapEmail, MapEmails } from '@osf/shared/mappers/emails.mapper';
-import { AccountEmailModel, EmailResponseJsonApi, EmailsDataJsonApi, EmailsResponseJsonApi } from '@osf/shared/models';
+import { AccountEmailModel } from '@osf/shared/models/emails/account-email.model';
+import {
+  EmailResponseJsonApi,
+  EmailsDataJsonApi,
+  EmailsResponseJsonApi,
+} from '@osf/shared/models/emails/account-emails-json-api.model';
 import { JsonApiService } from '@osf/shared/services/json-api.service';
 
 @Injectable({

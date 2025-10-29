@@ -3,7 +3,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { SOCIAL_ICONS } from '@osf/core/constants';
+import { SOCIAL_ICONS } from '@core/constants/social-icons.constant';
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 
 @Component({

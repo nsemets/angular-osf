@@ -1,6 +1,7 @@
 import { ResourceInfoModel } from '@osf/features/contributors/models';
 import { ResourceType } from '@shared/enums/resource-type.enum';
-import { ResourceModel, ResourceOverview } from '@shared/models';
+import { ResourceOverview } from '@shared/models/resource-overview.model';
+import { ResourceModel } from '@shared/models/search/resource.model';
 
 export const MOCK_RESOURCE: ResourceModel = {
   absoluteUrl: 'https://api.osf.io/v2/resources/resource-123',

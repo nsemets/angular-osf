@@ -2,7 +2,7 @@ import { MockComponent } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StepOption } from '@shared/models';
+import { StepOption } from '@shared/models/step-option.model';
 
 import { IconComponent } from '../icon/icon.component';
 

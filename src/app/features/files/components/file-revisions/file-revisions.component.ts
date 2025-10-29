@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 
 import { CopyButtonComponent } from '@osf/shared/components/copy-button/copy-button.component';
 import { InfoIconComponent } from '@osf/shared/components/info-icon/info-icon.component';
-import { StopPropagationDirective } from '@osf/shared/directives';
+import { StopPropagationDirective } from '@osf/shared/directives/stop-propagation.directive';
 
 import { OsfFileRevision } from '../../models';
 

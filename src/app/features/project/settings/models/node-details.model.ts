@@ -1,5 +1,6 @@
 import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
-import { IdName, Institution } from '@osf/shared/models';
+import { IdName } from '@shared/models/common/id-name.model';
+import { Institution } from '@shared/models/institutions/institutions.models';
 
 export interface NodeDetailsModel {
   id: string;

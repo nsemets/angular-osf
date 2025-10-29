@@ -5,7 +5,7 @@ import { catchError, of, tap } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 
 import { handleSectionError } from '@osf/shared/helpers/state-error.handler';
-import { PaginatedData } from '@osf/shared/models';
+import { PaginatedData } from '@osf/shared/models/paginated-data.model';
 
 import { ModeratorModel } from '../../models';
 import { ModeratorsService } from '../../services';

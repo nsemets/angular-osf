@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 
 import { CredentialsFormat } from '@osf/shared/enums/addons-credentials-format.enum';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
-import { AddonModel } from '@shared/models';
+import { AddonModel } from '@shared/models/addons/addon.model';
 
 import { AddonCardComponent } from './addon-card.component';
 

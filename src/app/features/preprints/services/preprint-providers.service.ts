@@ -10,7 +10,9 @@ import {
   PreprintProviderShortInfo,
 } from '@osf/features/preprints/models';
 import { JsonApiService } from '@osf/shared/services/json-api.service';
-import { JsonApiResponse, SubjectModel, SubjectsResponseJsonApi } from '@shared/models';
+import { JsonApiResponse } from '@shared/models/common/json-api.model';
+import { SubjectModel } from '@shared/models/subject/subject.model';
+import { SubjectsResponseJsonApi } from '@shared/models/subject/subjects-json-api.model';
 
 @Injectable({
   providedIn: 'root',

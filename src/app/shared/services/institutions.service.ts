@@ -8,12 +8,11 @@ import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { ResourceType } from '../enums/resource-type.enum';
 import { InstitutionsMapper } from '../mappers/institutions';
 import {
-  Institution,
   InstitutionJsonApiResponse,
   InstitutionsJsonApiResponse,
   InstitutionsWithMetaJsonApiResponse,
-  InstitutionsWithTotalCount,
-} from '../models';
+} from '../models/institutions/institution-json-api.model';
+import { Institution, InstitutionsWithTotalCount } from '../models/institutions/institutions.models';
 
 import { JsonApiService } from './json-api.service';
 

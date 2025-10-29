@@ -1,6 +1,6 @@
 import { Selector } from '@ngxs/store';
 
-import { Wiki, WikiVersion } from '@osf/shared/models';
+import { Wiki, WikiVersion } from '@osf/shared/models/wiki/wiki.model';
 
 import { ComponentWiki, WikiModesStateModel, WikiStateModel } from './wiki.model';
 import { WikiState } from './wiki.state';

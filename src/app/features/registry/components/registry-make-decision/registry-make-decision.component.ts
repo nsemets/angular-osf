@@ -22,7 +22,7 @@ import { ModerationDecisionFormControls } from '@osf/shared/enums/moderation-dec
 import { RegistrationReviewStates } from '@osf/shared/enums/registration-review-states.enum';
 import { RevisionReviewStates } from '@osf/shared/enums/revision-review-states.enum';
 import { ReviewActionTrigger, SchemaResponseActionTrigger } from '@osf/shared/enums/trigger-action.enum';
-import { DateAgoPipe } from '@osf/shared/pipes';
+import { DateAgoPipe } from '@osf/shared/pipes/date-ago.pipe';
 
 import { RegistryOverview } from '../../models';
 import { RegistryOverviewSelectors, SubmitDecision } from '../../store/registry-overview';

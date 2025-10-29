@@ -9,7 +9,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { ActivatedRoute, Navigation, Router, UrlTree } from '@angular/router';
 
-import { AddonSetupAccountFormComponent, AddonTermsComponent } from '@osf/shared/components/addons';
+import { AddonSetupAccountFormComponent } from '@osf/shared/components/addons/addon-setup-account-form/addon-setup-account-form.component';
+import { AddonTermsComponent } from '@osf/shared/components/addons/addon-terms/addon-terms.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { AddonsSelectors } from '@shared/stores/addons';
 

@@ -14,8 +14,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { languageCodes } from '@osf/shared/constants/language.const';
 import { hasViewOnlyParam } from '@osf/shared/helpers/view-only.helper';
-import { LanguageCodeModel } from '@osf/shared/models';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
+import { LanguageCodeModel } from '@shared/models/language-code.model';
 
 import { FileMetadataFields } from '../../constants';
 import { PatchFileMetadata } from '../../models';

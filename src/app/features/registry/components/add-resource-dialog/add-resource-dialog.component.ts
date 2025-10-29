@@ -15,7 +15,7 @@ import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/
 import { InputLimits } from '@osf/shared/constants/input-limits.const';
 import { RegistryResourceType } from '@osf/shared/enums/registry-resource.enum';
 import { CustomValidators } from '@osf/shared/helpers/custom-form-validators.helper';
-import { SelectOption } from '@osf/shared/models';
+import { SelectOption } from '@shared/models/select-option.model';
 
 import { resourceTypeOptions } from '../../constants';
 import { AddResource, ConfirmAddResource, RegistryResourceFormModel } from '../../models';

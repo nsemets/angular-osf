@@ -6,7 +6,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CedarTemplateFormComponent } from '@osf/features/metadata/components';
 import { CedarMetadataDataTemplateJsonApi, CedarRecordDataBinding } from '@osf/features/metadata/models';
 import { MetadataResourceEnum } from '@osf/shared/enums/metadata-resource.enum';
-import { MetadataTabsModel } from '@osf/shared/models';
+import { MetadataTabsModel } from '@shared/models/metadata-tabs.model';
 
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 
