@@ -2,7 +2,6 @@ import { MockComponents, MockProvider } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OverviewToolbarComponent } from '@osf/features/project/overview/components';
 import { RegistriesSelectors } from '@osf/features/registries/store';
 import { DataResourcesComponent } from '@osf/shared/components/data-resources/data-resources.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
@@ -13,6 +12,7 @@ import { ViewOnlyLinkMessageComponent } from '@osf/shared/components/view-only-l
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 
 import { ArchivingMessageComponent, RegistryRevisionsComponent, RegistryStatusesComponent } from '../../components';
+import { RegistrationOverviewToolbarComponent } from '../../components/registration-overview-toolbar/registration-overview-toolbar.component';
 import { WithdrawnMessageComponent } from '../../components/withdrawn-message/withdrawn-message.component';
 import { RegistryOverviewSelectors } from '../../store/registry-overview';
 
@@ -35,7 +35,7 @@ describe('RegistryOverviewComponent', () => {
         OSFTestingModule,
         ...MockComponents(
           SubHeaderComponent,
-          OverviewToolbarComponent,
+          RegistrationOverviewToolbarComponent,
           LoadingSpinnerComponent,
           ResourceMetadataComponent,
           RegistryRevisionsComponent,

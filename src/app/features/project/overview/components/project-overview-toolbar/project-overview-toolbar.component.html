@@ -2,7 +2,7 @@
 
 @if (resource) {
   <div class="flex flex-column gap-5 lg:flex-row lg:align-items-center lg:justify-content-between">
-    @if (!isCollectionsRoute() && canEdit() && !isRegistration) {
+    @if (!isCollectionsRoute() && canEdit()) {
       <div class="flex gap-3 align-items-center">
         <div class="flex gap-1" [class.inactive]="isPublic()">
           <i class="fas fa-lock"></i>
@@ -23,7 +23,7 @@
       </div>
     }
 
-    @if ((isCollectionsRoute() || hasViewOnly() || !canEdit()) && !isRegistration) {
+    @if (isCollectionsRoute() || hasViewOnly() || !canEdit()) {
       @if (isPublic()) {
         <div class="flex gap-2">
           <i class="fas fa-lock-open"></i>
@@ -60,7 +60,7 @@
               </p-button>
             }
 
-            @if (resource.resourceType === ResourceType.Project && !hasViewOnly()) {
+            @if (!hasViewOnly()) {
               <p-button
                 class="flex"
                 (click)="forkActionMenu.toggle($event)"

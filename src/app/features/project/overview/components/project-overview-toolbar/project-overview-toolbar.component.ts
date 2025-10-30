@@ -32,7 +32,7 @@ import { ForkDialogComponent } from '../fork-dialog/fork-dialog.component';
 import { TogglePublicityDialogComponent } from '../toggle-publicity-dialog/toggle-publicity-dialog.component';
 
 @Component({
-  selector: 'osf-overview-toolbar',
+  selector: 'osf-project-overview-toolbar',
   imports: [
     ToggleSwitch,
     TranslatePipe,
@@ -45,11 +45,11 @@ import { TogglePublicityDialogComponent } from '../toggle-publicity-dialog/toggl
     FileSizePipe,
     SocialsShareButtonComponent,
   ],
-  templateUrl: './overview-toolbar.component.html',
-  styleUrl: './overview-toolbar.component.scss',
+  templateUrl: './project-overview-toolbar.component.html',
+  styleUrl: './project-overview-toolbar.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OverviewToolbarComponent {
+export class ProjectOverviewToolbarComponent {
   private store = inject(Store);
   private customDialogService = inject(CustomDialogService);
   private toastService = inject(ToastService);
@@ -96,10 +96,6 @@ export class OverviewToolbarComponent {
       },
     },
   ];
-
-  get isRegistration(): boolean {
-    return this.currentResource()?.resourceType === ResourceType.Registration;
-  }
 
   constructor() {
     effect(() => {
@@ -188,19 +184,12 @@ export class OverviewToolbarComponent {
 
   private handleForkResource(): void {
     const resource = this.currentResource();
-    const headerTranslation =
-      resource?.resourceType === ResourceType.Project
-        ? 'project.overview.dialog.fork.headerProject'
-        : resource?.resourceType === ResourceType.Registration
-          ? 'project.overview.dialog.fork.headerRegistry'
-          : '';
+    const headerTranslation = 'project.overview.dialog.fork.headerProject';
 
     if (resource) {
       this.customDialogService.open(ForkDialogComponent, {
         header: headerTranslation,
-        data: {
-          resource: resource,
-        },
+        data: { resource },
       });
     }
   }
@@ -211,7 +200,6 @@ export class OverviewToolbarComponent {
       .onClose.subscribe({
         next: () => {
           const duplicatedProject = this.duplicatedProject();
-
           if (duplicatedProject) {
             this.router.navigate(['/', duplicatedProject.id]);
           }

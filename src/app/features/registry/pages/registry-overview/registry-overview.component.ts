@@ -20,7 +20,6 @@ import {
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { OverviewToolbarComponent } from '@osf/features/project/overview/components';
 import { CreateSchemaResponse, FetchAllSchemaResponses, RegistriesSelectors } from '@osf/features/registries/store';
 import { DataResourcesComponent } from '@osf/shared/components/data-resources/data-resources.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
@@ -48,6 +47,7 @@ import { SchemaResponse } from '@shared/models/registration/schema-response.mode
 import { ToolbarResource } from '@shared/models/toolbar-resource.model';
 
 import { ArchivingMessageComponent, RegistryRevisionsComponent, RegistryStatusesComponent } from '../../components';
+import { RegistrationOverviewToolbarComponent } from '../../components/registration-overview-toolbar/registration-overview-toolbar.component';
 import { RegistryMakeDecisionComponent } from '../../components/registry-make-decision/registry-make-decision.component';
 import { WithdrawnMessageComponent } from '../../components/withdrawn-message/withdrawn-message.component';
 import {
@@ -62,7 +62,6 @@ import {
   selector: 'osf-registry-overview',
   imports: [
     SubHeaderComponent,
-    OverviewToolbarComponent,
     LoadingSpinnerComponent,
     ResourceMetadataComponent,
     RegistryRevisionsComponent,
@@ -75,6 +74,7 @@ import {
     Message,
     DatePipe,
     ViewOnlyLinkMessageComponent,
+    RegistrationOverviewToolbarComponent,
   ],
   templateUrl: './registry-overview.component.html',
   styleUrl: './registry-overview.component.scss',
