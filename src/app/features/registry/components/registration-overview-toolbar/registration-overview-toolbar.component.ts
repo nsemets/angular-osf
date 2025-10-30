@@ -1,4 +1,4 @@
-import { createDispatchMap, select, Store } from '@ngxs/store';
+import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -12,8 +12,12 @@ import { UserSelectors } from '@core/store/user';
 import { SocialsShareButtonComponent } from '@osf/shared/components/socials-share-button/socials-share-button.component';
 import { ToolbarResource } from '@osf/shared/models/toolbar-resource.model';
 import { ToastService } from '@osf/shared/services/toast.service';
-import { AddResourceToBookmarks, BookmarksSelectors, RemoveResourceFromBookmarks } from '@osf/shared/stores/bookmarks';
-import { GetMyBookmarks, MyResourcesSelectors } from '@osf/shared/stores/my-resources';
+import {
+  AddResourceToBookmarks,
+  BookmarksSelectors,
+  GetResourceBookmark,
+  RemoveResourceFromBookmarks,
+} from '@osf/shared/stores/bookmarks';
 
 @Component({
   selector: 'osf-registration-overview-toolbar',
@@ -23,38 +27,44 @@ import { GetMyBookmarks, MyResourcesSelectors } from '@osf/shared/stores/my-reso
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegistrationOverviewToolbarComponent {
-  private store = inject(Store);
   private toastService = inject(ToastService);
+  private destroyRef = inject(DestroyRef);
 
-  destroyRef = inject(DestroyRef);
-  isBookmarked = signal(false);
-
-  isCollectionsRoute = input<boolean>(false);
   currentResource = input.required<ToolbarResource>();
 
-  isBookmarksLoading = select(MyResourcesSelectors.getBookmarksLoading);
-  isBookmarksSubmitting = select(BookmarksSelectors.getBookmarksCollectionIdSubmitting);
+  isBookmarked = signal(false);
+
   bookmarksCollectionId = select(BookmarksSelectors.getBookmarksCollectionId);
-  bookmarkedProjects = select(MyResourcesSelectors.getBookmarks);
+  bookmarks = select(BookmarksSelectors.getBookmarks);
+  isBookmarksLoading = select(BookmarksSelectors.areBookmarksLoading);
+  isBookmarksSubmitting = select(BookmarksSelectors.getBookmarksCollectionIdSubmitting);
   isAuthenticated = select(UserSelectors.isAuthenticated);
 
-  actions = createDispatchMap({ getMyBookmarks: GetMyBookmarks });
+  actions = createDispatchMap({
+    getResourceBookmark: GetResourceBookmark,
+    addResourceToBookmarks: AddResourceToBookmarks,
+    removeResourceFromBookmarks: RemoveResourceFromBookmarks,
+  });
 
   constructor() {
     effect(() => {
-      const bookmarksId = this.bookmarksCollectionId();
+      const bookmarksCollectionId = this.bookmarksCollectionId();
       const resource = this.currentResource();
-      if (!bookmarksId || !resource) return;
-      this.store.dispatch(new GetMyBookmarks(bookmarksId, 1, 100, {}, resource.resourceType));
+
+      if (!bookmarksCollectionId || !resource) return;
+
+      this.actions.getResourceBookmark(bookmarksCollectionId, resource.id, resource.resourceType);
     });
 
     effect(() => {
       const resource = this.currentResource();
-      const bookmarks = this.bookmarkedProjects();
+      const bookmarks = this.bookmarks();
+
       if (!resource || !bookmarks?.length) {
         this.isBookmarked.set(false);
         return;
       }
+
       this.isBookmarked.set(bookmarks.some((bookmark) => bookmark.id === resource.id));
     });
   }
@@ -62,29 +72,26 @@ export class RegistrationOverviewToolbarComponent {
   toggleBookmark(): void {
     const resource = this.currentResource();
     const bookmarksId = this.bookmarksCollectionId();
+
     if (!resource || !bookmarksId) return;
 
     const newBookmarkState = !this.isBookmarked();
 
-    if (!newBookmarkState) {
-      this.store
-        .dispatch(new RemoveResourceFromBookmarks(bookmarksId, resource.id, resource.resourceType))
+    if (newBookmarkState) {
+      this.actions
+        .addResourceToBookmarks(bookmarksId, resource.id, resource.resourceType)
         .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe({
-          next: () => {
-            this.isBookmarked.set(newBookmarkState);
-            this.toastService.showSuccess('project.overview.dialog.toast.bookmark.remove');
-          },
+        .subscribe(() => {
+          this.isBookmarked.set(newBookmarkState);
+          this.toastService.showSuccess('project.overview.dialog.toast.bookmark.add');
         });
     } else {
-      this.store
-        .dispatch(new AddResourceToBookmarks(bookmarksId, resource.id, resource.resourceType))
+      this.actions
+        .removeResourceFromBookmarks(bookmarksId, resource.id, resource.resourceType)
         .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe({
-          next: () => {
-            this.isBookmarked.set(newBookmarkState);
-            this.toastService.showSuccess('project.overview.dialog.toast.bookmark.add');
-          },
+        .subscribe(() => {
+          this.isBookmarked.set(newBookmarkState);
+          this.toastService.showSuccess('project.overview.dialog.toast.bookmark.remove');
         });
     }
   }
