@@ -144,7 +144,7 @@ export class ConnectConfiguredAddonComponent {
     return `${this.environment.webUrl}/${id}`;
   });
 
-  addonTypeString = computed(() => getAddonTypeString(this.addon()));
+  addonTypeString = computed(() => getAddonTypeString(this.addon()) as AddonType);
 
   readonly baseUrl = computed(() => {
     const currentUrl = this.router.url;

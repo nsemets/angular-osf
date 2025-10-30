@@ -101,7 +101,7 @@ export class ConfigureAddonComponent implements OnInit {
     return `${this.environment.webUrl}/${id}`;
   });
   readonly addonTypeString = computed(() => {
-    return getAddonTypeString(this.addon());
+    return getAddonTypeString(this.addon()) as AddonType;
   });
   readonly selectedItemLabel = computed(() => {
     const addonType = this.addonTypeString();
