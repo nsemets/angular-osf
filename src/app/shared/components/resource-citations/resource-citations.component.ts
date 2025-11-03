@@ -9,7 +9,7 @@ import { Select, SelectChangeEvent, SelectFilterEvent } from 'primeng/select';
 import { Skeleton } from 'primeng/skeleton';
 import { Textarea } from 'primeng/textarea';
 
-import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 import { Clipboard } from '@angular/cdk/clipboard';
 import {
@@ -23,6 +23,7 @@ import {
   output,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -68,7 +69,6 @@ export class ResourceCitationsComponent {
 
   private readonly clipboard = inject(Clipboard);
   private readonly toastService = inject(ToastService);
-  private readonly destroy$ = new Subject<void>();
   private readonly filterSubject = new Subject<string>();
 
   customCitation = output<string>();
@@ -102,7 +102,6 @@ export class ResourceCitationsComponent {
     this.setupFilterDebounce();
     this.setupDefaultCitationsEffect();
     this.setupCitationStylesEffect();
-    this.setupCleanup();
   }
 
   setupDefaultCitationsEffect(): void {
@@ -190,10 +189,8 @@ export class ResourceCitationsComponent {
 
   private setupFilterDebounce(): void {
     this.filterSubject
-      .pipe(debounceTime(300), distinctUntilChanged(), takeUntil(this.destroy$))
-      .subscribe((filterValue) => {
-        this.actions.getCitationStyles(filterValue);
-      });
+      .pipe(debounceTime(300), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+      .subscribe((filterValue) => this.actions.getCitationStyles(filterValue));
   }
 
   private setupCitationStylesEffect(): void {
@@ -204,14 +201,8 @@ export class ResourceCitationsComponent {
         label: style.title,
         value: style,
       }));
-      this.citationStylesOptions.set(options);
-    });
-  }
 
-  private setupCleanup(): void {
-    this.destroyRef.onDestroy(() => {
-      this.destroy$.next();
-      this.destroy$.complete();
+      this.citationStylesOptions.set(options);
     });
   }
 }

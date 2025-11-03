@@ -66,7 +66,7 @@ export class RegistrationNodeMapper {
   static getRegistrationResponses(response: RegistrationResponsesJsonApi): RegistrationResponses {
     return {
       summary: response.summary,
-      uploader: response.uploader.map((uploadItem) => ({
+      uploader: response.uploader?.map((uploadItem) => ({
         fileId: uploadItem.file_id,
         fileName: uploadItem.file_name,
         fileUrls: uploadItem.file_urls,

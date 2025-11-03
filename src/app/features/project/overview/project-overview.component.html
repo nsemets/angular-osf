@@ -86,9 +86,7 @@
       <osf-resource-metadata
         [currentResource]="resourceOverview()"
         (customCitationUpdated)="onCustomCitationUpdated($event)"
-        [isCollectionsRoute]="isCollectionsRoute()"
-        [canEdit]="hasAdminAccess()"
-        [showEditButton]="hasWriteAccess()"
+        [canEdit]="hasWriteAccess()"
         [bibliographicContributors]="bibliographicContributors()"
         [isBibliographicContributorsLoading]="isBibliographicContributorsLoading()"
         [hasMoreBibliographicContributors]="hasMoreBibliographicContributors()"

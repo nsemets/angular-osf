@@ -14,7 +14,7 @@
 
     @if (showToolbar()) {
       <div class="pb-5 pl-4 ml-auto w-full md:pr-4">
-        <osf-registration-overview-toolbar [currentResource]="toolbarResource()!" />
+        <osf-registration-overview-toolbar [currentResource]="registry()!" />
       </div>
     }
   </div>
@@ -131,7 +131,6 @@
             [currentResource]="resourceOverview()"
             (customCitationUpdated)="onCustomCitationUpdated($event)"
             [canEdit]="hasWriteAccess()"
-            [showEditButton]="hasWriteAccess()"
             [bibliographicContributors]="bibliographicContributors()"
             [isBibliographicContributorsLoading]="isBibliographicContributorsLoading()"
             [hasMoreBibliographicContributors]="hasMoreBibliographicContributors()"

@@ -10,7 +10,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { UserSelectors } from '@core/store/user';
 import { SocialsShareButtonComponent } from '@osf/shared/components/socials-share-button/socials-share-button.component';
-import { ToolbarResource } from '@osf/shared/models/toolbar-resource.model';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { ToastService } from '@osf/shared/services/toast.service';
 import {
   AddResourceToBookmarks,
@@ -18,6 +18,8 @@ import {
   GetResourceBookmark,
   RemoveResourceFromBookmarks,
 } from '@osf/shared/stores/bookmarks';
+
+import { RegistryOverview } from '../../models';
 
 @Component({
   selector: 'osf-registration-overview-toolbar',
@@ -30,9 +32,10 @@ export class RegistrationOverviewToolbarComponent {
   private toastService = inject(ToastService);
   private destroyRef = inject(DestroyRef);
 
-  currentResource = input.required<ToolbarResource>();
+  currentResource = input.required<RegistryOverview>();
 
   isBookmarked = signal(false);
+  resourceType = ResourceType.Registration;
 
   bookmarksCollectionId = select(BookmarksSelectors.getBookmarksCollectionId);
   bookmarks = select(BookmarksSelectors.getBookmarks);
@@ -53,7 +56,7 @@ export class RegistrationOverviewToolbarComponent {
 
       if (!bookmarksCollectionId || !resource) return;
 
-      this.actions.getResourceBookmark(bookmarksCollectionId, resource.id, resource.resourceType);
+      this.actions.getResourceBookmark(bookmarksCollectionId, resource.id, this.resourceType);
     });
 
     effect(() => {
@@ -79,7 +82,7 @@ export class RegistrationOverviewToolbarComponent {
 
     if (newBookmarkState) {
       this.actions
-        .addResourceToBookmarks(bookmarksId, resource.id, resource.resourceType)
+        .addResourceToBookmarks(bookmarksId, resource.id, this.resourceType)
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => {
           this.isBookmarked.set(newBookmarkState);
@@ -87,7 +90,7 @@ export class RegistrationOverviewToolbarComponent {
         });
     } else {
       this.actions
-        .removeResourceFromBookmarks(bookmarksId, resource.id, resource.resourceType)
+        .removeResourceFromBookmarks(bookmarksId, resource.id, this.resourceType)
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => {
           this.isBookmarked.set(newBookmarkState);

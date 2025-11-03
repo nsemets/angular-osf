@@ -42,9 +42,7 @@ export class ResourceMetadataComponent {
 
   currentResource = input.required<ResourceOverview | null>();
   customCitationUpdated = output<string>();
-  isCollectionsRoute = input<boolean>(false);
   canEdit = input.required<boolean>();
-  showEditButton = input<boolean>();
   bibliographicContributors = input<ContributorModel[]>([]);
   isBibliographicContributorsLoading = input<boolean>(false);
   hasMoreBibliographicContributors = input<boolean>(false);
