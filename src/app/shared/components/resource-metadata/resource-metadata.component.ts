@@ -1,7 +1,6 @@
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
-import { Tag } from 'primeng/tag';
 
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
@@ -16,6 +15,10 @@ import { ResourceOverview } from '@shared/models/resource-overview.model';
 import { AffiliatedInstitutionsViewComponent } from '../affiliated-institutions-view/affiliated-institutions-view.component';
 import { ContributorsListComponent } from '../contributors-list/contributors-list.component';
 import { ResourceCitationsComponent } from '../resource-citations/resource-citations.component';
+import { ResourceDoiComponent } from '../resource-doi/resource-doi.component';
+import { ResourceLicenseComponent } from '../resource-license/resource-license.component';
+import { SubjectsListComponent } from '../subjects-list/subjects-list.component';
+import { TagsListComponent } from '../tags-list/tags-list.component';
 import { TruncatedTextComponent } from '../truncated-text/truncated-text.component';
 
 @Component({
@@ -25,12 +28,15 @@ import { TruncatedTextComponent } from '../truncated-text/truncated-text.compone
     TranslatePipe,
     TruncatedTextComponent,
     RouterLink,
-    Tag,
     DatePipe,
     ResourceCitationsComponent,
     OverviewCollectionsComponent,
     AffiliatedInstitutionsViewComponent,
     ContributorsListComponent,
+    ResourceDoiComponent,
+    ResourceLicenseComponent,
+    SubjectsListComponent,
+    TagsListComponent,
   ],
   templateUrl: './resource-metadata.component.html',
   styleUrl: './resource-metadata.component.scss',

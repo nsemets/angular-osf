@@ -95,7 +95,7 @@
     <div class="flex flex-column gap-2">
       <h3>{{ 'common.labels.license' | translate }}</h3>
 
-      <div>{{ resource.license?.name ?? ('project.overview.metadata.noLicense' | translate) }}</div>
+      <osf-resource-license [license]="resource.license"></osf-resource-license>
     </div>
 
     @if (resource.iaUrl) {
@@ -112,22 +112,16 @@
           {{ (isProject() ? 'project.overview.metadata.projectDOI' : 'registry.overview.metadata.doi') | translate }}
         </h3>
 
-        @if (resource.identifiers?.length) {
-          @for (identifier of resource.identifiers; track identifier.id) {
-            @if (identifier.category === 'doi') {
-              <a class="font-bold" [href]="'https://doi.org/' + identifier.value">
-                {{ identifier.value }}
-              </a>
-            }
-          }
-        } @else {
-          <p>{{ 'project.overview.metadata.noProjectDoi' | translate }}</p>
-        }
+        <osf-resource-doi [identifiers]="resource.identifiers || []"></osf-resource-doi>
       </div>
     }
 
     @if (!resource.isAnonymous) {
-      <osf-affiliated-institutions-view [institutions]="resource.affiliatedInstitutions || []" />
+      <div class="flex flex-column gap-2">
+        <h3>{{ 'common.labels.affiliatedInstitutions' | translate }}</h3>
+
+        <osf-affiliated-institutions-view [institutions]="resource.affiliatedInstitutions || []" />
+      </div>
     }
 
     @if (isProject()) {
@@ -135,36 +129,15 @@
     }
 
     <div class="flex flex-column gap-2">
-      <h3>{{ 'project.overview.metadata.subjects' | translate }}</h3>
+      <h3>{{ 'common.labels.subjects' | translate }}</h3>
 
-      <div class="flex flex-wrap gap-2">
-        @if (resource.subjects.length) {
-          @for (subject of resource.subjects; track subject.id) {
-            <p-tag [value]="subject.name" severity="info" />
-          }
-        } @else {
-          <p>{{ 'project.overview.metadata.noSubjects' | translate }}</p>
-        }
-      </div>
+      <osf-subjects-list [subjects]="resource.subjects"></osf-subjects-list>
     </div>
 
     <div class="flex flex-column gap-2">
       <h3>{{ 'project.overview.metadata.tags' | translate }}</h3>
 
-      @if (resource.tags.length) {
-        <div class="flex flex-wrap gap-2">
-          @for (tag of resource.tags; track tag) {
-            <p-tag
-              class="cursor-pointer hover:bg-black-alpha-10"
-              [value]="tag"
-              severity="info"
-              (click)="tagClicked(tag)"
-            />
-          }
-        </div>
-      } @else {
-        <p>{{ 'project.overview.metadata.noTags' | translate }}</p>
-      }
+      <osf-tags-list [tags]="resource.tags" (tagClick)="tagClicked($event)"></osf-tags-list>
     </div>
 
     @if (!resource.isAnonymous) {

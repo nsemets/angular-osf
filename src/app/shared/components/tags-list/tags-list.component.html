@@ -1,0 +1,13 @@
+<div class="flex flex-wrap gap-2">
+  @if (isLoading()) {
+    <p-skeleton height="1.5rem" />
+  } @else {
+    @if (tags().length) {
+      @for (tag of tags(); track tag) {
+        <p-tag class="cursor-pointer hover:bg-black-alpha-10" [value]="tag" severity="info" (click)="onTagClick(tag)" />
+      }
+    } @else {
+      <p>{{ 'project.overview.metadata.noTags' | translate }}</p>
+    }
+  }
+</div>

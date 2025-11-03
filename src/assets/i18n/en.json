@@ -137,7 +137,12 @@
       "updated": "Updated",
       "dateUpdated": "Date Updated",
       "dateCreated": "Date Created",
-      "license": "License"
+      "license": "License",
+      "noDoi": "No DOI",
+      "subjects": "Subjects",
+      "noLicense": "No License",
+      "affiliatedInstitutions": "Affiliated Institutions",
+      "noAffiliatedInstitutions": "No affiliated institutions"
     },
     "deleteConfirmation": {
       "header": "Delete",
