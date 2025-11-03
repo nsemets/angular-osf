@@ -62,6 +62,10 @@ export class AddonSetupAccountFormComponent {
     return format === CredentialsFormat.OAUTH2 || format === CredentialsFormat.OAUTH;
   });
 
+  readonly hasConfigurableApiRoot = computed(() => {
+    return this.addon().configurableApiRoot === true;
+  });
+
   handleSubmit(): void {
     if (!this.isFormValid) return;
 
