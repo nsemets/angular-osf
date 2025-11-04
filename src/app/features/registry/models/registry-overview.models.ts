@@ -66,19 +66,15 @@ export interface RegistryOverview {
 }
 
 export interface RegistrationOverviewModel extends RegistrationNodeModel {
-  type: string;
   registrationSchemaLink: string;
+  licenseId: string;
   associatedProjectId: string;
-  citation: string;
   provider?: ProviderShortInfoModel;
-  contributors: ContributorModel[];
-  license?: LicenseModel;
-  identifiers?: IdentifierModel[];
-  schemaResponses: SchemaResponse[];
   status: RegistryStatus;
+  forksCount: number;
 }
 
 export interface RegistryOverviewWithMeta {
-  registry: RegistryOverview | null;
+  registry: RegistrationOverviewModel;
   meta?: MetaAnonymousJsonApi;
 }

@@ -1,6 +1,4 @@
-@let resource = currentResource();
-
-@if (resource) {
+@if (resourceId()) {
   <div class="flex gap-2 justify-content-end">
     @if (isAuthenticated()) {
       <p-button
@@ -16,10 +14,10 @@
       </p-button>
     }
 
-    @if (resource.isPublic) {
+    @if (isPublic()) {
       <osf-socials-share-button
-        [resourceId]="resource.id"
-        [resourceTitle]="resource.title"
+        [resourceId]="resourceId()"
+        [resourceTitle]="resourceTitle()"
         [resourceType]="resourceType"
       ></osf-socials-share-button>
     }

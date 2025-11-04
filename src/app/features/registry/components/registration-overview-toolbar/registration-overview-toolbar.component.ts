@@ -19,8 +19,6 @@ import {
   RemoveResourceFromBookmarks,
 } from '@osf/shared/stores/bookmarks';
 
-import { RegistryOverview } from '../../models';
-
 @Component({
   selector: 'osf-registration-overview-toolbar',
   imports: [Button, Tooltip, SocialsShareButtonComponent, TranslatePipe],
@@ -32,7 +30,9 @@ export class RegistrationOverviewToolbarComponent {
   private toastService = inject(ToastService);
   private destroyRef = inject(DestroyRef);
 
-  currentResource = input.required<RegistryOverview>();
+  resourceId = input.required<string>();
+  resourceTitle = input.required<string>();
+  isPublic = input<boolean>(false);
 
   isBookmarked = signal(false);
   resourceType = ResourceType.Registration;
@@ -52,37 +52,34 @@ export class RegistrationOverviewToolbarComponent {
   constructor() {
     effect(() => {
       const bookmarksCollectionId = this.bookmarksCollectionId();
-      const resource = this.currentResource();
 
-      if (!bookmarksCollectionId || !resource) return;
+      if (!bookmarksCollectionId || !this.resourceId()) return;
 
-      this.actions.getResourceBookmark(bookmarksCollectionId, resource.id, this.resourceType);
+      this.actions.getResourceBookmark(bookmarksCollectionId, this.resourceId(), this.resourceType);
     });
 
     effect(() => {
-      const resource = this.currentResource();
       const bookmarks = this.bookmarks();
 
-      if (!resource || !bookmarks?.length) {
+      if (!this.resourceId() || !bookmarks?.length) {
         this.isBookmarked.set(false);
         return;
       }
 
-      this.isBookmarked.set(bookmarks.some((bookmark) => bookmark.id === resource.id));
+      this.isBookmarked.set(bookmarks.some((bookmark) => bookmark.id === this.resourceId()));
     });
   }
 
   toggleBookmark(): void {
-    const resource = this.currentResource();
     const bookmarksId = this.bookmarksCollectionId();
 
-    if (!resource || !bookmarksId) return;
+    if (!this.resourceId() || !bookmarksId) return;
 
     const newBookmarkState = !this.isBookmarked();
 
     if (newBookmarkState) {
       this.actions
-        .addResourceToBookmarks(bookmarksId, resource.id, this.resourceType)
+        .addResourceToBookmarks(bookmarksId, this.resourceId(), this.resourceType)
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => {
           this.isBookmarked.set(newBookmarkState);
@@ -90,7 +87,7 @@ export class RegistrationOverviewToolbarComponent {
         });
     } else {
       this.actions
-        .removeResourceFromBookmarks(bookmarksId, resource.id, this.resourceType)
+        .removeResourceFromBookmarks(bookmarksId, this.resourceId(), this.resourceType)
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => {
           this.isBookmarked.set(newBookmarkState);

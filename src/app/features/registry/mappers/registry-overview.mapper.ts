@@ -3,7 +3,7 @@ import { IdentifiersMapper } from '@osf/shared/mappers/identifiers.mapper';
 import { LicensesMapper } from '@osf/shared/mappers/licenses.mapper';
 import { MapRegistryStatus, RegistrationMapper, RegistrationNodeMapper } from '@osf/shared/mappers/registration';
 
-import { RegistryOverview, RegistryOverviewJsonApiData } from '../models';
+import { RegistrationOverviewModel, RegistryOverview, RegistryOverviewJsonApiData } from '../models';
 
 export function MapRegistryOverview(data: RegistryOverviewJsonApiData): RegistryOverview | null {
   return {
@@ -62,16 +62,17 @@ export function MapRegistryOverview(data: RegistryOverviewJsonApiData): Registry
   } as RegistryOverview;
 }
 
-export function MapRegistrationOverview(data: RegistryOverviewJsonApiData) {
+export function MapRegistrationOverview(data: RegistryOverviewJsonApiData): RegistrationOverviewModel {
   const registrationAttributes = RegistrationNodeMapper.getRegistrationNodeAttributes(data.id, data.attributes);
   const providerInfo = RegistrationNodeMapper.getRegistrationProviderShortInfo(data.embeds?.provider?.data);
-  const identifiers = IdentifiersMapper.fromJsonApi(data.embeds?.identifiers);
-  const license = LicensesMapper.fromLicenseDataJsonApi(data.embeds?.license?.data);
 
   return {
     ...registrationAttributes,
+    associatedProjectId: data.relationships?.registered_from?.data?.id,
+    registrationSchemaLink: data.relationships?.registration_schema?.links?.related?.href,
+    licenseId: data.relationships?.license?.data.id,
+    status: MapRegistryStatus(data.attributes),
     provider: providerInfo,
-    identifiers: identifiers,
-    license: license,
+    forksCount: 0,
   };
 }

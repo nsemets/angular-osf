@@ -84,20 +84,6 @@ export interface RegistryOverviewJsonApiEmbed {
   schema_responses: {
     data: SchemaResponseDataJsonApi[];
   };
-  files: {
-    data: {
-      id: string;
-      relationships: {
-        files: {
-          links: {
-            related: {
-              href: string;
-            };
-          };
-        };
-      };
-    }[];
-  };
   provider: { data: RegistryProviderDetailsJsonApi };
 }
 
@@ -138,6 +124,11 @@ export interface RegistryOverviewJsonApiRelationships {
     data: {
       id: string;
       type: string;
+    };
+  };
+  license: {
+    data: {
+      id: string;
     };
   };
 }

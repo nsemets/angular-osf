@@ -1477,7 +1477,8 @@
       "rejectSubmissionSuccess": "Submission has been rejected successfully",
       "forceWithdrawSuccess": "Submission has been force withdrawn successfully",
       "removeSuccess": "Submission has been withdrawn successfully",
-      "justificationPlaceholder": "Provide justification for withdrawal"
+      "justificationPlaceholder": "Provide justification for withdrawal",
+      "acceptWithdrawalSuccess": "Submission has been withdrawn successfully"
     },
     "submissionReview": {
       "submitted": "Submitted",

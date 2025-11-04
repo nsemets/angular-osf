@@ -2,28 +2,26 @@ import { MockComponents } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { AffiliatedInstitutionsViewComponent } from '@osf/features/project/overview/components/affiliated-institutions-view/affiliated-institutions-view.component';
+import { ContributorsListComponent } from '@osf/features/project/overview/components/contributors-list/contributors-list.component';
 import { OverviewCollectionsComponent } from '@osf/features/project/overview/components/overview-collections/overview-collections.component';
-import { ResourceOverview } from '@shared/models/resource-overview.model';
-
-import { AffiliatedInstitutionsViewComponent } from '../affiliated-institutions-view/affiliated-institutions-view.component';
-import { ContributorsListComponent } from '../contributors-list/contributors-list.component';
-import { ResourceCitationsComponent } from '../resource-citations/resource-citations.component';
-import { TruncatedTextComponent } from '../truncated-text/truncated-text.component';
-
-import { ResourceMetadataComponent } from './resource-metadata.component';
+import { ResourceCitationsComponent } from '@osf/features/project/overview/components/resource-citations/resource-citations.component';
+import { ProjectOverviewMetadataComponent } from '@osf/features/project/overview/components/resource-metadata/resource-metadata.component';
+import { TruncatedTextComponent } from '@osf/features/project/overview/components/truncated-text/truncated-text.component';
+import { ResourceOverview } from '@osf/shared/models/resource-overview.model';
 
 import { MOCK_RESOURCE_OVERVIEW } from '@testing/mocks/resource.mock';
 
-describe('ResourceMetadataComponent', () => {
-  let component: ResourceMetadataComponent;
-  let fixture: ComponentFixture<ResourceMetadataComponent>;
+describe('ProjectOverviewMetadataComponent', () => {
+  let component: ProjectOverviewMetadataComponent;
+  let fixture: ComponentFixture<ProjectOverviewMetadataComponent>;
 
   const mockResourceOverview: ResourceOverview = MOCK_RESOURCE_OVERVIEW;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        ResourceMetadataComponent,
+        ProjectOverviewMetadataComponent,
         MockComponents(
           TruncatedTextComponent,
           ResourceCitationsComponent,
@@ -34,7 +32,7 @@ describe('ResourceMetadataComponent', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ResourceMetadataComponent);
+    fixture = TestBed.createComponent(ProjectOverviewMetadataComponent);
     component = fixture.componentInstance;
   });
 
@@ -83,10 +81,5 @@ describe('ResourceMetadataComponent', () => {
   it('should handle false canEdit input', () => {
     fixture.componentRef.setInput('canEdit', false);
     expect(component.canEdit()).toBe(false);
-  });
-
-  it('should handle true isCollectionsRoute input', () => {
-    fixture.componentRef.setInput('isCollectionsRoute', true);
-    expect(component.isCollectionsRoute()).toBe(true);
   });
 });

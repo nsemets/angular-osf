@@ -1,6 +1,6 @@
-@let resource = currentResource();
+@let customCitation = customCitations();
 
-@if (resource) {
+@if (resourceId()) {
   <div class="metadata-accordion">
     <p-accordion>
       <p-accordion-panel value="0">
@@ -13,10 +13,10 @@
             @if (isCitationsLoading()) {
               <p-skeleton height="3.5rem"></p-skeleton>
             } @else {
-              @if (resource.customCitation) {
+              @if (customCitation) {
                 <div class="flex flex-column gap-2">
                   <h3>{{ 'project.overview.metadata.citeAs' | translate }}</h3>
-                  <p>{{ resource.customCitation }}</p>
+                  <p>{{ customCitation }}</p>
                 </div>
 
                 <div class="flex mt-3 gap-3">
@@ -109,7 +109,7 @@
                   class="btn-full-width"
                   severity="danger"
                   [label]="'common.buttons.remove' | translate"
-                  [disabled]="!resource.customCitation || isCustomCitationSubmitting()"
+                  [disabled]="!customCitation || isCustomCitationSubmitting()"
                   (onClick)="handleDeleteCustomCitation()"
                 >
                 </p-button>

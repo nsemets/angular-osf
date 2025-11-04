@@ -13,9 +13,13 @@ import { RegistryOverviewService } from '../../services';
 
 import {
   ClearRegistryOverview,
+  CreateSchemaResponse,
   GetRegistryById,
+  GetRegistryIdentifiers,
   GetRegistryInstitutions,
+  GetRegistryLicense,
   GetRegistryReviewActions,
+  GetRegistrySchemaResponses,
   GetSchemaBlocks,
   MakePublic,
   SetRegistryCustomCitation,
@@ -70,10 +74,6 @@ export class RegistryOverviewState {
           },
           isAnonymous: response.meta?.anonymous ?? false,
         });
-
-        if (registryOverview?.registrationSchemaLink) {
-          ctx.dispatch(new GetSchemaBlocks(registryOverview.registrationSchemaLink));
-        }
       }),
       catchError((error) => handleSectionError(ctx, 'registry', error))
     );
@@ -103,6 +103,54 @@ export class RegistryOverviewState {
     );
   }
 
+  @Action(GetRegistryIdentifiers)
+  getRegistryIdentifiers(ctx: StateContext<RegistryOverviewStateModel>, action: GetRegistryIdentifiers) {
+    const state = ctx.getState();
+    ctx.patchState({
+      identifiers: {
+        ...state.identifiers,
+        isLoading: true,
+      },
+    });
+
+    return this.registryOverviewService.getRegistryIdentifiers(action.registryId).pipe(
+      tap((identifiers) => {
+        ctx.patchState({
+          identifiers: {
+            data: identifiers,
+            isLoading: false,
+            error: null,
+          },
+        });
+      }),
+      catchError((error) => handleSectionError(ctx, 'identifiers', error))
+    );
+  }
+
+  @Action(GetRegistryLicense)
+  getRegistryLicense(ctx: StateContext<RegistryOverviewStateModel>, action: GetRegistryLicense) {
+    const state = ctx.getState();
+    ctx.patchState({
+      license: {
+        ...state.license,
+        isLoading: true,
+      },
+    });
+
+    return this.registryOverviewService.getRegistryLicense(action.licenseId).pipe(
+      tap((license) => {
+        ctx.patchState({
+          license: {
+            data: license,
+            isLoading: false,
+            error: null,
+          },
+        });
+      }),
+      catchError((error) => handleSectionError(ctx, 'license', error))
+    );
+  }
+
   @Action(GetSchemaBlocks)
   getSchemaBlocks(ctx: StateContext<RegistryOverviewStateModel>, action: GetSchemaBlocks) {
     const state = ctx.getState();
@@ -127,6 +175,56 @@ export class RegistryOverviewState {
     );
   }
 
+  @Action(GetRegistrySchemaResponses)
+  getSchemaResponses(ctx: StateContext<RegistryOverviewStateModel>, action: GetRegistrySchemaResponses) {
+    const state = ctx.getState();
+    ctx.patchState({
+      schemaResponses: {
+        ...state.schemaResponses,
+        isLoading: true,
+      },
+    });
+
+    return this.registryOverviewService.getSchemaResponses(action.registryId).pipe(
+      tap((schemaResponses) => {
+        ctx.patchState({
+          schemaResponses: {
+            data: schemaResponses,
+            isLoading: false,
+            error: null,
+          },
+        });
+      }),
+      catchError((error) => handleSectionError(ctx, 'schemaResponses', error))
+    );
+  }
+
+  @Action(CreateSchemaResponse)
+  createSchemaResponse(ctx: StateContext<RegistryOverviewStateModel>, { registryId }: CreateSchemaResponse) {
+    const state = ctx.getState();
+
+    ctx.patchState({
+      currentSchemaResponse: {
+        ...state.currentSchemaResponse,
+        isLoading: true,
+        error: null,
+      },
+    });
+
+    return this.registryOverviewService.createSchemaResponse(registryId).pipe(
+      tap((schemaResponse) => {
+        ctx.patchState({
+          currentSchemaResponse: {
+            data: schemaResponse,
+            isLoading: false,
+            error: null,
+          },
+        });
+      }),
+      catchError((error) => handleSectionError(ctx, 'currentSchemaResponse', error))
+    );
+  }
+
   @Action(WithdrawRegistration)
   withdrawRegistration(ctx: StateContext<RegistryOverviewStateModel>, action: WithdrawRegistration) {
     const state = ctx.getState();
@@ -146,10 +244,6 @@ export class RegistryOverviewState {
             error: null,
           },
         });
-
-        if (registryOverview?.registrationSchemaLink) {
-          ctx.dispatch(new GetSchemaBlocks(registryOverview.registrationSchemaLink));
-        }
       }),
       catchError((error) => handleSectionError(ctx, 'registry', error))
     );
@@ -174,10 +268,6 @@ export class RegistryOverviewState {
             error: null,
           },
         });
-
-        if (registryOverview?.registrationSchemaLink) {
-          ctx.dispatch(new GetSchemaBlocks(registryOverview.registrationSchemaLink));
-        }
       }),
       catchError((error) => handleSectionError(ctx, 'registry', error))
     );
