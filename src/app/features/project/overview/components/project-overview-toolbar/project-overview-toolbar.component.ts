@@ -1,4 +1,4 @@
-import { createDispatchMap, select, Store } from '@ngxs/store';
+import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -24,15 +24,19 @@ import { ToolbarResource } from '@osf/shared/models/toolbar-resource.model';
 import { FileSizePipe } from '@osf/shared/pipes/file-size.pipe';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { ToastService } from '@osf/shared/services/toast.service';
-import { AddResourceToBookmarks, BookmarksSelectors, RemoveResourceFromBookmarks } from '@osf/shared/stores/bookmarks';
-import { GetMyBookmarks, MyResourcesSelectors } from '@osf/shared/stores/my-resources';
+import {
+  AddResourceToBookmarks,
+  BookmarksSelectors,
+  GetResourceBookmark,
+  RemoveResourceFromBookmarks,
+} from '@osf/shared/stores/bookmarks';
 
 import { DuplicateDialogComponent } from '../duplicate-dialog/duplicate-dialog.component';
 import { ForkDialogComponent } from '../fork-dialog/fork-dialog.component';
 import { TogglePublicityDialogComponent } from '../toggle-publicity-dialog/toggle-publicity-dialog.component';
 
 @Component({
-  selector: 'osf-overview-toolbar',
+  selector: 'osf-project-overview-toolbar',
   imports: [
     ToggleSwitch,
     TranslatePipe,
@@ -45,19 +49,18 @@ import { TogglePublicityDialogComponent } from '../toggle-publicity-dialog/toggl
     FileSizePipe,
     SocialsShareButtonComponent,
   ],
-  templateUrl: './overview-toolbar.component.html',
-  styleUrl: './overview-toolbar.component.scss',
+  templateUrl: './project-overview-toolbar.component.html',
+  styleUrl: './project-overview-toolbar.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OverviewToolbarComponent {
-  private store = inject(Store);
+export class ProjectOverviewToolbarComponent {
   private customDialogService = inject(CustomDialogService);
   private toastService = inject(ToastService);
+  private destroyRef = inject(DestroyRef);
 
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
-  destroyRef = inject(DestroyRef);
   isPublic = signal(false);
   isBookmarked = signal(false);
 
@@ -67,16 +70,22 @@ export class OverviewToolbarComponent {
   projectDescription = input<string>('');
   showViewOnlyLinks = input<boolean>(true);
 
-  isBookmarksLoading = select(MyResourcesSelectors.getBookmarksLoading);
-  isBookmarksSubmitting = select(BookmarksSelectors.getBookmarksCollectionIdSubmitting);
   bookmarksCollectionId = select(BookmarksSelectors.getBookmarksCollectionId);
-  bookmarkedProjects = select(MyResourcesSelectors.getBookmarks);
+  bookmarks = select(BookmarksSelectors.getBookmarks);
+  isBookmarksLoading = select(BookmarksSelectors.areBookmarksLoading);
+  isBookmarksSubmitting = select(BookmarksSelectors.getBookmarksCollectionIdSubmitting);
+
   duplicatedProject = select(ProjectOverviewSelectors.getDuplicatedProject);
   isAuthenticated = select(UserSelectors.isAuthenticated);
 
   hasViewOnly = computed(() => hasViewOnlyParam(this.router));
 
-  actions = createDispatchMap({ clearDuplicatedProject: ClearDuplicatedProject });
+  actions = createDispatchMap({
+    getResourceBookmark: GetResourceBookmark,
+    addResourceToBookmarks: AddResourceToBookmarks,
+    removeResourceFromBookmarks: RemoveResourceFromBookmarks,
+    clearDuplicatedProject: ClearDuplicatedProject,
+  });
 
   readonly ResourceType = ResourceType;
 
@@ -97,20 +106,14 @@ export class OverviewToolbarComponent {
     },
   ];
 
-  get isRegistration(): boolean {
-    return this.currentResource()?.resourceType === ResourceType.Registration;
-  }
-
   constructor() {
     effect(() => {
       const bookmarksId = this.bookmarksCollectionId();
       const resource = this.currentResource();
 
-      if (!bookmarksId || !resource) {
-        return;
-      }
+      if (!bookmarksId || !resource) return;
 
-      this.store.dispatch(new GetMyBookmarks(bookmarksId, 1, 100, {}, resource.resourceType));
+      this.actions.getResourceBookmark(bookmarksId, resource.id, resource.resourceType);
     });
 
     effect(() => {
@@ -122,7 +125,7 @@ export class OverviewToolbarComponent {
 
     effect(() => {
       const resource = this.currentResource();
-      const bookmarks = this.bookmarkedProjects();
+      const bookmarks = this.bookmarks();
 
       if (!resource || !bookmarks?.length) {
         this.isBookmarked.set(false);
@@ -163,44 +166,33 @@ export class OverviewToolbarComponent {
 
     const newBookmarkState = !this.isBookmarked();
 
-    if (!newBookmarkState) {
-      this.store
-        .dispatch(new RemoveResourceFromBookmarks(bookmarksId, resource.id, resource.resourceType))
+    if (newBookmarkState) {
+      this.actions
+        .addResourceToBookmarks(bookmarksId, resource.id, resource.resourceType)
         .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe({
-          next: () => {
-            this.isBookmarked.set(newBookmarkState);
-            this.toastService.showSuccess('project.overview.dialog.toast.bookmark.remove');
-          },
+        .subscribe(() => {
+          this.isBookmarked.set(newBookmarkState);
+          this.toastService.showSuccess('project.overview.dialog.toast.bookmark.add');
         });
     } else {
-      this.store
-        .dispatch(new AddResourceToBookmarks(bookmarksId, resource.id, resource.resourceType))
+      this.actions
+        .removeResourceFromBookmarks(bookmarksId, resource.id, resource.resourceType)
         .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe({
-          next: () => {
-            this.isBookmarked.set(newBookmarkState);
-            this.toastService.showSuccess('project.overview.dialog.toast.bookmark.add');
-          },
+        .subscribe(() => {
+          this.isBookmarked.set(newBookmarkState);
+          this.toastService.showSuccess('project.overview.dialog.toast.bookmark.remove');
         });
     }
   }
 
   private handleForkResource(): void {
     const resource = this.currentResource();
-    const headerTranslation =
-      resource?.resourceType === ResourceType.Project
-        ? 'project.overview.dialog.fork.headerProject'
-        : resource?.resourceType === ResourceType.Registration
-          ? 'project.overview.dialog.fork.headerRegistry'
-          : '';
+    const headerTranslation = 'project.overview.dialog.fork.headerProject';
 
     if (resource) {
       this.customDialogService.open(ForkDialogComponent, {
         header: headerTranslation,
-        data: {
-          resource: resource,
-        },
+        data: { resource },
       });
     }
   }
@@ -211,7 +203,6 @@ export class OverviewToolbarComponent {
       .onClose.subscribe({
         next: () => {
           const duplicatedProject = this.duplicatedProject();
-
           if (duplicatedProject) {
             this.router.navigate(['/', duplicatedProject.id]);
           }

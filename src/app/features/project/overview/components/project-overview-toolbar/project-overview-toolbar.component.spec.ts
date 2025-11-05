@@ -4,18 +4,18 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SocialsShareButtonComponent } from '@osf/shared/components/socials-share-button/socials-share-button.component';
 
-import { OverviewToolbarComponent } from './overview-toolbar.component';
+import { ProjectOverviewToolbarComponent } from './project-overview-toolbar.component';
 
-describe('OverviewToolbarComponent', () => {
-  let component: OverviewToolbarComponent;
-  let fixture: ComponentFixture<OverviewToolbarComponent>;
+describe('ProjectOverviewToolbarComponent', () => {
+  let component: ProjectOverviewToolbarComponent;
+  let fixture: ComponentFixture<ProjectOverviewToolbarComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OverviewToolbarComponent, MockComponent(SocialsShareButtonComponent)],
+      imports: [ProjectOverviewToolbarComponent, MockComponent(SocialsShareButtonComponent)],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(OverviewToolbarComponent);
+    fixture = TestBed.createComponent(ProjectOverviewToolbarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
