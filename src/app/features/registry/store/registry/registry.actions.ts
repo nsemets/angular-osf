@@ -1,61 +1,61 @@
 import { ReviewActionPayload } from '@osf/shared/models/review-action/review-action-payload.model';
 
 export class GetRegistryById {
-  static readonly type = '[Registry Overview] Get Registry By Id';
+  static readonly type = '[Registry] Get Registry By Id';
 
   constructor(public id: string) {}
 }
 
 export class GetRegistryInstitutions {
-  static readonly type = '[Registry Overview] Get Registry Institutions';
+  static readonly type = '[Registry] Get Registry Institutions';
 
   constructor(public registryId: string) {}
 }
 
 export class GetRegistryIdentifiers {
-  static readonly type = '[Registry Overview] Get Registry Identifiers';
+  static readonly type = '[Registry] Get Registry Identifiers';
 
   constructor(public registryId: string) {}
 }
 
 export class GetRegistryLicense {
-  static readonly type = '[Registry Overview] Get Registry License';
+  static readonly type = '[Registry] Get Registry License';
 
   constructor(public licenseId: string) {}
 }
 
 export class GetSchemaBlocks {
-  static readonly type = '[Registry Overview] Get Schema Blocks';
+  static readonly type = '[Registry] Get Schema Blocks';
 
   constructor(public schemaLink: string) {}
 }
 
 export class GetRegistrySchemaResponses {
-  static readonly type = '[Registry Overview] Get Registry Schema Responses';
+  static readonly type = '[Registry] Get Registry Schema Responses';
 
   constructor(public registryId: string) {}
 }
 
 export class CreateSchemaResponse {
-  static readonly type = '[Registry Overview] Create Schema Response';
+  static readonly type = '[Registry] Create Schema Response';
 
   constructor(public registryId: string) {}
 }
 
 export class GetRegistryReviewActions {
-  static readonly type = '[Registry Overview] Get Registry Review Actions';
+  static readonly type = '[Registry] Get Registry Review Actions';
 
   constructor(public registryId: string) {}
 }
 
 export class SetRegistryCustomCitation {
-  static readonly type = '[Registry Overview] Set Registry Custom Citation';
+  static readonly type = '[Registry] Set Registry Custom Citation';
 
   constructor(public citation: string) {}
 }
 
 export class WithdrawRegistration {
-  static readonly type = '[Registry Overview] Withdraw Registration';
+  static readonly type = '[Registry] Withdraw Registration';
 
   constructor(
     public registryId: string,
@@ -64,13 +64,13 @@ export class WithdrawRegistration {
 }
 
 export class MakePublic {
-  static readonly type = '[Registry Overview] Make Public';
+  static readonly type = '[Registry] Make Public';
 
   constructor(public registryId: string) {}
 }
 
 export class SubmitDecision {
-  static readonly type = '[Registry Overview] Submit Decision';
+  static readonly type = '[Registry] Submit Decision';
 
   constructor(
     public payload: ReviewActionPayload,
@@ -78,6 +78,6 @@ export class SubmitDecision {
   ) {}
 }
 
-export class ClearRegistryOverview {
-  static readonly type = '[Registry Overview] Clear Registry Overview';
+export class ClearRegistry {
+  static readonly type = '[Registry] Clear Registry';
 }

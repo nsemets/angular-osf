@@ -28,9 +28,9 @@ import { JsonApiService } from '@osf/shared/services/json-api.service';
 
 import { MapRegistrationOverview } from '../mappers';
 import {
-  GetRegistryOverviewJsonApi,
+  RegistrationOverviewDataJsonApi,
   RegistrationOverviewModel,
-  RegistryOverviewJsonApiData,
+  RegistrationOverviewResponse,
   RegistryOverviewWithMeta,
 } from '../models';
 
@@ -46,12 +46,8 @@ export class RegistryOverviewService {
   }
 
   getRegistrationById(id: string): Observable<RegistryOverviewWithMeta> {
-    const params = {
-      'embed[]': ['provider'],
-    };
-
     return this.jsonApiService
-      .get<GetRegistryOverviewJsonApi>(`${this.apiUrl}/registrations/${id}/`, params)
+      .get<RegistrationOverviewResponse>(`${this.apiUrl}/registrations/${id}/`)
       .pipe(map((response) => ({ registry: MapRegistrationOverview(response.data), meta: response.meta })));
   }
 
@@ -144,7 +140,7 @@ export class RegistryOverviewService {
     };
 
     return this.jsonApiService
-      .patch<RegistryOverviewJsonApiData>(`${this.apiUrl}/registrations/${registryId}/`, payload)
+      .patch<RegistrationOverviewDataJsonApi>(`${this.apiUrl}/registrations/${registryId}/`, payload)
       .pipe(map((response) => MapRegistrationOverview(response)));
   }
 
@@ -161,7 +157,7 @@ export class RegistryOverviewService {
     };
 
     return this.jsonApiService
-      .patch<RegistryOverviewJsonApiData>(`${this.apiUrl}/registrations/${registryId}/`, payload)
+      .patch<RegistrationOverviewDataJsonApi>(`${this.apiUrl}/registrations/${registryId}/`, payload)
       .pipe(map((response) => MapRegistrationOverview(response)));
   }
 

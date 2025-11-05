@@ -5,14 +5,12 @@ import { catchError } from 'rxjs/operators';
 
 import { inject, Injectable } from '@angular/core';
 
-import { SetCurrentProvider } from '@core/store/provider';
-import { CurrentResourceType } from '@osf/shared/enums/resource-type.enum';
 import { handleSectionError } from '@osf/shared/helpers/state-error.handler';
 
 import { RegistryOverviewService } from '../../services';
 
 import {
-  ClearRegistryOverview,
+  ClearRegistry,
   CreateSchemaResponse,
   GetRegistryById,
   GetRegistryIdentifiers,
@@ -25,19 +23,19 @@ import {
   SetRegistryCustomCitation,
   SubmitDecision,
   WithdrawRegistration,
-} from './registry-overview.actions';
-import { REGISTRY_OVERVIEW_DEFAULTS, RegistryOverviewStateModel } from './registry-overview.model';
+} from './registry.actions';
+import { REGISTRY_DEFAULTS, RegistryStateModel } from './registry.model';
 
 @Injectable()
-@State<RegistryOverviewStateModel>({
-  name: 'registryOverview',
-  defaults: REGISTRY_OVERVIEW_DEFAULTS,
+@State<RegistryStateModel>({
+  name: 'registry',
+  defaults: REGISTRY_DEFAULTS,
 })
-export class RegistryOverviewState {
+export class RegistryState {
   private readonly registryOverviewService = inject(RegistryOverviewService);
 
   @Action(GetRegistryById)
-  getRegistryById(ctx: StateContext<RegistryOverviewStateModel>, action: GetRegistryById) {
+  getRegistryById(ctx: StateContext<RegistryStateModel>, action: GetRegistryById) {
     const state = ctx.getState();
 
     if (state.registry.isLoading) {
@@ -55,17 +53,6 @@ export class RegistryOverviewState {
       tap((response) => {
         const registryOverview = response.registry;
 
-        if (registryOverview?.provider) {
-          ctx.dispatch(
-            new SetCurrentProvider({
-              id: registryOverview.provider.id,
-              name: registryOverview.provider.name,
-              type: CurrentResourceType.Registrations,
-              permissions: registryOverview.provider.permissions,
-            })
-          );
-        }
-
         ctx.patchState({
           registry: {
             data: registryOverview,
@@ -80,7 +67,7 @@ export class RegistryOverviewState {
   }
 
   @Action(GetRegistryInstitutions)
-  getRegistryInstitutions(ctx: StateContext<RegistryOverviewStateModel>, action: GetRegistryInstitutions) {
+  getRegistryInstitutions(ctx: StateContext<RegistryStateModel>, action: GetRegistryInstitutions) {
     const state = ctx.getState();
     ctx.patchState({
       institutions: {
@@ -104,7 +91,7 @@ export class RegistryOverviewState {
   }
 
   @Action(GetRegistryIdentifiers)
-  getRegistryIdentifiers(ctx: StateContext<RegistryOverviewStateModel>, action: GetRegistryIdentifiers) {
+  getRegistryIdentifiers(ctx: StateContext<RegistryStateModel>, action: GetRegistryIdentifiers) {
     const state = ctx.getState();
     ctx.patchState({
       identifiers: {
@@ -128,7 +115,7 @@ export class RegistryOverviewState {
   }
 
   @Action(GetRegistryLicense)
-  getRegistryLicense(ctx: StateContext<RegistryOverviewStateModel>, action: GetRegistryLicense) {
+  getRegistryLicense(ctx: StateContext<RegistryStateModel>, action: GetRegistryLicense) {
     const state = ctx.getState();
     ctx.patchState({
       license: {
@@ -152,7 +139,7 @@ export class RegistryOverviewState {
   }
 
   @Action(GetSchemaBlocks)
-  getSchemaBlocks(ctx: StateContext<RegistryOverviewStateModel>, action: GetSchemaBlocks) {
+  getSchemaBlocks(ctx: StateContext<RegistryStateModel>, action: GetSchemaBlocks) {
     const state = ctx.getState();
     ctx.patchState({
       schemaBlocks: {
@@ -176,7 +163,7 @@ export class RegistryOverviewState {
   }
 
   @Action(GetRegistrySchemaResponses)
-  getSchemaResponses(ctx: StateContext<RegistryOverviewStateModel>, action: GetRegistrySchemaResponses) {
+  getSchemaResponses(ctx: StateContext<RegistryStateModel>, action: GetRegistrySchemaResponses) {
     const state = ctx.getState();
     ctx.patchState({
       schemaResponses: {
@@ -200,7 +187,7 @@ export class RegistryOverviewState {
   }
 
   @Action(CreateSchemaResponse)
-  createSchemaResponse(ctx: StateContext<RegistryOverviewStateModel>, { registryId }: CreateSchemaResponse) {
+  createSchemaResponse(ctx: StateContext<RegistryStateModel>, { registryId }: CreateSchemaResponse) {
     const state = ctx.getState();
 
     ctx.patchState({
@@ -226,7 +213,7 @@ export class RegistryOverviewState {
   }
 
   @Action(WithdrawRegistration)
-  withdrawRegistration(ctx: StateContext<RegistryOverviewStateModel>, action: WithdrawRegistration) {
+  withdrawRegistration(ctx: StateContext<RegistryStateModel>, action: WithdrawRegistration) {
     const state = ctx.getState();
     ctx.patchState({
       registry: {
@@ -250,7 +237,7 @@ export class RegistryOverviewState {
   }
 
   @Action(MakePublic)
-  makePublic(ctx: StateContext<RegistryOverviewStateModel>, action: MakePublic) {
+  makePublic(ctx: StateContext<RegistryStateModel>, action: MakePublic) {
     const state = ctx.getState();
     ctx.patchState({
       registry: {
@@ -274,7 +261,7 @@ export class RegistryOverviewState {
   }
 
   @Action(SetRegistryCustomCitation)
-  setRegistryCustomCitation(ctx: StateContext<RegistryOverviewStateModel>, action: SetRegistryCustomCitation) {
+  setRegistryCustomCitation(ctx: StateContext<RegistryStateModel>, action: SetRegistryCustomCitation) {
     const state = ctx.getState();
     ctx.patchState({
       registry: {
@@ -288,7 +275,7 @@ export class RegistryOverviewState {
   }
 
   @Action(GetRegistryReviewActions)
-  getRegistryReviewActions(ctx: StateContext<RegistryOverviewStateModel>, action: GetRegistryReviewActions) {
+  getRegistryReviewActions(ctx: StateContext<RegistryStateModel>, action: GetRegistryReviewActions) {
     ctx.patchState({
       moderationActions: {
         data: [],
@@ -313,7 +300,7 @@ export class RegistryOverviewState {
   }
 
   @Action(SubmitDecision)
-  submitDecision(ctx: StateContext<RegistryOverviewStateModel>, action: SubmitDecision) {
+  submitDecision(ctx: StateContext<RegistryStateModel>, action: SubmitDecision) {
     ctx.patchState({
       moderationActions: {
         data: [],
@@ -338,8 +325,8 @@ export class RegistryOverviewState {
     );
   }
 
-  @Action(ClearRegistryOverview)
-  clearRegistryOverview(ctx: StateContext<RegistryOverviewStateModel>) {
-    ctx.patchState(REGISTRY_OVERVIEW_DEFAULTS);
+  @Action(ClearRegistry)
+  clearRegistry(ctx: StateContext<RegistryStateModel>) {
+    ctx.patchState(REGISTRY_DEFAULTS);
   }
 }

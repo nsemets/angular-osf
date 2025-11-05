@@ -17,7 +17,7 @@ import {
 import { RegistrationOverviewToolbarComponent } from '../../components/registration-overview-toolbar/registration-overview-toolbar.component';
 import { RegistryOverviewMetadataComponent } from '../../components/registry-overview-metadata/registry-overview-metadata.component';
 import { WithdrawnMessageComponent } from '../../components/withdrawn-message/withdrawn-message.component';
-import { RegistryOverviewSelectors } from '../../store/registry-overview';
+import { RegistrySelectors } from '../../store/registry';
 
 import { RegistryOverviewComponent } from './registry-overview.component';
 
@@ -54,20 +54,20 @@ describe('RegistryOverviewComponent', () => {
         MockProvider(CustomDialogService, mockCustomDialogService),
         provideMockStore({
           signals: [
-            { selector: RegistryOverviewSelectors.getRegistry, value: null },
-            { selector: RegistryOverviewSelectors.isRegistryLoading, value: false },
-            { selector: RegistryOverviewSelectors.isRegistryAnonymous, value: false },
-            { selector: RegistryOverviewSelectors.getInstitutions, value: [] },
-            { selector: RegistryOverviewSelectors.isInstitutionsLoading, value: false },
-            { selector: RegistryOverviewSelectors.getSchemaBlocks, value: [] },
-            { selector: RegistryOverviewSelectors.isSchemaBlocksLoading, value: false },
-            { selector: RegistryOverviewSelectors.areReviewActionsLoading, value: false },
-            { selector: RegistryOverviewSelectors.getSchemaResponse, value: null },
-            { selector: RegistryOverviewSelectors.getSchemaResponseLoading, value: false },
-            { selector: RegistryOverviewSelectors.hasWriteAccess, value: false },
-            { selector: RegistryOverviewSelectors.hasAdminAccess, value: false },
-            { selector: RegistryOverviewSelectors.getReviewActions, value: [] },
-            { selector: RegistryOverviewSelectors.isReviewActionSubmitting, value: false },
+            { selector: RegistrySelectors.getRegistry, value: null },
+            { selector: RegistrySelectors.isRegistryLoading, value: false },
+            { selector: RegistrySelectors.isRegistryAnonymous, value: false },
+            { selector: RegistrySelectors.getInstitutions, value: [] },
+            { selector: RegistrySelectors.isInstitutionsLoading, value: false },
+            { selector: RegistrySelectors.getSchemaBlocks, value: [] },
+            { selector: RegistrySelectors.isSchemaBlocksLoading, value: false },
+            { selector: RegistrySelectors.areReviewActionsLoading, value: false },
+            { selector: RegistrySelectors.getSchemaResponse, value: null },
+            { selector: RegistrySelectors.getSchemaResponseLoading, value: false },
+            { selector: RegistrySelectors.hasWriteAccess, value: false },
+            { selector: RegistrySelectors.hasAdminAccess, value: false },
+            { selector: RegistrySelectors.getReviewActions, value: [] },
+            { selector: RegistrySelectors.isReviewActionSubmitting, value: false },
           ],
         }),
       ],

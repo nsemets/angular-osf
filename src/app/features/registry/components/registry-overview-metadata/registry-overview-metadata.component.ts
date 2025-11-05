@@ -25,9 +25,9 @@ import {
   GetRegistryIdentifiers,
   GetRegistryInstitutions,
   GetRegistryLicense,
-  RegistryOverviewSelectors,
+  RegistrySelectors,
   SetRegistryCustomCitation,
-} from '../../store/registry-overview';
+} from '../../store/registry';
 
 @Component({
   selector: 'osf-registry-overview-metadata',
@@ -53,16 +53,16 @@ export class RegistryOverviewMetadataComponent {
   private readonly environment = inject(ENVIRONMENT);
   private readonly router = inject(Router);
 
-  readonly registry = select(RegistryOverviewSelectors.getRegistry);
-  readonly isAnonymous = select(RegistryOverviewSelectors.isRegistryAnonymous);
+  readonly registry = select(RegistrySelectors.getRegistry);
+  readonly isAnonymous = select(RegistrySelectors.isRegistryAnonymous);
 
-  canEdit = select(RegistryOverviewSelectors.hasWriteAccess);
-  license = select(RegistryOverviewSelectors.getLicense);
-  isLicenseLoading = select(RegistryOverviewSelectors.isLicenseLoading);
-  identifiers = select(RegistryOverviewSelectors.getIdentifiers);
-  isIdentifiersLoading = select(RegistryOverviewSelectors.isIdentifiersLoading);
-  institutions = select(RegistryOverviewSelectors.getInstitutions);
-  isInstitutionsLoading = select(RegistryOverviewSelectors.isInstitutionsLoading);
+  canEdit = select(RegistrySelectors.hasWriteAccess);
+  license = select(RegistrySelectors.getLicense);
+  isLicenseLoading = select(RegistrySelectors.isLicenseLoading);
+  identifiers = select(RegistrySelectors.getIdentifiers);
+  isIdentifiersLoading = select(RegistrySelectors.isIdentifiersLoading);
+  institutions = select(RegistrySelectors.getInstitutions);
+  isInstitutionsLoading = select(RegistrySelectors.isInstitutionsLoading);
   subjects = select(SubjectsSelectors.getSubjects);
   isSubjectsLoading = select(SubjectsSelectors.getSubjectsLoading);
 

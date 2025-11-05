@@ -52,8 +52,8 @@ import {
   GetRegistryReviewActions,
   GetRegistrySchemaResponses,
   GetSchemaBlocks,
-  RegistryOverviewSelectors,
-} from '../../store/registry-overview';
+  RegistrySelectors,
+} from '../../store/registry';
 
 @Component({
   selector: 'osf-registry-overview',
@@ -86,22 +86,22 @@ export class RegistryOverviewComponent {
   private readonly customDialogService = inject(CustomDialogService);
   private readonly loaderService = inject(LoaderService);
 
-  readonly registry = select(RegistryOverviewSelectors.getRegistry);
-  readonly isRegistryLoading = select(RegistryOverviewSelectors.isRegistryLoading);
-  readonly isAnonymous = select(RegistryOverviewSelectors.isRegistryAnonymous);
-  readonly schemaResponses = select(RegistryOverviewSelectors.getSchemaResponses);
-  readonly isSchemaResponsesLoading = select(RegistryOverviewSelectors.isSchemaResponsesLoading);
-  readonly schemaBlocks = select(RegistryOverviewSelectors.getSchemaBlocks);
-  readonly isSchemaBlocksLoading = select(RegistryOverviewSelectors.isSchemaBlocksLoading);
-  readonly areReviewActionsLoading = select(RegistryOverviewSelectors.areReviewActionsLoading);
-  readonly currentRevision = select(RegistryOverviewSelectors.getSchemaResponse);
+  readonly registry = select(RegistrySelectors.getRegistry);
+  readonly isRegistryLoading = select(RegistrySelectors.isRegistryLoading);
+  readonly isAnonymous = select(RegistrySelectors.isRegistryAnonymous);
+  readonly schemaResponses = select(RegistrySelectors.getSchemaResponses);
+  readonly isSchemaResponsesLoading = select(RegistrySelectors.isSchemaResponsesLoading);
+  readonly schemaBlocks = select(RegistrySelectors.getSchemaBlocks);
+  readonly isSchemaBlocksLoading = select(RegistrySelectors.isSchemaBlocksLoading);
+  readonly areReviewActionsLoading = select(RegistrySelectors.areReviewActionsLoading);
+  readonly currentRevision = select(RegistrySelectors.getSchemaResponse);
 
   bibliographicContributors = select(ContributorsSelectors.getBibliographicContributors);
   isBibliographicContributorsLoading = select(ContributorsSelectors.isBibliographicContributorsLoading);
   hasMoreBibliographicContributors = select(ContributorsSelectors.hasMoreBibliographicContributors);
 
-  readonly hasWriteAccess = select(RegistryOverviewSelectors.hasWriteAccess);
-  readonly hasAdminAccess = select(RegistryOverviewSelectors.hasAdminAccess);
+  readonly hasWriteAccess = select(RegistrySelectors.hasWriteAccess);
+  readonly hasAdminAccess = select(RegistrySelectors.hasAdminAccess);
 
   revisionInProgress: SchemaResponse | undefined;
 

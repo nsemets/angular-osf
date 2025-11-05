@@ -8,7 +8,7 @@ import { AsyncStateModel } from '@osf/shared/models/store/async-state.model';
 
 import { RegistrationOverviewModel } from '../../models';
 
-export interface RegistryOverviewStateModel {
+export interface RegistryStateModel {
   registry: AsyncStateModel<RegistrationOverviewModel | null>;
   institutions: AsyncStateModel<Institution[] | null>;
   identifiers: AsyncStateModel<IdentifierModel[]>;
@@ -20,18 +20,13 @@ export interface RegistryOverviewStateModel {
   isAnonymous: boolean;
 }
 
-export const REGISTRY_OVERVIEW_DEFAULTS: RegistryOverviewStateModel = {
+export const REGISTRY_DEFAULTS: RegistryStateModel = {
   registry: {
     data: null,
     isLoading: false,
     error: null,
   },
   institutions: {
-    data: [],
-    isLoading: false,
-    error: null,
-  },
-  schemaBlocks: {
     data: [],
     isLoading: false,
     error: null,
@@ -49,6 +44,11 @@ export const REGISTRY_OVERVIEW_DEFAULTS: RegistryOverviewStateModel = {
   },
   license: {
     data: null,
+    isLoading: false,
+    error: null,
+  },
+  schemaBlocks: {
+    data: [],
     isLoading: false,
     error: null,
   },

@@ -16,7 +16,7 @@ import { CustomConfirmationService } from '@osf/shared/services/custom-confirmat
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 
 import { RegistrationOverviewModel } from '../../models';
-import { MakePublic } from '../../store/registry-overview';
+import { MakePublic } from '../../store/registry';
 import { WithdrawDialogComponent } from '../withdraw-dialog/withdraw-dialog.component';
 
 @Component({
