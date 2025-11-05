@@ -109,7 +109,7 @@
         [resourceType]="resourceType"
         [customCitations]="currentResource()?.customCitation"
         [canEdit]="canEdit()"
-        (customCitation)="onCustomCitationUpdated($event)"
+        (customCitationChange)="onCustomCitationUpdated($event)"
       ></osf-resource-citations>
     }
   </div>

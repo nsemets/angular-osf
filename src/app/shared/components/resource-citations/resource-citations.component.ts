@@ -73,7 +73,7 @@ export class ResourceCitationsComponent {
   private readonly toastService = inject(ToastService);
   private readonly filterSubject = new Subject<string>();
 
-  customCitation = output<string>();
+  customCitationChange = output<string>();
   defaultCitations = select(CitationsSelectors.getDefaultCitations);
   isCitationsLoading = select(CitationsSelectors.getDefaultCitationsLoading);
   citationStyles = select(CitationsSelectors.getCitationStyles);
@@ -147,7 +147,7 @@ export class ResourceCitationsComponent {
 
       this.actions.updateCustomCitation(payload).subscribe({
         next: () => {
-          this.customCitation.emit(customCitationText);
+          this.customCitationChange.emit(customCitationText);
         },
         complete: () => {
           this.toggleEditMode();
@@ -169,7 +169,7 @@ export class ResourceCitationsComponent {
 
       this.actions.updateCustomCitation(payload).subscribe({
         next: () => {
-          this.customCitation.emit('');
+          this.customCitationChange.emit('');
         },
         complete: () => {
           this.toggleEditMode();
