@@ -12,6 +12,7 @@ import {
   HostBinding,
   inject,
   OnDestroy,
+  signal,
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
@@ -24,10 +25,9 @@ import { pathJoin } from '@osf/shared/helpers/path-join.helper';
 import { AnalyticsService } from '@osf/shared/services/analytics.service';
 import { MetaTagsService } from '@osf/shared/services/meta-tags.service';
 import { ContributorsSelectors, GetBibliographicContributors } from '@osf/shared/stores/contributors';
-import { GetRegistryProvider } from '@osf/shared/stores/registration-provider';
 import { DataciteService } from '@shared/services/datacite/datacite.service';
 
-import { GetRegistryById, GetRegistryIdentifiers, GetRegistryLicense, RegistrySelectors } from './store/registry';
+import { GetRegistryIdentifiers, GetRegistryWithRelatedData, RegistrySelectors } from './store/registry';
 
 @Component({
   selector: 'osf-registry',
@@ -49,12 +49,10 @@ export class RegistryComponent implements OnDestroy {
   private readonly prerenderReady = inject(PrerenderReadyService);
 
   private readonly actions = createDispatchMap({
-    getRegistryById: GetRegistryById,
+    getRegistryWithRelatedData: GetRegistryWithRelatedData,
     clearCurrentProvider: ClearCurrentProvider,
     getBibliographicContributors: GetBibliographicContributors,
-    getLicense: GetRegistryLicense,
     getIdentifiers: GetRegistryIdentifiers,
-    getRegistryProvider: GetRegistryProvider,
   });
 
   private registryId = toSignal(this.route.params.pipe(map((params) => params['id'])));
@@ -79,32 +77,30 @@ export class RegistryComponent implements OnDestroy {
       !!this.registry()
   );
 
+  private readonly lastMetaTagsRegistryId = signal<string | null>(null);
+
   constructor() {
     this.prerenderReady.setNotReady();
 
     effect(() => {
-      if (this.registryId()) {
-        this.actions.getRegistryById(this.registryId()!);
-      }
-    });
+      const id = this.registryId();
 
-    effect(() => {
-      const currentRegistry = this.registry();
-
-      if (currentRegistry?.id) {
-        this.actions.getBibliographicContributors(currentRegistry.id, ResourceType.Registration);
-        this.actions.getIdentifiers(currentRegistry.id);
-        this.actions.getRegistryProvider(currentRegistry.providerId);
-
-        if (currentRegistry.licenseId) {
-          this.actions.getLicense(currentRegistry.licenseId);
-        }
+      if (id) {
+        this.actions.getRegistryWithRelatedData(id);
+        this.actions.getIdentifiers(id);
+        this.actions.getBibliographicContributors(id, ResourceType.Registration);
       }
     });
 
     effect(() => {
       if (this.allDataLoaded()) {
-        this.setMetaTags();
+        const currentRegistry = this.registry();
+        const currentRegistryId = currentRegistry?.id ?? null;
+        const lastSetRegistryId = this.lastMetaTagsRegistryId();
+
+        if (currentRegistryId && currentRegistryId !== lastSetRegistryId) {
+          this.setMetaTags();
+        }
       }
     });
 
@@ -151,5 +147,7 @@ export class RegistryComponent implements OnDestroy {
       },
       this.destroyRef
     );
+
+    this.lastMetaTagsRegistryId.set(currentRegistry.id);
   }
 }

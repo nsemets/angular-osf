@@ -6,6 +6,7 @@ import { catchError } from 'rxjs/operators';
 import { inject, Injectable } from '@angular/core';
 
 import { handleSectionError } from '@osf/shared/helpers/state-error.handler';
+import { GetRegistryProvider } from '@osf/shared/stores/registration-provider';
 
 import { RegistryOverviewService } from '../../services';
 
@@ -18,6 +19,7 @@ import {
   GetRegistryLicense,
   GetRegistryReviewActions,
   GetRegistrySchemaResponses,
+  GetRegistryWithRelatedData,
   GetSchemaBlocks,
   MakePublic,
   SetRegistryCustomCitation,
@@ -38,9 +40,33 @@ export class RegistryState {
   getRegistryById(ctx: StateContext<RegistryStateModel>, action: GetRegistryById) {
     const state = ctx.getState();
 
-    if (state.registry.isLoading) {
-      return;
-    }
+    ctx.patchState({
+      registry: {
+        ...state.registry,
+        isLoading: true,
+      },
+    });
+
+    return this.registryOverviewService.getRegistrationById(action.id).pipe(
+      tap((response) => {
+        const registryOverview = response.registry;
+
+        ctx.patchState({
+          registry: {
+            data: registryOverview,
+            isLoading: false,
+            error: null,
+          },
+          isAnonymous: response.meta?.anonymous ?? false,
+        });
+      }),
+      catchError((error) => handleSectionError(ctx, 'registry', error))
+    );
+  }
+
+  @Action(GetRegistryWithRelatedData)
+  getRegistryWithRelatedData(ctx: StateContext<RegistryStateModel>, action: GetRegistryWithRelatedData) {
+    const state = ctx.getState();
 
     ctx.patchState({
       registry: {
@@ -61,6 +87,13 @@ export class RegistryState {
           },
           isAnonymous: response.meta?.anonymous ?? false,
         });
+
+        if (registryOverview.providerId) {
+          ctx.dispatch(new GetRegistryProvider(registryOverview.providerId));
+        }
+        if (registryOverview.licenseId) {
+          ctx.dispatch(new GetRegistryLicense(registryOverview.licenseId));
+        }
       }),
       catchError((error) => handleSectionError(ctx, 'registry', error))
     );

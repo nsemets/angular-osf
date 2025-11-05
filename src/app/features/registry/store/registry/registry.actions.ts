@@ -6,6 +6,12 @@ export class GetRegistryById {
   constructor(public id: string) {}
 }
 
+export class GetRegistryWithRelatedData {
+  static readonly type = '[Registry] Get Registry With Related Data';
+
+  constructor(public id: string) {}
+}
+
 export class GetRegistryInstitutions {
   static readonly type = '[Registry] Get Registry Institutions';
 
