@@ -13,7 +13,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
-import { ResourceMetadataComponent } from '@osf/shared/components/resource-metadata/resource-metadata.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { ViewOnlyLinkMessageComponent } from '@osf/shared/components/view-only-link-message/view-only-link-message.component';
 import { MetaTagsService } from '@osf/shared/services/meta-tags.service';
@@ -21,16 +20,15 @@ import { ToastService } from '@osf/shared/services/toast.service';
 import { DataciteService } from '@shared/services/datacite/datacite.service';
 import { GetActivityLogs } from '@shared/stores/activity-logs';
 
+import { CitationAddonCardComponent } from './components/citation-addon-card/citation-addon-card.component';
+import { FilesWidgetComponent } from './components/files-widget/files-widget.component';
+import { LinkedResourcesComponent } from './components/linked-resources/linked-resources.component';
+import { OverviewComponentsComponent } from './components/overview-components/overview-components.component';
 import { OverviewParentProjectComponent } from './components/overview-parent-project/overview-parent-project.component';
+import { OverviewWikiComponent } from './components/overview-wiki/overview-wiki.component';
+import { ProjectOverviewMetadataComponent } from './components/project-overview-metadata/project-overview-metadata.component';
 import { ProjectOverviewToolbarComponent } from './components/project-overview-toolbar/project-overview-toolbar.component';
-import {
-  CitationAddonCardComponent,
-  FilesWidgetComponent,
-  LinkedResourcesComponent,
-  OverviewComponentsComponent,
-  OverviewWikiComponent,
-  RecentActivityComponent,
-} from './components';
+import { RecentActivityComponent } from './components/recent-activity/recent-activity.component';
 import { ProjectOverviewComponent } from './project-overview.component';
 
 import { DataciteMockFactory } from '@testing/mocks/datacite.service.mock';
@@ -55,7 +53,7 @@ describe('ProjectOverviewComponent', () => {
           LinkedResourcesComponent,
           RecentActivityComponent,
           ProjectOverviewToolbarComponent,
-          ResourceMetadataComponent,
+          ProjectOverviewMetadataComponent,
           FilesWidgetComponent,
           ViewOnlyLinkMessageComponent,
           OverviewParentProjectComponent,

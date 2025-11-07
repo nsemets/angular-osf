@@ -90,9 +90,9 @@ export class ProjectOverviewMetadataComponent {
     getPreprints: GetProjectPreprints,
     setCustomCitation: SetProjectCustomCitation,
     getSubjects: FetchSelectedSubjects,
+    getProjectSubmissions: GetProjectSubmissions,
     getBibliographicContributors: GetBibliographicContributors,
     loadMoreBibliographicContributors: LoadMoreBibliographicContributors,
-    getProjectSubmissions: GetProjectSubmissions,
   });
 
   constructor() {

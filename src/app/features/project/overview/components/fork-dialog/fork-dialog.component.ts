@@ -1,4 +1,4 @@
-import { select, Store } from '@ngxs/store';
+import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -23,19 +23,20 @@ import { ForkResource, ProjectOverviewSelectors } from '../../store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ForkDialogComponent {
-  private store = inject(Store);
   private toastService = inject(ToastService);
   dialogRef = inject(DynamicDialogRef);
   destroyRef = inject(DestroyRef);
   isSubmitting = select(ProjectOverviewSelectors.getForkProjectSubmitting);
   readonly config = inject(DynamicDialogConfig);
 
+  actions = createDispatchMap({ forkResource: ForkResource });
+
   handleForkConfirm(): void {
     const resource = this.config.data.resource as ToolbarResource;
     if (!resource) return;
 
-    this.store
-      .dispatch(new ForkResource(resource.id, resource.resourceType))
+    this.actions
+      .forkResource(resource.id, resource.resourceType)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         finalize(() => {

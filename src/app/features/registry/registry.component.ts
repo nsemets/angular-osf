@@ -18,6 +18,7 @@ import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-i
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
+import { HelpScoutService } from '@core/services/help-scout.service';
 import { PrerenderReadyService } from '@core/services/prerender-ready.service';
 import { ClearCurrentProvider } from '@core/store/provider';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
@@ -45,8 +46,10 @@ export class RegistryComponent implements OnDestroy {
   private readonly dataciteService = inject(DataciteService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly route = inject(ActivatedRoute);
+  private readonly helpScoutService = inject(HelpScoutService);
   private readonly environment = inject(ENVIRONMENT);
   private readonly prerenderReady = inject(PrerenderReadyService);
+  readonly analyticsService = inject(AnalyticsService);
 
   private readonly actions = createDispatchMap({
     getRegistryWithRelatedData: GetRegistryWithRelatedData,
@@ -62,12 +65,10 @@ export class RegistryComponent implements OnDestroy {
   readonly identifiersForDatacite$ = toObservable(select(RegistrySelectors.getIdentifiers)).pipe(
     map((identifiers) => (identifiers?.length ? { identifiers } : null))
   );
-  readonly analyticsService = inject(AnalyticsService);
   readonly bibliographicContributors = select(ContributorsSelectors.getBibliographicContributors);
   readonly isBibliographicContributorsLoading = select(ContributorsSelectors.isBibliographicContributorsLoading);
   readonly license = select(RegistrySelectors.getLicense);
   readonly isLicenseLoading = select(RegistrySelectors.isLicenseLoading);
-  readonly isIdentifiersLoading = select(RegistrySelectors.isIdentifiersLoading);
 
   private readonly allDataLoaded = computed(
     () =>
@@ -81,6 +82,7 @@ export class RegistryComponent implements OnDestroy {
 
   constructor() {
     this.prerenderReady.setNotReady();
+    this.helpScoutService.setResourceType('registration');
 
     effect(() => {
       const id = this.registryId();
@@ -119,6 +121,7 @@ export class RegistryComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.actions.clearCurrentProvider();
+    this.helpScoutService.unsetResourceType();
   }
 
   private setMetaTags(): void {
