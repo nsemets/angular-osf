@@ -9,6 +9,36 @@ export class GetProjectById {
   constructor(public projectId: string) {}
 }
 
+export class GetProjectInstitutions {
+  static readonly type = '[Project Overview] Get Project Institutions';
+
+  constructor(public projectId: string) {}
+}
+
+export class GetProjectIdentifiers {
+  static readonly type = '[Project Overview] Get Project Identifiers';
+
+  constructor(public projectId: string) {}
+}
+
+export class GetProjectLicense {
+  static readonly type = '[Project Overview] Get Project License';
+
+  constructor(public licenseId: string | undefined) {}
+}
+
+export class GetProjectStorage {
+  static readonly type = '[Project Overview] Get Project Storage';
+
+  constructor(public projectId: string) {}
+}
+
+export class GetProjectPreprints {
+  static readonly type = '[Project Overview] Get Project Preprints';
+
+  constructor(public projectId: string) {}
+}
+
 export class UpdateProjectPublicStatus {
   static readonly type = '[Project Overview] Update Project Public Status';
 
