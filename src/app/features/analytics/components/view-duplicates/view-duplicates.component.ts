@@ -40,7 +40,6 @@ import { LoaderService } from '@osf/shared/services/loader.service';
 import { GetResourceWithChildren } from '@osf/shared/stores/current-resource';
 import { ClearDuplicates, DuplicatesSelectors, GetAllDuplicates } from '@osf/shared/stores/duplicates';
 import { BaseNodeModel } from '@shared/models/nodes/base-node.model';
-import { ToolbarResource } from '@shared/models/toolbar-resource.model';
 
 @Component({
   selector: 'osf-view-duplicates',
@@ -69,8 +68,6 @@ export class ViewDuplicatesComponent {
   private destroyRef = inject(DestroyRef);
   private project = select(ProjectOverviewSelectors.getProject);
   private registration = select(RegistrySelectors.getRegistry);
-  private isProjectAnonymous = select(ProjectOverviewSelectors.isProjectAnonymous);
-  private isRegistryAnonymous = select(RegistrySelectors.isRegistryAnonymous);
 
   duplicates = select(DuplicatesSelectors.getDuplicates);
   isDuplicatesLoading = select(DuplicatesSelectors.getDuplicatesLoading);
@@ -149,26 +146,6 @@ export class ViewDuplicatesComponent {
     this.setupCleanup();
   }
 
-  toolbarResource = computed(() => {
-    const resource = this.currentResource();
-    const resourceType = this.resourceType();
-    if (resource && resourceType) {
-      const isAnonymous =
-        resourceType === ResourceType.Project ? this.isProjectAnonymous() : this.isRegistryAnonymous();
-
-      return {
-        id: resource.id,
-        isPublic: resource.isPublic,
-        storage: undefined,
-        viewOnlyLinksCount: 0,
-        forksCount: resource.forksCount,
-        resourceType: resourceType,
-        isAnonymous,
-      } as ToolbarResource;
-    }
-    return null;
-  });
-
   showMoreOptions(duplicate: BaseNodeModel) {
     return (
       duplicate.currentUserPermissions.includes(UserPermissions.Admin) ||
@@ -191,24 +168,21 @@ export class ViewDuplicatesComponent {
   }
 
   handleForkResource(): void {
-    const toolbarResource = this.toolbarResource();
+    const currentResource = this.currentResource();
 
-    if (toolbarResource) {
+    if (currentResource) {
       this.customDialogService
         .open(ForkDialogComponent, {
           header: 'project.overview.dialog.fork.headerProject',
           width: '450px',
           data: {
-            resource: toolbarResource,
+            resourceId: currentResource.id,
             resourceType: this.resourceType(),
           },
         })
         .onClose.subscribe((result) => {
           if (result?.success) {
-            const resource = this.currentResource();
-            if (resource) {
-              this.actions.getDuplicates(resource.id, resource.type, this.currentPage(), this.pageSize);
-            }
+            this.actions.getDuplicates(currentResource.id, currentResource.type, this.currentPage(), this.pageSize);
           }
         });
     }

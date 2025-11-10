@@ -10,7 +10,7 @@ import { finalize } from 'rxjs';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { ToolbarResource } from '@osf/shared/models/toolbar-resource.model';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { ToastService } from '@osf/shared/services/toast.service';
 
 import { ForkResource, ProjectOverviewSelectors } from '../../store';
@@ -26,17 +26,20 @@ export class ForkDialogComponent {
   private toastService = inject(ToastService);
   dialogRef = inject(DynamicDialogRef);
   destroyRef = inject(DestroyRef);
-  isSubmitting = select(ProjectOverviewSelectors.getForkProjectSubmitting);
   readonly config = inject(DynamicDialogConfig);
+
+  isSubmitting = select(ProjectOverviewSelectors.getForkProjectSubmitting);
 
   actions = createDispatchMap({ forkResource: ForkResource });
 
   handleForkConfirm(): void {
-    const resource = this.config.data.resource as ToolbarResource;
-    if (!resource) return;
+    const resourceId = this.config.data.resourceId as string;
+    const resourceType = this.config.data.resourceType as ResourceType;
+
+    if (!resourceId || !resourceType) return;
 
     this.actions
-      .forkResource(resource.id, resource.resourceType)
+      .forkResource(resourceId, resourceType)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         finalize(() => {

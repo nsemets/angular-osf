@@ -128,28 +128,27 @@ export class RegistryComponent implements OnDestroy {
     const currentRegistry = this.registry();
     if (!currentRegistry) return;
 
-    this.metaTags.updateMetaTags(
-      {
-        osfGuid: currentRegistry.id,
-        title: currentRegistry.title,
-        description: currentRegistry.description,
-        publishedDate: this.datePipe.transform(currentRegistry.dateRegistered, 'yyyy-MM-dd'),
-        modifiedDate: this.datePipe.transform(currentRegistry.dateModified, 'yyyy-MM-dd'),
-        url: pathJoin(this.environment.webUrl, currentRegistry.id ?? ''),
-        identifier: currentRegistry.id,
-        doi: currentRegistry.articleDoi,
-        keywords: currentRegistry.tags,
-        siteName: 'OSF',
-        license: this.license()?.name,
-        contributors:
-          this.bibliographicContributors()?.map((contributor) => ({
-            fullName: contributor.fullName,
-            givenName: contributor.givenName,
-            familyName: contributor.familyName,
-          })) ?? [],
-      },
-      this.destroyRef
-    );
+    const metaTagsData = {
+      osfGuid: currentRegistry.id,
+      title: currentRegistry.title,
+      description: currentRegistry.description,
+      publishedDate: this.datePipe.transform(currentRegistry.dateRegistered, 'yyyy-MM-dd'),
+      modifiedDate: this.datePipe.transform(currentRegistry.dateModified, 'yyyy-MM-dd'),
+      url: pathJoin(this.environment.webUrl, currentRegistry.id ?? ''),
+      identifier: currentRegistry.id,
+      doi: currentRegistry.articleDoi,
+      keywords: currentRegistry.tags,
+      siteName: 'OSF',
+      license: this.license()?.name,
+      contributors:
+        this.bibliographicContributors()?.map((contributor) => ({
+          fullName: contributor.fullName,
+          givenName: contributor.givenName,
+          familyName: contributor.familyName,
+        })) ?? [],
+    };
+
+    this.metaTags.updateMetaTags(metaTagsData, this.destroyRef);
 
     this.lastMetaTagsRegistryId.set(currentRegistry.id);
   }

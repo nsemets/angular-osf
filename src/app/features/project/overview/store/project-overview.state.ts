@@ -58,10 +58,6 @@ export class ProjectOverviewState {
           },
           isAnonymous: response.meta?.anonymous ?? false,
         });
-
-        if (response.project.licenseId) {
-          ctx.dispatch(new GetProjectLicense(response.project.licenseId));
-        }
       }),
       catchError((error) => handleSectionError(ctx, 'project', error))
     );

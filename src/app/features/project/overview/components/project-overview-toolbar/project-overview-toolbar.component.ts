@@ -183,12 +183,11 @@ export class ProjectOverviewToolbarComponent {
 
   private handleForkResource(): void {
     const resource = this.currentResource();
-    const headerTranslation = 'project.overview.dialog.fork.headerProject';
 
     if (resource) {
       this.customDialogService.open(ForkDialogComponent, {
-        header: headerTranslation,
-        data: { resource },
+        header: 'project.overview.dialog.fork.headerProject',
+        data: { resourceId: resource.id, resourceType: this.resourceType },
       });
     }
   }

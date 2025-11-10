@@ -5,7 +5,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
 import { Message } from 'primeng/message';
 
-import { CommonModule, DatePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -16,8 +15,7 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { SubmissionReviewStatus } from '@osf/features/moderation/enums';
@@ -74,10 +72,11 @@ import {
   templateUrl: './project-overview.component.html',
   styleUrls: ['./project-overview.component.scss'],
   imports: [
-    CommonModule,
     Button,
+    Message,
+    RouterLink,
+    TranslatePipe,
     SubHeaderComponent,
-    FormsModule,
     LoadingSpinnerComponent,
     OverviewWikiComponent,
     OverviewComponentsComponent,
@@ -85,15 +84,11 @@ import {
     RecentActivityComponent,
     ProjectOverviewToolbarComponent,
     ProjectOverviewMetadataComponent,
-    TranslatePipe,
-    Message,
-    RouterLink,
     FilesWidgetComponent,
     ViewOnlyLinkMessageComponent,
     OverviewParentProjectComponent,
     CitationAddonCardComponent,
   ],
-  providers: [DatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectOverviewComponent implements OnInit {
@@ -174,14 +169,10 @@ export class ProjectOverviewComponent implements OnInit {
 
   hasViewOnly = computed(() => hasViewOnlyParam(this.router));
 
-  currentProject$ = toObservable(this.currentProject);
-
-  filesRootOption = computed(() => {
-    return {
-      value: this.currentProject()?.id ?? '',
-      label: this.currentProject()?.title ?? '',
-    };
-  });
+  filesRootOption = computed(() => ({
+    value: this.currentProject()?.id ?? '',
+    label: this.currentProject()?.title ?? '',
+  }));
 
   constructor() {
     this.setupCollectionsEffects();

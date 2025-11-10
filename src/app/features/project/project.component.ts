@@ -24,7 +24,13 @@ import { DataciteService } from '@osf/shared/services/datacite/datacite.service'
 import { MetaTagsService } from '@osf/shared/services/meta-tags.service';
 import { ContributorsSelectors, GetBibliographicContributors } from '@osf/shared/stores/contributors';
 
-import { GetProjectById, GetProjectIdentifiers, ProjectOverviewSelectors } from './overview/store';
+import {
+  GetProjectById,
+  GetProjectIdentifiers,
+  GetProjectInstitutions,
+  GetProjectLicense,
+  ProjectOverviewSelectors,
+} from './overview/store';
 
 @Component({
   selector: 'osf-project',
@@ -49,12 +55,14 @@ export class ProjectComponent implements OnDestroy {
     map((identifiers) => (identifiers?.length ? { identifiers } : null))
   );
 
-  currentProject = select(ProjectOverviewSelectors.getProject);
-  isProjectLoading = select(ProjectOverviewSelectors.getProjectLoading);
+  readonly currentProject = select(ProjectOverviewSelectors.getProject);
+  readonly isProjectLoading = select(ProjectOverviewSelectors.getProjectLoading);
   readonly bibliographicContributors = select(ContributorsSelectors.getBibliographicContributors);
   readonly isBibliographicContributorsLoading = select(ContributorsSelectors.isBibliographicContributorsLoading);
   readonly license = select(ProjectOverviewSelectors.getLicense);
   readonly isLicenseLoading = select(ProjectOverviewSelectors.isLicenseLoading);
+  readonly institutions = select(ProjectOverviewSelectors.getInstitutions);
+  readonly isInstitutionsLoading = select(ProjectOverviewSelectors.isInstitutionsLoading);
 
   private projectId = toSignal(this.route.params.pipe(map((params) => params['id'])));
 
@@ -63,6 +71,7 @@ export class ProjectComponent implements OnDestroy {
       !this.isProjectLoading() &&
       !this.isBibliographicContributorsLoading() &&
       !this.isLicenseLoading() &&
+      !this.isInstitutionsLoading() &&
       !!this.currentProject()
   );
 
@@ -70,37 +79,10 @@ export class ProjectComponent implements OnDestroy {
 
   private readonly actions = createDispatchMap({
     getProject: GetProjectById,
+    getLicense: GetProjectLicense,
+    getInstitutions: GetProjectInstitutions,
     getIdentifiers: GetProjectIdentifiers,
     getBibliographicContributors: GetBibliographicContributors,
-  });
-
-  private readonly metaTagsData = computed(() => {
-    const project = this.currentProject();
-
-    if (!project) return null;
-
-    const keywords = [...(project.tags || [])];
-
-    if (project.category) {
-      keywords.push(project.category);
-    }
-
-    return {
-      osfGuid: project.id,
-      title: project.title,
-      description: project.description,
-      url: project.links?.iri,
-      // license: project.license?.name,
-      publishedDate: this.datePipe.transform(project.dateCreated, 'yyyy-MM-dd'),
-      modifiedDate: this.datePipe.transform(project.dateModified, 'yyyy-MM-dd'),
-      keywords,
-      // institution: project.affiliatedInstitutions?.map((institution) => institution.name),
-      // contributors: project?.contributors?.map((contributor) => ({
-      //   fullName: contributor.fullName,
-      //   givenName: contributor.givenName,
-      //   familyName: contributor.familyName,
-      // })),
-    };
   });
 
   constructor() {
@@ -114,6 +96,15 @@ export class ProjectComponent implements OnDestroy {
         this.actions.getProject(id);
         this.actions.getIdentifiers(id);
         this.actions.getBibliographicContributors(id, ResourceType.Project);
+        this.actions.getInstitutions(id);
+      }
+    });
+
+    effect(() => {
+      const project = this.currentProject();
+
+      if (project?.licenseId) {
+        this.actions.getLicense(project.licenseId);
       }
     });
 
@@ -121,10 +112,9 @@ export class ProjectComponent implements OnDestroy {
       if (this.allDataLoaded()) {
         const currentProjectId = this.projectId();
         const lastSetProjectId = this.lastMetaTagsProjectId();
-        const metaTagsData = this.metaTagsData();
 
-        if (currentProjectId && currentProjectId !== lastSetProjectId && metaTagsData) {
-          this.metaTags.updateMetaTags(metaTagsData, this.destroyRef);
+        if (currentProjectId && currentProjectId !== lastSetProjectId) {
+          this.setMetaTags();
         }
       }
     });
@@ -137,5 +127,33 @@ export class ProjectComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.helpScoutService.unsetResourceType();
+  }
+
+  private setMetaTags(): void {
+    const project = this.currentProject();
+    if (!project) return;
+
+    const keywords = [...(project.tags || []), ...(project.category ? [project.category] : [])];
+
+    const metaTagsData = {
+      osfGuid: project.id,
+      title: project.title,
+      description: project.description,
+      url: project.links?.iri,
+      license: this.license.name,
+      publishedDate: this.datePipe.transform(project.dateCreated, 'yyyy-MM-dd'),
+      modifiedDate: this.datePipe.transform(project.dateModified, 'yyyy-MM-dd'),
+      keywords,
+      institution: this.institutions().map((institution) => institution.name),
+      contributors: this.bibliographicContributors().map((contributor) => ({
+        fullName: contributor.fullName,
+        givenName: contributor.givenName,
+        familyName: contributor.familyName,
+      })),
+    };
+
+    this.metaTags.updateMetaTags(metaTagsData, this.destroyRef);
+
+    this.lastMetaTagsProjectId.set(project.id);
   }
 }
