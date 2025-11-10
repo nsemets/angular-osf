@@ -6,10 +6,9 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { of } from 'rxjs';
 
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
-import { ToolbarResource } from '@osf/shared/models/toolbar-resource.model';
 import { ToastService } from '@osf/shared/services/toast.service';
 
 import { ForkResource, ProjectOverviewSelectors } from '../../store';
@@ -17,6 +16,7 @@ import { ForkResource, ProjectOverviewSelectors } from '../../store';
 import { ForkDialogComponent } from './fork-dialog.component';
 
 import { DynamicDialogRefMock } from '@testing/mocks/dynamic-dialog-ref.mock';
+import { ToastServiceMock } from '@testing/mocks/toast.service.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
@@ -28,30 +28,23 @@ describe('ForkDialogComponent', () => {
   let dialogConfig: jest.Mocked<DynamicDialogConfig>;
   let toastService: jest.Mocked<ToastService>;
 
-  const mockResource: ToolbarResource = {
-    id: 'resource-123',
-    title: 'Test Resource',
-    isPublic: true,
-    viewOnlyLinksCount: 0,
-    forksCount: 0,
-    resourceType: ResourceType.Project,
-    isAnonymous: false,
-  };
+  const mockResourceId = 'test-resource-id';
+  const mockResourceType = ResourceType.Project;
 
   beforeEach(async () => {
-    jest.useFakeTimers();
-    dialogRef = DynamicDialogRefMock.useValue as unknown as jest.Mocked<DynamicDialogRef>;
     dialogConfig = {
-      data: { resource: mockResource },
+      data: {
+        resourceId: mockResourceId,
+        resourceType: mockResourceType,
+      },
     } as jest.Mocked<DynamicDialogConfig>;
-    toastService = { showSuccess: jest.fn() } as unknown as jest.Mocked<ToastService>;
 
     await TestBed.configureTestingModule({
       imports: [ForkDialogComponent, OSFTestingModule],
       providers: [
         DynamicDialogRefMock,
+        ToastServiceMock,
         MockProvider(DynamicDialogConfig, dialogConfig),
-        MockProvider(ToastService, toastService),
         provideMockStore({
           signals: [{ selector: ProjectOverviewSelectors.getForkProjectSubmitting, value: false }],
         }),
@@ -62,52 +55,93 @@ describe('ForkDialogComponent', () => {
     store.dispatch = jest.fn().mockReturnValue(of(true));
     fixture = TestBed.createComponent(ForkDialogComponent);
     component = fixture.componentInstance;
+    dialogRef = TestBed.inject(DynamicDialogRef) as jest.Mocked<DynamicDialogRef>;
+    toastService = TestBed.inject(ToastService) as jest.Mocked<ToastService>;
     fixture.detectChanges();
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    jest.clearAllMocks();
   });
 
-  it('should dispatch ForkResource action with resource id and type', () => {
+  it('should dispatch ForkResource action with correct parameters', () => {
     component.handleForkConfirm();
 
     expect(store.dispatch).toHaveBeenCalledWith(expect.any(ForkResource));
     const call = (store.dispatch as jest.Mock).mock.calls.find((call) => call[0] instanceof ForkResource);
     expect(call).toBeDefined();
     const action = call[0] as ForkResource;
-    expect(action.resourceId).toBe('resource-123');
-    expect(action.resourceType).toBe(ResourceType.Project);
+    expect(action.resourceId).toBe(mockResourceId);
+    expect(action.resourceType).toBe(mockResourceType);
   });
 
-  it('should close dialog with success data on finalize', () => {
-    store.dispatch = jest.fn().mockReturnValue(of(true));
+  it('should close dialog with success result', fakeAsync(() => {
+    const closeSpy = jest.spyOn(dialogRef, 'close');
 
     component.handleForkConfirm();
-    jest.runAllTimers();
+    tick();
 
-    expect(dialogRef.close).toHaveBeenCalledWith({ success: true });
-  });
+    expect(closeSpy).toHaveBeenCalledWith({ success: true });
+  }));
 
-  it('should show success toast on finalize', () => {
-    store.dispatch = jest.fn().mockReturnValue(of(true));
-
+  it('should show success toast message', fakeAsync(() => {
     component.handleForkConfirm();
-    jest.runAllTimers();
+    tick();
 
     expect(toastService.showSuccess).toHaveBeenCalledWith('project.overview.dialog.toast.fork.success');
+  }));
+
+  it('should not dispatch action when resourceId is missing', () => {
+    jest.clearAllMocks();
+    component.config.data = {
+      resourceType: mockResourceType,
+    };
+
+    component.handleForkConfirm();
+
+    expect(store.dispatch).not.toHaveBeenCalled();
+    expect(dialogRef.close).not.toHaveBeenCalled();
+    expect(toastService.showSuccess).not.toHaveBeenCalled();
   });
 
-  it('should have config injected', () => {
-    expect(component.config).toBeDefined();
-    expect(component.config.data.resource).toEqual(mockResource);
+  it('should not dispatch action when resourceType is missing', () => {
+    jest.clearAllMocks();
+    component.config.data = {
+      resourceId: mockResourceId,
+    };
+
+    component.handleForkConfirm();
+
+    expect(store.dispatch).not.toHaveBeenCalled();
+    expect(dialogRef.close).not.toHaveBeenCalled();
+    expect(toastService.showSuccess).not.toHaveBeenCalled();
   });
 
-  it('should have dialogRef injected', () => {
-    expect(component.dialogRef).toBeDefined();
+  it('should not dispatch action when both resourceId and resourceType are missing', () => {
+    jest.clearAllMocks();
+    component.config.data = {};
+
+    component.handleForkConfirm();
+
+    expect(store.dispatch).not.toHaveBeenCalled();
+    expect(dialogRef.close).not.toHaveBeenCalled();
+    expect(toastService.showSuccess).not.toHaveBeenCalled();
   });
 
-  it('should have isSubmitting selector', () => {
-    expect(component.isSubmitting).toBeDefined();
+  it('should handle ForkResource action for Registration resource type', () => {
+    jest.clearAllMocks();
+    component.config.data = {
+      resourceId: mockResourceId,
+      resourceType: ResourceType.Registration,
+    };
+
+    component.handleForkConfirm();
+
+    expect(store.dispatch).toHaveBeenCalledWith(expect.any(ForkResource));
+    const call = (store.dispatch as jest.Mock).mock.calls.find((call) => call[0] instanceof ForkResource);
+    expect(call).toBeDefined();
+    const action = call[0] as ForkResource;
+    expect(action.resourceId).toBe(mockResourceId);
+    expect(action.resourceType).toBe(ResourceType.Registration);
   });
 });
