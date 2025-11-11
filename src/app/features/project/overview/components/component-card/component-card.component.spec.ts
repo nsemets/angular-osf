@@ -25,10 +25,6 @@ describe('ComponentCardComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
   it('should emit navigate when handleNavigate is called', () => {
     const emitSpy = jest.spyOn(component.navigate, 'emit');
     component.handleNavigate('test-id');
