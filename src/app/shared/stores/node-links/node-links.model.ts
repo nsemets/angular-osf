@@ -8,6 +8,7 @@ export interface LinkedResourcesState extends AsyncStateModel<NodeModel[]> {
   projectsTotalCount: number;
   registrationsTotalCount: number;
   isLoadingMore: boolean;
+  hasChanges: boolean;
 }
 
 export interface NodeLinksStateModel {
@@ -25,5 +26,6 @@ export const NODE_LINKS_DEFAULTS: NodeLinksStateModel = {
     projectsTotalCount: 0,
     registrationsTotalCount: 0,
     isLoadingMore: false,
+    hasChanges: false,
   },
 };

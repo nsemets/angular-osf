@@ -77,6 +77,7 @@ export class LinkResourceDialogComponent {
   totalRegistrationsCount = select(MyResourcesSelectors.getTotalRegistrations);
   isNodeLinksSubmitting = select(NodeLinksSelectors.getNodeLinksSubmitting);
   linkedResources = select(NodeLinksSelectors.getLinkedResources);
+  hasChanges = select(NodeLinksSelectors.getNodeLinksHasChanges);
   currentProject = select(ProjectOverviewSelectors.getProject);
 
   currentResourceId = computed(() => this.currentProject()?.id);
@@ -161,7 +162,7 @@ export class LinkResourceDialogComponent {
   }
 
   handleCloseDialog() {
-    this.dialogRef.close();
+    this.dialogRef.close({ hasChanges: this.hasChanges() });
   }
 
   handleToggleNodeLink(resource: MyResourcesItem) {

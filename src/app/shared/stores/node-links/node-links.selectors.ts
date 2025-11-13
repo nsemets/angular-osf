@@ -36,4 +36,9 @@ export class NodeLinksSelectors {
   static isLoadingMoreLinkedResources(state: NodeLinksStateModel) {
     return state.linkedResources.isLoadingMore;
   }
+
+  @Selector([NodeLinksState])
+  static getNodeLinksHasChanges(state: NodeLinksStateModel) {
+    return state.linkedResources.hasChanges;
+  }
 }

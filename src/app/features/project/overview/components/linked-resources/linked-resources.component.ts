@@ -5,6 +5,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
 import { Skeleton } from 'primeng/skeleton';
 
+import { filter } from 'rxjs';
+
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -44,6 +46,7 @@ export class LinkedResourcesComponent {
 
   openLinkProjectModal() {
     const project = this.currentProject();
+
     if (!project) return;
 
     this.customDialogService
@@ -52,20 +55,30 @@ export class LinkedResourcesComponent {
         width: '850px',
         closable: false,
       })
-      .onClose.pipe(takeUntilDestroyed(this.destroyRef))
+      .onClose.pipe(
+        filter((data) => !!data?.hasChanges),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe(() => this.actions.getLinkedResources(project.id));
   }
 
   openDeleteResourceModal(resourceId: string): void {
     const currentLink = this.linkedResources().find((resource) => resource.id === resourceId);
+    const project = this.currentProject();
 
-    if (!currentLink) return;
+    if (!currentLink || !project) return;
 
-    this.customDialogService.open(DeleteNodeLinkDialogComponent, {
-      header: 'project.overview.dialog.deleteNodeLink.header',
-      width: '650px',
-      data: { currentLink },
-    });
+    this.customDialogService
+      .open(DeleteNodeLinkDialogComponent, {
+        header: 'project.overview.dialog.deleteNodeLink.header',
+        width: '650px',
+        data: { currentLink },
+      })
+      .onClose.pipe(
+        filter((data) => !!data?.hasChanges),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => this.actions.getLinkedResources(project.id));
   }
 
   loadMore(): void {

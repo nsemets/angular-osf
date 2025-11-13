@@ -40,6 +40,7 @@ export class NodeLinksState {
         isLoading: page === 1,
         isLoadingMore: page > 1,
         error: null,
+        hasChanges: false,
       },
     });
 
@@ -93,6 +94,7 @@ export class NodeLinksState {
             pageSize: pageSize,
             projectsTotalCount: linkedProjects.totalCount,
             registrationsTotalCount: linkedRegistrations.totalCount,
+            hasChanges: false,
           },
         });
       }),
@@ -121,7 +123,9 @@ export class NodeLinksState {
 
     return this.nodeLinksService.createNodeLink(action.currentProjectId, action.resource).pipe(
       tap(() => {
-        ctx.patchState({ linkedResources: { ...ctx.getState().linkedResources, isSubmitting: false } });
+        ctx.patchState({
+          linkedResources: { ...ctx.getState().linkedResources, isSubmitting: false, hasChanges: true },
+        });
       }),
       catchError((error) => handleSectionError(ctx, 'linkedResources', error))
     );
@@ -140,7 +144,11 @@ export class NodeLinksState {
     });
 
     return this.nodeLinksService.deleteNodeLink(action.projectId, action.linkedResource).pipe(
-      tap(() => ctx.dispatch(new GetLinkedResources(action.projectId, 1, state.linkedResources.pageSize))),
+      tap(() => {
+        ctx.patchState({
+          linkedResources: { ...ctx.getState().linkedResources, isSubmitting: false, hasChanges: true },
+        });
+      }),
       catchError((error) => handleSectionError(ctx, 'linkedResources', error))
     );
   }
