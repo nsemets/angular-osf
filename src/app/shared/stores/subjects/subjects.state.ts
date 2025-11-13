@@ -1,9 +1,10 @@
 import { Action, State, StateContext } from '@ngxs/store';
 
-import { catchError, tap, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
+import { handleSectionError } from '@osf/shared/helpers/state-error.handler';
 import { SubjectModel } from '@osf/shared/models/subject/subject.model';
 import { SubjectsService } from '@osf/shared/services/subjects.service';
 
@@ -62,7 +63,7 @@ export class SubjectsState {
           });
         }
       }),
-      catchError((error) => this.handleError(ctx, 'subjects', error))
+      catchError((error) => handleSectionError(ctx, search ? 'searchedSubjects' : 'subjects', error))
     );
   }
 
@@ -88,7 +89,7 @@ export class SubjectsState {
           },
         });
       }),
-      catchError((error) => this.handleError(ctx, 'subjects', error))
+      catchError((error) => handleSectionError(ctx, 'subjects', error))
     );
   }
 
@@ -116,7 +117,7 @@ export class SubjectsState {
           },
         });
       }),
-      catchError((error) => this.handleError(ctx, 'selectedSubjects', error))
+      catchError((error) => handleSectionError(ctx, 'selectedSubjects', error))
     );
   }
 
@@ -147,7 +148,7 @@ export class SubjectsState {
           },
         });
       }),
-      catchError((error) => this.handleError(ctx, 'selectedSubjects', error))
+      catchError((error) => handleSectionError(ctx, 'selectedSubjects', error))
     );
   }
 
@@ -170,16 +171,5 @@ export class SubjectsState {
 
       return subject;
     });
-  }
-
-  private handleError(ctx: StateContext<SubjectsModel>, section: keyof SubjectsModel, error: Error) {
-    ctx.patchState({
-      [section]: {
-        ...ctx.getState()[section],
-        isLoading: false,
-        error: error.message,
-      },
-    });
-    return throwError(() => error);
   }
 }
