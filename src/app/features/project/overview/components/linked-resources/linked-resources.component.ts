@@ -5,13 +5,14 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
 import { Skeleton } from 'primeng/skeleton';
 
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, input } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { ContributorsListComponent } from '@osf/shared/components/contributors-list/contributors-list.component';
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { TruncatedTextComponent } from '@osf/shared/components/truncated-text/truncated-text.component';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
-import { LoadMoreLinkedResources, NodeLinksSelectors } from '@osf/shared/stores/node-links';
+import { GetLinkedResources, LoadMoreLinkedResources, NodeLinksSelectors } from '@osf/shared/stores/node-links';
 
 import { ProjectOverviewSelectors } from '../../store';
 import { DeleteNodeLinkDialogComponent } from '../delete-node-link-dialog/delete-node-link-dialog.component';
@@ -26,6 +27,7 @@ import { LinkResourceDialogComponent } from '../link-resource-dialog/link-resour
 })
 export class LinkedResourcesComponent {
   private customDialogService = inject(CustomDialogService);
+  private readonly destroyRef = inject(DestroyRef);
 
   canEdit = input.required<boolean>();
 
@@ -35,14 +37,23 @@ export class LinkedResourcesComponent {
   isLoadingMoreLinkedResources = select(NodeLinksSelectors.isLoadingMoreLinkedResources);
   currentProject = select(ProjectOverviewSelectors.getProject);
 
-  private readonly actions = createDispatchMap({ loadMoreLinkedResources: LoadMoreLinkedResources });
+  private readonly actions = createDispatchMap({
+    getLinkedResources: GetLinkedResources,
+    loadMoreLinkedResources: LoadMoreLinkedResources,
+  });
 
   openLinkProjectModal() {
-    this.customDialogService.open(LinkResourceDialogComponent, {
-      header: 'project.overview.dialog.linkProject.header',
-      width: '850px',
-      closable: false,
-    });
+    const project = this.currentProject();
+    if (!project) return;
+
+    this.customDialogService
+      .open(LinkResourceDialogComponent, {
+        header: 'project.overview.dialog.linkProject.header',
+        width: '850px',
+        closable: false,
+      })
+      .onClose.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.actions.getLinkedResources(project.id));
   }
 
   openDeleteResourceModal(resourceId: string): void {
