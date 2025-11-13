@@ -26,12 +26,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule } from '@angular/forms';
 
 import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
+import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants/default-table-params.constants';
 import { ResourceSearchMode } from '@osf/shared/enums/resource-search-mode.enum';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { GetMyProjects, GetMyRegistrations, MyResourcesSelectors } from '@osf/shared/stores/my-resources';
 import { CreateNodeLink, DeleteNodeLink, GetLinkedResources, NodeLinksSelectors } from '@osf/shared/stores/node-links';
 import { MyResourcesItem } from '@shared/models/my-resources/my-resources.models';
 import { MyResourcesSearchFilters } from '@shared/models/my-resources/my-resources-search-filters.models';
+import { TableParameters } from '@shared/models/table-parameters.model';
 
 import { ProjectOverviewSelectors } from '../../store';
 
@@ -89,11 +91,17 @@ export class LinkResourceDialogComponent {
     this.resourceType() === ResourceType.Project ? this.totalProjectsCount() : this.totalRegistrationsCount()
   );
 
-  isItemLinked = computed(() => {
-    const linkedResources = this.linkedResources();
-    const linkedTargetIds = new Set(linkedResources.map((resource) => resource.id));
+  tableParams = computed<TableParameters>(() => ({
+    ...DEFAULT_TABLE_PARAMS,
+    rows: this.tableRows,
+    firstRowIndex: (this.currentPage() - 1) * this.tableRows,
+    paginator: this.currentTotalCount() > this.tableRows,
+    totalRecords: this.currentTotalCount(),
+  }));
 
-    return (itemId: string) => linkedTargetIds.has(itemId);
+  linkedResourceIds = computed(() => {
+    const linkedResources = this.linkedResources();
+    return new Set(linkedResources.map((resource) => resource.id));
   });
 
   actions = createDispatchMap({
@@ -112,12 +120,12 @@ export class LinkResourceDialogComponent {
 
   onSearchModeChange(mode: ResourceSearchMode): void {
     this.searchMode.set(mode);
-    this.currentPage.set(1);
+    this.resetToFirstPage();
   }
 
   onObjectTypeChange(type: ResourceType): void {
     this.resourceType.set(type);
-    this.currentPage.set(1);
+    this.resetToFirstPage();
   }
 
   onPageChange(event: TablePageEvent): void {
@@ -126,9 +134,17 @@ export class LinkResourceDialogComponent {
     this.handleSearch(this.searchControl.value || '', this.searchMode(), this.resourceType());
   }
 
+  isItemLinked(itemId: string): boolean {
+    return this.linkedResourceIds().has(itemId);
+  }
+
+  private resetToFirstPage(): void {
+    this.currentPage.set(1);
+  }
+
   setupSearchEffect() {
     effect(() => {
-      this.currentPage.set(1);
+      this.resetToFirstPage();
       this.handleSearch(this.searchControl.value || '', this.searchMode(), this.resourceType());
     });
   }
@@ -146,7 +162,7 @@ export class LinkResourceDialogComponent {
     this.searchControl.valueChanges
       .pipe(debounceTime(300), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe((searchValue) => {
-        this.currentPage.set(1);
+        this.resetToFirstPage();
         this.handleSearch(searchValue ?? '', this.searchMode(), this.resourceType());
       });
   }
@@ -170,7 +186,7 @@ export class LinkResourceDialogComponent {
       return;
     }
 
-    const isCurrentlyLinked = this.isItemLinked()(resource.id);
+    const isCurrentlyLinked = this.isItemLinked(resource.id);
 
     if (isCurrentlyLinked) {
       const resources = this.linkedResources();

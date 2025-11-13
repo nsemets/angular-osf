@@ -23,4 +23,17 @@ export class NodeLinksSelectors {
   static getLinkedResourcesSubmitting(state: NodeLinksStateModel) {
     return state.linkedResources.isSubmitting;
   }
+
+  @Selector([NodeLinksState])
+  static hasMoreLinkedResources(state: NodeLinksStateModel) {
+    const { page, pageSize, projectsTotalCount, registrationsTotalCount } = state.linkedResources;
+    const hasMoreProjects = projectsTotalCount > page * pageSize;
+    const hasMoreRegistrations = registrationsTotalCount > page * pageSize;
+    return hasMoreProjects || hasMoreRegistrations;
+  }
+
+  @Selector([NodeLinksState])
+  static isLoadingMoreLinkedResources(state: NodeLinksStateModel) {
+    return state.linkedResources.isLoadingMore;
+  }
 }

@@ -1,4 +1,4 @@
-import { select } from '@ngxs/store';
+import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -11,8 +11,9 @@ import { ContributorsListComponent } from '@osf/shared/components/contributors-l
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { TruncatedTextComponent } from '@osf/shared/components/truncated-text/truncated-text.component';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
-import { NodeLinksSelectors } from '@osf/shared/stores/node-links';
+import { LoadMoreLinkedResources, NodeLinksSelectors } from '@osf/shared/stores/node-links';
 
+import { ProjectOverviewSelectors } from '../../store';
 import { DeleteNodeLinkDialogComponent } from '../delete-node-link-dialog/delete-node-link-dialog.component';
 import { LinkResourceDialogComponent } from '../link-resource-dialog/link-resource-dialog.component';
 
@@ -30,11 +31,17 @@ export class LinkedResourcesComponent {
 
   linkedResources = select(NodeLinksSelectors.getLinkedResources);
   isLinkedResourcesLoading = select(NodeLinksSelectors.getLinkedResourcesLoading);
+  hasMoreLinkedResources = select(NodeLinksSelectors.hasMoreLinkedResources);
+  isLoadingMoreLinkedResources = select(NodeLinksSelectors.isLoadingMoreLinkedResources);
+  currentProject = select(ProjectOverviewSelectors.getProject);
+
+  private readonly actions = createDispatchMap({ loadMoreLinkedResources: LoadMoreLinkedResources });
 
   openLinkProjectModal() {
     this.customDialogService.open(LinkResourceDialogComponent, {
       header: 'project.overview.dialog.linkProject.header',
       width: '850px',
+      closable: false,
     });
   }
 
@@ -48,5 +55,12 @@ export class LinkedResourcesComponent {
       width: '650px',
       data: { currentLink },
     });
+  }
+
+  loadMore(): void {
+    const project = this.currentProject();
+    if (!project) return;
+
+    this.actions.loadMoreLinkedResources(project.id);
   }
 }
