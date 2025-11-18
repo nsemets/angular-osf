@@ -31,6 +31,7 @@
               "markdown-it-video",
               "ace-builds/src-noconflict/ext-language_tools",
               "@traptitech/markdown-it-katex",
+              "@centerforopenscience/markdown-it-atrules",
               "@citation-js/core",
               "@citation-js/plugin-csl"
             ],

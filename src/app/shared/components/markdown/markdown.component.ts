@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, Signal } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
+import { ENVIRONMENT } from '@core/provider/environment.provider';
+
+import markdownItAtrules from '@centerforopenscience/markdown-it-atrules';
 import markdownItKatex from '@traptitech/markdown-it-katex';
 import MarkdownIt from 'markdown-it';
 import markdownItVideo from 'markdown-it-video';
@@ -17,6 +20,7 @@ export class MarkdownComponent {
 
   private md: MarkdownIt;
   private sanitizer = inject(DomSanitizer);
+  private readonly environment = inject(ENVIRONMENT);
 
   renderedHtml: Signal<SafeHtml> = computed(() => {
     const result = this.md.render(this.markdownText());
@@ -37,6 +41,18 @@ export class MarkdownComponent {
       .use(markdownItKatex, {
         output: 'mathml',
         throwOnError: false,
+      })
+      .use(markdownItAtrules, {
+        type: 'osf',
+        pattern:
+          /^http(?:s?):\/\/(?:www\.)?[a-zA-Z0-9 .:]{1,}\/render\?url=http(?:s?):\/\/[a-zA-Z0-9 .:]{1,}\/([a-zA-Z0-9]{5})\/\?action=download|(^[a-zA-Z0-9]{5}$)/,
+        format: (assetID: string) => {
+          const id = '__markdown-it-atrules-' + Date.now();
+          const downloadUrl = `${this.environment.webUrl}/download/${assetID}/`;
+          const hostname = new URL(this.environment.webUrl).hostname;
+          const mfrUrl = `https://mfr.${hostname}/render?url=${encodeURIComponent(downloadUrl)}`;
+          return `<div id="${id}" class="mfr mfr-file"></div><script>$(document).ready(function () {new mfr.Render("${id}", "${mfrUrl}");});</script>`;
+        },
       });
   }
 }
