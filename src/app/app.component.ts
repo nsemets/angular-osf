@@ -1,6 +1,6 @@
 import { Actions, createDispatchMap, ofActionSuccessful, select } from '@ngxs/store';
 
-import { take } from 'rxjs';
+import { take, timer } from 'rxjs';
 
 import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -67,7 +67,9 @@ export class AppComponent implements OnInit {
         event instanceof NavigationCancel ||
         event instanceof NavigationError
       ) {
-        this.loaderService.hide();
+        timer(500)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe(() => this.loaderService.hide());
       }
 
       if (this.environment.googleTagManagerId && event instanceof NavigationEnd) {
