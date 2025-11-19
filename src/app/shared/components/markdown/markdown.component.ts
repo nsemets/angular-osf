@@ -34,25 +34,25 @@ export class MarkdownComponent {
       typographer: true,
       breaks: true,
     })
-      .use(markdownItVideo, {
-        youtube: { width: 560, height: 315 },
-        vimeo: { width: 560, height: 315 },
-      })
-      .use(markdownItKatex, {
-        output: 'mathml',
-        throwOnError: false,
-      })
       .use(markdownItAtrules, {
         type: 'osf',
         pattern:
           /^http(?:s?):\/\/(?:www\.)?[a-zA-Z0-9 .:]{1,}\/render\?url=http(?:s?):\/\/[a-zA-Z0-9 .:]{1,}\/([a-zA-Z0-9]{5})\/\?action=download|(^[a-zA-Z0-9]{5}$)/,
         format: (assetID: string) => {
           const id = '__markdown-it-atrules-' + Date.now();
-          const downloadUrl = `${this.environment.webUrl}/download/${assetID}/`;
+          const downloadUrl = `${this.environment.webUrl}/download/${assetID}/?direct&mode=render`;
           const hostname = new URL(this.environment.webUrl).hostname;
-          const mfrUrl = `https://mfr.${hostname}/render?url=${encodeURIComponent(downloadUrl)}`;
-          return `<div id="${id}" class="mfr mfr-file"></div><script>$(document).ready(function () {new mfr.Render("${id}", "${mfrUrl}");});</script>`;
+          const mfrUrl = `https://mfr.us.${hostname}/render?url=${encodeURIComponent(downloadUrl)}`;
+          return `<div id="${id}" class="mfr mfr-file"><iframe frameborder="0" allowfullscreen="" height="100%" width="100%" src="${mfrUrl}"></iframe></div>`;
         },
+      })
+      .use(markdownItKatex, {
+        output: 'mathml',
+        throwOnError: false,
+      })
+      .use(markdownItVideo, {
+        youtube: { width: 560, height: 315 },
+        vimeo: { width: 560, height: 315 },
       });
   }
 }
