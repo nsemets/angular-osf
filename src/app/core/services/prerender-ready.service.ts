@@ -10,13 +10,13 @@ export class PrerenderReadyService {
 
   setNotReady(): void {
     if (this.window && 'prerenderReady' in this.window) {
-      this.window.prerenderReady = false;
+      // this.window.prerenderReady = false;
     }
   }
 
   setReady(): void {
     if (this.window && 'prerenderReady' in this.window) {
-      this.window.prerenderReady = true;
+      // this.window.prerenderReady = true;
     }
   }
 }
