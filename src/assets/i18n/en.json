@@ -3118,5 +3118,10 @@
     "project": "Project",
     "software": "Software",
     "other": "Other"
+  },
+  "spamTombstone": {
+    "title": "This page is temporarily unavailable.",
+    "message": "This content was flagged as potential spam.",
+    "contact": "If this is a mistake, reach out to <a class='font-bold' href=\"mailto:{{supportEmail}}\" target=\"_blank\">{{supportEmail}}</a> for assistance. Your content remains safe and will be restored once verified."
   }
 }

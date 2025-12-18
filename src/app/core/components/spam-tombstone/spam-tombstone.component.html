@@ -1,0 +1,5 @@
+<div class="flex flex-column align-items-center justify-content-center w-full text-center p-2 md:p-4 lg:w-7">
+  <h1>{{ 'spamTombstone.title' | translate }}</h1>
+  <p class="mt-4">{{ 'spamTombstone.message' | translate }}</p>
+  <p class="mt-4" [innerHTML]="'spamTombstone.contact' | translate: { supportEmail }"></p>
+</div>
