@@ -1,7 +1,6 @@
 import { MockComponent } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
 
 import { AffiliatedInstitutionSelectComponent } from '@osf/shared/components/affiliated-institution-select/affiliated-institution-select.component';
 import { InstitutionsSelectors } from '@osf/shared/stores/institutions';
@@ -9,17 +8,13 @@ import { InstitutionsSelectors } from '@osf/shared/stores/institutions';
 import { RegistriesAffiliatedInstitutionComponent } from './registries-affiliated-institution.component';
 
 import { OSFTestingModule } from '@testing/osf.testing.module';
-import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('RegistriesAffiliatedInstitutionComponent', () => {
   let component: RegistriesAffiliatedInstitutionComponent;
   let fixture: ComponentFixture<RegistriesAffiliatedInstitutionComponent>;
-  let mockActivatedRoute: ReturnType<ActivatedRouteMockBuilder['build']>;
 
   beforeEach(async () => {
-    mockActivatedRoute = ActivatedRouteMockBuilder.create().withParams({ id: 'draft-1' }).build();
-
     await TestBed.configureTestingModule({
       imports: [
         RegistriesAffiliatedInstitutionComponent,
@@ -27,7 +22,6 @@ describe('RegistriesAffiliatedInstitutionComponent', () => {
         MockComponent(AffiliatedInstitutionSelectComponent),
       ],
       providers: [
-        { provide: ActivatedRoute, useValue: mockActivatedRoute },
         provideMockStore({
           signals: [
             { selector: InstitutionsSelectors.getUserInstitutions, value: [] },
@@ -42,6 +36,7 @@ describe('RegistriesAffiliatedInstitutionComponent', () => {
 
     fixture = TestBed.createComponent(RegistriesAffiliatedInstitutionComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('draftId', 'draft-1');
     fixture.detectChanges();
   });
 
@@ -54,7 +49,7 @@ describe('RegistriesAffiliatedInstitutionComponent', () => {
       updateResourceInstitutions: jest.fn(),
       fetchUserInstitutions: jest.fn(),
       fetchResourceInstitutions: jest.fn(),
-    } as any;
+    };
     Object.defineProperty(component, 'actions', { value: actionsMock });
     const selected = [{ id: 'i2' }] as any;
     component.institutionsSelected(selected);
@@ -66,7 +61,7 @@ describe('RegistriesAffiliatedInstitutionComponent', () => {
       updateResourceInstitutions: jest.fn(),
       fetchUserInstitutions: jest.fn(),
       fetchResourceInstitutions: jest.fn(),
-    } as any;
+    };
     Object.defineProperty(component, 'actions', { value: actionsMock });
     component.ngOnInit();
     expect(actionsMock.fetchUserInstitutions).toHaveBeenCalled();

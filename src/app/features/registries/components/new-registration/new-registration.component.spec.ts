@@ -60,37 +60,35 @@ describe('NewRegistrationComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should init with provider and project ids from route', () => {
-    expect(component.providerId).toBe('prov-1');
-    expect(component.projectId).toBe('proj-1');
-    expect(component.fromProject).toBe(true);
+  it('should init fromProject as true when projectId is present', () => {
+    expect(component.fromProject()).toBe(true);
   });
 
-  it('should default providerSchema when empty', () => {
-    expect(component['draftForm'].get('providerSchema')?.value).toBe('schema-1');
+  it('should init form with project id from route', () => {
+    expect(component.draftForm.get('project')?.value).toBe('proj-1');
   });
 
-  it('should update project on selection', () => {
-    component.onSelectProject('p1');
-    expect(component['draftForm'].get('project')?.value).toBe('p1');
+  it('should default providerSchema when schemas are available', () => {
+    expect(component.draftForm.get('providerSchema')?.value).toBe('schema-1');
   });
 
   it('should toggle fromProject and add/remove validator', () => {
-    component.fromProject = false;
+    component.fromProject.set(false);
     component.toggleFromProject();
-    expect(component.fromProject).toBe(true);
+    expect(component.fromProject()).toBe(true);
+    expect(component.draftForm.get('project')?.validator).toBeTruthy();
+
     component.toggleFromProject();
-    expect(component.fromProject).toBe(false);
+    expect(component.fromProject()).toBe(false);
+    expect(component.draftForm.get('project')?.validator).toBeNull();
   });
 
-  it('should create draft when form valid', () => {
-    const mockActions = {
-      createDraft: jest.fn().mockReturnValue(of({})),
-    } as any;
+  it('should create draft when form is valid', () => {
+    const mockActions = { createDraft: jest.fn().mockReturnValue(of({})) };
     Object.defineProperty(component, 'actions', { value: mockActions });
 
     component.draftForm.patchValue({ providerSchema: 'schema-1', project: 'proj-1' });
-    component.fromProject = true;
+    component.fromProject.set(true);
     component.createDraft();
 
     expect(mockActions.createDraft).toHaveBeenCalledWith({
@@ -99,5 +97,15 @@ describe('NewRegistrationComponent', () => {
       projectId: 'proj-1',
     });
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/registries/drafts/', 'draft-1', 'metadata']);
+  });
+
+  it('should not create draft when form is invalid', () => {
+    const mockActions = { createDraft: jest.fn().mockReturnValue(of({})) };
+    Object.defineProperty(component, 'actions', { value: mockActions });
+
+    component.draftForm.patchValue({ providerSchema: '' });
+    component.createDraft();
+
+    expect(mockActions.createDraft).not.toHaveBeenCalled();
   });
 });

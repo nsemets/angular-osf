@@ -1,5 +1,6 @@
 import { MockProvider } from 'ng-mocks';
 
+import { TreeNode } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -18,7 +19,7 @@ describe('SelectComponentsDialogComponent', () => {
   const components = [
     { id: 'c1', title: 'Child 1', children: [{ id: 'c1a', title: 'Child 1A' }] },
     { id: 'c2', title: 'Child 2' },
-  ] as any;
+  ] as TreeNode;
 
   beforeEach(async () => {
     dialogRefMock = { close: jest.fn() } as any;

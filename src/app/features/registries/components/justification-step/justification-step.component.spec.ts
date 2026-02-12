@@ -6,6 +6,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { RegistriesSelectors } from '@osf/features/registries/store';
+import { SchemaResponse } from '@osf/shared/models/registration/schema-response.model';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 
@@ -28,7 +29,7 @@ describe('JustificationStepComponent', () => {
   const MOCK_SCHEMA_RESPONSE = {
     registrationId: 'reg-1',
     revisionJustification: 'reason',
-  } as any;
+  } as SchemaResponse;
 
   beforeEach(async () => {
     mockActivatedRoute = ActivatedRouteMockBuilder.create().withParams({ id: 'rev-1' }).build();
@@ -44,10 +45,7 @@ describe('JustificationStepComponent', () => {
         MockProvider(CustomConfirmationService, mockCustomConfirmationService as any),
         MockProvider(ToastService, mockToastService),
         provideMockStore({
-          signals: [
-            { selector: RegistriesSelectors.getSchemaResponse, value: MOCK_SCHEMA_RESPONSE },
-            { selector: RegistriesSelectors.getStepsState, value: {} },
-          ],
+          signals: [{ selector: RegistriesSelectors.getSchemaResponse, value: MOCK_SCHEMA_RESPONSE }],
         }),
       ],
     }).compileComponents();
@@ -69,7 +67,7 @@ describe('JustificationStepComponent', () => {
     const mockActions = {
       updateRevision: jest.fn().mockReturnValue(of({})),
       updateStepState: jest.fn(),
-    } as any;
+    };
     Object.defineProperty(component, 'actions', { value: mockActions });
 
     component.justificationForm.patchValue({ justification: 'new reason' });
@@ -86,7 +84,7 @@ describe('JustificationStepComponent', () => {
     const mockActions = {
       deleteSchemaResponse: jest.fn().mockReturnValue(of({})),
       clearState: jest.fn(),
-    } as any;
+    };
     Object.defineProperty(component, 'actions', { value: mockActions });
 
     component.deleteDraftUpdate();

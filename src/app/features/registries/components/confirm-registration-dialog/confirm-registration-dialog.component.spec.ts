@@ -2,7 +2,7 @@ import { MockProvider } from 'ng-mocks';
 
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
@@ -117,5 +117,29 @@ describe('ConfirmRegistrationDialogComponent', () => {
       MOCK_CONFIG_DATA.components
     );
     expect(mockDialogRef.close).toHaveBeenCalledWith(true);
+  });
+
+  it('should return a date 3 days in the future for minEmbargoDate', () => {
+    const expected = new Date();
+    expected.setDate(expected.getDate() + 3);
+
+    const result = component.minEmbargoDate();
+
+    expect(result.getFullYear()).toBe(expected.getFullYear());
+    expect(result.getMonth()).toBe(expected.getMonth());
+    expect(result.getDate()).toBe(expected.getDate());
+  });
+
+  it('should re-enable form on submit error', () => {
+    const mockActions = {
+      registerDraft: jest.fn().mockReturnValue(throwError(() => new Error('fail'))),
+    };
+    Object.defineProperty(component, 'actions', { value: mockActions, writable: true });
+
+    component.form.get('submitOption')?.setValue(SubmitType.Public);
+    component.submit();
+
+    expect(component.form.enabled).toBe(true);
+    expect(mockDialogRef.close).not.toHaveBeenCalled();
   });
 });

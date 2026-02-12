@@ -1,42 +1,46 @@
-import { MockComponent, MockProvider } from 'ng-mocks';
+import { MockComponent } from 'ng-mocks';
 
 import { of } from 'rxjs';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { FormControl, Validators } from '@angular/forms';
 
 import { RegistriesSelectors } from '@osf/features/registries/store';
 import { SubjectsComponent } from '@osf/shared/components/subjects/subjects.component';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { SubjectsSelectors } from '@osf/shared/stores/subjects';
+import { SubjectModel } from '@shared/models/subject/subject.model';
 
 import { RegistriesSubjectsComponent } from './registries-subjects.component';
 
+import { MOCK_DRAFT_REGISTRATION } from '@testing/mocks/draft-registration.mock';
 import { OSFTestingModule } from '@testing/osf.testing.module';
-import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('RegistriesSubjectsComponent', () => {
   let component: RegistriesSubjectsComponent;
   let fixture: ComponentFixture<RegistriesSubjectsComponent>;
-  let mockActivatedRoute: ReturnType<ActivatedRouteMockBuilder['build']>;
+  let actionsMock: {
+    fetchSubjects: jest.Mock;
+    fetchSelectedSubjects: jest.Mock;
+    fetchChildrenSubjects: jest.Mock;
+    updateResourceSubjects: jest.Mock;
+  };
+
+  const mockSubjects: SubjectModel[] = [
+    { id: 'sub-1', name: 'Subject 1' },
+    { id: 'sub-2', name: 'Subject 2' },
+  ];
 
   beforeEach(async () => {
-    mockActivatedRoute = ActivatedRouteMockBuilder.create().withParams({ id: 'draft-1' }).build();
     await TestBed.configureTestingModule({
       imports: [RegistriesSubjectsComponent, OSFTestingModule, MockComponent(SubjectsComponent)],
       providers: [
-        MockProvider(ActivatedRoute, mockActivatedRoute),
         provideMockStore({
           signals: [
-            { selector: RegistriesSelectors.getDraftRegistration, value: { providerId: 'prov-1' } },
             { selector: SubjectsSelectors.getSelectedSubjects, value: [] },
-            { selector: SubjectsSelectors.getSubjects, value: [] },
-            { selector: SubjectsSelectors.getSearchedSubjects, value: [] },
-            { selector: SubjectsSelectors.getSubjectsLoading, value: false },
-            { selector: SubjectsSelectors.getSearchedSubjectsLoading, value: false },
             { selector: SubjectsSelectors.areSelectedSubjectsLoading, value: false },
+            { selector: RegistriesSelectors.getDraftRegistration, value: MOCK_DRAFT_REGISTRATION },
           ],
         }),
       ],
@@ -44,14 +48,16 @@ describe('RegistriesSubjectsComponent', () => {
 
     fixture = TestBed.createComponent(RegistriesSubjectsComponent);
     component = fixture.componentInstance;
-    fixture.componentRef.setInput('control', new FormControl([]));
-    const mockActions = {
+    fixture.componentRef.setInput('control', new FormControl(null, Validators.required));
+    fixture.componentRef.setInput('draftId', 'draft-1');
+
+    actionsMock = {
       fetchSubjects: jest.fn().mockReturnValue(of({})),
       fetchSelectedSubjects: jest.fn().mockReturnValue(of({})),
       fetchChildrenSubjects: jest.fn().mockReturnValue(of({})),
       updateResourceSubjects: jest.fn().mockReturnValue(of({})),
-    } as any;
-    Object.defineProperty(component, 'actions', { value: mockActions });
+    };
+    Object.defineProperty(component, 'actions', { value: actionsMock });
     fixture.detectChanges();
   });
 
@@ -59,33 +65,55 @@ describe('RegistriesSubjectsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should fetch subjects and selected subjects on init', () => {
-    const actions = (component as any).actions;
-    expect(actions.fetchSubjects).toHaveBeenCalledWith(ResourceType.Registration, 'prov-1');
-    expect(actions.fetchSelectedSubjects).toHaveBeenCalledWith('draft-1', ResourceType.DraftRegistration);
-  });
-
-  it('should fetch children on demand', () => {
-    const actions = (component as any).actions;
+  it('should call fetchChildrenSubjects when getSubjectChildren is called', () => {
     component.getSubjectChildren('parent-1');
-    expect(actions.fetchChildrenSubjects).toHaveBeenCalledWith('parent-1');
+    expect(actionsMock.fetchChildrenSubjects).toHaveBeenCalledWith('parent-1');
   });
 
-  it('should search subjects', () => {
-    const actions = (component as any).actions;
-    component.searchSubjects('term');
-    expect(actions.fetchSubjects).toHaveBeenCalledWith(ResourceType.Registration, 'prov-1', 'term');
+  it('should call fetchSubjects with search term when searchSubjects is called', () => {
+    component.searchSubjects('biology');
+    expect(actionsMock.fetchSubjects).toHaveBeenCalledWith(
+      ResourceType.Registration,
+      MOCK_DRAFT_REGISTRATION.providerId,
+      'biology'
+    );
   });
 
-  it('should update selected subjects and control state', () => {
-    const actions = (component as any).actions;
-    const nextSubjects = [{ id: 's1' } as any];
-    component.updateSelectedSubjects(nextSubjects);
-    expect(actions.updateResourceSubjects).toHaveBeenCalledWith(
+  it('should call updateResourceSubjects and update control when updateSelectedSubjects is called', () => {
+    component.updateSelectedSubjects(mockSubjects);
+    expect(actionsMock.updateResourceSubjects).toHaveBeenCalledWith(
       'draft-1',
       ResourceType.DraftRegistration,
-      nextSubjects
+      mockSubjects
     );
-    expect(component.control().value).toEqual(nextSubjects);
+    expect(component.control().value).toEqual(mockSubjects);
+    expect(component.control().touched).toBe(true);
+    expect(component.control().dirty).toBe(true);
+  });
+
+  it('should mark control as touched and dirty on focusout', () => {
+    component.onFocusOut();
+    expect(component.control().touched).toBe(true);
+    expect(component.control().dirty).toBe(true);
+  });
+
+  it('should set control value and mark as touched/dirty in updateControlState', () => {
+    component.updateControlState(mockSubjects);
+    expect(component.control().value).toEqual(mockSubjects);
+    expect(component.control().touched).toBe(true);
+    expect(component.control().dirty).toBe(true);
+  });
+
+  it('should have invalid control when value is null and touched', () => {
+    component.control().markAsTouched();
+    component.control().updateValueAndValidity();
+    expect(component.control().valid).toBe(false);
+    expect(component.control().errors?.['required']).toBeTruthy();
+  });
+
+  it('should have valid control when subjects are set', () => {
+    component.updateControlState(mockSubjects);
+    expect(component.control().valid).toBe(true);
+    expect(component.control().errors).toBeNull();
   });
 });

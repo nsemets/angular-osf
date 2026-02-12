@@ -22,22 +22,15 @@ describe('ConfirmContinueEditingDialogComponent', () => {
   const MOCK_REVISION_ID = 'test-revision-id';
 
   beforeEach(async () => {
-    mockDialogRef = {
-      close: jest.fn(),
-    } as any;
-
-    mockDialogConfig = {
-      data: { revisionId: MOCK_REVISION_ID },
-    } as jest.Mocked<DynamicDialogConfig>;
+    mockDialogRef = { close: jest.fn() } as unknown as jest.Mocked<DynamicDialogRef>;
+    mockDialogConfig = { data: { revisionId: MOCK_REVISION_ID } } as jest.Mocked<DynamicDialogConfig>;
 
     await TestBed.configureTestingModule({
       imports: [ConfirmContinueEditingDialogComponent, OSFTestingModule],
       providers: [
         MockProvider(DynamicDialogRef, mockDialogRef),
         MockProvider(DynamicDialogConfig, mockDialogConfig),
-        provideMockStore({
-          signals: [],
-        }),
+        provideMockStore(),
       ],
     }).compileComponents();
 
@@ -58,9 +51,7 @@ describe('ConfirmContinueEditingDialogComponent', () => {
     const testComment = 'Test comment';
     component.form.patchValue({ comment: testComment });
 
-    const mockActions = {
-      handleSchemaResponse: jest.fn().mockReturnValue(of({})),
-    };
+    const mockActions = { handleSchemaResponse: jest.fn().mockReturnValue(of({})) };
 
     Object.defineProperty(component, 'actions', {
       value: mockActions,
@@ -77,9 +68,7 @@ describe('ConfirmContinueEditingDialogComponent', () => {
   });
 
   it('should submit with empty comment', () => {
-    const mockActions = {
-      handleSchemaResponse: jest.fn().mockReturnValue(of({})),
-    };
+    const mockActions = { handleSchemaResponse: jest.fn().mockReturnValue(of({})) };
 
     Object.defineProperty(component, 'actions', {
       value: mockActions,
@@ -96,9 +85,7 @@ describe('ConfirmContinueEditingDialogComponent', () => {
   });
 
   it('should set isSubmitting to true when submitting', () => {
-    const mockActions = {
-      handleSchemaResponse: jest.fn().mockReturnValue(of({}).pipe()),
-    };
+    const mockActions = { handleSchemaResponse: jest.fn().mockReturnValue(of({}).pipe()) };
 
     Object.defineProperty(component, 'actions', {
       value: mockActions,
@@ -120,9 +107,7 @@ describe('ConfirmContinueEditingDialogComponent', () => {
     const differentRevisionId = 'different-revision-id';
     (component as any).config.data = { revisionId: differentRevisionId } as any;
 
-    const mockActions = {
-      handleSchemaResponse: jest.fn().mockReturnValue(of({})),
-    };
+    const mockActions = { handleSchemaResponse: jest.fn().mockReturnValue(of({})) };
 
     Object.defineProperty(component, 'actions', {
       value: mockActions,

@@ -8,7 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SchemaActionTrigger } from '@osf/features/registries/enums';
 import { RegistriesSelectors } from '@osf/features/registries/store';
 import { RegistrationBlocksDataComponent } from '@osf/shared/components/registration-blocks-data/registration-blocks-data.component';
-import { RevisionReviewStates } from '@osf/shared/enums/revision-review-states.enum';
+import { SchemaResponse } from '@osf/shared/models/registration/schema-response.model';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { ToastService } from '@osf/shared/services/toast.service';
@@ -34,11 +34,9 @@ describe('JustificationReviewComponent', () => {
   let mockToastService: ReturnType<ToastServiceMockBuilder['build']>;
 
   const MOCK_SCHEMA_RESPONSE = {
-    id: 'rev-1',
     registrationId: 'reg-1',
-    reviewsState: RevisionReviewStates.RevisionInProgress,
     updatedResponseKeys: ['field1'],
-  } as any;
+  } as SchemaResponse;
 
   beforeEach(async () => {
     mockActivatedRoute = ActivatedRouteMockBuilder.create().withParams({ id: 'rev-1' }).build();
@@ -86,9 +84,7 @@ describe('JustificationReviewComponent', () => {
   });
 
   it('should submit revision for review', () => {
-    const mockActions = {
-      handleSchemaResponse: jest.fn().mockReturnValue(of({})),
-    } as any;
+    const mockActions = { handleSchemaResponse: jest.fn().mockReturnValue(of({})) };
     Object.defineProperty(component, 'actions', { value: mockActions });
 
     component.submit();
@@ -98,9 +94,7 @@ describe('JustificationReviewComponent', () => {
   });
 
   it('should accept changes', () => {
-    const mockActions = {
-      handleSchemaResponse: jest.fn().mockReturnValue(of({})),
-    } as any;
+    const mockActions = { handleSchemaResponse: jest.fn().mockReturnValue(of({})) };
     Object.defineProperty(component, 'actions', { value: mockActions });
 
     component.acceptChanges();
@@ -123,7 +117,7 @@ describe('JustificationReviewComponent', () => {
     const mockActions = {
       deleteSchemaResponse: jest.fn().mockReturnValue(of({})),
       clearState: jest.fn(),
-    } as any;
+    };
     Object.defineProperty(component, 'actions', { value: mockActions });
 
     component.deleteDraftUpdate();
