@@ -1,6 +1,6 @@
 import { MockProvider } from 'ng-mocks';
 
-import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 
 import { of } from 'rxjs';
 
@@ -10,27 +10,23 @@ import { SchemaActionTrigger } from '@osf/features/registries/enums';
 
 import { ConfirmContinueEditingDialogComponent } from './confirm-continue-editing-dialog.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore, provideOSFDialog } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('ConfirmContinueEditingDialogComponent', () => {
   let component: ConfirmContinueEditingDialogComponent;
   let fixture: ComponentFixture<ConfirmContinueEditingDialogComponent>;
-  let mockDialogRef: DynamicDialogRef;
-  let mockDialogConfig: jest.Mocked<DynamicDialogConfig>;
 
   const MOCK_REVISION_ID = 'test-revision-id';
 
   beforeEach(async () => {
-    mockDialogRef = { close: jest.fn() } as unknown as jest.Mocked<DynamicDialogRef>;
-    mockDialogConfig = { data: { revisionId: MOCK_REVISION_ID } } as jest.Mocked<DynamicDialogConfig>;
-
     await TestBed.configureTestingModule({
-      imports: [ConfirmContinueEditingDialogComponent, OSFTestingModule],
+      imports: [ConfirmContinueEditingDialogComponent],
       providers: [
-        MockProvider(DynamicDialogRef, mockDialogRef),
-        MockProvider(DynamicDialogConfig, mockDialogConfig),
+        provideOSFCore(),
+        provideOSFDialog(),
         provideMockStore(),
+        MockProvider(DynamicDialogConfig, { data: { revisionId: MOCK_REVISION_ID } }),
       ],
     }).compileComponents();
 
