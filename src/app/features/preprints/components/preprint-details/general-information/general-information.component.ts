@@ -17,18 +17,16 @@ import {
   output,
   PLATFORM_ID,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { ApplicabilityStatus, PreregLinkInfo } from '@osf/features/preprints/enums';
 import { PreprintProviderDetails } from '@osf/features/preprints/models';
-import { FetchPreprintDetails, PreprintSelectors } from '@osf/features/preprints/store/preprint';
+import { PreprintSelectors } from '@osf/features/preprints/store/preprint';
 import { AffiliatedInstitutionsViewComponent } from '@osf/shared/components/affiliated-institutions-view/affiliated-institutions-view.component';
 import { ContributorsListComponent } from '@osf/shared/components/contributors-list/contributors-list.component';
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { TruncatedTextComponent } from '@osf/shared/components/truncated-text/truncated-text.component';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
-import { FixSpecialCharPipe } from '@osf/shared/pipes/fix-special-char.pipe';
 import {
   ContributorsSelectors,
   GetBibliographicContributors,
@@ -43,15 +41,13 @@ import { PreprintDoiSectionComponent } from '../preprint-doi-section/preprint-do
   selector: 'osf-preprint-general-information',
   imports: [
     Card,
-    TranslatePipe,
     Skeleton,
-    FormsModule,
-    TruncatedTextComponent,
-    PreprintDoiSectionComponent,
-    IconComponent,
     AffiliatedInstitutionsViewComponent,
     ContributorsListComponent,
-    FixSpecialCharPipe,
+    IconComponent,
+    PreprintDoiSectionComponent,
+    TruncatedTextComponent,
+    TranslatePipe,
   ],
   templateUrl: './general-information.component.html',
   styleUrl: './general-information.component.scss',
@@ -62,40 +58,39 @@ export class GeneralInformationComponent implements OnDestroy {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
+  readonly preprintProvider = input.required<PreprintProviderDetails | undefined>();
+  readonly preprintVersionSelected = output<string>();
+
+  private readonly actions = createDispatchMap({
+    getBibliographicContributors: GetBibliographicContributors,
+    fetchResourceInstitutions: FetchResourceInstitutions,
+    loadMoreBibliographicContributors: LoadMoreBibliographicContributors,
+    resetContributorsState: ResetContributorsState,
+  });
+
+  readonly preprint = select(PreprintSelectors.getPreprint);
+  readonly isPreprintLoading = select(PreprintSelectors.isPreprintLoading);
+
+  readonly affiliatedInstitutions = select(InstitutionsSelectors.getResourceInstitutions);
+
+  readonly bibliographicContributors = select(ContributorsSelectors.getBibliographicContributors);
+  readonly areContributorsLoading = select(ContributorsSelectors.isBibliographicContributorsLoading);
+  readonly hasMoreBibliographicContributors = select(ContributorsSelectors.hasMoreBibliographicContributors);
+
   readonly ApplicabilityStatus = ApplicabilityStatus;
   readonly PreregLinkInfo = PreregLinkInfo;
 
-  private actions = createDispatchMap({
-    getBibliographicContributors: GetBibliographicContributors,
-    resetContributorsState: ResetContributorsState,
-    fetchPreprintById: FetchPreprintDetails,
-    fetchResourceInstitutions: FetchResourceInstitutions,
-    loadMoreBibliographicContributors: LoadMoreBibliographicContributors,
-  });
+  readonly skeletonData = new Array(5).fill(null);
 
-  preprintProvider = input.required<PreprintProviderDetails | undefined>();
-  preprintVersionSelected = output<string>();
-
-  preprint = select(PreprintSelectors.getPreprint);
-  isPreprintLoading = select(PreprintSelectors.isPreprintLoading);
-
-  affiliatedInstitutions = select(InstitutionsSelectors.getResourceInstitutions);
-
-  bibliographicContributors = select(ContributorsSelectors.getBibliographicContributors);
-  areContributorsLoading = select(ContributorsSelectors.isBibliographicContributorsLoading);
-  hasMoreBibliographicContributors = select(ContributorsSelectors.hasMoreBibliographicContributors);
-
-  skeletonData = Array.from({ length: 5 }, () => null);
-
-  nodeLink = computed(() => `${this.environment.webUrl}/${this.preprint()?.nodeId}`);
+  readonly nodeLink = computed(() => `${this.environment.webUrl}/${this.preprint()?.nodeId}`);
 
   constructor() {
     effect(() => {
-      const preprint = this.preprint();
-      if (!preprint) return;
+      const preprintId = this.preprint()?.id;
+      if (!preprintId) return;
 
-      this.actions.getBibliographicContributors(this.preprint()!.id, ResourceType.Preprint);
-      this.actions.fetchResourceInstitutions(this.preprint()!.id, ResourceType.Preprint);
+      this.actions.getBibliographicContributors(preprintId, ResourceType.Preprint);
+      this.actions.fetchResourceInstitutions(preprintId, ResourceType.Preprint);
     });
   }
 

@@ -2,22 +2,25 @@
   <p-button
     icon="fas fa-download text-2xl"
     styleClass="px-4"
+    tooltipPosition="bottom"
     [pTooltip]="
       'preprints.details.share.downloadPreprint' | translate: { documentType: preprintProvider()?.preprintWord }
     "
-    tooltipPosition="bottom"
-    (onClick)="download()"
     [ariaLabel]="
       'preprints.details.share.downloadPreprint' | translate: { documentType: preprintProvider()?.preprintWord }
     "
+    (onClick)="download()"
   />
 
-  @if (preprint() && preprintProvider()) {
+  @let preprintValue = preprint();
+  @let providerValue = preprintProvider();
+
+  @if (preprintValue && providerValue) {
     <osf-socials-share-button
-      [resourceId]="preprint()!.id"
-      [resourceTitle]="preprint()!.title"
+      [resourceId]="preprintValue.id"
+      [resourceTitle]="preprintValue.title"
       [resourceType]="resourceType"
-      [resourceProvider]="preprintProvider()!.id"
+      [resourceProvider]="providerValue.id"
     ></osf-socials-share-button>
   }
 </div>

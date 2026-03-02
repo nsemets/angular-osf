@@ -30,12 +30,11 @@ import {
   FetchDefaultProviderCitationStyles,
   GetCitationStyles,
   GetStyledCitation,
-  UpdateCustomCitation,
 } from '@shared/stores/citations';
 
 @Component({
   selector: 'osf-preprint-citation-section',
-  imports: [Accordion, AccordionPanel, AccordionHeader, TranslatePipe, AccordionContent, Skeleton, Divider, Select],
+  imports: [Accordion, AccordionPanel, AccordionHeader, AccordionContent, Divider, Skeleton, Select, TranslatePipe],
   templateUrl: './citation-section.component.html',
   styleUrl: './citation-section.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,18 +45,19 @@ export class CitationSectionComponent implements OnInit {
 
   private readonly destroyRef = inject(DestroyRef);
   private readonly filterSubject = new Subject<string>();
-  private actions = createDispatchMap({
+
+  private readonly actions = createDispatchMap({
     getDefaultCitations: FetchDefaultProviderCitationStyles,
     getCitationStyles: GetCitationStyles,
     getStyledCitation: GetStyledCitation,
-    updateCustomCitation: UpdateCustomCitation,
   });
 
-  defaultCitations = select(CitationsSelectors.getDefaultCitations);
-  areCitationsLoading = select(CitationsSelectors.getDefaultCitationsLoading);
-  citationStyles = select(CitationsSelectors.getCitationStyles);
-  areCitationStylesLoading = select(CitationsSelectors.getCitationStylesLoading);
-  styledCitation = select(CitationsSelectors.getStyledCitation);
+  readonly defaultCitations = select(CitationsSelectors.getDefaultCitations);
+  readonly areCitationsLoading = select(CitationsSelectors.getDefaultCitationsLoading);
+  readonly citationStyles = select(CitationsSelectors.getCitationStyles);
+  readonly areCitationStylesLoading = select(CitationsSelectors.getCitationStylesLoading);
+  readonly styledCitation = select(CitationsSelectors.getStyledCitation);
+
   citationStylesOptions = signal<CustomOption<CitationStyle>[]>([]);
 
   filterMessage = computed(() =>
@@ -87,9 +87,7 @@ export class CitationSectionComponent implements OnInit {
   private setupFilterDebounce(): void {
     this.filterSubject
       .pipe(debounceTime(300), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
-      .subscribe((filterValue) => {
-        this.actions.getCitationStyles(filterValue);
-      });
+      .subscribe((filterValue) => this.actions.getCitationStyles(filterValue));
   }
 
   private setupCitationStylesEffect(): void {
@@ -100,6 +98,7 @@ export class CitationSectionComponent implements OnInit {
         label: style.title,
         value: style,
       }));
+
       this.citationStylesOptions.set(options);
     });
   }
