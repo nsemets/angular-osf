@@ -3,7 +3,6 @@ import { provideStates } from '@ngxs/store';
 import { Routes } from '@angular/router';
 
 import { authGuard } from '@core/guards/auth.guard';
-import { preprintsModeratorGuard } from '@osf/features/preprints/guards';
 import { PreprintsComponent } from '@osf/features/preprints/preprints.component';
 import { PreprintState } from '@osf/features/preprints/store/preprint';
 import { PreprintProvidersState } from '@osf/features/preprints/store/preprint-providers';
@@ -14,6 +13,8 @@ import { ProjectsState } from '@shared/stores/projects';
 import { SubjectsState } from '@shared/stores/subjects';
 
 import { PreprintModerationState } from '../moderation/store/preprint-moderation';
+
+import { preprintsModeratorGuard } from './guards/preprints-moderator.guard';
 
 export const preprintsRoutes: Routes = [
   {

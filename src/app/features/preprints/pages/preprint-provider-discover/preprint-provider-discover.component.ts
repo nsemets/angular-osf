@@ -40,7 +40,7 @@ export class PreprintProviderDiscoverComponent implements OnInit, OnDestroy {
   preprintProvider = select(PreprintProvidersSelectors.getPreprintProviderDetails(this.providerId));
   isPreprintProviderLoading = select(PreprintProvidersSelectors.isPreprintProviderDetailsLoading);
 
-  searchControl = new FormControl('');
+  searchControl = new FormControl('', { nonNullable: true });
   defaultSearchFiltersInitialized = signal<boolean>(false);
 
   ngOnInit() {
