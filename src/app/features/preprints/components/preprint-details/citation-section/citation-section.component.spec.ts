@@ -2,17 +2,15 @@ import { Store } from '@ngxs/store';
 
 import { SelectChangeEvent, SelectFilterEvent } from 'primeng/select';
 
-import { signal } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 
-import { ResourceType } from '@osf/shared/enums/resource-type.enum';
-import { CitationStyle } from '@osf/shared/models/citations/citation-style.model';
+import { ResourceType } from '@shared/enums/resource-type.enum';
 import {
   CitationsSelectors,
   FetchDefaultProviderCitationStyles,
   GetCitationStyles,
   GetStyledCitation,
-} from '@osf/shared/stores/citations';
+} from '@shared/stores/citations';
 
 import { CitationSectionComponent } from './citation-section.component';
 
@@ -25,7 +23,7 @@ describe('CitationSectionComponent', () => {
   let fixture: ComponentFixture<CitationSectionComponent>;
   let store: Store;
 
-  const mockCitationStyles: CitationStyle[] = CITATION_STYLES_MOCK;
+  const mockCitationStyles = CITATION_STYLES_MOCK;
   const mockDefaultCitations = [{ id: 'apa', title: 'APA', citation: 'APA Citation Text' }];
   const mockStyledCitation = { citation: 'Styled Citation Text' };
 
@@ -36,12 +34,6 @@ describe('CitationSectionComponent', () => {
   }
 
   const setup = (overrides: SetupOverrides = {}) => {
-    const defaultCitationsSignal = signal(mockDefaultCitations);
-    const areCitationsLoadingSignal = signal(false);
-    const citationStylesSignal = signal(mockCitationStyles);
-    const areCitationStylesLoadingSignal = signal(false);
-    const styledCitationSignal = signal(mockStyledCitation);
-
     TestBed.configureTestingModule({
       imports: [CitationSectionComponent],
       providers: [
@@ -49,11 +41,11 @@ describe('CitationSectionComponent', () => {
         provideMockStore({
           signals: mergeSignalOverrides(
             [
-              { selector: CitationsSelectors.getDefaultCitations, value: defaultCitationsSignal },
-              { selector: CitationsSelectors.getDefaultCitationsLoading, value: areCitationsLoadingSignal },
-              { selector: CitationsSelectors.getCitationStyles, value: citationStylesSignal },
-              { selector: CitationsSelectors.getCitationStylesLoading, value: areCitationStylesLoadingSignal },
-              { selector: CitationsSelectors.getStyledCitation, value: styledCitationSignal },
+              { selector: CitationsSelectors.getDefaultCitations, value: mockDefaultCitations },
+              { selector: CitationsSelectors.getDefaultCitationsLoading, value: false },
+              { selector: CitationsSelectors.getCitationStyles, value: mockCitationStyles },
+              { selector: CitationsSelectors.getCitationStylesLoading, value: false },
+              { selector: CitationsSelectors.getStyledCitation, value: mockStyledCitation },
             ],
             overrides.selectorOverrides
           ),
@@ -72,8 +64,6 @@ describe('CitationSectionComponent', () => {
       fixture.detectChanges();
       (store.dispatch as jest.Mock).mockClear();
     }
-
-    return { areCitationStylesLoadingSignal };
   };
 
   it('should create', () => {
@@ -100,8 +90,9 @@ describe('CitationSectionComponent', () => {
   });
 
   it('should return loading filter message when citation styles are loading', () => {
-    const { areCitationStylesLoadingSignal } = setup();
-    areCitationStylesLoadingSignal.set(true);
+    setup({
+      selectorOverrides: [{ selector: CitationsSelectors.getCitationStylesLoading, value: true }],
+    });
     expect(component.filterMessage()).toBe('project.overview.metadata.citationLoadingPlaceholder');
   });
 

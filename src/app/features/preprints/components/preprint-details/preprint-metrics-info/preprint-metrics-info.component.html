@@ -1,6 +1,6 @@
-<p-card>
-  @let metricsValue = metrics();
+@let metricsValue = metrics();
 
+<p-card>
   @if (isLoading()) {
     <div class="flex flex-row gap-1">
       <p-skeleton width="8rem" height="1.5rem" />

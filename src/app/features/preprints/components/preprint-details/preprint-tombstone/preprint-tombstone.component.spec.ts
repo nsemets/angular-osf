@@ -1,8 +1,7 @@
 import { Store } from '@ngxs/store';
 
-import { MockComponents } from 'ng-mocks';
+import { MockComponents, MockProvider } from 'ng-mocks';
 
-import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
@@ -53,17 +52,17 @@ describe('PreprintTombstoneComponent', () => {
       ],
       providers: [
         provideOSFCore(),
-        { provide: Router, useValue: mockRouter },
+        MockProvider(Router, mockRouter),
         provideMockStore({
           signals: mergeSignalOverrides(
             [
-              { selector: PreprintSelectors.getPreprint, value: signal(mockPreprint) },
-              { selector: PreprintSelectors.isPreprintLoading, value: signal(false) },
-              { selector: ContributorsSelectors.getBibliographicContributors, value: signal(mockContributors) },
-              { selector: ContributorsSelectors.isBibliographicContributorsLoading, value: signal(false) },
-              { selector: ContributorsSelectors.hasMoreBibliographicContributors, value: signal(false) },
-              { selector: SubjectsSelectors.getSelectedSubjects, value: signal(mockSubjects) },
-              { selector: SubjectsSelectors.areSelectedSubjectsLoading, value: signal(false) },
+              { selector: PreprintSelectors.getPreprint, value: mockPreprint },
+              { selector: PreprintSelectors.isPreprintLoading, value: false },
+              { selector: ContributorsSelectors.getBibliographicContributors, value: mockContributors },
+              { selector: ContributorsSelectors.isBibliographicContributorsLoading, value: false },
+              { selector: ContributorsSelectors.hasMoreBibliographicContributors, value: false },
+              { selector: SubjectsSelectors.getSelectedSubjects, value: mockSubjects },
+              { selector: SubjectsSelectors.areSelectedSubjectsLoading, value: false },
             ],
             overrides.selectorOverrides
           ),
@@ -94,9 +93,7 @@ describe('PreprintTombstoneComponent', () => {
   });
 
   it('should fallback computed values when preprint data is missing', () => {
-    setup({
-      selectorOverrides: [{ selector: PreprintSelectors.getPreprint, value: signal(null) }],
-    });
+    setup({ selectorOverrides: [{ selector: PreprintSelectors.getPreprint, value: null }] });
     expect(component.license()).toBeNull();
     expect(component.licenseOptionsRecord()).toEqual({});
   });
@@ -126,7 +123,7 @@ describe('PreprintTombstoneComponent', () => {
 
   it('should not dispatch contributor and subject fetch actions when preprint is missing', () => {
     setup({
-      selectorOverrides: [{ selector: PreprintSelectors.getPreprint, value: signal(undefined) }],
+      selectorOverrides: [{ selector: PreprintSelectors.getPreprint, value: undefined }],
     });
     fixture.detectChanges();
     TestBed.flushEffects();

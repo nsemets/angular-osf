@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PreprintModel, PreprintProviderDetails } from '@osf/features/preprints/models';
+import { PreprintModel } from '@osf/features/preprints/models';
 import { PreprintSelectors } from '@osf/features/preprints/store/preprint';
 
 import { PreprintDoiSectionComponent } from './preprint-doi-section.component';
@@ -14,9 +14,9 @@ describe('PreprintDoiSectionComponent', () => {
   let component: PreprintDoiSectionComponent;
   let fixture: ComponentFixture<PreprintDoiSectionComponent>;
 
-  const mockPreprint: PreprintModel = PREPRINT_MOCK;
+  const mockPreprint = PREPRINT_MOCK;
 
-  const mockProvider: PreprintProviderDetails = PREPRINT_PROVIDER_DETAILS_MOCK;
+  const mockProvider = PREPRINT_PROVIDER_DETAILS_MOCK;
   const mockVersionIds = ['version-1', 'version-2', 'version-3'];
 
   beforeEach(() => {
@@ -26,18 +26,9 @@ describe('PreprintDoiSectionComponent', () => {
         provideOSFCore(),
         provideMockStore({
           signals: [
-            {
-              selector: PreprintSelectors.getPreprint,
-              value: mockPreprint,
-            },
-            {
-              selector: PreprintSelectors.getPreprintVersionIds,
-              value: mockVersionIds,
-            },
-            {
-              selector: PreprintSelectors.arePreprintVersionIdsLoading,
-              value: false,
-            },
+            { selector: PreprintSelectors.getPreprint, value: mockPreprint },
+            { selector: PreprintSelectors.getPreprintVersionIds, value: mockVersionIds },
+            { selector: PreprintSelectors.arePreprintVersionIdsLoading, value: false },
           ],
         }),
       ],

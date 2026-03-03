@@ -40,8 +40,8 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CitationSectionComponent implements OnInit {
-  preprintId = input.required<string>();
-  providerId = input.required<string>();
+  readonly preprintId = input.required<string>();
+  readonly providerId = input.required<string>();
 
   private readonly destroyRef = inject(DestroyRef);
   private readonly filterSubject = new Subject<string>();

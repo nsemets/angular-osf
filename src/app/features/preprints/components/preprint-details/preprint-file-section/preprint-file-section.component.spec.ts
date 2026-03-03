@@ -2,7 +2,6 @@ import { MockComponent, MockProvider } from 'ng-mocks';
 
 import { BehaviorSubject } from 'rxjs';
 
-import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProviderReviewsWorkflow } from '@osf/features/preprints/enums';
@@ -70,11 +69,11 @@ describe('PreprintFileSectionComponent', () => {
         provideMockStore({
           signals: mergeSignalOverrides(
             [
-              { selector: PreprintSelectors.getPreprint, value: signal(mockPreprint) },
-              { selector: PreprintSelectors.getPreprintFile, value: signal(mockFile) },
-              { selector: PreprintSelectors.isPreprintFileLoading, value: signal(false) },
-              { selector: PreprintSelectors.getPreprintFileVersions, value: signal(mockFileVersions) },
-              { selector: PreprintSelectors.arePreprintFileVersionsLoading, value: signal(false) },
+              { selector: PreprintSelectors.getPreprint, value: mockPreprint },
+              { selector: PreprintSelectors.getPreprintFile, value: mockFile },
+              { selector: PreprintSelectors.isPreprintFileLoading, value: false },
+              { selector: PreprintSelectors.getPreprintFileVersions, value: mockFileVersions },
+              { selector: PreprintSelectors.arePreprintFileVersionsLoading, value: false },
             ],
             overrides.selectorOverrides
           ),
@@ -112,7 +111,7 @@ describe('PreprintFileSectionComponent', () => {
 
   it('should return null safe link when render link is missing', () => {
     setup({
-      selectorOverrides: [{ selector: PreprintSelectors.getPreprintFile, value: signal({ ...mockFile, links: {} }) }],
+      selectorOverrides: [{ selector: PreprintSelectors.getPreprintFile, value: { ...mockFile, links: {} } }],
     });
     expect(component.safeLink()).toBeNull();
   });

@@ -2,7 +2,6 @@ import { Store } from '@ngxs/store';
 
 import { MockComponents } from 'ng-mocks';
 
-import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
@@ -113,7 +112,7 @@ describe('AdditionalInfoComponent', () => {
 
   it('should not dispatch subject fetch when preprint id is missing', () => {
     setup({
-      selectorOverrides: [{ selector: PreprintSelectors.getPreprint, value: signal(null) }],
+      selectorOverrides: [{ selector: PreprintSelectors.getPreprint, value: null }],
     });
 
     expect(store.dispatch).not.toHaveBeenCalled();

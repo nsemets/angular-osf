@@ -1,7 +1,7 @@
-<p-card>
-  @let preprintValue = preprint();
-  @let preprintProviderValue = preprintProvider();
+@let preprintValue = preprint();
+@let preprintProviderValue = preprintProvider();
 
+<p-card>
   @if (preprintValue) {
     <div class="flex flex-column gap-4">
       <section class="flex flex-column gap-2">
@@ -31,68 +31,7 @@
       }
 
       @if (preprintProviderValue?.assertionsEnabled) {
-        @if (preprintValue.hasDataLinks) {
-          <section class="flex flex-column gap-2">
-            <h3>{{ 'preprints.preprintStepper.review.sections.authorAssertions.publicData' | translate }}</h3>
-
-            @switch (preprintValue.hasDataLinks) {
-              @case (ApplicabilityStatus.NotApplicable) {
-                <p>{{ 'preprints.preprintStepper.review.sections.authorAssertions.noData' | translate }}</p>
-              }
-              @case (ApplicabilityStatus.Unavailable) {
-                {{ preprintValue.whyNoData }}
-              }
-              @case (ApplicabilityStatus.Applicable) {
-                @for (link of preprintValue.dataLinks; track $index) {
-                  <p>{{ link }}</p>
-                }
-              }
-            }
-          </section>
-        }
-
-        @if (preprintValue.hasPreregLinks) {
-          <section class="flex flex-column gap-2">
-            <h3>
-              {{ 'preprints.preprintStepper.review.sections.authorAssertions.publicPreregistration' | translate }}
-            </h3>
-
-            @switch (preprintValue.hasPreregLinks) {
-              @case (ApplicabilityStatus.NotApplicable) {
-                <p>
-                  {{ 'preprints.preprintStepper.review.sections.authorAssertions.noPrereg' | translate }}
-                </p>
-              }
-              @case (ApplicabilityStatus.Unavailable) {
-                {{ preprintValue.whyNoPrereg }}
-              }
-              @case (ApplicabilityStatus.Applicable) {
-                @switch (preprintValue.preregLinkInfo) {
-                  @case (PreregLinkInfo.Analysis) {
-                    <p>
-                      {{ 'preprints.preprintStepper.common.labels.preregTypes.analysis' | translate }}
-                    </p>
-                  }
-                  @case (PreregLinkInfo.Designs) {
-                    <p>
-                      {{ 'preprints.preprintStepper.common.labels.preregTypes.designs' | translate }}
-                    </p>
-                  }
-                  @case (PreregLinkInfo.Both) {
-                    <p>
-                      {{ 'preprints.preprintStepper.common.labels.preregTypes.both' | translate }}
-                    </p>
-                  }
-                }
-                @for (link of preprintValue.preregLinks; track $index) {
-                  <p>
-                    <a class="font-bold" [href]="link">{{ link }}</a>
-                  </p>
-                }
-              }
-            }
-          </section>
-        }
+        <osf-preprint-author-assertions [preprint]="preprintValue" />
       }
 
       @if (preprintValue.nodeId) {

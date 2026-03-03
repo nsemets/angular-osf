@@ -2,7 +2,7 @@ import { Store } from '@ngxs/store';
 
 import { MockComponents, MockProvider } from 'ng-mocks';
 
-import { PLATFORM_ID, signal } from '@angular/core';
+import { PLATFORM_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
@@ -19,6 +19,7 @@ import {
 } from '@shared/stores/contributors';
 import { FetchResourceInstitutions, InstitutionsSelectors } from '@shared/stores/institutions';
 
+import { PreprintAuthorAssertionsComponent } from '../preprint-author-assertions/preprint-author-assertions.component';
 import { PreprintDoiSectionComponent } from '../preprint-doi-section/preprint-doi-section.component';
 
 import { GeneralInformationComponent } from './general-information.component';
@@ -45,13 +46,6 @@ describe('GeneralInformationComponent', () => {
   }
 
   const setup = (overrides: SetupOverrides = {}) => {
-    const preprintSignal = signal(PREPRINT_MOCK);
-    const isPreprintLoadingSignal = signal(false);
-    const contributorsSignal = signal(mockContributors);
-    const areContributorsLoadingSignal = signal(false);
-    const hasMoreContributorsSignal = signal(false);
-    const institutionsSignal = signal(mockInstitutions);
-
     TestBed.configureTestingModule({
       imports: [
         GeneralInformationComponent,
@@ -59,7 +53,8 @@ describe('GeneralInformationComponent', () => {
           AffiliatedInstitutionsViewComponent,
           ContributorsListComponent,
           IconComponent,
-          PreprintDoiSectionComponent
+          PreprintDoiSectionComponent,
+          PreprintAuthorAssertionsComponent
         ),
         MockComponentWithSignal('osf-truncated-text'),
       ],
@@ -70,15 +65,12 @@ describe('GeneralInformationComponent', () => {
         provideMockStore({
           signals: mergeSignalOverrides(
             [
-              { selector: PreprintSelectors.getPreprint, value: preprintSignal },
-              { selector: PreprintSelectors.isPreprintLoading, value: isPreprintLoadingSignal },
-              { selector: ContributorsSelectors.getBibliographicContributors, value: contributorsSignal },
-              {
-                selector: ContributorsSelectors.isBibliographicContributorsLoading,
-                value: areContributorsLoadingSignal,
-              },
-              { selector: ContributorsSelectors.hasMoreBibliographicContributors, value: hasMoreContributorsSignal },
-              { selector: InstitutionsSelectors.getResourceInstitutions, value: institutionsSignal },
+              { selector: PreprintSelectors.getPreprint, value: PREPRINT_MOCK },
+              { selector: PreprintSelectors.isPreprintLoading, value: false },
+              { selector: ContributorsSelectors.getBibliographicContributors, value: mockContributors },
+              { selector: ContributorsSelectors.isBibliographicContributorsLoading, value: false },
+              { selector: ContributorsSelectors.hasMoreBibliographicContributors, value: false },
+              { selector: InstitutionsSelectors.getResourceInstitutions, value: mockInstitutions },
             ],
             overrides.selectorOverrides
           ),
@@ -104,8 +96,6 @@ describe('GeneralInformationComponent', () => {
     expect(component.affiliatedInstitutions()).toBe(mockInstitutions);
     expect(component.nodeLink()).toBe(`${mockWebUrl}/node-123`);
     expect(component.preprintProvider()).toBe(PREPRINT_PROVIDER_DETAILS_MOCK);
-    expect(component.ApplicabilityStatus).toBeDefined();
-    expect(component.PreregLinkInfo).toBeDefined();
   });
 
   it('should have skeleton data array with 5 null elements', () => {
@@ -126,7 +116,7 @@ describe('GeneralInformationComponent', () => {
 
   it('should not dispatch constructor effect actions when preprint is missing', () => {
     setup({
-      selectorOverrides: [{ selector: PreprintSelectors.getPreprint, value: signal(undefined) }],
+      selectorOverrides: [{ selector: PreprintSelectors.getPreprint, value: undefined }],
     });
     (store.dispatch as jest.Mock).mockClear();
     fixture.detectChanges();
@@ -145,7 +135,7 @@ describe('GeneralInformationComponent', () => {
 
   it('should dispatch load more contributors with undefined id when preprint is missing', () => {
     setup({
-      selectorOverrides: [{ selector: PreprintSelectors.getPreprint, value: signal(undefined) }],
+      selectorOverrides: [{ selector: PreprintSelectors.getPreprint, value: undefined }],
     });
     (store.dispatch as jest.Mock).mockClear();
     component.handleLoadMoreContributors();

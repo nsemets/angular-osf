@@ -1,3 +1,6 @@
+@let preprintValue = preprint();
+@let providerValue = preprintProvider();
+
 <div class="flex align-items-center gap-2">
   <p-button
     icon="fas fa-download text-2xl"
@@ -11,9 +14,6 @@
     "
     (onClick)="download()"
   />
-
-  @let preprintValue = preprint();
-  @let providerValue = preprintProvider();
 
   @if (preprintValue && providerValue) {
     <osf-socials-share-button

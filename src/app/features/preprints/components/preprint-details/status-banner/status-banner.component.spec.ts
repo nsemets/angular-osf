@@ -1,7 +1,6 @@
 import { MockComponent, MockPipe } from 'ng-mocks';
 
 import { TitleCasePipe } from '@angular/common';
-import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ReviewAction } from '@osf/features/moderation/models';
@@ -42,7 +41,7 @@ describe('StatusBannerComponent', () => {
         provideOSFCore(),
         provideMockStore({
           signals: mergeSignalOverrides(
-            [{ selector: PreprintSelectors.getPreprint, value: signal(mockPreprint) }],
+            [{ selector: PreprintSelectors.getPreprint, value: mockPreprint }],
             overrides.selectorOverrides
           ),
         }),
@@ -93,7 +92,7 @@ describe('StatusBannerComponent', () => {
   it('should treat preprint as withdrawn only when dateWithdrawn is truthy', () => {
     setup({
       selectorOverrides: [
-        { selector: PreprintSelectors.getPreprint, value: signal({ ...mockPreprint, dateWithdrawn: undefined }) },
+        { selector: PreprintSelectors.getPreprint, value: { ...mockPreprint, dateWithdrawn: undefined } },
       ],
     });
     expect(component.isWithdrawn()).toBe(false);
@@ -104,11 +103,11 @@ describe('StatusBannerComponent', () => {
       selectorOverrides: [
         {
           selector: PreprintSelectors.getPreprint,
-          value: signal({
+          value: {
             ...mockPreprint,
             reviewsState: ReviewsState.Withdrawn,
             dateWithdrawn: '2024-01-01T00:00:00Z',
-          }),
+          },
         },
       ],
     });

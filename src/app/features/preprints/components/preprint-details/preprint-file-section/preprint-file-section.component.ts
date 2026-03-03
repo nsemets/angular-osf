@@ -19,7 +19,7 @@ import { DataciteService } from '@osf/shared/services/datacite/datacite.service'
 
 @Component({
   selector: 'osf-preprint-file-section',
-  imports: [LoadingSpinnerComponent, DatePipe, Skeleton, Menu, Button, TranslatePipe, SafeUrlPipe],
+  imports: [LoadingSpinnerComponent, Skeleton, Menu, Button, DatePipe, TranslatePipe, SafeUrlPipe],
   templateUrl: './preprint-file-section.component.html',
   styleUrl: './preprint-file-section.component.scss',
   providers: [DatePipe],

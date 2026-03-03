@@ -50,7 +50,7 @@ export class PreprintTombstoneComponent implements OnDestroy {
   readonly preprintProvider = input.required<PreprintProviderDetails | undefined>();
   readonly preprintVersionSelected = output<string>();
 
-  private actions = createDispatchMap({
+  private readonly actions = createDispatchMap({
     getBibliographicContributors: GetBibliographicContributors,
     resetContributorsState: ResetContributorsState,
     fetchPreprintById: FetchPreprintDetails,

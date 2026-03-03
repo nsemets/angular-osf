@@ -19,7 +19,6 @@ import {
 } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
-import { ApplicabilityStatus, PreregLinkInfo } from '@osf/features/preprints/enums';
 import { PreprintProviderDetails } from '@osf/features/preprints/models';
 import { PreprintSelectors } from '@osf/features/preprints/store/preprint';
 import { AffiliatedInstitutionsViewComponent } from '@osf/shared/components/affiliated-institutions-view/affiliated-institutions-view.component';
@@ -35,6 +34,7 @@ import {
 } from '@osf/shared/stores/contributors';
 import { FetchResourceInstitutions, InstitutionsSelectors } from '@osf/shared/stores/institutions';
 
+import { PreprintAuthorAssertionsComponent } from '../preprint-author-assertions/preprint-author-assertions.component';
 import { PreprintDoiSectionComponent } from '../preprint-doi-section/preprint-doi-section.component';
 
 @Component({
@@ -46,6 +46,7 @@ import { PreprintDoiSectionComponent } from '../preprint-doi-section/preprint-do
     ContributorsListComponent,
     IconComponent,
     PreprintDoiSectionComponent,
+    PreprintAuthorAssertionsComponent,
     TruncatedTextComponent,
     TranslatePipe,
   ],
@@ -76,9 +77,6 @@ export class GeneralInformationComponent implements OnDestroy {
   readonly bibliographicContributors = select(ContributorsSelectors.getBibliographicContributors);
   readonly areContributorsLoading = select(ContributorsSelectors.isBibliographicContributorsLoading);
   readonly hasMoreBibliographicContributors = select(ContributorsSelectors.hasMoreBibliographicContributors);
-
-  readonly ApplicabilityStatus = ApplicabilityStatus;
-  readonly PreregLinkInfo = PreregLinkInfo;
 
   readonly skeletonData = new Array(5).fill(null);
 

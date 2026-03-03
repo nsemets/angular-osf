@@ -1,9 +1,8 @@
 import { MockComponent, MockProvider } from 'ng-mocks';
 
-import { PLATFORM_ID, signal } from '@angular/core';
+import { PLATFORM_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PreprintProviderDetails } from '@osf/features/preprints/models';
 import { PreprintSelectors } from '@osf/features/preprints/store/preprint';
 import { SocialsShareButtonComponent } from '@osf/shared/components/socials-share-button/socials-share-button.component';
 import { DataciteService } from '@osf/shared/services/datacite/datacite.service';
@@ -24,7 +23,7 @@ describe('ShareAndDownloadComponent', () => {
   let socialShareService: { createDownloadUrl: jest.Mock };
 
   const mockPreprint = PREPRINT_MOCK;
-  const mockProvider: PreprintProviderDetails = PREPRINT_PROVIDER_DETAILS_MOCK;
+  const mockProvider = PREPRINT_PROVIDER_DETAILS_MOCK;
 
   interface SetupOverrides extends BaseSetupOverrides {
     platformId?: string;
@@ -32,9 +31,7 @@ describe('ShareAndDownloadComponent', () => {
 
   const setup = (overrides: SetupOverrides = {}) => {
     dataciteService = DataciteServiceMockBuilder.create().build();
-    socialShareService = {
-      createDownloadUrl: jest.fn().mockReturnValue('https://example.com/download'),
-    };
+    socialShareService = { createDownloadUrl: jest.fn().mockReturnValue('https://example.com/download') };
 
     TestBed.configureTestingModule({
       imports: [ShareAndDownloadComponent, MockComponent(SocialsShareButtonComponent)],
@@ -45,7 +42,7 @@ describe('ShareAndDownloadComponent', () => {
         MockProvider(SocialShareService, socialShareService),
         provideMockStore({
           signals: mergeSignalOverrides(
-            [{ selector: PreprintSelectors.getPreprint, value: signal(mockPreprint) }],
+            [{ selector: PreprintSelectors.getPreprint, value: mockPreprint }],
             overrides.selectorOverrides
           ),
         }),
@@ -91,7 +88,7 @@ describe('ShareAndDownloadComponent', () => {
 
   it('should not do anything when preprint is missing', () => {
     setup({
-      selectorOverrides: [{ selector: PreprintSelectors.getPreprint, value: signal(null) }],
+      selectorOverrides: [{ selector: PreprintSelectors.getPreprint, value: null }],
     });
     const openSpy = jest.spyOn(window, 'open');
 

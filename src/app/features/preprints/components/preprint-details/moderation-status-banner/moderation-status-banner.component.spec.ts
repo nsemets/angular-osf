@@ -1,12 +1,11 @@
 import { MockComponent, MockPipes } from 'ng-mocks';
 
 import { DatePipe, TitleCasePipe } from '@angular/common';
-import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ReviewAction } from '@osf/features/moderation/models';
 import { ProviderReviewsWorkflow, ReviewsState } from '@osf/features/preprints/enums';
-import { PreprintModel, PreprintProviderDetails, PreprintRequest } from '@osf/features/preprints/models';
+import { PreprintProviderDetails, PreprintRequest } from '@osf/features/preprints/models';
 import { PreprintSelectors } from '@osf/features/preprints/store/preprint';
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 
@@ -23,10 +22,10 @@ describe('ModerationStatusBannerComponent', () => {
   let component: ModerationStatusBannerComponent;
   let fixture: ComponentFixture<ModerationStatusBannerComponent>;
 
-  const mockPreprint: PreprintModel = PREPRINT_MOCK;
-  const mockProvider: PreprintProviderDetails = PREPRINT_PROVIDER_DETAILS_MOCK;
-  const mockReviewAction: ReviewAction = REVIEW_ACTION_MOCK;
-  const mockWithdrawalRequest: PreprintRequest = PREPRINT_REQUEST_MOCK;
+  const mockPreprint = PREPRINT_MOCK;
+  const mockProvider = PREPRINT_PROVIDER_DETAILS_MOCK;
+  const mockReviewAction = REVIEW_ACTION_MOCK;
+  const mockWithdrawalRequest = PREPRINT_REQUEST_MOCK;
 
   interface SetupOverrides extends BaseSetupOverrides {
     provider?: PreprintProviderDetails | undefined;
@@ -37,12 +36,12 @@ describe('ModerationStatusBannerComponent', () => {
 
   const setup = (overrides: SetupOverrides = {}) => {
     TestBed.configureTestingModule({
-      imports: [ModerationStatusBannerComponent, MockComponent(IconComponent), MockPipes(TitleCasePipe, DatePipe)],
+      imports: [ModerationStatusBannerComponent, MockComponent(IconComponent), ...MockPipes(TitleCasePipe, DatePipe)],
       providers: [
         provideOSFCore(),
         provideMockStore({
           signals: mergeSignalOverrides(
-            [{ selector: PreprintSelectors.getPreprint, value: signal(mockPreprint) }],
+            [{ selector: PreprintSelectors.getPreprint, value: mockPreprint }],
             overrides.selectorOverrides
           ),
         }),
@@ -81,7 +80,7 @@ describe('ModerationStatusBannerComponent', () => {
 
   it('should compute currentState and fallback to pending when preprint is missing', () => {
     setup({
-      selectorOverrides: [{ selector: PreprintSelectors.getPreprint, value: signal(undefined) }],
+      selectorOverrides: [{ selector: PreprintSelectors.getPreprint, value: undefined }],
     });
     expect(component.currentState()).toBe(ReviewsState.Pending);
   });
@@ -94,7 +93,7 @@ describe('ModerationStatusBannerComponent', () => {
       selectorOverrides: [
         {
           selector: PreprintSelectors.getPreprint,
-          value: signal({ ...mockPreprint, dateWithdrawn: '2024-01-01T00:00:00Z' }),
+          value: { ...mockPreprint, dateWithdrawn: '2024-01-01T00:00:00Z' },
         },
       ],
     });
@@ -113,7 +112,7 @@ describe('ModerationStatusBannerComponent', () => {
       selectorOverrides: [
         {
           selector: PreprintSelectors.getPreprint,
-          value: signal({ ...mockPreprint, reviewsState: ReviewsState.Accepted }),
+          value: { ...mockPreprint, reviewsState: ReviewsState.Accepted },
         },
       ],
     });

@@ -1,6 +1,6 @@
-<p-card>
-  @let preprintValue = preprint();
+@let preprintValue = preprint();
 
+<p-card>
   @if (preprintValue) {
     <div class="flex flex-column gap-4">
       @if (preprintValue.customPublicationCitation) {
