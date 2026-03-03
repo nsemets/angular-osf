@@ -2,6 +2,7 @@ import { Store } from '@ngxs/store';
 
 import { MockComponents, MockProvider } from 'ng-mocks';
 
+import { PLATFORM_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
@@ -41,7 +42,11 @@ describe('PreprintTombstoneComponent', () => {
   const mockContributors = [MOCK_CONTRIBUTOR];
   const mockSubjects = SUBJECTS_MOCK;
 
-  const setup = (overrides: BaseSetupOverrides = {}) => {
+  interface SetupOverrides extends BaseSetupOverrides {
+    platformId?: 'browser' | 'server';
+  }
+
+  const setup = (overrides: SetupOverrides = {}) => {
     mockRouter = RouterMockBuilder.create().build();
 
     TestBed.configureTestingModule({
@@ -52,6 +57,7 @@ describe('PreprintTombstoneComponent', () => {
       ],
       providers: [
         provideOSFCore(),
+        MockProvider(PLATFORM_ID, overrides.platformId ?? 'browser'),
         MockProvider(Router, mockRouter),
         provideMockStore({
           signals: mergeSignalOverrides(
@@ -149,5 +155,11 @@ describe('PreprintTombstoneComponent', () => {
     setup();
     component.ngOnDestroy();
     expect(store.dispatch).toHaveBeenCalledWith(new ResetContributorsState());
+  });
+
+  it('should not reset contributors state on destroy when not in browser', () => {
+    setup({ platformId: 'server' });
+    component.ngOnDestroy();
+    expect(store.dispatch).not.toHaveBeenCalledWith(new ResetContributorsState());
   });
 });
