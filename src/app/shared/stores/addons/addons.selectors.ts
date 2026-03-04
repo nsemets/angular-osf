@@ -11,7 +11,7 @@ import { ConfiguredAddonModel } from '@osf/shared/models/addons/configured-addon
 import { OperationInvocation } from '@osf/shared/models/addons/operation-invocation.model';
 import { StorageItem } from '@osf/shared/models/addons/storage-item.model';
 
-import { AddonsStateModel } from './addons.models';
+import { AddonsStateModel } from './addons.model';
 import { AddonsState } from './addons.state';
 
 export class AddonsSelectors {
