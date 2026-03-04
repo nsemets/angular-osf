@@ -22,4 +22,18 @@ describe('PreprintPendingModerationComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should render pending moderation title', () => {
+    const title = fixture.nativeElement.querySelector('h2');
+
+    expect(title).toBeTruthy();
+    expect(title.textContent).toContain('preprints.details.moderationStatusBanner.pendingDetails.title');
+  });
+
+  it('should render pending moderation body', () => {
+    const body = fixture.nativeElement.querySelector('p');
+
+    expect(body).toBeTruthy();
+    expect(body.textContent).toContain('preprints.details.moderationStatusBanner.pendingDetails.body');
+  });
 });
