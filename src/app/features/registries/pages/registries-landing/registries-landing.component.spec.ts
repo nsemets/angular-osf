@@ -47,7 +47,7 @@ describe('RegistriesLandingComponent', () => {
       providers: [
         provideOSFCore(),
         MockProvider(Router, mockRouter),
-        { provide: PLATFORM_ID, useValue: 'browser' },
+        MockProvider(PLATFORM_ID, 'browser'),
         provideMockStore({
           signals: [
             { selector: RegistriesSelectors.getRegistries, value: [] },

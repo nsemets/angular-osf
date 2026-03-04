@@ -29,7 +29,6 @@ describe('ConfirmContinueEditingDialogComponent', () => {
       providers: [
         provideOSFCore(),
         provideDynamicDialogRefMock(),
-        // MockProvider(DynamicDialogRef),
         MockProvider(DynamicDialogConfig, { data: { revisionId: MOCK_REVISION_ID } }),
         provideMockStore(),
       ],
