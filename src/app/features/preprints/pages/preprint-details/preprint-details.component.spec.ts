@@ -363,6 +363,19 @@ describe('PreprintDetailsComponent', () => {
     expect(component.editButtonVisible()).toBe(true);
   });
 
+  it('should show edit button for latest preprint', () => {
+    setup({
+      selectorOverrides: [
+        {
+          selector: PreprintSelectors.getPreprint,
+          value: { ...mockPreprint, isLatestVersion: true },
+        },
+      ],
+    });
+
+    expect(component.editButtonVisible()).toBe(true);
+  });
+
   it('should show edit button for pending premoderation preprint', () => {
     setup({
       selectorOverrides: [
