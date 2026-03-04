@@ -66,11 +66,6 @@ describe('PreprintsAffiliatedInstitutionsComponent', () => {
     }
   }
 
-  afterEach(() => {
-    fixture?.destroy();
-    jest.restoreAllMocks();
-  });
-
   it('should create', () => {
     setup();
     expect(component).toBeTruthy();

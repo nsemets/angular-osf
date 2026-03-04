@@ -93,11 +93,6 @@ describe('AuthorAssertionsStepComponent', () => {
     }
   }
 
-  afterEach(() => {
-    fixture?.destroy();
-    jest.restoreAllMocks();
-  });
-
   it('should create and initialize form with preprint defaults', () => {
     setup();
 

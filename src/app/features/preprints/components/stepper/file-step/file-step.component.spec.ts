@@ -108,11 +108,6 @@ describe('FileStepComponent', () => {
     }
   });
 
-  afterEach(() => {
-    fixture?.destroy();
-    jest.restoreAllMocks();
-  });
-
   afterAll(() => {
     if (originalPointerEvent) {
       (globalThis as unknown as { PointerEvent: typeof Event }).PointerEvent = originalPointerEvent;

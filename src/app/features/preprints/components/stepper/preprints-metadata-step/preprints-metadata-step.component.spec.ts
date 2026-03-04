@@ -87,11 +87,6 @@ describe('PreprintsMetadataStepComponent', () => {
     }
   }
 
-  afterEach(() => {
-    fixture?.destroy();
-    jest.restoreAllMocks();
-  });
-
   it('should create', () => {
     setup();
     expect(component).toBeTruthy();

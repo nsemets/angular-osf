@@ -7,7 +7,7 @@ import { TextInputComponent } from '@osf/shared/components/text-input/text-input
 
 import { ArrayInputComponent } from './array-input.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('ArrayInputComponent', () => {
   let component: ArrayInputComponent;
@@ -16,7 +16,8 @@ describe('ArrayInputComponent', () => {
 
   function setup(overrides?: { withValidators?: boolean; formArray?: FormArray<FormControl<string>> }) {
     TestBed.configureTestingModule({
-      imports: [ArrayInputComponent, MockComponent(TextInputComponent), OSFTestingModule],
+      imports: [ArrayInputComponent, MockComponent(TextInputComponent)],
+      providers: [provideOSFCore()],
     });
 
     fixture = TestBed.createComponent(ArrayInputComponent);

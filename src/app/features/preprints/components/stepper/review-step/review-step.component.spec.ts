@@ -100,11 +100,6 @@ describe('ReviewStepComponent', () => {
     }
   }
 
-  afterEach(() => {
-    fixture?.destroy();
-    jest.restoreAllMocks();
-  });
-
   it('should dispatch initial fetch actions when preprint exists', () => {
     setup();
 

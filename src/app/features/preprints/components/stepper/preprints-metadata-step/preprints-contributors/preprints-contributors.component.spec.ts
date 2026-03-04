@@ -96,11 +96,6 @@ describe('PreprintsContributorsComponent', () => {
     fixture.detectChanges();
   }
 
-  afterEach(() => {
-    fixture?.destroy();
-    jest.restoreAllMocks();
-  });
-
   it('should fetch contributors when preprint id exists', () => {
     setup();
 
