@@ -32,7 +32,7 @@ import { BrowserTabServiceMock, BrowserTabServiceMockType } from '@testing/provi
 import { HeaderStyleServiceMock, HeaderStyleServiceMockType } from '@testing/providers/header-style-service.mock';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
-import { mergeSignalOverrides, provideMockStore, SignalOverride } from '@testing/providers/store-provider.mock';
+import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('PreprintProviderOverviewComponent', () => {
   let component: PreprintProviderOverviewComponent;
@@ -48,16 +48,7 @@ describe('PreprintProviderOverviewComponent', () => {
   const mockSubjects = SUBJECTS_MOCK;
   const mockProviderId = 'osf';
 
-  const defaultSignals: SignalOverride[] = [
-    { selector: PreprintProvidersSelectors.getPreprintProviderDetails(mockProviderId), value: mockProvider },
-    { selector: PreprintProvidersSelectors.isPreprintProviderDetailsLoading, value: false },
-    { selector: PreprintProvidersSelectors.getHighlightedSubjectsForProvider, value: mockSubjects },
-    { selector: PreprintProvidersSelectors.areSubjectsLoading, value: false },
-  ];
-
-  function setup(overrides?: { selectorOverrides?: SignalOverride[] }) {
-    const signals = mergeSignalOverrides(defaultSignals, overrides?.selectorOverrides);
-
+  beforeEach(() => {
     routerMock = RouterMockBuilder.create().withNavigate(jest.fn().mockResolvedValue(true)).build();
     routeMock = ActivatedRouteMockBuilder.create().withParams({ providerId: mockProviderId }).build();
     brandServiceMock = BrandServiceMock.simple();
@@ -81,7 +72,14 @@ describe('PreprintProviderOverviewComponent', () => {
         MockProvider(BrandService, brandServiceMock),
         MockProvider(HeaderStyleService, headerStyleMock),
         MockProvider(BrowserTabService, browserTabMock),
-        provideMockStore({ signals }),
+        provideMockStore({
+          signals: [
+            { selector: PreprintProvidersSelectors.getPreprintProviderDetails(mockProviderId), value: mockProvider },
+            { selector: PreprintProvidersSelectors.isPreprintProviderDetailsLoading, value: false },
+            { selector: PreprintProvidersSelectors.getHighlightedSubjectsForProvider, value: mockSubjects },
+            { selector: PreprintProvidersSelectors.areSubjectsLoading, value: false },
+          ],
+        }),
       ],
     });
 
@@ -89,23 +87,14 @@ describe('PreprintProviderOverviewComponent', () => {
     fixture = TestBed.createComponent(PreprintProviderOverviewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }
-
-  afterEach(() => {
-    fixture?.destroy();
-    jest.restoreAllMocks();
   });
 
   it('should dispatch initial actions on creation', () => {
-    setup();
-
     expect(store.dispatch).toHaveBeenCalledWith(new GetPreprintProviderById(mockProviderId));
     expect(store.dispatch).toHaveBeenCalledWith(new GetHighlightedSubjectsByProviderId(mockProviderId));
   });
 
   it('should apply branding when provider is available', () => {
-    setup();
-
     expect(brandServiceMock.applyBranding).toHaveBeenCalledWith(mockProvider.brand);
     expect(headerStyleMock.applyHeaderStyles).toHaveBeenCalledWith(
       mockProvider.brand.primaryColor,
@@ -116,8 +105,6 @@ describe('PreprintProviderOverviewComponent', () => {
   });
 
   it('should reset branding and header styles on destroy', () => {
-    setup();
-
     component.ngOnDestroy();
 
     expect(headerStyleMock.resetToDefaults).toHaveBeenCalled();
@@ -126,7 +113,6 @@ describe('PreprintProviderOverviewComponent', () => {
   });
 
   it('should navigate to discover page with search value', () => {
-    setup();
     const searchValue = 'test search';
 
     component.redirectToDiscoverPageWithValue(searchValue);
@@ -138,7 +124,6 @@ describe('PreprintProviderOverviewComponent', () => {
   });
 
   it('should navigate to discover page with empty search value', () => {
-    setup();
     const searchValue = '';
 
     component.redirectToDiscoverPageWithValue(searchValue);
@@ -150,8 +135,6 @@ describe('PreprintProviderOverviewComponent', () => {
   });
 
   it('should expose highlighted subjects from store', () => {
-    setup();
-
     expect(component.highlightedSubjectsByProviderId()).toBe(mockSubjects);
   });
 });

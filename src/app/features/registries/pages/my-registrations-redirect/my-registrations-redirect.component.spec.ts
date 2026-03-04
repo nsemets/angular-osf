@@ -1,3 +1,5 @@
+import { MockProvider } from 'ng-mocks';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
@@ -10,13 +12,13 @@ describe('MyRegistrationsRedirectComponent', () => {
   let fixture: ComponentFixture<MyRegistrationsRedirectComponent>;
   let router: jest.Mocked<Router>;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const routerMock = RouterMock.create().build();
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [MyRegistrationsRedirectComponent],
-      providers: [{ provide: Router, useValue: routerMock }],
-    }).compileComponents();
+      providers: [MockProvider(Router, routerMock)],
+    });
 
     fixture = TestBed.createComponent(MyRegistrationsRedirectComponent);
     component = fixture.componentInstance;

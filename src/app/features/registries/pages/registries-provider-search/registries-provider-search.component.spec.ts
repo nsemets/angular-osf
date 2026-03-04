@@ -53,7 +53,7 @@ describe('RegistriesProviderSearchComponent', () => {
       providers: [
         provideOSFCore(),
         MockProvider(ActivatedRoute, mockRoute),
-        { provide: PLATFORM_ID, useValue: platformId },
+        MockProvider(PLATFORM_ID, platformId),
         provideMockStore({
           signals: [
             { selector: RegistrationProviderSelectors.getBrandedProvider, value: MOCK_PROVIDER },

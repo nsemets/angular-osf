@@ -2,7 +2,7 @@ import { Store } from '@ngxs/store';
 
 import { MockComponents, MockProvider } from 'ng-mocks';
 
-import { Observable, of, throwError } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { PLATFORM_ID } from '@angular/core';
@@ -178,11 +178,6 @@ describe('PreprintDetailsComponent', () => {
     fixture.detectChanges();
   }
 
-  afterEach(() => {
-    fixture?.destroy();
-    jest.restoreAllMocks();
-  });
-
   it('should dispatch initial fetch actions on creation', () => {
     setup();
 
@@ -261,23 +256,17 @@ describe('PreprintDetailsComponent', () => {
 
   it('should show toast error for 409 on create new version', () => {
     setup();
-    (store.dispatch as jest.Mock).mockImplementation((action: unknown): Observable<unknown> => {
-      if (action instanceof CreateNewVersion) {
-        return throwError(
-          () =>
-            new HttpErrorResponse({
-              status: 409,
-              error: { errors: [{ detail: 'Version already exists' }] },
-            })
-        );
-      }
-
-      return of(true);
+    const errorResponse = new HttpErrorResponse({
+      status: 409,
+      error: { errors: [{ detail: 'Version already exists' }] },
     });
+
+    (store.dispatch as jest.Mock).mockReturnValueOnce(throwError(() => errorResponse));
 
     component.createNewVersionClicked();
 
     expect(toastService.showError).toHaveBeenCalledWith('Version already exists');
+    expect(routerMock.navigate).not.toHaveBeenCalled();
   });
 
   it('should refetch preprint after successful withdraw dialog close', () => {
@@ -290,27 +279,21 @@ describe('PreprintDetailsComponent', () => {
     expect(fetchSpy).toHaveBeenCalledWith('preprint-1');
   });
 
-  it('should navigate to pending moderation page on matching 403 error', () => {
+  it('should navigate to pending moderation page on 403 "pending moderation" error', () => {
     setup();
-    (store.dispatch as jest.Mock).mockImplementation((action: unknown): Observable<unknown> => {
-      if (action instanceof FetchPreprintDetails) {
-        return throwError(
-          () =>
-            new HttpErrorResponse({
-              status: 403,
-              error: {
-                errors: [{ detail: 'This preprint is pending moderation and is not yet publicly available.' }],
-              },
-            })
-        );
-      }
-
-      return of(true);
+    const preprintId = 'preprint-1';
+    const errorResponse = new HttpErrorResponse({
+      status: 403,
+      error: {
+        errors: [{ detail: 'This preprint is pending moderation and is not yet publicly available.' }],
+      },
     });
 
-    component.fetchPreprint('preprint-1');
+    jest.spyOn(store, 'dispatch').mockReturnValue(throwError(() => errorResponse));
 
-    expect(routerMock.navigate).toHaveBeenCalledWith(['/preprints', 'osf', 'preprint-1', 'pending-moderation']);
+    component.fetchPreprint(preprintId);
+
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/preprints', 'osf', preprintId, 'pending-moderation']);
   });
 
   it('should return early in fetchPreprint when preprint id is missing', () => {
@@ -367,12 +350,25 @@ describe('PreprintDetailsComponent', () => {
     expect(component.editButtonVisible()).toBe(false);
   });
 
-  it('should show edit button for latest or initial preprint', () => {
+  it('should show edit button for initial preprint', () => {
     setup({
       selectorOverrides: [
         {
           selector: PreprintSelectors.getPreprint,
           value: { ...mockPreprint, isLatestVersion: false, reviewsState: ReviewsState.Initial },
+        },
+      ],
+    });
+
+    expect(component.editButtonVisible()).toBe(true);
+  });
+
+  it('should show edit button for latest preprint', () => {
+    setup({
+      selectorOverrides: [
+        {
+          selector: PreprintSelectors.getPreprint,
+          value: { ...mockPreprint, isLatestVersion: true },
         },
       ],
     });
@@ -482,15 +478,26 @@ describe('PreprintDetailsComponent SSR', () => {
   let component: PreprintDetailsComponent;
   let fixture: ComponentFixture<PreprintDetailsComponent>;
   let store: Store;
-  const mockProvider = PREPRINT_PROVIDER_DETAILS_MOCK;
-  const mockPreprint = PREPRINT_MOCK;
-  const mockContributors = [MOCK_CONTRIBUTOR];
+  let helpScoutServiceMock: jest.Mocked<HelpScoutService>;
 
-  function setup() {
+  const defaultSignals = [
+    { selector: PreprintProvidersSelectors.getPreprintProviderDetails('osf'), value: PREPRINT_PROVIDER_DETAILS_MOCK },
+    { selector: PreprintSelectors.getPreprint, value: PREPRINT_MOCK },
+    { selector: ContributorsSelectors.getBibliographicContributors, value: [MOCK_CONTRIBUTOR] },
+    { selector: PreprintSelectors.isPreprintLoading, value: false },
+    { selector: PreprintProvidersSelectors.isPreprintProviderDetailsLoading, value: false },
+    { selector: ContributorsSelectors.isBibliographicContributorsLoading, value: false },
+    { selector: PreprintSelectors.getPreprintReviewActions, value: [] },
+    { selector: PreprintSelectors.getPreprintRequests, value: [] },
+    { selector: PreprintSelectors.getPreprintRequestActions, value: [] },
+  ];
+
+  beforeEach(() => {
     const routerMock = RouterMockBuilder.create().build();
     const activatedRouteMock = ActivatedRouteMockBuilder.create()
       .withParams({ providerId: 'osf', id: 'preprint-1' })
       .build();
+    helpScoutServiceMock = HelpScoutServiceMockFactory();
 
     TestBed.configureTestingModule({
       imports: [
@@ -519,55 +526,28 @@ describe('PreprintDetailsComponent SSR', () => {
         MockProvider(DataciteService, DataciteMockFactory()),
         MockProvider(MetaTagsService, MetaTagsServiceMockFactory()),
         MockProvider(PrerenderReadyService, PrerenderReadyServiceMockFactory()),
-        MockProvider(HelpScoutService, HelpScoutServiceMockFactory()),
-        provideMockStore({
-          signals: [
-            { selector: PreprintProvidersSelectors.getPreprintProviderDetails('osf'), value: mockProvider },
-            { selector: PreprintProvidersSelectors.isPreprintProviderDetailsLoading, value: false },
-            { selector: PreprintSelectors.getPreprint, value: mockPreprint },
-            { selector: PreprintSelectors.isPreprintLoading, value: false },
-            { selector: ContributorsSelectors.getBibliographicContributors, value: mockContributors },
-            { selector: ContributorsSelectors.isBibliographicContributorsLoading, value: false },
-            { selector: PreprintSelectors.getPreprintReviewActions, value: [] },
-            { selector: PreprintSelectors.arePreprintReviewActionsLoading, value: false },
-            { selector: PreprintSelectors.getPreprintRequests, value: [] },
-            { selector: PreprintSelectors.arePreprintRequestsLoading, value: false },
-            { selector: PreprintSelectors.getPreprintRequestActions, value: [] },
-            { selector: PreprintSelectors.arePreprintRequestActionsLoading, value: false },
-            { selector: PreprintSelectors.hasAdminAccess, value: false },
-            { selector: PreprintSelectors.hasWriteAccess, value: false },
-            { selector: PreprintSelectors.getPreprintMetrics, value: null },
-            { selector: PreprintSelectors.arePreprintMetricsLoading, value: false },
-          ],
-        }),
+        MockProvider(HelpScoutService, helpScoutServiceMock),
+        provideMockStore({ signals: defaultSignals }),
       ],
     });
 
     store = TestBed.inject(Store);
     fixture = TestBed.createComponent(PreprintDetailsComponent);
     component = fixture.componentInstance;
-  }
-
-  afterEach(() => {
-    fixture?.destroy();
-    jest.restoreAllMocks();
   });
 
-  it('should render without browser-only errors in SSR', () => {
-    setup();
-
+  it('should render successfully on the server without throwing errors', () => {
     expect(() => fixture.detectChanges()).not.toThrow();
     expect(component).toBeTruthy();
   });
 
-  it('should skip reset dispatches in ngOnDestroy on SSR', () => {
-    setup();
+  it('should skip reset dispatches during ngOnDestroy in SSR environment', () => {
     fixture.detectChanges();
-    const dispatchSpy = jest.spyOn(store, 'dispatch');
-    dispatchSpy.mockClear();
+    (store.dispatch as jest.Mock).mockClear();
 
     component.ngOnDestroy();
 
-    expect(dispatchSpy).not.toHaveBeenCalled();
+    expect(store.dispatch).not.toHaveBeenCalled();
+    expect(helpScoutServiceMock.unsetResourceType).toHaveBeenCalled();
   });
 });

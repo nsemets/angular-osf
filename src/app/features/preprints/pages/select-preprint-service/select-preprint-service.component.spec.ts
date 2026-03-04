@@ -48,11 +48,6 @@ describe('SelectPreprintServiceComponent', () => {
     fixture.detectChanges();
   }
 
-  afterEach(() => {
-    fixture?.destroy();
-    jest.restoreAllMocks();
-  });
-
   it('should initialize with correct default values', () => {
     setup();
 

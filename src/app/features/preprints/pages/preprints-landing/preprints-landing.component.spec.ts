@@ -27,7 +27,7 @@ import { SUBJECTS_MOCK } from '@testing/mocks/subject.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { BrandServiceMock, BrandServiceMockType } from '@testing/providers/brand-service.mock';
 import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
-import { provideMockStore, SignalOverride } from '@testing/providers/store-provider.mock';
+import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('PreprintsLandingComponent', () => {
   let component: PreprintsLandingComponent;
@@ -41,15 +41,7 @@ describe('PreprintsLandingComponent', () => {
   const mockHighlightedSubjects = SUBJECTS_MOCK;
   const mockDefaultProvider = 'osf';
 
-  const defaultSignals: SignalOverride[] = [
-    { selector: PreprintProvidersSelectors.getPreprintProviderDetails(mockDefaultProvider), value: mockProvider },
-    { selector: PreprintProvidersSelectors.isPreprintProviderDetailsLoading, value: false },
-    { selector: PreprintProvidersSelectors.getPreprintProvidersToAdvertise, value: mockProvidersToAdvertise },
-    { selector: PreprintProvidersSelectors.getHighlightedSubjectsForProvider, value: mockHighlightedSubjects },
-    { selector: PreprintProvidersSelectors.areSubjectsLoading, value: false },
-  ];
-
-  function setup() {
+  beforeEach(() => {
     routerMock = RouterMockBuilder.create().withNavigate(jest.fn().mockResolvedValue(true)).build();
     brandServiceMock = BrandServiceMock.simple();
 
@@ -68,7 +60,18 @@ describe('PreprintsLandingComponent', () => {
         provideOSFCore(),
         MockProvider(BrandService, brandServiceMock),
         MockProvider(Router, routerMock),
-        provideMockStore({ signals: defaultSignals }),
+        provideMockStore({
+          signals: [
+            {
+              selector: PreprintProvidersSelectors.getPreprintProviderDetails(mockDefaultProvider),
+              value: mockProvider,
+            },
+            { selector: PreprintProvidersSelectors.isPreprintProviderDetailsLoading, value: false },
+            { selector: PreprintProvidersSelectors.getPreprintProvidersToAdvertise, value: mockProvidersToAdvertise },
+            { selector: PreprintProvidersSelectors.getHighlightedSubjectsForProvider, value: mockHighlightedSubjects },
+            { selector: PreprintProvidersSelectors.areSubjectsLoading, value: false },
+          ],
+        }),
       ],
     });
 
@@ -76,45 +79,31 @@ describe('PreprintsLandingComponent', () => {
     fixture = TestBed.createComponent(PreprintsLandingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }
-
-  afterEach(() => {
-    fixture?.destroy();
-    jest.restoreAllMocks();
   });
 
   it('should initialize with correct default values', () => {
-    setup();
-
     expect(component.searchControl.value).toBe('');
     expect(component.supportEmail).toBeDefined();
     expect(component.classes).toBe('flex-1 flex flex-column w-full h-full');
   });
 
   it('should dispatch initial actions on creation', () => {
-    setup();
-
     expect(store.dispatch).toHaveBeenCalledWith(new GetPreprintProviderById(mockDefaultProvider));
     expect(store.dispatch).toHaveBeenCalledWith(new GetPreprintProvidersToAdvertise());
     expect(store.dispatch).toHaveBeenCalledWith(new GetHighlightedSubjectsByProviderId(mockDefaultProvider));
   });
 
   it('should apply branding when provider is available', () => {
-    setup();
-
     expect(brandServiceMock.applyBranding).toHaveBeenCalledWith(mockProvider.brand);
   });
 
   it('should reset branding on destroy', () => {
-    setup();
-
     component.ngOnDestroy();
 
     expect(brandServiceMock.resetBranding).toHaveBeenCalled();
   });
 
   it('should navigate to search page with search value', () => {
-    setup();
     component.searchControl.setValue('test search');
 
     component.submitSearch();
@@ -125,7 +114,6 @@ describe('PreprintsLandingComponent', () => {
   });
 
   it('should not navigate when search value is empty', () => {
-    setup();
     component.searchControl.setValue('');
 
     component.submitSearch();
@@ -134,7 +122,6 @@ describe('PreprintsLandingComponent', () => {
   });
 
   it('should not navigate when search value is whitespace only', () => {
-    setup();
     component.searchControl.setValue('   ');
 
     component.submitSearch();

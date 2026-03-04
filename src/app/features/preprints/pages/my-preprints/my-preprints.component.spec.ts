@@ -14,7 +14,6 @@ import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header
 import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants/default-table-params.constants';
 import { SortOrder } from '@osf/shared/enums/sort-order.enum';
 
-import { PreprintShortInfo } from '../../models';
 import { FetchMyPreprints, MyPreprintsSelectors } from '../../store/my-preprints';
 
 import { MyPreprintsComponent } from './my-preprints.component';
@@ -32,9 +31,9 @@ describe('MyPreprintsComponent', () => {
   let routerMock: RouterMockType;
   let queryParamsSubject: BehaviorSubject<Record<string, string>>;
 
-  const mockPreprints: PreprintShortInfo[] = PREPRINT_SHORT_INFO_ARRAY_MOCK;
+  const mockPreprints = PREPRINT_SHORT_INFO_ARRAY_MOCK;
 
-  function setup() {
+  beforeEach(() => {
     queryParamsSubject = new BehaviorSubject<Record<string, string>>({});
 
     routerMock = RouterMockBuilder.create()
@@ -66,19 +65,19 @@ describe('MyPreprintsComponent', () => {
     });
 
     store = TestBed.inject(Store);
+    jest.spyOn(store, 'dispatch');
+
+    store = TestBed.inject(Store);
     fixture = TestBed.createComponent(MyPreprintsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }
+  });
 
   afterEach(() => {
-    fixture?.destroy();
-    jest.restoreAllMocks();
+    queryParamsSubject.complete();
   });
 
   it('should initialize with correct default values', () => {
-    setup();
-
     expect(component.searchControl.value).toBe('');
     expect(component.sortColumn()).toBe('');
     expect(component.sortOrder()).toBe(SortOrder.Desc);
@@ -87,8 +86,6 @@ describe('MyPreprintsComponent', () => {
   });
 
   it('should dispatch FetchMyPreprints on init', () => {
-    setup();
-
     expect(store.dispatch).toHaveBeenCalledWith(
       new FetchMyPreprints(1, 10, {
         searchValue: '',
@@ -100,8 +97,6 @@ describe('MyPreprintsComponent', () => {
   });
 
   it('should have correct table parameters after init', () => {
-    setup();
-
     expect(component.tableParams()).toEqual({
       ...DEFAULT_TABLE_PARAMS,
       firstRowIndex: 0,
@@ -110,23 +105,13 @@ describe('MyPreprintsComponent', () => {
   });
 
   it('should navigate to preprint details', () => {
-    setup();
-    const mockPreprint: PreprintShortInfo = {
-      id: 'preprint-1',
-      title: 'Test Preprint',
-      dateModified: '2024-01-01T00:00:00Z',
-      contributors: [],
-      providerId: 'provider-1',
-    };
-
+    const mockPreprint = mockPreprints[0];
     component.navigateToPreprintDetails(mockPreprint);
 
-    expect(routerMock.navigateByUrl).toHaveBeenCalledWith('/preprints/provider-1/preprint-1');
+    expect(routerMock.navigateByUrl).toHaveBeenCalledWith(`/preprints/${mockPreprint.providerId}/${mockPreprint.id}`);
   });
 
   it('should update query params on page change', () => {
-    setup();
-
     component.onPageChange({ first: 20, rows: 10 });
 
     expect(routerMock.navigate).toHaveBeenCalledWith([], {
@@ -137,8 +122,6 @@ describe('MyPreprintsComponent', () => {
   });
 
   it('should update query params on ascending sort', () => {
-    setup();
-
     component.onSort({ field: 'title', order: 1 });
 
     expect(routerMock.navigate).toHaveBeenCalledWith([], {
@@ -149,8 +132,6 @@ describe('MyPreprintsComponent', () => {
   });
 
   it('should update query params on descending sort', () => {
-    setup();
-
     component.onSort({ field: 'title', order: -1 });
 
     expect(routerMock.navigate).toHaveBeenCalledWith([], {
@@ -161,24 +142,25 @@ describe('MyPreprintsComponent', () => {
   });
 
   it('should not navigate when sort field is undefined', () => {
-    setup();
-
     component.onSort({ field: undefined, order: 1 });
-
     expect(routerMock.navigate).not.toHaveBeenCalled();
   });
 
   it('should navigate to add preprint page', () => {
-    setup();
-
     component.navigateToAddPreprint();
-
     expect(routerMock.navigateByUrl).toHaveBeenCalledWith('/preprints/select');
   });
 
   it('should update state and re-dispatch when query params change', () => {
-    setup();
     (store.dispatch as jest.Mock).mockClear();
+
+    queryParamsSubject.next({
+      page: '2',
+      size: '20',
+      search: 'test',
+      sortColumn: 'title',
+      sortOrder: 'asc',
+    });
 
     queryParamsSubject.next({ page: '2', size: '20', search: 'test', sortColumn: 'title', sortOrder: 'asc' });
     fixture.detectChanges();

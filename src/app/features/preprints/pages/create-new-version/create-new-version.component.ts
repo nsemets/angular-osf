@@ -43,24 +43,24 @@ import { FetchPreprintById, PreprintStepperSelectors, ResetPreprintStepperState 
 export class CreateNewVersionComponent implements OnDestroy, CanDeactivateComponent {
   @HostBinding('class') classes = 'flex-1 flex flex-column w-full';
 
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
-  private brandService = inject(BrandService);
-  private headerStyleHelper = inject(HeaderStyleService);
-  private browserTabHelper = inject(BrowserTabService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly brandService = inject(BrandService);
+  private readonly headerStyleHelper = inject(HeaderStyleService);
+  private readonly browserTabHelper = inject(BrowserTabService);
 
-  private providerId = toSignal(this.route.params.pipe(map((params) => params['providerId'])));
-  private preprintId = toSignal(this.route.params.pipe(map((params) => params['preprintId'])));
+  private readonly providerId = toSignal(this.route.params.pipe(map((params) => params['providerId'])));
+  private readonly preprintId = toSignal(this.route.params.pipe(map((params) => params['preprintId'])));
 
-  private actions = createDispatchMap({
+  private readonly actions = createDispatchMap({
     getPreprintProviderById: GetPreprintProviderById,
     fetchPreprint: FetchPreprintById,
     resetState: ResetPreprintStepperState,
   });
 
-  preprintProvider = select(PreprintProvidersSelectors.getPreprintProviderDetails(this.providerId()));
-  isPreprintProviderLoading = select(PreprintProvidersSelectors.isPreprintProviderDetailsLoading);
-  hasBeenSubmitted = select(PreprintStepperSelectors.hasBeenSubmitted);
+  readonly preprintProvider = select(PreprintProvidersSelectors.getPreprintProviderDetails(this.providerId()));
+  readonly isPreprintProviderLoading = select(PreprintProvidersSelectors.isPreprintProviderDetailsLoading);
+  readonly hasBeenSubmitted = select(PreprintStepperSelectors.hasBeenSubmitted);
 
   currentStep = signal<StepOption>(createNewVersionStepsConst[0]);
   isWeb = toSignal(inject(IS_WEB));
