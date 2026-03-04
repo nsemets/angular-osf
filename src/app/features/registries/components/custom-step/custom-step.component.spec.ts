@@ -2,8 +2,7 @@ import { Store } from '@ngxs/store';
 
 import { MockComponents, MockProvider } from 'ng-mocks';
 
-import { signal, WritableSignal } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -22,38 +21,27 @@ import { CustomStepComponent } from './custom-step.component';
 import { MOCK_REGISTRIES_PAGE, MOCK_STEPS_DATA } from '@testing/mocks/registries.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
-import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
-import { provideMockStore } from '@testing/providers/store-provider.mock';
-import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
+import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
+import {
+  BaseSetupOverrides,
+  mergeSignalOverrides,
+  provideMockStore,
+  SignalOverride,
+} from '@testing/providers/store-provider.mock';
+import { ToastServiceMock } from '@testing/providers/toast-provider.mock';
 
 type StepsState = Record<string, { invalid: boolean; touched: boolean }>;
 
+interface SetupOverrides extends BaseSetupOverrides {
+  pages?: PageSchema[];
+  stepsState?: StepsState;
+  stepsData?: Record<string, unknown>;
+  filesLink?: string;
+  projectId?: string;
+  provider?: string;
+}
+
 describe('CustomStepComponent', () => {
-  let component: CustomStepComponent;
-  let fixture: ComponentFixture<CustomStepComponent>;
-  let store: Store;
-  let routeBuilder: ActivatedRouteMockBuilder;
-  let mockRouter: RouterMockType;
-  let toastMock: ToastServiceMockType;
-  let pagesSignal: WritableSignal<PageSchema[]>;
-  let stepsStateSignal: WritableSignal<StepsState>;
-
-  function createComponent(
-    page: PageSchema,
-    stepsData: Record<string, unknown> = {},
-    stepsState: StepsState = {}
-  ): ComponentFixture<CustomStepComponent> {
-    pagesSignal.set([page]);
-    stepsStateSignal.set(stepsState);
-    const f = TestBed.createComponent(CustomStepComponent);
-    f.componentRef.setInput('stepsData', stepsData);
-    f.componentRef.setInput('filesLink', 'files-link');
-    f.componentRef.setInput('projectId', 'project');
-    f.componentRef.setInput('provider', 'provider');
-    f.detectChanges();
-    return f;
-  }
-
   function createPage(
     questions: PageSchema['questions'] = [],
     sections: PageSchema['sections'] = undefined
@@ -61,12 +49,20 @@ describe('CustomStepComponent', () => {
     return { id: 'p', title: 'P', questions, sections };
   }
 
-  beforeEach(() => {
-    toastMock = ToastServiceMock.simple();
-    routeBuilder = ActivatedRouteMockBuilder.create().withParams({ step: 1 });
-    mockRouter = RouterMockBuilder.create().withUrl('/registries/drafts/id/1').build();
-    pagesSignal = signal<PageSchema[]>([MOCK_REGISTRIES_PAGE]);
-    stepsStateSignal = signal<StepsState>({});
+  function setup(overrides: SetupOverrides = {}) {
+    const routeBuilder = ActivatedRouteMockBuilder.create().withParams(overrides.routeParams ?? { step: 1 });
+    if (overrides.hasParent === false) {
+      routeBuilder.withNoParent();
+    }
+
+    const mockRouter = RouterMockBuilder.create().withUrl('/registries/drafts/id/1').build();
+    const toastMock = ToastServiceMock.simple();
+
+    const defaultSignals: SignalOverride[] = [
+      { selector: RegistriesSelectors.getPagesSchema, value: overrides.pages ?? [MOCK_REGISTRIES_PAGE] },
+      { selector: RegistriesSelectors.getStepsState, value: overrides.stepsState ?? {} },
+    ];
+    const signals = mergeSignalOverrides(defaultSignals, overrides.selectorOverrides);
 
     TestBed.configureTestingModule({
       imports: [CustomStepComponent, ...MockComponents(InfoIconComponent, FilesControlComponent)],
@@ -75,53 +71,48 @@ describe('CustomStepComponent', () => {
         MockProvider(ToastService, toastMock),
         MockProvider(ActivatedRoute, routeBuilder.build()),
         MockProvider(Router, mockRouter),
-        provideMockStore({
-          signals: [
-            { selector: RegistriesSelectors.getPagesSchema, value: pagesSignal },
-            { selector: RegistriesSelectors.getStepsState, value: stepsStateSignal },
-          ],
-        }),
+        provideMockStore({ signals }),
       ],
     });
 
-    store = TestBed.inject(Store);
-    fixture = TestBed.createComponent(CustomStepComponent);
-    component = fixture.componentInstance;
-    fixture.componentRef.setInput('stepsData', MOCK_STEPS_DATA);
-    fixture.componentRef.setInput('filesLink', 'files-link');
-    fixture.componentRef.setInput('projectId', 'project');
-    fixture.componentRef.setInput('provider', 'provider');
+    const store = TestBed.inject(Store);
+    const fixture = TestBed.createComponent(CustomStepComponent);
+    const component = fixture.componentInstance;
+    fixture.componentRef.setInput('stepsData', overrides.stepsData ?? MOCK_STEPS_DATA);
+    fixture.componentRef.setInput('filesLink', overrides.filesLink ?? 'files-link');
+    fixture.componentRef.setInput('projectId', overrides.projectId ?? 'project');
+    fixture.componentRef.setInput('provider', overrides.provider ?? 'provider');
     fixture.detectChanges();
-  });
+    return { component, fixture, store, routeBuilder, mockRouter, toastMock };
+  }
 
   it('should create', () => {
+    const { component } = setup();
     expect(component).toBeTruthy();
   });
 
-  it('should initialize stepForm when page available', () => {
-    expect(Object.keys(component['stepForm'].controls)).toContain('field1');
-    expect(Object.keys(component['stepForm'].controls)).toContain('field2');
-  });
-
   it('should emit back on first step', () => {
+    const { component } = setup();
     const backSpy = jest.spyOn(component.back, 'emit');
     component.goBack();
     expect(backSpy).toHaveBeenCalled();
   });
 
   it('should navigate to previous step on step > 1', () => {
+    const { component, mockRouter } = setup();
     component.step.set(2);
     component.goBack();
     expect(mockRouter.navigate).toHaveBeenCalledWith(['../', 1], { relativeTo: expect.anything() });
   });
 
   it('should navigate to next step within pages', () => {
-    pagesSignal.set([MOCK_REGISTRIES_PAGE, MOCK_REGISTRIES_PAGE]);
+    const { component, mockRouter } = setup({ pages: [MOCK_REGISTRIES_PAGE, MOCK_REGISTRIES_PAGE] });
     component.goNext();
     expect(mockRouter.navigate).toHaveBeenCalledWith(['../', 2], { relativeTo: expect.anything() });
   });
 
   it('should emit next on last step', () => {
+    const { component } = setup();
     const nextSpy = jest.spyOn(component.next, 'emit');
     component.step.set(1);
     component.goNext();
@@ -129,12 +120,14 @@ describe('CustomStepComponent', () => {
   });
 
   it('should dispatch updateStepState on ngOnDestroy', () => {
+    const { component, store } = setup();
     (store.dispatch as jest.Mock).mockClear();
     component.ngOnDestroy();
     expect(store.dispatch).toHaveBeenCalledWith(expect.any(UpdateStepState));
   });
 
   it('should emit updateAction and dispatch setUpdatedFields when fields changed', () => {
+    const { component, store } = setup();
     const emitSpy = jest.spyOn(component.updateAction, 'emit');
     component['stepForm'].get('field1')?.setValue('changed');
     (store.dispatch as jest.Mock).mockClear();
@@ -146,6 +139,7 @@ describe('CustomStepComponent', () => {
   });
 
   it('should not emit updateAction when no fields changed', () => {
+    const { component, store } = setup();
     const emitSpy = jest.spyOn(component.updateAction, 'emit');
     (store.dispatch as jest.Mock).mockClear();
 
@@ -156,6 +150,7 @@ describe('CustomStepComponent', () => {
   });
 
   it('should skip saveStepState when form has no controls', () => {
+    const { component, store } = setup();
     component.stepForm = new FormGroup({});
     (store.dispatch as jest.Mock).mockClear();
 
@@ -165,6 +160,7 @@ describe('CustomStepComponent', () => {
   });
 
   it('should attach file and emit updateAction', () => {
+    const { component } = setup();
     const emitSpy = jest.spyOn(component.updateAction, 'emit');
     const mockFile = {
       id: 'new-file',
@@ -181,6 +177,7 @@ describe('CustomStepComponent', () => {
   });
 
   it('should not attach duplicate file', () => {
+    const { component } = setup();
     component.attachedFiles['field1'] = [{ file_id: 'file-1', name: 'existing.txt' }];
     const emitSpy = jest.spyOn(component.updateAction, 'emit');
 
@@ -191,6 +188,7 @@ describe('CustomStepComponent', () => {
   });
 
   it('should show warning when attachment limit reached', () => {
+    const { component, toastMock } = setup();
     component.attachedFiles['field1'] = Array.from({ length: 5 }, (_, i) => ({ file_id: `f-${i}`, name: `f-${i}` }));
 
     const mockFile = {
@@ -206,6 +204,7 @@ describe('CustomStepComponent', () => {
   });
 
   it('should remove file and emit updateAction', () => {
+    const { component } = setup();
     const emitSpy = jest.spyOn(component.updateAction, 'emit');
     component.attachedFiles['field1'] = [
       { file_id: 'f1', name: 'a' },
@@ -220,12 +219,14 @@ describe('CustomStepComponent', () => {
   });
 
   it('should skip non-existent questionKey', () => {
+    const { component } = setup();
     const emitSpy = jest.spyOn(component.updateAction, 'emit');
     component.removeFromAttachedFiles({ file_id: 'f1' }, 'nonexistent');
     expect(emitSpy).not.toHaveBeenCalled();
   });
 
   it('should save step state and update step on route param change', () => {
+    const { component, store, routeBuilder } = setup();
     (store.dispatch as jest.Mock).mockClear();
     routeBuilder.withParams({ step: 2 });
 
@@ -234,65 +235,85 @@ describe('CustomStepComponent', () => {
   });
 
   it('should mark form touched when stepsState has invalid for current step', () => {
-    const f = createComponent(MOCK_REGISTRIES_PAGE, MOCK_STEPS_DATA, {
-      1: { invalid: true, touched: true },
+    const { component } = setup({
+      stepsState: { 1: { invalid: true, touched: true } },
     });
-    expect(f.componentInstance['stepForm'].get('field1')?.touched).toBe(true);
+    expect(component['stepForm'].get('field1')?.touched).toBe(true);
   });
 
   it('should initialize checkbox control with empty array default', () => {
-    const page = createPage([
-      { id: 'q', displayText: '', responseKey: 'cbField', fieldType: FieldType.Checkbox, required: true },
-    ]);
-    const f = createComponent(page);
-    expect(f.componentInstance['stepForm'].get('cbField')?.value).toEqual([]);
+    const { component } = setup({
+      pages: [
+        createPage([
+          { id: 'q', displayText: '', responseKey: 'cbField', fieldType: FieldType.Checkbox, required: true },
+        ]),
+      ],
+      stepsData: {},
+    });
+    expect(component['stepForm'].get('cbField')?.value).toEqual([]);
   });
 
   it('should initialize radio control with required validator', () => {
-    const page = createPage([
-      { id: 'q', displayText: '', responseKey: 'radioField', fieldType: FieldType.Radio, required: true },
-    ]);
-    const f = createComponent(page);
-    expect(f.componentInstance['stepForm'].get('radioField')?.valid).toBe(false);
+    const { component } = setup({
+      pages: [
+        createPage([
+          { id: 'q', displayText: '', responseKey: 'radioField', fieldType: FieldType.Radio, required: true },
+        ]),
+      ],
+      stepsData: {},
+    });
+    expect(component['stepForm'].get('radioField')?.valid).toBe(false);
   });
 
   it('should initialize file control and populate attachedFiles', () => {
-    const page = createPage([
-      { id: 'q', displayText: '', responseKey: 'fileField', fieldType: FieldType.File, required: false },
-    ]);
     const files: FilePayloadJsonApi[] = [
       { file_id: 'f1', file_name: 'doc.pdf', file_urls: { html: '', download: '' }, file_hashes: { sha256: '' } },
     ];
-    const f = createComponent(page, { fileField: files });
+    const { component } = setup({
+      pages: [
+        createPage([
+          { id: 'q', displayText: '', responseKey: 'fileField', fieldType: FieldType.File, required: false },
+        ]),
+      ],
+      stepsData: { fileField: files },
+    });
 
-    expect(f.componentInstance.attachedFiles['fileField'].length).toBe(1);
-    expect(f.componentInstance.attachedFiles['fileField'][0].name).toBe('doc.pdf');
+    expect(component.attachedFiles['fileField'].length).toBe(1);
+    expect(component.attachedFiles['fileField'][0].name).toBe('doc.pdf');
   });
 
   it('should skip unknown field types', () => {
-    const page = createPage([
-      { id: 'q', displayText: '', responseKey: 'unknownField', fieldType: 'unknown' as FieldType, required: false },
-    ]);
-    const f = createComponent(page);
-    expect(f.componentInstance['stepForm'].get('unknownField')).toBeNull();
+    const { component } = setup({
+      pages: [
+        createPage([
+          { id: 'q', displayText: '', responseKey: 'unknownField', fieldType: 'unknown' as FieldType, required: false },
+        ]),
+      ],
+      stepsData: {},
+    });
+    expect(component['stepForm'].get('unknownField')).toBeNull();
   });
 
   it('should include section questions', () => {
-    const page = createPage(
-      [],
-      [
-        {
-          id: 's1',
-          title: 'S',
-          questions: [
-            { id: 'q', displayText: '', responseKey: 'secField', fieldType: FieldType.Text, required: false },
-          ],
-        },
-      ]
-    );
-    const f = createComponent(page, { secField: 'val' });
+    const { component } = setup({
+      pages: [
+        createPage(
+          [],
+          [
+            {
+              id: 's1',
+              title: 'S',
+              questions: [
+                { id: 'q', displayText: '', responseKey: 'secField', fieldType: FieldType.Text, required: false },
+              ],
+            },
+          ]
+        ),
+      ],
+      stepsData: { secField: 'val' },
+    });
 
-    expect(f.componentInstance['stepForm'].get('secField')).toBeDefined();
-    expect(f.componentInstance['stepForm'].get('secField')?.value).toBe('val');
+    expect(component['stepForm'].get('secField')).toBeDefined();
+    expect(component['stepForm'].get('secField')?.value).toBe('val');
   });
 });

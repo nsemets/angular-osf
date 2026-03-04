@@ -67,6 +67,7 @@ describe('MyPreprintsComponent', () => {
     store = TestBed.inject(Store);
     jest.spyOn(store, 'dispatch');
 
+    store = TestBed.inject(Store);
     fixture = TestBed.createComponent(MyPreprintsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -161,6 +162,7 @@ describe('MyPreprintsComponent', () => {
       sortOrder: 'asc',
     });
 
+    queryParamsSubject.next({ page: '2', size: '20', search: 'test', sortColumn: 'title', sortOrder: 'asc' });
     fixture.detectChanges();
 
     expect(component.searchControl.value).toBe('test');
@@ -168,7 +170,6 @@ describe('MyPreprintsComponent', () => {
     expect(component.sortOrder()).toBe(SortOrder.Asc);
     expect(component.tableParams().rows).toBe(20);
     expect(component.tableParams().firstRowIndex).toBe(20);
-
     expect(store.dispatch).toHaveBeenCalledWith(
       new FetchMyPreprints(2, 20, {
         searchValue: 'test',
