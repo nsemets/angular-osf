@@ -26,7 +26,7 @@ describe('AdditionalInfoComponent', () => {
     preprintProviderId?: string;
   }
 
-  const setup = (overrides: SetupOverrides = {}) => {
+  function setup(overrides: SetupOverrides = {}) {
     TestBed.configureTestingModule({
       imports: [AdditionalInfoComponent, ...MockComponents(CitationSectionComponent, LicenseDisplayComponent)],
       providers: [
@@ -50,7 +50,7 @@ describe('AdditionalInfoComponent', () => {
     store = TestBed.inject(Store);
     fixture.componentRef.setInput('preprintProviderId', overrides.preprintProviderId ?? 'osf');
     fixture.detectChanges();
-  };
+  }
 
   beforeEach(() => {
     setup();

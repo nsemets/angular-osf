@@ -45,7 +45,7 @@ describe('GeneralInformationComponent', () => {
     platformId?: string;
   }
 
-  const setup = (overrides: SetupOverrides = {}) => {
+  function setup(overrides: SetupOverrides = {}) {
     TestBed.configureTestingModule({
       imports: [
         GeneralInformationComponent,
@@ -82,7 +82,7 @@ describe('GeneralInformationComponent', () => {
     component = fixture.componentInstance;
     store = TestBed.inject(Store);
     fixture.componentRef.setInput('preprintProvider', PREPRINT_PROVIDER_DETAILS_MOCK);
-  };
+  }
 
   it('should create', () => {
     setup();

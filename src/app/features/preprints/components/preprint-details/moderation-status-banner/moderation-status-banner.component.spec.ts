@@ -34,7 +34,7 @@ describe('ModerationStatusBannerComponent', () => {
     isPendingWithdrawal?: boolean;
   }
 
-  const setup = (overrides: SetupOverrides = {}) => {
+  function setup(overrides: SetupOverrides = {}) {
     TestBed.configureTestingModule({
       imports: [ModerationStatusBannerComponent, MockComponent(IconComponent), ...MockPipes(TitleCasePipe, DatePipe)],
       providers: [
@@ -60,7 +60,7 @@ describe('ModerationStatusBannerComponent', () => {
       'latestWithdrawalRequest' in overrides ? overrides.latestWithdrawalRequest : mockWithdrawalRequest
     );
     fixture.componentRef.setInput('isPendingWithdrawal', overrides.isPendingWithdrawal ?? false);
-  };
+  }
 
   it('should create', () => {
     setup();

@@ -34,7 +34,7 @@ describe('StatusBannerComponent', () => {
     isWithdrawalRejected?: boolean;
   }
 
-  const setup = (overrides: SetupOverrides = {}) => {
+  function setup(overrides: SetupOverrides = {}) {
     TestBed.configureTestingModule({
       imports: [StatusBannerComponent, MockComponent(IconComponent), MockPipe(TitleCasePipe)],
       providers: [
@@ -50,18 +50,19 @@ describe('StatusBannerComponent', () => {
 
     fixture = TestBed.createComponent(StatusBannerComponent);
     component = fixture.componentInstance;
-    fixture.componentRef.setInput('provider', 'provider' in overrides ? overrides.provider : mockProvider);
+    fixture.componentRef.setInput('provider', overrides.provider ?? mockProvider);
     fixture.componentRef.setInput(
       'latestAction',
       'latestAction' in overrides ? overrides.latestAction : mockReviewAction
     );
-    fixture.componentRef.setInput('isPendingWithdrawal', overrides.isPendingWithdrawal ?? false);
-    fixture.componentRef.setInput('isWithdrawalRejected', overrides.isWithdrawalRejected ?? false);
     fixture.componentRef.setInput(
       'latestRequestAction',
       'latestRequestAction' in overrides ? overrides.latestRequestAction : mockRequestAction
     );
-  };
+    fixture.componentRef.setInput('isPendingWithdrawal', overrides.isPendingWithdrawal ?? false);
+    fixture.componentRef.setInput('isWithdrawalRejected', overrides.isWithdrawalRejected ?? false);
+    fixture.detectChanges();
+  }
 
   it('should create', () => {
     setup();
@@ -162,7 +163,7 @@ describe('StatusBannerComponent', () => {
     expect(content).not.toContain('preprints.details.statusBanner.messages.base');
   });
 
-  it('should show feedback dialog', () => {
+  it('should toggle feedback dialog visibility', () => {
     setup();
     expect(component.feedbackDialogVisible).toBe(false);
     component.showFeedbackDialog();

@@ -46,7 +46,7 @@ describe('PreprintTombstoneComponent', () => {
     platformId?: 'browser' | 'server';
   }
 
-  const setup = (overrides: SetupOverrides = {}) => {
+  function setup(overrides: SetupOverrides = {}) {
     mockRouter = RouterMockBuilder.create().build();
 
     TestBed.configureTestingModule({
@@ -82,7 +82,7 @@ describe('PreprintTombstoneComponent', () => {
 
     fixture.componentRef.setInput('preprintProvider', mockProvider);
     (store.dispatch as jest.Mock).mockClear();
-  };
+  }
 
   it('should create', () => {
     setup();

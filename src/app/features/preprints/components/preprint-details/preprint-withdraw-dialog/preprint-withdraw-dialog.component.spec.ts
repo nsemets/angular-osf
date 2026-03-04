@@ -36,7 +36,7 @@ describe('PreprintWithdrawDialogComponent', () => {
     preprint?: PreprintModel | undefined;
   }
 
-  const setup = (overrides: SetupOverrides = {}) => {
+  function setup(overrides: SetupOverrides = {}) {
     const dialogConfigMock = {
       data: {
         provider: 'provider' in overrides ? overrides.provider : mockProvider,
@@ -60,7 +60,7 @@ describe('PreprintWithdrawDialogComponent', () => {
     dialogRefMock = TestBed.inject(DynamicDialogRef) as unknown as { close: jest.Mock };
     fixture.detectChanges();
     (store.dispatch as jest.Mock).mockClear();
-  };
+  }
 
   it('should create', () => {
     setup();

@@ -54,7 +54,7 @@ describe('PreprintFileSectionComponent', () => {
     providerReviewsWorkflow?: ProviderReviewsWorkflow | null;
   }
 
-  const setup = (overrides: SetupOverrides = {}) => {
+  function setup(overrides: SetupOverrides = {}) {
     isMediumSubject = new BehaviorSubject<boolean>(false);
     isLargeSubject = new BehaviorSubject<boolean>(true);
     dataciteService = DataciteServiceMockBuilder.create().build();
@@ -87,7 +87,7 @@ describe('PreprintFileSectionComponent', () => {
       'providerReviewsWorkflow',
       overrides.providerReviewsWorkflow ?? ProviderReviewsWorkflow.PreModeration
     );
-  };
+  }
 
   it('should create', () => {
     setup();

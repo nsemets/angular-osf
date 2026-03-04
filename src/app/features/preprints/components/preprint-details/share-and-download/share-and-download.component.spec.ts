@@ -29,7 +29,7 @@ describe('ShareAndDownloadComponent', () => {
     platformId?: string;
   }
 
-  const setup = (overrides: SetupOverrides = {}) => {
+  function setup(overrides: SetupOverrides = {}) {
     dataciteService = DataciteServiceMockBuilder.create().build();
     socialShareService = { createDownloadUrl: jest.fn().mockReturnValue('https://example.com/download') };
 
@@ -53,7 +53,7 @@ describe('ShareAndDownloadComponent', () => {
     component = fixture.componentInstance;
 
     fixture.componentRef.setInput('preprintProvider', mockProvider);
-  };
+  }
 
   it('should create', () => {
     setup();

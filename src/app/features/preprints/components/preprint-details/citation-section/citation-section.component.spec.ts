@@ -33,7 +33,7 @@ describe('CitationSectionComponent', () => {
     detectChanges?: boolean;
   }
 
-  const setup = (overrides: SetupOverrides = {}) => {
+  function setup(overrides: SetupOverrides = {}) {
     TestBed.configureTestingModule({
       imports: [CitationSectionComponent],
       providers: [
@@ -64,7 +64,7 @@ describe('CitationSectionComponent', () => {
       fixture.detectChanges();
       (store.dispatch as jest.Mock).mockClear();
     }
-  };
+  }
 
   it('should create', () => {
     setup();
