@@ -16,15 +16,20 @@ function loadSsrConfig(): ConfigModel {
   const serverDistFolder = dirname(fileURLToPath(import.meta.url));
   const configPath = resolve(serverDistFolder, '../browser/assets/config/config.json');
 
+  let config = {} as ConfigModel;
+
   if (existsSync(configPath)) {
     try {
-      return JSON.parse(readFileSync(configPath, 'utf-8'));
+      config = JSON.parse(readFileSync(configPath, 'utf-8'));
     } catch {
-      return {} as ConfigModel;
+      config = {} as ConfigModel;
     }
   }
 
-  return {} as ConfigModel;
+  return {
+    ...config,
+    throttleToken: process.env['THROTTLE_TOKEN'] || '',
+  } as ConfigModel;
 }
 
 const serverConfig: ApplicationConfig = {
