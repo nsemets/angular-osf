@@ -350,6 +350,14 @@ describe('PreprintDetailsComponent', () => {
     expect(component.editButtonVisible()).toBe(false);
   });
 
+  it('should hide edit button when user does not have write access', () => {
+    setup({
+      selectorOverrides: [{ selector: PreprintSelectors.hasWriteAccess, value: false }],
+    });
+
+    expect(component.editButtonVisible()).toBe(false);
+  });
+
   it('should show edit button for initial preprint', () => {
     setup({
       selectorOverrides: [
