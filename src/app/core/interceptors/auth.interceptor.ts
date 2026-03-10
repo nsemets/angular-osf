@@ -8,11 +8,13 @@ import { inject, PLATFORM_ID } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 
+import { environment } from 'src/environments/environment';
+
 export const authInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
   next: HttpHandlerFn
 ): Observable<HttpEvent<unknown>> => {
-  if (req.url.includes('/api.crossref.org/funders')) {
+  if (req.url.startsWith(environment.funderApiUrl)) {
     return next(req);
   }
 

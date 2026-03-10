@@ -14,12 +14,14 @@ import { authInterceptor } from './auth.interceptor';
 
 describe('authInterceptor', () => {
   let cookieService: CookieService;
-  let mockHandler: jest.Mock;
+  let cookieServiceMock: { get: jest.Mock };
 
   const setup = (platformId = 'browser', environmentOverrides: Partial<EnvironmentModel> = {}) => {
+    cookieServiceMock = { get: jest.fn() };
+
     TestBed.configureTestingModule({
       providers: [
-        MockProvider(CookieService, { get: jest.fn() }),
+        MockProvider(CookieService, cookieServiceMock),
         MockProvider(PLATFORM_ID, platformId),
         MockProvider(ENVIRONMENT, { throttleToken: '', ...environmentOverrides } as EnvironmentModel),
       ],
@@ -29,7 +31,6 @@ describe('authInterceptor', () => {
   };
 
   beforeEach(() => {
-    mockHandler = jest.fn();
     jest.clearAllMocks();
   });
 
@@ -41,13 +42,13 @@ describe('authInterceptor', () => {
   };
 
   const createHandler = () => {
-    const handler = mockHandler.mockReturnValue(of({}));
+    const handler = jest.fn().mockReturnValue(of({}));
     return handler;
   };
 
-  it('should skip CrossRef funders API requests', () => {
+  it('should skip ROR funders API requests', () => {
     setup();
-    const request = createRequest('/api.crossref.org/funders/10.13039/100000001');
+    const request = createRequest('https://api.ror.org/v2');
     const handler = createHandler();
 
     runInInjectionContext(TestBed, () => authInterceptor(request, handler));
@@ -110,7 +111,7 @@ describe('authInterceptor', () => {
 
   it('should add CSRF token and withCredentials in browser platform', () => {
     setup();
-    jest.spyOn(cookieService, 'get').mockReturnValue('csrf-token-123');
+    cookieServiceMock.get.mockReturnValue('csrf-token-123');
 
     const request = createRequest('/api/v2/projects/');
     const handler = createHandler();
@@ -126,7 +127,7 @@ describe('authInterceptor', () => {
 
   it('should not add CSRF token when not available in browser platform', () => {
     setup();
-    jest.spyOn(cookieService, 'get').mockReturnValue('');
+    cookieServiceMock.get.mockReturnValue('');
 
     const request = createRequest('/api/v2/projects/');
     const handler = createHandler();
