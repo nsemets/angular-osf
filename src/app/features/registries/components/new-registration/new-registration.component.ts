@@ -8,21 +8,22 @@ import { Select } from 'primeng/select';
 
 import { debounceTime, distinctUntilChanged, filter, Subject, take } from 'rxjs';
 
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { UserSelectors } from '@core/store/user';
+import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { ToastService } from '@osf/shared/services/toast.service';
-import { GetRegistryProvider } from '@shared/stores/registration-provider';
+import { GetRegistryProvider, RegistrationProviderSelectors } from '@shared/stores/registration-provider';
 
 import { CreateDraft, GetProjects, GetProviderSchemas, RegistriesSelectors } from '../../store';
 
 @Component({
   selector: 'osf-new-registration',
-  imports: [SubHeaderComponent, TranslatePipe, Card, Button, ReactiveFormsModule, Select],
+  imports: [Button, Card, Select, ReactiveFormsModule, LoadingSpinnerComponent, SubHeaderComponent, TranslatePipe],
   templateUrl: './new-registration.component.html',
   styleUrl: './new-registration.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,10 +38,13 @@ export class NewRegistrationComponent {
   readonly user = select(UserSelectors.getCurrentUser);
   readonly projects = select(RegistriesSelectors.getProjects);
   readonly providerSchemas = select(RegistriesSelectors.getProviderSchemas);
+  readonly provider = select(RegistrationProviderSelectors.getBrandedProvider);
   readonly isDraftSubmitting = select(RegistriesSelectors.isDraftSubmitting);
   readonly isProvidersLoading = select(RegistriesSelectors.isProvidersLoading);
   readonly isProjectsLoading = select(RegistriesSelectors.isProjectsLoading);
   private readonly draftRegistration = select(RegistriesSelectors.getDraftRegistration);
+
+  readonly canShowForm = computed(() => !this.isProvidersLoading() && !!this.provider()?.allowSubmissions);
 
   private readonly actions = createDispatchMap({
     getProvider: GetRegistryProvider,
@@ -62,6 +66,7 @@ export class NewRegistrationComponent {
     this.loadInitialData();
     this.setupDefaultSchema();
     this.setupProjectFilter();
+    this.setupSubmissionsAccessCheck();
   }
 
   onProjectFilter(value: string) {
@@ -122,5 +127,16 @@ export class NewRegistrationComponent {
           this.actions.getProjects(currentUserId, value);
         }
       });
+  }
+
+  private setupSubmissionsAccessCheck() {
+    effect(() => {
+      const provider = this.provider();
+
+      if (provider && !provider.allowSubmissions) {
+        this.toastService.showError('registries.new.registryClosedForSubmissions');
+        this.router.navigate(['/registries', provider.id]);
+      }
+    });
   }
 }
