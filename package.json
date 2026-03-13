@@ -1,6 +1,6 @@
 {
   "name": "osf",
-  "version": "26.4.0",
+  "version": "26.5.0",
   "scripts": {
     "ng": "ng",
     "analyze-bundle": "ng build --configuration=analyze-bundle && source-map-explorer dist/**/*.js --no-border-checks",
@@ -20,6 +20,7 @@
     "ngxs:store": "ng generate @ngxs/store:store --name --path",
     "prepare": "husky",
     "start": "ng serve",
+    "start:ssr": "ng serve --configuration dev-ssr",
     "start:docker": "npm run check:config && ng serve --host 0.0.0.0 --port 4200 --poll 2000 --configuration development",
     "start:docker:local": "npm run check:config && ng serve --host 0.0.0.0 --port 4200 --poll 2000 --configuration docker",
     "test": "jest",
