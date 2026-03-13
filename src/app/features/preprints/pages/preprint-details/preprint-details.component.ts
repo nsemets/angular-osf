@@ -7,7 +7,7 @@ import { Skeleton } from 'primeng/skeleton';
 
 import { catchError, EMPTY, filter, map } from 'rxjs';
 
-import { DatePipe, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
@@ -30,10 +30,10 @@ import { PrerenderReadyService } from '@core/services/prerender-ready.service';
 import { ClearCurrentProvider } from '@core/store/provider';
 import { UserSelectors } from '@core/store/user';
 import { ReviewPermissions } from '@osf/shared/enums/review-permissions.enum';
-import { pathJoin } from '@osf/shared/helpers/path-join.helper';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { DataciteService } from '@osf/shared/services/datacite/datacite.service';
 import { MetaTagsService } from '@osf/shared/services/meta-tags.service';
+import { MetaTagsBuilderService } from '@osf/shared/services/meta-tags-builder.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { ContributorsSelectors } from '@osf/shared/stores/contributors';
 
@@ -82,7 +82,6 @@ import { CreateNewVersion, PreprintStepperSelectors } from '../../store/preprint
   ],
   templateUrl: './preprint-details.component.html',
   styleUrl: './preprint-details.component.scss',
-  providers: [DatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PreprintDetailsComponent implements OnInit, OnDestroy {
@@ -97,14 +96,13 @@ export class PreprintDetailsComponent implements OnInit, OnDestroy {
   private readonly customDialogService = inject(CustomDialogService);
   private readonly translateService = inject(TranslateService);
   private readonly metaTags = inject(MetaTagsService);
-  private readonly datePipe = inject(DatePipe);
+  private readonly metaTagsBuilder = inject(MetaTagsBuilderService);
   private readonly dataciteService = inject(DataciteService);
   private readonly prerenderReady = inject(PrerenderReadyService);
-  private readonly platformId = inject(PLATFORM_ID);
   private readonly environment = inject(ENVIRONMENT);
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
-  private readonly isBrowser = isPlatformBrowser(this.platformId);
-
+  readonly providerId = toSignal(this.route.params.pipe(map((params) => params['providerId'])));
   private readonly preprintId = toSignal(this.route.params.pipe(map((params) => params['id'])));
 
   private readonly actions = createDispatchMap({
@@ -118,7 +116,6 @@ export class PreprintDetailsComponent implements OnInit, OnDestroy {
     clearCurrentProvider: ClearCurrentProvider,
   });
 
-  readonly providerId = toSignal(this.route.params.pipe(map((params) => params['providerId'])));
   currentUser = select(UserSelectors.getCurrentUser);
   preprintProvider = select(PreprintProvidersSelectors.getPreprintProviderDetails(this.providerId()));
   isPreprintProviderLoading = select(PreprintProvidersSelectors.isPreprintProviderDetailsLoading);
@@ -410,26 +407,13 @@ export class PreprintDetailsComponent implements OnInit, OnDestroy {
   }
 
   private setMetaTags() {
-    this.metaTags.updateMetaTags(
-      {
-        osfGuid: this.preprint()?.id,
-        title: this.preprint()?.title,
-        description: this.preprint()?.description,
-        publishedDate: this.datePipe.transform(this.preprint()?.datePublished, 'yyyy-MM-dd'),
-        modifiedDate: this.datePipe.transform(this.preprint()?.dateModified, 'yyyy-MM-dd'),
-        url: pathJoin(this.environment.webUrl, this.preprint()?.id ?? ''),
-        doi: this.preprint()?.doi,
-        keywords: this.preprint()?.tags,
-        siteName: 'OSF',
-        license: this.preprint()?.embeddedLicense?.name,
-        contributors: this.contributors().map((contributor) => ({
-          fullName: contributor.fullName,
-          givenName: contributor.givenName,
-          familyName: contributor.familyName,
-        })),
-      },
-      this.destroyRef
-    );
+    const metaTags = this.metaTagsBuilder.buildPreprintMetaTagsData({
+      providerId: this.providerId(),
+      preprint: this.preprint(),
+      contributors: this.contributors(),
+    });
+
+    this.metaTags.updateMetaTags(metaTags, this.destroyRef);
   }
 
   private checkAndSetVersionToTheUrl() {

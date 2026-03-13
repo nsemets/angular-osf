@@ -13,9 +13,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HelpScoutService } from '@core/services/help-scout.service';
 import { PrerenderReadyService } from '@core/services/prerender-ready.service';
 import { ClearCurrentProvider } from '@core/store/provider';
+import { MetaTagsData } from '@osf/shared/models/meta-tags/meta-tags-data.model';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { DataciteService } from '@osf/shared/services/datacite/datacite.service';
 import { MetaTagsService } from '@osf/shared/services/meta-tags.service';
+import { MetaTagsBuilderService } from '@osf/shared/services/meta-tags-builder.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { ContributorsSelectors } from '@osf/shared/stores/contributors';
 
@@ -55,6 +57,7 @@ import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
 import { HelpScoutServiceMockFactory } from '@testing/providers/help-scout.service.mock';
 import { MetaTagsServiceMockFactory } from '@testing/providers/meta-tags.service.mock';
+import { MetaTagsBuilderServiceMockFactory } from '@testing/providers/meta-tags-builder.service.mock';
 import { PrerenderReadyServiceMockFactory } from '@testing/providers/prerender-ready.service.mock';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
@@ -70,6 +73,7 @@ describe('PreprintDetailsComponent', () => {
   let prerenderReadyServiceMock: jest.Mocked<PrerenderReadyService>;
   let dataciteServiceMock: ReturnType<typeof DataciteMockFactory>;
   let metaTagsServiceMock: ReturnType<typeof MetaTagsServiceMockFactory>;
+  let metaTagsBuilderServiceMock: ReturnType<typeof MetaTagsBuilderServiceMockFactory>;
   let customDialogServiceMock: ReturnType<CustomDialogServiceMockBuilder['build']>;
   let toastService: ToastServiceMockType;
 
@@ -122,6 +126,13 @@ describe('PreprintDetailsComponent', () => {
     prerenderReadyServiceMock = PrerenderReadyServiceMockFactory();
     dataciteServiceMock = DataciteMockFactory();
     metaTagsServiceMock = MetaTagsServiceMockFactory();
+    metaTagsBuilderServiceMock = MetaTagsBuilderServiceMockFactory();
+    metaTagsBuilderServiceMock.buildPreprintMetaTagsData.mockImplementation(
+      ({ providerId, preprint }) =>
+        ({
+          canonicalUrl: `http://localhost:4200/preprints/${providerId}/${preprint?.id}`,
+        }) as MetaTagsData
+    );
     toastService = ToastServiceMock.simple();
     customDialogServiceMock =
       overrides?.dialogReturnsCloseValue === false
@@ -167,6 +178,7 @@ describe('PreprintDetailsComponent', () => {
         MockProvider(PrerenderReadyService, prerenderReadyServiceMock),
         MockProvider(DataciteService, dataciteServiceMock),
         MockProvider(MetaTagsService, metaTagsServiceMock),
+        MockProvider(MetaTagsBuilderService, metaTagsBuilderServiceMock),
         MockProvider(CustomDialogService, customDialogServiceMock),
         provideMockStore({ signals }),
       ],
@@ -199,7 +211,19 @@ describe('PreprintDetailsComponent', () => {
   it('should update meta tags when preprint and contributors are loaded', () => {
     setup();
 
-    expect(metaTagsServiceMock.updateMetaTags).toHaveBeenCalled();
+    expect(metaTagsBuilderServiceMock.buildPreprintMetaTagsData).toHaveBeenCalledWith(
+      expect.objectContaining({
+        providerId: 'osf',
+        preprint: expect.objectContaining({ id: 'preprint-1' }),
+      })
+    );
+
+    expect(metaTagsServiceMock.updateMetaTags).toHaveBeenCalledWith(
+      expect.objectContaining({
+        canonicalUrl: 'http://localhost:4200/preprints/osf/preprint-1',
+      }),
+      expect.anything()
+    );
   });
 
   it('should not fetch moderation actions when not moderator and no permissions', () => {
@@ -532,6 +556,7 @@ describe('PreprintDetailsComponent SSR', () => {
         MockProvider(Router, routerMock),
         MockProvider(CustomDialogService, CustomDialogServiceMockBuilder.create().withDefaultOpen().build()),
         MockProvider(DataciteService, DataciteMockFactory()),
+        MockProvider(MetaTagsBuilderService, MetaTagsBuilderServiceMockFactory()),
         MockProvider(MetaTagsService, MetaTagsServiceMockFactory()),
         MockProvider(PrerenderReadyService, PrerenderReadyServiceMockFactory()),
         MockProvider(HelpScoutService, helpScoutServiceMock),

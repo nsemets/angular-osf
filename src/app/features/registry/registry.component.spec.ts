@@ -9,9 +9,12 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { HelpScoutService } from '@core/services/help-scout.service';
 import { PrerenderReadyService } from '@core/services/prerender-ready.service';
 import { ClearCurrentProvider } from '@core/store/provider';
+import { IdentifierModel } from '@osf/shared/models/identifiers/identifier.model';
+import { MetaTagsData } from '@osf/shared/models/meta-tags/meta-tags-data.model';
 import { AnalyticsService } from '@osf/shared/services/analytics.service';
 import { DataciteService } from '@osf/shared/services/datacite/datacite.service';
 import { MetaTagsService } from '@osf/shared/services/meta-tags.service';
+import { MetaTagsBuilderService } from '@osf/shared/services/meta-tags-builder.service';
 import { ContributorsSelectors } from '@osf/shared/stores/contributors';
 import { CurrentResourceSelectors } from '@shared/stores/current-resource';
 
@@ -25,6 +28,7 @@ import { provideOSFCore } from '@testing/osf.testing.provider';
 import { AnalyticsServiceMockFactory } from '@testing/providers/analytics.service.mock';
 import { HelpScoutServiceMockFactory } from '@testing/providers/help-scout.service.mock';
 import { MetaTagsServiceMockFactory } from '@testing/providers/meta-tags.service.mock';
+import { MetaTagsBuilderServiceMockFactory } from '@testing/providers/meta-tags-builder.service.mock';
 import { PrerenderReadyServiceMockFactory } from '@testing/providers/prerender-ready.service.mock';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
@@ -33,35 +37,56 @@ import { provideMockStore } from '@testing/providers/store-provider.mock';
 interface SetupOverrides {
   registryId?: string;
   registry?: RegistrationOverviewModel | null;
+  identifiers?: IdentifierModel[];
+  canonicalPath?: string;
   platform?: string;
 }
 
 function setup(overrides: SetupOverrides = {}) {
   const registryId = overrides.registryId ?? 'registry-1';
   const registry = overrides.registry ?? null;
+  const identifiers = overrides.identifiers ?? [];
+  const canonicalPath = overrides.canonicalPath;
 
   const helpScoutService = HelpScoutServiceMockFactory();
   const metaTagsService = MetaTagsServiceMockFactory();
+  const metaTagsBuilderService = MetaTagsBuilderServiceMockFactory();
   const dataciteService = DataciteMockFactory();
   const prerenderReadyService = PrerenderReadyServiceMockFactory();
   const analyticsService = AnalyticsServiceMockFactory();
   const routerBuilder = RouterMockBuilder.create();
   const mockRouter = routerBuilder.build();
+  const routeBuilder = ActivatedRouteMockBuilder.create().withParams({ id: registryId });
+  if (canonicalPath) {
+    routeBuilder.withFirstChild((child) => child.withData({ canonicalPath }));
+  }
+  metaTagsBuilderService.buildRegistryMetaTagsData.mockImplementation(
+    ({ registry: currentRegistry, canonicalPath }) =>
+      ({
+        osfGuid: currentRegistry.id,
+        title: currentRegistry.title,
+        description: currentRegistry.description,
+        url: `http://localhost:4200/${currentRegistry.id}`,
+        canonicalUrl: `http://localhost:4200/${currentRegistry.id}/${canonicalPath}`,
+        siteName: 'OSF',
+      }) as MetaTagsData
+  );
 
   const providers: Provider[] = [
     provideOSFCore(),
     MockProvider(HelpScoutService, helpScoutService),
     MockProvider(MetaTagsService, metaTagsService),
+    MockProvider(MetaTagsBuilderService, metaTagsBuilderService),
     MockProvider(DataciteService, dataciteService),
     MockProvider(PrerenderReadyService, prerenderReadyService),
     MockProvider(AnalyticsService, analyticsService),
-    MockProvider(ActivatedRoute, ActivatedRouteMockBuilder.create().withParams({ id: registryId }).build()),
+    MockProvider(ActivatedRoute, routeBuilder.build()),
     MockProvider(Router, mockRouter),
     provideMockStore({
       signals: [
         { selector: RegistrySelectors.getRegistry, value: registry },
         { selector: RegistrySelectors.isRegistryLoading, value: false },
-        { selector: RegistrySelectors.getIdentifiers, value: [] },
+        { selector: RegistrySelectors.getIdentifiers, value: identifiers },
         { selector: RegistrySelectors.getLicense, value: { name: 'MIT' } },
         { selector: RegistrySelectors.isLicenseLoading, value: false },
         { selector: ContributorsSelectors.getBibliographicContributors, value: [] },
@@ -91,6 +116,7 @@ function setup(overrides: SetupOverrides = {}) {
     routerBuilder,
     helpScoutService,
     metaTagsService,
+    metaTagsBuilderService,
     dataciteService,
     prerenderReadyService,
     analyticsService,
@@ -111,6 +137,38 @@ describe('RegistryComponent', () => {
     expect(dataciteService.logIdentifiableView).toHaveBeenCalled();
   });
 
+  it('should map identifiers to null when identifiers are empty', () => {
+    const { dataciteService } = setup({ identifiers: [] });
+    const identifiers$ = (dataciteService.logIdentifiableView as jest.Mock).mock.calls[0][0];
+    let emitted: unknown;
+
+    identifiers$.subscribe((value: unknown) => {
+      emitted = value;
+    });
+
+    expect(emitted).toBeNull();
+  });
+
+  it('should map identifiers to payload when identifiers exist', () => {
+    const identifiers: IdentifierModel[] = [
+      {
+        id: 'identifier-1',
+        type: 'identifiers',
+        category: 'doi',
+        value: '10.1234/osf.test',
+      },
+    ];
+    const { dataciteService } = setup({ identifiers });
+    const identifiers$ = (dataciteService.logIdentifiableView as jest.Mock).mock.calls[0][0];
+    let emitted: unknown;
+
+    identifiers$.subscribe((value: unknown) => {
+      emitted = value;
+    });
+
+    expect(emitted).toEqual({ identifiers });
+  });
+
   it('should dispatch init actions when registryId is available', () => {
     const { store } = setup();
 
@@ -124,14 +182,38 @@ describe('RegistryComponent', () => {
   });
 
   it('should call setMetaTags when all data is loaded', () => {
-    const { metaTagsService } = setup({ registry: MOCK_REGISTRATION_OVERVIEW_MODEL });
+    const { metaTagsService, metaTagsBuilderService } = setup({ registry: MOCK_REGISTRATION_OVERVIEW_MODEL });
+
+    expect(metaTagsBuilderService.buildRegistryMetaTagsData).toHaveBeenCalledWith(
+      expect.objectContaining({
+        registry: expect.objectContaining({ id: MOCK_REGISTRATION_OVERVIEW_MODEL.id }),
+        canonicalPath: 'overview',
+      })
+    );
 
     expect(metaTagsService.updateMetaTags).toHaveBeenCalledWith(
       expect.objectContaining({
         osfGuid: MOCK_REGISTRATION_OVERVIEW_MODEL.id,
         title: MOCK_REGISTRATION_OVERVIEW_MODEL.title,
         description: MOCK_REGISTRATION_OVERVIEW_MODEL.description,
+        url: `http://localhost:4200/${MOCK_REGISTRATION_OVERVIEW_MODEL.id}`,
+        canonicalUrl: `http://localhost:4200/${MOCK_REGISTRATION_OVERVIEW_MODEL.id}/overview`,
         siteName: 'OSF',
+      }),
+      expect.anything()
+    );
+    expect(metaTagsService.updateMetaTags).toHaveBeenCalledTimes(1);
+  });
+
+  it('should set canonicalUrl using active subroute path', () => {
+    const { metaTagsService } = setup({
+      registry: MOCK_REGISTRATION_OVERVIEW_MODEL,
+      canonicalPath: 'files/osfstorage',
+    });
+
+    expect(metaTagsService.updateMetaTags).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        canonicalUrl: `http://localhost:4200/${MOCK_REGISTRATION_OVERVIEW_MODEL.id}/files/osfstorage`,
       }),
       expect.anything()
     );
