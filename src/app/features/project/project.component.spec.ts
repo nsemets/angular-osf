@@ -217,6 +217,7 @@ describe('Component: Project', () => {
       }),
       expect.anything()
     );
+    expect(metaTagsService.updateMetaTags).toHaveBeenCalledTimes(1);
   });
 
   it('should not build or update meta tags when current project is null', () => {

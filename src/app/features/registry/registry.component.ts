@@ -80,6 +80,7 @@ export class RegistryComponent implements OnDestroy {
 
   private readonly canonicalPath = signal(this.getCanonicalPathFromSnapshot());
   private readonly isFileDetailRoute = signal(this.isFileDetailRouteFromSnapshot());
+  private readonly lastMetaTagsKey = signal<string | null>(null);
 
   private readonly allDataLoaded = computed(
     () =>
@@ -104,14 +105,27 @@ export class RegistryComponent implements OnDestroy {
     });
 
     effect(() => {
-      if (this.allDataLoaded()) {
-        const currentRegistryId = this.registry()?.id;
-        const currentCanonicalPath = this.canonicalPath();
-
-        if (currentRegistryId && currentCanonicalPath && !this.isFileDetailRoute()) {
-          this.setMetaTags();
-        }
+      if (!this.allDataLoaded()) {
+        this.lastMetaTagsKey.set(null);
+        return;
       }
+
+      const currentRegistryId = this.registry()?.id;
+      const currentCanonicalPath = this.canonicalPath();
+
+      if (!currentRegistryId || !currentCanonicalPath || this.isFileDetailRoute()) {
+        this.lastMetaTagsKey.set(null);
+        return;
+      }
+
+      const metaTagsKey = `${currentRegistryId}:${currentCanonicalPath}`;
+
+      if (this.lastMetaTagsKey() === metaTagsKey) {
+        return;
+      }
+
+      this.lastMetaTagsKey.set(metaTagsKey);
+      this.setMetaTags();
     });
 
     this.dataciteService

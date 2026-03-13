@@ -202,6 +202,7 @@ describe('RegistryComponent', () => {
       }),
       expect.anything()
     );
+    expect(metaTagsService.updateMetaTags).toHaveBeenCalledTimes(1);
   });
 
   it('should set canonicalUrl using active subroute path', () => {

@@ -74,6 +74,7 @@ export class ProjectComponent implements OnDestroy {
   private readonly projectId = toSignal(this.route.params.pipe(map((params) => params['id'])));
   private readonly canonicalPath = signal(this.getCanonicalPathFromSnapshot());
   private readonly isFileDetailRoute = signal(this.isFileDetailRouteFromSnapshot());
+  private readonly lastMetaTagsKey = signal<string | null>(null);
 
   private readonly allDataLoaded = computed(
     () =>
@@ -106,14 +107,27 @@ export class ProjectComponent implements OnDestroy {
     });
 
     effect(() => {
-      if (this.allDataLoaded()) {
-        const currentProjectId = this.currentProject()?.id;
-        const currentCanonicalPath = this.canonicalPath();
-
-        if (currentProjectId && currentCanonicalPath && !this.isFileDetailRoute()) {
-          this.setMetaTags();
-        }
+      if (!this.allDataLoaded()) {
+        this.lastMetaTagsKey.set(null);
+        return;
       }
+
+      const currentProjectId = this.currentProject()?.id;
+      const currentCanonicalPath = this.canonicalPath();
+
+      if (!currentProjectId || !currentCanonicalPath || this.isFileDetailRoute()) {
+        this.lastMetaTagsKey.set(null);
+        return;
+      }
+
+      const metaTagsKey = `${currentProjectId}:${currentCanonicalPath}`;
+
+      if (this.lastMetaTagsKey() === metaTagsKey) {
+        return;
+      }
+
+      this.lastMetaTagsKey.set(metaTagsKey);
+      this.setMetaTags();
     });
 
     this.dataciteService
