@@ -567,6 +567,7 @@ describe('PreprintDetailsComponent SSR', () => {
     store = TestBed.inject(Store);
     fixture = TestBed.createComponent(PreprintDetailsComponent);
     component = fixture.componentInstance;
+    document.head.innerHTML = '';
   });
 
   it('should render successfully on the server without throwing errors', () => {
@@ -574,7 +575,20 @@ describe('PreprintDetailsComponent SSR', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should skip reset dispatches during ngOnDestroy in SSR environment', () => {
+  it('should add signposting tags during SSR', () => {
+    fixture.detectChanges();
+
+    const linkTags = Array.from(document.head.querySelectorAll('link[rel="linkset"]'));
+    expect(linkTags.length).toBe(2);
+    expect(linkTags[0].getAttribute('href')).toBe('http://localhost:4200/metadata/preprint-1/?format=linkset');
+    expect(linkTags[0].getAttribute('type')).toBe('application/linkset');
+    expect(linkTags[1].getAttribute('href')).toBe('http://localhost:4200/metadata/preprint-1/?format=linkset-json');
+    expect(linkTags[1].getAttribute('type')).toBe('application/linkset+json');
+  });
+
+  it('should not access browser-only APIs during SSR', () => {
+    const platformId = TestBed.inject(PLATFORM_ID);
+    expect(platformId).toBe('server');
     fixture.detectChanges();
     (store.dispatch as jest.Mock).mockClear();
 
