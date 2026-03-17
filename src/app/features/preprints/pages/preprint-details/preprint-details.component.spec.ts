@@ -7,8 +7,8 @@ import { of, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PLATFORM_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideServerRendering } from '@angular/platform-server';
 import { ActivatedRoute, Router } from '@angular/router';
+import { provideServerRendering } from '@angular/ssr';
 
 import { HelpScoutService } from '@core/services/help-scout.service';
 import { PrerenderReadyService } from '@core/services/prerender-ready.service';

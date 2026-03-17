@@ -6,11 +6,11 @@ import { Skeleton } from 'primeng/skeleton';
 
 import { map } from 'rxjs';
 
-import { DOCUMENT } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DOCUMENT,
   effect,
   HostBinding,
   HostListener,

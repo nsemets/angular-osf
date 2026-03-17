@@ -1,7 +1,7 @@
 import { Observable, Subscriber } from 'rxjs';
 
-import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { DOCUMENT, inject, Injectable, PLATFORM_ID } from '@angular/core';
 
 /**
  * Injectable service to load the Google Picker API script dynamically.
@@ -11,20 +11,12 @@ import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
  */
 @Injectable({ providedIn: 'root' })
 export class GoogleFilePickerDownloadService {
+  private document = inject(DOCUMENT);
+  private platformId = inject(PLATFORM_ID);
   /** Tracks whether the script has already been loaded to prevent duplicates. */
   private scriptLoaded = false;
   /** The Google Picker API script URL. */
   private scriptUrl = 'https://apis.google.com/js/api.js';
-
-  /**
-   * Constructor injecting the global `Document` object.
-   *
-   * @param document - The Angular-injected reference to the global `document`.
-   */
-  constructor(
-    @Inject(DOCUMENT) private document: Document,
-    @Inject(PLATFORM_ID) private platformId: string
-  ) {}
 
   /**
    * Dynamically loads the Google Picker script if it hasn't already been loaded.
