@@ -43,7 +43,11 @@ export class ProfileSettingsComponent {
 
   selectedTab = this.tabOption.Name;
 
-  onTabChange(index: number): void {
-    this.selectedTab = index;
+  onTabChange(event: string | number | undefined): void {
+    const value = Number(event);
+
+    if (!isNaN(value)) {
+      this.selectedTab = value;
+    }
   }
 }

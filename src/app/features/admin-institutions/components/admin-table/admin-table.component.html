@@ -72,7 +72,6 @@
   <p-table
     [columns]="selectedColumnsComputed()"
     [value]="isLoading() ? skeletonData : tableData()"
-    [autoLayout]="true"
     [scrollable]="true"
     [sortMode]="'single'"
     (onSort)="onSort($event)"
