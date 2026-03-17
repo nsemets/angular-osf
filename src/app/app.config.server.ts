@@ -1,6 +1,5 @@
 import { ApplicationConfig, mergeApplicationConfig } from '@angular/core';
-import { provideServerRendering } from '@angular/platform-server';
-import { provideServerRouting } from '@angular/ssr';
+import { provideServerRendering, withRoutes } from '@angular/ssr';
 
 import { SSR_CONFIG } from '@core/constants/ssr-config.token';
 import { ConfigModel } from '@core/models/config.model';
@@ -33,11 +32,7 @@ function loadSsrConfig(): ConfigModel {
 }
 
 const serverConfig: ApplicationConfig = {
-  providers: [
-    provideServerRendering(),
-    provideServerRouting(serverRoutes),
-    { provide: SSR_CONFIG, useFactory: loadSsrConfig },
-  ],
+  providers: [provideServerRendering(withRoutes(serverRoutes)), { provide: SSR_CONFIG, useFactory: loadSsrConfig }],
 };
 
 export const config = mergeApplicationConfig(appConfig, serverConfig);
