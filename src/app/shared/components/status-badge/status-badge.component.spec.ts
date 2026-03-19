@@ -4,6 +4,8 @@ import { RegistryStatus } from '@osf/shared/enums/registry-status.enum';
 
 import { StatusBadgeComponent } from './status-badge.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 describe('StatusBadgeComponent', () => {
   let component: StatusBadgeComponent;
   let fixture: ComponentFixture<StatusBadgeComponent>;
@@ -11,6 +13,7 @@ describe('StatusBadgeComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [StatusBadgeComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(StatusBadgeComponent);

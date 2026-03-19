@@ -11,9 +11,8 @@ import { PreprintModerationSelectors } from '../../store/preprint-moderation';
 
 import { PreprintModerationSettingsComponent } from './preprint-moderation-settings.component';
 
-import { EnvironmentTokenMock } from '@testing/mocks/environment.token.mock';
 import { MOCK_PREPRINT_PROVIDER_MODERATION_INFO } from '@testing/mocks/preprint-provider-moderation-info.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
@@ -29,10 +28,10 @@ describe('PreprintModerationSettingsComponent', () => {
     mockActivatedRoute = ActivatedRouteMockBuilder.create().withParams({ providerId: mockProviderId }).build();
 
     await TestBed.configureTestingModule({
-      imports: [PreprintModerationSettingsComponent, OSFTestingModule, MockComponent(LoadingSpinnerComponent)],
+      imports: [PreprintModerationSettingsComponent, MockComponent(LoadingSpinnerComponent)],
       providers: [
+        provideOSFCore(),
         MockProvider(ActivatedRoute, mockActivatedRoute),
-        EnvironmentTokenMock,
         provideMockStore({
           signals: [
             { selector: PreprintModerationSelectors.arePreprintProviderLoading, value: false },

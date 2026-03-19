@@ -12,7 +12,7 @@ import {
   makeActivityLogWithDisplay,
   MOCK_ACTIVITY_LOGS_WITH_DISPLAY,
 } from '@testing/mocks/activity-log-with-display.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('RecentActivityListComponent', () => {
   let component: RecentActivityListComponent;
@@ -20,7 +20,8 @@ describe('RecentActivityListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RecentActivityListComponent, OSFTestingModule, MockComponent(CustomPaginatorComponent)],
+      imports: [RecentActivityListComponent, MockComponent(CustomPaginatorComponent)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RecentActivityListComponent);

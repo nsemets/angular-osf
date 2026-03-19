@@ -1,5 +1,5 @@
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { MockComponent, MockPipe, MockProvider } from 'ng-mocks';
+import { TranslateService } from '@ngx-translate/core';
+import { MockComponent, MockProvider } from 'ng-mocks';
 
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
@@ -13,7 +13,7 @@ import { ToastService } from '@osf/shared/services/toast.service';
 
 import { DeveloperAppsContainerComponent } from './developer-apps-container.component';
 
-import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('DeveloperAppsContainerComponent', () => {
   let component: DeveloperAppsContainerComponent;
@@ -28,8 +28,8 @@ describe('DeveloperAppsContainerComponent', () => {
     dialogRefMock = { onClose: new Subject<void>() };
 
     await TestBed.configureTestingModule({
-      imports: [DeveloperAppsContainerComponent, MockComponent(SubHeaderComponent), MockPipe(TranslatePipe)],
-      providers: [MockProvider(DialogService), MockProvider(ToastService), TranslateServiceMock],
+      imports: [DeveloperAppsContainerComponent, MockComponent(SubHeaderComponent)],
+      providers: [MockProvider(DialogService), MockProvider(ToastService), provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DeveloperAppsContainerComponent);

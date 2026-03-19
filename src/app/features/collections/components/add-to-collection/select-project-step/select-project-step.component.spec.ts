@@ -11,7 +11,7 @@ import { SelectProjectStepComponent } from './select-project-step.component';
 
 import { MOCK_PROJECT } from '@testing/mocks/project.mock';
 import { MOCK_COLLECTION_SUBMISSION_WITH_GUID } from '@testing/mocks/submission.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 import { ToastServiceMockBuilder } from '@testing/providers/toast-provider.mock';
 
@@ -26,8 +26,9 @@ describe.skip('SelectProjectStepComponent', () => {
     toastServiceMock = ToastServiceMockBuilder.create().build();
 
     await TestBed.configureTestingModule({
-      imports: [SelectProjectStepComponent, OSFTestingModule, ...MockComponents(ProjectSelectorComponent)],
+      imports: [SelectProjectStepComponent, ...MockComponents(ProjectSelectorComponent)],
       providers: [
+        provideOSFCore(),
         MockProvider(ToastService, toastServiceMock),
         provideMockStore({
           signals: [

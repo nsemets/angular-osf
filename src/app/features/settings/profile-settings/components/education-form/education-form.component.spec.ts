@@ -1,5 +1,4 @@
-import { TranslatePipe } from '@ngx-translate/core';
-import { MockComponent, MockPipe } from 'ng-mocks';
+import { MockComponent } from 'ng-mocks';
 
 import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -10,6 +9,7 @@ import { TextInputComponent } from '@osf/shared/components/text-input/text-input
 import { EducationFormComponent } from './education-form.component';
 
 import { MOCK_EDUCATION } from '@testing/mocks/user-employment-education.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('EducationFormComponent', () => {
   let component: EducationFormComponent;
@@ -28,7 +28,8 @@ describe('EducationFormComponent', () => {
     });
 
     await TestBed.configureTestingModule({
-      imports: [EducationFormComponent, MockPipe(TranslatePipe), MockComponent(TextInputComponent)],
+      imports: [EducationFormComponent, MockComponent(TextInputComponent)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(EducationFormComponent);

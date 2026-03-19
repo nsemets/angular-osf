@@ -6,7 +6,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { WikiSyntaxHelpDialogComponent } from './wiki-syntax-help-dialog.component';
 
-import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('WikiSyntaxHelpDialogComponent', () => {
   let component: WikiSyntaxHelpDialogComponent;
@@ -15,7 +15,7 @@ describe('WikiSyntaxHelpDialogComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [WikiSyntaxHelpDialogComponent],
-      providers: [TranslateServiceMock, MockProvider(DynamicDialogRef)],
+      providers: [provideOSFCore(), MockProvider(DynamicDialogRef)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(WikiSyntaxHelpDialogComponent);

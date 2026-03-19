@@ -15,7 +15,7 @@ import { AddonsState } from '@osf/shared/stores/addons';
 
 import { ProjectAddonsComponent } from './project-addons.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe.skip('Component: Addons', () => {
   let component: ProjectAddonsComponent;
@@ -25,7 +25,6 @@ describe.skip('Component: Addons', () => {
     await TestBed.configureTestingModule({
       imports: [
         ProjectAddonsComponent,
-        OSFTestingModule,
         ...MockComponents(
           AddonCardListComponent,
           AddonsToolbarComponent,
@@ -35,6 +34,7 @@ describe.skip('Component: Addons', () => {
         ),
       ],
       providers: [
+        provideOSFCore(),
         provideStore([UserState, AddonsState]),
         {
           provide: UserSelectors,

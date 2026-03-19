@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TruncatedTextComponent } from './truncated-text.component';
 
-import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('TruncatedTextComponent', () => {
   let component: TruncatedTextComponent;
@@ -11,7 +11,7 @@ describe('TruncatedTextComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [TruncatedTextComponent],
-      providers: [TranslateServiceMock],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TruncatedTextComponent);

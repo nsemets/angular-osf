@@ -33,7 +33,7 @@ import { ViewOnlyLinkMessageComponent } from '@shared/components/view-only-link-
 
 import { WikiComponent } from './wiki.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
@@ -90,7 +90,6 @@ describe('WikiComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         WikiComponent,
-        OSFTestingModule,
         ...MockComponents(
           SubHeaderComponent,
           WikiListComponent,
@@ -101,6 +100,7 @@ describe('WikiComponent', () => {
         ),
       ],
       providers: [
+        provideOSFCore(),
         MockProvider(Router, routerMock),
         MockProvider(ActivatedRoute, activatedRouteMock),
         MockProvider(ToastService, toastServiceMock),

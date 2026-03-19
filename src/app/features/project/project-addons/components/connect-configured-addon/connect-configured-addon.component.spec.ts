@@ -1,12 +1,11 @@
 import { Store } from '@ngxs/store';
 
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { MockComponents, MockPipe, MockProvider } from 'ng-mocks';
+import { TranslateService } from '@ngx-translate/core';
+import { MockComponents, MockProvider } from 'ng-mocks';
 
 import { of } from 'rxjs';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { ActivatedRoute, Navigation, Router, UrlTree } from '@angular/router';
 
 import { AddonSetupAccountFormComponent } from '@osf/shared/components/addons/addon-setup-account-form/addon-setup-account-form.component';
@@ -17,6 +16,8 @@ import { AddonModel } from '@osf/shared/models/addons/addon.model';
 import { AddonsSelectors } from '@osf/shared/stores/addons';
 
 import { ConnectConfiguredAddonComponent } from './connect-configured-addon.component';
+
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe.skip('ConnectAddonComponent', () => {
   let component: ConnectConfiguredAddonComponent;
@@ -49,10 +50,9 @@ describe.skip('ConnectAddonComponent', () => {
       imports: [
         ConnectConfiguredAddonComponent,
         ...MockComponents(SubHeaderComponent, AddonSetupAccountFormComponent, StorageItemSelectorComponent),
-        MockPipe(TranslatePipe),
       ],
       providers: [
-        provideNoopAnimations(),
+        provideOSFCore(),
         MockProvider(Store, {
           selectSignal: jest.fn().mockImplementation((selector) => {
             if (selector === AddonsSelectors.getAddonsUserReference) {

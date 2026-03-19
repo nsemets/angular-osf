@@ -1,7 +1,6 @@
 import { provideStore } from '@ngxs/store';
 
-import { TranslatePipe } from '@ngx-translate/core';
-import { MockPipe, MockProvider } from 'ng-mocks';
+import { MockProvider } from 'ng-mocks';
 
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
@@ -13,14 +12,17 @@ import { AccountSettingsState } from '../../store';
 
 import { CancelDeactivationComponent } from './cancel-deactivation.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 describe('CancelDeactivationComponent', () => {
   let component: CancelDeactivationComponent;
   let fixture: ComponentFixture<CancelDeactivationComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CancelDeactivationComponent, MockPipe(TranslatePipe)],
+      imports: [CancelDeactivationComponent],
       providers: [
+        provideOSFCore(),
         provideStore([AccountSettingsState]),
         provideHttpClient(),
         provideHttpClientTesting(),

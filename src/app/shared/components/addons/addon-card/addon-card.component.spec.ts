@@ -9,7 +9,7 @@ import { AddonModel } from '@shared/models/addons/addon.model';
 
 import { AddonCardComponent } from './addon-card.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomConfirmationServiceMockBuilder } from '@testing/providers/custom-confirmation-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
@@ -36,9 +36,10 @@ describe('AddonCardComponent', () => {
     customConfirmationServiceMock = CustomConfirmationServiceMockBuilder.create().build();
 
     await TestBed.configureTestingModule({
-      imports: [AddonCardComponent, OSFTestingModule],
+      imports: [AddonCardComponent],
       providers: [
-        provideMockStore({}),
+        provideOSFCore(),
+        provideMockStore(),
         MockProvider(Router, mockRouter),
         MockProvider(CustomConfirmationService, customConfirmationServiceMock),
       ],

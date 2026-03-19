@@ -11,7 +11,7 @@ import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.comp
 
 import { LineChartComponent } from './line-chart.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('LineChartComponent', () => {
   let component: LineChartComponent;
@@ -19,8 +19,8 @@ describe('LineChartComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LineChartComponent, OSFTestingModule, MockModule(ChartModule), MockComponent(LoadingSpinnerComponent)],
-      providers: [MockProvider(PLATFORM_ID, 'browser')],
+      imports: [LineChartComponent, MockModule(ChartModule), MockComponent(LoadingSpinnerComponent)],
+      providers: [provideOSFCore(), MockProvider(PLATFORM_ID, 'browser')],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LineChartComponent);

@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FilesContainerComponent } from './files-container.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 describe('FilesContainerComponent', () => {
   let component: FilesContainerComponent;
   let fixture: ComponentFixture<FilesContainerComponent>;
@@ -9,6 +11,7 @@ describe('FilesContainerComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [FilesContainerComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FilesContainerComponent);

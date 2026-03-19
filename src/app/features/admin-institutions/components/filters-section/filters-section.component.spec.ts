@@ -19,7 +19,7 @@ import {
 
 import { FiltersSectionComponent } from './filters-section.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('FiltersSectionComponent', () => {
@@ -33,12 +33,9 @@ describe('FiltersSectionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        FiltersSectionComponent,
-        OSFTestingModule,
-        ...MockComponents(FilterChipsComponent, SearchFiltersComponent),
-      ],
+      imports: [FiltersSectionComponent, ...MockComponents(FilterChipsComponent, SearchFiltersComponent)],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             { selector: GlobalSearchSelectors.getFilters, value: mockFilters },

@@ -8,7 +8,7 @@ import { AddonTerm } from '@osf/shared/models/addons/addon-utils.model';
 import { AddonTermsComponent } from './addon-terms.component';
 
 import { MOCK_ADDON } from '@testing/mocks/addon.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 jest.mock('@shared/helpers/addon-type.helper.ts', () => ({
   isCitationAddon: jest.fn(),
@@ -24,7 +24,8 @@ describe('AddonTermsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AddonTermsComponent, OSFTestingModule],
+      imports: [AddonTermsComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AddonTermsComponent);

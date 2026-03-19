@@ -1,5 +1,4 @@
-import { TranslatePipe } from '@ngx-translate/core';
-import { MockComponent, MockPipe } from 'ng-mocks';
+import { MockComponent } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -8,6 +7,8 @@ import { NameForm } from '@osf/features/settings/profile-settings/models';
 import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
 
 import { NameFormComponent } from './name-form.component';
+
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('NameFormComponent', () => {
   let component: NameFormComponent;
@@ -23,7 +24,8 @@ describe('NameFormComponent', () => {
       suffix: new FormControl('Jr.', { nonNullable: true }),
     });
     await TestBed.configureTestingModule({
-      imports: [NameFormComponent, MockComponent(TextInputComponent), MockPipe(TranslatePipe)],
+      imports: [NameFormComponent, MockComponent(TextInputComponent)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(NameFormComponent);

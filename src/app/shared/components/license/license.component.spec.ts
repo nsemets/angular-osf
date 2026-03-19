@@ -10,7 +10,7 @@ import { TruncatedTextComponent } from '../truncated-text/truncated-text.compone
 import { LicenseComponent } from './license.component';
 
 import { MOCK_LICENSE } from '@testing/mocks/license.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('LicenseComponent', () => {
   let component: LicenseComponent;
@@ -34,7 +34,8 @@ describe('LicenseComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LicenseComponent, ...MockComponents(TextInputComponent, TruncatedTextComponent), OSFTestingModule],
+      imports: [LicenseComponent, ...MockComponents(TextInputComponent, TruncatedTextComponent)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LicenseComponent);

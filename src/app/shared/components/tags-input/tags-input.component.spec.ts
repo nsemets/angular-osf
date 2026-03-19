@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TagsInputComponent } from './tags-input.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('TagsInputComponent', () => {
   let component: TagsInputComponent;
@@ -10,7 +10,8 @@ describe('TagsInputComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TagsInputComponent, OSFTestingModule],
+      imports: [TagsInputComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TagsInputComponent);

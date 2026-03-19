@@ -10,7 +10,7 @@ import { ProjectsState } from '@shared/stores/projects';
 
 import { ProjectSelectorComponent } from './project-selector.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('ProjectSelectorComponent', () => {
   let component: ProjectSelectorComponent;
@@ -18,8 +18,8 @@ describe('ProjectSelectorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProjectSelectorComponent, OSFTestingModule],
-      providers: [MockProvider(ToastService), provideStore([ProjectsState, UserState])],
+      imports: [ProjectSelectorComponent],
+      providers: [provideOSFCore(), MockProvider(ToastService), provideStore([ProjectsState, UserState])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProjectSelectorComponent);

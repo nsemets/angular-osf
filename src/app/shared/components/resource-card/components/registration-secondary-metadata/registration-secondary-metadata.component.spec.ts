@@ -6,7 +6,7 @@ import { ResourceModel } from '@shared/models/search/resource.model';
 import { RegistrationSecondaryMetadataComponent } from './registration-secondary-metadata.component';
 
 import { MOCK_RESOURCE } from '@testing/mocks/resource.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('RegistrationSecondaryMetadataComponent', () => {
   let component: RegistrationSecondaryMetadataComponent;
@@ -19,7 +19,8 @@ describe('RegistrationSecondaryMetadataComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RegistrationSecondaryMetadataComponent, OSFTestingModule],
+      imports: [RegistrationSecondaryMetadataComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RegistrationSecondaryMetadataComponent);

@@ -45,7 +45,6 @@
 ```
 src/testing/
 ├── osf.testing.provider.ts       ← provideOSFCore(), provideOSFHttp()
-├── osf.testing.module.ts         ← OSFTestingModule (legacy — prefer providers)
 ├── providers/                    ← Builder-pattern mocks for services
 │   ├── store-provider.mock.ts
 │   ├── route-provider.mock.ts
@@ -68,20 +67,13 @@ src/testing/
 
 ### `provideOSFCore()` — mandatory base provider
 
-Every component test must include `provideOSFCore()`. It configures animations, translations, and environment tokens.
+Every component test must include `provideOSFCore()`. It configures translations and environment tokens.
 
 ```typescript
 export function provideOSFCore() {
-  return [
-    provideNoopAnimations(),
-    importProvidersFrom(TranslateModule.forRoot()),
-    TranslationServiceMock,
-    EnvironmentTokenMock,
-  ];
+  return [provideTranslation, TranslateServiceMock, EnvironmentTokenMock];
 }
 ```
-
-> **Never** import `OSFTestingModule` directly in new tests. It is retained for legacy compatibility only. Use `provideOSFCore()` instead.
 
 ---
 
@@ -854,7 +846,7 @@ This project strictly enforces 90%+ test coverage through GitHub Actions CI.
 
 ## 18. Best Practices
 
-1. **Always use `provideOSFCore()`** — never import `OSFTestingModule` directly in new tests.
+1. **Always use `provideOSFCore()`**.
 2. **Always use `provideMockStore()`** — never mock `component.actions` via `Object.defineProperty`.
 3. **Always pass explicit mocks to `MockProvider`** when you need `jest.fn()` assertions. Bare `MockProvider(Service)` creates ng-mocks stubs.
 4. **Check `@testing/` before creating inline mocks** — builders and factories almost certainly exist.

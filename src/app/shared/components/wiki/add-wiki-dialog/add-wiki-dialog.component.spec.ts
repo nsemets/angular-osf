@@ -1,5 +1,3 @@
-import { Store } from '@ngxs/store';
-
 import { MockComponent, MockProvider } from 'ng-mocks';
 
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -13,25 +11,26 @@ import { TextInputComponent } from '../../text-input/text-input.component';
 
 import { AddWikiDialogComponent } from './add-wiki-dialog.component';
 
-import { MOCK_STORE } from '@testing/mocks/mock-store.mock';
-import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
+import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('AddWikiDialogComponent', () => {
   let component: AddWikiDialogComponent;
   let fixture: ComponentFixture<AddWikiDialogComponent>;
 
-  beforeEach(async () => {
-    (MOCK_STORE.selectSignal as jest.Mock).mockImplementation((selector) => {
-      if (selector === WikiSelectors.getWikiSubmitting) {
-        return () => false;
-      }
-      return () => null;
-    });
-
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [AddWikiDialogComponent, MockComponent(TextInputComponent)],
       providers: [
-        TranslateServiceMock,
+        provideOSFCore(),
+        provideMockStore({
+          signals: [
+            {
+              selector: WikiSelectors.getWikiSubmitting,
+              value: false,
+            },
+          ],
+        }),
         MockProvider(DynamicDialogRef),
         MockProvider(DynamicDialogConfig, {
           data: {
@@ -39,9 +38,8 @@ describe('AddWikiDialogComponent', () => {
           },
         }),
         MockProvider(ToastService),
-        MockProvider(Store, MOCK_STORE),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(AddWikiDialogComponent);
     component = fixture.componentInstance;

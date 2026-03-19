@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FilesSelectionActionsComponent } from './files-selection-actions.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('FilesSelectionActionsComponent', () => {
   let component: FilesSelectionActionsComponent;
@@ -10,7 +10,8 @@ describe('FilesSelectionActionsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FilesSelectionActionsComponent, OSFTestingModule],
+      imports: [FilesSelectionActionsComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FilesSelectionActionsComponent);

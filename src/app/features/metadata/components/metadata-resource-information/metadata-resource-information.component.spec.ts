@@ -4,7 +4,7 @@ import { CustomItemMetadataRecord } from '@osf/features/metadata/models';
 
 import { MetadataResourceInformationComponent } from './metadata-resource-information.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('MetadataResourceInformationComponent', () => {
   let component: MetadataResourceInformationComponent;
@@ -18,7 +18,8 @@ describe('MetadataResourceInformationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MetadataResourceInformationComponent, OSFTestingModule],
+      imports: [MetadataResourceInformationComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MetadataResourceInformationComponent);

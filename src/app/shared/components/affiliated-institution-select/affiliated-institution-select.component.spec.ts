@@ -5,7 +5,7 @@ import { Institution } from '@osf/shared/models/institutions/institutions.model'
 import { AffiliatedInstitutionSelectComponent } from './affiliated-institution-select.component';
 
 import { MOCK_INSTITUTION } from '@testing/mocks/institution.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('AffiliatedInstitutionSelectComponent', () => {
   let component: AffiliatedInstitutionSelectComponent;
@@ -15,7 +15,8 @@ describe('AffiliatedInstitutionSelectComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AffiliatedInstitutionSelectComponent, OSFTestingModule],
+      imports: [AffiliatedInstitutionSelectComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AffiliatedInstitutionSelectComponent);

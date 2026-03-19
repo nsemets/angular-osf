@@ -1,7 +1,7 @@
 import { provideStore, Store } from '@ngxs/store';
 
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { MockComponent, MockPipe, MockProviders } from 'ng-mocks';
+import { TranslateService } from '@ngx-translate/core';
+import { MockComponent, MockProvider, MockProviders } from 'ng-mocks';
 
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
@@ -24,8 +24,8 @@ import { ConfirmationSentDialogComponent } from '../confirmation-sent-dialog/con
 
 import { ConnectedEmailsComponent } from './connected-emails.component';
 
-import { MockCustomConfirmationServiceProvider } from '@testing/mocks/custom-confirmation.service.mock';
 import { MOCK_USER } from '@testing/mocks/data.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('ConnectedEmailsComponent', () => {
   let component: ConnectedEmailsComponent;
@@ -46,13 +46,14 @@ describe('ConnectedEmailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ConnectedEmailsComponent, MockComponent(ReadonlyInputComponent), MockPipe(TranslatePipe)],
+      imports: [ConnectedEmailsComponent, MockComponent(ReadonlyInputComponent)],
       providers: [
+        provideOSFCore(),
         provideStore([UserState, UserEmailsState]),
         provideHttpClient(),
         provideHttpClientTesting(),
         MockProviders(DialogService, TranslateService, DestroyRef, LoaderService, ToastService),
-        MockCustomConfirmationServiceProvider,
+        MockProvider(CustomConfirmationService),
       ],
     }).compileComponents();
 

@@ -17,7 +17,7 @@ import { ViewOnlyLinkMessageComponent } from '@osf/shared/components/view-only-l
 import { IS_WEB } from '@osf/shared/helpers/breakpoints.tokens';
 
 import { MOCK_ANALYTICS_METRICS, MOCK_RELATED_COUNTS } from '@testing/mocks/analytics.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
@@ -41,8 +41,6 @@ describe('Component: Analytics', () => {
       .withData({ resourceType: undefined })
       .build();
 
-    jest.clearAllMocks();
-
     await TestBed.configureTestingModule({
       imports: [
         AnalyticsComponent,
@@ -55,9 +53,9 @@ describe('Component: Analytics', () => {
           ViewOnlyLinkMessageComponent,
           SelectComponent
         ),
-        OSFTestingModule,
       ],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             { selector: metricsSelector, value: metrics },

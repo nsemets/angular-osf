@@ -9,7 +9,7 @@ import { WikiSyntaxHelpDialogComponent } from '../wiki-syntax-help-dialog/wiki-s
 
 import { EditSectionComponent } from './edit-section.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
 
 describe('EditSectionComponent', () => {
@@ -35,8 +35,8 @@ describe('EditSectionComponent', () => {
     mockCustomDialogService = CustomDialogServiceMockBuilder.create().withDefaultOpen().build();
 
     await TestBed.configureTestingModule({
-      imports: [EditSectionComponent, OSFTestingModule, MockModule(LMarkdownEditorModule)],
-      providers: [MockProvider(CustomDialogService, mockCustomDialogService)],
+      imports: [EditSectionComponent, MockModule(LMarkdownEditorModule)],
+      providers: [provideOSFCore(), MockProvider(CustomDialogService, mockCustomDialogService)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(EditSectionComponent);

@@ -11,7 +11,7 @@ import { ModeratorModel } from '../../models';
 import { ModeratorsTableComponent } from './moderators-table.component';
 
 import { MOCK_MODERATORS } from '@testing/mocks/moderator.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
 
 describe('ModeratorsTableComponent', () => {
@@ -35,8 +35,8 @@ describe('ModeratorsTableComponent', () => {
     mockCustomDialogService = CustomDialogServiceMockBuilder.create().build();
 
     await TestBed.configureTestingModule({
-      imports: [ModeratorsTableComponent, OSFTestingModule, MockComponent(SelectComponent)],
-      providers: [MockProvider(CustomDialogService, mockCustomDialogService)],
+      imports: [ModeratorsTableComponent, MockComponent(SelectComponent)],
+      providers: [provideOSFCore(), MockProvider(CustomDialogService, mockCustomDialogService)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ModeratorsTableComponent);

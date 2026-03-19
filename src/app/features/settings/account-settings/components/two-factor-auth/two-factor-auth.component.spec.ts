@@ -1,7 +1,6 @@
 import { provideStore, Store } from '@ngxs/store';
 
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { MockComponent, MockPipe, MockProviders } from 'ng-mocks';
+import { MockComponent, MockProvider, MockProviders } from 'ng-mocks';
 
 import { MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -10,7 +9,7 @@ import { of } from 'rxjs';
 
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UserState } from '@osf/core/store/user';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
@@ -19,7 +18,7 @@ import { AccountSettingsState } from '../../store';
 
 import { TwoFactorAuthComponent } from './two-factor-auth.component';
 
-import { MockCustomConfirmationServiceProvider } from '@testing/mocks/custom-confirmation.service.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { QRCodeComponent } from 'angularx-qrcode';
 
 describe('TwoFactorAuthComponent', () => {
@@ -30,13 +29,14 @@ describe('TwoFactorAuthComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TwoFactorAuthComponent, MockComponent(QRCodeComponent), MockPipe(TranslatePipe)],
+      imports: [TwoFactorAuthComponent, MockComponent(QRCodeComponent)],
       providers: [
+        provideOSFCore(),
         provideStore([UserState, AccountSettingsState]),
         provideHttpClient(),
         provideHttpClientTesting(),
-        MockProviders(TranslateService, DialogService, MessageService),
-        MockCustomConfirmationServiceProvider,
+        MockProviders(DialogService, MessageService),
+        MockProvider(CustomConfirmationService),
       ],
     }).compileComponents();
 
@@ -84,11 +84,11 @@ describe('TwoFactorAuthComponent', () => {
     expect(store.dispatch).not.toHaveBeenCalled();
   });
 
-  it('should call disableTwoFactorAuth when disableTwoFactor is called', fakeAsync(() => {
-    jest.spyOn(store, 'dispatch').mockReturnValue(of());
+  it('should call disableTwoFactorAuth when disableTwoFactor is called', () => {
+    const dispatchSpy = jest.spyOn(store, 'dispatch').mockReturnValue(of());
 
     component.disableTwoFactor();
 
-    expect(store.dispatch).toHaveBeenCalled();
-  }));
+    expect(dispatchSpy).toHaveBeenCalled();
+  });
 });

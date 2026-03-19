@@ -5,6 +5,7 @@ import { LoaderService } from '@osf/shared/services/loader.service';
 
 import { FullScreenLoaderComponent } from './full-screen-loader.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { LoaderServiceMock } from '@testing/providers/loader-service.mock';
 
 describe('FullScreenLoaderComponent', () => {
@@ -16,6 +17,7 @@ describe('FullScreenLoaderComponent', () => {
     await TestBed.configureTestingModule({
       imports: [FullScreenLoaderComponent],
       providers: [
+        provideOSFCore(),
         {
           provide: LoaderService,
           useClass: LoaderServiceMock,

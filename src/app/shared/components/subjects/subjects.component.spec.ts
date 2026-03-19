@@ -10,7 +10,7 @@ import { SearchInputComponent } from '../search-input/search-input.component';
 
 import { SubjectsComponent } from './subjects.component';
 
-import { OSFTestingStoreModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('SubjectsComponent', () => {
@@ -43,8 +43,9 @@ describe('SubjectsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SubjectsComponent, OSFTestingStoreModule, MockComponent(SearchInputComponent)],
+      imports: [SubjectsComponent, MockComponent(SearchInputComponent)],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             { selector: SubjectsSelectors.getSubjects, value: signal(mockSubjects) },

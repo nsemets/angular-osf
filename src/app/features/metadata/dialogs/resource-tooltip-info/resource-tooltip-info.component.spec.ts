@@ -6,7 +6,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ResourceInfoTooltipComponent } from './resource-tooltip-info.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('ResourceInfoTooltipComponent', () => {
   let component: ResourceInfoTooltipComponent;
@@ -16,8 +16,8 @@ describe('ResourceInfoTooltipComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ResourceInfoTooltipComponent, OSFTestingModule],
-      providers: [MockProvider(DynamicDialogRef), MockProvider(DynamicDialogConfig)],
+      imports: [ResourceInfoTooltipComponent],
+      providers: [provideOSFCore(), MockProvider(DynamicDialogRef), MockProvider(DynamicDialogConfig)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ResourceInfoTooltipComponent);

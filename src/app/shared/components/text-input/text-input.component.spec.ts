@@ -5,7 +5,7 @@ import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants/input-validatio
 
 import { TextInputComponent } from './text-input.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('TextInputComponent', () => {
   let component: TextInputComponent;
@@ -13,7 +13,8 @@ describe('TextInputComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TextInputComponent, OSFTestingModule],
+      imports: [TextInputComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TextInputComponent);

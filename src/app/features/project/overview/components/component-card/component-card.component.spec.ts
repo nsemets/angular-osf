@@ -8,6 +8,7 @@ import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { ComponentCardComponent } from './component-card.component';
 
 import { MOCK_NODE_WITH_ADMIN, MOCK_NODE_WITHOUT_ADMIN } from '@testing/mocks/node.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('ComponentCardComponent', () => {
   let component: ComponentCardComponent;
@@ -16,6 +17,7 @@ describe('ComponentCardComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ComponentCardComponent, ...MockComponents(IconComponent, ContributorsListComponent)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComponentCardComponent);

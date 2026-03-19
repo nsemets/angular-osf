@@ -13,7 +13,7 @@ import { SubmissionReviewStatus } from '../../enums';
 import { CollectionSubmissionItemComponent } from './collection-submission-item.component';
 
 import { MOCK_COLLECTION_SUBMISSION_WITH_GUID } from '@testing/mocks/submission.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
@@ -36,13 +36,9 @@ describe('CollectionSubmissionItemComponent', () => {
     mockActivatedRoute = ActivatedRouteMockBuilder.create().withQueryParams({ status: 'pending' }).build();
 
     await TestBed.configureTestingModule({
-      imports: [
-        CollectionSubmissionItemComponent,
-        OSFTestingModule,
-        ...MockComponents(IconComponent),
-        MockPipe(DateAgoPipe),
-      ],
+      imports: [CollectionSubmissionItemComponent, ...MockComponents(IconComponent), MockPipe(DateAgoPipe)],
       providers: [
+        provideOSFCore(),
         MockProvider(Router, mockRouter),
         MockProvider(ActivatedRoute, mockActivatedRoute),
         provideMockStore({

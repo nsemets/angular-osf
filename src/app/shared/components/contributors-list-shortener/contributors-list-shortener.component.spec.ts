@@ -4,6 +4,8 @@ import { By } from '@angular/platform-browser';
 
 import { ContributorsListShortenerComponent } from './contributors-list-shortener.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 describe('ContributorsListShortenerComponent', () => {
   let component: ContributorsListShortenerComponent;
   let fixture: ComponentFixture<ContributorsListShortenerComponent>;
@@ -12,6 +14,7 @@ describe('ContributorsListShortenerComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ContributorsListShortenerComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ContributorsListShortenerComponent);

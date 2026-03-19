@@ -10,7 +10,7 @@ import { CollectionsSelectors } from '@shared/stores/collections';
 
 import { CollectionMetadataStepComponent } from './collection-metadata-step.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe.skip('CollectionMetadataStepComponent', () => {
@@ -19,8 +19,9 @@ describe.skip('CollectionMetadataStepComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CollectionMetadataStepComponent, OSFTestingModule, MockComponents(StepPanel, Step, StepItem)],
+      imports: [CollectionMetadataStepComponent, MockComponents(StepPanel, Step, StepItem)],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             { selector: CollectionsSelectors.getCollectionProvider, value: null },

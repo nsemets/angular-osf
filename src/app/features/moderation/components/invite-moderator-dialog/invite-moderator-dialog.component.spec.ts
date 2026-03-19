@@ -11,8 +11,8 @@ import { ModeratorPermission } from '../../enums';
 
 import { InviteModeratorDialogComponent } from './invite-moderator-dialog.component';
 
-import { DynamicDialogRefMock } from '@testing/mocks/dynamic-dialog-ref.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
+import { DynamicDialogRefMock } from '@testing/providers/dynamic-dialog-ref.mock';
 
 describe('InviteModeratorDialogComponent', () => {
   let component: InviteModeratorDialogComponent;
@@ -23,12 +23,8 @@ describe('InviteModeratorDialogComponent', () => {
     mockDialogRef = DynamicDialogRefMock.useValue as unknown as jest.Mocked<DynamicDialogRef>;
 
     await TestBed.configureTestingModule({
-      imports: [
-        InviteModeratorDialogComponent,
-        OSFTestingModule,
-        ...MockComponents(TextInputComponent, FormSelectComponent),
-      ],
-      providers: [DynamicDialogRefMock],
+      imports: [InviteModeratorDialogComponent, ...MockComponents(TextInputComponent, FormSelectComponent)],
+      providers: [provideOSFCore(), DynamicDialogRefMock],
     }).compileComponents();
 
     fixture = TestBed.createComponent(InviteModeratorDialogComponent);

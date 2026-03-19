@@ -16,7 +16,7 @@ import { RegistryModerationSelectors } from '../../store/registry-moderation';
 import { RegistrySubmissionsComponent } from './registry-submissions.component';
 
 import { MOCK_REGISTRY_MODERATIONS } from '@testing/mocks/registry-moderation.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
@@ -40,7 +40,6 @@ describe('RegistrySubmissionsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         RegistrySubmissionsComponent,
-        OSFTestingModule,
         ...MockComponents(
           SelectComponent,
           IconComponent,
@@ -50,6 +49,7 @@ describe('RegistrySubmissionsComponent', () => {
         ),
       ],
       providers: [
+        provideOSFCore(),
         MockProvider(Router, mockRouter),
         MockProvider(ActivatedRoute, mockActivatedRoute),
         provideMockStore({

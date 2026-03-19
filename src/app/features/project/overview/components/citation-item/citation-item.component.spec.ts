@@ -8,7 +8,7 @@ import { ToastService } from '@osf/shared/services/toast.service';
 
 import { CitationItemComponent } from './citation-item.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('CitationItemComponent', () => {
   let component: CitationItemComponent;
@@ -18,8 +18,8 @@ describe('CitationItemComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CitationItemComponent, OSFTestingModule, ...MockComponents(IconComponent)],
-      providers: [MockProvider(Clipboard), MockProvider(ToastService)],
+      imports: [CitationItemComponent, ...MockComponents(IconComponent)],
+      providers: [provideOSFCore(), MockProvider(Clipboard), MockProvider(ToastService)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CitationItemComponent);

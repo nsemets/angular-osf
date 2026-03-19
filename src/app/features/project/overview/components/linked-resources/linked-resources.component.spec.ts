@@ -14,7 +14,7 @@ import { LinkResourceDialogComponent } from '../link-resource-dialog/link-resour
 import { LinkedResourcesComponent } from './linked-resources.component';
 
 import { MOCK_NODE_WITH_ADMIN } from '@testing/mocks/node.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
@@ -33,12 +33,9 @@ describe('LinkedProjectsComponent', () => {
     customDialogServiceMock = CustomDialogServiceMockBuilder.create().withDefaultOpen().build();
 
     await TestBed.configureTestingModule({
-      imports: [
-        LinkedResourcesComponent,
-        OSFTestingModule,
-        ...MockComponents(IconComponent, ContributorsListComponent),
-      ],
+      imports: [LinkedResourcesComponent, ...MockComponents(IconComponent, ContributorsListComponent)],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             { selector: NodeLinksSelectors.getLinkedResources, value: mockLinkedResources },

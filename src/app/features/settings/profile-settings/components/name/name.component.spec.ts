@@ -1,12 +1,9 @@
 import { Store } from '@ngxs/store';
 
-import { TranslatePipe } from '@ngx-translate/core';
-import { MockComponents, MockPipe, MockProvider } from 'ng-mocks';
+import { MockComponents, MockProvider } from 'ng-mocks';
 
 import { of } from 'rxjs';
 
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UpdateProfileSettingsUser, UserSelectors } from '@core/store/user';
@@ -18,8 +15,8 @@ import { NameFormComponent } from '../name-form/name-form.component';
 
 import { NameComponent } from './name.component';
 
-import { MockCustomConfirmationServiceProvider } from '@testing/mocks/custom-confirmation.service.mock';
 import { MOCK_USER } from '@testing/mocks/data.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('NameComponent', () => {
   let component: NameComponent;
@@ -40,13 +37,11 @@ describe('NameComponent', () => {
     jest.clearAllMocks();
 
     await TestBed.configureTestingModule({
-      imports: [NameComponent, MockPipe(TranslatePipe), ...MockComponents(CitationPreviewComponent, NameFormComponent)],
+      imports: [NameComponent, ...MockComponents(CitationPreviewComponent, NameFormComponent)],
       providers: [
-        MockCustomConfirmationServiceProvider,
+        provideOSFCore(),
+        MockProvider(CustomConfirmationService),
         MockProvider(ToastService),
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        MockProvider(TranslatePipe),
         MockProvider(Store, mockStore),
       ],
     }).compileComponents();

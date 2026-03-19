@@ -22,7 +22,7 @@ import { PreprintSubmissionItemComponent } from '../preprint-submission-item/pre
 import { PreprintWithdrawalSubmissionsComponent } from './preprint-withdrawal-submissions.component';
 
 import { MOCK_PREPRINT_WITHDRAWAL_SUBMISSIONS } from '@testing/mocks/preprint-withdrawal-submission.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
@@ -58,7 +58,6 @@ describe('PreprintWithdrawalSubmissionsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         PreprintWithdrawalSubmissionsComponent,
-        OSFTestingModule,
         ...MockComponents(
           SelectComponent,
           IconComponent,
@@ -68,6 +67,7 @@ describe('PreprintWithdrawalSubmissionsComponent', () => {
         ),
       ],
       providers: [
+        provideOSFCore(),
         MockProvider(Router, mockRouter),
         MockProvider(ActivatedRoute, mockActivatedRoute),
         provideMockStore({

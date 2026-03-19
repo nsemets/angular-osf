@@ -7,7 +7,7 @@ import { AffiliatedInstitutionsViewComponent } from '@osf/shared/components/affi
 import { MetadataAffiliatedInstitutionsComponent } from './metadata-affiliated-institutions.component';
 
 import { MOCK_PROJECT_AFFILIATED_INSTITUTIONS } from '@testing/mocks/project-overview.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('MetadataAffiliatedInstitutionsComponent', () => {
   let component: MetadataAffiliatedInstitutionsComponent;
@@ -17,11 +17,8 @@ describe('MetadataAffiliatedInstitutionsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        MetadataAffiliatedInstitutionsComponent,
-        MockComponent(AffiliatedInstitutionsViewComponent),
-        OSFTestingModule,
-      ],
+      imports: [MetadataAffiliatedInstitutionsComponent, MockComponent(AffiliatedInstitutionsViewComponent)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MetadataAffiliatedInstitutionsComponent);

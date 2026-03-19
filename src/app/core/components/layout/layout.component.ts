@@ -19,15 +19,15 @@ import { TopnavComponent } from '../topnav/topnav.component';
 @Component({
   selector: 'osf-layout',
   imports: [
-    BreadcrumbComponent,
     ConfirmDialog,
+    BreadcrumbComponent,
     FooterComponent,
     HeaderComponent,
     OSFBannerComponent,
-    RouterOutlet,
-    ScrollTopOnRouteChangeDirective,
     SidenavComponent,
     TopnavComponent,
+    RouterOutlet,
+    ScrollTopOnRouteChangeDirective,
     TranslatePipe,
   ],
   templateUrl: './layout.component.html',

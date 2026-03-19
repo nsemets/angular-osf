@@ -1,4 +1,3 @@
-import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -11,7 +10,7 @@ import { FilesSelectors } from '../../store';
 
 import { FileMetadataComponent } from './file-metadata.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomDialogServiceMock } from '@testing/providers/custom-dialog-provider.mock';
 import { ActivatedRouteMock } from '@testing/providers/route-provider.mock';
 import { RouterMock } from '@testing/providers/router-provider.mock';
@@ -34,16 +33,17 @@ describe('FileMetadataComponent', () => {
     customDialogService = CustomDialogServiceMock.simple();
 
     await TestBed.configureTestingModule({
-      imports: [FileMetadataComponent, OSFTestingModule],
+      imports: [FileMetadataComponent],
       providers: [
+        provideOSFCore(),
         { provide: CustomDialogService, useValue: customDialogService },
         { provide: Router, useValue: RouterMock.withUrl('/test').build() },
         { provide: ActivatedRoute, useValue: ActivatedRouteMock.withParams({ fileGuid: 'test-guid' }).build() },
         provideMockStore({
           signals: [
-            { selector: FilesSelectors.getFileCustomMetadata, value: signal(mockFileMetadata) },
-            { selector: FilesSelectors.isFileMetadataLoading, value: signal(false) },
-            { selector: FilesSelectors.hasWriteAccess, value: signal(true) },
+            { selector: FilesSelectors.getFileCustomMetadata, value: mockFileMetadata },
+            { selector: FilesSelectors.isFileMetadataLoading, value: false },
+            { selector: FilesSelectors.hasWriteAccess, value: true },
           ],
         }),
       ],

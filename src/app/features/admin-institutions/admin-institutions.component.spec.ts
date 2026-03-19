@@ -15,7 +15,7 @@ import { AdminInstitutionResourceTab } from './enums';
 import { InstitutionsAdminSelectors } from './store';
 
 import { MOCK_INSTITUTION } from '@testing/mocks/institution.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
@@ -32,12 +32,9 @@ describe('AdminInstitutionsComponent', () => {
     mockRouter = RouterMockBuilder.create().build();
 
     await TestBed.configureTestingModule({
-      imports: [
-        AdminInstitutionsComponent,
-        OSFTestingModule,
-        ...MockComponents(LoadingSpinnerComponent, SelectComponent),
-      ],
+      imports: [AdminInstitutionsComponent, ...MockComponents(LoadingSpinnerComponent, SelectComponent)],
       providers: [
+        provideOSFCore(),
         MockProvider(ActivatedRoute, mockActivatedRoute),
         MockProvider(Router, mockRouter),
         provideMockStore({

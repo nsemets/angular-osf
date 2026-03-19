@@ -8,7 +8,7 @@ import { TextInputComponent } from '@osf/shared/components/text-input/text-input
 
 import { EditTitleDialogComponent } from './edit-title-dialog.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('EditTitleDialogComponent', () => {
   let component: EditTitleDialogComponent;
@@ -18,8 +18,8 @@ describe('EditTitleDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EditTitleDialogComponent, MockComponent(TextInputComponent), OSFTestingModule],
-      providers: [MockProvider(DynamicDialogRef), MockProvider(DynamicDialogConfig)],
+      imports: [EditTitleDialogComponent, MockComponent(TextInputComponent)],
+      providers: [provideOSFCore(), MockProvider(DynamicDialogRef), MockProvider(DynamicDialogConfig)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(EditTitleDialogComponent);

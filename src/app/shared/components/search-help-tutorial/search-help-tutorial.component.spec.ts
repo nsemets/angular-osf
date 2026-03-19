@@ -5,6 +5,8 @@ import { TutorialStep } from '@shared/models/tutorial-step.model';
 
 import { SearchHelpTutorialComponent } from './search-help-tutorial.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 describe('SearchHelpTutorialComponent', () => {
   let component: SearchHelpTutorialComponent;
   let fixture: ComponentFixture<SearchHelpTutorialComponent>;
@@ -19,6 +21,7 @@ describe('SearchHelpTutorialComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SearchHelpTutorialComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SearchHelpTutorialComponent);

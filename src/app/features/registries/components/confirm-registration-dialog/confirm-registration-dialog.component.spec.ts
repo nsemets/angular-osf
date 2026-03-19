@@ -13,8 +13,8 @@ import { RegisterDraft, RegistriesSelectors } from '@osf/features/registries/sto
 
 import { ConfirmRegistrationDialogComponent } from './confirm-registration-dialog.component';
 
-import { provideDynamicDialogRefMock } from '@testing/mocks/dynamic-dialog-ref.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
+import { provideDynamicDialogRefMock } from '@testing/providers/dynamic-dialog-ref.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('ConfirmRegistrationDialogComponent', () => {

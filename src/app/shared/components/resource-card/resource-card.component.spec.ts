@@ -20,7 +20,7 @@ import { ResourceCardComponent } from './resource-card.component';
 
 import { MOCK_USER_RELATED_COUNTS } from '@testing/mocks/data.mock';
 import { MOCK_AGENT_RESOURCE, MOCK_RESOURCE } from '@testing/mocks/resource.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('ResourceCardComponent', () => {
   let component: ResourceCardComponent;
@@ -35,7 +35,6 @@ describe('ResourceCardComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         ResourceCardComponent,
-        OSFTestingModule,
         ...MockComponents(
           DataResourcesComponent,
           UserSecondaryMetadataComponent,
@@ -46,6 +45,7 @@ describe('ResourceCardComponent', () => {
         ),
       ],
       providers: [
+        provideOSFCore(),
         MockProvider(ResourceCardService, {
           getUserRelatedCounts: jest.fn().mockReturnValue(of(mockUserCounts)),
         }),

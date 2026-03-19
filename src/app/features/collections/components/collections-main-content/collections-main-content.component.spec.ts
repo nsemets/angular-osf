@@ -13,7 +13,7 @@ import { CollectionsMainContentComponent } from './collections-main-content.comp
 
 import { MOCK_COLLECTIONS_SELECTED_FILTERS } from '@testing/mocks/collections-filters.mock';
 import { MOCK_COLLECTION_SUBMISSIONS } from '@testing/mocks/collections-submissions.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('CollectionsMainContentComponent', () => {
@@ -32,9 +32,9 @@ describe('CollectionsMainContentComponent', () => {
           CollectionsFiltersComponent,
           CollectionsSearchResultsComponent
         ),
-        OSFTestingModule,
       ],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             { selector: CollectionsSelectors.getSortBy, value: 'date' },

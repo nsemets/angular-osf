@@ -10,7 +10,7 @@ import { StopPropagationDirective } from '@osf/shared/directives/stop-propagatio
 
 import { AdminTableComponent } from './admin-table.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('AdminTableComponent', () => {
   let component: AdminTableComponent;
@@ -21,11 +21,11 @@ describe('AdminTableComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         AdminTableComponent,
-        OSFTestingModule,
         MockComponent(CustomPaginatorComponent),
         MockPipe(DatePipe),
         MockDirective(StopPropagationDirective),
       ],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AdminTableComponent);

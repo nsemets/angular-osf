@@ -1,6 +1,5 @@
 import { of } from 'rxjs';
 
-import { runInInjectionContext } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
@@ -66,7 +65,7 @@ describe('registrationModerationGuard', () => {
 
     router = TestBed.inject(Router);
 
-    const result = runInInjectionContext(TestBed, () =>
+    const result = TestBed.runInInjectionContext(() =>
       registrationModerationGuard({ params: { providerId: 'provider-123' } } as any, {} as any)
     );
 
@@ -96,7 +95,7 @@ describe('registrationModerationGuard', () => {
 
     router = TestBed.inject(Router);
 
-    const result = runInInjectionContext(TestBed, () =>
+    const result = TestBed.runInInjectionContext(() =>
       registrationModerationGuard({ params: { providerId: 'provider-123' } } as any, {} as any)
     );
 
@@ -139,7 +138,7 @@ describe('registrationModerationGuard', () => {
 
     router = TestBed.inject(Router);
 
-    const result = runInInjectionContext(TestBed, () =>
+    const result = TestBed.runInInjectionContext(() =>
       registrationModerationGuard({ params: { providerId: 'provider-123' } } as any, {} as any)
     );
 

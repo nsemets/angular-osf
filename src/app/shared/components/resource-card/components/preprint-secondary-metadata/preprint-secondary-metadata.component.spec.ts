@@ -6,7 +6,7 @@ import { ResourceModel } from '@shared/models/search/resource.model';
 import { PreprintSecondaryMetadataComponent } from './preprint-secondary-metadata.component';
 
 import { MOCK_RESOURCE } from '@testing/mocks/resource.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('PreprintSecondaryMetadataComponent', () => {
   let component: PreprintSecondaryMetadataComponent;
@@ -19,7 +19,8 @@ describe('PreprintSecondaryMetadataComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PreprintSecondaryMetadataComponent, OSFTestingModule],
+      imports: [PreprintSecondaryMetadataComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PreprintSecondaryMetadataComponent);

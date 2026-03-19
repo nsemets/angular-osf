@@ -13,7 +13,7 @@ import { CollectionsSelectors } from '@osf/shared/stores/collections';
 
 import { MakeDecisionDialogComponent } from './make-decision-dialog.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('MakeDecisionDialogComponent', () => {
@@ -42,9 +42,10 @@ describe('MakeDecisionDialogComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [MakeDecisionDialogComponent, OSFTestingModule],
+      imports: [MakeDecisionDialogComponent],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             { selector: CollectionsSelectors.getCollectionProvider, value: signal(mockCollectionProvider) },

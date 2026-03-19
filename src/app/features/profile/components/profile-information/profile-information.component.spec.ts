@@ -3,6 +3,7 @@ import { MockComponents, MockProvider } from 'ng-mocks';
 import { of } from 'rxjs';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
 
 import { EducationHistoryComponent } from '@osf/shared/components/education-history/education-history.component';
 import { EmploymentHistoryComponent } from '@osf/shared/components/employment-history/employment-history.component';
@@ -16,7 +17,7 @@ import { ProfileInformationComponent } from './profile-information.component';
 import { MOCK_USER } from '@testing/mocks/data.mock';
 import { MOCK_INSTITUTION } from '@testing/mocks/institution.mock';
 import { MOCK_EDUCATION, MOCK_EMPLOYMENT } from '@testing/mocks/user-employment-education.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('ProfileInformationComponent', () => {
   let component: ProfileInformationComponent;
@@ -26,12 +27,8 @@ describe('ProfileInformationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        ProfileInformationComponent,
-        OSFTestingModule,
-        ...MockComponents(EmploymentHistoryComponent, EducationHistoryComponent),
-      ],
-      providers: [MockProvider(IS_MEDIUM, of(false))],
+      imports: [ProfileInformationComponent, ...MockComponents(EmploymentHistoryComponent, EducationHistoryComponent)],
+      providers: [provideOSFCore(), MockProvider(ActivatedRoute), MockProvider(IS_MEDIUM, of(false))],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProfileInformationComponent);

@@ -8,7 +8,7 @@ import {
 
 import { FilterChipsComponent } from './filter-chips.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('FilterChipsComponent', () => {
   let component: FilterChipsComponent;
@@ -39,7 +39,8 @@ describe('FilterChipsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FilterChipsComponent, OSFTestingModule],
+      imports: [FilterChipsComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FilterChipsComponent);

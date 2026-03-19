@@ -21,7 +21,7 @@ import { AddComponentDialogComponent } from '../add-component-dialog/add-compone
 import { OverviewComponentsComponent } from './overview-components.component';
 
 import { MOCK_NODE_WITH_ADMIN } from '@testing/mocks/node.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
 import { LoaderServiceMock } from '@testing/providers/loader-service.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
@@ -62,12 +62,9 @@ describe('ProjectComponentsComponent', () => {
     toastService = { showSuccess: jest.fn() } as unknown as jest.Mocked<ToastService>;
 
     await TestBed.configureTestingModule({
-      imports: [
-        OverviewComponentsComponent,
-        OSFTestingModule,
-        ...MockComponents(IconComponent, ContributorsListComponent),
-      ],
+      imports: [OverviewComponentsComponent, ...MockComponents(IconComponent, ContributorsListComponent)],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             { selector: ProjectOverviewSelectors.getComponents, value: mockComponents },

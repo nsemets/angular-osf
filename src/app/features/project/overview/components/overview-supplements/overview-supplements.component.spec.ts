@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { OverviewSupplementsComponent } from './overview-supplements.component';
 
 import { MOCK_NODE_PREPRINTS } from '@testing/mocks/node-preprint.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('OverviewSupplementsComponent', () => {
   let component: OverviewSupplementsComponent;
@@ -11,7 +11,8 @@ describe('OverviewSupplementsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OverviewSupplementsComponent, OSFTestingModule],
+      imports: [OverviewSupplementsComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(OverviewSupplementsComponent);

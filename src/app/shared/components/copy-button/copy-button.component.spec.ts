@@ -7,7 +7,7 @@ import { ToastService } from '@osf/shared/services/toast.service';
 
 import { CopyButtonComponent } from './copy-button.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('CopyButtonComponent', () => {
   let component: CopyButtonComponent;
@@ -17,8 +17,8 @@ describe('CopyButtonComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CopyButtonComponent, OSFTestingModule],
-      providers: [MockProviders(Clipboard, ToastService)],
+      imports: [CopyButtonComponent],
+      providers: [provideOSFCore(), MockProviders(Clipboard, ToastService)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CopyButtonComponent);

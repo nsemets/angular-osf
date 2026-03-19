@@ -6,6 +6,8 @@ import { SelectComponent } from '../select/select.component';
 
 import { FileSelectDestinationComponent } from './file-select-destination.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 describe.skip('FileSelectDestinationComponent', () => {
   let component: FileSelectDestinationComponent;
   let fixture: ComponentFixture<FileSelectDestinationComponent>;
@@ -13,6 +15,7 @@ describe.skip('FileSelectDestinationComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [FileSelectDestinationComponent, MockComponent(SelectComponent)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FileSelectDestinationComponent);

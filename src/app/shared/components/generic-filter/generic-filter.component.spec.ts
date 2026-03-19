@@ -10,7 +10,7 @@ import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.comp
 
 import { GenericFilterComponent } from './generic-filter.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('GenericFilterComponent', () => {
   let component: GenericFilterComponent;
@@ -25,7 +25,8 @@ describe('GenericFilterComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GenericFilterComponent, OSFTestingModule, MockComponent(LoadingSpinnerComponent)],
+      imports: [GenericFilterComponent, MockComponent(LoadingSpinnerComponent)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(GenericFilterComponent);

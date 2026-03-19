@@ -11,7 +11,7 @@ import { ProjectDetailSettingAccordionComponent } from '../project-detail-settin
 import { ProjectSettingNotificationsComponent } from './project-setting-notifications.component';
 
 import { MOCK_NOTIFICATION_SUBSCRIPTIONS } from '@testing/mocks/notification-subscription.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('ProjectSettingNotificationsComponent', () => {
   let component: ProjectSettingNotificationsComponent;
@@ -23,10 +23,10 @@ describe('ProjectSettingNotificationsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         ProjectSettingNotificationsComponent,
-        OSFTestingModule,
         MockComponent(ProjectDetailSettingAccordionComponent),
         MockPipe(NotificationDescriptionPipe),
       ],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProjectSettingNotificationsComponent);

@@ -17,7 +17,7 @@ import { StatusBadgeComponent } from '../status-badge/status-badge.component';
 import { RegistrationCardComponent } from './registration-card.component';
 
 import { MOCK_REGISTRATION } from '@testing/mocks/registration.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('RegistrationCardComponent', () => {
@@ -30,10 +30,10 @@ describe('RegistrationCardComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         RegistrationCardComponent,
-        OSFTestingModule,
         ...MockComponents(StatusBadgeComponent, DataResourcesComponent, IconComponent, ContributorsListComponent),
       ],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [{ selector: RegistriesSelectors.getSchemaResponse, value: signal(null) }],
         }),

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SettingsAccessRequestsCardComponent } from './settings-access-requests-card.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('SettingsAccessRequestsCardComponent', () => {
   let component: SettingsAccessRequestsCardComponent;
@@ -10,7 +10,8 @@ describe('SettingsAccessRequestsCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SettingsAccessRequestsCardComponent, OSFTestingModule],
+      imports: [SettingsAccessRequestsCardComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SettingsAccessRequestsCardComponent);

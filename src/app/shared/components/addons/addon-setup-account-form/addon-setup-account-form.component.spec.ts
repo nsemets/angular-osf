@@ -10,7 +10,7 @@ import { AddonSetupAccountFormComponent } from './addon-setup-account-form.compo
 
 import { MOCK_ADDON } from '@testing/mocks/addon.mock';
 import { MOCK_USER } from '@testing/mocks/data.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('AddonSetupAccountFormComponent', () => {
   let component: AddonSetupAccountFormComponent;
@@ -24,8 +24,8 @@ describe('AddonSetupAccountFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AddonSetupAccountFormComponent, OSFTestingModule],
-      providers: [MockProvider(AddonFormService, mockAddonFormService)],
+      imports: [AddonSetupAccountFormComponent],
+      providers: [provideOSFCore(), MockProvider(AddonFormService, mockAddonFormService)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AddonSetupAccountFormComponent);

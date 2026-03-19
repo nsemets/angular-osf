@@ -5,6 +5,7 @@ import { IdentifierModel } from '@osf/shared/models/identifiers/identifier.model
 import { ResourceDoiComponent } from './resource-doi.component';
 
 import { MOCK_PROJECT_IDENTIFIERS } from '@testing/mocks/project-overview.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('ResourceDoiComponent', () => {
   let component: ResourceDoiComponent;
@@ -23,6 +24,7 @@ describe('ResourceDoiComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ResourceDoiComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ResourceDoiComponent);

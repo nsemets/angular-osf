@@ -1,6 +1,5 @@
 import { MockComponents } from 'ng-mocks';
 
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CedarTemplateFormComponent } from '@osf/features/metadata/components';
@@ -14,7 +13,7 @@ import { MetadataTabsComponent } from './metadata-tabs.component';
 
 import { CEDAR_METADATA_DATA_TEMPLATE_JSON_API_MOCK } from '@testing/mocks/cedar-metadata-data-template-json-api.mock';
 import { MOCK_CEDAR_METADATA_RECORD_DATA } from '@testing/mocks/cedar-metadata-record.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('MetadataTabsComponent', () => {
   let component: MetadataTabsComponent;
@@ -32,12 +31,8 @@ describe('MetadataTabsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        MetadataTabsComponent,
-        OSFTestingModule,
-        ...MockComponents(LoadingSpinnerComponent, CedarTemplateFormComponent),
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
+      imports: [MetadataTabsComponent, ...MockComponents(LoadingSpinnerComponent, CedarTemplateFormComponent)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MetadataTabsComponent);

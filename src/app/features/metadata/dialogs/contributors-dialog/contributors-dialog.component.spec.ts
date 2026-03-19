@@ -5,7 +5,9 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 import { ContributorsSelectors } from '@osf/shared/stores/contributors';
 import { ContributorsTableComponent } from '@shared/components/contributors';
 import { ContributorModel } from '@shared/models/contributors/contributor.model';
@@ -13,9 +15,7 @@ import { ContributorModel } from '@shared/models/contributors/contributor.model'
 import { ContributorsDialogComponent } from './contributors-dialog.component';
 
 import { MOCK_CONTRIBUTOR } from '@testing/mocks/contributors.mock';
-import { MockCustomConfirmationServiceProvider } from '@testing/mocks/custom-confirmation.service.mock';
-import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
@@ -32,14 +32,9 @@ describe('ContributorsDialogComponent', () => {
     mockCustomDialogService = CustomDialogServiceMockBuilder.create().build();
 
     await TestBed.configureTestingModule({
-      imports: [
-        ContributorsDialogComponent,
-        OSFTestingModule,
-        ...MockComponents(SearchInputComponent, ContributorsTableComponent),
-      ],
+      imports: [ContributorsDialogComponent, ...MockComponents(SearchInputComponent, ContributorsTableComponent)],
       providers: [
-        TranslateServiceMock,
-        MockCustomConfirmationServiceProvider,
+        provideOSFCore(),
         provideMockStore({
           signals: [
             { selector: ContributorsSelectors.getContributors, value: mockContributors },
@@ -47,6 +42,8 @@ describe('ContributorsDialogComponent', () => {
             { selector: ContributorsSelectors.getContributorsTotalCount, value: mockContributors },
           ],
         }),
+        MockProvider(CustomConfirmationService),
+        MockProvider(ToastService),
         MockProvider(CustomDialogService, mockCustomDialogService),
         MockProvider(DynamicDialogConfig, {
           data: {

@@ -20,10 +20,10 @@ import { CurrentResourceSelectors } from '@osf/shared/stores/current-resource';
 import { GetProjectById, GetProjectIdentifiers, GetProjectLicense, ProjectOverviewSelectors } from './overview/store';
 import { ProjectComponent } from './project.component';
 
-import { DataciteMockFactory } from '@testing/mocks/datacite.service.mock';
 import { MOCK_PROJECT_OVERVIEW } from '@testing/mocks/project-overview.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { AnalyticsServiceMockFactory } from '@testing/providers/analytics.service.mock';
+import { DataciteServiceMock } from '@testing/providers/datacite.service.mock';
 import { HelpScoutServiceMockFactory } from '@testing/providers/help-scout.service.mock';
 import { MetaTagsServiceMockFactory } from '@testing/providers/meta-tags.service.mock';
 import { MetaTagsBuilderServiceMockFactory } from '@testing/providers/meta-tags-builder.service.mock';
@@ -51,7 +51,7 @@ function setup(overrides: SetupOverrides = {}) {
   const analyticsService = AnalyticsServiceMockFactory();
   const metaTagsService = MetaTagsServiceMockFactory();
   const metaTagsBuilderService = MetaTagsBuilderServiceMockFactory();
-  const dataciteService = DataciteMockFactory();
+  const dataciteService = DataciteServiceMock.simple();
   const prerenderReadyService = PrerenderReadyServiceMockFactory();
   const routerBuilder = RouterMockBuilder.create();
   const routerMock = routerBuilder.build();

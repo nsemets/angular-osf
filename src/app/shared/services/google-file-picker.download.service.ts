@@ -26,7 +26,7 @@ export class GoogleFilePickerDownloadService {
    *
    * @returns Observable that emits once the script is loaded, or errors if loading fails.
    */
-  public loadScript(): Observable<void> {
+  loadScript(): Observable<void> {
     return new Observable<void>((observer: Subscriber<void>) => {
       const existingScript = this.document.querySelector(`script[src="${this.scriptUrl}"]`);
       if (existingScript || this.scriptLoaded) {
@@ -52,7 +52,7 @@ export class GoogleFilePickerDownloadService {
   /**
    * Loads GAPI modules (client:picker).
    */
-  public loadGapiModules(): Observable<void> {
+  loadGapiModules(): Observable<void> {
     return new Observable((observer: Subscriber<void>) => {
       if (!isPlatformBrowser(this.platformId) || !window.gapi) {
         observer.error('GAPI not available');

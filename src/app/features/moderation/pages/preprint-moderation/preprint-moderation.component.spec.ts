@@ -13,9 +13,10 @@ import { PreprintModerationTab } from '../../enums';
 
 import { PreprintModerationComponent } from './preprint-moderation.component';
 
-import { OSFTestingStoreModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
+import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('PreprintModerationComponent', () => {
   let component: PreprintModerationComponent;
@@ -24,7 +25,7 @@ describe('PreprintModerationComponent', () => {
   let mockRouter: ReturnType<RouterMockBuilder['build']>;
   let mockActivatedRoute: ReturnType<ActivatedRouteMockBuilder['build']>;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     isMediumSubject = new BehaviorSubject<boolean>(true);
     mockRouter = RouterMockBuilder.create().build();
     mockActivatedRoute = ActivatedRouteMockBuilder.create()
@@ -32,18 +33,16 @@ describe('PreprintModerationComponent', () => {
       .withData({ tab: PreprintModerationTab.Submissions })
       .build();
 
-    await TestBed.configureTestingModule({
-      imports: [
-        PreprintModerationComponent,
-        OSFTestingStoreModule,
-        ...MockComponents(SubHeaderComponent, SelectComponent),
-      ],
+    TestBed.configureTestingModule({
+      imports: [PreprintModerationComponent, ...MockComponents(SubHeaderComponent, SelectComponent)],
       providers: [
+        provideOSFCore(),
+        provideMockStore(),
         MockProvider(ActivatedRoute, mockActivatedRoute),
         MockProvider(Router, mockRouter),
         MockProvider(IS_MEDIUM, isMediumSubject),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(PreprintModerationComponent);
     component = fixture.componentInstance;
@@ -76,12 +75,9 @@ describe('PreprintModerationComponent', () => {
     });
 
     await TestBed.configureTestingModule({
-      imports: [
-        PreprintModerationComponent,
-        OSFTestingStoreModule,
-        ...MockComponents(SubHeaderComponent, SelectComponent),
-      ],
+      imports: [PreprintModerationComponent, ...MockComponents(SubHeaderComponent, SelectComponent)],
       providers: [
+        provideOSFCore(),
         MockProvider(ActivatedRoute, routeWithFirstChild),
         MockProvider(Router, mockRouter),
         MockProvider(IS_MEDIUM, isMediumSubject),
@@ -162,12 +158,9 @@ describe('PreprintModerationComponent', () => {
     });
 
     await TestBed.configureTestingModule({
-      imports: [
-        PreprintModerationComponent,
-        OSFTestingStoreModule,
-        ...MockComponents(SubHeaderComponent, SelectComponent),
-      ],
+      imports: [PreprintModerationComponent, ...MockComponents(SubHeaderComponent, SelectComponent)],
       providers: [
+        provideOSFCore(),
         MockProvider(ActivatedRoute, routeWithoutFirstChild),
         MockProvider(Router, mockRouter),
         MockProvider(IS_MEDIUM, isMediumSubject),

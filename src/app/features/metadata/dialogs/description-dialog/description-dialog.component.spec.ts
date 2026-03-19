@@ -6,7 +6,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DescriptionDialogComponent } from './description-dialog.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('DescriptionDialogComponent', () => {
   let component: DescriptionDialogComponent;
@@ -14,8 +14,8 @@ describe('DescriptionDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DescriptionDialogComponent, OSFTestingModule],
-      providers: [MockProvider(DynamicDialogRef), MockProvider(DynamicDialogConfig)],
+      imports: [DescriptionDialogComponent],
+      providers: [provideOSFCore(), MockProvider(DynamicDialogRef), MockProvider(DynamicDialogConfig)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DescriptionDialogComponent);

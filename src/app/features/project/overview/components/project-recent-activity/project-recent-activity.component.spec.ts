@@ -8,7 +8,7 @@ import { ActivityLogsSelectors, ClearActivityLogs } from '@osf/shared/stores/act
 import { ProjectRecentActivityComponent } from './project-recent-activity.component';
 
 import { MOCK_ACTIVITY_LOGS_WITH_DISPLAY } from '@testing/mocks/activity-log-with-display.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('ProjectRecentActivityComponent', () => {
@@ -18,8 +18,9 @@ describe('ProjectRecentActivityComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProjectRecentActivityComponent, OSFTestingModule],
+      imports: [ProjectRecentActivityComponent],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             { selector: ActivityLogsSelectors.getActivityLogs, value: [] },
@@ -134,8 +135,9 @@ describe('ProjectRecentActivityComponent', () => {
   it('should return activity logs from selector', () => {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
-      imports: [ProjectRecentActivityComponent, OSFTestingModule],
+      imports: [ProjectRecentActivityComponent],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             { selector: ActivityLogsSelectors.getActivityLogs, value: MOCK_ACTIVITY_LOGS_WITH_DISPLAY },
@@ -156,8 +158,9 @@ describe('ProjectRecentActivityComponent', () => {
   it('should return totalCount from selector', () => {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
-      imports: [ProjectRecentActivityComponent, OSFTestingModule],
+      imports: [ProjectRecentActivityComponent],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             { selector: ActivityLogsSelectors.getActivityLogs, value: [] },
@@ -178,8 +181,9 @@ describe('ProjectRecentActivityComponent', () => {
   it('should return isLoading from selector', () => {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
-      imports: [ProjectRecentActivityComponent, OSFTestingModule],
+      imports: [ProjectRecentActivityComponent],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             { selector: ActivityLogsSelectors.getActivityLogs, value: [] },

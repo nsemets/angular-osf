@@ -15,7 +15,7 @@ import { SelectComponent } from '../../select/select.component';
 import { ContributorsTableComponent } from './contributors-table.component';
 
 import { MOCK_CONTRIBUTOR, MOCK_CONTRIBUTOR_WITHOUT_HISTORY } from '@testing/mocks/contributors.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { DialogServiceMockBuilder } from '@testing/providers/dialog-provider.mock';
 
 describe('ContributorsTableComponent', () => {
@@ -38,12 +38,8 @@ describe('ContributorsTableComponent', () => {
     mockDialogService = DialogServiceMockBuilder.create().withOpenMock().build();
 
     await TestBed.configureTestingModule({
-      imports: [
-        ContributorsTableComponent,
-        OSFTestingModule,
-        ...MockComponents(SelectComponent, IconComponent, InfoIconComponent),
-      ],
-      providers: [MockProvider(DialogService, mockDialogService)],
+      imports: [ContributorsTableComponent, ...MockComponents(SelectComponent, IconComponent, InfoIconComponent)],
+      providers: [provideOSFCore(), MockProvider(DialogService, mockDialogService)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ContributorsTableComponent);

@@ -3,7 +3,7 @@ import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 export const provideTranslation = provideTranslateService({
   loader: provideTranslateHttpLoader({
-    prefix: './assets/i18n/',
+    prefix: '/assets/i18n/',
     suffix: '.json',
   }),
   lang: 'en',

@@ -3,7 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 
 import { PasswordInputHintComponent } from './password-input-hint.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('PasswordInputHintComponent', () => {
   let component: PasswordInputHintComponent;
@@ -11,7 +11,8 @@ describe('PasswordInputHintComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PasswordInputHintComponent, OSFTestingModule],
+      imports: [PasswordInputHintComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasswordInputHintComponent);

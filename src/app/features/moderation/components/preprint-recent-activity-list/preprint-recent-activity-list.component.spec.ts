@@ -10,7 +10,7 @@ import { PreprintReviewActionModel } from '../../models';
 import { PreprintRecentActivityListComponent } from './preprint-recent-activity-list.component';
 
 import { MOCK_PREPRINT_REVIEW_ACTIONS } from '@testing/mocks/preprint-review-action.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('PreprintRecentActivityListComponent', () => {
   let component: PreprintRecentActivityListComponent;
@@ -20,11 +20,8 @@ describe('PreprintRecentActivityListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        PreprintRecentActivityListComponent,
-        OSFTestingModule,
-        ...MockComponents(IconComponent, CustomPaginatorComponent),
-      ],
+      imports: [PreprintRecentActivityListComponent, ...MockComponents(IconComponent, CustomPaginatorComponent)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PreprintRecentActivityListComponent);

@@ -16,7 +16,7 @@ import { CollectionsModerationSelectors } from '../../store/collections-moderati
 import { CollectionModerationSubmissionsComponent } from './collection-moderation-submissions.component';
 
 import { MOCK_PROVIDER } from '@testing/mocks/provider.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
@@ -45,7 +45,6 @@ describe('CollectionModerationSubmissionsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         CollectionModerationSubmissionsComponent,
-        OSFTestingModule,
         ...MockComponents(
           SelectComponent,
           CollectionSubmissionsListComponent,
@@ -55,6 +54,7 @@ describe('CollectionModerationSubmissionsComponent', () => {
         ),
       ],
       providers: [
+        provideOSFCore(),
         MockProvider(Router, mockRouter),
         MockProvider(ActivatedRoute, mockActivatedRoute),
         provideMockStore({

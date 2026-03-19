@@ -6,14 +6,17 @@ import { NavMenuComponent } from '../nav-menu/nav-menu.component';
 
 import { SidenavComponent } from './sidenav.component';
 
-describe('SidenavDComponent', () => {
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
+describe('SidenavComponent', () => {
   let component: SidenavComponent;
   let fixture: ComponentFixture<SidenavComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [SidenavComponent, MockComponent(NavMenuComponent)],
-    }).compileComponents();
+      providers: [provideOSFCore()],
+    });
 
     fixture = TestBed.createComponent(SidenavComponent);
     component = fixture.componentInstance;

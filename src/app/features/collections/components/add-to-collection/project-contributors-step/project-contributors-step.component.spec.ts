@@ -12,7 +12,7 @@ import { ProjectsSelectors } from '@shared/stores/projects/projects.selectors';
 
 import { ProjectContributorsStepComponent } from './project-contributors-step.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomConfirmationServiceMockBuilder } from '@testing/providers/custom-confirmation-provider.mock';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
@@ -31,12 +31,9 @@ describe.skip('ProjectContributorsStepComponent', () => {
     mockCustomDialogService = CustomDialogServiceMockBuilder.create().build();
 
     await TestBed.configureTestingModule({
-      imports: [
-        ProjectContributorsStepComponent,
-        OSFTestingModule,
-        ...MockComponents(ContributorsTableComponent, InfoIconComponent),
-      ],
+      imports: [ProjectContributorsStepComponent, ...MockComponents(ContributorsTableComponent, InfoIconComponent)],
       providers: [
+        provideOSFCore(),
         MockProvider(ToastService, toastServiceMock),
         MockProvider(CustomConfirmationService, customConfirmationServiceMock),
         MockProvider(CustomDialogService, mockCustomDialogService),

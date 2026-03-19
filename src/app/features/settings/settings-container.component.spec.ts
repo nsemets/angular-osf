@@ -5,7 +5,7 @@ import { HelpScoutService } from '@core/services/help-scout.service';
 
 import { SettingsContainerComponent } from './settings-container.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('Component: Settings', () => {
   let fixture: ComponentFixture<SettingsContainerComponent>;
@@ -13,8 +13,9 @@ describe('Component: Settings', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SettingsContainerComponent, OSFTestingModule],
+      imports: [SettingsContainerComponent],
       providers: [
+        provideOSFCore(),
         {
           provide: HelpScoutService,
           useValue: {

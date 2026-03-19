@@ -11,7 +11,7 @@ import { SettingsSelectors } from '../../store';
 
 import { DeleteProjectDialogComponent } from './delete-project-dialog.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('DeleteProjectDialogComponent', () => {
@@ -20,8 +20,9 @@ describe('DeleteProjectDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DeleteProjectDialogComponent, OSFTestingModule],
+      imports: [DeleteProjectDialogComponent],
       providers: [
+        provideOSFCore(),
         MockProvider(ToastService),
         MockProvider(DynamicDialogRef),
         provideMockStore({

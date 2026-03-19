@@ -14,7 +14,7 @@ import { AddonsSelectors } from '@shared/stores/addons';
 
 import { SettingsAddonsComponent } from './settings-addons.component';
 
-import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe.skip('AddonsComponent', () => {
   let component: SettingsAddonsComponent;
@@ -33,7 +33,7 @@ describe.skip('AddonsComponent', () => {
         ),
       ],
       providers: [
-        TranslateServiceMock,
+        provideOSFCore(),
         MockProvider(Store, {
           selectSignal: jest.fn().mockImplementation((selector) => {
             if (selector === UserSelectors.getCurrentUser) {

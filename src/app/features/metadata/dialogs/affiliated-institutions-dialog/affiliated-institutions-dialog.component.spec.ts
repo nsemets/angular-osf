@@ -11,8 +11,7 @@ import { InstitutionsSelectors } from '@osf/shared/stores/institutions';
 import { AffiliatedInstitutionsDialogComponent } from './affiliated-institutions-dialog.component';
 
 import { MOCK_INSTITUTION } from '@testing/mocks/institution.mock';
-import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('AffiliatedInstitutionsDialogComponent', () => {
@@ -24,13 +23,9 @@ describe('AffiliatedInstitutionsDialogComponent', () => {
   const mockInstitutions: Institution[] = [MOCK_INSTITUTION];
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        AffiliatedInstitutionsDialogComponent,
-        OSFTestingModule,
-        MockComponent(AffiliatedInstitutionSelectComponent),
-      ],
+      imports: [AffiliatedInstitutionsDialogComponent, MockComponent(AffiliatedInstitutionSelectComponent)],
       providers: [
-        TranslateServiceMock,
+        provideOSFCore(),
         MockProviders(DynamicDialogRef, DynamicDialogConfig),
         provideMockStore({
           signals: [

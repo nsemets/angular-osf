@@ -34,7 +34,7 @@ import {
   MOCK_ADMIN_INSTITUTIONS_PREPRINT_RESOURCE,
   MOCK_ADMIN_INSTITUTIONS_PREPRINT_RESOURCES,
 } from '@testing/mocks/admin-institutions.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 jest.mock('@osf/features/admin-institutions/helpers', () => ({
@@ -72,12 +72,9 @@ describe('InstitutionsPreprintsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        InstitutionsPreprintsComponent,
-        OSFTestingModule,
-        ...MockComponents(AdminTableComponent, FiltersSectionComponent),
-      ],
+      imports: [InstitutionsPreprintsComponent, ...MockComponents(AdminTableComponent, FiltersSectionComponent)],
       providers: [
+        provideOSFCore(),
         MockProviders(Router),
         {
           provide: ActivatedRoute,

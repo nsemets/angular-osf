@@ -4,7 +4,7 @@ import { ContributorAddModel } from '@osf/shared/models/contributors/contributor
 
 import { AddContributorItemComponent } from './add-contributor-item.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('AddContributorItemComponent', () => {
   let component: AddContributorItemComponent;
@@ -20,7 +20,8 @@ describe('AddContributorItemComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AddContributorItemComponent, OSFTestingModule],
+      imports: [AddContributorItemComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AddContributorItemComponent);

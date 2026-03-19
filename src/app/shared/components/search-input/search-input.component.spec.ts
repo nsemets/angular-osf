@@ -7,6 +7,8 @@ import { IconComponent } from '../icon/icon.component';
 
 import { SearchInputComponent } from './search-input.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 describe('SearchInputComponent', () => {
   let component: SearchInputComponent;
   let fixture: ComponentFixture<SearchInputComponent>;
@@ -14,6 +16,7 @@ describe('SearchInputComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SearchInputComponent, MockComponent(IconComponent)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SearchInputComponent);

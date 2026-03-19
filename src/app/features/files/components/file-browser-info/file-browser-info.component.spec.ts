@@ -6,7 +6,7 @@ import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 
 import { FileBrowserInfoComponent } from './file-browser-info.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('FileBrowserInfoComponent', () => {
   let component: FileBrowserInfoComponent;
@@ -24,8 +24,9 @@ describe('FileBrowserInfoComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [FileBrowserInfoComponent, OSFTestingModule],
+      imports: [FileBrowserInfoComponent],
       providers: [
+        provideOSFCore(),
         { provide: DynamicDialogRef, useValue: dialogRefMock },
         { provide: DynamicDialogConfig, useValue: dialogConfigMock },
       ],

@@ -8,7 +8,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { PLATFORM_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
-import { provideServerRendering } from '@angular/ssr';
 
 import { HelpScoutService } from '@core/services/help-scout.service';
 import { PrerenderReadyService } from '@core/services/prerender-ready.service';
@@ -48,13 +47,13 @@ import { CreateNewVersion } from '../../store/preprint-stepper';
 import { PreprintDetailsComponent } from './preprint-details.component';
 
 import { MOCK_CONTRIBUTOR } from '@testing/mocks/contributors.mock';
-import { DataciteMockFactory } from '@testing/mocks/datacite.service.mock';
 import { PREPRINT_MOCK } from '@testing/mocks/preprint.mock';
 import { PREPRINT_PROVIDER_DETAILS_MOCK } from '@testing/mocks/preprint-provider-details';
 import { PREPRINT_REQUEST_MOCK } from '@testing/mocks/preprint-request.mock';
 import { REVIEW_ACTION_MOCK } from '@testing/mocks/review-action.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
+import { DataciteServiceMock, DataciteServiceMockType } from '@testing/providers/datacite.service.mock';
 import { HelpScoutServiceMockFactory } from '@testing/providers/help-scout.service.mock';
 import { MetaTagsServiceMockFactory } from '@testing/providers/meta-tags.service.mock';
 import { MetaTagsBuilderServiceMockFactory } from '@testing/providers/meta-tags-builder.service.mock';
@@ -71,7 +70,7 @@ describe('PreprintDetailsComponent', () => {
   let routerMock: RouterMockType;
   let helpScoutServiceMock: jest.Mocked<HelpScoutService>;
   let prerenderReadyServiceMock: jest.Mocked<PrerenderReadyService>;
-  let dataciteServiceMock: ReturnType<typeof DataciteMockFactory>;
+  let dataciteServiceMock: DataciteServiceMockType;
   let metaTagsServiceMock: ReturnType<typeof MetaTagsServiceMockFactory>;
   let metaTagsBuilderServiceMock: ReturnType<typeof MetaTagsBuilderServiceMockFactory>;
   let customDialogServiceMock: ReturnType<CustomDialogServiceMockBuilder['build']>;
@@ -124,7 +123,7 @@ describe('PreprintDetailsComponent', () => {
       .build();
     helpScoutServiceMock = HelpScoutServiceMockFactory();
     prerenderReadyServiceMock = PrerenderReadyServiceMockFactory();
-    dataciteServiceMock = DataciteMockFactory();
+    dataciteServiceMock = DataciteServiceMock.simple();
     metaTagsServiceMock = MetaTagsServiceMockFactory();
     metaTagsBuilderServiceMock = MetaTagsBuilderServiceMockFactory();
     metaTagsBuilderServiceMock.buildPreprintMetaTagsData.mockImplementation(
@@ -548,14 +547,13 @@ describe('PreprintDetailsComponent SSR', () => {
         ),
       ],
       providers: [
-        provideServerRendering(),
         provideOSFCore(),
         MockProvider(PLATFORM_ID, 'server'),
         MockProvider(ToastService, ToastServiceMock.simple()),
         MockProvider(ActivatedRoute, activatedRouteMock),
         MockProvider(Router, routerMock),
         MockProvider(CustomDialogService, CustomDialogServiceMockBuilder.create().withDefaultOpen().build()),
-        MockProvider(DataciteService, DataciteMockFactory()),
+        MockProvider(DataciteService, DataciteServiceMock.simple()),
         MockProvider(MetaTagsBuilderService, MetaTagsBuilderServiceMockFactory()),
         MockProvider(MetaTagsService, MetaTagsServiceMockFactory()),
         MockProvider(PrerenderReadyService, PrerenderReadyServiceMockFactory()),

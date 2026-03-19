@@ -9,7 +9,7 @@ import { ToastService } from '@osf/shared/services/toast.service';
 import { AddToCollectionConfirmationDialogComponent } from './add-to-collection-confirmation-dialog.component';
 
 import { MOCK_PROJECT } from '@testing/mocks/project.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('AddToCollectionConfirmationDialogComponent', () => {
@@ -37,12 +37,13 @@ describe('AddToCollectionConfirmationDialogComponent', () => {
     createCollectionSubmission = jest.fn().mockReturnValue(of(null));
 
     await TestBed.configureTestingModule({
-      imports: [AddToCollectionConfirmationDialogComponent, OSFTestingModule],
+      imports: [AddToCollectionConfirmationDialogComponent],
       providers: [
+        provideOSFCore(),
         { provide: DynamicDialogRef, useValue: dialogRef },
         { provide: ToastService, useValue: toastService },
         { provide: DynamicDialogConfig, useValue: { data: configData } },
-        provideMockStore({ signals: [] }),
+        provideMockStore(),
       ],
     }).compileComponents();
 

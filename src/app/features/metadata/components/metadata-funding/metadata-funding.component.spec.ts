@@ -5,7 +5,7 @@ import { Funder } from '@osf/features/metadata/models';
 import { MetadataFundingComponent } from './metadata-funding.component';
 
 import { MOCK_FUNDERS } from '@testing/mocks/funder.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('MetadataFundingComponent', () => {
   let component: MetadataFundingComponent;
@@ -15,7 +15,8 @@ describe('MetadataFundingComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MetadataFundingComponent, OSFTestingModule],
+      imports: [MetadataFundingComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MetadataFundingComponent);

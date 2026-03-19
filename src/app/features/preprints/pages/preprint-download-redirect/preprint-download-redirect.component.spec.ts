@@ -15,19 +15,8 @@ const MOCK_ID = 'test-preprint-id';
 const MOCK_DOWNLOAD_URL = 'https://osf.io/download/test-preprint-id';
 
 describe('PreprintDownloadRedirectComponent', () => {
-  let locationReplaceMock: jest.Mock;
-
-  beforeEach(() => {
-    locationReplaceMock = jest.fn();
-    Object.defineProperty(window, 'location', {
-      value: { replace: locationReplaceMock },
-      writable: true,
-      configurable: true,
-    });
-  });
-
   function setup(overrides: { id?: string | null; isBrowser?: boolean } = {}) {
-    const { id = MOCK_ID, isBrowser = true } = overrides;
+    const { id = null, isBrowser = true } = overrides;
 
     const mockRoute = ActivatedRouteMockBuilder.create()
       .withParams(id ? { id } : {})
@@ -63,20 +52,32 @@ describe('PreprintDownloadRedirectComponent', () => {
   });
 
   it('should redirect to download URL when id is present in browser', () => {
+    const redirectSpy = jest
+      .spyOn(PreprintDownloadRedirectComponent.prototype, 'redirect')
+      .mockImplementation(jest.fn());
     const { mockSocialShareService } = setup({ id: MOCK_ID });
     expect(mockSocialShareService.createDownloadUrl).toHaveBeenCalledWith(MOCK_ID);
-    expect(locationReplaceMock).toHaveBeenCalledWith(MOCK_DOWNLOAD_URL);
+    expect(redirectSpy).toHaveBeenCalledWith(MOCK_DOWNLOAD_URL);
+    redirectSpy.mockRestore();
   });
 
   it('should not redirect when id is missing', () => {
+    const redirectSpy = jest
+      .spyOn(PreprintDownloadRedirectComponent.prototype, 'redirect')
+      .mockImplementation(jest.fn());
     const { mockSocialShareService } = setup({ id: null });
     expect(mockSocialShareService.createDownloadUrl).not.toHaveBeenCalled();
-    expect(locationReplaceMock).not.toHaveBeenCalled();
+    expect(redirectSpy).not.toHaveBeenCalled();
+    redirectSpy.mockRestore();
   });
 
   it('should not redirect when not in browser', () => {
+    const redirectSpy = jest
+      .spyOn(PreprintDownloadRedirectComponent.prototype, 'redirect')
+      .mockImplementation(jest.fn());
     const { mockSocialShareService } = setup({ isBrowser: false });
     expect(mockSocialShareService.createDownloadUrl).not.toHaveBeenCalled();
-    expect(locationReplaceMock).not.toHaveBeenCalled();
+    expect(redirectSpy).not.toHaveBeenCalled();
+    redirectSpy.mockRestore();
   });
 });

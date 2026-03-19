@@ -4,7 +4,7 @@ import { MockProvider } from 'ng-mocks';
 import { of } from 'rxjs';
 
 import { HttpRequest } from '@angular/common/http';
-import { PLATFORM_ID, runInInjectionContext } from '@angular/core';
+import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
@@ -30,10 +30,6 @@ describe('authInterceptor', () => {
     cookieService = TestBed.inject(CookieService);
   };
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   const createRequest = (url: string, options?: Partial<HttpRequest<unknown>>): HttpRequest<unknown> => {
     return new HttpRequest('GET', url, options?.body, {
       responseType: options?.responseType || 'json',
@@ -51,7 +47,7 @@ describe('authInterceptor', () => {
     const request = createRequest('https://api.ror.org/v2');
     const handler = createHandler();
 
-    runInInjectionContext(TestBed, () => authInterceptor(request, handler));
+    TestBed.runInInjectionContext(() => authInterceptor(request, handler));
 
     expect(handler).toHaveBeenCalledTimes(1);
     const modifiedRequest = handler.mock.calls[0][0];
@@ -63,7 +59,7 @@ describe('authInterceptor', () => {
     const request = createRequest('/api/v2/projects/', { responseType: 'text' });
     const handler = createHandler();
 
-    runInInjectionContext(TestBed, () => authInterceptor(request, handler));
+    TestBed.runInInjectionContext(() => authInterceptor(request, handler));
 
     expect(handler).toHaveBeenCalledTimes(1);
     const modifiedRequest = handler.mock.calls[0][0];
@@ -75,7 +71,7 @@ describe('authInterceptor', () => {
     const request = createRequest('/api/v2/projects/', { responseType: 'json' });
     const handler = createHandler();
 
-    runInInjectionContext(TestBed, () => authInterceptor(request, handler));
+    TestBed.runInInjectionContext(() => authInterceptor(request, handler));
 
     expect(handler).toHaveBeenCalledTimes(1);
     const modifiedRequest = handler.mock.calls[0][0];
@@ -87,7 +83,7 @@ describe('authInterceptor', () => {
     const request = createRequest('/api/v2/projects/');
     const handler = createHandler();
 
-    runInInjectionContext(TestBed, () => authInterceptor(request, handler));
+    TestBed.runInInjectionContext(() => authInterceptor(request, handler));
 
     expect(handler).toHaveBeenCalledTimes(1);
     const modifiedRequest = handler.mock.calls[0][0];
@@ -102,7 +98,7 @@ describe('authInterceptor', () => {
     });
     const handler = createHandler();
 
-    runInInjectionContext(TestBed, () => authInterceptor(requestWithHeaders, handler));
+    TestBed.runInInjectionContext(() => authInterceptor(requestWithHeaders, handler));
 
     expect(handler).toHaveBeenCalledTimes(1);
     const modifiedRequest = handler.mock.calls[0][0];
@@ -116,7 +112,7 @@ describe('authInterceptor', () => {
     const request = createRequest('/api/v2/projects/');
     const handler = createHandler();
 
-    runInInjectionContext(TestBed, () => authInterceptor(request, handler));
+    TestBed.runInInjectionContext(() => authInterceptor(request, handler));
 
     expect(cookieService.get).toHaveBeenCalledWith('api-csrf');
     expect(handler).toHaveBeenCalledTimes(1);
@@ -132,7 +128,7 @@ describe('authInterceptor', () => {
     const request = createRequest('/api/v2/projects/');
     const handler = createHandler();
 
-    runInInjectionContext(TestBed, () => authInterceptor(request, handler));
+    TestBed.runInInjectionContext(() => authInterceptor(request, handler));
 
     expect(cookieService.get).toHaveBeenCalledWith('api-csrf');
     expect(handler).toHaveBeenCalledTimes(1);
@@ -146,7 +142,7 @@ describe('authInterceptor', () => {
     const request = createRequest('/api/v2/projects/');
     const handler = createHandler();
 
-    runInInjectionContext(TestBed, () => authInterceptor(request, handler));
+    TestBed.runInInjectionContext(() => authInterceptor(request, handler));
 
     const modifiedRequest = handler.mock.calls[0][0];
     expect(modifiedRequest.headers.has('X-Throttle-Token')).toBe(false);
@@ -157,7 +153,7 @@ describe('authInterceptor', () => {
     const request = createRequest('/api/v2/projects/');
     const handler = createHandler();
 
-    runInInjectionContext(TestBed, () => authInterceptor(request, handler));
+    TestBed.runInInjectionContext(() => authInterceptor(request, handler));
 
     const modifiedRequest = handler.mock.calls[0][0];
     expect(modifiedRequest.headers.get('X-Throttle-Token')).toBe('test-token');
@@ -168,7 +164,7 @@ describe('authInterceptor', () => {
     const request = createRequest('/api/v2/projects/');
     const handler = createHandler();
 
-    runInInjectionContext(TestBed, () => authInterceptor(request, handler));
+    TestBed.runInInjectionContext(() => authInterceptor(request, handler));
 
     const modifiedRequest = handler.mock.calls[0][0];
     expect(modifiedRequest.headers.has('X-Throttle-Token')).toBe(false);

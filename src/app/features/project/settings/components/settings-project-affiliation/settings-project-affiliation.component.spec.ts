@@ -6,7 +6,7 @@ import { InstitutionsSelectors } from '@osf/shared/stores/institutions';
 import { SettingsProjectAffiliationComponent } from './settings-project-affiliation.component';
 
 import { MOCK_INSTITUTION } from '@testing/mocks/institution.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('SettingsProjectAffiliationComponent', () => {
@@ -17,8 +17,9 @@ describe('SettingsProjectAffiliationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SettingsProjectAffiliationComponent, OSFTestingModule],
+      imports: [SettingsProjectAffiliationComponent],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [{ selector: InstitutionsSelectors.getUserInstitutions, value: [] }],
         }),
@@ -67,8 +68,9 @@ describe('SettingsProjectAffiliationComponent', () => {
     beforeEach(() => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        imports: [SettingsProjectAffiliationComponent, OSFTestingModule],
+        imports: [SettingsProjectAffiliationComponent],
         providers: [
+          provideOSFCore(),
           provideMockStore({
             signals: [{ selector: InstitutionsSelectors.getUserInstitutions, value: userInstitutions }],
           }),
@@ -123,8 +125,9 @@ describe('SettingsProjectAffiliationComponent', () => {
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        imports: [SettingsProjectAffiliationComponent, OSFTestingModule],
+        imports: [SettingsProjectAffiliationComponent],
         providers: [
+          provideOSFCore(),
           provideMockStore({
             signals: [{ selector: InstitutionsSelectors.getUserInstitutions, value: userInstitutions }],
           }),
@@ -145,8 +148,9 @@ describe('SettingsProjectAffiliationComponent', () => {
     it('should return empty Set when no user institutions', () => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        imports: [SettingsProjectAffiliationComponent, OSFTestingModule],
+        imports: [SettingsProjectAffiliationComponent],
         providers: [
+          provideOSFCore(),
           provideMockStore({
             signals: [{ selector: InstitutionsSelectors.getUserInstitutions, value: [] }],
           }),

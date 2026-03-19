@@ -29,7 +29,7 @@ import { RegistrationProviderSelectors } from '@osf/shared/stores/registration-p
 import { MetadataComponent } from './metadata.component';
 
 import { MOCK_PROJECT_METADATA } from '@testing/mocks/project-metadata.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomConfirmationServiceMockBuilder } from '@testing/providers/custom-confirmation-provider.mock';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
@@ -92,9 +92,9 @@ describe('MetadataComponent', () => {
           MetadataTitleComponent,
           MetadataRegistrationDoiComponent
         ),
-        OSFTestingModule,
       ],
       providers: [
+        provideOSFCore(),
         MockProvider(ActivatedRoute, activatedRouteMock),
         MockProvider(Router, routerMock),
         MockProvider(CustomDialogService, customDialogServiceMock),

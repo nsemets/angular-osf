@@ -1,5 +1,7 @@
 import { Store } from '@ngxs/store';
 
+import { MockProvider } from 'ng-mocks';
+
 import { BehaviorSubject } from 'rxjs';
 
 import { signal, WritableSignal } from '@angular/core';
@@ -11,6 +13,7 @@ import { BannersSelector, GetCurrentScheduledBanner } from '@osf/shared/stores/b
 
 import { ScheduledBannerComponent } from './scheduled-banner.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('Component: Scheduled Banner', () => {
@@ -27,16 +30,12 @@ describe('Component: Scheduled Banner', () => {
     TestBed.configureTestingModule({
       imports: [ScheduledBannerComponent],
       providers: [
-        {
-          provide: IS_XSMALL,
-          useValue: isMobile$,
-        },
+        provideOSFCore(),
+        MockProvider(IS_XSMALL, isMobile$),
+        provideMockStore({
+          signals: [{ selector: BannersSelector.getCurrentBanner, value: currentBannerSignal }],
+        }),
       ],
-    }).overrideProvider(Store, {
-      useValue: provideMockStore({
-        signals: [{ selector: BannersSelector.getCurrentBanner, value: currentBannerSignal }],
-        actions: [{ action: new GetCurrentScheduledBanner(), value: true }],
-      }).useValue,
     });
 
     fixture = TestBed.createComponent(ScheduledBannerComponent);
@@ -44,10 +43,6 @@ describe('Component: Scheduled Banner', () => {
     fixture.detectChanges();
 
     store = TestBed.inject(Store);
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
   });
 
   it('should create the component', () => {

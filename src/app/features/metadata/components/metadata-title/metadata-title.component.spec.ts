@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MetadataTitleComponent } from './metadata-title.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('MetadataTitleComponent', () => {
   let component: MetadataTitleComponent;
@@ -12,7 +12,8 @@ describe('MetadataTitleComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MetadataTitleComponent, OSFTestingModule],
+      imports: [MetadataTitleComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MetadataTitleComponent);

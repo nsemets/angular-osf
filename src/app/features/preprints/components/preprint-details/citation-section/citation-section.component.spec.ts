@@ -2,7 +2,7 @@ import { Store } from '@ngxs/store';
 
 import { SelectChangeEvent, SelectFilterEvent } from 'primeng/select';
 
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ResourceType } from '@shared/enums/resource-type.enum';
 import {
@@ -66,6 +66,10 @@ describe('CitationSectionComponent', () => {
     }
   }
 
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   it('should create', () => {
     setup();
     expect(component).toBeTruthy();
@@ -123,7 +127,8 @@ describe('CitationSectionComponent', () => {
     );
   });
 
-  it('should debounce and deduplicate citation style filter dispatches', fakeAsync(() => {
+  it('should debounce and deduplicate citation style filter dispatches', () => {
+    jest.useFakeTimers();
     setup();
     const preventDefault = jest.fn();
     const eventApa: SelectFilterEvent = {
@@ -136,16 +141,16 @@ describe('CitationSectionComponent', () => {
     expect(preventDefault).toHaveBeenCalled();
     expect(store.dispatch).not.toHaveBeenCalled();
 
-    tick(299);
+    jest.advanceTimersByTime(299);
     expect(store.dispatch).not.toHaveBeenCalled();
 
-    tick(1);
+    jest.advanceTimersByTime(1);
     expect(store.dispatch).toHaveBeenCalledWith(new GetCitationStyles('apa'));
     expect(store.dispatch).toHaveBeenCalledTimes(1);
 
     (store.dispatch as jest.Mock).mockClear();
     component.handleCitationStyleFilterSearch(eventApa);
-    tick(300);
+    jest.advanceTimersByTime(300);
     expect(store.dispatch).not.toHaveBeenCalled();
 
     const eventMla: SelectFilterEvent = {
@@ -153,8 +158,8 @@ describe('CitationSectionComponent', () => {
       filter: 'mla',
     };
     component.handleCitationStyleFilterSearch(eventMla);
-    tick(300);
+    jest.advanceTimersByTime(300);
 
     expect(store.dispatch).toHaveBeenCalledWith(new GetCitationStyles('mla'));
-  }));
+  });
 });

@@ -39,7 +39,7 @@ import {
   MOCK_ADMIN_INSTITUTIONS_PROJECT_RESOURCES,
 } from '@testing/mocks/admin-institutions.mock';
 import { MOCK_USER } from '@testing/mocks/data.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 import { ToastServiceMockBuilder } from '@testing/providers/toast-provider.mock';
@@ -87,12 +87,9 @@ describe('InstitutionsProjectsComponent', () => {
     customDialogServiceMock = CustomDialogServiceMockBuilder.create().withDefaultOpen().build();
     toastServiceMock = ToastServiceMockBuilder.create().build();
     await TestBed.configureTestingModule({
-      imports: [
-        InstitutionsProjectsComponent,
-        OSFTestingModule,
-        ...MockComponents(AdminTableComponent, FiltersSectionComponent),
-      ],
+      imports: [InstitutionsProjectsComponent, ...MockComponents(AdminTableComponent, FiltersSectionComponent)],
       providers: [
+        provideOSFCore(),
         MockProviders(Router),
         {
           provide: ActivatedRoute,

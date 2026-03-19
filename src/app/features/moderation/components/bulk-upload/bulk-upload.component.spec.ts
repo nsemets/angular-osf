@@ -4,7 +4,7 @@ import { BYTES_IN_MB, FILE_TYPES } from '../../constants';
 
 import { BulkUploadComponent } from './bulk-upload.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('BulkUploadComponent', () => {
   let component: BulkUploadComponent;
@@ -12,7 +12,8 @@ describe('BulkUploadComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BulkUploadComponent, OSFTestingModule],
+      imports: [BulkUploadComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(BulkUploadComponent);

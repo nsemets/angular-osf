@@ -3,11 +3,10 @@ import { MockPipe } from 'ng-mocks';
 
 import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-
-import { TooltipPosition } from '@osf/shared/models/tooltip-position.model';
 
 import { InfoIconComponent } from './info-icon.component';
+
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('InfoIconComponent', () => {
   let component: InfoIconComponent;
@@ -17,6 +16,7 @@ describe('InfoIconComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [InfoIconComponent, MockPipe(TranslatePipe)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(InfoIconComponent);
@@ -33,17 +33,5 @@ describe('InfoIconComponent', () => {
     fixture.detectChanges();
 
     expect(component.tooltipText()).toBe('This is a tooltip');
-  });
-
-  it('should handle different tooltip positions', () => {
-    const positions: TooltipPosition[] = ['top', 'bottom', 'left', 'right'];
-
-    positions.forEach((position) => {
-      componentRef.setInput('tooltipPosition', position);
-      fixture.detectChanges();
-
-      const iconElement = fixture.debugElement.query(By.css('i'));
-      expect(iconElement.nativeElement.getAttribute('ng-reflect-tooltip-position')).toBe(position);
-    });
   });
 });

@@ -1,5 +1,4 @@
-import { TranslatePipe } from '@ngx-translate/core';
-import { MockComponent, MockDirective, MockPipe } from 'ng-mocks';
+import { MockComponent, MockDirective } from 'ng-mocks';
 
 import { Textarea } from 'primeng/textarea';
 
@@ -13,7 +12,7 @@ import { NodeDetailsModel } from '../../models';
 import { SettingsProjectFormCardComponent } from './settings-project-form-card.component';
 
 import { MOCK_NODE_DETAILS } from '@testing/mocks/node-details.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('SettingsProjectFormCardComponent', () => {
   let component: SettingsProjectFormCardComponent;
@@ -23,13 +22,8 @@ describe('SettingsProjectFormCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        SettingsProjectFormCardComponent,
-        OSFTestingModule,
-        MockComponent(TextInputComponent),
-        MockPipe(TranslatePipe),
-        MockDirective(Textarea),
-      ],
+      imports: [SettingsProjectFormCardComponent, MockComponent(TextInputComponent), MockDirective(Textarea)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SettingsProjectFormCardComponent);

@@ -1,7 +1,6 @@
 import { provideStore } from '@ngxs/store';
 
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { MockPipe, MockProvider } from 'ng-mocks';
+import { MockProvider } from 'ng-mocks';
 
 import { ConfirmationService } from 'primeng/api';
 
@@ -17,6 +16,7 @@ import { DeveloperAppsState } from '../../store';
 import { DeveloperAppsListComponent } from './developer-apps-list.component';
 
 import { MOCK_DEVELOPER_APP } from '@testing/mocks/developer-app.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('DeveloperApplicationsListComponent', () => {
   let component: DeveloperAppsListComponent;
@@ -25,13 +25,13 @@ describe('DeveloperApplicationsListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DeveloperAppsListComponent, MockPipe(TranslatePipe)],
+      imports: [DeveloperAppsListComponent],
       providers: [
+        provideOSFCore(),
         provideStore([DeveloperAppsState]),
         provideHttpClient(),
         provideHttpClientTesting(),
         MockProvider(ConfirmationService),
-        MockProvider(TranslateService),
         MockProvider(CustomConfirmationService),
         MockProvider(ToastService),
       ],

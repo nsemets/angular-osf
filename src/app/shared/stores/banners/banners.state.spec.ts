@@ -11,15 +11,14 @@ import { BannersSelector } from './banners.selectors';
 import { BannersState } from './banners.state';
 
 import { getScheduledBannerData } from '@testing/data/banners/scheduled.banner.data';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore, provideOSFHttp } from '@testing/osf.testing.provider';
 
 describe('State: Banners', () => {
   let store: Store;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [OSFTestingModule],
-      providers: [provideStore([BannersState]), BannersService],
+      providers: [provideOSFCore(), provideOSFHttp(), provideStore([BannersState]), BannersService],
     });
 
     store = TestBed.inject(Store);

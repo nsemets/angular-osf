@@ -1,13 +1,12 @@
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
 
 import { OsfFileCustomMetadata } from '@osf/features/files/models';
 
 import { EditFileMetadataDialogComponent } from './edit-file-metadata-dialog.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('EditFileMetadataDialogComponent', () => {
   let component: EditFileMetadataDialogComponent;
@@ -33,8 +32,9 @@ describe('EditFileMetadataDialogComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [EditFileMetadataDialogComponent, ReactiveFormsModule, OSFTestingModule],
+      imports: [EditFileMetadataDialogComponent],
       providers: [
+        provideOSFCore(),
         { provide: DynamicDialogRef, useValue: dialogRefMock },
         { provide: DynamicDialogConfig, useValue: dialogConfigMock },
       ],

@@ -13,9 +13,10 @@ import { RegistryModerationTab } from '../../enums';
 
 import { RegistriesModerationComponent } from './registries-moderation.component';
 
-import { OSFTestingStoreModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
+import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('RegistriesModerationComponent', () => {
   let component: RegistriesModerationComponent;
@@ -24,7 +25,7 @@ describe('RegistriesModerationComponent', () => {
   let mockRouter: ReturnType<RouterMockBuilder['build']>;
   let mockActivatedRoute: ReturnType<ActivatedRouteMockBuilder['build']>;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     isMediumSubject = new BehaviorSubject<boolean>(true);
     mockRouter = RouterMockBuilder.create().build();
     mockActivatedRoute = ActivatedRouteMockBuilder.create()
@@ -32,18 +33,16 @@ describe('RegistriesModerationComponent', () => {
       .withData({ tab: RegistryModerationTab.Submitted })
       .build();
 
-    await TestBed.configureTestingModule({
-      imports: [
-        RegistriesModerationComponent,
-        OSFTestingStoreModule,
-        ...MockComponents(SubHeaderComponent, SelectComponent),
-      ],
+    TestBed.configureTestingModule({
+      imports: [RegistriesModerationComponent, ...MockComponents(SubHeaderComponent, SelectComponent)],
       providers: [
+        provideOSFCore(),
+        provideMockStore(),
         MockProvider(ActivatedRoute, mockActivatedRoute),
         MockProvider(Router, mockRouter),
         MockProvider(IS_MEDIUM, isMediumSubject),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(RegistriesModerationComponent);
     component = fixture.componentInstance;

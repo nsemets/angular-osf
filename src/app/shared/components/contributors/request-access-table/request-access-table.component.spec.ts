@@ -13,7 +13,7 @@ import { SelectComponent } from '../../select/select.component';
 import { RequestAccessTableComponent } from './request-access-table.component';
 
 import { MOCK_USER } from '@testing/mocks/data.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { DialogServiceMockBuilder } from '@testing/providers/dialog-provider.mock';
 
 describe('RequestAccessTableComponent', () => {
@@ -53,8 +53,8 @@ describe('RequestAccessTableComponent', () => {
     mockDialogService = DialogServiceMockBuilder.create().withOpenMock().build();
 
     await TestBed.configureTestingModule({
-      imports: [RequestAccessTableComponent, OSFTestingModule, MockComponent(SelectComponent)],
-      providers: [MockProvider(DialogService, mockDialogService)],
+      imports: [RequestAccessTableComponent, MockComponent(SelectComponent)],
+      providers: [provideOSFCore(), MockProvider(DialogService, mockDialogService)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RequestAccessTableComponent);

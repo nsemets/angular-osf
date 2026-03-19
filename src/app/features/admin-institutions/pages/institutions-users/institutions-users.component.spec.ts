@@ -22,7 +22,7 @@ import {
   MOCK_ADMIN_INSTITUTIONS_USERS,
 } from '@testing/mocks/admin-institutions.mock';
 import { MOCK_USER } from '@testing/mocks/data.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
@@ -35,8 +35,9 @@ describe('InstitutionsUsersComponent', () => {
     mockCustomDialogService = CustomDialogServiceMockBuilder.create().withDefaultOpen().build();
 
     await TestBed.configureTestingModule({
-      imports: [InstitutionsUsersComponent, ...MockComponents(AdminTableComponent, SelectComponent), OSFTestingModule],
+      imports: [InstitutionsUsersComponent, ...MockComponents(AdminTableComponent, SelectComponent)],
       providers: [
+        provideOSFCore(),
         {
           provide: ActivatedRoute,
           useValue: { queryParams: of({}) },

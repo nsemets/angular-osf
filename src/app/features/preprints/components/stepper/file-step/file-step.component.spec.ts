@@ -4,7 +4,7 @@ import { MockComponents, MockProvider } from 'ng-mocks';
 
 import { SelectChangeEvent } from 'primeng/select';
 
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PreprintFileSource } from '@osf/features/preprints/enums';
 import { PreprintModel, PreprintProviderDetails } from '@osf/features/preprints/models';
@@ -116,6 +116,10 @@ describe('FileStepComponent', () => {
     }
   });
 
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   it('should create', () => {
     setup();
     expect(component).toBeTruthy();
@@ -155,26 +159,28 @@ describe('FileStepComponent', () => {
     expect(store.dispatch).not.toHaveBeenCalledWith(expect.any(FetchPreprintPrimaryFile));
   });
 
-  it('should dispatch available projects from debounced projectNameControl value', fakeAsync(() => {
+  it('should dispatch available projects from debounced projectNameControl value', () => {
+    jest.useFakeTimers();
     setup();
     (store.dispatch as jest.Mock).mockClear();
 
     component.projectNameControl.setValue('project-search');
-    tick(500);
+    jest.advanceTimersByTime(500);
 
     expect(store.dispatch).toHaveBeenCalledWith(new FetchAvailableProjects('project-search'));
-  }));
+  });
 
-  it('should skip available projects dispatch when value equals selectedProjectId', fakeAsync(() => {
+  it('should skip available projects dispatch when value equals selectedProjectId', () => {
+    jest.useFakeTimers();
     setup();
     (store.dispatch as jest.Mock).mockClear();
     component.selectedProjectId.set('project-1');
 
     component.projectNameControl.setValue('project-1');
-    tick(500);
+    jest.advanceTimersByTime(500);
 
     expect(store.dispatch).not.toHaveBeenCalledWith(new FetchAvailableProjects('project-1'));
-  }));
+  });
 
   it('should handle selectFileSource for project and computer source', () => {
     setup({ detectChanges: false });

@@ -9,7 +9,7 @@ import { CollectionsModerationSelectors } from '../../store/collections-moderati
 import { CollectionSubmissionsListComponent } from './collection-submissions-list.component';
 
 import { MOCK_COLLECTION_SUBMISSION_WITH_GUID } from '@testing/mocks/submission.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('CollectionSubmissionsListComponent', () => {
@@ -20,8 +20,9 @@ describe('CollectionSubmissionsListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CollectionSubmissionsListComponent, OSFTestingModule, MockComponent(CollectionSubmissionItemComponent)],
+      imports: [CollectionSubmissionsListComponent, MockComponent(CollectionSubmissionItemComponent)],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [{ selector: CollectionsModerationSelectors.getCollectionSubmissions, value: mockSubmissions }],
         }),

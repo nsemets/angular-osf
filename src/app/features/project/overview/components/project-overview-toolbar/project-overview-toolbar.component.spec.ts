@@ -22,7 +22,7 @@ import { TogglePublicityDialogComponent } from '../toggle-publicity-dialog/toggl
 import { ProjectOverviewToolbarComponent } from './project-overview-toolbar.component';
 
 import { MOCK_PROJECT_OVERVIEW } from '@testing/mocks/project-overview.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
@@ -57,8 +57,9 @@ describe('ProjectOverviewToolbarComponent', () => {
     toastService = { showSuccess: jest.fn() } as unknown as jest.Mocked<ToastService>;
 
     await TestBed.configureTestingModule({
-      imports: [ProjectOverviewToolbarComponent, OSFTestingModule, ...MockComponents(SocialsShareButtonComponent)],
+      imports: [ProjectOverviewToolbarComponent, ...MockComponents(SocialsShareButtonComponent)],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             { selector: BookmarksSelectors.getBookmarksCollectionId, value: 'bookmarks-123' },

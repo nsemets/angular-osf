@@ -1,5 +1,4 @@
-import { TranslatePipe } from '@ngx-translate/core';
-import { MockComponent, MockPipe, MockProvider } from 'ng-mocks';
+import { MockComponent, MockProvider } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -10,7 +9,7 @@ import { ToastService } from '@osf/shared/services/toast.service';
 
 import { SignUpComponent } from './sign-up.component';
 
-import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('SignUpComponent', () => {
   let component: SignUpComponent;
@@ -18,9 +17,9 @@ describe('SignUpComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SignUpComponent, MockComponent(PasswordInputHintComponent), MockPipe(TranslatePipe)],
+      imports: [SignUpComponent, MockComponent(PasswordInputHintComponent)],
       providers: [
-        TranslateServiceMock,
+        provideOSFCore(),
         MockProvider(ActivatedRoute),
         MockProvider(ToastService),
         MockProvider(AuthService),

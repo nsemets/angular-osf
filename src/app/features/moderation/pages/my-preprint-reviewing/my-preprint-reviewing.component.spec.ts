@@ -14,7 +14,7 @@ import { MyPreprintReviewingComponent } from './my-preprint-reviewing.component'
 
 import { MOCK_PREPRINT_PROVIDER_MODERATION_INFO } from '@testing/mocks/preprint-provider-moderation-info.mock';
 import { MOCK_PREPRINT_REVIEW_ACTIONS } from '@testing/mocks/preprint-review-action.mock';
-import { OSFTestingStoreModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('MyPreprintReviewingComponent', () => {
@@ -24,14 +24,14 @@ describe('MyPreprintReviewingComponent', () => {
   const mockPreprintProviders = [MOCK_PREPRINT_PROVIDER_MODERATION_INFO];
   const mockPreprintReviews = MOCK_PREPRINT_REVIEW_ACTIONS;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [
         MyPreprintReviewingComponent,
-        OSFTestingStoreModule,
         ...MockComponents(SubHeaderComponent, PreprintRecentActivityListComponent, MyReviewingNavigationComponent),
       ],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             { selector: PreprintModerationSelectors.getPreprintProviders, value: mockPreprintProviders },
@@ -42,7 +42,7 @@ describe('MyPreprintReviewingComponent', () => {
           ],
         }),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(MyPreprintReviewingComponent);
     component = fixture.componentInstance;

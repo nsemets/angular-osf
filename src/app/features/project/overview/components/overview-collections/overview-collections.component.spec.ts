@@ -12,7 +12,7 @@ import {
   MOCK_COLLECTION_SUBMISSION_WITH_FILTERS,
   MOCK_COLLECTION_SUBMISSIONS,
 } from '@testing/mocks/collections-submissions.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('OverviewCollectionsComponent', () => {
   let component: OverviewCollectionsComponent;
@@ -20,7 +20,8 @@ describe('OverviewCollectionsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OverviewCollectionsComponent, OSFTestingModule],
+      imports: [OverviewCollectionsComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(OverviewCollectionsComponent);

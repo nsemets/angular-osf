@@ -8,7 +8,7 @@ import { InterpolatePipe } from '@osf/shared/pipes/interpolate.pipe';
 import { LicenseDisplayComponent } from './license-display.component';
 
 import { MOCK_LICENSE } from '@testing/mocks/license.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('LicenseDisplayComponent', () => {
   let component: LicenseDisplayComponent;
@@ -27,7 +27,8 @@ describe('LicenseDisplayComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LicenseDisplayComponent, MockPipe(InterpolatePipe), OSFTestingModule],
+      imports: [LicenseDisplayComponent, MockPipe(InterpolatePipe)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LicenseDisplayComponent);

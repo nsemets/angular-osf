@@ -5,7 +5,7 @@ import { IdentifierModel } from '@shared/models/identifiers/identifier.model';
 import { MetadataPublicationDoiComponent } from './metadata-publication-doi.component';
 
 import { MOCK_PROJECT_IDENTIFIERS } from '@testing/mocks/project-overview.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('MetadataPublicationDoiComponent', () => {
   let component: MetadataPublicationDoiComponent;
@@ -15,7 +15,8 @@ describe('MetadataPublicationDoiComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MetadataPublicationDoiComponent, OSFTestingModule],
+      imports: [MetadataPublicationDoiComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MetadataPublicationDoiComponent);

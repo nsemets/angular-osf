@@ -1,4 +1,3 @@
-import { TranslatePipe } from '@ngx-translate/core';
 import { MockComponents, MockPipe } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -12,7 +11,7 @@ import { RegistryModeration } from '../../models';
 import { RegistrySubmissionItemComponent } from './registry-submission-item.component';
 
 import { MOCK_REGISTRY_MODERATIONS } from '@testing/mocks/registry-moderation.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('RegistrySubmissionItemComponent', () => {
   let component: RegistrySubmissionItemComponent;
@@ -22,13 +21,8 @@ describe('RegistrySubmissionItemComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RegistrySubmissionItemComponent,
-        OSFTestingModule,
-        ...MockComponents(IconComponent),
-        MockPipe(DateAgoPipe),
-        MockPipe(TranslatePipe),
-      ],
+      imports: [RegistrySubmissionItemComponent, ...MockComponents(IconComponent), MockPipe(DateAgoPipe)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RegistrySubmissionItemComponent);

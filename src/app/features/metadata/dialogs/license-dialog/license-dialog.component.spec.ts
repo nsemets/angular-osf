@@ -11,7 +11,7 @@ import { LicensesSelectors } from '@shared/stores/licenses';
 import { LicenseDialogComponent } from './license-dialog.component';
 
 import { MOCK_LICENSE } from '@testing/mocks/license.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('LicenseDialogComponent', () => {
@@ -20,8 +20,9 @@ describe('LicenseDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LicenseDialogComponent, OSFTestingModule, ...MockComponents(LoadingSpinnerComponent, LicenseComponent)],
+      imports: [LicenseDialogComponent, ...MockComponents(LoadingSpinnerComponent, LicenseComponent)],
       providers: [
+        provideOSFCore(),
         MockProvider(DynamicDialogRef),
         MockProvider(DynamicDialogConfig),
         provideMockStore({

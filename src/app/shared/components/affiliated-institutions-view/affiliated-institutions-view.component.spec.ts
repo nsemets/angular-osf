@@ -1,11 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { Institution } from '@osf/shared/models/institutions/institutions.model';
 
 import { AffiliatedInstitutionsViewComponent } from './affiliated-institutions-view.component';
 
 import { MOCK_INSTITUTION } from '@testing/mocks/institution.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('AffiliatedInstitutionsViewComponent', () => {
   let component: AffiliatedInstitutionsViewComponent;
@@ -15,7 +16,8 @@ describe('AffiliatedInstitutionsViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AffiliatedInstitutionsViewComponent, OSFTestingModule],
+      imports: [AffiliatedInstitutionsViewComponent],
+      providers: [provideOSFCore(), provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AffiliatedInstitutionsViewComponent);

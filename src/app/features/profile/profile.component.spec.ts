@@ -13,7 +13,7 @@ import { ProfileInformationComponent } from './components';
 import { ProfileComponent } from './profile.component';
 import { ProfileSelectors } from './store';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
@@ -31,10 +31,10 @@ describe('ProfileComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         ProfileComponent,
-        OSFTestingModule,
         ...MockComponents(ProfileInformationComponent, GlobalSearchComponent, LoadingSpinnerComponent),
       ],
       providers: [
+        provideOSFCore(),
         MockProvider(Router, routerMock),
         MockProvider(ActivatedRoute, activatedRouteMock),
         MockProvider(PrerenderReadyService),

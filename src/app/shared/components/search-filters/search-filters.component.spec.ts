@@ -14,7 +14,7 @@ import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.comp
 
 import { SearchFiltersComponent } from './search-filters.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('SearchFiltersComponent', () => {
   let component: SearchFiltersComponent;
@@ -55,11 +55,8 @@ describe('SearchFiltersComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        SearchFiltersComponent,
-        OSFTestingModule,
-        ...MockComponents(GenericFilterComponent, LoadingSpinnerComponent),
-      ],
+      imports: [SearchFiltersComponent, ...MockComponents(GenericFilterComponent, LoadingSpinnerComponent)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SearchFiltersComponent);

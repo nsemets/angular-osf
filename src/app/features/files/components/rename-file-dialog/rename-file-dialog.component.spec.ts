@@ -3,14 +3,13 @@ import { MockComponent } from 'ng-mocks';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
 
 import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
 import { InputLimits } from '@osf/shared/constants/input-limits.const';
 
 import { RenameFileDialogComponent } from './rename-file-dialog.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('RenameFileDialogComponent', () => {
   let component: RenameFileDialogComponent;
@@ -28,8 +27,9 @@ describe('RenameFileDialogComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [RenameFileDialogComponent, ReactiveFormsModule, OSFTestingModule, MockComponent(TextInputComponent)],
+      imports: [RenameFileDialogComponent, MockComponent(TextInputComponent)],
       providers: [
+        provideOSFCore(),
         { provide: DynamicDialogRef, useValue: dialogRefMock },
         { provide: DynamicDialogConfig, useValue: dialogConfigMock },
       ],

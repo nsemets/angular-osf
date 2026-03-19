@@ -21,7 +21,7 @@ import { PreprintSubmissionItemComponent } from '../preprint-submission-item/pre
 import { PreprintSubmissionsComponent } from '..';
 
 import { MOCK_PREPRINT_SUBMISSIONS } from '@testing/mocks/preprint-submission.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
@@ -36,17 +36,16 @@ describe('PreprintSubmissionsComponent', () => {
   const mockProviderId = 'test-provider-id';
   const mockSubmissions: PreprintSubmissionModel[] = MOCK_PREPRINT_SUBMISSIONS;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     mockRouter = RouterMockBuilder.create().build();
     mockActivatedRoute = ActivatedRouteMockBuilder.create()
       .withParams({ providerId: mockProviderId })
       .withQueryParams({ status: 'pending' })
       .build();
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [
         PreprintSubmissionsComponent,
-        OSFTestingModule,
         ...MockComponents(
           SelectComponent,
           IconComponent,
@@ -56,6 +55,7 @@ describe('PreprintSubmissionsComponent', () => {
         ),
       ],
       providers: [
+        provideOSFCore(),
         MockProvider(Router, mockRouter),
         MockProvider(ActivatedRoute, mockActivatedRoute),
         provideMockStore({
@@ -69,7 +69,7 @@ describe('PreprintSubmissionsComponent', () => {
           ],
         }),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(PreprintSubmissionsComponent);
     component = fixture.componentInstance;

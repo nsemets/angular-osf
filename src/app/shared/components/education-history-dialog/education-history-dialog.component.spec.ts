@@ -8,7 +8,7 @@ import { EducationHistoryComponent } from '../education-history/education-histor
 
 import { EducationHistoryDialogComponent } from './education-history-dialog.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('EducationHistoryDialogComponent', () => {
   let component: EducationHistoryDialogComponent;
@@ -16,8 +16,8 @@ describe('EducationHistoryDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EducationHistoryDialogComponent, OSFTestingModule, MockComponent(EducationHistoryComponent)],
-      providers: [MockProvider(DynamicDialogRef), MockProvider(DynamicDialogConfig)],
+      imports: [EducationHistoryDialogComponent, MockComponent(EducationHistoryComponent)],
+      providers: [provideOSFCore(), MockProvider(DynamicDialogRef), MockProvider(DynamicDialogConfig)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(EducationHistoryDialogComponent);

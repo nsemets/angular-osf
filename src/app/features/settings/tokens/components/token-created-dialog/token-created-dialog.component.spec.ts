@@ -10,7 +10,7 @@ import { CopyButtonComponent } from '@osf/shared/components/copy-button/copy-but
 import { TokenCreatedDialogComponent } from './token-created-dialog.component';
 
 import { MOCK_TOKEN } from '@testing/mocks/token.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('TokenCreatedDialogComponent', () => {
   let component: TokenCreatedDialogComponent;
@@ -18,8 +18,9 @@ describe('TokenCreatedDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TokenCreatedDialogComponent, OSFTestingModule, MockComponent(CopyButtonComponent)],
+      imports: [TokenCreatedDialogComponent, MockComponent(CopyButtonComponent)],
       providers: [
+        provideOSFCore(),
         MockProvider(DynamicDialogRef, { close: jest.fn() }),
         MockProvider(DynamicDialogConfig, {
           data: {

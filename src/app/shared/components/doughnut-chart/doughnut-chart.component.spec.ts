@@ -7,7 +7,7 @@ import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.comp
 
 import { DoughnutChartComponent } from './doughnut-chart.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('DoughnutChartComponent', () => {
   let component: DoughnutChartComponent;
@@ -15,8 +15,8 @@ describe('DoughnutChartComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DoughnutChartComponent, OSFTestingModule, MockComponent(LoadingSpinnerComponent)],
-      providers: [MockProvider(PLATFORM_ID, 'server')],
+      imports: [DoughnutChartComponent, MockComponent(LoadingSpinnerComponent)],
+      providers: [provideOSFCore(), MockProvider(PLATFORM_ID, 'server')],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DoughnutChartComponent);

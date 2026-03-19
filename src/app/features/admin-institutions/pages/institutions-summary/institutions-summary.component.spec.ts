@@ -30,7 +30,7 @@ import {
   MOCK_ADMIN_INSTITUTIONS_STORAGE_FILTERS,
   MOCK_ADMIN_INSTITUTIONS_SUMMARY_METRICS,
 } from '@testing/mocks/admin-institutions.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('InstitutionsSummaryComponent', () => {
@@ -42,10 +42,10 @@ describe('InstitutionsSummaryComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         InstitutionsSummaryComponent,
-        OSFTestingModule,
         ...MockComponents(StatisticCardComponent, LoadingSpinnerComponent, DoughnutChartComponent, BarChartComponent),
       ],
       providers: [
+        provideOSFCore(),
         {
           provide: ActivatedRoute,
           useValue: {

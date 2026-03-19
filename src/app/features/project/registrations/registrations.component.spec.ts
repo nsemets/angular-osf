@@ -15,7 +15,7 @@ import { RegistrationsComponent } from './registrations.component';
 import { GetRegistrations, RegistrationsSelectors } from './store';
 
 import { MOCK_REGISTRATION } from '@testing/mocks/registration.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
@@ -51,7 +51,6 @@ describe('RegistrationsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         RegistrationsComponent,
-        OSFTestingModule,
         ...MockComponents(
           RegistrationCardComponent,
           SubHeaderComponent,
@@ -60,6 +59,7 @@ describe('RegistrationsComponent', () => {
         ),
       ],
       providers: [
+        provideOSFCore(),
         MockProvider(Router, routerMock),
         MockProvider(ActivatedRoute, activatedRouteMock),
         MockProvider(ENVIRONMENT, mockEnvironment),

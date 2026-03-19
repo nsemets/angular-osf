@@ -4,7 +4,7 @@ import { RegistryProviderDetails } from '@osf/shared/models/provider/registry-pr
 
 import { MetadataRegistryInfoComponent } from './metadata-registry-info.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('MetadataRegistryInfoComponent', () => {
   let component: MetadataRegistryInfoComponent;
@@ -18,11 +18,13 @@ describe('MetadataRegistryInfoComponent', () => {
     brand: null,
     iri: 'https://example.com/registry',
     reviewsWorkflow: 'standard',
+    allowSubmissions: true,
   };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MetadataRegistryInfoComponent, OSFTestingModule],
+      imports: [MetadataRegistryInfoComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MetadataRegistryInfoComponent);

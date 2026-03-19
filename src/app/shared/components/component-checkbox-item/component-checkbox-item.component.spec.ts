@@ -6,6 +6,8 @@ import { InfoIconComponent } from '../info-icon/info-icon.component';
 
 import { ComponentCheckboxItemComponent } from './component-checkbox-item.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 describe('ComponentCheckboxItemComponent', () => {
   let component: ComponentCheckboxItemComponent;
   let fixture: ComponentFixture<ComponentCheckboxItemComponent>;
@@ -13,6 +15,7 @@ describe('ComponentCheckboxItemComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ComponentCheckboxItemComponent, MockComponent(InfoIconComponent)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComponentCheckboxItemComponent);

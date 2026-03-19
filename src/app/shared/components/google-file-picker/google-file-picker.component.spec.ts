@@ -10,7 +10,7 @@ import { GoogleFilePickerDownloadService } from '@osf/shared/services/google-fil
 
 import { GoogleFilePickerComponent } from './google-file-picker.component';
 
-import { OSFTestingModule, OSFTestingStoreModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('Component: Google File Picker', () => {
   let component: GoogleFilePickerComponent;
@@ -104,8 +104,9 @@ describe('Component: Google File Picker', () => {
       };
 
       await TestBed.configureTestingModule({
-        imports: [OSFTestingModule, GoogleFilePickerComponent],
+        imports: [GoogleFilePickerComponent],
         providers: [
+          provideOSFCore(),
           { provide: SENTRY_TOKEN, useValue: { captureException: jest.fn() } },
           { provide: GoogleFilePickerDownloadService, useValue: googlePickerServiceSpy },
           {
@@ -225,8 +226,9 @@ describe('Component: Google File Picker', () => {
       };
 
       await TestBed.configureTestingModule({
-        imports: [OSFTestingStoreModule, GoogleFilePickerComponent],
+        imports: [GoogleFilePickerComponent],
         providers: [
+          provideOSFCore(),
           { provide: SENTRY_TOKEN, useValue: { captureException: jest.fn() } },
           { provide: GoogleFilePickerDownloadService, useValue: googlePickerServiceSpy },
           {
@@ -306,8 +308,9 @@ describe('Component: Google File Picker', () => {
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        imports: [OSFTestingStoreModule, GoogleFilePickerComponent],
+        imports: [GoogleFilePickerComponent],
         providers: [
+          provideOSFCore(),
           { provide: SENTRY_TOKEN, useValue: { captureException: jest.fn() } },
           { provide: GoogleFilePickerDownloadService, useValue: googlePickerServiceSpy },
           { provide: Store, useValue: errorStoreMock },
@@ -333,8 +336,9 @@ describe('Component: Google File Picker', () => {
   describe('picker not configured', () => {
     it('should disable picker when apiKey or appId is missing', async () => {
       await TestBed.configureTestingModule({
-        imports: [OSFTestingModule, GoogleFilePickerComponent],
+        imports: [GoogleFilePickerComponent],
         providers: [
+          provideOSFCore(),
           { provide: SENTRY_TOKEN, useValue: { captureException: jest.fn() } },
           { provide: GoogleFilePickerDownloadService, useValue: googlePickerServiceSpy },
           { provide: Store, useValue: storeMock },
@@ -359,8 +363,9 @@ describe('Component: Google File Picker', () => {
 
     it('should not open picker when not configured', async () => {
       await TestBed.configureTestingModule({
-        imports: [OSFTestingModule, GoogleFilePickerComponent],
+        imports: [GoogleFilePickerComponent],
         providers: [
+          provideOSFCore(),
           { provide: SENTRY_TOKEN, useValue: { captureException: jest.fn() } },
           { provide: GoogleFilePickerDownloadService, useValue: googlePickerServiceSpy },
           { provide: Store, useValue: storeMock },

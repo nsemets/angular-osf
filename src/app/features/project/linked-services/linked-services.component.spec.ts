@@ -14,7 +14,7 @@ import { LinkedServicesComponent } from './linked-services.component';
 import { getConfiguredAddonsMappedData } from '@testing/data/addons/addons.configured.data';
 import { getResourceReferencesData } from '@testing/data/files/resource-references.data';
 import { MOCK_USER } from '@testing/mocks/data.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
@@ -31,12 +31,9 @@ describe('Component: Linked Services', () => {
     const activatedRouteMock = ActivatedRouteMockBuilder.create().withParams({ id: mockProjectId }).build();
 
     await TestBed.configureTestingModule({
-      imports: [
-        LinkedServicesComponent,
-        OSFTestingModule,
-        ...MockComponents(SubHeaderComponent, LoadingSpinnerComponent),
-      ],
+      imports: [LinkedServicesComponent, ...MockComponents(SubHeaderComponent, LoadingSpinnerComponent)],
       providers: [
+        provideOSFCore(),
         { provide: ActivatedRoute, useValue: activatedRouteMock },
         provideMockStore({
           signals: [

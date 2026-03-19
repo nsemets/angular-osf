@@ -6,7 +6,7 @@ import { SelectComponent } from '@osf/shared/components/select/select.component'
 
 import { ProjectDetailSettingAccordionComponent } from './project-detail-setting-accordion.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('ProjectDetailSettingAccordionComponent', () => {
   let component: ProjectDetailSettingAccordionComponent;
@@ -14,7 +14,8 @@ describe('ProjectDetailSettingAccordionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProjectDetailSettingAccordionComponent, OSFTestingModule, MockComponent(SelectComponent)],
+      imports: [ProjectDetailSettingAccordionComponent, MockComponent(SelectComponent)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProjectDetailSettingAccordionComponent);

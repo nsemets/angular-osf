@@ -1,5 +1,4 @@
-import { TranslatePipe } from '@ngx-translate/core';
-import { MockComponents, MockPipe, MockProvider } from 'ng-mocks';
+import { MockComponents, MockProvider } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -17,7 +16,7 @@ import { RegistrySubmissionItemComponent } from '../registry-submission-item/reg
 import { RegistryPendingSubmissionsComponent } from './registry-pending-submissions.component';
 
 import { MOCK_REGISTRY_MODERATIONS } from '@testing/mocks/registry-moderation.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
@@ -41,7 +40,6 @@ describe('RegistryPendingSubmissionsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         RegistryPendingSubmissionsComponent,
-        OSFTestingModule,
         ...MockComponents(
           SelectComponent,
           IconComponent,
@@ -49,9 +47,9 @@ describe('RegistryPendingSubmissionsComponent', () => {
           RegistrySubmissionItemComponent,
           CustomPaginatorComponent
         ),
-        MockPipe(TranslatePipe),
       ],
       providers: [
+        provideOSFCore(),
         MockProvider(Router, mockRouter),
         MockProvider(ActivatedRoute, mockActivatedRoute),
         provideMockStore({

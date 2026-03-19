@@ -4,7 +4,7 @@ import { By } from '@angular/platform-browser';
 import { ResourceLicenseComponent } from './resource-license.component';
 
 import { MOCK_LICENSE } from '@testing/mocks/license.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('ResourceLicenseComponent', () => {
   let component: ResourceLicenseComponent;
@@ -12,7 +12,8 @@ describe('ResourceLicenseComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ResourceLicenseComponent, OSFTestingModule],
+      imports: [ResourceLicenseComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ResourceLicenseComponent);

@@ -13,9 +13,10 @@ import { CollectionModerationTab } from '../../enums';
 
 import { CollectionModerationComponent } from './collection-moderation.component';
 
-import { OSFTestingStoreModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
+import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('Component: Collection Moderation', () => {
   let component: CollectionModerationComponent;
@@ -24,7 +25,7 @@ describe('Component: Collection Moderation', () => {
   let mockRouter: ReturnType<RouterMockBuilder['build']>;
   let mockActivatedRoute: ReturnType<ActivatedRouteMockBuilder['build']>;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     isMediumSubject = new BehaviorSubject<boolean>(true);
     mockRouter = RouterMockBuilder.create().build();
     mockActivatedRoute = ActivatedRouteMockBuilder.create()
@@ -32,18 +33,16 @@ describe('Component: Collection Moderation', () => {
       .withData({ tab: CollectionModerationTab.AllItems })
       .build();
 
-    await TestBed.configureTestingModule({
-      imports: [
-        CollectionModerationComponent,
-        OSFTestingStoreModule,
-        ...MockComponents(SubHeaderComponent, SelectComponent),
-      ],
+    TestBed.configureTestingModule({
+      imports: [CollectionModerationComponent, ...MockComponents(SubHeaderComponent, SelectComponent)],
       providers: [
+        provideOSFCore(),
+        provideMockStore(),
         MockProvider(ActivatedRoute, mockActivatedRoute),
         MockProvider(Router, mockRouter),
         MockProvider(IS_MEDIUM, isMediumSubject),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(CollectionModerationComponent);
     component = fixture.componentInstance;
@@ -75,12 +74,9 @@ describe('Component: Collection Moderation', () => {
     });
 
     await TestBed.configureTestingModule({
-      imports: [
-        CollectionModerationComponent,
-        OSFTestingStoreModule,
-        ...MockComponents(SubHeaderComponent, SelectComponent),
-      ],
+      imports: [CollectionModerationComponent, ...MockComponents(SubHeaderComponent, SelectComponent)],
       providers: [
+        provideOSFCore(),
         MockProvider(ActivatedRoute, routeWithFirstChild),
         MockProvider(Router, mockRouter),
         MockProvider(IS_MEDIUM, isMediumSubject),
@@ -99,12 +95,9 @@ describe('Component: Collection Moderation', () => {
     const routeWithoutProviderId = ActivatedRouteMockBuilder.create().withParams({}).build();
 
     await TestBed.configureTestingModule({
-      imports: [
-        CollectionModerationComponent,
-        OSFTestingStoreModule,
-        ...MockComponents(SubHeaderComponent, SelectComponent),
-      ],
+      imports: [CollectionModerationComponent, ...MockComponents(SubHeaderComponent, SelectComponent)],
       providers: [
+        provideOSFCore(),
         MockProvider(ActivatedRoute, routeWithoutProviderId),
         MockProvider(Router, mockRouter),
         MockProvider(IS_MEDIUM, isMediumSubject),

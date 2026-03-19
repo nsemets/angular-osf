@@ -1,7 +1,6 @@
 import { provideStore } from '@ngxs/store';
 
-import { TranslatePipe } from '@ngx-translate/core';
-import { MockPipe, MockProvider } from 'ng-mocks';
+import { MockProvider } from 'ng-mocks';
 
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -12,14 +11,17 @@ import { ToastService } from '@osf/shared/services/toast.service';
 
 import { ShareIndexingComponent } from './share-indexing.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 describe('ShareIndexingComponent', () => {
   let component: ShareIndexingComponent;
   let fixture: ComponentFixture<ShareIndexingComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ShareIndexingComponent, MockPipe(TranslatePipe)],
+      imports: [ShareIndexingComponent],
       providers: [
+        provideOSFCore(),
         provideStore([UserState]),
         MockProvider(ToastService),
         provideHttpClient(),

@@ -1,6 +1,6 @@
 import { MockComponent, MockProvider } from 'ng-mocks';
 
-import { NO_ERRORS_SCHEMA, signal } from '@angular/core';
+import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -14,7 +14,7 @@ import { CurrentResourceSelectors } from '@osf/shared/stores/current-resource';
 import { NavMenuComponent } from './nav-menu.component';
 
 import { MOCK_USER } from '@testing/mocks/data.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
@@ -35,8 +35,9 @@ describe('NavMenuComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [NavMenuComponent, OSFTestingModule, MockComponent(IconComponent)],
+      imports: [NavMenuComponent, MockComponent(IconComponent)],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             { selector: UserSelectors.isAuthenticated, value: signal(false) },
@@ -61,7 +62,6 @@ describe('NavMenuComponent', () => {
         },
         MockProvider(AuthService, mockAuthService),
       ],
-      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(NavMenuComponent);

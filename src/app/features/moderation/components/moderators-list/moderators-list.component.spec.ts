@@ -11,6 +11,7 @@ import { SearchInputComponent } from '@osf/shared/components/search-input/search
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 
 import { ModeratorPermission } from '../../enums';
 import { ModeratorModel } from '../../models';
@@ -21,8 +22,7 @@ import { ModeratorsListComponent } from './moderators-list.component';
 
 import { MOCK_USER } from '@testing/mocks/data.mock';
 import { MOCK_MODERATORS } from '@testing/mocks/moderator.mock';
-import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomConfirmationServiceMockBuilder } from '@testing/providers/custom-confirmation-provider.mock';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
@@ -49,17 +49,14 @@ describe('ModeratorsListComponent', () => {
     customConfirmationServiceMock = CustomConfirmationServiceMockBuilder.create().build();
     mockCustomDialogService = CustomDialogServiceMockBuilder.create().build();
 
-    await TestBed.configureTestingModule({
-      imports: [
-        ModeratorsListComponent,
-        OSFTestingModule,
-        ...MockComponents(ModeratorsTableComponent, SearchInputComponent),
-      ],
+    TestBed.configureTestingModule({
+      imports: [ModeratorsListComponent, ...MockComponents(ModeratorsTableComponent, SearchInputComponent)],
       providers: [
+        provideOSFCore(),
         MockProvider(ActivatedRoute, mockActivatedRoute),
         MockProvider(CustomConfirmationService, customConfirmationServiceMock),
         MockProvider(CustomDialogService, mockCustomDialogService),
-        TranslateServiceMock,
+        MockProvider(ToastService),
         provideMockStore({
           signals: [
             { selector: UserSelectors.getCurrentUser, value: mockCurrentUser },
@@ -69,7 +66,7 @@ describe('ModeratorsListComponent', () => {
           ],
         }),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(ModeratorsListComponent);
     component = fixture.componentInstance;

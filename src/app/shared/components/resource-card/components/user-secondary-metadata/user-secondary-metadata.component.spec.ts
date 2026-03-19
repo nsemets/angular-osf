@@ -6,7 +6,7 @@ import { ResourceModel } from '@shared/models/search/resource.model';
 import { UserSecondaryMetadataComponent } from './user-secondary-metadata.component';
 
 import { MOCK_AGENT_RESOURCE } from '@testing/mocks/resource.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('UserSecondaryMetadataComponent', () => {
   let component: UserSecondaryMetadataComponent;
@@ -19,7 +19,8 @@ describe('UserSecondaryMetadataComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [UserSecondaryMetadataComponent, OSFTestingModule],
+      imports: [UserSecondaryMetadataComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(UserSecondaryMetadataComponent);
