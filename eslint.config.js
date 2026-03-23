@@ -4,7 +4,6 @@ const { defineConfig } = require('eslint/config');
 const tseslint = require('typescript-eslint');
 const angular = require('angular-eslint');
 
-const pluginImport = require('eslint-plugin-import');
 const pluginSimpleImportSort = require('eslint-plugin-simple-import-sort');
 const pluginUnusedImports = require('eslint-plugin-unused-imports');
 const eslintPluginPrettierRecommended = require('eslint-plugin-prettier/recommended');
@@ -21,7 +20,6 @@ module.exports = defineConfig(
     ],
     processor: angular.processInlineTemplates,
     plugins: {
-      import: pluginImport,
       'simple-import-sort': pluginSimpleImportSort,
       'unused-imports': pluginUnusedImports,
     },
@@ -43,9 +41,7 @@ module.exports = defineConfig(
           style: 'kebab-case',
         },
       ],
-      'import/first': 'error',
-      'import/no-duplicates': 'error',
-      'import/newline-after-import': 'error',
+      'no-duplicate-imports': 'error',
       'simple-import-sort/imports': [
         'error',
         {
