@@ -4,25 +4,28 @@ import { map } from 'rxjs/operators';
 import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
-import { CedarRecordsMapper, MetadataMapper } from '@osf/features/metadata/mappers';
+import { CedarRecordsMapper, MetadataMapper, RorMapper } from '@osf/features/metadata/mappers';
 import {
   CedarMetadataRecord,
   CedarMetadataRecordJsonApi,
   CedarMetadataTemplateJsonApi,
   CedarRecordDataBinding,
-  CrossRefFundersResponse,
   CustomItemMetadataRecord,
   CustomMetadataJsonApi,
   CustomMetadataJsonApiResponse,
   MetadataJsonApi,
   MetadataJsonApiResponse,
   MetadataModel,
+  RorFunderOption,
+  RorSearchResponse,
 } from '@osf/features/metadata/models';
-import { ResourceType } from '@osf/shared/enums/resource-type.enum';
-import { IdentifierModel } from '@osf/shared/models/identifiers/identifier.model';
-import { LicenseOptions } from '@osf/shared/models/license/license.model';
-import { BaseNodeAttributesJsonApi } from '@osf/shared/models/nodes/base-node-attributes-json-api.model';
-import { JsonApiService } from '@osf/shared/services/json-api.service';
+
+import { ResourceType } from '../enums/resource-type.enum';
+import { IdentifierModel } from '../models/identifiers/identifier.model';
+import { LicenseOptions } from '../models/license/license.model';
+import { BaseNodeAttributesJsonApi } from '../models/nodes/base-node-attributes-json-api.model';
+
+import { JsonApiService } from './json-api.service';
 
 @Injectable({
   providedIn: 'root',
@@ -79,14 +82,18 @@ export class MetadataService {
     );
   }
 
-  getFundersList(searchQuery?: string): Observable<CrossRefFundersResponse> {
-    let url = `${this.funderApiUrl}funders?mailto=support%40osf.io`;
+  getFundersList(searchQuery?: string): Observable<RorFunderOption[]> {
+    let url = `${this.funderApiUrl}/organizations?filter=types:funder`;
 
     if (searchQuery && searchQuery.trim()) {
       url += `&query=${encodeURIComponent(searchQuery.trim())}`;
     }
 
-    return this.jsonApiService.get<CrossRefFundersResponse>(url);
+    const headers = this.environment.rorClientId ? { 'Client-Id': this.environment.rorClientId } : undefined;
+
+    return this.jsonApiService
+      .get<RorSearchResponse>(url, undefined, undefined, headers)
+      .pipe(map((response) => RorMapper.toFunderOptions(response)));
   }
 
   getMetadataCedarTemplates(url?: string): Observable<CedarMetadataTemplateJsonApi> {

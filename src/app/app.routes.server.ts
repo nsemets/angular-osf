@@ -134,6 +134,14 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server,
   },
   {
+    path: ':id/metadata/:recordId',
+    renderMode: RenderMode.Server,
+  },
+  {
+    path: ':id/wiki',
+    renderMode: RenderMode.Server,
+  },
+  {
     path: ':id/files/**',
     renderMode: RenderMode.Server,
   },
