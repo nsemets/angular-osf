@@ -7,6 +7,7 @@ import { ConfirmationService } from 'primeng/api';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { ToastService } from '@osf/shared/services/toast.service';
@@ -23,11 +24,12 @@ describe('DeveloperApplicationsListComponent', () => {
   let fixture: ComponentFixture<DeveloperAppsListComponent>;
   let customConfirmationService: CustomConfirmationService;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [DeveloperAppsListComponent],
       providers: [
         provideOSFCore(),
+        provideRouter([]),
         provideStore([DeveloperAppsState]),
         provideHttpClient(),
         provideHttpClientTesting(),
@@ -35,7 +37,7 @@ describe('DeveloperApplicationsListComponent', () => {
         MockProvider(CustomConfirmationService),
         MockProvider(ToastService),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(DeveloperAppsListComponent);
     component = fixture.componentInstance;

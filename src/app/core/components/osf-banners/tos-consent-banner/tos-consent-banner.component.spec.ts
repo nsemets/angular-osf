@@ -1,10 +1,8 @@
 import { Store } from '@ngxs/store';
 
-import { MockProvider } from 'ng-mocks';
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { ActivatedRoute, provideRouter } from '@angular/router';
+import { provideRouter } from '@angular/router';
 
 import { AcceptTermsOfServiceByUser, UserSelectors } from '@core/store/user';
 import { UserModel } from '@osf/shared/models/user/user.model';
@@ -13,7 +11,6 @@ import { TosConsentBannerComponent } from './tos-consent-banner.component';
 
 import { MOCK_USER } from '@testing/mocks/data.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
-import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { BaseSetupOverrides, mergeSignalOverrides, provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('TosConsentBannerComponent', () => {
@@ -27,7 +24,6 @@ describe('TosConsentBannerComponent', () => {
       providers: [
         provideOSFCore(),
         provideRouter([]),
-        MockProvider(ActivatedRoute, ActivatedRouteMockBuilder.create().build()),
         provideMockStore({
           signals: mergeSignalOverrides(
             [

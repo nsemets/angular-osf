@@ -14,11 +14,11 @@ describe('AffiliatedInstitutionsViewComponent', () => {
 
   const mockInstitutions: Institution[] = [MOCK_INSTITUTION];
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [AffiliatedInstitutionsViewComponent],
       providers: [provideOSFCore(), provideRouter([])],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(AffiliatedInstitutionsViewComponent);
     component = fixture.componentInstance;

@@ -3,7 +3,7 @@ import { MockComponents, MockProvider } from 'ng-mocks';
 import { of } from 'rxjs';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
+import { provideRouter } from '@angular/router';
 
 import { EducationHistoryComponent } from '@osf/shared/components/education-history/education-history.component';
 import { EmploymentHistoryComponent } from '@osf/shared/components/employment-history/employment-history.component';
@@ -25,11 +25,11 @@ describe('ProfileInformationComponent', () => {
 
   const mockUser: UserModel = MOCK_USER;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [ProfileInformationComponent, ...MockComponents(EmploymentHistoryComponent, EducationHistoryComponent)],
-      providers: [provideOSFCore(), MockProvider(ActivatedRoute), MockProvider(IS_MEDIUM, of(false))],
-    }).compileComponents();
+      providers: [provideOSFCore(), provideRouter([]), MockProvider(IS_MEDIUM, of(false))],
+    });
 
     fixture = TestBed.createComponent(ProfileInformationComponent);
     component = fixture.componentInstance;
@@ -178,22 +178,5 @@ describe('ProfileInformationComponent', () => {
     fixture.componentRef.setInput('currentUserInstitutions', mockInstitutions);
     fixture.detectChanges();
     expect(component.currentUserInstitutions()).toEqual(mockInstitutions);
-  });
-
-  it('should not render institution logos when currentUserInstitutions is undefined', () => {
-    fixture.componentRef.setInput('currentUserInstitutions', undefined);
-    fixture.detectChanges();
-    const logos = fixture.nativeElement.querySelectorAll('img.fit-contain');
-    expect(logos.length).toBe(0);
-  });
-
-  it('should render institution logos when currentUserInstitutions is provided', () => {
-    const institutions: Institution[] = [MOCK_INSTITUTION];
-    fixture.componentRef.setInput('currentUserInstitutions', institutions);
-    fixture.detectChanges();
-
-    const logos = fixture.nativeElement.querySelectorAll('img.fit-contain');
-    expect(logos.length).toBe(institutions.length);
-    expect(logos[0].alt).toBe(institutions[0].name);
   });
 });

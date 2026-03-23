@@ -1,7 +1,7 @@
-import { MockComponent, MockProvider } from 'ng-mocks';
+import { MockComponent } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, provideRouter } from '@angular/router';
+import { provideRouter } from '@angular/router';
 
 import { SOCIAL_ICONS } from '@core/constants/social-icons.constant';
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
@@ -9,7 +9,6 @@ import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { FooterComponent } from './footer.component';
 
 import { provideOSFCore } from '@testing/osf.testing.provider';
-import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 
 describe('FooterComponent', () => {
   let component: FooterComponent;
@@ -18,11 +17,7 @@ describe('FooterComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FooterComponent, MockComponent(IconComponent)],
-      providers: [
-        provideOSFCore(),
-        provideRouter([]),
-        MockProvider(ActivatedRoute, ActivatedRouteMockBuilder.create().build()),
-      ],
+      providers: [provideOSFCore(), provideRouter([])],
     });
 
     fixture = TestBed.createComponent(FooterComponent);

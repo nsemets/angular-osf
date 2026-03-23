@@ -5,7 +5,7 @@ import { MockComponents, MockProvider } from 'ng-mocks';
 import { of } from 'rxjs';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Navigation, Router, UrlTree } from '@angular/router';
+import { provideRouter } from '@angular/router';
 
 import { AddonSetupAccountFormComponent } from '@osf/shared/components/addons/addon-setup-account-form/addon-setup-account-form.component';
 import { AddonTermsComponent } from '@osf/shared/components/addons/addon-terms/addon-terms.component';
@@ -21,25 +21,15 @@ describe.skip('ConnectAddonComponent', () => {
   let component: ConnectAddonComponent;
   let fixture: ComponentFixture<ConnectAddonComponent>;
 
-  beforeEach(async () => {
-    const mockNavigation: Partial<Navigation> = {
-      id: 1,
-      initialUrl: new UrlTree(),
-      extractedUrl: new UrlTree(),
-      trigger: 'imperative',
-      previousNavigation: null,
-      extras: {
-        state: { addon: MOCK_ADDON },
-      },
-    };
-
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [
         ConnectAddonComponent,
         ...MockComponents(SubHeaderComponent, AddonTermsComponent, AddonSetupAccountFormComponent),
       ],
       providers: [
         provideOSFCore(),
+        provideRouter([]),
         MockProvider(Store, {
           selectSignal: jest.fn().mockImplementation((selector) => {
             if (selector === AddonsSelectors.getAddonsUserReference) {
@@ -52,13 +42,8 @@ describe.skip('ConnectAddonComponent', () => {
           }),
           dispatch: jest.fn().mockReturnValue(of({})),
         }),
-        MockProvider(Router, {
-          getCurrentNavigation: () => mockNavigation as Navigation,
-          navigate: jest.fn(),
-        }),
-        MockProvider(ActivatedRoute),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(ConnectAddonComponent);
     component = fixture.componentInstance;

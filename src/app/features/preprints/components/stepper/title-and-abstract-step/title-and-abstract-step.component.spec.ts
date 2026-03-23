@@ -3,7 +3,7 @@ import { MockComponent, MockDirective, MockProvider } from 'ng-mocks';
 import { Textarea } from 'primeng/textarea';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
+import { provideRouter } from '@angular/router';
 
 import { TitleAndAbstractStepComponent } from '@osf/features/preprints/components';
 import { PreprintStepperSelectors } from '@osf/features/preprints/store/preprint-stepper';
@@ -12,7 +12,6 @@ import { ToastService } from '@osf/shared/services/toast.service';
 
 import { PREPRINT_MOCK } from '@testing/mocks/preprint.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
-import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 import { ToastServiceMock } from '@testing/providers/toast-provider.mock';
 
@@ -29,7 +28,7 @@ describe('TitleAndAbstractStepComponent', () => {
       imports: [TitleAndAbstractStepComponent, MockComponent(TextInputComponent), MockDirective(Textarea)],
       providers: [
         provideOSFCore(),
-        MockProvider(ActivatedRoute, ActivatedRouteMockBuilder.create().build()),
+        provideRouter([]),
         MockProvider(ToastService, mockToastService),
         provideMockStore({
           signals: [

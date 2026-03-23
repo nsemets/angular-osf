@@ -3,7 +3,7 @@ import { Store } from '@ngxs/store';
 import { MockProvider } from 'ng-mocks';
 
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
+import { provideRouter } from '@angular/router';
 
 import { RegistrationReviewStates } from '@osf/shared/enums/registration-review-states.enum';
 import { RegistryStatus } from '@osf/shared/enums/registry-status.enum';
@@ -18,7 +18,6 @@ import { MOCK_REGISTRATION_OVERVIEW_MODEL } from '@testing/mocks/registration-ov
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomConfirmationServiceMock } from '@testing/providers/custom-confirmation-provider.mock';
 import { CustomDialogServiceMock } from '@testing/providers/custom-dialog-provider.mock';
-import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 const MOCK_REGISTRY = { ...MOCK_REGISTRATION_OVERVIEW_MODEL, embargoEndDate: '2024-01-01T00:00:00Z' };
@@ -37,10 +36,10 @@ function setup(overrides: SetupOverrides = {}) {
     imports: [RegistryStatusesComponent],
     providers: [
       provideOSFCore(),
-      MockProvider(ActivatedRoute, ActivatedRouteMockBuilder.create().build()),
+      provideRouter([]),
+      provideMockStore(),
       MockProvider(CustomDialogService, mockDialogService),
       MockProvider(CustomConfirmationService, mockConfirmationService),
-      provideMockStore(),
     ],
   });
 

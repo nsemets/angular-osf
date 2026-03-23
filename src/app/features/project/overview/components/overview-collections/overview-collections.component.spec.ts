@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { collectionFilterNames } from '@osf/features/collections/constants';
 import { CollectionSubmission } from '@osf/shared/models/collections/collections.model';
@@ -18,11 +19,11 @@ describe('OverviewCollectionsComponent', () => {
   let component: OverviewCollectionsComponent;
   let fixture: ComponentFixture<OverviewCollectionsComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [OverviewCollectionsComponent],
-      providers: [provideOSFCore()],
-    }).compileComponents();
+      providers: [provideOSFCore(), provideRouter([])],
+    });
 
     fixture = TestBed.createComponent(OverviewCollectionsComponent);
     component = fixture.componentInstance;

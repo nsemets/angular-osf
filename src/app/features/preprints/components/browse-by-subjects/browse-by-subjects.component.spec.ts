@@ -1,7 +1,5 @@
-import { MockProvider } from 'ng-mocks';
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
+import { provideRouter } from '@angular/router';
 
 import { ResourceType } from '@shared/enums/resource-type.enum';
 import { SubjectModel } from '@shared/models/subject/subject.model';
@@ -10,7 +8,6 @@ import { BrowseBySubjectsComponent } from './browse-by-subjects.component';
 
 import { SUBJECTS_MOCK } from '@testing/mocks/subject.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
-import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 
 describe('BrowseBySubjectsComponent', () => {
   let component: BrowseBySubjectsComponent;
@@ -26,7 +23,7 @@ describe('BrowseBySubjectsComponent', () => {
   }) {
     TestBed.configureTestingModule({
       imports: [BrowseBySubjectsComponent],
-      providers: [provideOSFCore(), MockProvider(ActivatedRoute, ActivatedRouteMockBuilder.create().build())],
+      providers: [provideOSFCore(), provideRouter([])],
     });
 
     fixture = TestBed.createComponent(BrowseBySubjectsComponent);

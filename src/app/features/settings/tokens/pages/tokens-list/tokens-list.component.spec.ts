@@ -1,6 +1,7 @@
 import { of } from 'rxjs';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { ToastService } from '@osf/shared/services/toast.service';
@@ -48,15 +49,16 @@ describe('TokensListComponent', () => {
     showSuccess: jest.fn(),
   };
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [TokensListComponent],
       providers: [
         provideOSFCore(),
+        provideRouter([]),
         { provide: CustomConfirmationService, useValue: mockConfirmationService },
         { provide: ToastService, useValue: mockToastService },
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(TokensListComponent);
     component = fixture.componentInstance;

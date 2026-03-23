@@ -4,7 +4,7 @@ import { MockComponents } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl } from '@angular/forms';
-import { ActivatedRoute, provideRouter } from '@angular/router';
+import { provideRouter } from '@angular/router';
 
 import { ScheduledBannerComponent } from '@core/components/osf-banners/scheduled-banner/scheduled-banner.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
@@ -16,7 +16,6 @@ import { InstitutionsListComponent } from './institutions-list.component';
 
 import { MOCK_INSTITUTION } from '@testing/mocks/institution.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
-import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('InstitutionsListComponent', () => {
@@ -35,10 +34,6 @@ describe('InstitutionsListComponent', () => {
       providers: [
         provideOSFCore(),
         provideRouter([]),
-        {
-          provide: ActivatedRoute,
-          useValue: ActivatedRouteMockBuilder.create().build(),
-        },
         provideMockStore({
           signals: [
             { selector: InstitutionsSelectors.getInstitutions, value: mockInstitutions },

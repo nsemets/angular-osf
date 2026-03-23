@@ -14,7 +14,7 @@ describe('MyReviewingNavigationComponent', () => {
 
   const mockProvider = MOCK_PROVIDER;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MyReviewingNavigationComponent],
       providers: [provideOSFCore(), provideRouter([])],

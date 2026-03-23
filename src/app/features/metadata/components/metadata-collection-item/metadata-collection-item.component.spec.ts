@@ -1,7 +1,5 @@
-import { MockProvider } from 'ng-mocks';
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
+import { provideRouter } from '@angular/router';
 
 import { CollectionSubmissionReviewState } from '@osf/shared/enums/collection-submission-review-state.enum';
 import { CollectionSubmission } from '@osf/shared/models/collections/collections.model';
@@ -9,7 +7,6 @@ import { CollectionSubmission } from '@osf/shared/models/collections/collections
 import { MetadataCollectionItemComponent } from './metadata-collection-item.component';
 
 import { provideOSFCore } from '@testing/osf.testing.provider';
-import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 
 describe('MetadataCollectionItemComponent', () => {
   let component: MetadataCollectionItemComponent;
@@ -33,11 +30,11 @@ describe('MetadataCollectionItemComponent', () => {
     gradeLevels: 'Graduate',
   };
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MetadataCollectionItemComponent],
-      providers: [provideOSFCore(), MockProvider(ActivatedRoute, ActivatedRouteMockBuilder.create().build())],
-    }).compileComponents();
+      providers: [provideOSFCore(), provideRouter([])],
+    });
 
     fixture = TestBed.createComponent(MetadataCollectionItemComponent);
     component = fixture.componentInstance;

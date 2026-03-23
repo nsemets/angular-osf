@@ -1,6 +1,7 @@
 import { MockComponent, MockProvider } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { SelectComponent } from '@osf/shared/components/select/select.component';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
@@ -34,10 +35,10 @@ describe('ModeratorsTableComponent', () => {
   beforeEach(async () => {
     mockCustomDialogService = CustomDialogServiceMockBuilder.create().build();
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [ModeratorsTableComponent, MockComponent(SelectComponent)],
-      providers: [provideOSFCore(), MockProvider(CustomDialogService, mockCustomDialogService)],
-    }).compileComponents();
+      providers: [provideOSFCore(), provideRouter([]), MockProvider(CustomDialogService, mockCustomDialogService)],
+    });
 
     fixture = TestBed.createComponent(ModeratorsTableComponent);
     component = fixture.componentInstance;
