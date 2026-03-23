@@ -34,6 +34,7 @@ import { CustomDialogService } from '@osf/shared/services/custom-dialog.service'
 import { DataciteService } from '@osf/shared/services/datacite/datacite.service';
 import { MetaTagsService } from '@osf/shared/services/meta-tags.service';
 import { MetaTagsBuilderService } from '@osf/shared/services/meta-tags-builder.service';
+import { SignpostingService } from '@osf/shared/services/signposting.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { ContributorsSelectors } from '@osf/shared/stores/contributors';
 
@@ -99,6 +100,8 @@ export class PreprintDetailsComponent implements OnInit, OnDestroy {
   private readonly metaTagsBuilder = inject(MetaTagsBuilderService);
   private readonly dataciteService = inject(DataciteService);
   private readonly prerenderReady = inject(PrerenderReadyService);
+  private readonly signpostingService = inject(SignpostingService);
+
   private readonly environment = inject(ENVIRONMENT);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
@@ -300,6 +303,8 @@ export class PreprintDetailsComponent implements OnInit, OnDestroy {
       this.fetchPreprint(preprintId);
     }
 
+    this.signpostingService.addSignposting(this.preprintId());
+
     this.dataciteService.logIdentifiableView(this.preprint$).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
   }
 
@@ -308,6 +313,8 @@ export class PreprintDetailsComponent implements OnInit, OnDestroy {
       this.actions.resetState();
       this.actions.clearCurrentProvider();
     }
+
+    this.signpostingService.removeSignpostingLinkTags();
 
     this.helpScoutService.unsetResourceType();
   }
