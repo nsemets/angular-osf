@@ -42,6 +42,14 @@ export class MetadataTabsComponent {
     this.cedarFormChangeTemplate.emit();
   }
 
+  onTabChange(event: string | number | undefined): void {
+    const value = event;
+
+    if (value !== undefined) {
+      this.changeTab.emit(value);
+    }
+  }
+
   toggleEditMode() {
     this.toggleFormEdit.emit();
   }

@@ -7,8 +7,8 @@ import { of } from 'rxjs';
 import { HttpTestingController } from '@angular/common/http/testing';
 import { PLATFORM_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideServerRendering } from '@angular/platform-server';
 import { ActivatedRoute, Router } from '@angular/router';
+import { provideServerRendering } from '@angular/ssr';
 
 import {
   ClearCollectionModeration,

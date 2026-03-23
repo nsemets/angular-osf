@@ -65,7 +65,7 @@ function assertSendBeacon(
   doi: string,
   event: DataciteEvent
 ) {
-  expect(navigator.sendBeacon).toBeCalledTimes(1);
+  expect(navigator.sendBeacon).toHaveBeenCalledTimes(1);
   expect(navigator.sendBeacon).toHaveBeenCalledWith(
     dataciteTrackerAddress,
     JSON.stringify({
@@ -87,6 +87,7 @@ describe('DataciteService', () => {
   const dataciteTrackerRepoId = 'repo-123';
   describe('with proper configuration', () => {
     beforeEach(() => {
+      sentry = {} as jest.Mocked<any>;
       Object.defineProperty(navigator, 'sendBeacon', {
         configurable: true,
         value: jest.fn(() => false),

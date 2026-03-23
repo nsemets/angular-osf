@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 import { GoogleFilePickerDownloadService } from './google-file-picker.download.service';
@@ -59,21 +59,7 @@ describe('Service: Google File Picker Download', () => {
   });
 
   it('should emit error when script fails to load', (done) => {
-    const mockScriptElement: Partial<HTMLScriptElement> = {};
-
-    const mockDocument = {
-      createElement: jest.fn(() => mockScriptElement),
-      body: {
-        appendChild: jest.fn(() => {
-          setTimeout(() => {
-            mockScriptElement.onerror?.(new Event('error'));
-          }, 0);
-        }),
-      },
-      querySelector: jest.fn(() => null),
-    };
-
-    const service = new GoogleFilePickerDownloadService(mockDocument as unknown as Document);
+    const service = new GoogleFilePickerDownloadService();
 
     service.loadScript().subscribe({
       next: () => fail('Should not emit next on error'),
