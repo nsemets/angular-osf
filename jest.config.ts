@@ -1,11 +1,18 @@
-module.exports = {
+import type { Config } from 'jest';
+
+const config: Config = {
   preset: 'jest-preset-angular',
   setupFilesAfterEnv: ['<rootDir>/setup-jest.ts'],
   globalSetup: '<rootDir>/jest.global-setup.ts',
-  collectCoverage: false,
+  testEnvironment: 'jsdom',
   clearMocks: true,
   restoreMocks: true,
-  coverageReporters: ['json-summary', 'lcov', 'clover'],
+  collectCoverage: false,
+  coverageDirectory: 'coverage',
+  coverageReporters: ['json-summary', 'lcov', 'clover', 'text-summary'],
+  moduleFileExtensions: ['ts', 'js', 'html', 'json', 'mjs'],
+  extensionsToTreatAsEsm: ['.ts'],
+  testMatch: ['<rootDir>/src/**/*.spec.ts'],
   moduleNameMapper: {
     '^@osf/(.*)$': '<rootDir>/src/app/$1',
     '^@core/(.*)$': '<rootDir>/src/app/core/$1',
@@ -27,11 +34,8 @@ module.exports = {
     ],
   },
   transformIgnorePatterns: [
-    'node_modules/(?!.*\\.mjs$|@ngxs|@angular|@ngrx|parse5|entities|chart.js|@mdit|@citation-js|@traptitech|@sentry|@primeng|@newrelic)',
+    'node_modules/(?!(@angular|@ngxs|@ngx-translate|angular-google-tag-manager|ngx-cookie-service|ngx-markdown-editor|angularx-qrcode|ngx-captcha|@sentry|@newrelic|@centerforopenscience|@mdit|@traptitech|@citation-js|primeng|@primeuix|markdown-it|markdown-it-anchor|markdown-it-toc-done-right|markdown-it-video|chart\\.js)/)',
   ],
-  testEnvironment: 'jsdom',
-  moduleFileExtensions: ['ts', 'js', 'html', 'json', 'mjs'],
-  coverageDirectory: 'coverage',
   collectCoverageFrom: [
     'src/app/**/*.{ts,js}',
     '!src/app/core/theme/**',
@@ -40,10 +44,8 @@ module.exports = {
     '!src/app/**/*.routes.{ts,js}',
     '!src/app/**/*.route.{ts,js}',
     '!src/app/**/mappers/**',
-    '!src/app/shared/mappers/**',
     '!src/app/**/*.model.{ts,js}',
     '!src/app/**/models/*.{ts,js}',
-    '!src/app/shared/models/**',
     '!src/app/**/*.enum.{ts,js}',
     '!src/app/**/*.type.{ts,js}',
     '!src/app/**/*.spec.{ts,js}',
@@ -51,13 +53,12 @@ module.exports = {
     '!src/app/**/index.ts',
     '!src/app/**/public-api.ts',
   ],
-  extensionsToTreatAsEsm: ['.ts'],
   coverageThreshold: {
     global: {
       branches: 43.3,
-      functions: 42.7,
-      lines: 69.3,
-      statements: 69.8,
+      functions: 43.8,
+      lines: 70.18,
+      statements: 70.6,
     },
   },
   watchPathIgnorePatterns: [
@@ -70,3 +71,5 @@ module.exports = {
   ],
   testPathIgnorePatterns: ['<rootDir>/src/environments'],
 };
+
+export default config;

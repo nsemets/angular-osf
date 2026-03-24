@@ -2,34 +2,10 @@ import { setupZonelessTestEnv } from 'jest-preset-angular/setup-env/zoneless';
 
 setupZonelessTestEnv();
 
-// Global mocks for jsdom
-const mock = () => {
-  let storage: Record<string, string> = {};
-  return {
-    getItem: (key: string) => (key in storage ? storage[key] : null),
-    setItem: (key: string, value: string) => (storage[key] = value || ''),
-    removeItem: (key: string) => delete storage[key],
-    clear: () => (storage = {}),
-  };
-};
-
-Object.defineProperty(window, 'localStorage', { value: mock() });
-Object.defineProperty(window, 'sessionStorage', { value: mock() });
-Object.defineProperty(window, 'getComputedStyle', {
-  value: () => ['-webkit-appearance'],
-});
-
-Object.defineProperty(document.body, 'clientWidth', { value: 1024 });
-Object.defineProperty(document.body, 'clientHeight', { value: 768 });
-
-// Mock ResizeObserver for Jest (PrimeNG and other UI libs may require this)
 class ResizeObserver {
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  observe() {}
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  unobserve() {}
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  disconnect() {}
+  observe = jest.fn();
+  unobserve = jest.fn();
+  disconnect = jest.fn();
 }
 
 Object.defineProperty(window, 'ResizeObserver', {
@@ -37,14 +13,6 @@ Object.defineProperty(window, 'ResizeObserver', {
   configurable: true,
   value: ResizeObserver,
 });
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-(global as any).ace = {
-  define: jest.fn(),
-  require: jest.fn().mockReturnValue({
-    snippetCompleter: {},
-  }),
-};
 
 jest.mock('@newrelic/browser-agent/loaders/browser-agent', () => ({
   BrowserAgent: jest.fn().mockImplementation(() => ({
@@ -54,9 +22,5 @@ jest.mock('@newrelic/browser-agent/loaders/browser-agent', () => ({
 }));
 
 if (!globalThis.structuredClone) {
-  Object.defineProperty(globalThis, 'structuredClone', {
-    value: <T>(value: T): T => JSON.parse(JSON.stringify(value)) as T,
-    writable: true,
-    configurable: true,
-  });
+  globalThis.structuredClone = <T>(value: T): T => JSON.parse(JSON.stringify(value)) as T;
 }
