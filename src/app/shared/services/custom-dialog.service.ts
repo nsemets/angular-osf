@@ -16,6 +16,7 @@ export class CustomDialogService {
     closeOnEscape: true,
     modal: true,
     closable: true,
+    draggable: false,
     breakpoints: { '768px': '95vw' },
   };
 

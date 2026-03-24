@@ -2,25 +2,6 @@ import { primitives } from './primitives';
 
 export const components = {
   button: {
-    root: {
-      success: {
-        hoverBackground: primitives.colors.greenThree,
-        hoverBorderColor: primitives.colors.greenThree,
-      },
-      danger: {
-        hoverBackground: primitives.colors.redThree,
-        hoverBorderColor: primitives.colors.redThree,
-      },
-      secondary: {
-        background: primitives.colors.bgBlueThree,
-        hoverBackground: primitives.colors.bgBlueTwo,
-        activeBackground: primitives.colors.bgBlueThree,
-        borderColor: primitives.colors.bgBlueThree,
-        hoverBorderColor: primitives.colors.bgBlueTwo,
-        color: primitives.colors.darkBlueTwo,
-        hoverColor: primitives.colors.prBlueThree,
-      },
-    },
     outlined: {
       primary: {
         hoverBackground: primitives.colors.bgBlueTwo,
@@ -34,6 +15,14 @@ export const components = {
     colorScheme: {
       light: {
         root: {
+          success: {
+            hoverBackground: primitives.colors.greenThree,
+            hoverBorderColor: primitives.colors.greenThree,
+          },
+          danger: {
+            hoverBackground: primitives.colors.redThree,
+            hoverBorderColor: primitives.colors.redThree,
+          },
           info: {
             background: primitives.colors.transparent,
             hoverBackground: primitives.colors.transparent,
@@ -44,6 +33,15 @@ export const components = {
             color: primitives.colors.darkBlueOne,
             hoverColor: primitives.colors.darkBlueOne,
             activeColor: primitives.colors.darkBlueOne,
+          },
+          secondary: {
+            background: primitives.colors.bgBlueThree,
+            hoverBackground: primitives.colors.bgBlueTwo,
+            activeBackground: primitives.colors.bgBlueThree,
+            borderColor: primitives.colors.bgBlueThree,
+            hoverBorderColor: primitives.colors.bgBlueTwo,
+            color: primitives.colors.darkBlueTwo,
+            hoverColor: primitives.colors.prBlueThree,
           },
         },
       },

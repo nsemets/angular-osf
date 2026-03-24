@@ -24,8 +24,7 @@
     <div class="flex-1">
       <div class="files-table flex">
         <p-tree
-          class="tree-table"
-          styleClass="w-full md:w-[30rem]"
+          class="tree-table w-full"
           [draggableNodes]="!hasViewOnly() && supportUpload()"
           [droppableNodes]="!hasViewOnly() && supportUpload()"
           [lazy]="true"

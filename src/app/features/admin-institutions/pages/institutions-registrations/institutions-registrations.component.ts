@@ -4,7 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 
-import { CommonModule } from '@angular/common';
+import { LowerCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, OnDestroy, OnInit, signal } from '@angular/core';
 
 import { CurrentResourceType, ResourceType } from '@osf/shared/enums/resource-type.enum';
@@ -34,7 +34,7 @@ import { InstitutionsAdminSelectors } from '../../store';
 
 @Component({
   selector: 'osf-institutions-registrations',
-  imports: [CommonModule, AdminTableComponent, TranslatePipe, Button, FiltersSectionComponent],
+  imports: [Button, AdminTableComponent, FiltersSectionComponent, LowerCasePipe, TranslatePipe],
   templateUrl: './institutions-registrations.component.html',
   styleUrl: './institutions-registrations.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
