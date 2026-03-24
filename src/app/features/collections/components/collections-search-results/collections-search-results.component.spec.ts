@@ -2,9 +2,10 @@ import { MockComponents } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CollectionsSearchResultCardComponent } from '@osf/features/collections/components';
 import { CustomPaginatorComponent } from '@osf/shared/components/custom-paginator/custom-paginator.component';
 import { CollectionsSelectors } from '@shared/stores/collections';
+
+import { CollectionsSearchResultCardComponent } from '../collections-search-result-card/collections-search-result-card.component';
 
 import { CollectionsSearchResultsComponent } from './collections-search-results.component';
 

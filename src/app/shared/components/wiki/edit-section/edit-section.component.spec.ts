@@ -12,6 +12,13 @@ import { EditSectionComponent } from './edit-section.component';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
 
+jest.mock('ace-builds/src-noconflict/ext-language_tools');
+
+(globalThis as any).ace = {
+  define: jest.fn(),
+  require: jest.fn().mockReturnValue({ snippetCompleter: {} }),
+};
+
 describe('EditSectionComponent', () => {
   let component: EditSectionComponent;
   let fixture: ComponentFixture<EditSectionComponent>;
@@ -191,7 +198,7 @@ describe('EditSectionComponent', () => {
 
     expect((component as any).editorInstance).toBe(mockEditorInstance);
     expect(mockEditorInstance.setShowPrintMargin).toHaveBeenCalledWith(false);
-    expect((global as any).ace.require).toHaveBeenCalledWith('ace/ext/language_tools');
+    expect((globalThis as any).ace.require).toHaveBeenCalledWith('ace/ext/language_tools');
     expect(mockEditorInstance.setOptions).toHaveBeenCalledWith({
       enableBasicAutocompletion: false,
       enableLiveAutocompletion: false,

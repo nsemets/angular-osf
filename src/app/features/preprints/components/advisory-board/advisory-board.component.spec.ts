@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AdvisoryBoardComponent } from './advisory-board.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 describe('AdvisoryBoardComponent', () => {
   let component: AdvisoryBoardComponent;
   let fixture: ComponentFixture<AdvisoryBoardComponent>;
@@ -12,6 +14,7 @@ describe('AdvisoryBoardComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [AdvisoryBoardComponent],
+      providers: [provideOSFCore()],
     });
 
     fixture = TestBed.createComponent(AdvisoryBoardComponent);

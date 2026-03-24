@@ -20,18 +20,16 @@ import { MetaTagsBuilderService } from '@osf/shared/services/meta-tags-builder.s
 import { ToastService } from '@osf/shared/services/toast.service';
 import { ContributorsSelectors } from '@osf/shared/stores/contributors';
 
-import {
-  AdditionalInfoComponent,
-  GeneralInformationComponent,
-  ModerationStatusBannerComponent,
-  PreprintFileSectionComponent,
-  PreprintMakeDecisionComponent,
-  PreprintMetricsInfoComponent,
-  PreprintTombstoneComponent,
-  PreprintWarningBannerComponent,
-  ShareAndDownloadComponent,
-  StatusBannerComponent,
-} from '../../components';
+import { AdditionalInfoComponent } from '../../components/preprint-details/additional-info/additional-info.component';
+import { GeneralInformationComponent } from '../../components/preprint-details/general-information/general-information.component';
+import { ModerationStatusBannerComponent } from '../../components/preprint-details/moderation-status-banner/moderation-status-banner.component';
+import { PreprintFileSectionComponent } from '../../components/preprint-details/preprint-file-section/preprint-file-section.component';
+import { PreprintMakeDecisionComponent } from '../../components/preprint-details/preprint-make-decision/preprint-make-decision.component';
+import { PreprintMetricsInfoComponent } from '../../components/preprint-details/preprint-metrics-info/preprint-metrics-info.component';
+import { PreprintTombstoneComponent } from '../../components/preprint-details/preprint-tombstone/preprint-tombstone.component';
+import { PreprintWarningBannerComponent } from '../../components/preprint-details/preprint-warning-banner/preprint-warning-banner.component';
+import { ShareAndDownloadComponent } from '../../components/preprint-details/share-and-download/share-and-download.component';
+import { StatusBannerComponent } from '../../components/preprint-details/status-banner/status-banner.component';
 import { ReviewsState } from '../../enums';
 import {
   FetchPreprintDetails,

@@ -6,7 +6,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { UserSelectors } from '@osf/core/store/user';
-import { AdminTableComponent } from '@osf/features/admin-institutions/components';
 import { DownloadType } from '@osf/features/admin-institutions/enums';
 import { InstitutionsAdminSelectors } from '@osf/features/admin-institutions/store';
 import { SelectComponent } from '@osf/shared/components/select/select.component';
@@ -14,6 +13,8 @@ import { CustomDialogService } from '@osf/shared/services/custom-dialog.service'
 import { ToastService } from '@osf/shared/services/toast.service';
 import { SortOrder } from '@shared/enums/sort-order.enum';
 import { SearchFilters } from '@shared/models/search-filters.model';
+
+import { AdminTableComponent } from '../../components/admin-table/admin-table.component';
 
 import { InstitutionsUsersComponent } from './institutions-users.component';
 

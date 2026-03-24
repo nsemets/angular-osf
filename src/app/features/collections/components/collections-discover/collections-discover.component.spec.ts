@@ -4,12 +4,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { SENTRY_TOKEN } from '@core/provider/sentry.provider';
-import { CollectionsMainContentComponent } from '@osf/features/collections/components';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { CollectionsSelectors } from '@shared/stores/collections';
+
+import { CollectionsMainContentComponent } from '../collections-main-content';
 
 import { CollectionsDiscoverComponent } from './collections-discover.component';
 

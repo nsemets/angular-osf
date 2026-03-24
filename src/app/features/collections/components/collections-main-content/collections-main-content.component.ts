@@ -10,11 +10,11 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 
-import { CollectionsFilterChipsComponent } from '@osf/features/collections/components';
 import { collectionsSortOptions } from '@osf/features/collections/constants';
 import { IS_WEB } from '@osf/shared/helpers/breakpoints.tokens';
 import { CollectionsSelectors, SetSortBy } from '@shared/stores/collections';
 
+import { CollectionsFilterChipsComponent } from '../collections-filter-chips/collections-filter-chips.component';
 import { CollectionsFiltersComponent } from '../collections-filters/collections-filters.component';
 import { CollectionsSearchResultsComponent } from '../collections-search-results/collections-search-results.component';
 

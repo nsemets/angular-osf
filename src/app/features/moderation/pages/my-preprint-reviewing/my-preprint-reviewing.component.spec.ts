@@ -2,12 +2,10 @@ import { MockComponents } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {
-  MyReviewingNavigationComponent,
-  PreprintRecentActivityListComponent,
-} from '@osf/features/moderation/components';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 
+import { MyReviewingNavigationComponent } from '../../components/my-reviewing-navigation/my-reviewing-navigation.component';
+import { PreprintRecentActivityListComponent } from '../../components/preprint-recent-activity-list/preprint-recent-activity-list.component';
 import { PreprintModerationSelectors } from '../../store/preprint-moderation';
 
 import { MyPreprintReviewingComponent } from './my-preprint-reviewing.component';

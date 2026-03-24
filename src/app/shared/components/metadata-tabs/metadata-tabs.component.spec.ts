@@ -2,7 +2,7 @@ import { MockComponents } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CedarTemplateFormComponent } from '@osf/features/metadata/components';
+import { CedarTemplateFormComponent } from '@osf/features/metadata/components/cedar-template-form/cedar-template-form.component';
 import { CedarMetadataDataTemplateJsonApi, CedarRecordDataBinding } from '@osf/features/metadata/models';
 import { MetadataResourceEnum } from '@osf/shared/enums/metadata-resource.enum';
 import { MetadataTabsModel } from '@shared/models/metadata-tabs.model';

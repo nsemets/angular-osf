@@ -108,6 +108,7 @@ describe('PreprintProviderHeroComponent', () => {
 
     expect(customDialogMock.open).toHaveBeenCalledWith(PreprintsHelpDialogComponent, {
       header: 'preprints.helpDialog.header',
+      width: '560px',
     });
   });
 });

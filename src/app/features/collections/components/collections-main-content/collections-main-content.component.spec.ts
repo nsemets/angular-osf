@@ -2,12 +2,11 @@ import { MockComponents } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {
-  CollectionsFilterChipsComponent,
-  CollectionsFiltersComponent,
-  CollectionsSearchResultsComponent,
-} from '@osf/features/collections/components';
 import { CollectionsSelectors } from '@shared/stores/collections';
+
+import { CollectionsFilterChipsComponent } from '../collections-filter-chips/collections-filter-chips.component';
+import { CollectionsFiltersComponent } from '../collections-filters/collections-filters.component';
+import { CollectionsSearchResultsComponent } from '../collections-search-results/collections-search-results.component';
 
 import { CollectionsMainContentComponent } from './collections-main-content.component';
 

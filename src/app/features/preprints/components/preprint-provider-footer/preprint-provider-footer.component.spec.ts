@@ -2,12 +2,15 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PreprintProviderFooterComponent } from './preprint-provider-footer.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 describe('PreprintProviderFooterComponent', () => {
   let fixture: ComponentFixture<PreprintProviderFooterComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [PreprintProviderFooterComponent],
+      providers: [provideOSFCore()],
     });
 
     fixture = TestBed.createComponent(PreprintProviderFooterComponent);

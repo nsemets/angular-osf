@@ -3,7 +3,6 @@ import { MockComponents, MockProvider } from 'ng-mocks';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { CollectionSubmissionsListComponent } from '@osf/features/moderation/components';
 import { CustomPaginatorComponent } from '@osf/shared/components/custom-paginator/custom-paginator.component';
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
@@ -12,6 +11,7 @@ import { CollectionsSelectors } from '@osf/shared/stores/collections';
 
 import { SubmissionReviewStatus } from '../../enums';
 import { CollectionsModerationSelectors } from '../../store/collections-moderation';
+import { CollectionSubmissionsListComponent } from '../collection-submissions-list/collection-submissions-list.component';
 
 import { CollectionModerationSubmissionsComponent } from './collection-moderation-submissions.component';
 

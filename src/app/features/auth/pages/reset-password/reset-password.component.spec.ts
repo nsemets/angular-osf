@@ -6,8 +6,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { AuthService } from '@core/services/auth.service';
-import { ResetPasswordComponent } from '@osf/features/auth/pages';
 import { PasswordInputHintComponent } from '@osf/shared/components/password-input-hint/password-input-hint.component';
+
+import { ResetPasswordComponent } from './reset-password.component';
 
 import { provideOSFCore } from '@testing/osf.testing.provider';
 

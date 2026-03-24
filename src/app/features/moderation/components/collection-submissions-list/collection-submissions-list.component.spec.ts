@@ -2,9 +2,8 @@ import { MockComponent } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CollectionSubmissionItemComponent } from '@osf/features/moderation/components';
-
 import { CollectionsModerationSelectors } from '../../store/collections-moderation';
+import { CollectionSubmissionItemComponent } from '../collection-submission-item/collection-submission-item.component';
 
 import { CollectionSubmissionsListComponent } from './collection-submissions-list.component';
 

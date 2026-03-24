@@ -18,7 +18,8 @@ import {
   PreprintModerationSelectors,
 } from '../../store/preprint-moderation';
 import { PreprintSubmissionItemComponent } from '../preprint-submission-item/preprint-submission-item.component';
-import { PreprintSubmissionsComponent } from '..';
+
+import { PreprintSubmissionsComponent } from './preprint-submissions.component';
 
 import { MOCK_PREPRINT_SUBMISSIONS } from '@testing/mocks/preprint-submission.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';

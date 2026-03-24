@@ -3,12 +3,12 @@ import { MockComponents, MockProvider } from 'ng-mocks';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { CedarTemplateFormComponent } from '@osf/features/metadata/components';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { ToastService } from '@osf/shared/services/toast.service';
 
+import { CedarTemplateFormComponent } from '../../components/cedar-template-form/cedar-template-form.component';
 import { MetadataSelectors } from '../../store';
 
 import { AddMetadataComponent } from './add-metadata.component';

@@ -4,7 +4,7 @@ import { TabsModule } from 'primeng/tabs';
 
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
-import { CedarTemplateFormComponent } from '@osf/features/metadata/components';
+import { CedarTemplateFormComponent } from '@osf/features/metadata/components/cedar-template-form/cedar-template-form.component';
 import {
   CedarMetadataDataTemplateJsonApi,
   CedarMetadataRecordData,

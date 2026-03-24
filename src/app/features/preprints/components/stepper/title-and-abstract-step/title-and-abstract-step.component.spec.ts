@@ -5,10 +5,11 @@ import { Textarea } from 'primeng/textarea';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
-import { TitleAndAbstractStepComponent } from '@osf/features/preprints/components';
 import { PreprintStepperSelectors } from '@osf/features/preprints/store/preprint-stepper';
 import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
 import { ToastService } from '@osf/shared/services/toast.service';
+
+import { TitleAndAbstractStepComponent } from './title-and-abstract-step.component';
 
 import { PREPRINT_MOCK } from '@testing/mocks/preprint.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';

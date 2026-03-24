@@ -3,7 +3,6 @@ import { MockComponents, MockProvider } from 'ng-mocks';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { RegistrySubmissionItemComponent } from '@osf/features/moderation/components';
 import { RegistryModeration } from '@osf/features/moderation/models';
 import { CustomPaginatorComponent } from '@osf/shared/components/custom-paginator/custom-paginator.component';
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
@@ -12,6 +11,7 @@ import { SelectComponent } from '@osf/shared/components/select/select.component'
 
 import { RegistrySort, SubmissionReviewStatus } from '../../enums';
 import { RegistryModerationSelectors } from '../../store/registry-moderation';
+import { RegistrySubmissionItemComponent } from '../registry-submission-item/registry-submission-item.component';
 
 import { RegistrySubmissionsComponent } from './registry-submissions.component';
 

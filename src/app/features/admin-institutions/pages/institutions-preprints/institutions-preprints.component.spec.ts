@@ -8,7 +8,6 @@ import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { AdminTableComponent } from '@osf/features/admin-institutions/components';
 import { DownloadType } from '@osf/features/admin-institutions/enums';
 import * as downloadHelper from '@osf/features/admin-institutions/helpers';
 import { InstitutionsAdminSelectors } from '@osf/features/admin-institutions/store';
@@ -25,6 +24,7 @@ import {
   SetSortBy,
 } from '@osf/shared/stores/global-search';
 
+import { AdminTableComponent } from '../../components/admin-table/admin-table.component';
 import { FiltersSectionComponent } from '../../components/filters-section/filters-section.component';
 
 import { InstitutionsPreprintsComponent } from './institutions-preprints.component';
