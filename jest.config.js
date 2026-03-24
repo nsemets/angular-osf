@@ -1,6 +1,4 @@
-import type { Config } from 'jest';
-
-const config: Config = {
+const config = {
   preset: 'jest-preset-angular',
   setupFilesAfterEnv: ['<rootDir>/setup-jest.ts'],
   globalSetup: '<rootDir>/jest.global-setup.ts',
@@ -72,4 +70,4 @@ const config: Config = {
   testPathIgnorePatterns: ['<rootDir>/src/environments'],
 };
 
-export default config;
+module.exports = config;
