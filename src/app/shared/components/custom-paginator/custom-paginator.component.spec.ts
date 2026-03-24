@@ -4,6 +4,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CustomPaginatorComponent } from './custom-paginator.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 describe('CustomPaginatorComponent', () => {
   let component: CustomPaginatorComponent;
   let fixture: ComponentFixture<CustomPaginatorComponent>;
@@ -11,6 +13,7 @@ describe('CustomPaginatorComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [CustomPaginatorComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CustomPaginatorComponent);

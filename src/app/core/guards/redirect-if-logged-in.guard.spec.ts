@@ -1,6 +1,5 @@
 import { of } from 'rxjs';
 
-import { runInInjectionContext } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
@@ -59,7 +58,7 @@ describe('redirectIfLoggedInGuard', () => {
 
     router = TestBed.inject(Router);
 
-    runInInjectionContext(TestBed, () => {
+    TestBed.runInInjectionContext(() => {
       const result = redirectIfLoggedInGuard({} as any, {} as any);
 
       if (typeof result === 'object' && 'subscribe' in result) {
@@ -102,7 +101,7 @@ describe('redirectIfLoggedInGuard', () => {
 
     router = TestBed.inject(Router);
 
-    runInInjectionContext(TestBed, () => {
+    TestBed.runInInjectionContext(() => {
       const result = redirectIfLoggedInGuard({} as any, {} as any);
 
       if (typeof result === 'object' && 'subscribe' in result) {

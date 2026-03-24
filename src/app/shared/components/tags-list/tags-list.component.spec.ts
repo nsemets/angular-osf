@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 
 import { TagsListComponent } from './tags-list.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('TagsListComponent', () => {
   let component: TagsListComponent;
@@ -11,7 +11,8 @@ describe('TagsListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TagsListComponent, OSFTestingModule],
+      imports: [TagsListComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TagsListComponent);

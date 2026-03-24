@@ -7,7 +7,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RequestAccessErrorDialogComponent } from './request-access-error-dialog.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('RequestAccessErrorDialogComponent', () => {
   let component: RequestAccessErrorDialogComponent;
@@ -23,8 +23,8 @@ describe('RequestAccessErrorDialogComponent', () => {
     } as any;
 
     await TestBed.configureTestingModule({
-      imports: [RequestAccessErrorDialogComponent, OSFTestingModule, MockPipe(TranslatePipe)],
-      providers: [{ provide: DynamicDialogRef, useValue: mockDialogRef }],
+      imports: [RequestAccessErrorDialogComponent, MockPipe(TranslatePipe)],
+      providers: [provideOSFCore(), { provide: DynamicDialogRef, useValue: mockDialogRef }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RequestAccessErrorDialogComponent);

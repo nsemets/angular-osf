@@ -9,7 +9,7 @@ import { SelectComponent } from '../../select/select.component';
 
 import { AddonsToolbarComponent } from './addons-toolbar.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 
 describe('AddonsToolbarComponent', () => {
@@ -21,8 +21,8 @@ describe('AddonsToolbarComponent', () => {
     activatedRouteMock = ActivatedRouteMockBuilder.create().build();
 
     await TestBed.configureTestingModule({
-      imports: [AddonsToolbarComponent, OSFTestingModule, ...MockComponents(SearchInputComponent, SelectComponent)],
-      providers: [MockProvider(ActivatedRoute, activatedRouteMock)],
+      imports: [AddonsToolbarComponent, ...MockComponents(SearchInputComponent, SelectComponent)],
+      providers: [provideOSFCore(), MockProvider(ActivatedRoute, activatedRouteMock)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AddonsToolbarComponent);

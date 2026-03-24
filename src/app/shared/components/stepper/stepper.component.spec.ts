@@ -8,6 +8,8 @@ import { IconComponent } from '../icon/icon.component';
 
 import { StepperComponent } from './stepper.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 describe('StepperComponent', () => {
   let component: StepperComponent;
   let fixture: ComponentFixture<StepperComponent>;
@@ -23,6 +25,7 @@ describe('StepperComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [StepperComponent, MockComponent(IconComponent)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(StepperComponent);

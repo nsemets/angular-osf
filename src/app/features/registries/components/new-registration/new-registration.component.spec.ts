@@ -2,7 +2,7 @@ import { Store } from '@ngxs/store';
 
 import { MockComponent, MockProvider } from 'ng-mocks';
 
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { UserSelectors } from '@core/store/user';
@@ -73,6 +73,10 @@ describe('NewRegistrationComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   };
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
 
   it('should create', () => {
     setup();
@@ -169,44 +173,47 @@ describe('NewRegistrationComponent', () => {
     expect(store.dispatch).not.toHaveBeenCalledWith(expect.any(CreateDraft));
   });
 
-  it('should dispatch getProjects after debounced filter', fakeAsync(() => {
+  it('should dispatch getProjects after debounced filter', () => {
+    jest.useFakeTimers();
     setup();
     (store.dispatch as jest.Mock).mockClear();
 
     component.onProjectFilter('abc');
-    tick(300);
+    jest.advanceTimersByTime(300);
 
     expect(store.dispatch).toHaveBeenCalledWith(new GetProjects('user-1', 'abc'));
-  }));
+  });
 
-  it('should not dispatch duplicate getProjects for same filter value', fakeAsync(() => {
+  it('should not dispatch duplicate getProjects for same filter value', () => {
+    jest.useFakeTimers();
     setup();
     (store.dispatch as jest.Mock).mockClear();
 
     component.onProjectFilter('abc');
-    tick(300);
+    jest.advanceTimersByTime(300);
     component.onProjectFilter('abc');
-    tick(300);
+    jest.advanceTimersByTime(300);
 
     const getProjectsCalls = (store.dispatch as jest.Mock).mock.calls.filter(
       ([action]: [unknown]) => action instanceof GetProjects
     );
     expect(getProjectsCalls.length).toBe(1);
-  }));
+  });
 
-  it('should debounce rapid filter calls and dispatch only the last value', fakeAsync(() => {
+  it('should debounce rapid filter calls and dispatch only the last value', () => {
+    jest.useFakeTimers();
     setup();
     (store.dispatch as jest.Mock).mockClear();
 
     component.onProjectFilter('a');
     component.onProjectFilter('ab');
     component.onProjectFilter('abc');
-    tick(300);
+    jest.advanceTimersByTime(300);
 
     const getProjectsCalls = (store.dispatch as jest.Mock).mock.calls.filter(
       ([action]: [unknown]) => action instanceof GetProjects
     );
     expect(getProjectsCalls.length).toBe(1);
     expect(getProjectsCalls[0][0]).toEqual(new GetProjects('user-1', 'abc'));
-  }));
+  });
 });

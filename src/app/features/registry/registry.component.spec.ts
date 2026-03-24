@@ -22,10 +22,10 @@ import { RegistrySelectors } from './store/registry';
 import { RegistrationOverviewModel } from './models';
 import { RegistryComponent } from './registry.component';
 
-import { DataciteMockFactory } from '@testing/mocks/datacite.service.mock';
 import { MOCK_REGISTRATION_OVERVIEW_MODEL } from '@testing/mocks/registration-overview-model.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { AnalyticsServiceMockFactory } from '@testing/providers/analytics.service.mock';
+import { DataciteServiceMock } from '@testing/providers/datacite.service.mock';
 import { HelpScoutServiceMockFactory } from '@testing/providers/help-scout.service.mock';
 import { MetaTagsServiceMockFactory } from '@testing/providers/meta-tags.service.mock';
 import { MetaTagsBuilderServiceMockFactory } from '@testing/providers/meta-tags-builder.service.mock';
@@ -51,7 +51,7 @@ function setup(overrides: SetupOverrides = {}) {
   const helpScoutService = HelpScoutServiceMockFactory();
   const metaTagsService = MetaTagsServiceMockFactory();
   const metaTagsBuilderService = MetaTagsBuilderServiceMockFactory();
-  const dataciteService = DataciteMockFactory();
+  const dataciteService = DataciteServiceMock.simple();
   const prerenderReadyService = PrerenderReadyServiceMockFactory();
   const analyticsService = AnalyticsServiceMockFactory();
   const routerBuilder = RouterMockBuilder.create();

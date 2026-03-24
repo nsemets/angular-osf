@@ -4,6 +4,8 @@ import { By } from '@angular/platform-browser';
 
 import { IconComponent } from './icon.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 describe('IconComponent', () => {
   let component: IconComponent;
   let fixture: ComponentFixture<IconComponent>;
@@ -12,6 +14,7 @@ describe('IconComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [IconComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(IconComponent);

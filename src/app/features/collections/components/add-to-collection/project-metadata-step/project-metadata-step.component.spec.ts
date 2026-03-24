@@ -13,7 +13,7 @@ import { ProjectsSelectors } from '@shared/stores/projects/projects.selectors';
 import { ProjectMetadataStepComponent } from './project-metadata-step.component';
 
 import { MOCK_PROJECT } from '@testing/mocks/project.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 import { ToastServiceMockBuilder } from '@testing/providers/toast-provider.mock';
 
@@ -28,11 +28,11 @@ describe.skip('ProjectMetadataStepComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         ProjectMetadataStepComponent,
-        OSFTestingModule,
         ...MockComponents(TagsInputComponent, TextInputComponent, TruncatedTextComponent),
         MockPipe(InterpolatePipe),
       ],
       providers: [
+        provideOSFCore(),
         MockProvider(ToastService, toastServiceMock),
         provideMockStore({
           signals: [

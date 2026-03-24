@@ -7,6 +7,8 @@ import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/
 
 import { TogglePublicityDialogComponent } from './toggle-publicity-dialog.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 describe.skip('TogglePublicityDialogComponent', () => {
   let component: TogglePublicityDialogComponent;
   let fixture: ComponentFixture<TogglePublicityDialogComponent>;
@@ -17,6 +19,7 @@ describe.skip('TogglePublicityDialogComponent', () => {
         TogglePublicityDialogComponent,
         ...MockComponents(ComponentsSelectionListComponent, LoadingSpinnerComponent),
       ],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TogglePublicityDialogComponent);

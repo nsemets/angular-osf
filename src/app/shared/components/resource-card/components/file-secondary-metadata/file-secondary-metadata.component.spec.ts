@@ -6,7 +6,7 @@ import { ResourceModel } from '@shared/models/search/resource.model';
 import { FileSecondaryMetadataComponent } from './file-secondary-metadata.component';
 
 import { MOCK_RESOURCE } from '@testing/mocks/resource.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('FileSecondaryMetadataComponent', () => {
   let component: FileSecondaryMetadataComponent;
@@ -19,7 +19,8 @@ describe('FileSecondaryMetadataComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FileSecondaryMetadataComponent, OSFTestingModule],
+      imports: [FileSecondaryMetadataComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FileSecondaryMetadataComponent);

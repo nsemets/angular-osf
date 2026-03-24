@@ -37,7 +37,7 @@ import { OverviewSupplementsComponent } from '../overview-supplements/overview-s
 import { ProjectOverviewMetadataComponent } from './project-overview-metadata.component';
 
 import { MOCK_PROJECT_OVERVIEW } from '@testing/mocks/project-overview.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
@@ -59,7 +59,6 @@ describe('ProjectOverviewMetadataComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         ProjectOverviewMetadataComponent,
-        OSFTestingModule,
         ...MockComponents(
           ResourceCitationsComponent,
           OverviewCollectionsComponent,
@@ -73,6 +72,7 @@ describe('ProjectOverviewMetadataComponent', () => {
         ),
       ],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             { selector: ProjectOverviewSelectors.getProject, value: mockProject },

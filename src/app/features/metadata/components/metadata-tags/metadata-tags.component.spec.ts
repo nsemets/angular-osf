@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 
 import { MetadataTagsComponent } from './metadata-tags.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 
 describe('MetadataTagsComponent', () => {
@@ -18,8 +18,8 @@ describe('MetadataTagsComponent', () => {
     routerMock = RouterMockBuilder.create().build();
 
     await TestBed.configureTestingModule({
-      imports: [MetadataTagsComponent, OSFTestingModule],
-      providers: [MockProvider(Router, routerMock)],
+      imports: [MetadataTagsComponent],
+      providers: [provideOSFCore(), MockProvider(Router, routerMock)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MetadataTagsComponent);

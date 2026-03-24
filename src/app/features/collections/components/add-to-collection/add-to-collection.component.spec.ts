@@ -12,6 +12,7 @@ import { SelectProjectStepComponent } from '@osf/features/collections/components
 import { AddToCollectionSteps } from '@osf/features/collections/enums';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 import { CollectionsSelectors } from '@shared/stores/collections';
 import { ProjectsSelectors } from '@shared/stores/projects/projects.selectors';
 
@@ -20,7 +21,7 @@ import { AddToCollectionComponent } from './add-to-collection.component';
 import { MOCK_USER } from '@testing/mocks/data.mock';
 import { MOCK_PROJECT } from '@testing/mocks/project.mock';
 import { MOCK_PROVIDER } from '@testing/mocks/provider.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
@@ -43,7 +44,6 @@ describe('AddToCollectionComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         AddToCollectionComponent,
-        OSFTestingModule,
         ...MockComponents(
           LoadingSpinnerComponent,
           SelectProjectStepComponent,
@@ -53,9 +53,11 @@ describe('AddToCollectionComponent', () => {
         ),
       ],
       providers: [
+        provideOSFCore(),
         MockProvider(ActivatedRoute, mockActivatedRoute),
         MockProvider(Router, mockRouter),
         MockProvider(CustomDialogService, mockCustomDialogService),
+        MockProvider(ToastService),
         provideMockStore({
           signals: [
             { selector: CollectionsSelectors.getCollectionProviderLoading, value: false },

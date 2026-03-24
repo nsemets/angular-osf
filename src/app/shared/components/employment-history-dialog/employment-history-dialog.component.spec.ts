@@ -8,7 +8,7 @@ import { EmploymentHistoryComponent } from '../employment-history/employment-his
 
 import { EmploymentHistoryDialogComponent } from './employment-history-dialog.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('EmploymentHistoryDialogComponent', () => {
   let component: EmploymentHistoryDialogComponent;
@@ -16,8 +16,8 @@ describe('EmploymentHistoryDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EmploymentHistoryDialogComponent, OSFTestingModule, MockComponent(EmploymentHistoryComponent)],
-      providers: [MockProvider(DynamicDialogRef), MockProvider(DynamicDialogConfig)],
+      imports: [EmploymentHistoryDialogComponent, MockComponent(EmploymentHistoryComponent)],
+      providers: [provideOSFCore(), MockProvider(DynamicDialogRef), MockProvider(DynamicDialogConfig)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(EmploymentHistoryDialogComponent);

@@ -19,7 +19,7 @@ import { LinkedProjectsSelectors } from '@osf/shared/stores/linked-projects';
 import { ViewLinkedProjectsComponent } from './view-linked-projects.component';
 
 import { MOCK_PROJECT_OVERVIEW } from '@testing/mocks/project-overview.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
@@ -37,7 +37,6 @@ describe('Component: View Duplicates', () => {
     await TestBed.configureTestingModule({
       imports: [
         ViewLinkedProjectsComponent,
-        OSFTestingModule,
         ...MockComponents(
           SubHeaderComponent,
           TruncatedTextComponent,
@@ -48,6 +47,7 @@ describe('Component: View Duplicates', () => {
         ),
       ],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             { selector: LinkedProjectsSelectors.getLinkedProjects, value: [] },

@@ -6,7 +6,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ResourceTypeInfoDialogComponent } from './resource-type-info-dialog.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('ResourceTypeInfoDialogComponent', () => {
   let component: ResourceTypeInfoDialogComponent;
@@ -14,8 +14,8 @@ describe('ResourceTypeInfoDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ResourceTypeInfoDialogComponent, OSFTestingModule],
-      providers: [MockProvider(DynamicDialogRef)],
+      imports: [ResourceTypeInfoDialogComponent],
+      providers: [provideOSFCore(), MockProvider(DynamicDialogRef)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ResourceTypeInfoDialogComponent);

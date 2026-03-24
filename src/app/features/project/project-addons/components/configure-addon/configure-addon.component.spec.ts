@@ -1,8 +1,6 @@
 import { provideStore } from '@ngxs/store';
 
-import { MockComponents } from 'ng-mocks';
-
-import { MessageService } from 'primeng/api';
+import { MockComponents, MockProvider } from 'ng-mocks';
 
 import { of } from 'rxjs';
 
@@ -12,14 +10,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { StorageItemSelectorComponent } from '@osf/shared/components/addons/storage-item-selector/storage-item-selector.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
+import { ToastService } from '@osf/shared/services/toast.service';
 import { AddonsState } from '@osf/shared/stores/addons';
 
 import { ConfigureAddonComponent } from './configure-addon.component';
 
 import { getConfiguredAddonsData } from '@testing/data/addons/addons.configured.data';
 import { getAddonsOperationInvocation } from '@testing/data/addons/addons.operation-invocation.data';
-import { ToastServiceMock } from '@testing/mocks/toast.service.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { environment } from 'src/environments/environment';
 
 describe.skip('Component: Configure Addon', () => {
@@ -61,15 +59,11 @@ describe.skip('Component: Configure Addon', () => {
       } as unknown as Router;
 
       await TestBed.configureTestingModule({
-        imports: [
-          OSFTestingModule,
-          ConfigureAddonComponent,
-          ...MockComponents(SubHeaderComponent, StorageItemSelectorComponent),
-        ],
+        imports: [ConfigureAddonComponent, ...MockComponents(SubHeaderComponent, StorageItemSelectorComponent)],
         providers: [
+          provideOSFCore(),
           provideStore([AddonsState]),
-          ToastServiceMock,
-          MessageService,
+          MockProvider(ToastService),
           { provide: Router, useValue: mockRouter },
           {
             provide: ActivatedRoute,
@@ -160,10 +154,11 @@ describe.skip('Component: Configure Addon', () => {
       } as unknown as Router;
 
       await TestBed.configureTestingModule({
-        imports: [OSFTestingModule, ConfigureAddonComponent],
+        imports: [ConfigureAddonComponent],
         providers: [
+          provideOSFCore(),
           provideStore([AddonsState]),
-          ToastServiceMock,
+          MockProvider(ToastService),
           { provide: Router, useValue: mockRouter },
           {
             provide: ActivatedRoute,

@@ -12,7 +12,7 @@ import { IconComponent } from '../icon/icon.component';
 import { MyProjectsTableComponent } from './my-projects-table.component';
 
 import { MOCK_CONTRIBUTOR } from '@testing/mocks/contributors.mock';
-import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('MyProjectsTableComponent', () => {
   let component: MyProjectsTableComponent;
@@ -44,7 +44,7 @@ describe('MyProjectsTableComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MyProjectsTableComponent, ...MockComponents(IconComponent, ContributorsListShortenerComponent)],
-      providers: [TranslateServiceMock],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MyProjectsTableComponent);

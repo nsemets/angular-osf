@@ -8,7 +8,7 @@ import {
   MOCK_COLLECTIONS_FILTERS_OPTIONS,
   MOCK_COLLECTIONS_SELECTED_FILTERS,
 } from '@testing/mocks/collections-filters.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('CollectionsFiltersComponent', () => {
@@ -20,8 +20,9 @@ describe('CollectionsFiltersComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CollectionsFiltersComponent, OSFTestingModule],
+      imports: [CollectionsFiltersComponent],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             { selector: CollectionsSelectors.getAllFiltersOptions, value: mockFiltersOptions },

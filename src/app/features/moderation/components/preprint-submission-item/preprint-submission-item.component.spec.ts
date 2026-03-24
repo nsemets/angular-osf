@@ -1,5 +1,4 @@
-import { TranslatePipe } from '@ngx-translate/core';
-import { MockComponents, MockPipes } from 'ng-mocks';
+import { MockComponents, MockPipe } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
@@ -13,7 +12,7 @@ import { PreprintSubmissionModel } from '../../models';
 import { PreprintSubmissionItemComponent } from './preprint-submission-item.component';
 
 import { MOCK_PREPRINT_SUBMISSION } from '@testing/mocks/submission.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('PreprintSubmissionItemComponent', () => {
   let component: PreprintSubmissionItemComponent;
@@ -25,10 +24,10 @@ describe('PreprintSubmissionItemComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         PreprintSubmissionItemComponent,
-        OSFTestingModule,
         ...MockComponents(IconComponent, ContributorsListComponent),
-        MockPipes(DateAgoPipe, TranslatePipe),
+        MockPipe(DateAgoPipe),
       ],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PreprintSubmissionItemComponent);

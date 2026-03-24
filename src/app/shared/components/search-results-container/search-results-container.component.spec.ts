@@ -11,7 +11,7 @@ import { SelectComponent } from '../select/select.component';
 
 import { SearchResultsContainerComponent } from './search-results-container.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('SearchResultsContainerComponent', () => {
   let component: SearchResultsContainerComponent;
@@ -22,9 +22,9 @@ describe('SearchResultsContainerComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         SearchResultsContainerComponent,
-        OSFTestingModule,
         ...MockComponents(ResourceCardComponent, SelectComponent, LoadingSpinnerComponent),
       ],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SearchResultsContainerComponent);

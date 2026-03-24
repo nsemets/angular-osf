@@ -2,7 +2,6 @@ import { MockProvider } from 'ng-mocks';
 
 import { of } from 'rxjs';
 
-import { runInInjectionContext } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
@@ -23,10 +22,7 @@ describe('authGuard', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        provideMockStore({
-          selectors: [],
-          actions: [],
-        }),
+        provideMockStore(),
         {
           provide: Router,
           useValue: RouterMockBuilder.create().withUrl('/test').build(),
@@ -43,13 +39,12 @@ describe('authGuard', () => {
     router = TestBed.inject(Router);
     authService = TestBed.inject(AuthService);
     viewOnlyHelper = TestBed.inject(ViewOnlyLinkHelperService);
-    jest.clearAllMocks();
   });
 
   it('should return true when view-only param exists', () => {
     jest.spyOn(viewOnlyHelper, 'hasViewOnlyParam').mockReturnValue(true);
 
-    const result = runInInjectionContext(TestBed, () => {
+    const result = TestBed.runInInjectionContext(() => {
       return authGuard({} as any, {} as any);
     });
 
@@ -94,7 +89,7 @@ describe('authGuard', () => {
     router = TestBed.inject(Router);
     authService = TestBed.inject(AuthService);
 
-    runInInjectionContext(TestBed, () => {
+    TestBed.runInInjectionContext(() => {
       const result = authGuard({} as any, {} as any);
 
       if (typeof result === 'object' && 'subscribe' in result) {
@@ -146,7 +141,7 @@ describe('authGuard', () => {
     router = TestBed.inject(Router);
     authService = TestBed.inject(AuthService);
 
-    runInInjectionContext(TestBed, () => {
+    TestBed.runInInjectionContext(() => {
       const result = authGuard({} as any, {} as any);
 
       if (typeof result === 'object' && 'subscribe' in result) {

@@ -45,7 +45,6 @@
 ```
 src/testing/
 ├── osf.testing.provider.ts       ← provideOSFCore(), provideOSFHttp()
-├── osf.testing.module.ts         ← OSFTestingModule (legacy — prefer providers)
 ├── providers/                    ← Builder-pattern mocks for services
 │   ├── store-provider.mock.ts
 │   ├── route-provider.mock.ts
@@ -68,20 +67,13 @@ src/testing/
 
 ### `provideOSFCore()` — mandatory base provider
 
-Every component test must include `provideOSFCore()`. It configures animations, translations, and environment tokens.
+Every component test must include `provideOSFCore()`. It configures translations and environment tokens.
 
 ```typescript
 export function provideOSFCore() {
-  return [
-    provideNoopAnimations(),
-    importProvidersFrom(TranslateModule.forRoot()),
-    TranslationServiceMock,
-    EnvironmentTokenMock,
-  ];
+  return [provideTranslation, TranslateServiceMock, EnvironmentTokenMock];
 }
 ```
-
-> **Never** import `OSFTestingModule` directly in new tests. It is retained for legacy compatibility only. Use `provideOSFCore()` instead.
 
 ---
 
@@ -319,7 +311,35 @@ expect(store.dispatch).toHaveBeenCalledWith(new SpecificAction());
 
 ## 7. Router & Route Mocking
 
-### ActivatedRoute
+Use this checklist:
+
+### `provideRouter([])`
+
+- Use when the template/component needs router infrastructure (`routerLink`, `routerLinkActive`, router directives/providers).
+- Keep it local to the spec.
+- Skip it for pure logic tests without router directive usage.
+
+### `ActivatedRouteMockBuilder`
+
+- Use when code reads route state (`snapshot.paramMap`, `params`, `queryParams`, `parent`, and similar route inputs).
+- Use it for deterministic route inputs in unit tests.
+- Works with or without `provideRouter([])` depending on template needs.
+
+### `RouterMockBuilder`
+
+- Use when you assert navigation calls (`navigate`, `navigateByUrl`, `url`/events usage).
+- Best for behavior assertions, not real router integration.
+- If you mock `Router`, you test whether navigation was requested, not real routing execution.
+- Do not mock `Router` in specs that validate real routing behavior via `provideRouter(...)`.
+
+### Typical combos
+
+- Params only: `ActivatedRouteMockBuilder`
+- Params + navigation assertions: `ActivatedRouteMockBuilder` + `RouterMockBuilder`
+- Template has `routerLink` + params + navigation assertions: `provideRouter([])` + `ActivatedRouteMockBuilder` + `RouterMockBuilder`
+- Need real router behavior: `provideRouter(...)` + `ActivatedRoute` setup, avoid mocking `Router`
+
+### `ActivatedRouteMockBuilder` examples
 
 ```typescript
 const mockRoute = ActivatedRouteMockBuilder.create()
@@ -338,7 +358,7 @@ const mockRoute = ActivatedRouteMockBuilder.create()
 const mockRoute = ActivatedRouteMockBuilder.create().withParams({ id: 'reg-1' }).withNoParent().build();
 ```
 
-### Router
+### `RouterMockBuilder` examples
 
 ```typescript
 const mockRouter = RouterMockBuilder.create().withUrl('/registries/drafts/reg-1/metadata').build();
@@ -421,37 +441,57 @@ fixture.detectChanges();
 
 ## 10. Async Operations
 
-### `fakeAsync` + `tick` for debounced operations
+### Zoneless change detection
+
+In a zoneless environment, `fixture.detectChanges()` is used for immediate synchronous rendering. For signal updates and other async logic, use `await fixture.whenStable()` before DOM assertions so the scheduler can finish.
 
 ```typescript
-it('should dispatch after debounce', fakeAsync(() => {
-  (store.dispatch as jest.Mock).mockClear();
-  component.onProjectFilter('abc');
-  tick(300);
-  expect(store.dispatch).toHaveBeenCalledWith(new GetProjects('user-1', 'abc'));
-}));
+it('should update UI after signal change', async () => {
+  mySignal.set(newVal);
+  await fixture.whenStable();
+  expect(fixture.nativeElement.textContent).toContain(newVal);
+});
+```
 
-// Deduplication — only the last value dispatches
-it('should debounce rapid calls', fakeAsync(() => {
+### Debounced operations with Jest timers
+
+```typescript
+it('should dispatch after debounce', () => {
+  jest.useFakeTimers();
   (store.dispatch as jest.Mock).mockClear();
+
+  component.onProjectFilter('abc');
+  jest.advanceTimersByTime(300);
+
+  expect(store.dispatch).toHaveBeenCalledWith(new GetProjects('user-1', 'abc'));
+  jest.useRealTimers();
+});
+
+it('should debounce rapid calls', () => {
+  jest.useFakeTimers();
+  (store.dispatch as jest.Mock).mockClear();
+
   component.onProjectFilter('a');
   component.onProjectFilter('ab');
   component.onProjectFilter('abc');
-  tick(300);
-  const calls = (store.dispatch as jest.Mock).mock.calls.filter(([a]: [any]) => a instanceof GetProjects);
+  jest.advanceTimersByTime(300);
+
+  const calls = (store.dispatch as jest.Mock).mock.calls.filter(([a]: [unknown]) => a instanceof GetProjects);
   expect(calls.length).toBe(1);
-}));
+  jest.useRealTimers();
+});
 ```
 
-### `done` callback for output emissions
+### Output emissions with explicit async flow
 
 ```typescript
-it('should emit attachFile', (done) => {
-  component.attachFile.subscribe((f) => {
-    expect(f).toEqual({ id: 'file-1' });
-    done();
+it('should emit attachFile', async () => {
+  const emitted = new Promise<FileModel>((resolve) => {
+    component.attachFile.subscribe((file) => resolve(file));
   });
+
   component.selectFile({ id: 'file-1' } as FileModel);
+  await expect(emitted).resolves.toEqual({ id: 'file-1' });
 });
 ```
 
@@ -854,7 +894,7 @@ This project strictly enforces 90%+ test coverage through GitHub Actions CI.
 
 ## 18. Best Practices
 
-1. **Always use `provideOSFCore()`** — never import `OSFTestingModule` directly in new tests.
+1. **Always use `provideOSFCore()`**.
 2. **Always use `provideMockStore()`** — never mock `component.actions` via `Object.defineProperty`.
 3. **Always pass explicit mocks to `MockProvider`** when you need `jest.fn()` assertions. Bare `MockProvider(Service)` creates ng-mocks stubs.
 4. **Check `@testing/` before creating inline mocks** — builders and factories almost certainly exist.
@@ -863,13 +903,12 @@ This project strictly enforces 90%+ test coverage through GitHub Actions CI.
 7. **Use `(store.dispatch as jest.Mock).mockClear()`** when `ngOnInit` dispatches and you need isolated per-test assertions.
 8. **Use `WritableSignal` for dynamic state** — pass `signal()` values to `provideMockStore` when tests need to mutate state mid-test.
 9. **Use `Subject` for dialog `onClose`** — gives explicit control over dialog result timing. Use `provideDynamicDialogRefMock()` where applicable.
-10. **Use `fakeAsync` + `tick`** for debounced operations — specify the exact debounce duration.
+10. **Use Jest fake timers** for debounced operations — `jest.useFakeTimers()`, `jest.advanceTimersByTime(ms)`, and `jest.useRealTimers()`.
 11. **Use `fixture.componentRef.setInput()`** for signal inputs — never direct property assignment.
-12. **Use `ngMocks.faster()`** when all tests in a file share identical `TestBed` config — reuses the compiled module for speed. Do not use if any test requires a different config: shared state will cause subtle test pollution.
-13. **Use typed mock interfaces** (`ToastServiceMockType`, `RouterMockType`, etc.) — avoid `any`.
-14. **Test both positive and negative paths** — confirm an action fires AND confirm it does not fire when conditions are not met.
-15. **Only use `@testing/data` fixtures in HTTP flushes** — never hardcode response values inline in service or state tests.
-16. **Each test should highlight the most critical aspect of the code** — if a test fails during a refactor, it should clearly signal that a core feature was impacted.
+12. **Use typed mock interfaces** (`ToastServiceMockType`, `RouterMockType`, etc.) — avoid `any`.
+13. **Test both positive and negative paths** — confirm an action fires AND confirm it does not fire when conditions are not met.
+14. **Only use `@testing/data` fixtures in HTTP flushes** — never hardcode response values inline in service or state tests.
+15. **Each test should highlight the most critical aspect of the code** — if a test fails during a refactor, it should clearly signal that a core feature was impacted.
 
 ---
 
@@ -902,7 +941,7 @@ expect(callArgs[1].data.draftId).toBe('draft-1');
 ### Filtering dispatch calls by action type
 
 ```typescript
-const calls = (store.dispatch as jest.Mock).mock.calls.filter(([a]: [any]) => a instanceof GetProjects);
+const calls = (store.dispatch as jest.Mock).mock.calls.filter(([a]: [unknown]) => a instanceof GetProjects);
 expect(calls.length).toBe(1);
 expect(calls[0][0]).toEqual(new GetProjects('user-1', 'abc'));
 ```

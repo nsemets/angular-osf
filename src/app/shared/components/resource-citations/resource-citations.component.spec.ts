@@ -11,7 +11,7 @@ import { CitationsSelectors } from '@shared/stores/citations';
 
 import { ResourceCitationsComponent } from './resource-citations.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 import { ToastServiceMockBuilder } from '@testing/providers/toast-provider.mock';
@@ -35,8 +35,9 @@ describe('ResourceCitationsComponent', () => {
     mockRouter = RouterMockBuilder.create().build();
 
     await TestBed.configureTestingModule({
-      imports: [ResourceCitationsComponent, OSFTestingModule],
+      imports: [ResourceCitationsComponent],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             { selector: CitationsSelectors.getDefaultCitations, value: signal([]) },

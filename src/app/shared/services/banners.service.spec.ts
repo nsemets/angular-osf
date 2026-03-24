@@ -6,15 +6,14 @@ import { BannerModel } from '@core/components/osf-banners/models/banner.model';
 import { BannersService } from './banners.service';
 
 import { getScheduledBannerData } from '@testing/data/banners/scheduled.banner.data';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore, provideOSFHttp } from '@testing/osf.testing.provider';
 
 describe('Service: Banners', () => {
   let service: BannersService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [OSFTestingModule],
-      providers: [BannersService],
+      providers: [provideOSFCore(), provideOSFHttp(), BannersService],
     });
 
     service = TestBed.inject(BannersService);

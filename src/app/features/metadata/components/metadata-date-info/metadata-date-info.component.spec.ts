@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MetadataDateInfoComponent } from './metadata-date-info.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('MetadataDateInfoComponent', () => {
   let component: MetadataDateInfoComponent;
@@ -10,7 +10,8 @@ describe('MetadataDateInfoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MetadataDateInfoComponent, OSFTestingModule],
+      imports: [MetadataDateInfoComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MetadataDateInfoComponent);

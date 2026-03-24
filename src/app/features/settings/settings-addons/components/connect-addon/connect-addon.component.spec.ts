@@ -1,13 +1,11 @@
 import { Store } from '@ngxs/store';
 
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { MockComponents, MockPipe, MockProvider } from 'ng-mocks';
+import { MockComponents, MockProvider } from 'ng-mocks';
 
 import { of } from 'rxjs';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
-import { ActivatedRoute, Navigation, Router, UrlTree } from '@angular/router';
+import { provideRouter } from '@angular/router';
 
 import { AddonSetupAccountFormComponent } from '@osf/shared/components/addons/addon-setup-account-form/addon-setup-account-form.component';
 import { AddonTermsComponent } from '@osf/shared/components/addons/addon-terms/addon-terms.component';
@@ -17,31 +15,21 @@ import { AddonsSelectors } from '@shared/stores/addons';
 import { ConnectAddonComponent } from './connect-addon.component';
 
 import { MOCK_ADDON } from '@testing/mocks/addon.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe.skip('ConnectAddonComponent', () => {
   let component: ConnectAddonComponent;
   let fixture: ComponentFixture<ConnectAddonComponent>;
 
-  beforeEach(async () => {
-    const mockNavigation: Partial<Navigation> = {
-      id: 1,
-      initialUrl: new UrlTree(),
-      extractedUrl: new UrlTree(),
-      trigger: 'imperative',
-      previousNavigation: null,
-      extras: {
-        state: { addon: MOCK_ADDON },
-      },
-    };
-
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [
         ConnectAddonComponent,
         ...MockComponents(SubHeaderComponent, AddonTermsComponent, AddonSetupAccountFormComponent),
-        MockPipe(TranslatePipe),
       ],
       providers: [
-        provideNoopAnimations(),
+        provideOSFCore(),
+        provideRouter([]),
         MockProvider(Store, {
           selectSignal: jest.fn().mockImplementation((selector) => {
             if (selector === AddonsSelectors.getAddonsUserReference) {
@@ -54,14 +42,8 @@ describe.skip('ConnectAddonComponent', () => {
           }),
           dispatch: jest.fn().mockReturnValue(of({})),
         }),
-        MockProvider(Router, {
-          getCurrentNavigation: () => mockNavigation as Navigation,
-          navigate: jest.fn(),
-        }),
-        MockProvider(TranslateService),
-        MockProvider(ActivatedRoute),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(ConnectAddonComponent);
     component = fixture.componentInstance;

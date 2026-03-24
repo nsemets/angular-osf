@@ -15,7 +15,7 @@ import {
   buildRegistrationLogsUrl,
   getActivityLogsResponse,
 } from '@testing/data/activity-logs/activity-logs.data';
-import { EnvironmentTokenMock } from '@testing/mocks/environment.token.mock';
+import { EnvironmentTokenMock } from '@testing/providers/environment.token.mock';
 
 describe('State: ActivityLogs', () => {
   let store: Store;

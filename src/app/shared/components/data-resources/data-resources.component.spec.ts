@@ -7,7 +7,7 @@ import { IconComponent } from '../icon/icon.component';
 
 import { DataResourcesComponent } from './data-resources.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 
 describe('DataResourcesComponent', () => {
@@ -19,8 +19,8 @@ describe('DataResourcesComponent', () => {
     activatedRouteMock = ActivatedRouteMockBuilder.create().build();
 
     await TestBed.configureTestingModule({
-      imports: [DataResourcesComponent, OSFTestingModule, MockComponent(IconComponent)],
-      providers: [MockProvider(ActivatedRoute, activatedRouteMock)],
+      imports: [DataResourcesComponent, MockComponent(IconComponent)],
+      providers: [provideOSFCore(), MockProvider(ActivatedRoute, activatedRouteMock)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DataResourcesComponent);

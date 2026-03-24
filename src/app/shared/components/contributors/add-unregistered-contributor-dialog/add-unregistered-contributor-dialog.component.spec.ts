@@ -13,7 +13,7 @@ import { TextInputComponent } from '../../text-input/text-input.component';
 
 import { AddUnregisteredContributorDialogComponent } from './add-unregistered-contributor-dialog.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('AddUnregisteredContributorDialogComponent', () => {
   let component: AddUnregisteredContributorDialogComponent;
@@ -23,8 +23,8 @@ describe('AddUnregisteredContributorDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AddUnregisteredContributorDialogComponent, OSFTestingModule, MockComponent(TextInputComponent)],
-      providers: [MockProviders(DynamicDialogRef)],
+      imports: [AddUnregisteredContributorDialogComponent, MockComponent(TextInputComponent)],
+      providers: [provideOSFCore(), MockProviders(DynamicDialogRef)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AddUnregisteredContributorDialogComponent);

@@ -71,21 +71,21 @@ describe('StatusBannerComponent', () => {
 
   it('should compute pending state severity, status and icon', () => {
     setup();
-    expect(component.severity()).toBe('warn');
+    expect(component.messageSeverity()).toBe('warn');
     expect(component.status()).toBe('preprints.details.statusBanner.pending');
     expect(component.iconClass()).toBe('hourglass');
   });
 
   it('should compute pending withdrawal state severity, status and icon', () => {
     setup({ isPendingWithdrawal: true });
-    expect(component.severity()).toBe('error');
+    expect(component.messageSeverity()).toBe('error');
     expect(component.status()).toBe('preprints.details.statusBanner.pendingWithdrawal');
     expect(component.iconClass()).toBe('hourglass');
   });
 
   it('should compute withdrawal rejected state severity, status and icon', () => {
     setup({ isWithdrawalRejected: true });
-    expect(component.severity()).toBe('error');
+    expect(component.messageSeverity()).toBe('error');
     expect(component.status()).toBe('preprints.details.statusBanner.withdrawalRejected');
     expect(component.iconClass()).toBe('times-circle');
   });
@@ -113,7 +113,7 @@ describe('StatusBannerComponent', () => {
       ],
     });
     expect(component.isWithdrawn()).toBe(true);
-    expect(component.severity()).toBe('warn');
+    expect(component.messageSeverity()).toBe('warn');
     expect(component.status()).toBe('preprints.details.statusBanner.withdrawn');
     expect(component.iconClass()).toBe('circle-minus');
   });

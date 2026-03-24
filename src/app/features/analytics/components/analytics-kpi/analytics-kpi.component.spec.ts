@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 
 import { AnalyticsKpiComponent } from './analytics-kpi.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('AnalyticsKpiComponent', () => {
   let component: AnalyticsKpiComponent;
@@ -11,7 +11,8 @@ describe('AnalyticsKpiComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AnalyticsKpiComponent, OSFTestingModule],
+      imports: [AnalyticsKpiComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AnalyticsKpiComponent);

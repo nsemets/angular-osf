@@ -1,7 +1,6 @@
 import { provideStore, Store } from '@ngxs/store';
 
-import { TranslatePipe } from '@ngx-translate/core';
-import { MockComponent, MockPipe, MockProviders } from 'ng-mocks';
+import { MockComponent, MockProviders } from 'ng-mocks';
 
 import { of } from 'rxjs';
 
@@ -19,6 +18,8 @@ import { AccountSettingsState } from '../../store/account-settings.state';
 
 import { ConnectedIdentitiesComponent } from './connected-identities.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 const mockIdentity: ExternalIdentity = {
   id: 'id1',
   externalId: 'externalId1',
@@ -33,8 +34,9 @@ describe('ConnectedIdentitiesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ConnectedIdentitiesComponent, MockComponent(ReadonlyInputComponent), MockPipe(TranslatePipe)],
+      imports: [ConnectedIdentitiesComponent, MockComponent(ReadonlyInputComponent)],
       providers: [
+        provideOSFCore(),
         provideStore([AccountSettingsState]),
         provideHttpClient(),
         provideHttpClientTesting(),

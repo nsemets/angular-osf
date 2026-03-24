@@ -6,15 +6,15 @@ import { AddonsService } from './addons.service';
 import { getAddonsAuthorizedStorageData } from '@testing/data/addons/addons.authorized-storage.data';
 import { getConfiguredAddonsData } from '@testing/data/addons/addons.configured.data';
 import { getAddonsExternalStorageData } from '@testing/data/addons/addons.external-storage.data';
-import { OSFTestingStoreModule } from '@testing/osf.testing.module';
+import { provideOSFCore, provideOSFHttp } from '@testing/osf.testing.provider';
+import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('Service: Addons', () => {
   let service: AddonsService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [OSFTestingStoreModule],
-      providers: [AddonsService],
+      providers: [provideOSFCore(), provideOSFHttp(), provideMockStore(), AddonsService],
     });
 
     service = TestBed.inject(AddonsService);

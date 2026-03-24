@@ -1,20 +1,20 @@
-import { TranslatePipe } from '@ngx-translate/core';
-import { MockPipe } from 'ng-mocks';
-
 import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MeetingsFeatureCardComponent } from './meetings-feature-card.component';
+
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('MeetingsFeatureCardComponent', () => {
   let component: MeetingsFeatureCardComponent;
   let componentRef: ComponentRef<MeetingsFeatureCardComponent>;
   let fixture: ComponentFixture<MeetingsFeatureCardComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MeetingsFeatureCardComponent, MockPipe(TranslatePipe)],
-    }).compileComponents();
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [MeetingsFeatureCardComponent],
+      providers: [provideOSFCore()],
+    });
 
     fixture = TestBed.createComponent(MeetingsFeatureCardComponent);
     component = fixture.componentInstance;

@@ -9,7 +9,7 @@ import { CollectionSubmissionWithGuid } from '@osf/shared/models/collections/col
 import { CollectionsSearchResultCardComponent } from './collections-search-result-card.component';
 
 import { MOCK_COLLECTION_SUBMISSION_WITH_GUID } from '@testing/mocks/submission.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('CollectionsSearchResultCardComponent', () => {
   let component: CollectionsSearchResultCardComponent;
@@ -20,7 +20,8 @@ describe('CollectionsSearchResultCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CollectionsSearchResultCardComponent, OSFTestingModule, MockComponent(ContributorsListComponent)],
+      imports: [CollectionsSearchResultCardComponent, MockComponent(ContributorsListComponent)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CollectionsSearchResultCardComponent);

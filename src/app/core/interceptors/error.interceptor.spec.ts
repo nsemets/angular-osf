@@ -3,7 +3,6 @@ import { MockProvider } from 'ng-mocks';
 import { throwError } from 'rxjs';
 
 import { HttpContext, HttpErrorResponse, HttpHeaders, HttpRequest } from '@angular/common/http';
-import { runInInjectionContext } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
@@ -63,7 +62,6 @@ describe('errorInterceptor', () => {
     router = TestBed.inject(Router);
     authService = TestBed.inject(AuthService);
     viewOnlyHelper = TestBed.inject(ViewOnlyLinkHelperService);
-    jest.clearAllMocks();
   });
 
   const createRequest = (url = '/api/v2/test'): HttpRequest<unknown> => {
@@ -82,7 +80,7 @@ describe('errorInterceptor', () => {
       context: new HttpContext().set(BYPASS_ERROR_INTERCEPTOR, true),
     });
 
-    runInInjectionContext(TestBed, () => {
+    TestBed.runInInjectionContext(() => {
       const result = errorInterceptor(request, createErrorHandler(error));
       result.subscribe({
         error: () => {
@@ -99,7 +97,7 @@ describe('errorInterceptor', () => {
     const error = new HttpErrorResponse({ error: errorEvent, status: 0 });
     const request = createRequest();
 
-    runInInjectionContext(TestBed, () => {
+    TestBed.runInInjectionContext(() => {
       const result = errorInterceptor(request, createErrorHandler(error));
       result.subscribe({
         error: () => {
@@ -117,7 +115,7 @@ describe('errorInterceptor', () => {
     });
     const request = createRequest();
 
-    runInInjectionContext(TestBed, () => {
+    TestBed.runInInjectionContext(() => {
       const result = errorInterceptor(request, createErrorHandler(error));
       result.subscribe({
         error: () => {
@@ -132,7 +130,7 @@ describe('errorInterceptor', () => {
     const error = new HttpErrorResponse({ error: {}, status: 404 });
     const request = createRequest();
 
-    runInInjectionContext(TestBed, () => {
+    TestBed.runInInjectionContext(() => {
       const result = errorInterceptor(request, createErrorHandler(error));
       result.subscribe({
         error: () => {
@@ -150,7 +148,7 @@ describe('errorInterceptor', () => {
     });
     const request = createRequest();
 
-    runInInjectionContext(TestBed, () => {
+    TestBed.runInInjectionContext(() => {
       const result = errorInterceptor(request, createErrorHandler(error));
       result.subscribe({
         error: () => {
@@ -165,7 +163,7 @@ describe('errorInterceptor', () => {
     const error = new HttpErrorResponse({ error: {}, status: 409 });
     const request = createRequest();
 
-    runInInjectionContext(TestBed, () => {
+    TestBed.runInInjectionContext(() => {
       const result = errorInterceptor(request, createErrorHandler(error));
       result.subscribe({
         error: () => {
@@ -182,7 +180,7 @@ describe('errorInterceptor', () => {
     const error = new HttpErrorResponse({ error: {}, status: 401 });
     const request = createRequest();
 
-    runInInjectionContext(TestBed, () => {
+    TestBed.runInInjectionContext(() => {
       const result = errorInterceptor(request, createErrorHandler(error));
       result.subscribe({
         error: () => {
@@ -200,7 +198,7 @@ describe('errorInterceptor', () => {
     const error = new HttpErrorResponse({ error: {}, status: 401 });
     const request = createRequest();
 
-    runInInjectionContext(TestBed, () => {
+    TestBed.runInInjectionContext(() => {
       const result = errorInterceptor(request, createErrorHandler(error));
       result.subscribe({
         error: () => {
@@ -220,7 +218,7 @@ describe('errorInterceptor', () => {
     });
     const request = createRequest();
 
-    runInInjectionContext(TestBed, () => {
+    TestBed.runInInjectionContext(() => {
       const result = errorInterceptor(request, createErrorHandler(error));
       result.subscribe({
         error: () => {
@@ -240,7 +238,7 @@ describe('errorInterceptor', () => {
     });
     const request = createRequest();
 
-    runInInjectionContext(TestBed, () => {
+    TestBed.runInInjectionContext(() => {
       const result = errorInterceptor(request, createErrorHandler(error));
       result.subscribe({
         error: () => {
@@ -260,7 +258,7 @@ describe('errorInterceptor', () => {
     });
     const request = createRequest();
 
-    runInInjectionContext(TestBed, () => {
+    TestBed.runInInjectionContext(() => {
       const result = errorInterceptor(request, createErrorHandler(error));
       result.subscribe({
         error: () => {
@@ -281,7 +279,7 @@ describe('errorInterceptor', () => {
     });
     const request = createRequest();
 
-    runInInjectionContext(TestBed, () => {
+    TestBed.runInInjectionContext(() => {
       const result = errorInterceptor(request, createErrorHandler(error));
       result.subscribe({
         error: () => {

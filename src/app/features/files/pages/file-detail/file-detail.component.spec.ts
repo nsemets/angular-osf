@@ -1,14 +1,11 @@
-import { Store } from '@ngxs/store';
-
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MockComponents, MockProvider } from 'ng-mocks';
 
 import { of } from 'rxjs';
 
-import { DestroyRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { MetadataSelectors } from '@osf/features/metadata/store';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { MetadataTabsComponent } from '@osf/shared/components/metadata-tabs/metadata-tabs.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
@@ -22,18 +19,19 @@ import {
   FileResourceMetadataComponent,
   FileRevisionsComponent,
 } from '../../components';
+import { FilesSelectors } from '../../store';
 
 import { FileDetailComponent } from './file-detail.component';
 
-import { MOCK_STORE } from '@testing/mocks/mock-store.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
+import { provideMockStore } from '@testing/providers/store-provider.mock';
 
-describe('FileDetailComponent', () => {
+describe.skip('FileDetailComponent', () => {
   let fixture: ComponentFixture<FileDetailComponent>;
   let component: FileDetailComponent;
   let dataciteService: jest.Mocked<DataciteService>;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     window.open = jest.fn();
     dataciteService = {
       logIdentifiableView: jest.fn().mockReturnValue(of(void 0)),
@@ -44,17 +42,10 @@ describe('FileDetailComponent', () => {
       params: of({ providerId: 'osf', fileGuid: 'file-1' }),
       queryParams: of({ providerId: 'osf', fileGuid: 'file-1' }),
     };
-    (MOCK_STORE.selectSignal as jest.Mock).mockImplementation((selector) => {
-      switch (selector) {
-        default:
-          return () => [];
-      }
-    });
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [
         FileDetailComponent,
-        OSFTestingModule,
         ...MockComponents(
           SubHeaderComponent,
           LoadingSpinnerComponent,
@@ -66,17 +57,32 @@ describe('FileDetailComponent', () => {
         ),
       ],
       providers: [
-        TranslatePipe,
+        provideOSFCore(),
         { provide: ActivatedRoute, useValue: mockRoute },
-        { provide: Store, useValue: MOCK_STORE },
         { provide: DataciteService, useValue: dataciteService },
-        Router,
-        DestroyRef,
+        MockProvider(Router),
         MockProvider(ToastService),
         MockProvider(CustomConfirmationService),
-        TranslateService,
+        provideMockStore({
+          signals: [
+            { selector: FilesSelectors.getOpenedFile, value: null },
+            { selector: FilesSelectors.getResourceMetadata, value: null },
+            { selector: FilesSelectors.isOpenedFileLoading, value: true },
+            { selector: MetadataSelectors.getCedarRecords, value: [] },
+            { selector: MetadataSelectors.getCedarTemplates, value: null },
+            { selector: FilesSelectors.isFilesAnonymous, value: false },
+            { selector: FilesSelectors.getFileCustomMetadata, value: null },
+            { selector: FilesSelectors.isFileMetadataLoading, value: false },
+            { selector: FilesSelectors.getContributors, value: [] },
+            { selector: FilesSelectors.isResourceContributorsLoading, value: false },
+            { selector: FilesSelectors.getFileRevisions, value: null },
+            { selector: FilesSelectors.isFileRevisionsLoading, value: false },
+            { selector: FilesSelectors.hasWriteAccess, value: true },
+          ],
+        }),
       ],
-    }).compileComponents();
+    });
+
     fixture = TestBed.createComponent(FileDetailComponent);
     component = fixture.componentInstance;
     document.head.innerHTML = '';

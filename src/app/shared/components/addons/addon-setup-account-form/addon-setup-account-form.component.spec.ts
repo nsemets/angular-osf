@@ -2,6 +2,7 @@ import { MockProvider } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
+import { provideRouter } from '@angular/router';
 
 import { AddonFormControls } from '@osf/shared/enums/addon-form-controls.enum';
 import { AddonFormService } from '@shared/services/addons/addon-form.service';
@@ -10,7 +11,7 @@ import { AddonSetupAccountFormComponent } from './addon-setup-account-form.compo
 
 import { MOCK_ADDON } from '@testing/mocks/addon.mock';
 import { MOCK_USER } from '@testing/mocks/data.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('AddonSetupAccountFormComponent', () => {
   let component: AddonSetupAccountFormComponent;
@@ -22,11 +23,11 @@ describe('AddonSetupAccountFormComponent', () => {
     generateAuthorizedAddonPayload: jest.fn(),
   };
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [AddonSetupAccountFormComponent, OSFTestingModule],
-      providers: [MockProvider(AddonFormService, mockAddonFormService)],
-    }).compileComponents();
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [AddonSetupAccountFormComponent],
+      providers: [provideOSFCore(), provideRouter([]), MockProvider(AddonFormService, mockAddonFormService)],
+    });
 
     fixture = TestBed.createComponent(AddonSetupAccountFormComponent);
     component = fixture.componentInstance;

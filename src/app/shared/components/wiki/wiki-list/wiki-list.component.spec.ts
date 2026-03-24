@@ -13,7 +13,7 @@ import { ComponentWiki } from '@osf/shared/stores/wiki';
 
 import { WikiListComponent } from './wiki-list.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomConfirmationServiceMockBuilder } from '@testing/providers/custom-confirmation-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 
@@ -47,8 +47,9 @@ describe('WikiListComponent', () => {
     mockRouter = RouterMockBuilder.create().withUrl('/project/abc123/wiki').build();
 
     await TestBed.configureTestingModule({
-      imports: [WikiListComponent, OSFTestingModule],
+      imports: [WikiListComponent],
       providers: [
+        provideOSFCore(),
         MockProvider(CustomDialogService),
         MockProvider(CustomConfirmationService, mockCustomConfirmationService),
         MockProvider(Router, mockRouter),

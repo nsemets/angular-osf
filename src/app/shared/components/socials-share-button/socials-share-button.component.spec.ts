@@ -10,6 +10,8 @@ import { IconComponent } from '../icon/icon.component';
 
 import { SocialsShareButtonComponent } from './socials-share-button.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 describe('SocialsShareButtonComponent', () => {
   let component: SocialsShareButtonComponent;
   let fixture: ComponentFixture<SocialsShareButtonComponent>;
@@ -18,7 +20,7 @@ describe('SocialsShareButtonComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SocialsShareButtonComponent, MockComponent(IconComponent), MockPipe(TranslatePipe)],
-      providers: [MockProvider(SocialShareService)],
+      providers: [provideOSFCore(), MockProvider(SocialShareService)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SocialsShareButtonComponent);

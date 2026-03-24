@@ -3,7 +3,6 @@ import { MockComponents, MockProvider } from 'ng-mocks';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { CollectionSubmissionsListComponent } from '@osf/features/moderation/components';
 import { CustomPaginatorComponent } from '@osf/shared/components/custom-paginator/custom-paginator.component';
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
@@ -12,11 +11,12 @@ import { CollectionsSelectors } from '@osf/shared/stores/collections';
 
 import { SubmissionReviewStatus } from '../../enums';
 import { CollectionsModerationSelectors } from '../../store/collections-moderation';
+import { CollectionSubmissionsListComponent } from '../collection-submissions-list/collection-submissions-list.component';
 
 import { CollectionModerationSubmissionsComponent } from './collection-moderation-submissions.component';
 
 import { MOCK_PROVIDER } from '@testing/mocks/provider.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
@@ -45,7 +45,6 @@ describe('CollectionModerationSubmissionsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         CollectionModerationSubmissionsComponent,
-        OSFTestingModule,
         ...MockComponents(
           SelectComponent,
           CollectionSubmissionsListComponent,
@@ -55,6 +54,7 @@ describe('CollectionModerationSubmissionsComponent', () => {
         ),
       ],
       providers: [
+        provideOSFCore(),
         MockProvider(Router, mockRouter),
         MockProvider(ActivatedRoute, mockActivatedRoute),
         provideMockStore({

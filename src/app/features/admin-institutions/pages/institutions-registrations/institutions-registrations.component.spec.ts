@@ -8,7 +8,6 @@ import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { AdminTableComponent } from '@osf/features/admin-institutions/components';
 import { DownloadType } from '@osf/features/admin-institutions/enums';
 import * as downloadHelper from '@osf/features/admin-institutions/helpers';
 import { InstitutionsAdminSelectors } from '@osf/features/admin-institutions/store';
@@ -25,6 +24,7 @@ import {
   SetSortBy,
 } from '@osf/shared/stores/global-search';
 
+import { AdminTableComponent } from '../../components/admin-table/admin-table.component';
 import { FiltersSectionComponent } from '../../components/filters-section/filters-section.component';
 
 import { InstitutionsRegistrationsComponent } from './institutions-registrations.component';
@@ -34,7 +34,7 @@ import {
   MOCK_ADMIN_INSTITUTIONS_REGISTRATION_RESOURCE,
   MOCK_ADMIN_INSTITUTIONS_REGISTRATION_RESOURCES,
 } from '@testing/mocks/admin-institutions.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 jest.mock('@osf/features/admin-institutions/helpers', () => ({
@@ -76,12 +76,9 @@ describe('InstitutionsRegistrationsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        InstitutionsRegistrationsComponent,
-        OSFTestingModule,
-        ...MockComponents(AdminTableComponent, FiltersSectionComponent),
-      ],
+      imports: [InstitutionsRegistrationsComponent, ...MockComponents(AdminTableComponent, FiltersSectionComponent)],
       providers: [
+        provideOSFCore(),
         MockProviders(Router),
         {
           provide: ActivatedRoute,

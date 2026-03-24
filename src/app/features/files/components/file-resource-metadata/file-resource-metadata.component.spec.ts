@@ -1,6 +1,5 @@
 import { MockComponent } from 'ng-mocks';
 
-import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
@@ -10,7 +9,7 @@ import { FilesSelectors } from '../../store';
 
 import { FileResourceMetadataComponent } from './file-resource-metadata.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
@@ -36,15 +35,16 @@ describe('FileResourceMetadataComponent', () => {
     mockRouter = RouterMockBuilder.create().withUrl('/test').build();
 
     await TestBed.configureTestingModule({
-      imports: [FileResourceMetadataComponent, OSFTestingModule, MockComponent(ContributorsListComponent)],
+      imports: [FileResourceMetadataComponent, MockComponent(ContributorsListComponent)],
       providers: [
+        provideOSFCore(),
         { provide: Router, useValue: mockRouter },
         provideMockStore({
           signals: [
-            { selector: FilesSelectors.getResourceMetadata, value: signal(mockResourceMetadata) },
-            { selector: FilesSelectors.getContributors, value: signal(mockContributors) },
-            { selector: FilesSelectors.isResourceMetadataLoading, value: signal(false) },
-            { selector: FilesSelectors.isResourceContributorsLoading, value: signal(false) },
+            { selector: FilesSelectors.getResourceMetadata, value: mockResourceMetadata },
+            { selector: FilesSelectors.getContributors, value: mockContributors },
+            { selector: FilesSelectors.isResourceMetadataLoading, value: false },
+            { selector: FilesSelectors.isResourceContributorsLoading, value: false },
           ],
         }),
       ],

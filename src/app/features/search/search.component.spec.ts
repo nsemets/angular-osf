@@ -7,6 +7,8 @@ import { SEARCH_TAB_OPTIONS } from '@osf/shared/constants/search-tab-options.con
 
 import { SearchComponent } from './search.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 describe('SearchComponent', () => {
   let component: SearchComponent;
   let fixture: ComponentFixture<SearchComponent>;
@@ -14,6 +16,7 @@ describe('SearchComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SearchComponent, MockComponent(GlobalSearchComponent)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SearchComponent);

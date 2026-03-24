@@ -8,7 +8,7 @@ import { ComponentCheckboxItemComponent } from '../component-checkbox-item/compo
 
 import { ComponentsSelectionListComponent } from './components-selection-list.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('ComponentsSelectionListComponent', () => {
   let component: ComponentsSelectionListComponent;
@@ -22,7 +22,8 @@ describe('ComponentsSelectionListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ComponentsSelectionListComponent, OSFTestingModule, MockComponent(ComponentCheckboxItemComponent)],
+      imports: [ComponentsSelectionListComponent, MockComponent(ComponentCheckboxItemComponent)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComponentsSelectionListComponent);

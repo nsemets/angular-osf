@@ -5,7 +5,7 @@ import { CollectionsSelectors } from '@shared/stores/collections';
 import { CollectionsFilterChipsComponent } from './collections-filter-chips.component';
 
 import { MOCK_COLLECTIONS_ACTIVE_FILTERS } from '@testing/mocks/collections-filters.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('CollectionsFilterChipsComponent', () => {
@@ -16,8 +16,9 @@ describe('CollectionsFilterChipsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CollectionsFilterChipsComponent, OSFTestingModule],
+      imports: [CollectionsFilterChipsComponent],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [{ selector: CollectionsSelectors.getAllSelectedFilters, value: mockActiveFilters }],
         }),

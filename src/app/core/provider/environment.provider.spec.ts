@@ -4,14 +4,14 @@ import { EnvironmentModel } from '@osf/shared/models/environment.model';
 
 import { ENVIRONMENT } from './environment.provider';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('Provider: Environment', () => {
   let environment: EnvironmentModel;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OSFTestingModule],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     environment = TestBed.inject(ENVIRONMENT);

@@ -5,7 +5,7 @@ import { FilesSelectors } from '../../store';
 
 import { FileKeywordsComponent } from './file-keywords.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('FileKeywordsComponent', () => {
@@ -21,8 +21,9 @@ describe('FileKeywordsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FileKeywordsComponent, OSFTestingModule],
+      imports: [FileKeywordsComponent],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             { selector: FilesSelectors.getFileTags, value: signal(mockTags) },

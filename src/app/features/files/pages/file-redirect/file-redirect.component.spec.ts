@@ -7,6 +7,7 @@ import { FilesService } from '@osf/shared/services/files.service';
 
 import { FileRedirectComponent } from './file-redirect.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMock } from '@testing/providers/route-provider.mock';
 import { RouterMock } from '@testing/providers/router-provider.mock';
 
@@ -30,6 +31,7 @@ describe('FileRedirectComponent', () => {
     await TestBed.configureTestingModule({
       imports: [FileRedirectComponent],
       providers: [
+        provideOSFCore(),
         { provide: FilesService, useValue: mockFilesService },
         { provide: Router, useValue: RouterMock.withUrl('/test').build() },
         { provide: ActivatedRoute, useValue: ActivatedRouteMock.withParams({ fileId: 'test-file-id' }).build() },

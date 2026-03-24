@@ -2,7 +2,6 @@ import { MockProvider } from 'ng-mocks';
 
 import { of } from 'rxjs';
 
-import { runInInjectionContext } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
@@ -44,7 +43,7 @@ describe('isRegistryGuard', () => {
   });
 
   it('should return false when id is missing', () => {
-    const result = runInInjectionContext(TestBed, () => {
+    const result = TestBed.runInInjectionContext(() => {
       return isRegistryGuard({} as any, []);
     });
 
@@ -75,7 +74,7 @@ describe('isRegistryGuard', () => {
 
     router = TestBed.inject(Router);
 
-    runInInjectionContext(TestBed, () => {
+    TestBed.runInInjectionContext(() => {
       const result = isRegistryGuard({} as any, createMockSegments('test-id'));
 
       if (typeof result === 'object' && 'subscribe' in result) {
@@ -117,7 +116,7 @@ describe('isRegistryGuard', () => {
 
     router = TestBed.inject(Router);
 
-    runInInjectionContext(TestBed, () => {
+    TestBed.runInInjectionContext(() => {
       const result = isRegistryGuard({} as any, createMockSegments('test-id'));
 
       if (typeof result === 'object' && 'subscribe' in result) {
@@ -163,7 +162,7 @@ describe('isRegistryGuard', () => {
 
     router = TestBed.inject(Router);
 
-    runInInjectionContext(TestBed, () => {
+    TestBed.runInInjectionContext(() => {
       const result = isRegistryGuard({} as any, createMockSegments('parent-id/child-id'));
 
       if (typeof result === 'object' && 'subscribe' in result) {
@@ -210,7 +209,7 @@ describe('isRegistryGuard', () => {
 
     router = TestBed.inject(Router);
 
-    runInInjectionContext(TestBed, () => {
+    TestBed.runInInjectionContext(() => {
       const result = isRegistryGuard({} as any, createMockSegments('registration-id'));
 
       if (typeof result === 'object' && 'subscribe' in result) {
@@ -256,7 +255,7 @@ describe('isRegistryGuard', () => {
 
     router = TestBed.inject(Router);
 
-    runInInjectionContext(TestBed, () => {
+    TestBed.runInInjectionContext(() => {
       const result = isRegistryGuard({} as any, createMockSegments('parent-id/child-id'));
 
       if (typeof result === 'object' && 'subscribe' in result) {
@@ -306,7 +305,7 @@ describe('isRegistryGuard', () => {
 
     router = TestBed.inject(Router);
 
-    runInInjectionContext(TestBed, () => {
+    TestBed.runInInjectionContext(() => {
       const result = isRegistryGuard({} as any, createMockSegments('user-id'));
 
       if (typeof result === 'object' && 'subscribe' in result) {
@@ -356,7 +355,7 @@ describe('isRegistryGuard', () => {
 
     router = TestBed.inject(Router);
 
-    runInInjectionContext(TestBed, () => {
+    TestBed.runInInjectionContext(() => {
       const result = isRegistryGuard({} as any, createMockSegments('user-id'));
 
       if (typeof result === 'object' && 'subscribe' in result) {
@@ -401,7 +400,7 @@ describe('isRegistryGuard', () => {
 
     router = TestBed.inject(Router);
 
-    runInInjectionContext(TestBed, () => {
+    TestBed.runInInjectionContext(() => {
       const result = isRegistryGuard({} as any, createMockSegments('resource-id'));
 
       if (typeof result === 'object' && 'subscribe' in result) {

@@ -2,14 +2,15 @@ import { MockComponents } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CollectionsSearchResultCardComponent } from '@osf/features/collections/components';
 import { CustomPaginatorComponent } from '@osf/shared/components/custom-paginator/custom-paginator.component';
 import { CollectionsSelectors } from '@shared/stores/collections';
+
+import { CollectionsSearchResultCardComponent } from '../collections-search-result-card/collections-search-result-card.component';
 
 import { CollectionsSearchResultsComponent } from './collections-search-results.component';
 
 import { MOCK_COLLECTION_SUBMISSION_WITH_GUID } from '@testing/mocks/submission.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('CollectionsSearchResultsComponent', () => {
@@ -27,9 +28,9 @@ describe('CollectionsSearchResultsComponent', () => {
       imports: [
         CollectionsSearchResultsComponent,
         ...MockComponents(CustomPaginatorComponent, CollectionsSearchResultCardComponent),
-        OSFTestingModule,
       ],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             { selector: CollectionsSelectors.getCollectionSubmissionsSearchResult, value: mockSearchResults },

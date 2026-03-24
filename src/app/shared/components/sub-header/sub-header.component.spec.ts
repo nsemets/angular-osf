@@ -8,6 +8,8 @@ import { FixSpecialCharPipe } from '@osf/shared/pipes/fix-special-char.pipe';
 
 import { SubHeaderComponent } from './sub-header.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 describe('SubHeaderComponent', () => {
   let component: SubHeaderComponent;
   let fixture: ComponentFixture<SubHeaderComponent>;
@@ -15,6 +17,7 @@ describe('SubHeaderComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SubHeaderComponent, ...MockPipes(SafeHtmlPipe, FixSpecialCharPipe)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SubHeaderComponent);

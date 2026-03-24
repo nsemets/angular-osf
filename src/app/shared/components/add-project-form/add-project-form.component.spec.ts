@@ -21,7 +21,7 @@ import { ProjectSelectorComponent } from '../project-selector/project-selector.c
 import { AddProjectFormComponent } from './add-project-form.component';
 
 import { MOCK_USER } from '@testing/mocks/data.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('AddProjectFormComponent', () => {
@@ -54,10 +54,10 @@ describe('AddProjectFormComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         AddProjectFormComponent,
-        OSFTestingModule,
         ...MockComponents(AffiliatedInstitutionSelectComponent, ProjectSelectorComponent),
       ],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             {

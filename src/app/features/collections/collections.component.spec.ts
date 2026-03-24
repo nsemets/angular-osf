@@ -3,6 +3,8 @@ import { By } from '@angular/platform-browser';
 
 import { CollectionsComponent } from './collections.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 describe('CollectionsComponent', () => {
   let component: CollectionsComponent;
   let fixture: ComponentFixture<CollectionsComponent>;
@@ -10,6 +12,7 @@ describe('CollectionsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [CollectionsComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CollectionsComponent);

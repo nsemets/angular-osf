@@ -3,6 +3,8 @@ import { By } from '@angular/platform-browser';
 
 import { TermsOfUseComponent } from './terms-of-use.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 describe('TermsOfUseComponent', () => {
   let component: TermsOfUseComponent;
   let fixture: ComponentFixture<TermsOfUseComponent>;
@@ -10,6 +12,7 @@ describe('TermsOfUseComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [TermsOfUseComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TermsOfUseComponent);

@@ -9,7 +9,7 @@ import { WikiSelectors } from '@osf/shared/stores/wiki';
 
 import { OverviewWikiComponent } from './overview-wiki.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
@@ -24,8 +24,9 @@ describe('OverviewWikiComponent', () => {
     routerMock = RouterMockBuilder.create().build();
 
     await TestBed.configureTestingModule({
-      imports: [OverviewWikiComponent, OSFTestingModule, ...MockComponents(TruncatedTextComponent, MarkdownComponent)],
+      imports: [OverviewWikiComponent, ...MockComponents(TruncatedTextComponent, MarkdownComponent)],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             { selector: WikiSelectors.getHomeWikiLoading, value: false },

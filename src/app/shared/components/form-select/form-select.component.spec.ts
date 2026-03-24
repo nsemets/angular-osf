@@ -6,7 +6,7 @@ import { SelectOption } from '@osf/shared/models/select-option.model';
 
 import { FormSelectComponent } from './form-select.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('FormSelectComponent', () => {
   let component: FormSelectComponent;
@@ -22,7 +22,8 @@ describe('FormSelectComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FormSelectComponent, OSFTestingModule],
+      imports: [FormSelectComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FormSelectComponent);

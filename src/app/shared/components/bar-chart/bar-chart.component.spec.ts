@@ -6,7 +6,7 @@ import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.comp
 
 import { BarChartComponent } from './bar-chart.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('BarChartComponent', () => {
   let component: BarChartComponent;
@@ -14,7 +14,8 @@ describe('BarChartComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BarChartComponent, OSFTestingModule, MockComponent(LoadingSpinnerComponent)],
+      imports: [BarChartComponent, MockComponent(LoadingSpinnerComponent)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(BarChartComponent);

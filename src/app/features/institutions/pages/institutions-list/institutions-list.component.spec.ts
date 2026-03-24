@@ -2,8 +2,9 @@ import { Store } from '@ngxs/store';
 
 import { MockComponents } from 'ng-mocks';
 
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl } from '@angular/forms';
+import { provideRouter } from '@angular/router';
 
 import { ScheduledBannerComponent } from '@core/components/osf-banners/scheduled-banner/scheduled-banner.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
@@ -14,7 +15,7 @@ import { FetchInstitutions, InstitutionsSelectors } from '@osf/shared/stores/ins
 import { InstitutionsListComponent } from './institutions-list.component';
 
 import { MOCK_INSTITUTION } from '@testing/mocks/institution.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('InstitutionsListComponent', () => {
@@ -24,14 +25,15 @@ describe('InstitutionsListComponent', () => {
 
   const mockInstitutions = [MOCK_INSTITUTION];
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [
         InstitutionsListComponent,
-        OSFTestingModule,
         ...MockComponents(SubHeaderComponent, SearchInputComponent, LoadingSpinnerComponent, ScheduledBannerComponent),
       ],
       providers: [
+        provideOSFCore(),
+        provideRouter([]),
         provideMockStore({
           signals: [
             { selector: InstitutionsSelectors.getInstitutions, value: mockInstitutions },
@@ -39,12 +41,16 @@ describe('InstitutionsListComponent', () => {
           ],
         }),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(InstitutionsListComponent);
     component = fixture.componentInstance;
     store = TestBed.inject(Store);
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   it('should create', () => {
@@ -57,19 +63,38 @@ describe('InstitutionsListComponent', () => {
     expect(action.searchValue).toBeUndefined();
   });
 
-  it('should dispatch FetchInstitutions with search value after debounce', fakeAsync(() => {
+  it('should dispatch FetchInstitutions with search value after debounce', () => {
+    jest.useFakeTimers();
     (store.dispatch as jest.Mock).mockClear();
-    component.searchControl.setValue('test search');
-    tick(300);
-    expect(store.dispatch).toHaveBeenCalledWith(new FetchInstitutions('test search'));
-  }));
 
-  it('should dispatch FetchInstitutions with empty string when search is null', fakeAsync(() => {
+    component.searchControl.setValue('test search');
+    jest.advanceTimersByTime(300);
+
+    expect(store.dispatch).toHaveBeenCalledWith(new FetchInstitutions('test search'));
+  });
+
+  it('should dispatch FetchInstitutions with empty string when search is null', () => {
+    jest.useFakeTimers();
     (store.dispatch as jest.Mock).mockClear();
+
     component.searchControl.setValue(null);
-    tick(300);
+    jest.advanceTimersByTime(300);
+
     expect(store.dispatch).toHaveBeenCalledWith(new FetchInstitutions(''));
-  }));
+  });
+
+  it('should not dispatch another search action for unchanged value', () => {
+    jest.useFakeTimers();
+    (store.dispatch as jest.Mock).mockClear();
+
+    component.searchControl.setValue('same value');
+    jest.advanceTimersByTime(300);
+    component.searchControl.setValue('same value');
+    jest.advanceTimersByTime(300);
+
+    expect(store.dispatch).toHaveBeenCalledTimes(1);
+    expect(store.dispatch).toHaveBeenCalledWith(new FetchInstitutions('same value'));
+  });
 
   it('should initialize with correct default values', () => {
     expect(component.classes).toBe('flex-1 flex flex-column w-full');
@@ -78,31 +103,10 @@ describe('InstitutionsListComponent', () => {
   });
 
   it('should return institutions from store', () => {
-    const institutions = component.institutions();
-    expect(institutions).toBe(mockInstitutions);
+    expect(component.institutions()).toBe(mockInstitutions);
   });
 
   it('should return loading state from store', () => {
-    const loading = component.institutionsLoading();
-    expect(loading).toBe(false);
-  });
-
-  it('should handle search control value changes', () => {
-    const searchValue = 'test search';
-    component.searchControl.setValue(searchValue);
-
-    expect(component.searchControl.value).toBe(searchValue);
-  });
-
-  it('should handle empty search', () => {
-    component.searchControl.setValue('');
-
-    expect(component.searchControl.value).toBe('');
-  });
-
-  it('should handle null search value', () => {
-    component.searchControl.setValue(null);
-
-    expect(component.searchControl.value).toBe(null);
+    expect(component.institutionsLoading()).toBe(false);
   });
 });

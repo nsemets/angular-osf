@@ -21,7 +21,7 @@ import { CitationAddonCardComponent } from './citation-addon-card.component';
 
 import { MOCK_CONFIGURED_ADDON } from '@testing/mocks/configured-addon.mock';
 import { MOCK_DOCUMENT_STORAGE_ITEM } from '@testing/mocks/storage-item.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { AddonOperationInvocationServiceMockFactory } from '@testing/providers/addon-operation-invocation.service.mock';
 import { CslStyleManagerServiceMockFactory } from '@testing/providers/csl-style-manager.service.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
@@ -34,12 +34,9 @@ describe('CitationAddonCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        CitationAddonCardComponent,
-        OSFTestingModule,
-        ...MockComponents(CitationItemComponent, CitationCollectionItemComponent),
-      ],
+      imports: [CitationAddonCardComponent, ...MockComponents(CitationItemComponent, CitationCollectionItemComponent)],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             { selector: AddonsSelectors.getAllCitationOperationInvocations, value: signal({}) },

@@ -14,7 +14,7 @@ import { SelectComponent } from '../../select/select.component';
 
 import { StorageItemSelectorComponent } from './storage-item-selector.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { DialogServiceMockBuilder } from '@testing/providers/dialog-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
@@ -29,12 +29,9 @@ describe('StorageItemSelectorComponent', () => {
     mockOperationInvocation = signal<OperationInvocation | null>(null);
 
     await TestBed.configureTestingModule({
-      imports: [
-        StorageItemSelectorComponent,
-        OSFTestingModule,
-        ...MockComponents(GoogleFilePickerComponent, SelectComponent),
-      ],
+      imports: [StorageItemSelectorComponent, ...MockComponents(GoogleFilePickerComponent, SelectComponent)],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             {

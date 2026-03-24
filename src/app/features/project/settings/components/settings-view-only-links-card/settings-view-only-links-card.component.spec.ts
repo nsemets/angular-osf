@@ -8,7 +8,7 @@ import { PaginatedViewOnlyLinksModel } from '@shared/models/view-only-links/view
 import { SettingsViewOnlyLinksCardComponent } from './settings-view-only-links-card.component';
 
 import { MOCK_PAGINATED_VIEW_ONLY_LINKS, MOCK_VIEW_ONLY_LINK } from '@testing/mocks/view-only-link.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('SettingsViewOnlyLinksCardComponent', () => {
   let component: SettingsViewOnlyLinksCardComponent;
@@ -19,7 +19,8 @@ describe('SettingsViewOnlyLinksCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SettingsViewOnlyLinksCardComponent, OSFTestingModule, MockComponent(ViewOnlyTableComponent)],
+      imports: [SettingsViewOnlyLinksCardComponent, MockComponent(ViewOnlyTableComponent)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SettingsViewOnlyLinksCardComponent);

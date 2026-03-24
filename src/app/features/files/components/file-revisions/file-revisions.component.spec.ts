@@ -8,7 +8,7 @@ import { StopPropagationDirective } from '@osf/shared/directives/stop-propagatio
 
 import { FileRevisionsComponent } from './file-revisions.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('FileRevisionsComponent', () => {
   let component: FileRevisionsComponent;
@@ -16,8 +16,8 @@ describe('FileRevisionsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FileRevisionsComponent, OSFTestingModule, ...MockComponents(CopyButtonComponent, InfoIconComponent)],
-      providers: [{ provide: StopPropagationDirective, useValue: {} }],
+      imports: [FileRevisionsComponent, ...MockComponents(CopyButtonComponent, InfoIconComponent)],
+      providers: [provideOSFCore(), { provide: StopPropagationDirective, useValue: {} }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FileRevisionsComponent);

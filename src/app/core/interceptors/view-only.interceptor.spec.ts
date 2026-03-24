@@ -3,7 +3,6 @@ import { MockProvider } from 'ng-mocks';
 import { of } from 'rxjs';
 
 import { HttpRequest } from '@angular/common/http';
-import { runInInjectionContext } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
@@ -51,7 +50,7 @@ describe('viewOnlyInterceptor', () => {
     const request = createRequest('/api/v2/projects/');
     const handler = createHandler();
 
-    runInInjectionContext(TestBed, () => viewOnlyInterceptor(request, handler));
+    TestBed.runInInjectionContext(() => viewOnlyInterceptor(request, handler));
 
     expect(handler).toHaveBeenCalledTimes(1);
     const modifiedRequest = handler.mock.calls[0][0];
@@ -64,7 +63,7 @@ describe('viewOnlyInterceptor', () => {
     const request = createRequest('/api/v2/projects/?page=1');
     const handler = createHandler();
 
-    runInInjectionContext(TestBed, () => viewOnlyInterceptor(request, handler));
+    TestBed.runInInjectionContext(() => viewOnlyInterceptor(request, handler));
 
     expect(handler).toHaveBeenCalledTimes(1);
     const modifiedRequest = handler.mock.calls[0][0];
@@ -77,7 +76,7 @@ describe('viewOnlyInterceptor', () => {
     const request = createRequest('/api/v2/files/');
     const handler = createHandler();
 
-    runInInjectionContext(TestBed, () => viewOnlyInterceptor(request, handler));
+    TestBed.runInInjectionContext(() => viewOnlyInterceptor(request, handler));
 
     expect(handler).toHaveBeenCalledTimes(1);
     const modifiedRequest = handler.mock.calls[0][0];
@@ -90,7 +89,7 @@ describe('viewOnlyInterceptor', () => {
     const request = createRequest('/api/v2/nodes/?view_only=existing');
     const handler = createHandler();
 
-    runInInjectionContext(TestBed, () => viewOnlyInterceptor(request, handler));
+    TestBed.runInInjectionContext(() => viewOnlyInterceptor(request, handler));
 
     expect(handler).toHaveBeenCalledTimes(1);
     const modifiedRequest = handler.mock.calls[0][0];
@@ -103,7 +102,7 @@ describe('viewOnlyInterceptor', () => {
     const request = createRequest('/api/v2/users/');
     const handler = createHandler();
 
-    runInInjectionContext(TestBed, () => viewOnlyInterceptor(request, handler));
+    TestBed.runInInjectionContext(() => viewOnlyInterceptor(request, handler));
 
     expect(handler).toHaveBeenCalledTimes(1);
     const modifiedRequest = handler.mock.calls[0][0];
@@ -116,7 +115,7 @@ describe('viewOnlyInterceptor', () => {
     const request = createRequest('https://api.ror.org/v2');
     const handler = createHandler();
 
-    runInInjectionContext(TestBed, () => viewOnlyInterceptor(request, handler));
+    TestBed.runInInjectionContext(() => viewOnlyInterceptor(request, handler));
 
     expect(handler).toHaveBeenCalledTimes(1);
     const modifiedRequest = handler.mock.calls[0][0];
@@ -129,7 +128,7 @@ describe('viewOnlyInterceptor', () => {
     const request = createRequest('https://api.github.com/repos/user/repo');
     const handler = createHandler();
 
-    runInInjectionContext(TestBed, () => viewOnlyInterceptor(request, handler));
+    TestBed.runInInjectionContext(() => viewOnlyInterceptor(request, handler));
 
     expect(handler).toHaveBeenCalledTimes(1);
     const modifiedRequest = handler.mock.calls[0][0];

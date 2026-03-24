@@ -17,14 +17,14 @@ import { ProjectOverviewSelectors } from '../../store';
 
 import { LinkResourceDialogComponent } from './link-resource-dialog.component';
 
-import { DynamicDialogRefMock } from '@testing/mocks/dynamic-dialog-ref.mock';
 import {
   MOCK_MY_RESOURCES_ITEM_PROJECT,
   MOCK_MY_RESOURCES_ITEM_PROJECT_PRIVATE,
   MOCK_MY_RESOURCES_ITEM_REGISTRATION,
 } from '@testing/mocks/my-resources.mock';
 import { MOCK_NODE_WITH_ADMIN } from '@testing/mocks/node.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
+import { DynamicDialogRefMock } from '@testing/providers/dynamic-dialog-ref.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('LinkResourceDialogComponent', () => {
@@ -45,8 +45,9 @@ describe('LinkResourceDialogComponent', () => {
     dialogRef = { close: jest.fn() };
 
     await TestBed.configureTestingModule({
-      imports: [LinkResourceDialogComponent, OSFTestingModule, ...MockComponents(SearchInputComponent)],
+      imports: [LinkResourceDialogComponent, ...MockComponents(SearchInputComponent)],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             { selector: MyResourcesSelectors.getProjects, value: mockProjects },

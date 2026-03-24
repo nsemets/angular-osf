@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StatisticCardComponent } from './statistic-card.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 describe('StatisticCardComponent', () => {
   let component: StatisticCardComponent;
   let fixture: ComponentFixture<StatisticCardComponent>;
@@ -9,6 +11,7 @@ describe('StatisticCardComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [StatisticCardComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(StatisticCardComponent);

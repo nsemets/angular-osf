@@ -52,32 +52,33 @@ describe('AdditionalInfoComponent', () => {
     fixture.detectChanges();
   }
 
-  beforeEach(() => {
-    setup();
-  });
-
   it('should create', () => {
+    setup();
     expect(component).toBeTruthy();
   });
 
   it('should return license from preprint when available', () => {
+    setup();
     const license = component.license();
     expect(license).toBe(PREPRINT_MOCK.embeddedLicense);
   });
 
   it('should return license options record from preprint when available', () => {
+    setup();
     const licenseOptionsRecord = component.licenseOptionsRecord();
     expect(licenseOptionsRecord).toEqual(PREPRINT_MOCK.licenseOptions);
   });
 
   it('should have skeleton data array with 5 null elements', () => {
+    setup();
     expect(component.skeletonData).toHaveLength(5);
     expect(component.skeletonData.every((item) => item === null)).toBe(true);
   });
 
   it('should navigate to search page with tag when tagClicked is called', () => {
+    setup();
     const router = TestBed.inject(Router);
-    const navigateSpy = jest.spyOn(router, 'navigate');
+    const navigateSpy = jest.spyOn(router, 'navigate').mockResolvedValue(true);
 
     component.tagClicked('test-tag');
 
@@ -87,6 +88,7 @@ describe('AdditionalInfoComponent', () => {
   });
 
   it('should not render DOI link when articleDoiLink is missing', () => {
+    setup();
     const doiLink = fixture.nativeElement.querySelector('a[href*="doi.org"]');
     expect(doiLink).toBeNull();
   });

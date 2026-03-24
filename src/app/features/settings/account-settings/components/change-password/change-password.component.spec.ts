@@ -1,7 +1,6 @@
 import { provideStore, Store } from '@ngxs/store';
 
-import { TranslatePipe } from '@ngx-translate/core';
-import { MockComponent, MockPipe, MockProvider } from 'ng-mocks';
+import { MockComponent, MockProvider } from 'ng-mocks';
 
 import { of, throwError } from 'rxjs';
 
@@ -17,7 +16,7 @@ import { AccountSettingsState } from '../../store';
 
 import { ChangePasswordComponent } from './change-password.component';
 
-import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('ChangePasswordComponent', () => {
   let component: ChangePasswordComponent;
@@ -26,12 +25,12 @@ describe('ChangePasswordComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ChangePasswordComponent, MockComponent(PasswordInputHintComponent), MockPipe(TranslatePipe)],
+      imports: [ChangePasswordComponent, MockComponent(PasswordInputHintComponent)],
       providers: [
+        provideOSFCore(),
         provideStore([AccountSettingsState]),
         provideHttpClient(),
         provideHttpClientTesting(),
-        TranslateServiceMock,
         MockProvider(LoaderService),
         MockProvider(ToastService),
       ],

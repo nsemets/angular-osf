@@ -6,7 +6,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { UserSelectors } from '@osf/core/store/user';
-import { AdminTableComponent } from '@osf/features/admin-institutions/components';
 import { DownloadType } from '@osf/features/admin-institutions/enums';
 import { InstitutionsAdminSelectors } from '@osf/features/admin-institutions/store';
 import { SelectComponent } from '@osf/shared/components/select/select.component';
@@ -15,6 +14,8 @@ import { ToastService } from '@osf/shared/services/toast.service';
 import { SortOrder } from '@shared/enums/sort-order.enum';
 import { SearchFilters } from '@shared/models/search-filters.model';
 
+import { AdminTableComponent } from '../../components/admin-table/admin-table.component';
+
 import { InstitutionsUsersComponent } from './institutions-users.component';
 
 import {
@@ -22,7 +23,7 @@ import {
   MOCK_ADMIN_INSTITUTIONS_USERS,
 } from '@testing/mocks/admin-institutions.mock';
 import { MOCK_USER } from '@testing/mocks/data.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
@@ -35,8 +36,9 @@ describe('InstitutionsUsersComponent', () => {
     mockCustomDialogService = CustomDialogServiceMockBuilder.create().withDefaultOpen().build();
 
     await TestBed.configureTestingModule({
-      imports: [InstitutionsUsersComponent, ...MockComponents(AdminTableComponent, SelectComponent), OSFTestingModule],
+      imports: [InstitutionsUsersComponent, ...MockComponents(AdminTableComponent, SelectComponent)],
       providers: [
+        provideOSFCore(),
         {
           provide: ActivatedRoute,
           useValue: { queryParams: of({}) },

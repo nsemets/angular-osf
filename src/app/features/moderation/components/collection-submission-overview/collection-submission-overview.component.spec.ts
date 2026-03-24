@@ -8,7 +8,7 @@ import { Mode } from '@osf/shared/enums/mode.enum';
 
 import { CollectionSubmissionOverviewComponent } from './collection-submission-overview.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 
@@ -23,8 +23,9 @@ describe('CollectionSubmissionOverviewComponent', () => {
     mockActivatedRoute = ActivatedRouteMockBuilder.create().withQueryParams({ mode: Mode.Moderation }).build();
 
     await TestBed.configureTestingModule({
-      imports: [CollectionSubmissionOverviewComponent, OSFTestingModule, ...MockComponents(ProjectOverviewComponent)],
+      imports: [CollectionSubmissionOverviewComponent, ...MockComponents(ProjectOverviewComponent)],
       providers: [
+        provideOSFCore(),
         { provide: Router, useValue: mockRouter },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
       ],

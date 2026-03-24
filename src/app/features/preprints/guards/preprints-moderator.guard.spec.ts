@@ -1,6 +1,5 @@
 import { MockProvider } from 'ng-mocks';
 
-import { runInInjectionContext } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 
@@ -36,7 +35,7 @@ describe('preprintsModeratorGuard', () => {
   it('should allow activation when user can view reviews', () => {
     setup(true);
 
-    const result = runInInjectionContext(TestBed, () => preprintsModeratorGuard(routeSnapshot, stateSnapshot));
+    const result = TestBed.runInInjectionContext(() => preprintsModeratorGuard(routeSnapshot, stateSnapshot));
 
     expect(result).toBe(true);
     expect(routerMock.createUrlTree).not.toHaveBeenCalled();
@@ -45,7 +44,7 @@ describe('preprintsModeratorGuard', () => {
   it('should return forbidden UrlTree when user cannot view reviews', () => {
     const { urlTree } = setup(false);
 
-    const result = runInInjectionContext(TestBed, () => preprintsModeratorGuard(routeSnapshot, stateSnapshot));
+    const result = TestBed.runInInjectionContext(() => preprintsModeratorGuard(routeSnapshot, stateSnapshot));
 
     expect(routerMock.createUrlTree).toHaveBeenCalledWith(['/forbidden']);
     expect(result).toBe(urlTree);

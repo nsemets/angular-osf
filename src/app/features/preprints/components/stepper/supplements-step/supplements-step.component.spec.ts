@@ -2,7 +2,7 @@ import { Store } from '@ngxs/store';
 
 import { MockComponent, MockProvider } from 'ng-mocks';
 
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SupplementOptions } from '@osf/features/preprints/enums';
 import {
@@ -83,6 +83,10 @@ describe('SupplementsStepComponent', () => {
     }
   });
 
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   it('should create', () => {
     setup();
     expect(component).toBeTruthy();
@@ -120,38 +124,41 @@ describe('SupplementsStepComponent', () => {
     expect(store.dispatch).not.toHaveBeenCalledWith(expect.any(FetchPreprintProject));
   });
 
-  it('should dispatch available projects from debounced project search', fakeAsync(() => {
+  it('should dispatch available projects from debounced project search', () => {
+    jest.useFakeTimers();
     setup();
     (store.dispatch as jest.Mock).mockClear();
 
     component.projectNameControl.setValue('search-query');
-    tick(500);
+    jest.advanceTimersByTime(500);
 
     expect(store.dispatch).toHaveBeenCalledTimes(1);
     expect(store.dispatch).toHaveBeenCalledWith(new FetchAvailableProjects('search-query'));
-  }));
+  });
 
-  it('should not dispatch before the debounce window elapses', fakeAsync(() => {
+  it('should not dispatch before the debounce window elapses', () => {
+    jest.useFakeTimers();
     setup();
     (store.dispatch as jest.Mock).mockClear();
 
     component.projectNameControl.setValue('search-query');
-    tick(300);
+    jest.advanceTimersByTime(300);
 
     expect(store.dispatch).not.toHaveBeenCalledWith(new FetchAvailableProjects('search-query'));
-    tick(200);
-  }));
+    jest.advanceTimersByTime(200);
+  });
 
-  it('should skip available projects dispatch when value equals selected project id', fakeAsync(() => {
+  it('should skip available projects dispatch when value equals selected project id', () => {
+    jest.useFakeTimers();
     setup();
     (store.dispatch as jest.Mock).mockClear();
     component.selectedProjectId.set('project-1');
 
     component.projectNameControl.setValue('project-1');
-    tick(500);
+    jest.advanceTimersByTime(500);
 
     expect(store.dispatch).not.toHaveBeenCalledWith(new FetchAvailableProjects('project-1'));
-  }));
+  });
 
   it('should select supplement option and reset create form for create-new option', () => {
     setup({ detectChanges: false });

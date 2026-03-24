@@ -1,5 +1,4 @@
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { MockComponents, MockPipe, MockProvider } from 'ng-mocks';
+import { MockComponents, MockProvider } from 'ng-mocks';
 
 import { BehaviorSubject } from 'rxjs';
 
@@ -13,6 +12,8 @@ import { IS_MEDIUM } from '@osf/shared/helpers/breakpoints.tokens';
 import { EducationComponent, EmploymentComponent, NameComponent, SocialComponent } from './components';
 import { ProfileSettingsComponent } from './profile-settings.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 describe('ProfileSettingsComponent', () => {
   let component: ProfileSettingsComponent;
   let fixture: ComponentFixture<ProfileSettingsComponent>;
@@ -24,7 +25,6 @@ describe('ProfileSettingsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         ProfileSettingsComponent,
-        MockPipe(TranslatePipe),
         ...MockComponents(
           SubHeaderComponent,
           EducationComponent,
@@ -34,7 +34,7 @@ describe('ProfileSettingsComponent', () => {
           SelectComponent
         ),
       ],
-      providers: [MockProvider(IS_MEDIUM, isMedium), MockProvider(TranslateService)],
+      providers: [provideOSFCore(), MockProvider(IS_MEDIUM, isMedium)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProfileSettingsComponent);

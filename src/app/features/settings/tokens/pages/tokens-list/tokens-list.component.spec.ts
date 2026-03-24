@@ -1,14 +1,7 @@
-import { TranslatePipe } from '@ngx-translate/core';
-import { MockPipe } from 'ng-mocks';
-
-import { Button } from 'primeng/button';
-import { Card } from 'primeng/card';
-import { Skeleton } from 'primeng/skeleton';
-
 import { of } from 'rxjs';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterLink } from '@angular/router';
+import { provideRouter } from '@angular/router';
 
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { ToastService } from '@osf/shared/services/toast.service';
@@ -16,6 +9,8 @@ import { ToastService } from '@osf/shared/services/toast.service';
 import { TokenModel } from '../../models';
 
 import { TokensListComponent } from './tokens-list.component';
+
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 jest.mock('../../store', () => ({
   TokensSelectors: {
@@ -54,14 +49,16 @@ describe('TokensListComponent', () => {
     showSuccess: jest.fn(),
   };
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [TokensListComponent, MockPipe(TranslatePipe), Button, Card, Skeleton, RouterLink],
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [TokensListComponent],
       providers: [
+        provideOSFCore(),
+        provideRouter([]),
         { provide: CustomConfirmationService, useValue: mockConfirmationService },
         { provide: ToastService, useValue: mockToastService },
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(TokensListComponent);
     component = fixture.componentInstance;

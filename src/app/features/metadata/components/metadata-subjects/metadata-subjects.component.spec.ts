@@ -8,7 +8,7 @@ import { SubjectModel } from '@osf/shared/models/subject/subject.model';
 import { MetadataSubjectsComponent } from './metadata-subjects.component';
 
 import { SUBJECTS_MOCK } from '@testing/mocks/subject.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('MetadataSubjectsComponent', () => {
   let component: MetadataSubjectsComponent;
@@ -18,7 +18,8 @@ describe('MetadataSubjectsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MetadataSubjectsComponent, MockComponent(SubjectsComponent), OSFTestingModule],
+      imports: [MetadataSubjectsComponent, MockComponent(SubjectsComponent)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MetadataSubjectsComponent);

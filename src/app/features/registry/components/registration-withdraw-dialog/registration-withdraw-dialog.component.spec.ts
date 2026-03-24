@@ -12,8 +12,8 @@ import { TextInputComponent } from '@osf/shared/components/text-input/text-input
 
 import { RegistrationWithdrawDialogComponent } from './registration-withdraw-dialog.component';
 
-import { provideDynamicDialogRefMock } from '@testing/mocks/dynamic-dialog-ref.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
+import { provideDynamicDialogRefMock } from '@testing/providers/dynamic-dialog-ref.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 function setup(registryId = 'reg-123') {

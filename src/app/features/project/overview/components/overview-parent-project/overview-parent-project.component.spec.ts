@@ -8,6 +8,7 @@ import { ComponentCardComponent } from '../component-card/component-card.compone
 import { OverviewParentProjectComponent } from './overview-parent-project.component';
 
 import { MOCK_NODE_WITH_ADMIN } from '@testing/mocks/node.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 
 describe('OverviewParentProjectComponent', () => {
@@ -30,7 +31,7 @@ describe('OverviewParentProjectComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [OverviewParentProjectComponent, ...MockComponents(ComponentCardComponent)],
-      providers: [{ provide: Router, useValue: routerMock }],
+      providers: [provideOSFCore(), { provide: Router, useValue: routerMock }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(OverviewParentProjectComponent);

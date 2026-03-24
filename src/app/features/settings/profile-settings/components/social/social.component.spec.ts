@@ -1,5 +1,4 @@
-import { TranslatePipe } from '@ngx-translate/core';
-import { MockComponent, MockPipe, MockProvider } from 'ng-mocks';
+import { MockComponent, MockProvider } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
@@ -12,8 +11,8 @@ import { SocialFormComponent } from '../social-form/social-form.component';
 
 import { SocialComponent } from './social.component';
 
-import { MockCustomConfirmationServiceProvider } from '@testing/mocks/custom-confirmation.service.mock';
 import { MOCK_USER } from '@testing/mocks/data.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('SocialComponent', () => {
@@ -24,14 +23,15 @@ describe('SocialComponent', () => {
     jest.clearAllMocks();
 
     await TestBed.configureTestingModule({
-      imports: [SocialComponent, MockComponent(SocialFormComponent), MockPipe(TranslatePipe)],
+      imports: [SocialComponent, MockComponent(SocialFormComponent)],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [{ selector: UserSelectors.getSocialLinks, value: MOCK_USER.social }],
         }),
         MockProvider(ToastService),
         MockProvider(LoaderService),
-        { provide: CustomConfirmationService, useValue: MockCustomConfirmationServiceProvider },
+        MockProvider(CustomConfirmationService),
       ],
     }).compileComponents();
 

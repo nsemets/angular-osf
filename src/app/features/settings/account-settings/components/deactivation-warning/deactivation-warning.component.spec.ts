@@ -1,11 +1,12 @@
-import { TranslatePipe } from '@ngx-translate/core';
-import { MockPipe, MockProvider } from 'ng-mocks';
+import { MockProvider } from 'ng-mocks';
 
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DeactivationWarningComponent } from './deactivation-warning.component';
+
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('DeactivationWarningComponent', () => {
   let component: DeactivationWarningComponent;
@@ -14,8 +15,8 @@ describe('DeactivationWarningComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DeactivationWarningComponent, MockPipe(TranslatePipe)],
-      providers: [MockProvider(DynamicDialogRef)],
+      imports: [DeactivationWarningComponent],
+      providers: [provideOSFCore(), MockProvider(DynamicDialogRef)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DeactivationWarningComponent);

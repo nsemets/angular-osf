@@ -1,7 +1,6 @@
 import { provideStore, Store } from '@ngxs/store';
 
-import { TranslatePipe } from '@ngx-translate/core';
-import { MockComponent, MockPipe, MockProviders } from 'ng-mocks';
+import { MockComponent, MockProviders } from 'ng-mocks';
 
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
@@ -17,7 +16,7 @@ import { AccountSettingsState } from '../../store';
 
 import { AddEmailComponent } from './add-email.component';
 
-import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('AddEmailComponent', () => {
   let component: AddEmailComponent;
@@ -26,11 +25,11 @@ describe('AddEmailComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AddEmailComponent, MockComponent(TextInputComponent), MockPipe(TranslatePipe)],
+      imports: [AddEmailComponent, MockComponent(TextInputComponent)],
       providers: [
+        provideOSFCore(),
         provideStore([AccountSettingsState, UserEmailsState]),
         MockProviders(DynamicDialogRef, ToastService),
-        TranslateServiceMock,
         provideHttpClient(),
         provideHttpClientTesting(),
       ],

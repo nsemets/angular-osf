@@ -20,7 +20,7 @@ import { SearchInputComponent } from '../search-input/search-input.component';
 
 import { GlobalSearchComponent } from './global-search.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
@@ -51,7 +51,6 @@ describe('GlobalSearchComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         GlobalSearchComponent,
-        OSFTestingModule,
         ...MockComponents(
           FilterChipsComponent,
           SearchInputComponent,
@@ -60,6 +59,7 @@ describe('GlobalSearchComponent', () => {
         ),
       ],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             { selector: GlobalSearchSelectors.getResources, value: signal([]) },

@@ -8,7 +8,7 @@ import { SearchInputComponent } from '@osf/shared/components/search-input/search
 
 import { HomeComponent } from './home.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 
@@ -23,8 +23,8 @@ describe('HomeComponent', () => {
     activatedRouteMock = ActivatedRouteMockBuilder.create().build();
 
     await TestBed.configureTestingModule({
-      imports: [HomeComponent, OSFTestingModule, ...MockComponents(SearchInputComponent, IconComponent)],
-      providers: [MockProvider(Router, routerMock), MockProvider(ActivatedRoute, activatedRouteMock)],
+      imports: [HomeComponent, ...MockComponents(SearchInputComponent, IconComponent)],
+      providers: [provideOSFCore(), MockProvider(Router, routerMock), MockProvider(ActivatedRoute, activatedRouteMock)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HomeComponent);

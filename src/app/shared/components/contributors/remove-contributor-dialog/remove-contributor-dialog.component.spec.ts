@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RemoveContributorDialogComponent } from './remove-contributor-dialog.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('RemoveContributorDialogComponent', () => {
   let component: RemoveContributorDialogComponent;
@@ -15,8 +15,9 @@ describe('RemoveContributorDialogComponent', () => {
     dialogRef = { close: jest.fn() } as any;
 
     await TestBed.configureTestingModule({
-      imports: [RemoveContributorDialogComponent, OSFTestingModule],
+      imports: [RemoveContributorDialogComponent],
       providers: [
+        provideOSFCore(),
         { provide: DynamicDialogRef, useValue: dialogRef },
         {
           provide: DynamicDialogConfig,

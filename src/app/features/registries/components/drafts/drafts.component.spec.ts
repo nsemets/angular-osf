@@ -4,7 +4,7 @@ import { MockComponents, MockProvider } from 'ng-mocks';
 
 import { of } from 'rxjs';
 
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 import { StepperComponent } from '@osf/shared/components/stepper/stepper.component';
@@ -227,13 +227,13 @@ describe('DraftsComponent', () => {
     expect(c).toBeTruthy();
   });
 
-  it('should hide loader after schema blocks are fetched', fakeAsync(() => {
+  it('should hide loader after schema blocks are fetched', async () => {
     fixture.detectChanges();
-    tick();
+    await fixture.whenStable();
 
     const loaderService = TestBed.inject(LoaderService);
     expect(loaderService.hide).toHaveBeenCalled();
-  }));
+  });
 
   it('should not fetch schema blocks when draft has no registrationSchemaId', () => {
     const { fixture: f } = setup({

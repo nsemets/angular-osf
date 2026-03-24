@@ -1,5 +1,4 @@
 import { HttpTestingController } from '@angular/common/http/testing';
-import { runInInjectionContext } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 import { OSFConfigService } from '@core/services/osf-config.service';
@@ -10,7 +9,7 @@ import { ENVIRONMENT } from './environment.provider';
 import { BrowserAgent } from '@newrelic/browser-agent/loaders/browser-agent';
 import * as Sentry from '@sentry/angular';
 import { NEW_RELIC_CONFIG_MOCK } from '@testing/mocks/new-relic.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore, provideOSFHttp } from '@testing/osf.testing.provider';
 import { GoogleTagManagerConfiguration } from 'angular-google-tag-manager';
 
 jest.mock('@sentry/angular', () => ({
@@ -29,8 +28,9 @@ describe('Provider: sentry', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OSFTestingModule],
       providers: [
+        provideOSFCore(),
+        provideOSFHttp(),
         {
           provide: OSFConfigService,
           useValue: configServiceMock,
@@ -61,7 +61,7 @@ describe('Provider: sentry', () => {
   });
 
   it('should initialize Sentry if DSN is provided', async () => {
-    await runInInjectionContext(TestBed, async () => {
+    await TestBed.runInInjectionContext(async () => {
       await initializeApplication()();
     });
 
@@ -85,7 +85,7 @@ describe('Provider: sentry', () => {
     const environment = TestBed.inject(ENVIRONMENT);
     environment.sentryDsn = '';
     environment.googleTagManagerId = '';
-    await runInInjectionContext(TestBed, async () => {
+    await TestBed.runInInjectionContext(async () => {
       await initializeApplication()();
     });
 
@@ -99,7 +99,7 @@ describe('Provider: sentry', () => {
     const environment = TestBed.inject(ENVIRONMENT);
     Object.assign(environment, NEW_RELIC_CONFIG_MOCK);
 
-    await runInInjectionContext(TestBed, async () => {
+    await TestBed.runInInjectionContext(async () => {
       await initializeApplication()();
     });
 
@@ -111,7 +111,7 @@ describe('Provider: sentry', () => {
     const environment = TestBed.inject(ENVIRONMENT);
     environment.newRelicEnabled = false;
 
-    await runInInjectionContext(TestBed, async () => {
+    await TestBed.runInInjectionContext(async () => {
       await initializeApplication()();
     });
 

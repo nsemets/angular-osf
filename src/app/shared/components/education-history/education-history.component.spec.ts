@@ -7,7 +7,7 @@ import { MonthYearPipe } from '@osf/shared/pipes/month-year.pipe';
 import { EducationHistoryComponent } from './education-history.component';
 
 import { MOCK_EDUCATION } from '@testing/mocks/user-employment-education.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('EducationHistoryComponent', () => {
   let component: EducationHistoryComponent;
@@ -15,7 +15,8 @@ describe('EducationHistoryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EducationHistoryComponent, OSFTestingModule, MockPipe(MonthYearPipe)],
+      imports: [EducationHistoryComponent, MockPipe(MonthYearPipe)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(EducationHistoryComponent);

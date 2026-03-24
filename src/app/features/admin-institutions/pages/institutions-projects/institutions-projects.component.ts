@@ -37,7 +37,7 @@ import {
   SetSortBy,
 } from '@osf/shared/stores/global-search';
 
-import { AdminTableComponent } from '../../components';
+import { AdminTableComponent } from '../../components/admin-table/admin-table.component';
 import { FiltersSectionComponent } from '../../components/filters-section/filters-section.component';
 import { RequestAccessErrorDialogComponent } from '../../components/request-access-error-dialog/request-access-error-dialog.component';
 import { projectTableColumns } from '../../constants';

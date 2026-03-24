@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ReadonlyInputComponent } from './readonly-input.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('ReadonlyInputComponent', () => {
   let component: ReadonlyInputComponent;
@@ -14,7 +14,8 @@ describe('ReadonlyInputComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReadonlyInputComponent, OSFTestingModule],
+      imports: [ReadonlyInputComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ReadonlyInputComponent);

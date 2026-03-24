@@ -17,15 +17,14 @@ import { AddonsState } from './addons.state';
 import { getAddonsAuthorizedStorageData } from '@testing/data/addons/addons.authorized-storage.data';
 import { getConfiguredAddonsData } from '@testing/data/addons/addons.configured.data';
 import { getAddonsExternalStorageData } from '@testing/data/addons/addons.external-storage.data';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore, provideOSFHttp } from '@testing/osf.testing.provider';
 
 describe('State: Addons', () => {
   let store: Store;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [OSFTestingModule],
-      providers: [provideStore([AddonsState]), AddonsService],
+      providers: [provideOSFCore(), provideOSFHttp(), provideStore([AddonsState]), AddonsService],
     });
 
     store = TestBed.inject(Store);

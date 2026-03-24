@@ -4,17 +4,18 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { SENTRY_TOKEN } from '@core/provider/sentry.provider';
-import { CollectionsMainContentComponent } from '@osf/features/collections/components';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { CollectionsSelectors } from '@shared/stores/collections';
 
+import { CollectionsMainContentComponent } from '../collections-main-content';
+
 import { CollectionsDiscoverComponent } from './collections-discover.component';
 
 import { MOCK_PROVIDER } from '@testing/mocks/provider.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
@@ -36,9 +37,9 @@ describe('CollectionsDiscoverComponent', () => {
       imports: [
         CollectionsDiscoverComponent,
         ...MockComponents(SearchInputComponent, CollectionsMainContentComponent, LoadingSpinnerComponent),
-        OSFTestingModule,
       ],
       providers: [
+        provideOSFCore(),
         MockProvider(ToastService, toastServiceMock),
         MockProvider(CustomDialogService, mockCustomDialogService),
         MockProvider(ActivatedRoute, mockRoute),

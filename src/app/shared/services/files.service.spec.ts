@@ -5,15 +5,14 @@ import { FilesService } from './files.service';
 
 import { getConfiguredAddonsData } from '@testing/data/addons/addons.configured.data';
 import { getResourceReferencesData } from '@testing/data/files/resource-references.data';
-import { OSFTestingStoreModule } from '@testing/osf.testing.module';
+import { provideOSFCore, provideOSFHttp } from '@testing/osf.testing.provider';
 
 describe.skip('Service: Files', () => {
   let service: FilesService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [OSFTestingStoreModule],
-      providers: [FilesService],
+      providers: [provideOSFCore(), provideOSFHttp(), FilesService],
     });
 
     service = TestBed.inject(FilesService);

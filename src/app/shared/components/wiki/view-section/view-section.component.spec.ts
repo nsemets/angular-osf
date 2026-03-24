@@ -4,8 +4,7 @@ import { WikiVersion } from '@shared/models/wiki/wiki.model';
 
 import { ViewSectionComponent } from './view-section.component';
 
-import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('ViewSectionComponent', () => {
   let component: ViewSectionComponent;
@@ -29,8 +28,8 @@ describe('ViewSectionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ViewSectionComponent, OSFTestingModule],
-      providers: [TranslateServiceMock],
+      imports: [ViewSectionComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ViewSectionComponent);

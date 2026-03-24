@@ -16,10 +16,10 @@ import { WithdrawPreprint } from '@osf/features/preprints/store/preprint';
 
 import { PreprintWithdrawDialogComponent } from './preprint-withdraw-dialog.component';
 
-import { provideDynamicDialogRefMock } from '@testing/mocks/dynamic-dialog-ref.mock';
 import { PREPRINT_MOCK } from '@testing/mocks/preprint.mock';
 import { PREPRINT_PROVIDER_DETAILS_MOCK } from '@testing/mocks/preprint-provider-details';
 import { provideOSFCore } from '@testing/osf.testing.provider';
+import { provideDynamicDialogRefMock } from '@testing/providers/dynamic-dialog-ref.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('PreprintWithdrawDialogComponent', () => {

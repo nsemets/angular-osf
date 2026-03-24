@@ -1,5 +1,4 @@
-import { TranslatePipe } from '@ngx-translate/core';
-import { MockComponents, MockPipe } from 'ng-mocks';
+import { MockComponents } from 'ng-mocks';
 
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
@@ -17,7 +16,7 @@ import { FilesSelectors } from '../../store';
 
 import { MoveFileDialogComponent } from './move-file-dialog.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomConfirmationServiceMock } from '@testing/providers/custom-confirmation-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 import { ToastServiceMock } from '@testing/providers/toast-provider.mock';
@@ -43,11 +42,10 @@ describe('MoveFileDialogComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         MoveFileDialogComponent,
-        OSFTestingModule,
         ...MockComponents(IconComponent, LoadingSpinnerComponent, FileSelectDestinationComponent),
-        MockPipe(TranslatePipe),
       ],
       providers: [
+        provideOSFCore(),
         { provide: DynamicDialogRef, useValue: dialogRefMock },
         { provide: DynamicDialogConfig, useValue: dialogConfigMock },
         { provide: FilesService, useValue: mockFilesService },

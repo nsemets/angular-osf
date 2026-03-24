@@ -1,11 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Primitive } from '@shared/helpers';
+import { Primitive } from '@osf/shared/helpers/types.helper';
 import { SelectOption } from '@shared/models/select-option.model';
 
 import { SelectComponent } from './select.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('SelectComponent', () => {
   let component: SelectComponent;
@@ -25,7 +25,8 @@ describe('SelectComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SelectComponent, OSFTestingModule],
+      imports: [SelectComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SelectComponent);

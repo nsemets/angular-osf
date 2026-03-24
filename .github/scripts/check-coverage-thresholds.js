@@ -1,4 +1,3 @@
-const fs = require('fs');
 const coverage = require('../../coverage/coverage-summary.json');
 const jestConfig = require('../../jest.config.js');
 
@@ -43,7 +42,7 @@ if (failed) {
   console.log('\n\nCongratulations! You have successfully run the coverage check and added tests.');
   console.log('\n\nThe jest.config.js file is not insync with your new test additions.');
   console.log('Please update the coverage thresholds in jest.config.js.');
-  console.log('You will need to commit again once you have updated the jst.config.js file.');
+  console.log('You will need to commit again once you have updated the jst.config.ts file.');
   console.log('This is only necessary until we hit 100% coverage.');
   console.log(`\n\n${stars}`);
   errors.forEach((err) => {

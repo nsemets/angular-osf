@@ -6,7 +6,7 @@ import { AddonCardComponent } from '../addon-card/addon-card.component';
 
 import { AddonCardListComponent } from './addon-card-list.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('AddonCardListComponent', () => {
   let component: AddonCardListComponent;
@@ -14,7 +14,8 @@ describe('AddonCardListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AddonCardListComponent, MockComponent(AddonCardComponent), OSFTestingModule],
+      imports: [AddonCardListComponent, MockComponent(AddonCardComponent)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AddonCardListComponent);

@@ -1,5 +1,7 @@
 import { Store } from '@ngxs/store';
 
+import { MockProvider } from 'ng-mocks';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
@@ -17,6 +19,7 @@ import { PREPRINT_PROVIDER_DETAILS_MOCK } from '@testing/mocks/preprint-provider
 import { PREPRINT_REQUEST_MOCK } from '@testing/mocks/preprint-request.mock';
 import { REVIEW_ACTION_MOCK } from '@testing/mocks/review-action.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
+import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('PreprintMakeDecisionComponent', () => {
@@ -24,6 +27,7 @@ describe('PreprintMakeDecisionComponent', () => {
   let fixture: ComponentFixture<PreprintMakeDecisionComponent>;
   let store: Store;
   let router: Router;
+  let routerMock: RouterMockType;
 
   const mockPreprint = PREPRINT_MOCK;
   const mockProvider = PREPRINT_PROVIDER_DETAILS_MOCK;
@@ -31,10 +35,13 @@ describe('PreprintMakeDecisionComponent', () => {
   const mockWithdrawalRequest = PREPRINT_REQUEST_MOCK;
 
   beforeEach(() => {
+    routerMock = RouterMockBuilder.create().build();
+
     TestBed.configureTestingModule({
       imports: [PreprintMakeDecisionComponent],
       providers: [
         provideOSFCore(),
+        MockProvider(Router, routerMock),
         provideMockStore({
           signals: [{ selector: PreprintSelectors.getPreprint, value: mockPreprint }],
         }),

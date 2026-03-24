@@ -2,7 +2,7 @@ import { MockProvider } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { provideRouter } from '@angular/router';
 
 import { PreprintProviderDetails } from '@osf/features/preprints/models';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
@@ -17,7 +17,6 @@ import {
   CustomDialogServiceMockBuilder,
   CustomDialogServiceMockType,
 } from '@testing/providers/custom-dialog-provider.mock';
-import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 
 describe('PreprintProviderHeroComponent', () => {
   let component: PreprintProviderHeroComponent;
@@ -35,11 +34,7 @@ describe('PreprintProviderHeroComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [PreprintProviderHeroComponent],
-      providers: [
-        provideOSFCore(),
-        MockProvider(CustomDialogService, customDialogMock),
-        MockProvider(ActivatedRoute, ActivatedRouteMockBuilder.create().build()),
-      ],
+      providers: [provideOSFCore(), provideRouter([]), MockProvider(CustomDialogService, customDialogMock)],
     });
 
     fixture = TestBed.createComponent(PreprintProviderHeroComponent);
@@ -113,6 +108,7 @@ describe('PreprintProviderHeroComponent', () => {
 
     expect(customDialogMock.open).toHaveBeenCalledWith(PreprintsHelpDialogComponent, {
       header: 'preprints.helpDialog.header',
+      width: '560px',
     });
   });
 });

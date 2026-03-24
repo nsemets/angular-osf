@@ -4,7 +4,7 @@ import { By } from '@angular/platform-browser';
 import { SubjectsListComponent } from './subjects-list.component';
 
 import { SUBJECTS_MOCK } from '@testing/mocks/subject.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('SubjectsListComponent', () => {
   let component: SubjectsListComponent;
@@ -12,7 +12,8 @@ describe('SubjectsListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SubjectsListComponent, OSFTestingModule],
+      imports: [SubjectsListComponent],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SubjectsListComponent);

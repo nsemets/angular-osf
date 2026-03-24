@@ -8,7 +8,7 @@ import { ToastService } from '@osf/shared/services/toast.service';
 
 import { ToastComponent } from './toast.component';
 
-import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('ToastComponent', () => {
   let component: ToastComponent;
@@ -17,7 +17,7 @@ describe('ToastComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ToastComponent, MockModule(ToastModule)],
-      providers: [TranslateServiceMock, MockProvider(ToastService)],
+      providers: [provideOSFCore(), MockProvider(ToastService)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ToastComponent);

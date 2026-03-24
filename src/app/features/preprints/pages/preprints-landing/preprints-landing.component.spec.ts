@@ -10,7 +10,9 @@ import { SearchInputComponent } from '@osf/shared/components/search-input/search
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { BrandService } from '@osf/shared/services/brand.service';
 
-import { AdvisoryBoardComponent, BrowseBySubjectsComponent, PreprintServicesComponent } from '../../components';
+import { AdvisoryBoardComponent } from '../../components/advisory-board/advisory-board.component';
+import { BrowseBySubjectsComponent } from '../../components/browse-by-subjects/browse-by-subjects.component';
+import { PreprintServicesComponent } from '../../components/preprint-services/preprint-services.component';
 import { PreprintProviderDetails } from '../../models';
 import {
   GetHighlightedSubjectsByProviderId,

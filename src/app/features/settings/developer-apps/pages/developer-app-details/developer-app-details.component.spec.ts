@@ -1,9 +1,6 @@
 import { provideStore } from '@ngxs/store';
 
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { MockPipe, MockProvider } from 'ng-mocks';
-
-import { ConfirmationService } from 'primeng/api';
+import { MockProvider } from 'ng-mocks';
 
 import { of } from 'rxjs';
 
@@ -19,6 +16,8 @@ import { DeveloperAppsState } from '../../store';
 
 import { DeveloperAppDetailsComponent } from './developer-app-details.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 describe('DeveloperAppDetailsComponent', () => {
   let component: DeveloperAppDetailsComponent;
   let fixture: ComponentFixture<DeveloperAppDetailsComponent>;
@@ -32,13 +31,12 @@ describe('DeveloperAppDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DeveloperAppDetailsComponent, MockPipe(TranslatePipe)],
+      imports: [DeveloperAppDetailsComponent],
       providers: [
-        ConfirmationService,
+        provideOSFCore(),
         provideHttpClient(),
         provideHttpClientTesting(),
         provideStore([DeveloperAppsState]),
-        MockProvider(TranslateService),
         MockProvider(ActivatedRoute, { params: of({ id: 'test-client-id' }) }),
         MockProvider(Router, mockRouter),
         MockProvider(CustomConfirmationService),

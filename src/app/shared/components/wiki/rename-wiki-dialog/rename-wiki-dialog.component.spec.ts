@@ -11,7 +11,7 @@ import { TextInputComponent } from '../../text-input/text-input.component';
 
 import { RenameWikiDialogComponent } from './rename-wiki-dialog.component';
 
-import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('RenameWikiDialogComponent', () => {
@@ -22,7 +22,7 @@ describe('RenameWikiDialogComponent', () => {
     await TestBed.configureTestingModule({
       imports: [RenameWikiDialogComponent, MockComponent(TextInputComponent)],
       providers: [
-        TranslateServiceMock,
+        provideOSFCore(),
         MockProvider(DynamicDialogRef),
         MockProvider(DynamicDialogConfig, {
           data: {

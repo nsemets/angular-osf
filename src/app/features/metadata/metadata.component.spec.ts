@@ -3,21 +3,6 @@ import { MockComponents, MockProvider } from 'ng-mocks';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import {
-  MetadataAffiliatedInstitutionsComponent,
-  MetadataContributorsComponent,
-  MetadataDateInfoComponent,
-  MetadataDescriptionComponent,
-  MetadataFundingComponent,
-  MetadataLicenseComponent,
-  MetadataPublicationDoiComponent,
-  MetadataRegistrationDoiComponent,
-  MetadataResourceInformationComponent,
-  MetadataSubjectsComponent,
-  MetadataTagsComponent,
-  MetadataTitleComponent,
-} from '@osf/features/metadata/components';
-import { MetadataSelectors } from '@osf/features/metadata/store';
 import { MetadataTabsComponent } from '@osf/shared/components/metadata-tabs/metadata-tabs.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
@@ -26,10 +11,23 @@ import { CustomDialogService } from '@osf/shared/services/custom-dialog.service'
 import { ToastService } from '@osf/shared/services/toast.service';
 import { RegistrationProviderSelectors } from '@osf/shared/stores/registration-provider';
 
+import { MetadataAffiliatedInstitutionsComponent } from './components/metadata-affiliated-institutions/metadata-affiliated-institutions.component';
+import { MetadataContributorsComponent } from './components/metadata-contributors/metadata-contributors.component';
+import { MetadataDateInfoComponent } from './components/metadata-date-info/metadata-date-info.component';
+import { MetadataDescriptionComponent } from './components/metadata-description/metadata-description.component';
+import { MetadataFundingComponent } from './components/metadata-funding/metadata-funding.component';
+import { MetadataLicenseComponent } from './components/metadata-license/metadata-license.component';
+import { MetadataPublicationDoiComponent } from './components/metadata-publication-doi/metadata-publication-doi.component';
+import { MetadataRegistrationDoiComponent } from './components/metadata-registration-doi/metadata-registration-doi.component';
+import { MetadataResourceInformationComponent } from './components/metadata-resource-information/metadata-resource-information.component';
+import { MetadataSubjectsComponent } from './components/metadata-subjects/metadata-subjects.component';
+import { MetadataTagsComponent } from './components/metadata-tags/metadata-tags.component';
+import { MetadataTitleComponent } from './components/metadata-title/metadata-title.component';
 import { MetadataComponent } from './metadata.component';
+import { MetadataSelectors } from './store';
 
 import { MOCK_PROJECT_METADATA } from '@testing/mocks/project-metadata.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomConfirmationServiceMockBuilder } from '@testing/providers/custom-confirmation-provider.mock';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
@@ -92,9 +90,9 @@ describe('MetadataComponent', () => {
           MetadataTitleComponent,
           MetadataRegistrationDoiComponent
         ),
-        OSFTestingModule,
       ],
       providers: [
+        provideOSFCore(),
         MockProvider(ActivatedRoute, activatedRouteMock),
         MockProvider(Router, routerMock),
         MockProvider(CustomDialogService, customDialogServiceMock),

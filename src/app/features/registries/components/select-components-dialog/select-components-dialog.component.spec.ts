@@ -9,8 +9,8 @@ import { ProjectShortInfoModel } from '../../models/project-short-info.model';
 
 import { SelectComponentsDialogComponent } from './select-components-dialog.component';
 
-import { provideDynamicDialogRefMock } from '@testing/mocks/dynamic-dialog-ref.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
+import { provideDynamicDialogRefMock } from '@testing/providers/dynamic-dialog-ref.mock';
 
 describe('SelectComponentsDialogComponent', () => {
   let component: SelectComponentsDialogComponent;

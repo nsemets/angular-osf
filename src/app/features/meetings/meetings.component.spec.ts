@@ -3,14 +3,17 @@ import { By } from '@angular/platform-browser';
 
 import { MeetingsComponent } from './meetings.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 describe('MeetingsComponent', () => {
   let component: MeetingsComponent;
   let fixture: ComponentFixture<MeetingsComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MeetingsComponent],
-    }).compileComponents();
+      providers: [provideOSFCore()],
+    });
 
     fixture = TestBed.createComponent(MeetingsComponent);
     component = fixture.componentInstance;

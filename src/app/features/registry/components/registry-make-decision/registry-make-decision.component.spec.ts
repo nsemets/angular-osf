@@ -18,9 +18,9 @@ import { RegistrySelectors } from '../../store/registry';
 
 import { RegistryMakeDecisionComponent } from './registry-make-decision.component';
 
-import { provideDynamicDialogRefMock } from '@testing/mocks/dynamic-dialog-ref.mock';
 import { MOCK_REGISTRATION_OVERVIEW_MODEL } from '@testing/mocks/registration-overview-model.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
+import { provideDynamicDialogRefMock } from '@testing/providers/dynamic-dialog-ref.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 const MOCK_REGISTRY_ACCEPTED = {

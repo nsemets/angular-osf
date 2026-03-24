@@ -2,18 +2,17 @@ import { MockComponents } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {
-  CollectionsFilterChipsComponent,
-  CollectionsFiltersComponent,
-  CollectionsSearchResultsComponent,
-} from '@osf/features/collections/components';
 import { CollectionsSelectors } from '@shared/stores/collections';
+
+import { CollectionsFilterChipsComponent } from '../collections-filter-chips/collections-filter-chips.component';
+import { CollectionsFiltersComponent } from '../collections-filters/collections-filters.component';
+import { CollectionsSearchResultsComponent } from '../collections-search-results/collections-search-results.component';
 
 import { CollectionsMainContentComponent } from './collections-main-content.component';
 
 import { MOCK_COLLECTIONS_SELECTED_FILTERS } from '@testing/mocks/collections-filters.mock';
 import { MOCK_COLLECTION_SUBMISSIONS } from '@testing/mocks/collections-submissions.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('CollectionsMainContentComponent', () => {
@@ -32,9 +31,9 @@ describe('CollectionsMainContentComponent', () => {
           CollectionsFiltersComponent,
           CollectionsSearchResultsComponent
         ),
-        OSFTestingModule,
       ],
       providers: [
+        provideOSFCore(),
         provideMockStore({
           signals: [
             { selector: CollectionsSelectors.getSortBy, value: 'date' },

@@ -11,7 +11,7 @@ import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.comp
 
 import { PieChartComponent } from './pie-chart.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('PieChartComponent', () => {
   let component: PieChartComponent;
@@ -19,8 +19,8 @@ describe('PieChartComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PieChartComponent, OSFTestingModule, MockModule(ChartModule), MockComponent(LoadingSpinnerComponent)],
-      providers: [MockProvider(PLATFORM_ID, 'browser')],
+      imports: [PieChartComponent, MockModule(ChartModule), MockComponent(LoadingSpinnerComponent)],
+      providers: [provideOSFCore(), MockProvider(PLATFORM_ID, 'browser')],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PieChartComponent);

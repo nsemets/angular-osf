@@ -13,7 +13,8 @@ import { BrandService } from '@osf/shared/services/brand.service';
 import { BrowserTabService } from '@osf/shared/services/browser-tab.service';
 import { HeaderStyleService } from '@osf/shared/services/header-style.service';
 
-import { FileStepComponent, ReviewStepComponent } from '../../components';
+import { FileStepComponent } from '../../components/stepper/file-step/file-step.component';
+import { ReviewStepComponent } from '../../components/stepper/review-step/review-step.component';
 import { createNewVersionStepsConst } from '../../constants';
 import { PreprintSteps } from '../../enums';
 import { PreprintProviderDetails } from '../../models';

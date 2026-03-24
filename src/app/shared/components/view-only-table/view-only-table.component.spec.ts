@@ -8,8 +8,8 @@ import { CopyButtonComponent } from '../copy-button/copy-button.component';
 
 import { ViewOnlyTableComponent } from './view-only-table.component';
 
-import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
 import { MOCK_PAGINATED_VIEW_ONLY_LINKS, MOCK_VIEW_ONLY_LINK } from '@testing/mocks/view-only-link.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('ViewOnlyTableComponent', () => {
   let component: ViewOnlyTableComponent;
@@ -21,7 +21,7 @@ describe('ViewOnlyTableComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ViewOnlyTableComponent, MockComponent(CopyButtonComponent)],
-      providers: [TranslateServiceMock],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ViewOnlyTableComponent);

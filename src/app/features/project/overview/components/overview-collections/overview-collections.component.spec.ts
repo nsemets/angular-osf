@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { collectionFilterNames } from '@osf/features/collections/constants';
 import { CollectionSubmission } from '@osf/shared/models/collections/collections.model';
@@ -12,16 +13,17 @@ import {
   MOCK_COLLECTION_SUBMISSION_WITH_FILTERS,
   MOCK_COLLECTION_SUBMISSIONS,
 } from '@testing/mocks/collections-submissions.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('OverviewCollectionsComponent', () => {
   let component: OverviewCollectionsComponent;
   let fixture: ComponentFixture<OverviewCollectionsComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [OverviewCollectionsComponent, OSFTestingModule],
-    }).compileComponents();
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [OverviewCollectionsComponent],
+      providers: [provideOSFCore(), provideRouter([])],
+    });
 
     fixture = TestBed.createComponent(OverviewCollectionsComponent);
     component = fixture.componentInstance;

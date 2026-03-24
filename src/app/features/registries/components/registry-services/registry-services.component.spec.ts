@@ -1,7 +1,5 @@
-import { MockProvider } from 'ng-mocks';
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
+import { provideRouter } from '@angular/router';
 
 import { RegistryServicesComponent } from './registry-services.component';
 
@@ -14,7 +12,7 @@ describe('RegistryServicesComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RegistryServicesComponent],
-      providers: [provideOSFCore(), MockProvider(ActivatedRoute)],
+      providers: [provideOSFCore(), provideRouter([])],
     });
 
     fixture = TestBed.createComponent(RegistryServicesComponent);
@@ -37,16 +35,10 @@ describe('RegistryServicesComponent', () => {
     expect(buttons.length).toBeGreaterThan(0);
   });
 
-  it('should open email via mailto when openEmail is called', () => {
-    const originalHref = window.location.href;
-    Object.defineProperty(window, 'location', {
-      value: { href: originalHref },
-      writable: true,
-      configurable: true,
-    });
+  it('should render contact mailto anchor', () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    const mailtoAnchor = compiled.querySelector('a[href="mailto:contact@osf.io"]');
 
-    component.openEmail();
-
-    expect(window.location.href).toBe('mailto:contact@osf.io');
+    expect(mailtoAnchor).toBeTruthy();
   });
 });

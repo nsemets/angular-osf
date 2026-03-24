@@ -6,7 +6,7 @@ import { ProjectDetailSettingAccordionComponent } from '../project-detail-settin
 
 import { SettingsWikiCardComponent } from './settings-wiki-card.component';
 
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('SettingsWikiCardComponent', () => {
   let component: SettingsWikiCardComponent;
@@ -19,7 +19,8 @@ describe('SettingsWikiCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SettingsWikiCardComponent, OSFTestingModule, MockComponent(ProjectDetailSettingAccordionComponent)],
+      imports: [SettingsWikiCardComponent, MockComponent(ProjectDetailSettingAccordionComponent)],
+      providers: [provideOSFCore()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SettingsWikiCardComponent);

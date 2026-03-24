@@ -23,7 +23,7 @@ import { SettingsComponent } from './settings.component';
 import { SettingsSelectors } from './store';
 
 import { MOCK_VIEW_ONLY_LINK } from '@testing/mocks/view-only-link.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
+import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomConfirmationServiceMockBuilder } from '@testing/providers/custom-confirmation-provider.mock';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
@@ -69,7 +69,6 @@ describe.skip('SettingsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         SettingsComponent,
-        OSFTestingModule,
         ...MockComponents(
           SubHeaderComponent,
           SettingsProjectFormCardComponent,
@@ -83,6 +82,7 @@ describe.skip('SettingsComponent', () => {
         ),
       ],
       providers: [
+        provideOSFCore(),
         MockProvider(ActivatedRoute, activatedRouteMock),
         MockProvider(Router, routerMock),
         MockProvider(CustomConfirmationService, customConfirmationServiceMock),
