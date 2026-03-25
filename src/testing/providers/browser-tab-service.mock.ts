@@ -1,15 +1,17 @@
 import { BrowserTabService } from '@osf/shared/services/browser-tab.service';
 
+import { Mock } from 'vitest';
+
 export type BrowserTabServiceMockType = Partial<BrowserTabService> & {
-  updateTabStyles: jest.Mock;
-  resetToDefaults: jest.Mock;
+  updateTabStyles: Mock;
+  resetToDefaults: Mock;
 };
 
 export const BrowserTabServiceMock = {
   simple(): BrowserTabServiceMockType {
     return {
-      updateTabStyles: jest.fn(),
-      resetToDefaults: jest.fn(),
+      updateTabStyles: vi.fn(),
+      resetToDefaults: vi.fn(),
     };
   },
 };

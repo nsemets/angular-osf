@@ -5,32 +5,39 @@ import {
   DeleteConfirmationOptions,
 } from '@shared/models/confirmation-options.model';
 
+import { type Mock, vi } from 'vitest';
+
+type ConfirmDeleteFn = (options: DeleteConfirmationOptions) => void;
+type ConfirmAcceptFn = (options: AcceptConfirmationOptions) => void;
+type ConfirmContinueFn = (options: ContinueConfirmationOptions) => void;
+
 export type CustomConfirmationServiceMockType = Partial<CustomConfirmationService> & {
-  confirmDelete: jest.Mock<void, [DeleteConfirmationOptions]>;
-  confirmAccept: jest.Mock<void, [AcceptConfirmationOptions]>;
-  confirmContinue: jest.Mock<void, [ContinueConfirmationOptions]>;
+  confirmDelete: Mock<ConfirmDeleteFn>;
+  confirmAccept: Mock<ConfirmAcceptFn>;
+  confirmContinue: Mock<ConfirmContinueFn>;
 };
 
 export class CustomConfirmationServiceMockBuilder {
-  private confirmDeleteMock: jest.Mock<void, [DeleteConfirmationOptions]> = jest.fn();
-  private confirmAcceptMock: jest.Mock<void, [AcceptConfirmationOptions]> = jest.fn();
-  private confirmContinueMock: jest.Mock<void, [ContinueConfirmationOptions]> = jest.fn();
+  private confirmDeleteMock: Mock<ConfirmDeleteFn> = vi.fn();
+  private confirmAcceptMock: Mock<ConfirmAcceptFn> = vi.fn();
+  private confirmContinueMock: Mock<ConfirmContinueFn> = vi.fn();
 
   static create(): CustomConfirmationServiceMockBuilder {
     return new CustomConfirmationServiceMockBuilder();
   }
 
-  withConfirmDelete(mockImpl: jest.Mock<void, [DeleteConfirmationOptions]>): CustomConfirmationServiceMockBuilder {
+  // 3. Update method signatures
+  withConfirmDelete(mockImpl: Mock<ConfirmDeleteFn>): CustomConfirmationServiceMockBuilder {
     this.confirmDeleteMock = mockImpl;
     return this;
   }
 
-  withConfirmAccept(mockImpl: jest.Mock<void, [AcceptConfirmationOptions]>): CustomConfirmationServiceMockBuilder {
+  withConfirmAccept(mockImpl: Mock<ConfirmAcceptFn>): CustomConfirmationServiceMockBuilder {
     this.confirmAcceptMock = mockImpl;
     return this;
   }
 
-  withConfirmContinue(mockImpl: jest.Mock<void, [ContinueConfirmationOptions]>): CustomConfirmationServiceMockBuilder {
+  withConfirmContinue(mockImpl: Mock<ConfirmContinueFn>): CustomConfirmationServiceMockBuilder {
     this.confirmContinueMock = mockImpl;
     return this;
   }
@@ -50,9 +57,9 @@ export const CustomConfirmationServiceMock = {
   },
   simple() {
     return {
-      confirmDelete: jest.fn(),
-      confirmAccept: jest.fn(),
-      confirmContinue: jest.fn(),
+      confirmDelete: vi.fn(),
+      confirmAccept: vi.fn(),
+      confirmContinue: vi.fn(),
     } as CustomConfirmationServiceMockType;
   },
 };

@@ -2,15 +2,22 @@ import { Observable, Subject } from 'rxjs';
 
 import { Router, UrlTree } from '@angular/router';
 
-export type RouterMockType = Partial<Router> & { events: Observable<any> };
+import { type Mock, vi } from 'vitest';
+
+export type RouterMockType = Partial<Router> & {
+  events: Observable<any>;
+  navigate: Mock<(...args: any[]) => Promise<boolean>>;
+  navigateByUrl: Mock<(...args: any[]) => Promise<boolean>>;
+  createUrlTree: Mock<(...args: any[]) => UrlTree>;
+};
 
 export class RouterMockBuilder {
   private currentUrl = '/';
   private events$ = new Subject<any>();
 
-  private navigateMock: jest.Mock<Promise<boolean>, any[]> = jest.fn().mockResolvedValue(true);
-  private navigateByUrlMock: jest.Mock<Promise<boolean>, any[]> = jest.fn().mockResolvedValue(true);
-  private createUrlTreeMock: jest.Mock<UrlTree, any[]> = jest.fn(() => ({}) as UrlTree);
+  private navigateMock: Mock<(...args: any[]) => Promise<boolean>> = vi.fn().mockResolvedValue(true);
+  private navigateByUrlMock: Mock<(...args: any[]) => Promise<boolean>> = vi.fn().mockResolvedValue(true);
+  private createUrlTreeMock: Mock<(...args: any[]) => UrlTree> = vi.fn(() => ({}) as UrlTree);
 
   static create(): RouterMockBuilder {
     return new RouterMockBuilder();
@@ -21,17 +28,17 @@ export class RouterMockBuilder {
     return this;
   }
 
-  withNavigate(mockImpl: jest.Mock<Promise<boolean>, any[]>): RouterMockBuilder {
+  withNavigate(mockImpl: Mock<(...args: any[]) => Promise<boolean>>): RouterMockBuilder {
     this.navigateMock = mockImpl;
     return this;
   }
 
-  withNavigateByUrl(mockImpl: jest.Mock<Promise<boolean>, any[]>): RouterMockBuilder {
+  withNavigateByUrl(mockImpl: Mock<(...args: any[]) => Promise<boolean>>): RouterMockBuilder {
     this.navigateByUrlMock = mockImpl;
     return this;
   }
 
-  withCreateUrlTree(mockImpl: jest.Mock<UrlTree, any[]>): RouterMockBuilder {
+  withCreateUrlTree(mockImpl: Mock<(...args: any[]) => UrlTree>): RouterMockBuilder {
     this.createUrlTreeMock = mockImpl;
     return this;
   }

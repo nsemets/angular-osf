@@ -1,5 +1,7 @@
 import { MetaTagsBuilderService } from '@osf/shared/services/meta-tags-builder.service';
 
+import { Mocked } from 'vitest';
+
 type MetaTagsBuilderMethods =
   | 'buildProjectMetaTagsData'
   | 'buildRegistryMetaTagsData'
@@ -8,9 +10,9 @@ type MetaTagsBuilderMethods =
 
 export function MetaTagsBuilderServiceMockFactory() {
   return {
-    buildProjectMetaTagsData: jest.fn(),
-    buildRegistryMetaTagsData: jest.fn(),
-    buildPreprintMetaTagsData: jest.fn(),
-    buildFileMetaTagsData: jest.fn(),
-  } as unknown as jest.Mocked<Pick<MetaTagsBuilderService, MetaTagsBuilderMethods>>;
+    buildProjectMetaTagsData: vi.fn(),
+    buildRegistryMetaTagsData: vi.fn(),
+    buildPreprintMetaTagsData: vi.fn(),
+    buildFileMetaTagsData: vi.fn(),
+  } as unknown as Mocked<Pick<MetaTagsBuilderService, MetaTagsBuilderMethods>>;
 }

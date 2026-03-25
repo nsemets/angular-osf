@@ -1,30 +1,37 @@
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
+import { Type } from '@angular/core';
+
+import { type Mock, vi } from 'vitest';
+
+type OpenFn = (component: Type<any>, config?: any) => DynamicDialogRef<any>;
+type GetInstanceFn = (ref: DynamicDialogRef<any>) => any;
+
 export class DialogServiceMockBuilder {
-  private openSpy = jest.fn();
-  private getInstanceSpy = jest.fn();
+  private openSpy: Mock<OpenFn> = vi.fn();
+  private getInstanceSpy: Mock<GetInstanceFn> = vi.fn();
 
   static create(): DialogServiceMockBuilder {
     return new DialogServiceMockBuilder();
   }
 
-  withOpenMock(mockFn?: jest.Mock): DialogServiceMockBuilder {
-    this.openSpy = mockFn || jest.fn().mockReturnValue({} as DynamicDialogRef<any>);
+  withOpenMock(mockFn?: Mock<OpenFn>): DialogServiceMockBuilder {
+    this.openSpy = mockFn || vi.fn().mockReturnValue({} as DynamicDialogRef<any>);
     return this;
   }
 
-  withGetInstanceMock(mockFn?: jest.Mock): DialogServiceMockBuilder {
-    this.getInstanceSpy = mockFn || jest.fn();
+  withGetInstanceMock(mockFn?: Mock<GetInstanceFn>): DialogServiceMockBuilder {
+    this.getInstanceSpy = mockFn || vi.fn();
     return this;
   }
 
   withOpenReturning(ref: DynamicDialogRef<any>): DialogServiceMockBuilder {
-    this.openSpy = jest.fn().mockReturnValue(ref);
+    this.openSpy = vi.fn().mockReturnValue(ref);
     return this;
   }
 
   withOpenThrowing(error: Error): DialogServiceMockBuilder {
-    this.openSpy = jest.fn().mockImplementation(() => {
+    this.openSpy = vi.fn().mockImplementation(() => {
       throw error;
     });
     return this;
@@ -44,11 +51,11 @@ export const DialogServiceMock = {
     return DialogServiceMockBuilder.create();
   },
 
-  withOpenMock(mockFn?: jest.Mock) {
+  withOpenMock(mockFn?: Mock<OpenFn>) {
     return DialogServiceMockBuilder.create().withOpenMock(mockFn);
   },
 
-  withGetInstanceMock(mockFn?: jest.Mock) {
+  withGetInstanceMock(mockFn?: Mock<GetInstanceFn>) {
     return DialogServiceMockBuilder.create().withGetInstanceMock(mockFn);
   },
 

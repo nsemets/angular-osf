@@ -62,9 +62,9 @@ export class ActivatedRouteMockBuilder {
 
   build(): Partial<ActivatedRoute> {
     const paramMap = {
-      get: jest.fn((key: string) => this.paramsObj[key]),
-      has: jest.fn((key: string) => key in this.paramsObj),
-      getAll: jest.fn((key: string) => (this.paramsObj[key] ? [this.paramsObj[key]] : [])),
+      get: vi.fn((key: string) => this.paramsObj[key]),
+      has: vi.fn((key: string) => key in this.paramsObj),
+      getAll: vi.fn((key: string) => (this.paramsObj[key] ? [this.paramsObj[key]] : [])),
       keys: Object.keys(this.paramsObj),
     };
 

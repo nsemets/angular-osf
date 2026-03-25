@@ -3,10 +3,12 @@ import { of } from 'rxjs';
 import { StorageItem } from '@osf/shared/models/addons/storage-item.model';
 import { CslStyleManagerService } from '@osf/shared/services/csl-style-manager.service';
 
+import { Mocked } from 'vitest';
+
 export function CslStyleManagerServiceMockFactory() {
   return {
-    formatCitation: jest.fn().mockImplementation((item: StorageItem) => item.itemName || ''),
-    ensureStyleLoaded: jest.fn().mockReturnValue(of(undefined)),
-    clearCache: jest.fn(),
-  } as unknown as jest.Mocked<CslStyleManagerService>;
+    formatCitation: vi.fn().mockImplementation((item: StorageItem) => item.itemName || ''),
+    ensureStyleLoaded: vi.fn().mockReturnValue(of(undefined)),
+    clearCache: vi.fn(),
+  } as unknown as Mocked<CslStyleManagerService>;
 }
