@@ -2,6 +2,11 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+26.6.1 (2026-03-26)
+===================
+
+* Hotfix to prevent redirect on 403 error
+
 26.6.0 (2026-03-26)
 ===================
 
