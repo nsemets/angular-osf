@@ -4,25 +4,28 @@ import { map } from 'rxjs/operators';
 import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
-import { ResourceType } from '@osf/shared/enums/resource-type.enum';
-import { IdentifierModel } from '@osf/shared/models/identifiers/identifier.model';
-import { LicenseOptions } from '@osf/shared/models/license/license.model';
-import { BaseNodeAttributesJsonApi } from '@osf/shared/models/nodes/base-node-attributes-json-api.model';
-import { JsonApiService } from '@osf/shared/services/json-api.service';
-
-import { CedarRecordsMapper, MetadataMapper, RorMapper } from '../mappers';
+import { CedarRecordsMapper, MetadataMapper, RorMapper } from '@osf/features/metadata/mappers';
 import {
   CedarMetadataRecord,
   CedarMetadataRecordJsonApi,
   CedarMetadataTemplateJsonApi,
   CedarRecordDataBinding,
+  CustomItemMetadataRecord,
   CustomMetadataJsonApi,
   CustomMetadataJsonApiResponse,
   MetadataJsonApi,
   MetadataJsonApiResponse,
-} from '../models';
-import { CustomItemMetadataRecord, MetadataModel } from '../models/metadata.model';
-import { RorFunderOption, RorSearchResponse } from '../models/ror.model';
+  MetadataModel,
+  RorFunderOption,
+  RorSearchResponse,
+} from '@osf/features/metadata/models';
+
+import { ResourceType } from '../enums/resource-type.enum';
+import { IdentifierModel } from '../models/identifiers/identifier.model';
+import { LicenseOptions } from '../models/license/license.model';
+import { BaseNodeAttributesJsonApi } from '../models/nodes/base-node-attributes-json-api.model';
+
+import { JsonApiService } from './json-api.service';
 
 @Injectable({
   providedIn: 'root',

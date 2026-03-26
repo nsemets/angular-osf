@@ -41,24 +41,27 @@ import { PreprintDoiSectionComponent } from '../preprint-doi-section/preprint-do
   selector: 'osf-preprint-tombstone',
   imports: [
     Card,
-    PreprintDoiSectionComponent,
-    Skeleton,
-    TranslatePipe,
-    TruncatedTextComponent,
     Tag,
-    DatePipe,
+    Skeleton,
     ContributorsListComponent,
     LicenseDisplayComponent,
+    PreprintDoiSectionComponent,
+    TruncatedTextComponent,
+    DatePipe,
+    TranslatePipe,
   ],
   templateUrl: './preprint-tombstone.component.html',
   styleUrl: './preprint-tombstone.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PreprintTombstoneComponent implements OnDestroy {
-  readonly ApplicabilityStatus = ApplicabilityStatus;
-  readonly PreregLinkInfo = PreregLinkInfo;
+  private readonly router = inject(Router);
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
-  private actions = createDispatchMap({
+  readonly preprintProvider = input.required<PreprintProviderDetails | undefined>();
+  readonly preprintVersionSelected = output<string>();
+
+  private readonly actions = createDispatchMap({
     getBibliographicContributors: GetBibliographicContributors,
     resetContributorsState: ResetContributorsState,
     fetchPreprintById: FetchPreprintDetails,
@@ -71,34 +74,29 @@ export class PreprintTombstoneComponent implements OnDestroy {
 
   preprintVersionSelected = output<string>();
 
-  preprintProvider = input.required<PreprintProviderDetails | undefined>();
+  readonly preprint = select(PreprintSelectors.getPreprint);
+  readonly isPreprintLoading = select(PreprintSelectors.isPreprintLoading);
+  readonly bibliographicContributors = select(ContributorsSelectors.getBibliographicContributors);
+  readonly areContributorsLoading = select(ContributorsSelectors.isBibliographicContributorsLoading);
+  readonly hasMoreBibliographicContributors = select(ContributorsSelectors.hasMoreBibliographicContributors);
+  readonly subjects = select(SubjectsSelectors.getSelectedSubjects);
+  readonly areSelectedSubjectsLoading = select(SubjectsSelectors.areSelectedSubjectsLoading);
 
-  preprint = select(PreprintSelectors.getPreprint);
-  isPreprintLoading = select(PreprintSelectors.isPreprintLoading);
+  readonly ApplicabilityStatus = ApplicabilityStatus;
+  readonly PreregLinkInfo = PreregLinkInfo;
 
-  bibliographicContributors = select(ContributorsSelectors.getBibliographicContributors);
-  areContributorsLoading = select(ContributorsSelectors.isBibliographicContributorsLoading);
-  hasMoreBibliographicContributors = select(ContributorsSelectors.hasMoreBibliographicContributors);
-  subjects = select(SubjectsSelectors.getSelectedSubjects);
-  areSelectedSubjectsLoading = select(SubjectsSelectors.areSelectedSubjectsLoading);
+  readonly license = computed(() => this.preprint()?.embeddedLicense ?? null);
+  readonly licenseOptionsRecord = computed(() => (this.preprint()?.licenseOptions ?? {}) as Record<string, string>);
 
-  license = computed(() => {
-    const preprint = this.preprint();
-    if (!preprint) return null;
-    return preprint.embeddedLicense;
-  });
-
-  licenseOptionsRecord = computed(() => (this.preprint()?.licenseOptions ?? {}) as Record<string, string>);
-
-  skeletonData = Array.from({ length: 6 }, () => null);
+  readonly skeletonData = new Array(6).fill(null);
 
   constructor() {
     effect(() => {
-      const preprint = this.preprint();
-      if (!preprint) return;
+      const preprintId = this.preprint()?.id;
+      if (!preprintId) return;
 
-      this.actions.getBibliographicContributors(this.preprint()?.id, ResourceType.Preprint);
-      this.actions.fetchSubjects(this.preprint()!.id, ResourceType.Preprint);
+      this.actions.getBibliographicContributors(preprintId, ResourceType.Preprint);
+      this.actions.fetchSubjects(preprintId, ResourceType.Preprint);
     });
   }
 
