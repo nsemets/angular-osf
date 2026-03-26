@@ -68,6 +68,11 @@ export class PreprintTombstoneComponent implements OnDestroy {
     fetchSubjects: FetchSelectedSubjects,
     loadMoreBibliographicContributors: LoadMoreBibliographicContributors,
   });
+  private router = inject(Router);
+
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+
+  preprintVersionSelected = output<string>();
 
   readonly preprint = select(PreprintSelectors.getPreprint);
   readonly isPreprintLoading = select(PreprintSelectors.isPreprintLoading);
