@@ -2,6 +2,8 @@ import { Store } from '@ngxs/store';
 
 import { MockComponents } from 'ng-mocks';
 
+import { Mock } from 'vitest';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl } from '@angular/forms';
 import { provideRouter } from '@angular/router';
@@ -12,11 +14,11 @@ import { SearchInputComponent } from '@osf/shared/components/search-input/search
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { FetchInstitutions, InstitutionsSelectors } from '@osf/shared/stores/institutions';
 
-import { InstitutionsListComponent } from './institutions-list.component';
-
 import { MOCK_INSTITUTION } from '@testing/mocks/institution.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
+
+import { InstitutionsListComponent } from './institutions-list.component';
 
 describe('InstitutionsListComponent', () => {
   let component: InstitutionsListComponent;
@@ -50,7 +52,7 @@ describe('InstitutionsListComponent', () => {
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('should create', () => {
@@ -59,38 +61,38 @@ describe('InstitutionsListComponent', () => {
 
   it('should dispatch FetchInstitutions on init', () => {
     expect(store.dispatch).toHaveBeenCalledWith(expect.any(FetchInstitutions));
-    const action = (store.dispatch as jest.Mock).mock.calls[0][0] as FetchInstitutions;
+    const action = (store.dispatch as Mock).mock.calls[0][0] as FetchInstitutions;
     expect(action.searchValue).toBeUndefined();
   });
 
   it('should dispatch FetchInstitutions with search value after debounce', () => {
-    jest.useFakeTimers();
-    (store.dispatch as jest.Mock).mockClear();
+    vi.useFakeTimers();
+    (store.dispatch as Mock).mockClear();
 
     component.searchControl.setValue('test search');
-    jest.advanceTimersByTime(300);
+    vi.advanceTimersByTime(300);
 
     expect(store.dispatch).toHaveBeenCalledWith(new FetchInstitutions('test search'));
   });
 
   it('should dispatch FetchInstitutions with empty string when search is null', () => {
-    jest.useFakeTimers();
-    (store.dispatch as jest.Mock).mockClear();
+    vi.useFakeTimers();
+    (store.dispatch as Mock).mockClear();
 
     component.searchControl.setValue(null);
-    jest.advanceTimersByTime(300);
+    vi.advanceTimersByTime(300);
 
     expect(store.dispatch).toHaveBeenCalledWith(new FetchInstitutions(''));
   });
 
   it('should not dispatch another search action for unchanged value', () => {
-    jest.useFakeTimers();
-    (store.dispatch as jest.Mock).mockClear();
+    vi.useFakeTimers();
+    (store.dispatch as Mock).mockClear();
 
     component.searchControl.setValue('same value');
-    jest.advanceTimersByTime(300);
+    vi.advanceTimersByTime(300);
     component.searchControl.setValue('same value');
-    jest.advanceTimersByTime(300);
+    vi.advanceTimersByTime(300);
 
     expect(store.dispatch).toHaveBeenCalledTimes(1);
     expect(store.dispatch).toHaveBeenCalledWith(new FetchInstitutions('same value'));

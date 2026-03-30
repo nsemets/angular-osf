@@ -2,7 +2,11 @@ import { Store } from '@ngxs/store';
 
 import { MockComponents, MockProvider } from 'ng-mocks';
 
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
+
 import { Subject } from 'rxjs';
+
+import { Mock } from 'vitest';
 
 import { PLATFORM_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -20,9 +24,8 @@ import { CustomDialogService } from '@osf/shared/services/custom-dialog.service'
 import { ProjectRedirectDialogService } from '@osf/shared/services/project-redirect-dialog.service';
 import { ClearMyResources, GetMyProjects, MyResourcesSelectors } from '@osf/shared/stores/my-resources';
 
-import { DashboardComponent } from './dashboard.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+import { CustomDialogServiceMock, CustomDialogServiceMockType } from '@testing/providers/custom-dialog-provider.mock';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
 import {
@@ -32,13 +35,15 @@ import {
   SignalOverride,
 } from '@testing/providers/store-provider.mock';
 
+import { DashboardComponent } from './dashboard.component';
+
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
   let fixture: ComponentFixture<DashboardComponent>;
   let store: Store;
   let routerMock: RouterMockType;
-  let customDialogService: { open: jest.Mock };
-  let projectRedirectDialogService: { showProjectRedirectDialog: jest.Mock };
+  let customDialogService: CustomDialogServiceMockType;
+  let projectRedirectDialogService: { showProjectRedirectDialog: Mock };
 
   const defaultSignals: SignalOverride[] = [
     { selector: MyResourcesSelectors.getProjects, value: [] },
@@ -48,14 +53,13 @@ describe('DashboardComponent', () => {
 
   interface SetupOverrides extends BaseSetupOverrides {
     platformId?: 'browser' | 'server';
-    selectorOverrides?: SignalOverride[];
     routeQueryParams?: Record<string, unknown>;
   }
 
   function setup(options: SetupOverrides = {}) {
     routerMock = RouterMockBuilder.create().build();
-    customDialogService = { open: jest.fn() };
-    projectRedirectDialogService = { showProjectRedirectDialog: jest.fn() };
+    customDialogService = CustomDialogServiceMock.simple();
+    projectRedirectDialogService = { showProjectRedirectDialog: vi.fn() };
     const routeMock = ActivatedRouteMockBuilder.create()
       .withQueryParams(options.routeQueryParams ?? {})
       .build();
@@ -79,9 +83,7 @@ describe('DashboardComponent', () => {
         MockProvider(CustomDialogService, customDialogService),
         MockProvider(ProjectRedirectDialogService, projectRedirectDialogService),
         MockProvider(PLATFORM_ID, options?.platformId ?? 'browser'),
-        provideMockStore({
-          signals: mergeSignalOverrides(defaultSignals, options.selectorOverrides),
-        }),
+        provideMockStore({ signals: mergeSignalOverrides(defaultSignals, options.selectorOverrides) }),
       ],
     });
 
@@ -124,7 +126,7 @@ describe('DashboardComponent', () => {
 
   it('should update query params on page change', () => {
     setup();
-    (routerMock.navigate as jest.Mock).mockClear();
+    (routerMock.navigate as Mock).mockClear();
 
     component.onPageChange({ first: 20, rows: 10 } as never);
 
@@ -143,7 +145,7 @@ describe('DashboardComponent', () => {
 
   it('should update sort and reset page in query params on sort', () => {
     setup();
-    (routerMock.navigate as jest.Mock).mockClear();
+    (routerMock.navigate as Mock).mockClear();
 
     component.onSort({ field: 'dateModified', order: -1 } as never);
 
@@ -190,7 +192,7 @@ describe('DashboardComponent', () => {
   it('should open create project dialog and redirect on close result', () => {
     setup();
     const onClose$ = new Subject<{ project: { id: string } }>();
-    customDialogService.open.mockReturnValue({ onClose: onClose$.asObservable() });
+    customDialogService.open.mockReturnValue({ onClose: onClose$.asObservable() } as unknown as DynamicDialogRef);
 
     component.createProject();
     onClose$.next({ project: { id: 'p1' } });
@@ -204,7 +206,7 @@ describe('DashboardComponent', () => {
 
   it('should open help link in new tab', () => {
     setup();
-    const openSpy = jest.spyOn(window, 'open').mockImplementation(() => null);
+    const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
 
     component.openInfoLink();
 
@@ -213,7 +215,7 @@ describe('DashboardComponent', () => {
 
   it('should clear my resources on destroy in browser', () => {
     setup({ platformId: 'browser' });
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     fixture.destroy();
 

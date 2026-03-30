@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { InstitutionsComponent } from './institutions.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { InstitutionsComponent } from './institutions.component';
 
 describe('InstitutionsComponent', () => {
   let component: InstitutionsComponent;
   let fixture: ComponentFixture<InstitutionsComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [InstitutionsComponent],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(InstitutionsComponent);
     component = fixture.componentInstance;

@@ -2,18 +2,14 @@ import { Store } from '@ngxs/store';
 
 import { MockComponents, MockProvider } from 'ng-mocks';
 
+import { Mock } from 'vitest';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 
 import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { SortOrder } from '@osf/shared/enums/sort-order.enum';
-
-import { MEETING_SUBMISSIONS_TABLE_PARAMS } from '../../constants';
-import { Meeting } from '../../models';
-import { GetMeetingById, GetMeetingSubmissions, MeetingsSelectors } from '../../store';
-
-import { MeetingDetailsComponent } from './meeting-details.component';
 
 import { MOCK_MEETING, MOCK_MEETING_SUBMISSIONS } from '@testing/mocks/meeting.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
@@ -25,6 +21,12 @@ import {
   provideMockStore,
   SignalOverride,
 } from '@testing/providers/store-provider.mock';
+
+import { MEETING_SUBMISSIONS_TABLE_PARAMS } from '../../constants';
+import { Meeting, MeetingSubmission } from '../../models';
+import { GetMeetingById, GetMeetingSubmissions, MeetingsSelectors } from '../../store';
+
+import { MeetingDetailsComponent } from './meeting-details.component';
 
 interface SetupOverrides extends BaseSetupOverrides {
   queryParams?: Record<string, string>;
@@ -90,7 +92,7 @@ describe('MeetingDetailsComponent', () => {
   }
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('should create', () => {
@@ -160,14 +162,14 @@ describe('MeetingDetailsComponent', () => {
   });
 
   it('should update query params from search control after debounce', () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     setup({ routeParams: { id: MOCK_MEETING.id } }, false);
-    (mockRouter.navigate as jest.Mock).mockClear();
-    jest.advanceTimersByTime(300);
-    (mockRouter.navigate as jest.Mock).mockClear();
+    (mockRouter.navigate as Mock).mockClear();
+    vi.advanceTimersByTime(300);
+    (mockRouter.navigate as Mock).mockClear();
 
     component.searchControl.setValue('open science');
-    jest.advanceTimersByTime(300);
+    vi.advanceTimersByTime(300);
 
     expect(mockRouter.navigate).toHaveBeenCalledWith(
       [],
@@ -180,8 +182,8 @@ describe('MeetingDetailsComponent', () => {
 
   it('should open submission download link in new tab', () => {
     setup({ routeParams: { id: MOCK_MEETING.id } }, false);
-    const stopPropagation = jest.fn();
-    const openSpy = jest.spyOn(window, 'open').mockImplementation(() => null);
+    const stopPropagation = vi.fn();
+    const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
 
     component.downloadSubmission({ stopPropagation } as unknown as Event, MOCK_MEETING_SUBMISSIONS[0]);
 
@@ -191,10 +193,11 @@ describe('MeetingDetailsComponent', () => {
 
   it('should not open new tab when submission has no download link', () => {
     setup({ routeParams: { id: MOCK_MEETING.id } }, false);
-    const stopPropagation = jest.fn();
-    const openSpy = jest.spyOn(window, 'open').mockImplementation(() => null);
+    const stopPropagation = vi.fn();
+    const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
+    const meetingSubmission: MeetingSubmission = { ...MOCK_MEETING_SUBMISSIONS[1], downloadLink: null };
 
-    component.downloadSubmission({ stopPropagation } as unknown as Event, MOCK_MEETING_SUBMISSIONS[1]);
+    component.downloadSubmission({ stopPropagation } as unknown as Event, meetingSubmission);
 
     expect(stopPropagation).toHaveBeenCalled();
     expect(openSpy).not.toHaveBeenCalled();
