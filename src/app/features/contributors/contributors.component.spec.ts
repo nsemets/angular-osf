@@ -4,11 +4,14 @@ import { MockComponents, MockProvider } from 'ng-mocks';
 
 import { of } from 'rxjs';
 
+import { Mock } from 'vitest';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { UserSelectors } from '@core/store/user';
-import { ContributorsTableComponent, RequestAccessTableComponent } from '@osf/shared/components/contributors';
+import { ContributorsTableComponent } from '@osf/shared/components/contributors/contributors-table/contributors-table.component';
+import { RequestAccessTableComponent } from '@osf/shared/components/contributors/request-access-table/request-access-table.component';
 import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
 import { ViewOnlyTableComponent } from '@osf/shared/components/view-only-table/view-only-table.component';
 import { ContributorPermission } from '@osf/shared/enums/contributors/contributor-permission.enum';
@@ -29,8 +32,6 @@ import {
 import { CurrentResourceSelectors, GetResourceDetails } from '@osf/shared/stores/current-resource';
 import { ViewOnlyLinkSelectors } from '@osf/shared/stores/view-only-links';
 
-import { ContributorsComponent } from './contributors.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import {
   CustomConfirmationServiceMock,
@@ -48,9 +49,7 @@ import {
 } from '@testing/providers/store-provider.mock';
 import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
 
-interface SetupOverrides extends BaseSetupOverrides {
-  selectorOverrides?: SignalOverride[];
-}
+import { ContributorsComponent } from './contributors.component';
 
 describe('ContributorsComponent', () => {
   let component: ContributorsComponent;
@@ -81,7 +80,7 @@ describe('ContributorsComponent', () => {
     { selector: ContributorsSelectors.isContributorsLoadingMore, value: false },
   ];
 
-  function setup(overrides: SetupOverrides = {}) {
+  function setup(overrides: BaseSetupOverrides = {}) {
     const routeBuilder = ActivatedRouteMockBuilder.create().withData({ resourceType: ResourceType.Project });
     if (overrides.routeParams) {
       routeBuilder.withParams(overrides.routeParams);
@@ -148,21 +147,21 @@ describe('ContributorsComponent', () => {
   });
 
   it('should dispatch search update after debounce', () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     setup({ routeParams: { id: 'resource-id' } });
     component.ngOnInit();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.searchControl.setValue('john');
-    jest.advanceTimersByTime(500);
+    vi.advanceTimersByTime(500);
 
     expect(store.dispatch).toHaveBeenCalledWith(new UpdateContributorsSearchValue('john'));
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('should dispatch permission and bibliography filter actions', () => {
     setup({ routeParams: { id: 'resource-id' } });
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.onPermissionChange(ContributorPermission.Admin);
     component.onBibliographyChange(true);
@@ -202,7 +201,7 @@ describe('ContributorsComponent', () => {
 
   it('should dispatch load more contributors action', () => {
     setup({ routeParams: { id: 'resource-id' } });
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.loadMoreContributors();
 
@@ -225,8 +224,8 @@ describe('ContributorsComponent', () => {
         },
       ],
     });
-    (store.dispatch as jest.Mock).mockReturnValue(of(true));
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockReturnValue(of(true));
+    (store.dispatch as Mock).mockClear();
 
     component.save();
 
@@ -238,7 +237,7 @@ describe('ContributorsComponent', () => {
 
   it('should dispatch reset action on destroy', () => {
     setup({ routeParams: { id: 'resource-id' } });
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     fixture.destroy();
 

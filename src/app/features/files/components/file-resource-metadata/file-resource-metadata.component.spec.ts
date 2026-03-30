@@ -1,17 +1,17 @@
-import { MockComponent } from 'ng-mocks';
+import { MockComponent, MockProvider } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
 import { ContributorsListComponent } from '@osf/shared/components/contributors-list/contributors-list.component';
 
-import { FilesSelectors } from '../../store';
-
-import { FileResourceMetadataComponent } from './file-resource-metadata.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
+
+import { FilesSelectors } from '../../store';
+
+import { FileResourceMetadataComponent } from './file-resource-metadata.component';
 
 describe('FileResourceMetadataComponent', () => {
   let component: FileResourceMetadataComponent;
@@ -31,14 +31,14 @@ describe('FileResourceMetadataComponent', () => {
     { id: 'contrib-2', name: 'Jane Smith', role: 'Contributor' },
   ];
 
-  beforeEach(async () => {
+  beforeEach(() => {
     mockRouter = RouterMockBuilder.create().withUrl('/test').build();
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [FileResourceMetadataComponent, MockComponent(ContributorsListComponent)],
       providers: [
         provideOSFCore(),
-        { provide: Router, useValue: mockRouter },
+        MockProvider(Router, mockRouter),
         provideMockStore({
           signals: [
             { selector: FilesSelectors.getResourceMetadata, value: mockResourceMetadata },
@@ -48,7 +48,7 @@ describe('FileResourceMetadataComponent', () => {
           ],
         }),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(FileResourceMetadataComponent);
     component = fixture.componentInstance;

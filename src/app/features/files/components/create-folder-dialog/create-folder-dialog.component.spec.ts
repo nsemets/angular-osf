@@ -7,10 +7,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
 import { InputLimits } from '@osf/shared/constants/input-limits.const';
 
-import { CreateFolderDialogComponent } from './create-folder-dialog.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideDynamicDialogRefMock } from '@testing/providers/dynamic-dialog-ref.mock';
+
+import { CreateFolderDialogComponent } from './create-folder-dialog.component';
 
 describe('CreateFolderDialogComponent', () => {
   let component: CreateFolderDialogComponent;

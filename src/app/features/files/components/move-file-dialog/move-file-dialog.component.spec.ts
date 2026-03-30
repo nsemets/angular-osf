@@ -1,6 +1,6 @@
-import { MockComponents } from 'ng-mocks';
+import { MockComponents, MockProvider } from 'ng-mocks';
 
-import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
@@ -12,45 +12,37 @@ import { FilesService } from '@osf/shared/services/files.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { CurrentResourceSelectors } from '@shared/stores/current-resource';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+import { CustomConfirmationServiceMock } from '@testing/providers/custom-confirmation-provider.mock';
+import { provideDynamicDialogRefMock } from '@testing/providers/dynamic-dialog-ref.mock';
+import { provideMockStore } from '@testing/providers/store-provider.mock';
+import { ToastServiceMock } from '@testing/providers/toast-provider.mock';
+
 import { FilesSelectors } from '../../store';
 
 import { MoveFileDialogComponent } from './move-file-dialog.component';
-
-import { provideOSFCore } from '@testing/osf.testing.provider';
-import { CustomConfirmationServiceMock } from '@testing/providers/custom-confirmation-provider.mock';
-import { provideMockStore } from '@testing/providers/store-provider.mock';
-import { ToastServiceMock } from '@testing/providers/toast-provider.mock';
 
 describe('MoveFileDialogComponent', () => {
   let component: MoveFileDialogComponent;
   let fixture: ComponentFixture<MoveFileDialogComponent>;
 
-  const mockFilesService = {
-    moveFiles: jest.fn(),
-    getMoveDialogFiles: jest.fn(),
-  };
-
-  beforeEach(async () => {
-    const dialogRefMock = {
-      close: jest.fn(),
-    };
-
+  beforeEach(() => {
     const dialogConfigMock = {
       data: { files: [], currentFolder: null },
     };
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [
         MoveFileDialogComponent,
         ...MockComponents(IconComponent, LoadingSpinnerComponent, FileSelectDestinationComponent),
       ],
       providers: [
         provideOSFCore(),
-        { provide: DynamicDialogRef, useValue: dialogRefMock },
-        { provide: DynamicDialogConfig, useValue: dialogConfigMock },
-        { provide: FilesService, useValue: mockFilesService },
-        { provide: ToastService, useValue: ToastServiceMock.simple() },
-        { provide: CustomConfirmationService, useValue: CustomConfirmationServiceMock.simple() },
+        provideDynamicDialogRefMock(),
+        MockProvider(DynamicDialogConfig, dialogConfigMock),
+        MockProvider(FilesService),
+        MockProvider(ToastService, ToastServiceMock.simple()),
+        MockProvider(CustomConfirmationService, CustomConfirmationServiceMock.simple()),
         provideMockStore({
           signals: [
             { selector: FilesSelectors.getMoveDialogFiles, value: [] },
@@ -64,7 +56,7 @@ describe('MoveFileDialogComponent', () => {
           ],
         }),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(MoveFileDialogComponent);
     component = fixture.componentInstance;
