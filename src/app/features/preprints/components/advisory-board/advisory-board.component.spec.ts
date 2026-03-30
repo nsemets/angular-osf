@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AdvisoryBoardComponent } from './advisory-board.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { AdvisoryBoardComponent } from './advisory-board.component';
 
 describe('AdvisoryBoardComponent', () => {
   let component: AdvisoryBoardComponent;

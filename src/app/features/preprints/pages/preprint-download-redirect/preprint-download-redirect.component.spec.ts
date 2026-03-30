@@ -6,10 +6,10 @@ import { ActivatedRoute } from '@angular/router';
 
 import { SocialShareService } from '@osf/shared/services/social-share.service';
 
-import { PreprintDownloadRedirectComponent } from './preprint-download-redirect.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
+
+import { PreprintDownloadRedirectComponent } from './preprint-download-redirect.component';
 
 const MOCK_ID = 'test-preprint-id';
 const MOCK_DOWNLOAD_URL = 'https://osf.io/download/test-preprint-id';
@@ -23,7 +23,7 @@ describe('PreprintDownloadRedirectComponent', () => {
       .build();
 
     const mockSocialShareService = {
-      createDownloadUrl: jest.fn().mockReturnValue(MOCK_DOWNLOAD_URL),
+      createDownloadUrl: vi.fn().mockReturnValue(MOCK_DOWNLOAD_URL),
     };
 
     TestBed.configureTestingModule({
@@ -52,9 +52,7 @@ describe('PreprintDownloadRedirectComponent', () => {
   });
 
   it('should redirect to download URL when id is present in browser', () => {
-    const redirectSpy = jest
-      .spyOn(PreprintDownloadRedirectComponent.prototype, 'redirect')
-      .mockImplementation(jest.fn());
+    const redirectSpy = vi.spyOn(PreprintDownloadRedirectComponent.prototype, 'redirect').mockImplementation(vi.fn());
     const { mockSocialShareService } = setup({ id: MOCK_ID });
     expect(mockSocialShareService.createDownloadUrl).toHaveBeenCalledWith(MOCK_ID);
     expect(redirectSpy).toHaveBeenCalledWith(MOCK_DOWNLOAD_URL);
@@ -62,9 +60,7 @@ describe('PreprintDownloadRedirectComponent', () => {
   });
 
   it('should not redirect when id is missing', () => {
-    const redirectSpy = jest
-      .spyOn(PreprintDownloadRedirectComponent.prototype, 'redirect')
-      .mockImplementation(jest.fn());
+    const redirectSpy = vi.spyOn(PreprintDownloadRedirectComponent.prototype, 'redirect').mockImplementation(vi.fn());
     const { mockSocialShareService } = setup({ id: null });
     expect(mockSocialShareService.createDownloadUrl).not.toHaveBeenCalled();
     expect(redirectSpy).not.toHaveBeenCalled();
@@ -72,9 +68,7 @@ describe('PreprintDownloadRedirectComponent', () => {
   });
 
   it('should not redirect when not in browser', () => {
-    const redirectSpy = jest
-      .spyOn(PreprintDownloadRedirectComponent.prototype, 'redirect')
-      .mockImplementation(jest.fn());
+    const redirectSpy = vi.spyOn(PreprintDownloadRedirectComponent.prototype, 'redirect').mockImplementation(vi.fn());
     const { mockSocialShareService } = setup({ isBrowser: false });
     expect(mockSocialShareService.createDownloadUrl).not.toHaveBeenCalled();
     expect(redirectSpy).not.toHaveBeenCalled();

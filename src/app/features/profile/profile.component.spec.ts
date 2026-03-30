@@ -9,14 +9,14 @@ import { GlobalSearchComponent } from '@osf/shared/components/global-search/glob
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 
-import { ProfileInformationComponent } from './components';
-import { ProfileComponent } from './profile.component';
-import { ProfileSelectors } from './store';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
+
+import { ProfileInformationComponent } from './components';
+import { ProfileComponent } from './profile.component';
+import { ProfileSelectors } from './store';
 
 describe('ProfileComponent', () => {
   let component: ProfileComponent;
@@ -24,11 +24,11 @@ describe('ProfileComponent', () => {
   let routerMock: ReturnType<RouterMockBuilder['build']>;
   let activatedRouteMock: ReturnType<ActivatedRouteMockBuilder['build']>;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     routerMock = RouterMockBuilder.create().build();
     activatedRouteMock = ActivatedRouteMockBuilder.create().build();
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [
         ProfileComponent,
         ...MockComponents(ProfileInformationComponent, GlobalSearchComponent, LoadingSpinnerComponent),
@@ -46,7 +46,7 @@ describe('ProfileComponent', () => {
           ],
         }),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(ProfileComponent);
     component = fixture.componentInstance;

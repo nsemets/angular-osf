@@ -4,10 +4,10 @@ import { provideRouter } from '@angular/router';
 import { ResourceType } from '@shared/enums/resource-type.enum';
 import { SubjectModel } from '@shared/models/subject/subject.model';
 
-import { BrowseBySubjectsComponent } from './browse-by-subjects.component';
-
 import { SUBJECTS_MOCK } from '@testing/mocks/subject.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { BrowseBySubjectsComponent } from './browse-by-subjects.component';
 
 describe('BrowseBySubjectsComponent', () => {
   let component: BrowseBySubjectsComponent;

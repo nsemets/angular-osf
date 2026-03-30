@@ -7,14 +7,14 @@ import { provideRouter } from '@angular/router';
 
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 
+import { PREPRINT_PROVIDER_SHORT_INFO_MOCK } from '@testing/mocks/preprint-provider-short-info.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
+import { mergeSignalOverrides, provideMockStore, SignalOverride } from '@testing/providers/store-provider.mock';
+
 import { PreprintProviderShortInfo } from '../../models';
 import { GetPreprintProvidersAllowingSubmissions, PreprintProvidersSelectors } from '../../store/preprint-providers';
 
 import { SelectPreprintServiceComponent } from './select-preprint-service.component';
-
-import { PREPRINT_PROVIDER_SHORT_INFO_MOCK } from '@testing/mocks/preprint-provider-short-info.mock';
-import { provideOSFCore } from '@testing/osf.testing.provider';
-import { mergeSignalOverrides, provideMockStore, SignalOverride } from '@testing/providers/store-provider.mock';
 
 describe('SelectPreprintServiceComponent', () => {
   let component: SelectPreprintServiceComponent;
