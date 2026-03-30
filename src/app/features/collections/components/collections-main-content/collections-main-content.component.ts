@@ -23,12 +23,12 @@ import { CollectionsSearchResultsComponent } from '../collections-search-results
   imports: [
     Button,
     Select,
+    Skeleton,
     FormsModule,
     TranslatePipe,
     CollectionsFilterChipsComponent,
     CollectionsFiltersComponent,
     CollectionsSearchResultsComponent,
-    Skeleton,
   ],
   templateUrl: './collections-main-content.component.html',
   styleUrl: './collections-main-content.component.scss',
@@ -36,18 +36,19 @@ import { CollectionsSearchResultsComponent } from '../collections-search-results
 })
 export class CollectionsMainContentComponent {
   readonly sortOptions = collectionsSortOptions;
+
   isWeb = toSignal(inject(IS_WEB));
+
+  actions = createDispatchMap({ setSortBy: SetSortBy });
+
   selectedSort = select(CollectionsSelectors.getSortBy);
-  collectionSubmissions = select(CollectionsSelectors.getCollectionSubmissionsSearchResult);
   totalSubmissions = select(CollectionsSelectors.getTotalSubmissions);
-  isCollectionSubmissionsLoading = select(CollectionsSelectors.getCollectionSubmissionsLoading);
-
-  isFiltersOpen = signal(false);
-  isSortingOpen = signal(false);
-
   selectedFilters = select(CollectionsSelectors.getAllSelectedFilters);
   isCollectionProviderLoading = select(CollectionsSelectors.getCollectionProviderLoading);
   isCollectionDetailsLoading = select(CollectionsSelectors.getCollectionDetailsLoading);
+
+  isFiltersOpen = signal(false);
+  isSortingOpen = signal(false);
 
   isCollectionLoading = computed(() => this.isCollectionProviderLoading() || this.isCollectionDetailsLoading());
 
@@ -57,8 +58,6 @@ export class CollectionsMainContentComponent {
 
     return hasSelectedFiltersOptions;
   });
-
-  actions = createDispatchMap({ setSortBy: SetSortBy });
 
   openFilters(): void {
     this.isFiltersOpen.set(!this.isFiltersOpen());

@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { CollectionsComponent } from './collections.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { CollectionsComponent } from './collections.component';
 
 describe('CollectionsComponent', () => {
   let component: CollectionsComponent;
   let fixture: ComponentFixture<CollectionsComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [CollectionsComponent],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(CollectionsComponent);
     component = fixture.componentInstance;

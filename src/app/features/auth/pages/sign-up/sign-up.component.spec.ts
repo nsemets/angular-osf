@@ -9,9 +9,9 @@ import { PasswordInputHintComponent } from '@osf/shared/components/password-inpu
 import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
 import { ToastService } from '@osf/shared/services/toast.service';
 
-import { SignUpComponent } from './sign-up.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { SignUpComponent } from './sign-up.component';
 
 describe('SignUpComponent', () => {
   let component: SignUpComponent;
