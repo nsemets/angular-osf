@@ -11,6 +11,15 @@ import { CustomDialogService } from '@osf/shared/services/custom-dialog.service'
 import { ToastService } from '@osf/shared/services/toast.service';
 import { RegistrationProviderSelectors } from '@osf/shared/stores/registration-provider';
 
+import { MOCK_PROJECT_METADATA } from '@testing/mocks/project-metadata.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
+import { CustomConfirmationServiceMockBuilder } from '@testing/providers/custom-confirmation-provider.mock';
+import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
+import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
+import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
+import { provideMockStore } from '@testing/providers/store-provider.mock';
+import { ToastServiceMockBuilder } from '@testing/providers/toast-provider.mock';
+
 import { MetadataAffiliatedInstitutionsComponent } from './components/metadata-affiliated-institutions/metadata-affiliated-institutions.component';
 import { MetadataContributorsComponent } from './components/metadata-contributors/metadata-contributors.component';
 import { MetadataDateInfoComponent } from './components/metadata-date-info/metadata-date-info.component';
@@ -26,15 +35,6 @@ import { MetadataTitleComponent } from './components/metadata-title/metadata-tit
 import { MetadataComponent } from './metadata.component';
 import { MetadataSelectors } from './store';
 
-import { MOCK_PROJECT_METADATA } from '@testing/mocks/project-metadata.mock';
-import { provideOSFCore } from '@testing/osf.testing.provider';
-import { CustomConfirmationServiceMockBuilder } from '@testing/providers/custom-confirmation-provider.mock';
-import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
-import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
-import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
-import { provideMockStore } from '@testing/providers/store-provider.mock';
-import { ToastServiceMockBuilder } from '@testing/providers/toast-provider.mock';
-
 describe('MetadataComponent', () => {
   let component: MetadataComponent;
   let fixture: ComponentFixture<MetadataComponent>;
@@ -47,7 +47,7 @@ describe('MetadataComponent', () => {
   const mockMetadata = MOCK_PROJECT_METADATA;
   const mockResourceId = 'test-resource-id';
 
-  beforeEach(async () => {
+  beforeEach(() => {
     activatedRouteMock = ActivatedRouteMockBuilder.create()
       .withId(mockResourceId)
       .withData({ resourceType: ResourceType.Project })
@@ -71,7 +71,7 @@ describe('MetadataComponent', () => {
 
     customConfirmationServiceMock = CustomConfirmationServiceMockBuilder.create().build();
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [
         MetadataComponent,
         ...MockComponents(
@@ -109,7 +109,7 @@ describe('MetadataComponent', () => {
           ],
         }),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(MetadataComponent);
     component = fixture.componentInstance;
@@ -121,7 +121,7 @@ describe('MetadataComponent', () => {
 
   it('should handle tab change for OSF tab', () => {
     const tabId = 'osf';
-    const navigateSpy = jest.spyOn(routerMock, 'navigate');
+    const navigateSpy = vi.spyOn(routerMock, 'navigate');
 
     component.onTabChange(tabId);
 
@@ -144,7 +144,7 @@ describe('MetadataComponent', () => {
   });
 
   it('should open edit contributor dialog', () => {
-    const openSpy = jest.spyOn(customDialogServiceMock, 'open');
+    const openSpy = vi.spyOn(customDialogServiceMock, 'open');
 
     expect(openSpy).toHaveBeenCalledTimes(0);
     expect(() => component.openEditContributorDialog()).toThrow();
@@ -152,7 +152,7 @@ describe('MetadataComponent', () => {
   });
 
   it('should open edit title dialog', () => {
-    const openSpy = jest.spyOn(customDialogServiceMock, 'open');
+    const openSpy = vi.spyOn(customDialogServiceMock, 'open');
 
     component.openEditTitleDialog();
 
@@ -160,7 +160,7 @@ describe('MetadataComponent', () => {
   });
 
   it('should open edit description dialog', () => {
-    const openSpy = jest.spyOn(customDialogServiceMock, 'open');
+    const openSpy = vi.spyOn(customDialogServiceMock, 'open');
 
     component.openEditDescriptionDialog();
 
@@ -168,7 +168,7 @@ describe('MetadataComponent', () => {
   });
 
   it('should open edit resource information dialog', () => {
-    const openSpy = jest.spyOn(customDialogServiceMock, 'open');
+    const openSpy = vi.spyOn(customDialogServiceMock, 'open');
 
     component.openEditResourceInformationDialog();
 
@@ -176,7 +176,7 @@ describe('MetadataComponent', () => {
   });
 
   it('should show resource info tooltip', () => {
-    const openSpy = jest.spyOn(customDialogServiceMock, 'open');
+    const openSpy = vi.spyOn(customDialogServiceMock, 'open');
 
     component.onShowResourceInfo();
 
@@ -184,7 +184,7 @@ describe('MetadataComponent', () => {
   });
 
   it('should open edit license dialog', () => {
-    const openSpy = jest.spyOn(customDialogServiceMock, 'open');
+    const openSpy = vi.spyOn(customDialogServiceMock, 'open');
 
     component.openEditLicenseDialog();
 
@@ -192,7 +192,7 @@ describe('MetadataComponent', () => {
   });
 
   it('should open edit funding dialog', () => {
-    const openSpy = jest.spyOn(customDialogServiceMock, 'open');
+    const openSpy = vi.spyOn(customDialogServiceMock, 'open');
 
     component.openEditFundingDialog();
 
@@ -200,7 +200,7 @@ describe('MetadataComponent', () => {
   });
 
   it('should open edit affiliated institutions dialog', () => {
-    const openSpy = jest.spyOn(customDialogServiceMock, 'open');
+    const openSpy = vi.spyOn(customDialogServiceMock, 'open');
 
     component.openEditAffiliatedInstitutionsDialog();
 
@@ -220,7 +220,7 @@ describe('MetadataComponent', () => {
   });
 
   it('should handle edit DOI for project', () => {
-    const confirmSpy = jest.spyOn(customConfirmationServiceMock, 'confirmDelete');
+    const confirmSpy = vi.spyOn(customConfirmationServiceMock, 'confirmDelete');
 
     component.handleEditDoi();
 
@@ -228,7 +228,7 @@ describe('MetadataComponent', () => {
   });
 
   it('should open add record', () => {
-    const navigateSpy = jest.spyOn(routerMock, 'navigate');
+    const navigateSpy = vi.spyOn(routerMock, 'navigate');
 
     component.openAddRecord();
 
@@ -236,7 +236,7 @@ describe('MetadataComponent', () => {
   });
 
   it('should handle cedar form change template', () => {
-    const navigateSpy = jest.spyOn(routerMock, 'navigate');
+    const navigateSpy = vi.spyOn(routerMock, 'navigate');
 
     component.onCedarFormChangeTemplate();
 

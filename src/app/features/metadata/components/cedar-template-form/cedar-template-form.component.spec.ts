@@ -5,11 +5,11 @@ import { ActivatedRoute } from '@angular/router';
 
 import { CedarMetadataHelper } from '@osf/features/metadata/helpers';
 
-import { CedarTemplateFormComponent } from './cedar-template-form.component';
-
 import { CEDAR_METADATA_DATA_TEMPLATE_JSON_API_MOCK } from '@testing/mocks/cedar-metadata-data-template-json-api.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
+
+import { CedarTemplateFormComponent } from './cedar-template-form.component';
 
 describe('CedarTemplateFormComponent', () => {
   let component: CedarTemplateFormComponent;
@@ -17,11 +17,11 @@ describe('CedarTemplateFormComponent', () => {
 
   const mockTemplate = CEDAR_METADATA_DATA_TEMPLATE_JSON_API_MOCK;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [CedarTemplateFormComponent],
       providers: [provideOSFCore(), MockProvider(ActivatedRoute, ActivatedRouteMockBuilder.create().build())],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(CedarTemplateFormComponent);
     fixture.componentRef.setInput('template', mockTemplate);
@@ -64,7 +64,7 @@ describe('CedarTemplateFormComponent', () => {
   });
 
   it('should emit changeTemplate event', () => {
-    const emitSpy = jest.spyOn(component.changeTemplate, 'emit');
+    const emitSpy = vi.spyOn(component.changeTemplate, 'emit');
 
     component.changeTemplate.emit();
 
@@ -72,7 +72,7 @@ describe('CedarTemplateFormComponent', () => {
   });
 
   it('should emit toggleEditMode event', () => {
-    const emitSpy = jest.spyOn(component.toggleEditMode, 'emit');
+    const emitSpy = vi.spyOn(component.toggleEditMode, 'emit');
 
     component.toggleEditMode.emit();
 

@@ -8,17 +8,17 @@ import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { ToastService } from '@osf/shared/services/toast.service';
 
-import { CedarTemplateFormComponent } from '../../components/cedar-template-form/cedar-template-form.component';
-import { MetadataSelectors } from '../../store';
-
-import { AddMetadataComponent } from './add-metadata.component';
-
 import { CEDAR_METADATA_DATA_TEMPLATE_JSON_API_MOCK } from '@testing/mocks/cedar-metadata-data-template-json-api.mock';
 import { MOCK_CEDAR_METADATA_RECORD_DATA } from '@testing/mocks/cedar-metadata-record.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
-import { ToastServiceMockBuilder } from '@testing/providers/toast-provider.mock';
+import { ToastServiceMock, ToastServiceMockBuilder } from '@testing/providers/toast-provider.mock';
+
+import { CedarTemplateFormComponent } from '../../components/cedar-template-form/cedar-template-form.component';
+import { MetadataSelectors } from '../../store';
+
+import { AddMetadataComponent } from './add-metadata.component';
 
 describe('AddMetadataComponent', () => {
   let component: AddMetadataComponent;
@@ -42,11 +42,11 @@ describe('AddMetadataComponent', () => {
 
   const mockCedarRecords = [mockRecord];
 
-  beforeEach(async () => {
-    toastService = ToastServiceMockBuilder.create().build();
+  beforeEach(() => {
+    toastService = ToastServiceMock.simple();
 
     router = {
-      navigate: jest.fn(),
+      navigate: vi.fn(),
     };
 
     const baseRoute = ActivatedRouteMockBuilder.create().build();
@@ -66,7 +66,7 @@ describe('AddMetadataComponent', () => {
       } as any,
     };
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [
         AddMetadataComponent,
         ...MockComponents(SubHeaderComponent, CedarTemplateFormComponent, LoadingSpinnerComponent),
@@ -85,7 +85,7 @@ describe('AddMetadataComponent', () => {
           ],
         }),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(AddMetadataComponent);
     component = fixture.componentInstance;

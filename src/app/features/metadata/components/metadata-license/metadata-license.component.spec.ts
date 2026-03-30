@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MetadataLicenseComponent } from './metadata-license.component';
-
 import { MOCK_LICENSE } from '@testing/mocks/license.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { MetadataLicenseComponent } from './metadata-license.component';
 
 describe('MetadataLicenseComponent', () => {
   let component: MetadataLicenseComponent;
@@ -11,11 +11,11 @@ describe('MetadataLicenseComponent', () => {
 
   const mockLicense = MOCK_LICENSE;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MetadataLicenseComponent],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(MetadataLicenseComponent);
     component = fixture.componentInstance;
@@ -45,7 +45,7 @@ describe('MetadataLicenseComponent', () => {
   });
 
   it('should emit openEditLicenseDialog event', () => {
-    const emitSpy = jest.spyOn(component.openEditLicenseDialog, 'emit');
+    const emitSpy = vi.spyOn(component.openEditLicenseDialog, 'emit');
 
     component.openEditLicenseDialog.emit();
 
