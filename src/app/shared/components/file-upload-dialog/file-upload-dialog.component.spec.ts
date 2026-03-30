@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FileUploadDialogComponent } from './file-upload-dialog.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { FileUploadDialogComponent } from './file-upload-dialog.component';
 
 describe('FileUploadDialogComponent', () => {
   let component: FileUploadDialogComponent;

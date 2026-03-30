@@ -13,17 +13,17 @@ import {
 } from '@shared/models/search/discaverable-filter.model';
 import { GlobalSearchSelectors } from '@shared/stores/global-search';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
+import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
+import { provideMockStore } from '@testing/providers/store-provider.mock';
+
 import { FilterChipsComponent } from '../filter-chips/filter-chips.component';
 import { SearchFiltersComponent } from '../search-filters/search-filters.component';
 import { SearchHelpTutorialComponent } from '../search-help-tutorial/search-help-tutorial.component';
 import { SearchInputComponent } from '../search-input/search-input.component';
 
 import { GlobalSearchComponent } from './global-search.component';
-
-import { provideOSFCore } from '@testing/osf.testing.provider';
-import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
-import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
-import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('GlobalSearchComponent', () => {
   let component: GlobalSearchComponent;
@@ -44,11 +44,11 @@ describe('GlobalSearchComponent', () => {
     cardSearchResultCount: 100,
   };
 
-  beforeEach(async () => {
+  beforeEach(() => {
     mockRouter = RouterMockBuilder.create().withUrl('/search').build();
     mockActivatedRoute = ActivatedRouteMockBuilder.create().build();
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [
         GlobalSearchComponent,
         ...MockComponents(
@@ -78,7 +78,7 @@ describe('GlobalSearchComponent', () => {
         MockProvider(ActivatedRoute, mockActivatedRoute),
         MockProvider(Router, mockRouter),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(GlobalSearchComponent);
     component = fixture.componentInstance;
@@ -151,9 +151,9 @@ describe('GlobalSearchComponent', () => {
 
   it('should scroll to top of content wrapper', () => {
     const mockElement = {
-      scrollTo: jest.fn(),
+      scrollTo: vi.fn(),
     };
-    const querySelectorSpy = jest.spyOn(document, 'querySelector').mockReturnValue(mockElement as any);
+    const querySelectorSpy = vi.spyOn(document, 'querySelector').mockReturnValue(mockElement as any);
 
     component.scrollToTop();
 
@@ -164,7 +164,7 @@ describe('GlobalSearchComponent', () => {
   });
 
   it('should handle missing content wrapper gracefully', () => {
-    const querySelectorSpy = jest.spyOn(document, 'querySelector').mockReturnValue(null);
+    const querySelectorSpy = vi.spyOn(document, 'querySelector').mockReturnValue(null);
 
     expect(() => component.scrollToTop()).not.toThrow();
 

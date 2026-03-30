@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { TagsListComponent } from './tags-list.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { TagsListComponent } from './tags-list.component';
 
 describe('TagsListComponent', () => {
   let component: TagsListComponent;
   let fixture: ComponentFixture<TagsListComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [TagsListComponent],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(TagsListComponent);
     component = fixture.componentInstance;
@@ -55,7 +55,7 @@ describe('TagsListComponent', () => {
     fixture.componentRef.setInput('isLoading', false);
     fixture.detectChanges();
 
-    const emitSpy = jest.spyOn(component.tagClick, 'emit');
+    const emitSpy = vi.spyOn(component.tagClick, 'emit');
     const tagElements = fixture.debugElement.queryAll(By.css('p-tag'));
 
     tagElements[0].triggerEventHandler('click', null);

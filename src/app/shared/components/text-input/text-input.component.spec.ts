@@ -3,19 +3,19 @@ import { FormControl, Validators } from '@angular/forms';
 
 import { INPUT_VALIDATION_MESSAGES } from '@osf/shared/constants/input-validation-messages.const';
 
-import { TextInputComponent } from './text-input.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { TextInputComponent } from './text-input.component';
 
 describe('TextInputComponent', () => {
   let component: TextInputComponent;
   let fixture: ComponentFixture<TextInputComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [TextInputComponent],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(TextInputComponent);
     component = fixture.componentInstance;

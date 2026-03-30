@@ -50,8 +50,8 @@ describe('FileMenuComponent', () => {
     const routerMock: RouterMockType = RouterMock.create().build();
     viewOnlyService = ViewOnlyLinkHelperMock.simple(overrides.hasViewOnly ?? false);
     menuManager = {
-      openMenu: jest.fn(),
-      onMenuHide: jest.fn(),
+      openMenu: vi.fn(),
+      onMenuHide: vi.fn(),
     };
 
     TestBed.configureTestingModule({
@@ -66,15 +66,15 @@ describe('FileMenuComponent', () => {
 
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
-      value: jest.fn().mockImplementation(() => ({
+      value: vi.fn().mockImplementation(() => ({
         matches: false,
         media: '',
         onchange: null,
-        addListener: jest.fn(),
-        removeListener: jest.fn(),
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
-        dispatchEvent: jest.fn(),
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
       })),
     });
 
@@ -149,7 +149,7 @@ describe('FileMenuComponent', () => {
 
   it('should emit download action from menu command', () => {
     setup();
-    const emitSpy = jest.spyOn(component.action, 'emit');
+    const emitSpy = vi.spyOn(component.action, 'emit');
     const item = component.menuItems().find((menuItem) => menuItem.id === FileMenuType.Download);
     item?.command?.({} as never);
     expect(emitSpy).toHaveBeenCalledWith({ value: FileMenuType.Download, data: undefined } as FileMenuAction);
@@ -157,7 +157,7 @@ describe('FileMenuComponent', () => {
 
   it('should emit share twitter action with data from menu command', () => {
     setup();
-    const emitSpy = jest.spyOn(component.action, 'emit');
+    const emitSpy = vi.spyOn(component.action, 'emit');
     const shareItem = component.menuItems().find((menuItem) => menuItem.id === FileMenuType.Share);
     const twitterItem = shareItem?.items?.find((menuItem) => menuItem.id === `${FileMenuType.Share}-twitter`);
     twitterItem?.command?.({} as never);
@@ -171,7 +171,7 @@ describe('FileMenuComponent', () => {
     setup();
     const menuMock = {} as TieredMenu;
     const event = new Event('click');
-    jest.spyOn(component, 'menu').mockReturnValue(menuMock);
+    vi.spyOn(component, 'menu').mockReturnValue(menuMock);
     component.onMenuToggle(event);
     expect(menuManager.openMenu).toHaveBeenCalledWith(menuMock, event);
   });

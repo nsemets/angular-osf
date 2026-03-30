@@ -5,18 +5,18 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
+
 import { WikiSyntaxHelpDialogComponent } from '../wiki-syntax-help-dialog/wiki-syntax-help-dialog.component';
 
 import { EditSectionComponent } from './edit-section.component';
 
-import { provideOSFCore } from '@testing/osf.testing.provider';
-import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
-
-jest.mock('ace-builds/src-noconflict/ext-language_tools');
+vi.mock('ace-builds/src-noconflict/ext-language_tools', () => ({}));
 
 (globalThis as any).ace = {
-  define: jest.fn(),
-  require: jest.fn().mockReturnValue({ snippetCompleter: {} }),
+  define: vi.fn(),
+  require: vi.fn().mockReturnValue({ snippetCompleter: {} }),
 };
 
 describe('EditSectionComponent', () => {
@@ -29,22 +29,22 @@ describe('EditSectionComponent', () => {
   const mockCurrentContent = 'Current content';
   const mockEditorValue = 'Editor content value';
 
-  beforeEach(async () => {
+  beforeEach(() => {
     mockEditorInstance = {
-      setShowPrintMargin: jest.fn(),
-      setOptions: jest.fn(),
-      getValue: jest.fn().mockReturnValue(mockEditorValue),
-      insert: jest.fn(),
-      undo: jest.fn(),
-      redo: jest.fn(),
+      setShowPrintMargin: vi.fn(),
+      setOptions: vi.fn(),
+      getValue: vi.fn().mockReturnValue(mockEditorValue),
+      insert: vi.fn(),
+      undo: vi.fn(),
+      redo: vi.fn(),
     };
 
     mockCustomDialogService = CustomDialogServiceMockBuilder.create().withDefaultOpen().build();
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [EditSectionComponent, MockModule(LMarkdownEditorModule)],
       providers: [provideOSFCore(), MockProvider(CustomDialogService, mockCustomDialogService)],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(EditSectionComponent);
     component = fixture.componentInstance;
@@ -95,7 +95,7 @@ describe('EditSectionComponent', () => {
 
   it('should emit contentChange when onPreviewDomChanged is called', () => {
     (component as any).editorInstance = mockEditorInstance;
-    const emitSpy = jest.spyOn(component.contentChange, 'emit');
+    const emitSpy = vi.spyOn(component.contentChange, 'emit');
 
     component.onPreviewDomChanged();
 
@@ -105,7 +105,7 @@ describe('EditSectionComponent', () => {
 
   it('should not emit contentChange when editorInstance is null', () => {
     (component as any).editorInstance = null;
-    const emitSpy = jest.spyOn(component.contentChange, 'emit');
+    const emitSpy = vi.spyOn(component.contentChange, 'emit');
 
     component.onPreviewDomChanged();
 
@@ -114,7 +114,7 @@ describe('EditSectionComponent', () => {
 
   it('should emit saveContent when save is called', () => {
     (component as any).editorInstance = mockEditorInstance;
-    const emitSpy = jest.spyOn(component.saveContent, 'emit');
+    const emitSpy = vi.spyOn(component.saveContent, 'emit');
 
     component.save();
 
@@ -124,7 +124,7 @@ describe('EditSectionComponent', () => {
 
   it('should not emit saveContent when editorInstance is null', () => {
     (component as any).editorInstance = null;
-    const emitSpy = jest.spyOn(component.saveContent, 'emit');
+    const emitSpy = vi.spyOn(component.saveContent, 'emit');
 
     component.save();
 

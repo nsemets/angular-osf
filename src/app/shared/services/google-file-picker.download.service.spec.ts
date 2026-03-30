@@ -34,10 +34,10 @@ describe('Service: GoogleFilePickerDownload', () => {
     const script = documentRef.createElement('script');
     script.src = 'https://apis.google.com/js/api.js';
     documentRef.body.appendChild(script);
-    const appendSpy = jest.spyOn(documentRef.body, 'appendChild');
+    const appendSpy = vi.spyOn(documentRef.body, 'appendChild');
 
-    const next = jest.fn();
-    const complete = jest.fn();
+    const next = vi.fn();
+    const complete = vi.fn();
     service.loadScript().subscribe({ next, complete });
 
     expect(next).toHaveBeenCalledTimes(1);
@@ -48,8 +48,8 @@ describe('Service: GoogleFilePickerDownload', () => {
   it('should append script and complete on successful load', () => {
     setup();
 
-    const next = jest.fn();
-    const complete = jest.fn();
+    const next = vi.fn();
+    const complete = vi.fn();
     service.loadScript().subscribe({ next, complete });
 
     const script = documentRef.querySelector('script[src="https://apis.google.com/js/api.js"]') as HTMLScriptElement;
@@ -64,7 +64,7 @@ describe('Service: GoogleFilePickerDownload', () => {
   it('should emit error when script fails to load', () => {
     setup();
 
-    const error = jest.fn();
+    const error = vi.fn();
     service.loadScript().subscribe({ error });
 
     const script = documentRef.querySelector('script[src="https://apis.google.com/js/api.js"]') as HTMLScriptElement;
@@ -77,7 +77,7 @@ describe('Service: GoogleFilePickerDownload', () => {
 
   it('should complete immediately on second load after successful first load', () => {
     setup();
-    const appendSpy = jest.spyOn(documentRef.body, 'appendChild');
+    const appendSpy = vi.spyOn(documentRef.body, 'appendChild');
 
     service.loadScript().subscribe();
     const script = documentRef.querySelector('script[src="https://apis.google.com/js/api.js"]') as HTMLScriptElement;
@@ -85,8 +85,8 @@ describe('Service: GoogleFilePickerDownload', () => {
     removeGoogleScript();
     appendSpy.mockClear();
 
-    const next = jest.fn();
-    const complete = jest.fn();
+    const next = vi.fn();
+    const complete = vi.fn();
     service.loadScript().subscribe({ next, complete });
 
     expect(next).toHaveBeenCalledTimes(1);
@@ -97,7 +97,7 @@ describe('Service: GoogleFilePickerDownload', () => {
   it('should error when loading gapi modules outside browser', () => {
     setup('server');
 
-    const error = jest.fn();
+    const error = vi.fn();
     service.loadGapiModules().subscribe({ error });
 
     expect(error).toHaveBeenCalledWith('GAPI not available');
@@ -106,7 +106,7 @@ describe('Service: GoogleFilePickerDownload', () => {
   it('should error when gapi is not available in browser', () => {
     setup('browser');
 
-    const error = jest.fn();
+    const error = vi.fn();
     service.loadGapiModules().subscribe({ error });
 
     expect(error).toHaveBeenCalledWith('GAPI not available');
@@ -114,15 +114,15 @@ describe('Service: GoogleFilePickerDownload', () => {
 
   it('should load gapi modules successfully', () => {
     setup('browser');
-    const loadMock = jest.fn(
+    const loadMock = vi.fn(
       (api: string, config: { callback: () => void; onerror: () => void; timeout: number; ontimeout: () => void }) => {
         config.callback();
       }
     );
     window.gapi = { load: loadMock } as unknown as typeof window.gapi;
 
-    const next = jest.fn();
-    const complete = jest.fn();
+    const next = vi.fn();
+    const complete = vi.fn();
     service.loadGapiModules().subscribe({ next, complete });
 
     expect(loadMock).toHaveBeenCalledWith(
@@ -137,14 +137,14 @@ describe('Service: GoogleFilePickerDownload', () => {
 
   it('should emit error when gapi load fails', () => {
     setup('browser');
-    const loadMock = jest.fn(
+    const loadMock = vi.fn(
       (api: string, config: { callback: () => void; onerror: () => void; timeout: number; ontimeout: () => void }) => {
         config.onerror();
       }
     );
     window.gapi = { load: loadMock } as unknown as typeof window.gapi;
 
-    const error = jest.fn();
+    const error = vi.fn();
     service.loadGapiModules().subscribe({ error });
 
     expect(error).toHaveBeenCalledWith('Failed to load GAPI modules');
@@ -152,14 +152,14 @@ describe('Service: GoogleFilePickerDownload', () => {
 
   it('should emit error on gapi load timeout', () => {
     setup('browser');
-    const loadMock = jest.fn(
+    const loadMock = vi.fn(
       (api: string, config: { callback: () => void; onerror: () => void; timeout: number; ontimeout: () => void }) => {
         config.ontimeout();
       }
     );
     window.gapi = { load: loadMock } as unknown as typeof window.gapi;
 
-    const error = jest.fn();
+    const error = vi.fn();
     service.loadGapiModules().subscribe({ error });
 
     expect(error).toHaveBeenCalledWith('GAPI load timeout');

@@ -6,9 +6,9 @@ import {
   FilterOption,
 } from '@osf/shared/models/search/discaverable-filter.model';
 
-import { FilterChipsComponent } from './filter-chips.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { FilterChipsComponent } from './filter-chips.component';
 
 describe('FilterChipsComponent', () => {
   let component: FilterChipsComponent;
@@ -37,11 +37,11 @@ describe('FilterChipsComponent', () => {
     },
   ];
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [FilterChipsComponent],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(FilterChipsComponent);
     component = fixture.componentInstance;
@@ -232,7 +232,7 @@ describe('FilterChipsComponent', () => {
 
   describe('removeFilter', () => {
     it('should emit selectedOptionRemoved with correct data', () => {
-      const emitSpy = jest.fn();
+      const emitSpy = vi.fn();
       component.selectedOptionRemoved.subscribe(emitSpy);
 
       const mockOption: FilterOption = { label: 'Psychology', value: 'psychology', cardSearchResultCount: 50 };
@@ -249,7 +249,7 @@ describe('FilterChipsComponent', () => {
     });
 
     it('should emit with different filter keys', () => {
-      const emitSpy = jest.fn();
+      const emitSpy = vi.fn();
       component.selectedOptionRemoved.subscribe(emitSpy);
 
       const mockOption1: FilterOption = { label: 'Psychology', value: 'psychology', cardSearchResultCount: 50 };

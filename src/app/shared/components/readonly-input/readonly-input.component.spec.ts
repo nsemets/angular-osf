@@ -1,9 +1,9 @@
 import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ReadonlyInputComponent } from './readonly-input.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { ReadonlyInputComponent } from './readonly-input.component';
 
 describe('ReadonlyInputComponent', () => {
   let component: ReadonlyInputComponent;
@@ -12,11 +12,11 @@ describe('ReadonlyInputComponent', () => {
 
   const mockValue = 'test value';
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [ReadonlyInputComponent],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(ReadonlyInputComponent);
     component = fixture.componentInstance;
@@ -65,7 +65,7 @@ describe('ReadonlyInputComponent', () => {
     componentRef.setInput('value', mockValue);
     fixture.detectChanges();
 
-    const deleteSpy = jest.spyOn(component.deleteItem, 'emit');
+    const deleteSpy = vi.spyOn(component.deleteItem, 'emit');
     const removeIcon = fixture.nativeElement.querySelector('.remove-icon');
 
     removeIcon.click();

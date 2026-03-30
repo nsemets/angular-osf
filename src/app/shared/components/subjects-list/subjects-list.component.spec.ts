@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { SubjectsListComponent } from './subjects-list.component';
-
 import { SUBJECTS_MOCK } from '@testing/mocks/subject.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { SubjectsListComponent } from './subjects-list.component';
 
 describe('SubjectsListComponent', () => {
   let component: SubjectsListComponent;
   let fixture: ComponentFixture<SubjectsListComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [SubjectsListComponent],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(SubjectsListComponent);
     component = fixture.componentInstance;

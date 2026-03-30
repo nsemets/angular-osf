@@ -2,53 +2,94 @@ import { StateContext } from '@ngxs/store';
 
 import { firstValueFrom } from 'rxjs';
 
-import { handleSectionError } from './state-error.handler'; // adjust path as needed
+import { handleSectionError } from './state-error.handler';
 
 import * as Sentry from '@sentry/angular';
 
-jest.mock('@sentry/angular');
+vi.mock('@sentry/angular', () => ({ captureException: vi.fn() }));
 
-describe('Helper: State Error Handler', () => {
-  interface TestState {
-    mySection: {
-      isLoading: boolean;
-      isSubmitting: boolean;
-      error?: string;
-      otherField?: string;
-    };
-  }
+interface TestSectionState {
+  data: string[];
+  isLoading: boolean;
+  isSubmitting?: boolean;
+  error: string | null;
+}
 
-  it('should patch the state and throw the error', async () => {
-    const patchState = jest.fn();
-    const ctx: StateContext<TestState> = {
-      getState: () => ({
-        mySection: {
-          isLoading: true,
-          isSubmitting: true,
-          otherField: 'someValue',
-        },
-      }),
+interface TestStateModel {
+  sectionA: TestSectionState;
+  sectionB: TestSectionState;
+}
+
+describe('handleSectionError', () => {
+  const baseState: TestStateModel = {
+    sectionA: {
+      data: ['a'],
+      isLoading: true,
+      isSubmitting: true,
+      error: null,
+    },
+    sectionB: {
+      data: ['b'],
+      isLoading: true,
+      isSubmitting: true,
+      error: null,
+    },
+  };
+
+  let patchState: ReturnType<typeof vi.fn>;
+  let getState: ReturnType<typeof vi.fn>;
+  let ctx: StateContext<TestStateModel>;
+
+  beforeEach(() => {
+    patchState = vi.fn();
+    getState = vi.fn().mockReturnValue(baseState);
+    vi.mocked(Sentry.captureException).mockReset();
+    ctx = {
+      getState,
       patchState,
-      setState: jest.fn(),
-      dispatch: jest.fn(),
-    };
+    } as unknown as StateContext<TestStateModel>;
+  });
 
-    const error = new Error('Something went wrong');
+  it('should capture exception and patch only selected section', () => {
+    const error = new Error('Section failed');
+    vi.mocked(Sentry.captureException).mockReturnValue('event-id');
 
-    const result$ = handleSectionError(ctx, 'mySection', error);
-
-    expect(patchState).toHaveBeenCalledWith({
-      mySection: {
-        isLoading: false,
-        isSubmitting: false,
-        error: 'Something went wrong',
-        otherField: 'someValue',
-      },
-    });
+    handleSectionError(ctx, 'sectionA', error);
 
     expect(Sentry.captureException).toHaveBeenCalledWith(error, {
-      tags: { feature: 'state error section: mySection', 'state.section': 'mySection' },
+      tags: {
+        'state.section': 'sectionA',
+        feature: 'state error section: sectionA',
+      },
     });
-    await expect(firstValueFrom(result$)).rejects.toThrow('Something went wrong');
+    expect(patchState).toHaveBeenCalledWith({
+      sectionA: {
+        data: ['a'],
+        isLoading: false,
+        isSubmitting: false,
+        error: 'Section failed',
+      },
+    });
+  });
+
+  it('should preserve existing section data while updating error flags', () => {
+    const error = new Error('Another failure');
+
+    handleSectionError(ctx, 'sectionB', error);
+
+    expect(patchState).toHaveBeenCalledWith({
+      sectionB: {
+        data: ['b'],
+        isLoading: false,
+        isSubmitting: false,
+        error: 'Another failure',
+      },
+    });
+  });
+
+  it('should return observable that rethrows the same error', async () => {
+    const error = new Error('Rethrow me');
+
+    await expect(firstValueFrom(handleSectionError(ctx, 'sectionA', error))).rejects.toThrow('Rethrow me');
   });
 });

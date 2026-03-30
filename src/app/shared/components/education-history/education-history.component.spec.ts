@@ -4,20 +4,20 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MonthYearPipe } from '@osf/shared/pipes/month-year.pipe';
 
-import { EducationHistoryComponent } from './education-history.component';
-
 import { MOCK_EDUCATION } from '@testing/mocks/user-employment-education.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { EducationHistoryComponent } from './education-history.component';
 
 describe('EducationHistoryComponent', () => {
   let component: EducationHistoryComponent;
   let fixture: ComponentFixture<EducationHistoryComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [EducationHistoryComponent, MockPipe(MonthYearPipe)],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(EducationHistoryComponent);
     component = fixture.componentInstance;

@@ -3,10 +3,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ResourceType } from '@shared/enums/resource-type.enum';
 import { ResourceModel } from '@shared/models/search/resource.model';
 
-import { PreprintSecondaryMetadataComponent } from './preprint-secondary-metadata.component';
-
 import { MOCK_RESOURCE } from '@testing/mocks/resource.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { PreprintSecondaryMetadataComponent } from './preprint-secondary-metadata.component';
 
 describe('PreprintSecondaryMetadataComponent', () => {
   let component: PreprintSecondaryMetadataComponent;
@@ -17,11 +17,11 @@ describe('PreprintSecondaryMetadataComponent', () => {
     resourceType: ResourceType.Preprint,
   };
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [PreprintSecondaryMetadataComponent],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(PreprintSecondaryMetadataComponent);
     component = fixture.componentInstance;

@@ -2,20 +2,20 @@ import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { ContributorsListShortenerComponent } from './contributors-list-shortener.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { ContributorsListShortenerComponent } from './contributors-list-shortener.component';
 
 describe('ContributorsListShortenerComponent', () => {
   let component: ContributorsListShortenerComponent;
   let fixture: ComponentFixture<ContributorsListShortenerComponent>;
   let componentRef: ComponentRef<ContributorsListShortenerComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [ContributorsListShortenerComponent],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(ContributorsListShortenerComponent);
     component = fixture.componentInstance;

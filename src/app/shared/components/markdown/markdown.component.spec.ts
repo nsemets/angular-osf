@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MarkdownComponent } from './markdown.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { MarkdownComponent } from './markdown.component';
 
 describe('MarkdownComponent', () => {
   let component: MarkdownComponent;
   let fixture: ComponentFixture<MarkdownComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MarkdownComponent],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(MarkdownComponent);
     component = fixture.componentInstance;

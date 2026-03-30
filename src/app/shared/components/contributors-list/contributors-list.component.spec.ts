@@ -44,7 +44,7 @@ describe('ContributorsListComponent', () => {
   });
 
   it('should emit load more event', () => {
-    const emitSpy = jest.spyOn(component.loadMoreContributors, 'emit');
+    const emitSpy = vi.spyOn(component.loadMoreContributors, 'emit');
     component.loadMoreContributors.emit();
     expect(emitSpy).toHaveBeenCalled();
   });

@@ -7,12 +7,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { WikiSelectors } from '@osf/shared/stores/wiki';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+import { provideMockStore } from '@testing/providers/store-provider.mock';
+
 import { TextInputComponent } from '../../text-input/text-input.component';
 
 import { AddWikiDialogComponent } from './add-wiki-dialog.component';
-
-import { provideOSFCore } from '@testing/osf.testing.provider';
-import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('AddWikiDialogComponent', () => {
   let component: AddWikiDialogComponent;
@@ -24,12 +24,7 @@ describe('AddWikiDialogComponent', () => {
       providers: [
         provideOSFCore(),
         provideMockStore({
-          signals: [
-            {
-              selector: WikiSelectors.getWikiSubmitting,
-              value: false,
-            },
-          ],
+          signals: [{ selector: WikiSelectors.getWikiSubmitting, value: false }],
         }),
         MockProvider(DynamicDialogRef),
         MockProvider(DynamicDialogConfig, {
@@ -85,7 +80,7 @@ describe('AddWikiDialogComponent', () => {
 
   it('should close dialog on cancel', () => {
     const dialogRef = TestBed.inject(DynamicDialogRef);
-    const closeSpy = jest.spyOn(dialogRef, 'close');
+    const closeSpy = vi.spyOn(dialogRef, 'close');
 
     dialogRef.close();
 
@@ -96,8 +91,8 @@ describe('AddWikiDialogComponent', () => {
     const dialogRef = TestBed.inject(DynamicDialogRef);
     const toastService = TestBed.inject(ToastService);
 
-    const closeSpy = jest.spyOn(dialogRef, 'close');
-    const showSuccessSpy = jest.spyOn(toastService, 'showSuccess');
+    const closeSpy = vi.spyOn(dialogRef, 'close');
+    const showSuccessSpy = vi.spyOn(toastService, 'showSuccess');
 
     component.addWikiForm.patchValue({ name: '' });
 
@@ -111,8 +106,8 @@ describe('AddWikiDialogComponent', () => {
     const dialogRef = TestBed.inject(DynamicDialogRef);
     const toastService = TestBed.inject(ToastService);
 
-    const closeSpy = jest.spyOn(dialogRef, 'close');
-    const showSuccessSpy = jest.spyOn(toastService, 'showSuccess');
+    const closeSpy = vi.spyOn(dialogRef, 'close');
+    const showSuccessSpy = vi.spyOn(toastService, 'showSuccess');
 
     component.addWikiForm.patchValue({ name: '   ' });
 

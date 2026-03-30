@@ -7,11 +7,11 @@ import { provideRouter } from '@angular/router';
 import { AddonFormControls } from '@osf/shared/enums/addon-form-controls.enum';
 import { AddonFormService } from '@shared/services/addons/addon-form.service';
 
-import { AddonSetupAccountFormComponent } from './addon-setup-account-form.component';
-
 import { MOCK_ADDON } from '@testing/mocks/addon.mock';
 import { MOCK_USER } from '@testing/mocks/data.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { AddonSetupAccountFormComponent } from './addon-setup-account-form.component';
 
 describe('AddonSetupAccountFormComponent', () => {
   let component: AddonSetupAccountFormComponent;
@@ -19,8 +19,8 @@ describe('AddonSetupAccountFormComponent', () => {
   let addonFormService: AddonFormService;
 
   const mockAddonFormService = {
-    initializeForm: jest.fn(),
-    generateAuthorizedAddonPayload: jest.fn(),
+    initializeForm: vi.fn(),
+    generateAuthorizedAddonPayload: vi.fn(),
   };
 
   beforeEach(() => {
@@ -50,10 +50,10 @@ describe('AddonSetupAccountFormComponent', () => {
       [AddonFormControls.SecretKey]: new FormControl('test-secret'),
     });
 
-    jest.spyOn(addonFormService, 'initializeForm').mockReturnValue(mockForm as any);
-    jest.spyOn(addonFormService, 'generateAuthorizedAddonPayload').mockReturnValue(mockPayload as any);
+    vi.spyOn(addonFormService, 'initializeForm').mockReturnValue(mockForm as any);
+    vi.spyOn(addonFormService, 'generateAuthorizedAddonPayload').mockReturnValue(mockPayload as any);
 
-    const formSubmitSpy = jest.spyOn(component.formSubmit, 'emit');
+    const formSubmitSpy = vi.spyOn(component.formSubmit, 'emit');
 
     (component as any).handleSubmit();
 
@@ -74,8 +74,8 @@ describe('AddonSetupAccountFormComponent', () => {
     });
     mockForm.setErrors({ invalid: true });
 
-    jest.spyOn(addonFormService, 'initializeForm').mockReturnValue(mockForm as any);
-    const formSubmitSpy = jest.spyOn(component.formSubmit, 'emit');
+    vi.spyOn(addonFormService, 'initializeForm').mockReturnValue(mockForm as any);
+    const formSubmitSpy = vi.spyOn(component.formSubmit, 'emit');
 
     (component as any).handleSubmit();
 
@@ -83,7 +83,7 @@ describe('AddonSetupAccountFormComponent', () => {
   });
 
   it('should emit backClick event when handleBack is called', () => {
-    const backClickSpy = jest.spyOn(component.backClick, 'emit');
+    const backClickSpy = vi.spyOn(component.backClick, 'emit');
 
     (component as any).handleBack();
 

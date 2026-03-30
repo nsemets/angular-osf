@@ -11,11 +11,11 @@ import { CustomConfirmationService } from '@osf/shared/services/custom-confirmat
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { ComponentWiki } from '@osf/shared/stores/wiki';
 
-import { WikiListComponent } from './wiki-list.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomConfirmationServiceMockBuilder } from '@testing/providers/custom-confirmation-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
+
+import { WikiListComponent } from './wiki-list.component';
 
 describe('WikiListComponent', () => {
   let component: WikiListComponent;
@@ -42,11 +42,11 @@ describe('WikiListComponent', () => {
     },
   ];
 
-  beforeEach(async () => {
+  beforeEach(() => {
     mockCustomConfirmationService = CustomConfirmationServiceMockBuilder.create().build();
     mockRouter = RouterMockBuilder.create().withUrl('/project/abc123/wiki').build();
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [WikiListComponent],
       providers: [
         provideOSFCore(),
@@ -54,7 +54,7 @@ describe('WikiListComponent', () => {
         MockProvider(CustomConfirmationService, mockCustomConfirmationService),
         MockProvider(Router, mockRouter),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(WikiListComponent);
     component = fixture.componentInstance;
@@ -247,7 +247,7 @@ describe('WikiListComponent', () => {
     fixture.componentRef.setInput('componentsList', []);
     fixture.detectChanges();
 
-    const emitSpy = jest.spyOn(component.deleteWiki, 'emit');
+    const emitSpy = vi.spyOn(component.deleteWiki, 'emit');
 
     component.openDeleteWikiDialog();
 

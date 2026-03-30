@@ -1,13 +1,13 @@
 import { HttpTestingController } from '@angular/common/http/testing';
 import { inject, TestBed } from '@angular/core/testing';
 
-import { AddonsService } from './addons.service';
-
 import { getAddonsAuthorizedStorageData } from '@testing/data/addons/addons.authorized-storage.data';
 import { getConfiguredAddonsData } from '@testing/data/addons/addons.configured.data';
 import { getAddonsExternalStorageData } from '@testing/data/addons/addons.external-storage.data';
 import { provideOSFCore, provideOSFHttp } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
+
+import { AddonsService } from './addons.service';
 
 describe('Service: Addons', () => {
   let service: AddonsService;
