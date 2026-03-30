@@ -13,7 +13,7 @@ import { FileMenuComponent } from '@shared/components/file-menu/file-menu.compon
 import { FileMenuAction, FileMenuFlags } from '@shared/models/files/file-menu-action.model';
 
 import { provideOSFCore } from '@testing/osf.testing.provider';
-import { RouterMock, RouterMockType } from '@testing/providers/router-provider.mock';
+import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
 import { ViewOnlyLinkHelperMock, ViewOnlyLinkHelperMockType } from '@testing/providers/view-only-link-helper.mock';
 
 describe('FileMenuComponent', () => {
@@ -47,7 +47,7 @@ describe('FileMenuComponent', () => {
   }
 
   function setup(overrides: SetupOverrides = {}) {
-    const routerMock: RouterMockType = RouterMock.create().build();
+    const routerMock: RouterMockType = RouterMockBuilder.create().build();
     viewOnlyService = ViewOnlyLinkHelperMock.simple(overrides.hasViewOnly ?? false);
     menuManager = {
       openMenu: vi.fn(),

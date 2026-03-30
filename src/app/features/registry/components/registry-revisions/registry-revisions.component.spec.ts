@@ -4,11 +4,11 @@ import { provideRouter } from '@angular/router';
 import { RegistrationReviewStates } from '@osf/shared/enums/registration-review-states.enum';
 import { RevisionReviewStates } from '@osf/shared/enums/revision-review-states.enum';
 
-import { RegistryRevisionsComponent } from './registry-revisions.component';
-
 import { MOCK_REGISTRATION_OVERVIEW_MODEL } from '@testing/mocks/registration-overview-model.mock';
 import { createMockSchemaResponse } from '@testing/mocks/schema-response.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { RegistryRevisionsComponent } from './registry-revisions.component';
 
 const MOCK_REGISTRY = MOCK_REGISTRATION_OVERVIEW_MODEL;
 const MOCK_RESPONSES = [
@@ -160,7 +160,7 @@ describe('RegistryRevisionsComponent', () => {
 
   it('should emit openRevision on emitOpenRevision', () => {
     const { component } = setup();
-    const spy = jest.fn();
+    const spy = vi.fn();
     component.openRevision.subscribe(spy);
 
     component.emitOpenRevision(1);
@@ -170,7 +170,7 @@ describe('RegistryRevisionsComponent', () => {
 
   it('should emit continueUpdate on continueUpdateHandler', () => {
     const { component } = setup();
-    const spy = jest.fn();
+    const spy = vi.fn();
     component.continueUpdate.subscribe(spy);
 
     component.continueUpdateHandler();

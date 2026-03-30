@@ -2,6 +2,8 @@ import { Store } from '@ngxs/store';
 
 import { MockProvider } from 'ng-mocks';
 
+import { Mock } from 'vitest';
+
 import { PLATFORM_ID, Provider } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
@@ -18,10 +20,6 @@ import { MetaTagsBuilderService } from '@osf/shared/services/meta-tags-builder.s
 import { ContributorsSelectors } from '@osf/shared/stores/contributors';
 import { CurrentResourceSelectors } from '@shared/stores/current-resource';
 
-import { RegistrySelectors } from './store/registry';
-import { RegistrationOverviewModel } from './models';
-import { RegistryComponent } from './registry.component';
-
 import { MOCK_REGISTRATION_OVERVIEW_MODEL } from '@testing/mocks/registration-overview-model.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { AnalyticsServiceMockFactory } from '@testing/providers/analytics.service.mock';
@@ -33,6 +31,10 @@ import { PrerenderReadyServiceMockFactory } from '@testing/providers/prerender-r
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
+
+import { RegistrySelectors } from './store/registry';
+import { RegistrationOverviewModel } from './models';
+import { RegistryComponent } from './registry.component';
 
 interface SetupOverrides {
   registryId?: string;
@@ -139,7 +141,7 @@ describe('RegistryComponent', () => {
 
   it('should map identifiers to null when identifiers are empty', () => {
     const { dataciteService } = setup({ identifiers: [] });
-    const identifiers$ = (dataciteService.logIdentifiableView as jest.Mock).mock.calls[0][0];
+    const identifiers$ = (dataciteService.logIdentifiableView as Mock).mock.calls[0][0];
     let emitted: unknown;
 
     identifiers$.subscribe((value: unknown) => {
@@ -159,7 +161,7 @@ describe('RegistryComponent', () => {
       },
     ];
     const { dataciteService } = setup({ identifiers });
-    const identifiers$ = (dataciteService.logIdentifiableView as jest.Mock).mock.calls[0][0];
+    const identifiers$ = (dataciteService.logIdentifiableView as Mock).mock.calls[0][0];
     let emitted: unknown;
 
     identifiers$.subscribe((value: unknown) => {
@@ -238,7 +240,7 @@ describe('RegistryComponent', () => {
 
   it('should unset helpScout and clear provider on destroy', () => {
     const { component, store, helpScoutService } = setup();
-    jest.spyOn(store, 'dispatch');
+    vi.spyOn(store, 'dispatch');
 
     component.ngOnDestroy();
 
@@ -248,7 +250,7 @@ describe('RegistryComponent', () => {
 
   it('should not dispatch clearCurrentProvider on destroy when not browser', () => {
     const { component, store, helpScoutService } = setup({ platform: 'server' });
-    jest.spyOn(store, 'dispatch').mockClear();
+    vi.spyOn(store, 'dispatch').mockClear();
 
     component.ngOnDestroy();
 

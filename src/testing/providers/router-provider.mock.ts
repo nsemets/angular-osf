@@ -59,15 +59,6 @@ export class RouterMockBuilder {
   }
 }
 
-export const RouterMock = {
-  withUrl(url: string) {
-    return RouterMockBuilder.create().withUrl(url);
-  },
-  create() {
-    return RouterMockBuilder.create();
-  },
-};
-
 export function provideRouterMock(mock?: RouterMockType) {
   return {
     provide: Router,
