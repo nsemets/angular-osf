@@ -7,11 +7,6 @@ import { AddonOperationInvocationService } from '@osf/shared/services/addons/add
 import { AddonsService } from '@osf/shared/services/addons/addons.service';
 import { CslStyleManagerService } from '@osf/shared/services/csl-style-manager.service';
 
-import { AddonTreeItem } from '../../models';
-import { CitationItemComponent } from '../citation-item/citation-item.component';
-
-import { CitationCollectionItemComponent } from './citation-collection-item.component';
-
 import { MOCK_CONFIGURED_ADDON } from '@testing/mocks/configured-addon.mock';
 import { MOCK_COLLECTION_STORAGE_ITEM, MOCK_DOCUMENT_STORAGE_ITEM } from '@testing/mocks/storage-item.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
@@ -19,12 +14,17 @@ import { AddonOperationInvocationServiceMockFactory } from '@testing/providers/a
 import { AddonsServiceMockFactory } from '@testing/providers/addons.service.mock';
 import { CslStyleManagerServiceMockFactory } from '@testing/providers/csl-style-manager.service.mock';
 
+import { AddonTreeItem } from '../../models';
+import { CitationItemComponent } from '../citation-item/citation-item.component';
+
+import { CitationCollectionItemComponent } from './citation-collection-item.component';
+
 describe('CitationCollectionItemComponent', () => {
   let component: CitationCollectionItemComponent;
   let fixture: ComponentFixture<CitationCollectionItemComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [CitationCollectionItemComponent, ...MockComponents(IconComponent, CitationItemComponent)],
       providers: [
         provideOSFCore(),
@@ -41,7 +41,7 @@ describe('CitationCollectionItemComponent', () => {
           useFactory: CslStyleManagerServiceMockFactory,
         },
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(CitationCollectionItemComponent);
     component = fixture.componentInstance;

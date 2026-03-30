@@ -10,6 +10,14 @@ import { LoaderService } from '@osf/shared/services/loader.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { ViewOnlyLinkSelectors } from '@osf/shared/stores/view-only-links';
 
+import { MOCK_VIEW_ONLY_LINK } from '@testing/mocks/view-only-link.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
+import { CustomConfirmationServiceMockBuilder } from '@testing/providers/custom-confirmation-provider.mock';
+import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
+import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
+import { provideMockStore } from '@testing/providers/store-provider.mock';
+import { ToastServiceMockBuilder } from '@testing/providers/toast-provider.mock';
+
 import {
   ProjectSettingNotificationsComponent,
   SettingsAccessRequestsCardComponent,
@@ -21,14 +29,6 @@ import {
 } from './components';
 import { SettingsComponent } from './settings.component';
 import { SettingsSelectors } from './store';
-
-import { MOCK_VIEW_ONLY_LINK } from '@testing/mocks/view-only-link.mock';
-import { provideOSFCore } from '@testing/osf.testing.provider';
-import { CustomConfirmationServiceMockBuilder } from '@testing/providers/custom-confirmation-provider.mock';
-import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
-import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
-import { provideMockStore } from '@testing/providers/store-provider.mock';
-import { ToastServiceMockBuilder } from '@testing/providers/toast-provider.mock';
 
 describe.skip('SettingsComponent', () => {
   let component: SettingsComponent;
@@ -57,7 +57,7 @@ describe.skip('SettingsComponent', () => {
     affiliatedInstitutions: [],
   };
 
-  beforeEach(async () => {
+  beforeEach(() => {
     activatedRouteMock = ActivatedRouteMockBuilder.create().withParams({ id: mockProjectId }).build();
 
     routerMock = RouterMockBuilder.create().build();
@@ -66,7 +66,7 @@ describe.skip('SettingsComponent', () => {
 
     customConfirmationServiceMock = CustomConfirmationServiceMockBuilder.create().build();
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [
         SettingsComponent,
         ...MockComponents(
@@ -100,7 +100,7 @@ describe.skip('SettingsComponent', () => {
           ],
         }),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(SettingsComponent);
     component = fixture.componentInstance;

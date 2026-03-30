@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SettingsStorageLocationCardComponent } from './settings-storage-location-card.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { SettingsStorageLocationCardComponent } from './settings-storage-location-card.component';
 
 describe('SettingsStorageLocationCardComponent', () => {
   let component: SettingsStorageLocationCardComponent;
@@ -11,11 +11,11 @@ describe('SettingsStorageLocationCardComponent', () => {
   const mockLocation = 'Location Test';
   const mockLocationText = 'Location Text Test';
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [SettingsStorageLocationCardComponent],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(SettingsStorageLocationCardComponent);
     component = fixture.componentInstance;

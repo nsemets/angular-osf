@@ -2,6 +2,7 @@ import { Store } from '@ngxs/store';
 
 import { MockComponents } from 'ng-mocks';
 
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { TablePageEvent } from 'primeng/table';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -13,10 +14,6 @@ import { MyResourcesItem } from '@osf/shared/models/my-resources/my-resources.mo
 import { MyResourcesSelectors } from '@osf/shared/stores/my-resources';
 import { NodeLinksSelectors } from '@osf/shared/stores/node-links';
 
-import { ProjectOverviewSelectors } from '../../store';
-
-import { LinkResourceDialogComponent } from './link-resource-dialog.component';
-
 import {
   MOCK_MY_RESOURCES_ITEM_PROJECT,
   MOCK_MY_RESOURCES_ITEM_PROJECT_PRIVATE,
@@ -24,14 +21,18 @@ import {
 } from '@testing/mocks/my-resources.mock';
 import { MOCK_NODE_WITH_ADMIN } from '@testing/mocks/node.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
-import { DynamicDialogRefMock } from '@testing/providers/dynamic-dialog-ref.mock';
+import { provideDynamicDialogRefMock } from '@testing/providers/dynamic-dialog-ref.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
+
+import { ProjectOverviewSelectors } from '../../store';
+
+import { LinkResourceDialogComponent } from './link-resource-dialog.component';
 
 describe('LinkResourceDialogComponent', () => {
   let component: LinkResourceDialogComponent;
   let fixture: ComponentFixture<LinkResourceDialogComponent>;
   let store: Store;
-  let dialogRef: { close: jest.Mock };
+  let dialogRef: DynamicDialogRef;
 
   const mockProjects: MyResourcesItem[] = [MOCK_MY_RESOURCES_ITEM_PROJECT, MOCK_MY_RESOURCES_ITEM_PROJECT_PRIVATE];
 
@@ -41,10 +42,8 @@ describe('LinkResourceDialogComponent', () => {
 
   const mockCurrentProject = { ...MOCK_NODE_WITH_ADMIN, id: 'current-project-id' };
 
-  beforeEach(async () => {
-    dialogRef = { close: jest.fn() };
-
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [LinkResourceDialogComponent, ...MockComponents(SearchInputComponent)],
       providers: [
         provideOSFCore(),
@@ -61,13 +60,14 @@ describe('LinkResourceDialogComponent', () => {
             { selector: ProjectOverviewSelectors.getProject, value: mockCurrentProject },
           ],
         }),
-        { provide: DynamicDialogRefMock.provide, useValue: dialogRef },
+        provideDynamicDialogRefMock(),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(LinkResourceDialogComponent);
     component = fixture.componentInstance;
     store = TestBed.inject(Store);
+    dialogRef = TestBed.inject(DynamicDialogRef);
     fixture.detectChanges();
   });
 
@@ -130,7 +130,7 @@ describe('LinkResourceDialogComponent', () => {
   });
 
   it('should update currentPage and trigger search', () => {
-    const dispatchSpy = jest.spyOn(store, 'dispatch');
+    const dispatchSpy = vi.spyOn(store, 'dispatch');
     const event: TablePageEvent = {
       first: 6,
       rows: 6,
@@ -156,7 +156,7 @@ describe('LinkResourceDialogComponent', () => {
   });
 
   it('should trigger search when searchMode changes', () => {
-    const dispatchSpy = jest.spyOn(store, 'dispatch');
+    const dispatchSpy = vi.spyOn(store, 'dispatch');
 
     component.onSearchModeChange(ResourceSearchMode.All);
 
@@ -164,7 +164,7 @@ describe('LinkResourceDialogComponent', () => {
   });
 
   it('should trigger search when resourceType changes', () => {
-    const dispatchSpy = jest.spyOn(store, 'dispatch');
+    const dispatchSpy = vi.spyOn(store, 'dispatch');
 
     component.onObjectTypeChange(ResourceType.Registration);
 
@@ -172,7 +172,7 @@ describe('LinkResourceDialogComponent', () => {
   });
 
   it('should handle page change with zero first value', () => {
-    const dispatchSpy = jest.spyOn(store, 'dispatch');
+    const dispatchSpy = vi.spyOn(store, 'dispatch');
     const event: TablePageEvent = {
       first: 0,
       rows: 6,

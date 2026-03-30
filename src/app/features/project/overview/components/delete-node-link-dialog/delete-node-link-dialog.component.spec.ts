@@ -4,16 +4,13 @@ import { MockProvider } from 'ng-mocks';
 
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
+import { Mock } from 'vitest';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NodeModel } from '@osf/shared/models/nodes/base-node.model';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { DeleteNodeLink, NodeLinksSelectors } from '@osf/shared/stores/node-links';
-
-import { ProjectOverviewModel } from '../../models';
-import { ProjectOverviewSelectors } from '../../store';
-
-import { DeleteNodeLinkDialogComponent } from './delete-node-link-dialog.component';
 
 import { MOCK_NODE_WITH_ADMIN } from '@testing/mocks/node.mock';
 import { MOCK_PROJECT_OVERVIEW } from '@testing/mocks/project-overview.mock';
@@ -26,6 +23,11 @@ import {
   SignalOverride,
 } from '@testing/providers/store-provider.mock';
 import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
+
+import { ProjectOverviewModel } from '../../models';
+import { ProjectOverviewSelectors } from '../../store';
+
+import { DeleteNodeLinkDialogComponent } from './delete-node-link-dialog.component';
 
 interface SetupOverrides extends BaseSetupOverrides {
   currentLink?: NodeModel | null;
@@ -86,7 +88,7 @@ describe('DeleteNodeLinkDialogComponent', () => {
 
   it('should not dispatch delete action when current link is missing', () => {
     setup({ currentLink: null });
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.handleDeleteNodeLink();
 
@@ -99,7 +101,7 @@ describe('DeleteNodeLinkDialogComponent', () => {
     setup({
       selectorOverrides: [{ selector: ProjectOverviewSelectors.getProject, value: null }],
     });
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.handleDeleteNodeLink();
 
@@ -110,7 +112,7 @@ describe('DeleteNodeLinkDialogComponent', () => {
 
   it('should dispatch delete action, show success toast and close dialog with hasChanges', () => {
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.handleDeleteNodeLink();
 

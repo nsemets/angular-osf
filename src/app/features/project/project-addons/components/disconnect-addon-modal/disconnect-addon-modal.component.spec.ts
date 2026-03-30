@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DisconnectAddonModalComponent } from './disconnect-addon-modal.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { DisconnectAddonModalComponent } from './disconnect-addon-modal.component';
 
 describe.skip('DisconnectAddonModalComponent', () => {
   let component: DisconnectAddonModalComponent;
   let fixture: ComponentFixture<DisconnectAddonModalComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [DisconnectAddonModalComponent],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(DisconnectAddonModalComponent);
     component = fixture.componentInstance;

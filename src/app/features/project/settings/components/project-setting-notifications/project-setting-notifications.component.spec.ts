@@ -5,13 +5,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SubscriptionEvent } from '@osf/shared/enums/subscriptions/subscription-event.enum';
 import { SubscriptionFrequency } from '@osf/shared/enums/subscriptions/subscription-frequency.enum';
 
+import { MOCK_NOTIFICATION_SUBSCRIPTIONS } from '@testing/mocks/notification-subscription.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 import { NotificationDescriptionPipe } from '../../pipes';
 import { ProjectDetailSettingAccordionComponent } from '../project-detail-setting-accordion/project-detail-setting-accordion.component';
 
 import { ProjectSettingNotificationsComponent } from './project-setting-notifications.component';
-
-import { MOCK_NOTIFICATION_SUBSCRIPTIONS } from '@testing/mocks/notification-subscription.mock';
-import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('ProjectSettingNotificationsComponent', () => {
   let component: ProjectSettingNotificationsComponent;
@@ -19,15 +19,15 @@ describe('ProjectSettingNotificationsComponent', () => {
 
   const mockNotifications = MOCK_NOTIFICATION_SUBSCRIPTIONS;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [
         ProjectSettingNotificationsComponent,
         MockComponent(ProjectDetailSettingAccordionComponent),
         MockPipe(NotificationDescriptionPipe),
       ],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(ProjectSettingNotificationsComponent);
     component = fixture.componentInstance;
@@ -78,7 +78,7 @@ describe('ProjectSettingNotificationsComponent', () => {
   });
 
   it('should emit notification value change when changeEmittedValue is called', () => {
-    jest.spyOn(component.notificationEmitValue, 'emit');
+    vi.spyOn(component.notificationEmitValue, 'emit');
     fixture.componentRef.setInput('notifications', mockNotifications);
     fixture.detectChanges();
 
@@ -93,7 +93,7 @@ describe('ProjectSettingNotificationsComponent', () => {
   });
 
   it('should not emit when allAccordionData is undefined', () => {
-    jest.spyOn(component.notificationEmitValue, 'emit');
+    vi.spyOn(component.notificationEmitValue, 'emit');
     component.allAccordionData = undefined;
 
     const emittedValue = { index: 0, value: SubscriptionFrequency.Never };

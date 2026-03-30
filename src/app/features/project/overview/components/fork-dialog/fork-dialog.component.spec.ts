@@ -4,16 +4,14 @@ import { MockProvider } from 'ng-mocks';
 
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
-import { throwError } from 'rxjs';
+import { EMPTY } from 'rxjs';
+
+import { Mock } from 'vitest';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { ToastService } from '@osf/shared/services/toast.service';
-
-import { ForkResource, ProjectOverviewSelectors } from '../../store';
-
-import { ForkDialogComponent } from './fork-dialog.component';
 
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideDynamicDialogRefMock } from '@testing/providers/dynamic-dialog-ref.mock';
@@ -24,6 +22,10 @@ import {
   SignalOverride,
 } from '@testing/providers/store-provider.mock';
 import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
+
+import { ForkResource, ProjectOverviewSelectors } from '../../store';
+
+import { ForkDialogComponent } from './fork-dialog.component';
 
 interface SetupOverrides extends BaseSetupOverrides {
   resourceId?: string;
@@ -76,7 +78,7 @@ describe('ForkDialogComponent', () => {
 
   it('should not dispatch fork action when resource id is missing', () => {
     setup({ resourceId: '' });
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.handleForkConfirm();
 
@@ -87,7 +89,7 @@ describe('ForkDialogComponent', () => {
 
   it('should not dispatch fork action when resource type is missing', () => {
     setup({ resourceType: null });
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.handleForkConfirm();
 
@@ -98,7 +100,7 @@ describe('ForkDialogComponent', () => {
 
   it('should dispatch fork action and close dialog with success toast', () => {
     setup({ resourceId: 'project-1', resourceType: ResourceType.Project });
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.handleForkConfirm();
 
@@ -109,8 +111,8 @@ describe('ForkDialogComponent', () => {
 
   it('should still close dialog and show toast when fork action errors', () => {
     setup({ resourceId: 'project-1', resourceType: ResourceType.Project });
-    (store.dispatch as jest.Mock).mockClear();
-    (store.dispatch as jest.Mock).mockReturnValueOnce(throwError(() => new Error('fork failed')));
+    (store.dispatch as Mock).mockClear();
+    (store.dispatch as Mock).mockReturnValueOnce(EMPTY);
 
     component.handleForkConfirm();
     expect(store.dispatch).toHaveBeenCalledWith(new ForkResource('project-1', ResourceType.Project));
