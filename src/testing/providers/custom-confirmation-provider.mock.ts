@@ -1,11 +1,11 @@
+import { Mock } from 'vitest';
+
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import {
   AcceptConfirmationOptions,
   ContinueConfirmationOptions,
   DeleteConfirmationOptions,
 } from '@shared/models/confirmation-options.model';
-
-import { type Mock, vi } from 'vitest';
 
 type ConfirmDeleteFn = (options: DeleteConfirmationOptions) => void;
 type ConfirmAcceptFn = (options: AcceptConfirmationOptions) => void;

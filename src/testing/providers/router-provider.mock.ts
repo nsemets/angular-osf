@@ -1,8 +1,8 @@
 import { Observable, Subject } from 'rxjs';
 
-import { Router, UrlTree } from '@angular/router';
+import { Mock } from 'vitest';
 
-import { type Mock, vi } from 'vitest';
+import { Router, UrlTree } from '@angular/router';
 
 export type RouterMockType = Partial<Router> & {
   events: Observable<any>;

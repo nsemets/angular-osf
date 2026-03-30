@@ -1,6 +1,6 @@
-import { PrerenderReadyService } from '@core/services/prerender-ready.service';
-
 import { Mocked } from 'vitest';
+
+import { PrerenderReadyService } from '@core/services/prerender-ready.service';
 
 export function PrerenderReadyServiceMockFactory() {
   return {

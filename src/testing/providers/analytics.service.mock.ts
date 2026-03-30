@@ -1,8 +1,8 @@
 import { of } from 'rxjs';
 
-import { AnalyticsService } from '@osf/shared/services/analytics.service';
-
 import { Mocked } from 'vitest';
+
+import { AnalyticsService } from '@osf/shared/services/analytics.service';
 
 export function AnalyticsServiceMockFactory() {
   return {

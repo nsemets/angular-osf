@@ -1,9 +1,9 @@
 import { of } from 'rxjs';
 
+import { Mocked } from 'vitest';
+
 import { AddonsService } from '@osf/shared/services/addons/addons.service';
 import { OperationInvocation } from '@shared/models/addons/operation-invocation.model';
-
-import { Mocked } from 'vitest';
 
 export function AddonsServiceMockFactory() {
   return {

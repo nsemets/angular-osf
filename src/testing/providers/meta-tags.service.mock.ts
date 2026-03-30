@@ -1,6 +1,6 @@
-import { MetaTagsService } from '@osf/shared/services/meta-tags.service';
-
 import { Mocked } from 'vitest';
+
+import { MetaTagsService } from '@osf/shared/services/meta-tags.service';
 
 export function MetaTagsServiceMockFactory() {
   return {

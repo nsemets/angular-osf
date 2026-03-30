@@ -1,6 +1,6 @@
-import { BrandService } from '@osf/shared/services/brand.service';
-
 import { Mock } from 'vitest';
+
+import { BrandService } from '@osf/shared/services/brand.service';
 
 export type BrandServiceMockType = Partial<BrandService> & {
   applyBranding: Mock;

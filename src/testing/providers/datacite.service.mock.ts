@@ -1,8 +1,8 @@
 import { of } from 'rxjs';
 
-import { DataciteService } from '@osf/shared/services/datacite/datacite.service';
-
 import { Mock } from 'vitest';
+
+import { DataciteService } from '@osf/shared/services/datacite/datacite.service';
 
 export type DataciteServiceMockType = Partial<DataciteService> & {
   logIdentifiableView: Mock;

@@ -1,6 +1,6 @@
-import { HeaderStyleService } from '@osf/shared/services/header-style.service';
-
 import { Mock } from 'vitest';
+
+import { HeaderStyleService } from '@osf/shared/services/header-style.service';
 
 export type HeaderStyleServiceMockType = Partial<HeaderStyleService> & {
   applyHeaderStyles: Mock;

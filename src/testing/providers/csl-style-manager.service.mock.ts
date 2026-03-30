@@ -1,9 +1,9 @@
 import { of } from 'rxjs';
 
+import { Mocked } from 'vitest';
+
 import { StorageItem } from '@osf/shared/models/addons/storage-item.model';
 import { CslStyleManagerService } from '@osf/shared/services/csl-style-manager.service';
-
-import { Mocked } from 'vitest';
 
 export function CslStyleManagerServiceMockFactory() {
   return {

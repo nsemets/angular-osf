@@ -1,6 +1,6 @@
-import { BrowserTabService } from '@osf/shared/services/browser-tab.service';
-
 import { Mock } from 'vitest';
+
+import { BrowserTabService } from '@osf/shared/services/browser-tab.service';
 
 export type BrowserTabServiceMockType = Partial<BrowserTabService> & {
   updateTabStyles: Mock;

@@ -1,6 +1,6 @@
-import { ToastService } from '@osf/shared/services/toast.service';
+import { Mock } from 'vitest';
 
-import { type Mock, vi } from 'vitest';
+import { ToastService } from '@osf/shared/services/toast.service';
 
 type ToastFn = (...args: any[]) => void;
 

@@ -1,8 +1,8 @@
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
-import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
+import { Mock } from 'vitest';
 
-import { type Mock, vi } from 'vitest';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 
 type OpenFn = (component: any, config?: Partial<DynamicDialogConfig>) => DynamicDialogRef;
 

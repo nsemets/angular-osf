@@ -1,8 +1,8 @@
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
-import { Type } from '@angular/core';
-
 import { type Mock, vi } from 'vitest';
+
+import { Type } from '@angular/core';
 
 type OpenFn = (component: Type<any>, config?: any) => DynamicDialogRef<any>;
 type GetInstanceFn = (ref: DynamicDialogRef<any>) => any;

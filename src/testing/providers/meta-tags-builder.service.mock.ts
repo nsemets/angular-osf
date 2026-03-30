@@ -1,6 +1,6 @@
-import { MetaTagsBuilderService } from '@osf/shared/services/meta-tags-builder.service';
-
 import { Mocked } from 'vitest';
+
+import { MetaTagsBuilderService } from '@osf/shared/services/meta-tags-builder.service';
 
 type MetaTagsBuilderMethods =
   | 'buildProjectMetaTagsData'

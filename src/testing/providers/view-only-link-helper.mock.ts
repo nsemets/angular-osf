@@ -1,6 +1,6 @@
-import { ViewOnlyLinkHelperService } from '@osf/shared/services/view-only-link-helper.service';
-
 import { Mock } from 'vitest';
+
+import { ViewOnlyLinkHelperService } from '@osf/shared/services/view-only-link-helper.service';
 
 export type ViewOnlyLinkHelperMockType = Partial<ViewOnlyLinkHelperService> & {
   hasViewOnlyParam: Mock;
