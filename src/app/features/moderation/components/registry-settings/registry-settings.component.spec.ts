@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
-import { RegistrySettingsComponent } from './registry-settings.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { RegistrySettingsComponent } from './registry-settings.component';
 
 describe('RegistrySettingsComponent', () => {
   let component: RegistrySettingsComponent;

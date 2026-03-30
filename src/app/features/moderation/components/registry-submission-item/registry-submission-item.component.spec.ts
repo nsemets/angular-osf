@@ -5,13 +5,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { DateAgoPipe } from '@osf/shared/pipes/date-ago.pipe';
 
+import { MOCK_REGISTRY_MODERATIONS } from '@testing/mocks/registry-moderation.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 import { SubmissionReviewStatus } from '../../enums';
 import { RegistryModeration } from '../../models';
 
 import { RegistrySubmissionItemComponent } from './registry-submission-item.component';
-
-import { MOCK_REGISTRY_MODERATIONS } from '@testing/mocks/registry-moderation.mock';
-import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('RegistrySubmissionItemComponent', () => {
   let component: RegistrySubmissionItemComponent;
@@ -19,11 +19,11 @@ describe('RegistrySubmissionItemComponent', () => {
 
   const mockSubmission: RegistryModeration = MOCK_REGISTRY_MODERATIONS[0];
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [RegistrySubmissionItemComponent, ...MockComponents(IconComponent), MockPipe(DateAgoPipe)],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(RegistrySubmissionItemComponent);
     component = fixture.componentInstance;

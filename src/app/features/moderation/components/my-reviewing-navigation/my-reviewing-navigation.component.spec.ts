@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
+import { MOCK_PROVIDER } from '@testing/mocks/provider.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 import { PreprintModerationTab } from '../../enums';
 
 import { MyReviewingNavigationComponent } from './my-reviewing-navigation.component';
-
-import { MOCK_PROVIDER } from '@testing/mocks/provider.mock';
-import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('MyReviewingNavigationComponent', () => {
   let component: MyReviewingNavigationComponent;

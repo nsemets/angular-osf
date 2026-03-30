@@ -10,6 +10,12 @@ import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { SelectComponent } from '@osf/shared/components/select/select.component';
 
+import { MOCK_PREPRINT_SUBMISSIONS } from '@testing/mocks/preprint-submission.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
+import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
+import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
+import { provideMockStore } from '@testing/providers/store-provider.mock';
+
 import { PreprintSubmissionsSort, SubmissionReviewStatus } from '../../enums';
 import { PreprintSubmissionModel } from '../../models';
 import {
@@ -20,12 +26,6 @@ import {
 import { PreprintSubmissionItemComponent } from '../preprint-submission-item/preprint-submission-item.component';
 
 import { PreprintSubmissionsComponent } from './preprint-submissions.component';
-
-import { MOCK_PREPRINT_SUBMISSIONS } from '@testing/mocks/preprint-submission.mock';
-import { provideOSFCore } from '@testing/osf.testing.provider';
-import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
-import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
-import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('PreprintSubmissionsComponent', () => {
   let component: PreprintSubmissionsComponent;
@@ -157,7 +157,7 @@ describe('PreprintSubmissionsComponent', () => {
 
   it('should load contributors for a submission', () => {
     const mockItem = mockSubmissions[0];
-    const dispatchSpy = jest.spyOn(store, 'dispatch');
+    const dispatchSpy = vi.spyOn(store, 'dispatch');
 
     component.loadContributors(mockItem);
 
@@ -166,7 +166,7 @@ describe('PreprintSubmissionsComponent', () => {
 
   it('should load more contributors for a submission', () => {
     const mockItem = mockSubmissions[0];
-    const dispatchSpy = jest.spyOn(store, 'dispatch');
+    const dispatchSpy = vi.spyOn(store, 'dispatch');
 
     component.loadMoreContributors(mockItem);
 

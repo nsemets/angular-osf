@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 import { BYTES_IN_MB, FILE_TYPES } from '../../constants';
 
 import { BulkUploadComponent } from './bulk-upload.component';
-
-import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('BulkUploadComponent', () => {
   let component: BulkUploadComponent;
   let fixture: ComponentFixture<BulkUploadComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [BulkUploadComponent],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(BulkUploadComponent);
     component = fixture.componentInstance;

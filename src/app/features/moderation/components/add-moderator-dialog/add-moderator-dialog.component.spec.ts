@@ -5,13 +5,9 @@ import { MockProvider } from 'ng-mocks';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { PaginatorState } from 'primeng/paginator';
 
+import { Mock } from 'vitest';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { AddModeratorType, ModeratorPermission } from '../../enums';
-import { ModeratorAddModel, ModeratorDialogAddModel } from '../../models';
-import { ClearUsers, ModeratorsSelectors, SearchUsers, SearchUsersPageChange } from '../../store/moderators';
-
-import { AddModeratorDialogComponent } from './add-moderator-dialog.component';
 
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideDynamicDialogRefMock } from '@testing/providers/dynamic-dialog-ref.mock';
@@ -21,6 +17,12 @@ import {
   provideMockStore,
   SignalOverride,
 } from '@testing/providers/store-provider.mock';
+
+import { AddModeratorType, ModeratorPermission } from '../../enums';
+import { ModeratorAddModel, ModeratorDialogAddModel } from '../../models';
+import { ClearUsers, ModeratorsSelectors, SearchUsers, SearchUsersPageChange } from '../../store/moderators';
+
+import { AddModeratorDialogComponent } from './add-moderator-dialog.component';
 
 describe('AddModeratorDialogComponent', () => {
   let component: AddModeratorDialogComponent;
@@ -98,7 +100,7 @@ describe('AddModeratorDialogComponent', () => {
 
   it('should dispatch ClearUsers on destroy', () => {
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.ngOnDestroy();
 
@@ -107,7 +109,7 @@ describe('AddModeratorDialogComponent', () => {
 
   it('should dispatch SearchUsers for first page when search term exists', () => {
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
     component.searchControl.setValue('alice');
 
     const pageEvent: PaginatorState = { page: 0, first: 0, rows: 10, pageCount: 2 };
@@ -120,7 +122,7 @@ describe('AddModeratorDialogComponent', () => {
 
   it('should not dispatch first-page search when search term is empty', () => {
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
     component.searchControl.setValue('   ');
 
     const pageEvent: PaginatorState = { page: 0, first: 0, rows: 10, pageCount: 2 };
@@ -131,7 +133,7 @@ describe('AddModeratorDialogComponent', () => {
 
   it('should dispatch SearchUsersPageChange with next link', () => {
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     const pageEvent: PaginatorState = { page: 1, first: 10, rows: 10, pageCount: 2 };
     component.pageChanged(pageEvent);
@@ -143,7 +145,7 @@ describe('AddModeratorDialogComponent', () => {
 
   it('should dispatch SearchUsersPageChange with previous link', () => {
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
     component.currentPage.set(3);
 
     const pageEvent: PaginatorState = { page: 1, first: 10, rows: 10, pageCount: 3 };
@@ -158,7 +160,7 @@ describe('AddModeratorDialogComponent', () => {
     setup({
       selectorOverrides: [{ selector: ModeratorsSelectors.getUsersNextLink, value: null }],
     });
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     const pageEvent: PaginatorState = { page: 1, first: 10, rows: 10, pageCount: 2 };
     component.pageChanged(pageEvent);
@@ -167,34 +169,34 @@ describe('AddModeratorDialogComponent', () => {
   });
 
   it('should debounce search and clear selected users', () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
     component.selectedUsers.set([mockUsers[0]]);
 
     component.searchControl.setValue('john');
-    jest.advanceTimersByTime(500);
+    vi.advanceTimersByTime(500);
 
     expect(store.dispatch).toHaveBeenCalledWith(new SearchUsers('john'));
     expect(component.isInitialState()).toBe(false);
     expect(component.selectedUsers()).toEqual([]);
 
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('should not dispatch duplicate consecutive search terms', () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.searchControl.setValue('same');
-    jest.advanceTimersByTime(500);
+    vi.advanceTimersByTime(500);
     component.searchControl.setValue('same');
-    jest.advanceTimersByTime(500);
+    vi.advanceTimersByTime(500);
 
     expect(store.dispatch).toHaveBeenCalledTimes(1);
     expect(store.dispatch).toHaveBeenCalledWith(new SearchUsers('same'));
 
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 });

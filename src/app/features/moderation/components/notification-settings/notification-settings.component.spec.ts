@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
-import { NotificationSettingsComponent } from './notification-settings.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { NotificationSettingsComponent } from './notification-settings.component';
 
 describe('NotificationSettingsComponent', () => {
   let component: NotificationSettingsComponent;

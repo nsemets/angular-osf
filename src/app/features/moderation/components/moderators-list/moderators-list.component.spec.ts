@@ -13,13 +13,6 @@ import { CustomConfirmationService } from '@osf/shared/services/custom-confirmat
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 
-import { ModeratorPermission } from '../../enums';
-import { ModeratorModel } from '../../models';
-import { ModeratorsSelectors } from '../../store/moderators';
-import { ModeratorsTableComponent } from '../moderators-table/moderators-table.component';
-
-import { ModeratorsListComponent } from './moderators-list.component';
-
 import { MOCK_USER } from '@testing/mocks/data.mock';
 import { MOCK_MODERATORS } from '@testing/mocks/moderator.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
@@ -27,6 +20,13 @@ import { CustomConfirmationServiceMockBuilder } from '@testing/providers/custom-
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
+
+import { ModeratorPermission } from '../../enums';
+import { ModeratorModel } from '../../models';
+import { ModeratorsSelectors } from '../../store/moderators';
+import { ModeratorsTableComponent } from '../moderators-table/moderators-table.component';
+
+import { ModeratorsListComponent } from './moderators-list.component';
 
 describe('ModeratorsListComponent', () => {
   let component: ModeratorsListComponent;
@@ -41,7 +41,7 @@ describe('ModeratorsListComponent', () => {
 
   const mockModerators: ModeratorModel[] = MOCK_MODERATORS;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     mockActivatedRoute = ActivatedRouteMockBuilder.create()
       .withParams({ providerId: mockProviderId })
       .withData({ resourceType: mockResourceType })
@@ -116,7 +116,7 @@ describe('ModeratorsListComponent', () => {
   });
 
   it('should load moderators on initialization', () => {
-    const loadModeratorsSpy = jest.fn();
+    const loadModeratorsSpy = vi.fn();
     component.actions = {
       ...component.actions,
       loadModerators: loadModeratorsSpy,
@@ -128,7 +128,7 @@ describe('ModeratorsListComponent', () => {
   });
 
   it('should set search subscription on initialization', () => {
-    const setSearchSubscriptionSpy = jest.fn();
+    const setSearchSubscriptionSpy = vi.fn();
     (component as any).setSearchSubscription = setSearchSubscriptionSpy;
 
     component.ngOnInit();
@@ -137,10 +137,10 @@ describe('ModeratorsListComponent', () => {
   });
 
   it('should handle search control value changes', () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     fixture.detectChanges();
-    const updateSearchValueSpy = jest.fn();
-    const loadModeratorsSpy = jest.fn().mockReturnValue(of({}));
+    const updateSearchValueSpy = vi.fn();
+    const loadModeratorsSpy = vi.fn().mockReturnValue(of({}));
     component.actions = {
       ...component.actions,
       updateSearchValue: updateSearchValueSpy,
@@ -149,19 +149,19 @@ describe('ModeratorsListComponent', () => {
 
     component.searchControl.setValue('test search');
 
-    jest.advanceTimersByTime(600);
+    vi.advanceTimersByTime(600);
 
     expect(updateSearchValueSpy).toHaveBeenCalledWith('test search');
     expect(loadModeratorsSpy).toHaveBeenCalledWith(mockProviderId, mockResourceType);
 
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('should handle empty search value', () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     fixture.detectChanges();
-    const updateSearchValueSpy = jest.fn();
-    const loadModeratorsSpy = jest.fn().mockReturnValue(of({}));
+    const updateSearchValueSpy = vi.fn();
+    const loadModeratorsSpy = vi.fn().mockReturnValue(of({}));
     component.actions = {
       ...component.actions,
       updateSearchValue: updateSearchValueSpy,
@@ -170,12 +170,12 @@ describe('ModeratorsListComponent', () => {
 
     component.searchControl.setValue('');
 
-    jest.advanceTimersByTime(600);
+    vi.advanceTimersByTime(600);
 
     expect(updateSearchValueSpy).toHaveBeenCalledWith(null);
     expect(loadModeratorsSpy).toHaveBeenCalledWith(mockProviderId, mockResourceType);
 
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('should have actions defined', () => {
