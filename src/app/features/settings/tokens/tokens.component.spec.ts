@@ -8,14 +8,14 @@ import { Router } from '@angular/router';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 
-import { TokenAddEditFormComponent } from './components';
-import { GetScopes } from './store';
-import { TokensComponent } from './tokens.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomDialogServiceMock, CustomDialogServiceMockType } from '@testing/providers/custom-dialog-provider.mock';
 import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
+
+import { TokenAddEditFormComponent } from './components';
+import { GetScopes } from './store';
+import { TokensComponent } from './tokens.component';
 
 interface SetupOverrides {
   url?: string;

@@ -3,12 +3,12 @@ import { inject, TestBed } from '@angular/core/testing';
 
 import { JsonApiResponse } from '@osf/shared/models/common/json-api.model';
 
+import { provideOSFCore, provideOSFHttp } from '@testing/osf.testing.provider';
+import { EnvironmentTokenMock } from '@testing/providers/environment.token.mock';
+
 import { ScopeJsonApi, ScopeModel, TokenGetResponseJsonApi, TokenModel } from '../models';
 
 import { TokensService } from './tokens.service';
-
-import { provideOSFCore, provideOSFHttp } from '@testing/osf.testing.provider';
-import { EnvironmentTokenMock } from '@testing/providers/environment.token.mock';
 
 describe('TokensService', () => {
   let service: TokensService;

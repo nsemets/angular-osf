@@ -10,6 +10,15 @@ import { UserSelectors } from '@osf/core/store/user';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { FetchRegions } from '@osf/shared/stores/regions';
 
+import { MOCK_USER } from '@testing/mocks/data.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
+import {
+  BaseSetupOverrides,
+  mergeSignalOverrides,
+  provideMockStore,
+  SignalOverride,
+} from '@testing/providers/store-provider.mock';
+
 import { AccountSettingsComponent } from './account-settings.component';
 import {
   AffiliatedInstitutionsComponent,
@@ -22,15 +31,6 @@ import {
   TwoFactorAuthComponent,
 } from './components';
 import { GetAccountSettings, GetExternalIdentities, GetUserInstitutions } from './store';
-
-import { MOCK_USER } from '@testing/mocks/data.mock';
-import { provideOSFCore } from '@testing/osf.testing.provider';
-import {
-  BaseSetupOverrides,
-  mergeSignalOverrides,
-  provideMockStore,
-  SignalOverride,
-} from '@testing/providers/store-provider.mock';
 
 describe('AccountSettingsComponent', () => {
   let component: AccountSettingsComponent;

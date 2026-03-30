@@ -9,20 +9,20 @@ import { SelectComponent } from '@osf/shared/components/select/select.component'
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { IS_MEDIUM } from '@osf/shared/helpers/breakpoints.tokens';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 import { EducationComponent, EmploymentComponent, NameComponent, SocialComponent } from './components';
 import { ProfileSettingsComponent } from './profile-settings.component';
-
-import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('ProfileSettingsComponent', () => {
   let component: ProfileSettingsComponent;
   let fixture: ComponentFixture<ProfileSettingsComponent>;
   let isMedium: BehaviorSubject<boolean>;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     isMedium = new BehaviorSubject<boolean>(false);
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [
         ProfileSettingsComponent,
         ...MockComponents(
@@ -35,7 +35,7 @@ describe('ProfileSettingsComponent', () => {
         ),
       ],
       providers: [provideOSFCore(), MockProvider(IS_MEDIUM, isMedium)],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(ProfileSettingsComponent);
     component = fixture.componentInstance;

@@ -2,6 +2,8 @@ import { Store } from '@ngxs/store';
 
 import { MockComponents, MockProvider } from 'ng-mocks';
 
+import { Mock } from 'vitest';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -10,13 +12,11 @@ import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 
-import { TokenAddEditFormComponent } from '../../components';
-import { TokenModel } from '../../models';
-import { DeleteToken, GetTokenById, TokensSelectors } from '../../store';
-
-import { TokenDetailsComponent } from './token-details.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+import {
+  CustomConfirmationServiceMock,
+  CustomConfirmationServiceMockType,
+} from '@testing/providers/custom-confirmation-provider.mock';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
 import {
@@ -27,13 +27,19 @@ import {
 } from '@testing/providers/store-provider.mock';
 import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
 
+import { TokenAddEditFormComponent } from '../../components';
+import { TokenModel } from '../../models';
+import { DeleteToken, GetTokenById, TokensSelectors } from '../../store';
+
+import { TokenDetailsComponent } from './token-details.component';
+
 describe('TokenDetailsComponent', () => {
   let component: TokenDetailsComponent;
   let fixture: ComponentFixture<TokenDetailsComponent>;
   let store: Store;
   let mockRouter: RouterMockType;
   let mockToastService: ToastServiceMockType;
-  let confirmationService: { confirmDelete: jest.Mock };
+  let confirmationService: CustomConfirmationServiceMockType;
 
   const mockToken: TokenModel = {
     id: 'token-1',
@@ -56,7 +62,7 @@ describe('TokenDetailsComponent', () => {
       .build();
     mockRouter = RouterMockBuilder.create().withUrl('/settings/tokens/token-1').build();
     mockToastService = ToastServiceMock.simple();
-    confirmationService = { confirmDelete: jest.fn() };
+    confirmationService = CustomConfirmationServiceMock.simple();
     const signals = mergeSignalOverrides(defaultSignals, overrides.selectorOverrides);
 
     TestBed.configureTestingModule({
@@ -101,7 +107,7 @@ describe('TokenDetailsComponent', () => {
 
   it('should not dispatch getTokenById when token id is missing', () => {
     setup({ routeParams: {} });
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.tokenId.set('');
     component.ngOnInit();
@@ -128,7 +134,7 @@ describe('TokenDetailsComponent', () => {
     setup();
 
     component.deleteToken();
-    const confirmArg = (confirmationService.confirmDelete as jest.Mock).mock.calls[0][0];
+    const confirmArg = (confirmationService.confirmDelete as Mock).mock.calls[0][0];
     confirmArg.onConfirm();
 
     expect(store.dispatch).toHaveBeenCalledWith(new DeleteToken('token-1'));

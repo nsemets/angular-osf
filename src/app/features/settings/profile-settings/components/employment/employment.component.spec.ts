@@ -2,6 +2,8 @@ import { Store } from '@ngxs/store';
 
 import { MockProvider } from 'ng-mocks';
 
+import { Mock } from 'vitest';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UpdateProfileSettingsEmployment, UserSelectors } from '@osf/core/store/user';
@@ -9,8 +11,6 @@ import { Employment } from '@osf/shared/models/user/employment.model';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { LoaderService } from '@osf/shared/services/loader.service';
 import { ToastService } from '@osf/shared/services/toast.service';
-
-import { EmploymentComponent } from './employment.component';
 
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import {
@@ -20,6 +20,8 @@ import {
 import { LoaderServiceMock } from '@testing/providers/loader-service.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
+
+import { EmploymentComponent } from './employment.component';
 
 describe('EmploymentComponent', () => {
   let component: EmploymentComponent;
@@ -145,7 +147,7 @@ describe('EmploymentComponent', () => {
     component.positions.at(0).patchValue({
       institution: '',
     });
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.saveEmployment();
 
@@ -154,7 +156,7 @@ describe('EmploymentComponent', () => {
   });
 
   it('should save employment and show success toast when form is valid', () => {
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.saveEmployment();
 

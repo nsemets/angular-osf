@@ -6,17 +6,13 @@ import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { Subject } from 'rxjs';
 
+import { Mock } from 'vitest';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { LoaderService } from '@osf/shared/services/loader.service';
 import { ToastService } from '@osf/shared/services/toast.service';
-
-import { AccountSettingsSelectors, CancelDeactivationRequest, DeactivateAccount } from '../../store';
-import { CancelDeactivationComponent } from '../cancel-deactivation/cancel-deactivation.component';
-import { DeactivationWarningComponent } from '../deactivation-warning/deactivation-warning.component';
-
-import { DeactivateAccountComponent } from './deactivate-account.component';
 
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomDialogServiceMock, CustomDialogServiceMockType } from '@testing/providers/custom-dialog-provider.mock';
@@ -29,6 +25,12 @@ import {
   SignalOverride,
 } from '@testing/providers/store-provider.mock';
 import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
+
+import { AccountSettingsSelectors, CancelDeactivationRequest, DeactivateAccount } from '../../store';
+import { CancelDeactivationComponent } from '../cancel-deactivation/cancel-deactivation.component';
+import { DeactivationWarningComponent } from '../deactivation-warning/deactivation-warning.component';
+
+import { DeactivateAccountComponent } from './deactivate-account.component';
 
 describe('DeactivateAccountComponent', () => {
   let component: DeactivateAccountComponent;
@@ -100,7 +102,7 @@ describe('DeactivateAccountComponent', () => {
 
   it('should not dispatch deactivate action when dialog closes with false', () => {
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.deactivateAccount();
     (dialogRef.onClose as Subject<boolean>).next(false);
@@ -112,7 +114,7 @@ describe('DeactivateAccountComponent', () => {
 
   it('should dispatch deactivate action and show success when dialog closes with true', () => {
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.deactivateAccount();
     (dialogRef.onClose as Subject<boolean>).next(true);
@@ -138,7 +140,7 @@ describe('DeactivateAccountComponent', () => {
 
   it('should not dispatch cancel action when dialog closes with false', () => {
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.cancelDeactivation();
     (dialogRef.onClose as Subject<boolean>).next(false);
@@ -150,7 +152,7 @@ describe('DeactivateAccountComponent', () => {
 
   it('should dispatch cancel action and show success when dialog closes with true', () => {
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.cancelDeactivation();
     (dialogRef.onClose as Subject<boolean>).next(true);

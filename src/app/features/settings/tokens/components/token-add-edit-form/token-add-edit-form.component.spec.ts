@@ -4,20 +4,17 @@ import { MockProvider } from 'ng-mocks';
 
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
+import { Mock } from 'vitest';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 
-import { ScopeModel, TokenFormControls, TokenModel } from '../../models';
-import { CreateToken, TokensSelectors, UpdateToken } from '../../store';
-import { TokenCreatedDialogComponent } from '../token-created-dialog/token-created-dialog.component';
-
-import { TokenAddEditFormComponent } from './token-add-edit-form.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomDialogServiceMock, CustomDialogServiceMockType } from '@testing/providers/custom-dialog-provider.mock';
+import { provideDynamicDialogRefMock } from '@testing/providers/dynamic-dialog-ref.mock';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
 import {
@@ -27,6 +24,12 @@ import {
   SignalOverride,
 } from '@testing/providers/store-provider.mock';
 import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
+
+import { ScopeModel, TokenFormControls, TokenModel } from '../../models';
+import { CreateToken, TokensSelectors, UpdateToken } from '../../store';
+import { TokenCreatedDialogComponent } from '../token-created-dialog/token-created-dialog.component';
+
+import { TokenAddEditFormComponent } from './token-add-edit-form.component';
 
 interface SetupOverrides extends BaseSetupOverrides {
   isEditMode?: boolean;
@@ -40,7 +43,7 @@ describe('TokenAddEditFormComponent', () => {
   let mockRouter: RouterMockType;
   let mockToastService: ToastServiceMockType;
   let mockCustomDialogService: CustomDialogServiceMockType;
-  let dialogRef: { close: jest.Mock };
+  let dialogRef: DynamicDialogRef;
 
   const tokenFromState: TokenModel = {
     id: 'token-1',
@@ -65,7 +68,7 @@ describe('TokenAddEditFormComponent', () => {
     mockRouter = RouterMockBuilder.create().withUrl('/settings/tokens/token-1').build();
     mockToastService = ToastServiceMock.simple();
     mockCustomDialogService = CustomDialogServiceMock.simple();
-    dialogRef = { close: jest.fn() };
+    dialogRef = TestBed.inject(DynamicDialogRef);
 
     const signals = mergeSignalOverrides(defaultSignals, overrides.selectorOverrides);
 
@@ -77,7 +80,7 @@ describe('TokenAddEditFormComponent', () => {
         MockProvider(Router, mockRouter),
         MockProvider(ToastService, mockToastService),
         MockProvider(CustomDialogService, mockCustomDialogService),
-        MockProvider(DynamicDialogRef, dialogRef),
+        provideDynamicDialogRefMock(),
         provideMockStore({ signals }),
       ],
     });
@@ -138,7 +141,7 @@ describe('TokenAddEditFormComponent', () => {
 
   it('should create token and open created dialog when submitting valid form in create mode', () => {
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.tokenForm.patchValue({
       [TokenFormControls.TokenName]: 'New API Token',
@@ -165,7 +168,7 @@ describe('TokenAddEditFormComponent', () => {
 
   it('should update token and navigate when submitting valid form in edit mode', () => {
     setup({ isEditMode: true, routeParams: { id: 'token-9' } });
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.tokenForm.patchValue({
       [TokenFormControls.TokenName]: 'Updated Token',

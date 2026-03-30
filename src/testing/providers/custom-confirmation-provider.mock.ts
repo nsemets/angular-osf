@@ -26,7 +26,6 @@ export class CustomConfirmationServiceMockBuilder {
     return new CustomConfirmationServiceMockBuilder();
   }
 
-  // 3. Update method signatures
   withConfirmDelete(mockImpl: Mock<ConfirmDeleteFn>): CustomConfirmationServiceMockBuilder {
     this.confirmDeleteMock = mockImpl;
     return this;

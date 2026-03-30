@@ -6,10 +6,10 @@ import { FormControl, FormGroup } from '@angular/forms';
 
 import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
 
-import { EmploymentFormComponent } from './employment-form.component';
-
 import { MOCK_EDUCATION, MOCK_EMPLOYMENT } from '@testing/mocks/user-employment-education.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { EmploymentFormComponent } from './employment-form.component';
 
 describe('EmploymentFormComponent', () => {
   let component: EmploymentFormComponent;
@@ -17,7 +17,7 @@ describe('EmploymentFormComponent', () => {
   let fixture: ComponentFixture<EmploymentFormComponent>;
   let mockFormGroup: FormGroup;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     mockFormGroup = new FormGroup({
       title: new FormControl(MOCK_EMPLOYMENT[0].title),
       institution: new FormControl(MOCK_EDUCATION[0].institution),
@@ -27,10 +27,10 @@ describe('EmploymentFormComponent', () => {
       ongoing: new FormControl(false),
     });
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [EmploymentFormComponent, MockComponent(TextInputComponent)],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(EmploymentFormComponent);
     component = fixture.componentInstance;

@@ -6,16 +6,16 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { NameForm } from '@osf/features/settings/profile-settings/models';
 import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
 
-import { NameFormComponent } from './name-form.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { NameFormComponent } from './name-form.component';
 
 describe('NameFormComponent', () => {
   let component: NameFormComponent;
   let fixture: ComponentFixture<NameFormComponent>;
   let mockForm: FormGroup<NameForm>;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     mockForm = new FormGroup<NameForm>({
       fullName: new FormControl('John Doe', { nonNullable: true }),
       givenName: new FormControl('John', { nonNullable: true }),
@@ -23,10 +23,11 @@ describe('NameFormComponent', () => {
       familyName: new FormControl('Doe', { nonNullable: true }),
       suffix: new FormControl('Jr.', { nonNullable: true }),
     });
-    await TestBed.configureTestingModule({
+
+    TestBed.configureTestingModule({
       imports: [NameFormComponent, MockComponent(TextInputComponent)],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(NameFormComponent);
     component = fixture.componentInstance;
