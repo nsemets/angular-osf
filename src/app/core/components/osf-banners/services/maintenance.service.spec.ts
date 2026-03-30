@@ -3,11 +3,11 @@ import { firstValueFrom } from 'rxjs';
 import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
+import { provideOSFCore, provideOSFHttp } from '@testing/osf.testing.provider';
+
 import { MaintenanceModel } from '../models/maintenance.model';
 
 import { MaintenanceService } from './maintenance.service';
-
-import { provideOSFCore, provideOSFHttp } from '@testing/osf.testing.provider';
 
 describe('MaintenanceService', () => {
   let service: MaintenanceService;

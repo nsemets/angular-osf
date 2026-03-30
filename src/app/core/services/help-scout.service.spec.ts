@@ -8,10 +8,10 @@ import { TestBed } from '@angular/core/testing';
 import { WINDOW } from '@core/provider/window.provider';
 import { UserSelectors } from '@core/store/user';
 
-import { HelpScoutService } from './help-scout.service';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
+
+import { HelpScoutService } from './help-scout.service';
 
 interface DataLayer {
   loggedIn: boolean;

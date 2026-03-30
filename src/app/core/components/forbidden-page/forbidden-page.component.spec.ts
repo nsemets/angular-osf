@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ForbiddenPageComponent } from './forbidden-page.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { ForbiddenPageComponent } from './forbidden-page.component';
 
 describe('ForbiddenPageComponent', () => {
   let component: ForbiddenPageComponent;

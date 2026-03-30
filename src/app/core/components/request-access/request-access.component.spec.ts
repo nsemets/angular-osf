@@ -2,6 +2,8 @@ import { MockProvider } from 'ng-mocks';
 
 import { Observable, of, throwError } from 'rxjs';
 
+import { Mock } from 'vitest';
+
 import { HttpErrorResponse } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,22 +13,23 @@ import { InputLimits } from '@osf/shared/constants/input-limits.const';
 import { RequestAccessService } from '@osf/shared/services/request-access.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 
-import { RequestAccessComponent } from './request-access.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+import { AuthServiceMock, AuthServiceMockType } from '@testing/providers/auth-service.mock';
 import { LoaderServiceMock, provideLoaderServiceMock } from '@testing/providers/loader-service.mock';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
 import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
 
+import { RequestAccessComponent } from './request-access.component';
+
 describe('RequestAccessComponent', () => {
   let fixture: ComponentFixture<RequestAccessComponent>;
   let component: RequestAccessComponent;
   let routerMock: RouterMockType;
-  let requestAccessServiceMock: { requestAccessToProject: jest.Mock };
+  let requestAccessServiceMock: { requestAccessToProject: Mock };
   let loaderServiceMock: LoaderServiceMock;
   let toastServiceMock: ToastServiceMockType;
-  let authServiceMock: { logout: jest.Mock };
+  let authServiceMock: AuthServiceMockType;
 
   function setup(overrides?: {
     routeId?: string;
@@ -34,15 +37,15 @@ describe('RequestAccessComponent', () => {
     requestAccessError?: HttpErrorResponse;
   }) {
     const routeId = overrides?.routeId ?? 'project-1';
-    routerMock = RouterMockBuilder.create().withNavigate(jest.fn().mockResolvedValue(true)).build();
+    routerMock = RouterMockBuilder.create().withNavigate(vi.fn().mockResolvedValue(true)).build();
     loaderServiceMock = new LoaderServiceMock();
     toastServiceMock = ToastServiceMock.simple();
-    authServiceMock = { logout: jest.fn() };
+    authServiceMock = AuthServiceMock.simple();
 
     requestAccessServiceMock = {
       requestAccessToProject: overrides?.requestAccessError
-        ? jest.fn().mockReturnValue(throwError(() => overrides.requestAccessError))
-        : jest.fn().mockReturnValue(overrides?.requestAccessResult ?? of(void 0)),
+        ? vi.fn().mockReturnValue(throwError(() => overrides.requestAccessError))
+        : vi.fn().mockReturnValue(overrides?.requestAccessResult ?? of(void 0)),
     };
 
     const activatedRouteMock = ActivatedRouteMockBuilder.create().withParams({ id: routeId }).build();

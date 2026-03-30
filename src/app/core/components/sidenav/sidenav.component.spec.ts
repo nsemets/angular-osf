@@ -2,11 +2,11 @@ import { MockComponent } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 import { NavMenuComponent } from '../nav-menu/nav-menu.component';
 
 import { SidenavComponent } from './sidenav.component';
-
-import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('SidenavComponent', () => {
   let component: SidenavComponent;

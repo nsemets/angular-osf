@@ -12,11 +12,11 @@ import { CurrentResourceType } from '@osf/shared/enums/resource-type.enum';
 import { CurrentResource } from '@osf/shared/models/current-resource.model';
 import { CurrentResourceSelectors, GetResource } from '@osf/shared/stores/current-resource';
 
-import { isFileGuard } from './is-file.guard';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
+
+import { isFileGuard } from './is-file.guard';
 
 describe('isFileGuard', () => {
   let router: RouterMockType;
@@ -46,7 +46,7 @@ describe('isFileGuard', () => {
       window.history.replaceState({}, '', `/guard-test${browserSearch}`);
     }
 
-    router = RouterMockBuilder.create().withUrl(routerUrl).withNavigate(jest.fn().mockResolvedValue(true)).build();
+    router = RouterMockBuilder.create().withUrl(routerUrl).withNavigate(vi.fn().mockResolvedValue(true)).build();
 
     TestBed.configureTestingModule({
       providers: [

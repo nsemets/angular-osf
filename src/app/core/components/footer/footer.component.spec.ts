@@ -6,9 +6,9 @@ import { provideRouter } from '@angular/router';
 import { SOCIAL_ICONS } from '@core/constants/social-icons.constant';
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 
-import { FooterComponent } from './footer.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { FooterComponent } from './footer.component';
 
 describe('FooterComponent', () => {
   let component: FooterComponent;

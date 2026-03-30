@@ -7,27 +7,25 @@ import { AuthService } from '@core/services/auth.service';
 import { UserSelectors } from '@osf/core/store/user';
 import { UserModel } from '@osf/shared/models/user/user.model';
 
+import { MOCK_USER } from '@testing/mocks/data.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
+import { AuthServiceMock, AuthServiceMockType } from '@testing/providers/auth-service.mock';
+import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
+import { provideMockStore } from '@testing/providers/store-provider.mock';
+
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 
 import { HeaderComponent } from './header.component';
-
-import { MOCK_USER } from '@testing/mocks/data.mock';
-import { provideOSFCore } from '@testing/osf.testing.provider';
-import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
-import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
   let routerMock: RouterMockType;
-  let authServiceMock: { logout: jest.Mock; navigateToSignIn: jest.Mock };
+  let authServiceMock: AuthServiceMockType;
 
   beforeEach(() => {
-    routerMock = RouterMockBuilder.create().withNavigate(jest.fn().mockResolvedValue(true)).build();
-    authServiceMock = {
-      logout: jest.fn(),
-      navigateToSignIn: jest.fn(),
-    };
+    routerMock = RouterMockBuilder.create().withNavigate(vi.fn().mockResolvedValue(true)).build();
+    authServiceMock = AuthServiceMock.simple();
 
     TestBed.configureTestingModule({
       imports: [HeaderComponent, MockComponent(BreadcrumbComponent)],
