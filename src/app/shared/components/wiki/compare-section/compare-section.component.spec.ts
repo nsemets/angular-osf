@@ -88,7 +88,7 @@ describe('CompareSectionComponent', () => {
   it('should render diff words with added and removed wrappers', () => {
     vi.mocked(Diff.diffWords).mockReturnValue([
       { value: 'same ', added: false, removed: false, count: 1 },
-      { value: 'removed ', added: false, removed: true, count: 1 },
+      { value: 'removed', added: false, removed: true, count: 1 },
       { value: 'added', added: true, removed: false, count: 1 },
     ]);
 
@@ -96,7 +96,7 @@ describe('CompareSectionComponent', () => {
     fixture.componentRef.setInput('previewContent', 'same added');
     fixture.detectChanges();
 
-    expect(component.content()).toBe('same <span class="removed">removed </span><span class="added">added</span>');
+    expect(component.content()).toBe('same <span class="removed">removed</span><span class="added">added</span>');
   });
 
   it('should render loading skeletons when isLoading is true', () => {

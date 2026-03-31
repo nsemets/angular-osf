@@ -16,7 +16,13 @@ import { SENTRY_TOKEN } from './sentry.provider';
 import * as Sentry from '@sentry/angular';
 import { GoogleTagManagerConfiguration } from 'angular-google-tag-manager';
 
-vi.mock('@sentry/angular', () => ({ init: vi.fn() }));
+vi.mock('@sentry/angular', () => {
+  return {
+    init: vi.fn(),
+    captureException: vi.fn(),
+    ngOnDestroy: vi.fn(),
+  };
+});
 
 describe('initializeApplication', () => {
   let configServiceMock: { load: ReturnType<typeof vi.fn> };
