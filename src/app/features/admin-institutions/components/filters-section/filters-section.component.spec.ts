@@ -17,10 +17,10 @@ import {
   UpdateSelectedFilterOption,
 } from '@shared/stores/global-search';
 
-import { FiltersSectionComponent } from './filters-section.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
+
+import { FiltersSectionComponent } from './filters-section.component';
 
 describe('FiltersSectionComponent', () => {
   let component: FiltersSectionComponent;
@@ -31,8 +31,8 @@ describe('FiltersSectionComponent', () => {
   const mockSelectedOptions = { filter1: [{ value: 'option1', label: 'Option 1' }] as FilterOption[] };
   const mockFilterSearchCache = { filter1: [] };
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [FiltersSectionComponent, ...MockComponents(FilterChipsComponent, SearchFiltersComponent)],
       providers: [
         provideOSFCore(),
@@ -45,7 +45,7 @@ describe('FiltersSectionComponent', () => {
           ],
         }),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(FiltersSectionComponent);
     component = fixture.componentInstance;
