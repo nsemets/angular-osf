@@ -9,6 +9,7 @@ export type RouterMockType = Partial<Router> & {
   navigate: Mock<(...args: any[]) => Promise<boolean>>;
   navigateByUrl: Mock<(...args: any[]) => Promise<boolean>>;
   createUrlTree: Mock<(...args: any[]) => UrlTree>;
+  serializeUrl: Mock<(...args: any[]) => string>;
 };
 
 export class RouterMockBuilder {
@@ -18,6 +19,7 @@ export class RouterMockBuilder {
   private navigateMock: Mock<(...args: any[]) => Promise<boolean>> = vi.fn().mockResolvedValue(true);
   private navigateByUrlMock: Mock<(...args: any[]) => Promise<boolean>> = vi.fn().mockResolvedValue(true);
   private createUrlTreeMock: Mock<(...args: any[]) => UrlTree> = vi.fn(() => ({}) as UrlTree);
+  private serializeUrlMock: Mock<(...args: any[]) => string> = vi.fn(() => '/');
 
   static create(): RouterMockBuilder {
     return new RouterMockBuilder();
@@ -43,6 +45,11 @@ export class RouterMockBuilder {
     return this;
   }
 
+  withSerializeUrl(mockImpl: Mock<(...args: any[]) => string>): RouterMockBuilder {
+    this.serializeUrlMock = mockImpl;
+    return this;
+  }
+
   emit(event: any): RouterMockBuilder {
     this.events$.next(event);
     return this;
@@ -55,6 +62,7 @@ export class RouterMockBuilder {
       navigate: this.navigateMock,
       navigateByUrl: this.navigateByUrlMock,
       createUrlTree: this.createUrlTreeMock,
+      serializeUrl: this.serializeUrlMock,
     } as RouterMockType;
   }
 }

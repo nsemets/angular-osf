@@ -68,7 +68,6 @@ describe('TokenAddEditFormComponent', () => {
     mockRouter = RouterMockBuilder.create().withUrl('/settings/tokens/token-1').build();
     mockToastService = ToastServiceMock.simple();
     mockCustomDialogService = CustomDialogServiceMock.simple();
-    dialogRef = TestBed.inject(DynamicDialogRef);
 
     const signals = mergeSignalOverrides(defaultSignals, overrides.selectorOverrides);
 
@@ -88,6 +87,7 @@ describe('TokenAddEditFormComponent', () => {
     store = TestBed.inject(Store);
     fixture = TestBed.createComponent(TokenAddEditFormComponent);
     component = fixture.componentInstance;
+    dialogRef = TestBed.inject(DynamicDialogRef);
 
     if (overrides.isEditMode !== undefined) {
       fixture.componentRef.setInput('isEditMode', overrides.isEditMode);
