@@ -2,20 +2,20 @@ import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { IconComponent } from './icon.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { IconComponent } from './icon.component';
 
 describe('IconComponent', () => {
   let component: IconComponent;
   let fixture: ComponentFixture<IconComponent>;
   let componentRef: ComponentRef<IconComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [IconComponent],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(IconComponent);
     component = fixture.componentInstance;

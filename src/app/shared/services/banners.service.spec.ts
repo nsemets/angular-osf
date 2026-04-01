@@ -3,10 +3,10 @@ import { inject, TestBed } from '@angular/core/testing';
 
 import { BannerModel } from '@core/components/osf-banners/models/banner.model';
 
-import { BannersService } from './banners.service';
-
 import { getScheduledBannerData } from '@testing/data/banners/scheduled.banner.data';
 import { provideOSFCore, provideOSFHttp } from '@testing/osf.testing.provider';
+
+import { BannersService } from './banners.service';
 
 describe('Service: Banners', () => {
   let service: BannersService;

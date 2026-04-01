@@ -9,13 +9,13 @@ import { PreprintModel, PreprintProviderDetails, PreprintRequestAction } from '@
 import { PreprintSelectors } from '@osf/features/preprints/store/preprint';
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 
-import { StatusBannerComponent } from './status-banner.component';
-
 import { PREPRINT_MOCK } from '@testing/mocks/preprint.mock';
 import { PREPRINT_PROVIDER_DETAILS_MOCK } from '@testing/mocks/preprint-provider-details';
 import { REVIEW_ACTION_MOCK } from '@testing/mocks/review-action.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { BaseSetupOverrides, mergeSignalOverrides, provideMockStore } from '@testing/providers/store-provider.mock';
+
+import { StatusBannerComponent } from './status-banner.component';
 
 describe('StatusBannerComponent', () => {
   let component: StatusBannerComponent;

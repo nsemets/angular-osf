@@ -13,7 +13,6 @@ import { PaginationLinksModel } from '@osf/shared/models/pagination-links.model'
 import { ResourceModel } from '@osf/shared/models/search/resource.model';
 import { SearchFilters } from '@osf/shared/models/search-filters.model';
 import {
-  ClearFilterSearchResults,
   FetchResources,
   FetchResourcesByLink,
   GlobalSearchSelectors,
@@ -41,7 +40,6 @@ import { InstitutionsAdminSelectors } from '../../store';
 })
 export class InstitutionsRegistrationsComponent implements OnInit, OnDestroy {
   private readonly actions = createDispatchMap({
-    clearFilterSearchResults: ClearFilterSearchResults,
     setDefaultFilterValue: SetDefaultFilterValue,
     resetSearchState: ResetSearchState,
     setSortBy: SetSortBy,
@@ -62,7 +60,6 @@ export class InstitutionsRegistrationsComponent implements OnInit, OnDestroy {
   areResourcesLoading = select(GlobalSearchSelectors.getResourcesLoading);
   resourcesCount = select(GlobalSearchSelectors.getResourcesCount);
 
-  selfLink = select(GlobalSearchSelectors.getFirst);
   firstLink = select(GlobalSearchSelectors.getFirst);
   nextLink = select(GlobalSearchSelectors.getNext);
   previousLink = select(GlobalSearchSelectors.getPrevious);
@@ -72,6 +69,7 @@ export class InstitutionsRegistrationsComponent implements OnInit, OnDestroy {
       (resource: ResourceModel): TableCellData => mapRegistrationResourceToTableData(resource, this.institution().iri)
     )
   );
+
   sortParam = computed(() => {
     const sortField = this.sortField();
     const sortOrder = this.sortOrder();
@@ -110,7 +108,7 @@ export class InstitutionsRegistrationsComponent implements OnInit, OnDestroy {
 
   download(type: DownloadType) {
     downloadResults(
-      this.selfLink(),
+      this.firstLink(),
       type,
       INSTITUTIONS_CSV_TSV_FIELDS[CurrentResourceType.Registrations],
       INSTITUTIONS_DOWNLOAD_CSV_TSV_RESOURCE[CurrentResourceType.Registrations]

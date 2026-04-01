@@ -1,8 +1,10 @@
 import { Store } from '@ngxs/store';
 
-import { MockProvider } from 'ng-mocks';
+import { MockComponents, MockProvider } from 'ng-mocks';
 
 import { of } from 'rxjs';
+
+import { Mock } from 'vitest';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -10,6 +12,14 @@ import { ActivatedRoute } from '@angular/router';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { FileProvider } from '@osf/features/files/constants';
 import { FilesSelectors, GetFiles } from '@osf/features/files/store';
+import { FileUploadDialogComponent } from '@osf/shared/components/file-upload-dialog/file-upload-dialog.component';
+import { FilesTreeComponent } from '@osf/shared/components/files-tree/files-tree.component';
+import { FormSelectComponent } from '@osf/shared/components/form-select/form-select.component';
+import { GoogleFilePickerComponent } from '@osf/shared/components/google-file-picker/google-file-picker.component';
+import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
+import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
+import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
+import { ViewOnlyLinkMessageComponent } from '@osf/shared/components/view-only-link-message/view-only-link-message.component';
 import { SupportedFeature } from '@osf/shared/enums/addon-supported-features.enum';
 import { FileKind } from '@osf/shared/enums/file-kind.enum';
 import { FileMenuType } from '@osf/shared/enums/file-menu-type.enum';
@@ -25,8 +35,6 @@ import { ToastService } from '@osf/shared/services/toast.service';
 import { ViewOnlyLinkHelperService } from '@osf/shared/services/view-only-link-helper.service';
 import { CurrentResourceSelectors } from '@osf/shared/stores/current-resource';
 import { CustomDialogService } from '@shared/services/custom-dialog.service';
-
-import { FilesComponent } from './files.component';
 
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import {
@@ -45,15 +53,20 @@ import {
 import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
 import { ViewOnlyLinkHelperMock, ViewOnlyLinkHelperMockType } from '@testing/providers/view-only-link-helper.mock';
 
+import { FilesSelectionActionsComponent } from '../../components';
+
+import { FilesComponent } from './files.component';
+
 interface SetupOverrides extends BaseSetupOverrides {
   fileProvider?: string;
+  hasViewOnlyParam?: boolean;
 }
 
 describe('FilesComponent', () => {
   let component: FilesComponent;
   let fixture: ComponentFixture<FilesComponent>;
   let store: Store;
-  let routerMock: RouterMockType & { serializeUrl: jest.Mock };
+  let routerMock: RouterMockType & { serializeUrl: Mock };
   let customDialogServiceMock: CustomDialogServiceMockType;
   let customConfirmationServiceMock: CustomConfirmationServiceMockType;
   let toastService: ToastServiceMockType;
@@ -164,13 +177,13 @@ describe('FilesComponent', () => {
     const routerBuilder = RouterMockBuilder.create().withUrl('/abc');
     routerMock = {
       ...routerBuilder.build(),
-      serializeUrl: jest.fn().mockReturnValue('/guid-url'),
+      serializeUrl: vi.fn().mockReturnValue('/guid-url'),
     };
-    (routerMock.createUrlTree as jest.Mock).mockReturnValue('/guid-url');
+    (routerMock.createUrlTree as Mock).mockReturnValue('/guid-url');
     customDialogServiceMock = CustomDialogServiceMock.simple();
     customConfirmationServiceMock = CustomConfirmationServiceMock.simple();
     toastService = ToastServiceMock.simple();
-    viewOnlyLinkHelperMock = ViewOnlyLinkHelperMock.simple(false);
+    viewOnlyLinkHelperMock = ViewOnlyLinkHelperMock.simple(overrides.hasViewOnlyParam ?? false);
     viewOnlyLinkHelperMock.getViewOnlyParamFromUrl.mockReturnValue('view-only-token');
 
     const resourceRouteMock = ActivatedRouteMockBuilder.create().withParams({ id: 'node-1' }).build();
@@ -184,14 +197,28 @@ describe('FilesComponent', () => {
       .build();
 
     TestBed.configureTestingModule({
-      imports: [FilesComponent],
+      imports: [
+        FilesComponent,
+        ...MockComponents(
+          FilesTreeComponent,
+          FormSelectComponent,
+          GoogleFilePickerComponent,
+          LoadingSpinnerComponent,
+          SearchInputComponent,
+          SubHeaderComponent,
+          FileUploadDialogComponent,
+          ViewOnlyLinkMessageComponent,
+          GoogleFilePickerComponent,
+          FilesSelectionActionsComponent
+        ),
+      ],
       providers: [
         provideOSFCore(),
         MockProvider(ActivatedRoute, activatedRouteMock),
         provideRouterMock(routerMock),
         MockProvider(FilesService, {
-          uploadFile: jest.fn().mockReturnValue(of({})),
-          getFolderDownloadLink: jest.fn().mockReturnValue('https://download.link'),
+          uploadFile: vi.fn().mockReturnValue(of({})),
+          getFolderDownloadLink: vi.fn().mockReturnValue('https://download.link'),
         }),
         MockProvider(CustomDialogService, customDialogServiceMock),
         MockProvider(CustomConfirmationService, customConfirmationServiceMock),
@@ -200,12 +227,6 @@ describe('FilesComponent', () => {
         MockProvider(ENVIRONMENT, { webUrl: 'http://localhost:4200', apiDomainUrl: 'http://localhost:8000' }),
         provideMockStore({ signals: mergeSignalOverrides(defaultSignals, overrides.selectorOverrides) }),
       ],
-    });
-
-    TestBed.overrideComponent(FilesComponent, {
-      set: {
-        template: '<div></div>',
-      },
     });
 
     store = TestBed.inject(Store);
@@ -257,8 +278,7 @@ describe('FilesComponent', () => {
   });
 
   it('should expose read-only menu actions when view-only mode is enabled', () => {
-    setup();
-    viewOnlyLinkHelperMock.hasViewOnlyParam.mockReturnValue(true);
+    setup({ hasViewOnlyParam: true });
 
     const actions = component.allowedMenuActions();
 
@@ -290,7 +310,7 @@ describe('FilesComponent', () => {
 
   it('should show warning and skip upload when selected file exceeds size limit', () => {
     setup();
-    const uploadSpy = jest.spyOn(component, 'uploadFiles');
+    const uploadSpy = vi.spyOn(component, 'uploadFiles');
     const oversizedFile = new File([new ArrayBuffer(1)], 'large.txt');
     Object.defineProperty(oversizedFile, 'size', { value: 5 * 1024 * 1024 * 1024 });
     const input = document.createElement('input');
@@ -304,7 +324,7 @@ describe('FilesComponent', () => {
 
   it('should pass selected files to uploadFiles when files are valid', () => {
     setup();
-    const uploadSpy = jest.spyOn(component, 'uploadFiles').mockImplementation(() => {});
+    const uploadSpy = vi.spyOn(component, 'uploadFiles').mockImplementation(() => {});
     const validFile = new File(['body'], 'small.txt');
     const input = document.createElement('input');
     Object.defineProperty(input, 'files', { value: [validFile] });
@@ -316,7 +336,7 @@ describe('FilesComponent', () => {
 
   it('should dispatch GetFiles from updateFilesList when current folder has files link', () => {
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.updateFilesList();
 

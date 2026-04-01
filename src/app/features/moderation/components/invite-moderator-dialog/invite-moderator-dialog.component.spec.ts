@@ -7,33 +7,28 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormSelectComponent } from '@osf/shared/components/form-select/form-select.component';
 import { TextInputComponent } from '@osf/shared/components/text-input/text-input.component';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+import { provideDynamicDialogRefMock } from '@testing/providers/dynamic-dialog-ref.mock';
+
 import { ModeratorPermission } from '../../enums';
 
 import { InviteModeratorDialogComponent } from './invite-moderator-dialog.component';
 
-import { provideOSFCore } from '@testing/osf.testing.provider';
-import { DynamicDialogRefMock } from '@testing/providers/dynamic-dialog-ref.mock';
-
 describe('InviteModeratorDialogComponent', () => {
   let component: InviteModeratorDialogComponent;
   let fixture: ComponentFixture<InviteModeratorDialogComponent>;
-  let mockDialogRef: jest.Mocked<DynamicDialogRef>;
+  let mockDialogRef: DynamicDialogRef;
 
-  beforeEach(async () => {
-    mockDialogRef = DynamicDialogRefMock.useValue as unknown as jest.Mocked<DynamicDialogRef>;
-
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [InviteModeratorDialogComponent, ...MockComponents(TextInputComponent, FormSelectComponent)],
-      providers: [provideOSFCore(), DynamicDialogRefMock],
-    }).compileComponents();
+      providers: [provideOSFCore(), provideDynamicDialogRefMock()],
+    });
 
     fixture = TestBed.createComponent(InviteModeratorDialogComponent);
     component = fixture.componentInstance;
+    mockDialogRef = TestBed.inject(DynamicDialogRef);
     fixture.detectChanges();
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
   });
 
   it('should create', () => {

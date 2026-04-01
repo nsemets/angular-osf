@@ -2,12 +2,12 @@ import { MockComponents } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 import { CookieConsentBannerComponent } from './cookie-consent-banner/cookie-consent-banner.component';
 import { MaintenanceBannerComponent } from './maintenance-banner/maintenance-banner.component';
 import { TosConsentBannerComponent } from './tos-consent-banner/tos-consent-banner.component';
 import { OSFBannerComponent } from './osf-banner.component';
-
-import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('Component: OSF Banner', () => {
   let fixture: ComponentFixture<OSFBannerComponent>;

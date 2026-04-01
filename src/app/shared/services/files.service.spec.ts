@@ -1,11 +1,11 @@
 import { HttpTestingController } from '@angular/common/http/testing';
 import { inject, TestBed } from '@angular/core/testing';
 
-import { FilesService } from './files.service';
-
 import { getConfiguredAddonsData } from '@testing/data/addons/addons.configured.data';
 import { getResourceReferencesData } from '@testing/data/files/resource-references.data';
 import { provideOSFCore, provideOSFHttp } from '@testing/osf.testing.provider';
+
+import { FilesService } from './files.service';
 
 describe.skip('Service: Files', () => {
   let service: FilesService;

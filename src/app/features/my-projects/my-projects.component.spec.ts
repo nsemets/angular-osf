@@ -2,7 +2,11 @@ import { Store } from '@ngxs/store';
 
 import { MockComponents, MockProvider } from 'ng-mocks';
 
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
+
 import { of, Subject } from 'rxjs';
+
+import { Mock } from 'vitest';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,13 +15,30 @@ import { MyProjectsTableComponent } from '@osf/shared/components/my-projects-tab
 import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
 import { SelectComponent } from '@osf/shared/components/select/select.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
-import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants/default-table-params.constants';
 import { SortOrder } from '@osf/shared/enums/sort-order.enum';
 import { IS_MEDIUM } from '@osf/shared/helpers/breakpoints.tokens';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { ProjectRedirectDialogService } from '@osf/shared/services/project-redirect-dialog.service';
 import { BookmarksSelectors, GetBookmarksCollectionId } from '@osf/shared/stores/bookmarks';
 import { ClearMyResources, MyResourcesSelectors } from '@osf/shared/stores/my-resources';
+
+import { provideOSFCore } from '@testing/osf.testing.provider';
+import { CustomDialogServiceMock, CustomDialogServiceMockType } from '@testing/providers/custom-dialog-provider.mock';
+import {
+  MyProjectsQueryServiceMock,
+  MyProjectsQueryServiceMockType,
+} from '@testing/providers/my-projects-query.service.mock';
+import {
+  MyProjectsTableParamsServiceMock,
+  MyProjectsTableParamsServiceMockType,
+} from '@testing/providers/my-projects-table-params.service.mock';
+import {
+  ProjectRedirectDialogServiceMock,
+  ProjectRedirectDialogServiceMockType,
+} from '@testing/providers/project-redirect-dialog.service.mock';
+import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
+import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
+import { mergeSignalOverrides, provideMockStore, SignalOverride } from '@testing/providers/store-provider.mock';
 
 import { PROJECT_FILTER_OPTIONS } from './constants/project-filter-options.const';
 import { MyProjectsQueryService } from './services/my-projects-query.service';
@@ -26,30 +47,15 @@ import { CreateProjectDialogComponent } from './components';
 import { MyProjectsTab } from './enums';
 import { MyProjectsComponent } from './my-projects.component';
 
-import { provideOSFCore } from '@testing/osf.testing.provider';
-import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
-import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
-import { mergeSignalOverrides, provideMockStore, SignalOverride } from '@testing/providers/store-provider.mock';
-
 describe('MyProjectsComponent', () => {
   let component: MyProjectsComponent;
   let fixture: ComponentFixture<MyProjectsComponent>;
   let store: Store;
   let routerMock: RouterMockType;
-  let customDialogService: { open: jest.Mock };
-  let projectRedirectDialogService: { showProjectRedirectDialog: jest.Mock };
-  let queryServiceMock: {
-    getRawParams: jest.Mock;
-    handlePageChange: jest.Mock;
-    handleSort: jest.Mock;
-    handleTabSwitch: jest.Mock;
-    handleSearch: jest.Mock;
-    toQueryModel: jest.Mock;
-    hasTabInUrl: jest.Mock;
-    getTabFromUrl: jest.Mock;
-    updateParams: jest.Mock;
-  };
-  let tableParamsServiceMock: { buildTableParams: jest.Mock };
+  let customDialogService: CustomDialogServiceMockType;
+  let projectRedirectDialogService: ProjectRedirectDialogServiceMockType;
+  let queryServiceMock: MyProjectsQueryServiceMockType;
+  let tableParamsServiceMock: MyProjectsTableParamsServiceMockType;
 
   const projectItem = {
     id: 'p1',
@@ -75,35 +81,20 @@ describe('MyProjectsComponent', () => {
 
   function setup(selectorOverrides?: SignalOverride[]) {
     routerMock = RouterMockBuilder.create().build();
-    customDialogService = { open: jest.fn() };
-    projectRedirectDialogService = { showProjectRedirectDialog: jest.fn() };
-    queryServiceMock = {
-      getRawParams: jest.fn(() => ({ tab: '1', page: '1', size: '10' })),
-      handlePageChange: jest.fn(),
-      handleSort: jest.fn(),
-      handleTabSwitch: jest.fn(),
-      handleSearch: jest.fn(),
-      toQueryModel: jest.fn(() => ({
+    customDialogService = CustomDialogServiceMock.simple();
+    projectRedirectDialogService = ProjectRedirectDialogServiceMock.simple();
+    queryServiceMock = MyProjectsQueryServiceMock.create()
+      .withRawParams({ tab: '1', page: '1', size: '10' })
+      .withQueryModel({
         page: 1,
         size: 10,
         search: '',
         sortColumn: '',
         sortOrder: SortOrder.Asc,
-      })),
-      hasTabInUrl: jest.fn(() => true),
-      getTabFromUrl: jest.fn(() => MyProjectsTab.Projects),
-      updateParams: jest.fn(),
-    };
-    tableParamsServiceMock = {
-      buildTableParams: jest.fn((baseRows: number, totalRecords: number, isBookmarks: boolean) => ({
-        ...DEFAULT_TABLE_PARAMS,
-        rows: isBookmarks ? totalRecords : baseRows,
-        totalRecords,
-        paginator: !isBookmarks,
-        rowsPerPageOptions: isBookmarks ? [] : DEFAULT_TABLE_PARAMS.rowsPerPageOptions,
-        firstRowIndex: 0,
-      })),
-    };
+      })
+      .withSelectedTab(MyProjectsTab.Projects)
+      .build();
+    tableParamsServiceMock = MyProjectsTableParamsServiceMock.simple();
     const routeMock = ActivatedRouteMockBuilder.create().withQueryParams({ tab: '1', page: '1', size: '10' }).build();
 
     TestBed.configureTestingModule({
@@ -133,7 +124,7 @@ describe('MyProjectsComponent', () => {
   }
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('should create', () => {
@@ -174,7 +165,7 @@ describe('MyProjectsComponent', () => {
 
   it('should clear and switch tab when onTabChange receives numeric value', () => {
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.onTabChange(String(MyProjectsTab.Registrations));
 
@@ -189,7 +180,7 @@ describe('MyProjectsComponent', () => {
 
   it('should ignore invalid tab values', () => {
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.onTabChange('not-a-number');
 
@@ -200,7 +191,11 @@ describe('MyProjectsComponent', () => {
   it('should open create project dialog and redirect after close result', () => {
     setup();
     const onClose$ = new Subject<{ project: { id: string } }>();
-    customDialogService.open.mockReturnValue({ onClose: onClose$.asObservable() });
+    customDialogService.open.mockReturnValue({
+      close: vi.fn(),
+      destroy: vi.fn(),
+      onClose: onClose$.asObservable(),
+    } as unknown as DynamicDialogRef);
 
     component.createProject();
     onClose$.next({ project: { id: 'project-123' } });
@@ -222,11 +217,11 @@ describe('MyProjectsComponent', () => {
   });
 
   it('should delegate search handling after debounce', () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     setup();
 
     component.searchControl.setValue('alpha');
-    jest.advanceTimersByTime(300);
+    vi.advanceTimersByTime(300);
 
     expect(queryServiceMock.handleSearch).toHaveBeenCalledWith('alpha', { tab: '1', page: '1', size: '10' }, 1);
   });

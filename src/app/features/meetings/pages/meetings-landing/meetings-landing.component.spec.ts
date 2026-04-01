@@ -2,18 +2,15 @@ import { Store } from '@ngxs/store';
 
 import { MockComponents, MockProvider } from 'ng-mocks';
 
+import { Mock } from 'vitest';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, provideRouter, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { DEFAULT_TABLE_PARAMS } from '@shared/constants/default-table-params.constants';
 import { SortOrder } from '@shared/enums/sort-order.enum';
-
-import { MeetingsFeatureCardComponent } from '../../components';
-import { GetAllMeetings, MeetingsSelectors } from '../../store';
-
-import { MeetingsLandingComponent } from './meetings-landing.component';
 
 import { MOCK_MEETING } from '@testing/mocks/meeting.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
@@ -25,6 +22,11 @@ import {
   provideMockStore,
   SignalOverride,
 } from '@testing/providers/store-provider.mock';
+
+import { MeetingsFeatureCardComponent } from '../../components';
+import { GetAllMeetings, MeetingsSelectors } from '../../store';
+
+import { MeetingsLandingComponent } from './meetings-landing.component';
 
 interface SetupOverrides extends BaseSetupOverrides {
   queryParams?: Record<string, string>;
@@ -64,7 +66,6 @@ describe('MeetingsLandingComponent', () => {
       ],
       providers: [
         provideOSFCore(),
-        provideRouter([]),
         MockProvider(ActivatedRoute, mockRoute),
         MockProvider(Router, mockRouter),
         provideMockStore({
@@ -82,7 +83,7 @@ describe('MeetingsLandingComponent', () => {
   }
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('should create', () => {
@@ -164,14 +165,14 @@ describe('MeetingsLandingComponent', () => {
   });
 
   it('should update query params from search control after debounce', () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     setup({}, false);
-    (mockRouter.navigate as jest.Mock).mockClear();
-    jest.advanceTimersByTime(300);
-    (mockRouter.navigate as jest.Mock).mockClear();
+    (mockRouter.navigate as Mock).mockClear();
+    vi.advanceTimersByTime(300);
+    (mockRouter.navigate as Mock).mockClear();
 
     component.searchControl.setValue('science');
-    jest.advanceTimersByTime(300);
+    vi.advanceTimersByTime(300);
 
     expect(mockRouter.navigate).toHaveBeenCalledWith(
       [],

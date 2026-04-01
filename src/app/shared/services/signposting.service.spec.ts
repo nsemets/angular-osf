@@ -4,9 +4,9 @@ import { TestBed } from '@angular/core/testing';
 
 import { LINKSET_JSON_TYPE, LINKSET_TYPE } from '@osf/shared/models/signposting.model';
 
-import { SignpostingService } from './signposting.service';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { SignpostingService } from './signposting.service';
 
 describe('Service: Signposting', () => {
   let service: SignpostingService;

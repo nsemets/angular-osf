@@ -1,8 +1,4 @@
-import { Store } from '@ngxs/store';
-
-import { MockComponents, MockProvider } from 'ng-mocks';
-
-import { of } from 'rxjs';
+import { MockComponents } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
@@ -10,12 +6,12 @@ import { provideRouter } from '@angular/router';
 import { AddonSetupAccountFormComponent } from '@osf/shared/components/addons/addon-setup-account-form/addon-setup-account-form.component';
 import { AddonTermsComponent } from '@osf/shared/components/addons/addon-terms/addon-terms.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
-import { AddonsSelectors } from '@shared/stores/addons';
-
-import { ConnectAddonComponent } from './connect-addon.component';
 
 import { MOCK_ADDON } from '@testing/mocks/addon.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
+import { provideMockStore } from '@testing/providers/store-provider.mock';
+
+import { ConnectAddonComponent } from './connect-addon.component';
 
 describe.skip('ConnectAddonComponent', () => {
   let component: ConnectAddonComponent;
@@ -27,22 +23,7 @@ describe.skip('ConnectAddonComponent', () => {
         ConnectAddonComponent,
         ...MockComponents(SubHeaderComponent, AddonTermsComponent, AddonSetupAccountFormComponent),
       ],
-      providers: [
-        provideOSFCore(),
-        provideRouter([]),
-        MockProvider(Store, {
-          selectSignal: jest.fn().mockImplementation((selector) => {
-            if (selector === AddonsSelectors.getAddonsUserReference) {
-              return () => [{ id: 'test-user-id' }];
-            }
-            if (selector === AddonsSelectors.getCreatedOrUpdatedAuthorizedAddon) {
-              return () => null;
-            }
-            return () => null;
-          }),
-          dispatch: jest.fn().mockReturnValue(of({})),
-        }),
-      ],
+      providers: [provideOSFCore(), provideRouter([]), provideMockStore()],
     });
 
     fixture = TestBed.createComponent(ConnectAddonComponent);

@@ -3,10 +3,10 @@ import { provideRouter } from '@angular/router';
 
 import { PreprintProviderShortInfo } from '@osf/features/preprints/models';
 
-import { PreprintServicesComponent } from './preprint-services.component';
-
 import { PREPRINT_PROVIDER_SHORT_INFO_MOCK } from '@testing/mocks/preprint-provider-short-info.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { PreprintServicesComponent } from './preprint-services.component';
 
 describe('PreprintServicesComponent', () => {
   let component: PreprintServicesComponent;

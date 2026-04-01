@@ -5,13 +5,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CustomPaginatorComponent } from '@osf/shared/components/custom-paginator/custom-paginator.component';
 import { CollectionsSelectors } from '@shared/stores/collections';
 
-import { CollectionsSearchResultCardComponent } from '../collections-search-result-card/collections-search-result-card.component';
-
-import { CollectionsSearchResultsComponent } from './collections-search-results.component';
-
 import { MOCK_COLLECTION_SUBMISSION_WITH_GUID } from '@testing/mocks/submission.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
+
+import { CollectionsSearchResultCardComponent } from '../collections-search-result-card/collections-search-result-card.component';
+
+import { CollectionsSearchResultsComponent } from './collections-search-results.component';
 
 describe('CollectionsSearchResultsComponent', () => {
   let component: CollectionsSearchResultsComponent;
@@ -23,8 +23,8 @@ describe('CollectionsSearchResultsComponent', () => {
     { ...MOCK_COLLECTION_SUBMISSION_WITH_GUID, id: '3', title: 'Third Submission' },
   ];
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [
         CollectionsSearchResultsComponent,
         ...MockComponents(CustomPaginatorComponent, CollectionsSearchResultCardComponent),
@@ -41,7 +41,7 @@ describe('CollectionsSearchResultsComponent', () => {
           ],
         }),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(CollectionsSearchResultsComponent);
     component = fixture.componentInstance;

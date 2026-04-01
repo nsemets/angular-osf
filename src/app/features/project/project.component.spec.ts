@@ -2,6 +2,8 @@ import { Store } from '@ngxs/store';
 
 import { MockProvider } from 'ng-mocks';
 
+import { Mock } from 'vitest';
+
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
@@ -16,9 +18,6 @@ import { MetaTagsService } from '@osf/shared/services/meta-tags.service';
 import { MetaTagsBuilderService } from '@osf/shared/services/meta-tags-builder.service';
 import { ContributorsSelectors } from '@osf/shared/stores/contributors';
 import { CurrentResourceSelectors } from '@osf/shared/stores/current-resource';
-
-import { GetProjectById, GetProjectIdentifiers, GetProjectLicense, ProjectOverviewSelectors } from './overview/store';
-import { ProjectComponent } from './project.component';
 
 import { MOCK_PROJECT_OVERVIEW } from '@testing/mocks/project-overview.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
@@ -36,6 +35,9 @@ import {
   provideMockStore,
   SignalOverride,
 } from '@testing/providers/store-provider.mock';
+
+import { GetProjectById, GetProjectIdentifiers, GetProjectLicense, ProjectOverviewSelectors } from './overview/store';
+import { ProjectComponent } from './project.component';
 
 interface SetupOverrides extends BaseSetupOverrides {
   projectId?: string;
@@ -167,7 +169,7 @@ describe('Component: Project', () => {
 
   it('should map identifiers to null when identifiers are empty', () => {
     const { dataciteService } = setup();
-    const identifiers$ = (dataciteService.logIdentifiableView as jest.Mock).mock.calls[0][0];
+    const identifiers$ = (dataciteService.logIdentifiableView as Mock).mock.calls[0][0];
     let emitted: unknown;
 
     identifiers$.subscribe((value: unknown) => {
@@ -189,7 +191,7 @@ describe('Component: Project', () => {
     const { dataciteService } = setup({
       selectorOverrides: [{ selector: ProjectOverviewSelectors.getIdentifiers, value: identifiers }],
     });
-    const identifiers$ = (dataciteService.logIdentifiableView as jest.Mock).mock.calls[0][0];
+    const identifiers$ = (dataciteService.logIdentifiableView as Mock).mock.calls[0][0];
     let emitted: unknown;
 
     identifiers$.subscribe((value: unknown) => {

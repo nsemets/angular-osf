@@ -4,9 +4,9 @@ import { provideRouter } from '@angular/router';
 import { CollectionSubmissionReviewState } from '@osf/shared/enums/collection-submission-review-state.enum';
 import { CollectionSubmission } from '@osf/shared/models/collections/collections.model';
 
-import { MetadataCollectionItemComponent } from './metadata-collection-item.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { MetadataCollectionItemComponent } from './metadata-collection-item.component';
 
 describe('MetadataCollectionItemComponent', () => {
   let component: MetadataCollectionItemComponent;

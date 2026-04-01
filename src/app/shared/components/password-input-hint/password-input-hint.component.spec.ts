@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, Validators } from '@angular/forms';
 
-import { PasswordInputHintComponent } from './password-input-hint.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { PasswordInputHintComponent } from './password-input-hint.component';
 
 describe('PasswordInputHintComponent', () => {
   let component: PasswordInputHintComponent;
   let fixture: ComponentFixture<PasswordInputHintComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [PasswordInputHintComponent],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(PasswordInputHintComponent);
     component = fixture.componentInstance;

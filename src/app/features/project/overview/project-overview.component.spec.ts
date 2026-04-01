@@ -4,6 +4,8 @@ import { MockComponents, MockProvider } from 'ng-mocks';
 
 import { Subject } from 'rxjs';
 
+import { Mock } from 'vitest';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -27,19 +29,6 @@ import { CurrentResourceSelectors } from '@osf/shared/stores/current-resource';
 import { GetLinkedResources } from '@osf/shared/stores/node-links';
 import { ClearWiki } from '@osf/shared/stores/wiki';
 
-import { CitationAddonCardComponent } from './components/citation-addon-card/citation-addon-card.component';
-import { FilesWidgetComponent } from './components/files-widget/files-widget.component';
-import { LinkedResourcesComponent } from './components/linked-resources/linked-resources.component';
-import { OverviewComponentsComponent } from './components/overview-components/overview-components.component';
-import { OverviewParentProjectComponent } from './components/overview-parent-project/overview-parent-project.component';
-import { OverviewWikiComponent } from './components/overview-wiki/overview-wiki.component';
-import { ProjectOverviewMetadataComponent } from './components/project-overview-metadata/project-overview-metadata.component';
-import { ProjectOverviewToolbarComponent } from './components/project-overview-toolbar/project-overview-toolbar.component';
-import { ProjectRecentActivityComponent } from './components/project-recent-activity/project-recent-activity.component';
-import { ProjectOverviewModel } from './models';
-import { ProjectOverviewComponent } from './project-overview.component';
-import { ClearProjectOverview, GetComponents, GetProjectById, ProjectOverviewSelectors } from './store';
-
 import { MOCK_PROJECT_OVERVIEW } from '@testing/mocks/project-overview.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
@@ -54,6 +43,19 @@ import {
 import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
 import { ViewOnlyLinkHelperMock } from '@testing/providers/view-only-link-helper.mock';
 
+import { CitationAddonCardComponent } from './components/citation-addon-card/citation-addon-card.component';
+import { FilesWidgetComponent } from './components/files-widget/files-widget.component';
+import { LinkedResourcesComponent } from './components/linked-resources/linked-resources.component';
+import { OverviewComponentsComponent } from './components/overview-components/overview-components.component';
+import { OverviewParentProjectComponent } from './components/overview-parent-project/overview-parent-project.component';
+import { OverviewWikiComponent } from './components/overview-wiki/overview-wiki.component';
+import { ProjectOverviewMetadataComponent } from './components/project-overview-metadata/project-overview-metadata.component';
+import { ProjectOverviewToolbarComponent } from './components/project-overview-toolbar/project-overview-toolbar.component';
+import { ProjectRecentActivityComponent } from './components/project-recent-activity/project-recent-activity.component';
+import { ProjectOverviewModel } from './models';
+import { ProjectOverviewComponent } from './project-overview.component';
+import { ClearProjectOverview, GetComponents, GetProjectById, ProjectOverviewSelectors } from './store';
+
 interface SetupOverrides extends BaseSetupOverrides {
   routerUrl?: string;
   queryParams?: Record<string, string>;
@@ -67,8 +69,8 @@ describe('ProjectOverviewComponent', () => {
   let customDialogServiceMock: ReturnType<CustomDialogServiceMockBuilder['build']>;
   let toastServiceMock: ToastServiceMockType;
   let signpostingServiceMock: {
-    addSignposting: jest.Mock;
-    removeSignpostingLinkTags: jest.Mock;
+    addSignposting: Mock;
+    removeSignpostingLinkTags: Mock;
   };
 
   const mockProject = MOCK_PROJECT_OVERVIEW as ProjectOverviewModel;
@@ -115,18 +117,18 @@ describe('ProjectOverviewComponent', () => {
     const decisionClose$ = new Subject<{ action?: string }>();
     customDialogServiceMock = CustomDialogServiceMockBuilder.create()
       .withOpen(
-        jest.fn().mockReturnValue({
+        vi.fn().mockReturnValue({
           onClose: decisionClose$,
-          close: jest.fn(),
-          destroy: jest.fn(),
+          close: vi.fn(),
+          destroy: vi.fn(),
         })
       )
       .build();
 
     toastServiceMock = ToastServiceMock.simple();
     signpostingServiceMock = {
-      addSignposting: jest.fn(),
-      removeSignpostingLinkTags: jest.fn(),
+      addSignposting: vi.fn(),
+      removeSignpostingLinkTags: vi.fn(),
     };
     const viewOnlyLinkHelperMock = ViewOnlyLinkHelperMock.simple();
     const signals = mergeSignalOverrides(defaultSignals, overrides.selectorOverrides);
@@ -226,7 +228,7 @@ describe('ProjectOverviewComponent', () => {
     const { decisionClose$ } = setup({
       queryParams: { status: 'pending' },
     });
-    (routerMock.navigate as jest.Mock).mockClear();
+    (routerMock.navigate as Mock).mockClear();
 
     component.handleOpenMakeDecisionDialog();
     decisionClose$.next({ action: 'accept' });
@@ -241,7 +243,7 @@ describe('ProjectOverviewComponent', () => {
 
   it('should not show toast or navigate back when decision dialog closes without action', () => {
     const { decisionClose$ } = setup();
-    (routerMock.navigate as jest.Mock).mockClear();
+    (routerMock.navigate as Mock).mockClear();
 
     component.handleOpenMakeDecisionDialog();
     decisionClose$.next({});
@@ -273,7 +275,7 @@ describe('ProjectOverviewComponent', () => {
 
   it('should dispatch cleanup actions when fixture is destroyed', () => {
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     fixture.destroy();
 

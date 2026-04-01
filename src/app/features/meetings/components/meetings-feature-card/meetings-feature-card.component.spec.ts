@@ -1,9 +1,9 @@
 import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MeetingsFeatureCardComponent } from './meetings-feature-card.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { MeetingsFeatureCardComponent } from './meetings-feature-card.component';
 
 describe('MeetingsFeatureCardComponent', () => {
   let component: MeetingsFeatureCardComponent;

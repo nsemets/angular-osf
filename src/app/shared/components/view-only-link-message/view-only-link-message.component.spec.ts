@@ -4,20 +4,18 @@ import { PLATFORM_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
-import { ViewOnlyLinkMessageComponent } from './view-only-link-message.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
 
+import { ViewOnlyLinkMessageComponent } from './view-only-link-message.component';
+
 describe('ViewOnlyLinkMessageComponent', () => {
-  let component: ViewOnlyLinkMessageComponent;
   let fixture: ComponentFixture<ViewOnlyLinkMessageComponent>;
+  let component: ViewOnlyLinkMessageComponent;
   let routerMock: RouterMockType;
 
-  function setup(platformId: 'browser' | 'server', navigateMock?: jest.Mock<Promise<boolean>>) {
-    routerMock = navigateMock
-      ? RouterMockBuilder.create().withNavigate(navigateMock).build()
-      : RouterMockBuilder.create().build();
+  function setup(platformId: 'browser' | 'server' = 'browser') {
+    routerMock = RouterMockBuilder.create().build();
 
     TestBed.configureTestingModule({
       imports: [ViewOnlyLinkMessageComponent],
@@ -26,30 +24,31 @@ describe('ViewOnlyLinkMessageComponent', () => {
 
     fixture = TestBed.createComponent(ViewOnlyLinkMessageComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
   }
 
   it('should create', () => {
-    setup('server');
+    setup();
+
     expect(component).toBeTruthy();
   });
 
-  it('should not navigate outside browser platform', () => {
+  it('should navigate with merged query params in browser', () => {
+    setup();
+
+    component.handleLeaveViewOnlyView();
+
+    expect(routerMock.navigate).toHaveBeenCalledWith([], {
+      queryParams: { view_only: null },
+      queryParamsHandling: 'merge',
+    });
+  });
+
+  it('should not navigate on server platform', () => {
     setup('server');
 
     component.handleLeaveViewOnlyView();
 
     expect(routerMock.navigate).not.toHaveBeenCalled();
-  });
-
-  it('should navigate in browser platform', () => {
-    const navigateMock = jest.fn<Promise<boolean>, [unknown[], unknown?]>(() => new Promise<boolean>(() => {}));
-    setup('browser', navigateMock);
-
-    component.handleLeaveViewOnlyView();
-
-    expect(navigateMock).toHaveBeenCalledWith([], {
-      queryParams: { view_only: null },
-      queryParamsHandling: 'merge',
-    });
   });
 });

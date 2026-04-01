@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TruncatedTextComponent } from './truncated-text.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { TruncatedTextComponent } from './truncated-text.component';
 
 describe('TruncatedTextComponent', () => {
   let component: TruncatedTextComponent;
   let fixture: ComponentFixture<TruncatedTextComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [TruncatedTextComponent],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(TruncatedTextComponent);
     component = fixture.componentInstance;
@@ -33,7 +33,7 @@ describe('TruncatedTextComponent', () => {
   });
 
   it('should call checkTextOverflow in ngAfterViewInit', () => {
-    const checkTextOverflowSpy = jest.spyOn(component as any, 'checkTextOverflow');
+    const checkTextOverflowSpy = vi.spyOn(component, 'checkTextOverflow');
 
     component.ngAfterViewInit();
 

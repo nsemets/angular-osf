@@ -3,10 +3,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ResourceType } from '@shared/enums/resource-type.enum';
 import { ResourceModel } from '@shared/models/search/resource.model';
 
-import { RegistrationSecondaryMetadataComponent } from './registration-secondary-metadata.component';
-
 import { MOCK_RESOURCE } from '@testing/mocks/resource.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { RegistrationSecondaryMetadataComponent } from './registration-secondary-metadata.component';
 
 describe('RegistrationSecondaryMetadataComponent', () => {
   let component: RegistrationSecondaryMetadataComponent;
@@ -17,11 +17,11 @@ describe('RegistrationSecondaryMetadataComponent', () => {
     resourceType: ResourceType.Registration,
   };
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [RegistrationSecondaryMetadataComponent],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(RegistrationSecondaryMetadataComponent);
     component = fixture.componentInstance;

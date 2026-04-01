@@ -2,6 +2,8 @@ import { Store } from '@ngxs/store';
 
 import { MockProvider } from 'ng-mocks';
 
+import { Mock } from 'vitest';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UpdateProfileSettingsEducation, UserSelectors } from '@osf/core/store/user';
@@ -9,8 +11,6 @@ import { Education } from '@osf/shared/models/user/education.model';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { LoaderService } from '@osf/shared/services/loader.service';
 import { ToastService } from '@osf/shared/services/toast.service';
-
-import { EducationComponent } from './education.component';
 
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import {
@@ -20,6 +20,8 @@ import {
 import { LoaderServiceMock } from '@testing/providers/loader-service.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
+
+import { EducationComponent } from './education.component';
 
 describe('EducationComponent', () => {
   let component: EducationComponent;
@@ -134,7 +136,7 @@ describe('EducationComponent', () => {
       component.educations.at(0).patchValue({
         institution: '',
       });
-      (store.dispatch as jest.Mock).mockClear();
+      (store.dispatch as Mock).mockClear();
 
       component.saveEducation();
 
@@ -143,7 +145,7 @@ describe('EducationComponent', () => {
     });
 
     it('should save education and show success toast when form is valid', () => {
-      (store.dispatch as jest.Mock).mockClear();
+      (store.dispatch as Mock).mockClear();
 
       component.saveEducation();
 

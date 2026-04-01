@@ -5,12 +5,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CustomPaginatorComponent } from '@osf/shared/components/custom-paginator/custom-paginator.component';
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 
+import { MOCK_PREPRINT_REVIEW_ACTIONS } from '@testing/mocks/preprint-review-action.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 import { PreprintReviewActionModel } from '../../models';
 
 import { PreprintRecentActivityListComponent } from './preprint-recent-activity-list.component';
-
-import { MOCK_PREPRINT_REVIEW_ACTIONS } from '@testing/mocks/preprint-review-action.mock';
-import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('PreprintRecentActivityListComponent', () => {
   let component: PreprintRecentActivityListComponent;
@@ -18,11 +18,11 @@ describe('PreprintRecentActivityListComponent', () => {
 
   const mockReviews: PreprintReviewActionModel[] = MOCK_PREPRINT_REVIEW_ACTIONS;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [PreprintRecentActivityListComponent, ...MockComponents(IconComponent, CustomPaginatorComponent)],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(PreprintRecentActivityListComponent);
     component = fixture.componentInstance;
@@ -52,7 +52,7 @@ describe('PreprintRecentActivityListComponent', () => {
   });
 
   it('should emit page change event', () => {
-    jest.spyOn(component.pageChanged, 'emit');
+    vi.spyOn(component.pageChanged, 'emit');
     const mockEvent = { page: 2, first: 10, rows: 10 };
 
     component.onPageChange(mockEvent);
@@ -61,7 +61,7 @@ describe('PreprintRecentActivityListComponent', () => {
   });
 
   it('should emit page 1 when page is undefined', () => {
-    jest.spyOn(component.pageChanged, 'emit');
+    vi.spyOn(component.pageChanged, 'emit');
     const mockEvent = { page: undefined, first: 0, rows: 10 };
 
     component.onPageChange(mockEvent);

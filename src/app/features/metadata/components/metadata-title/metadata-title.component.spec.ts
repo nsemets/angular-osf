@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MetadataTitleComponent } from './metadata-title.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { MetadataTitleComponent } from './metadata-title.component';
 
 describe('MetadataTitleComponent', () => {
   let component: MetadataTitleComponent;
@@ -10,11 +10,11 @@ describe('MetadataTitleComponent', () => {
 
   const mockTitle = 'Title';
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MetadataTitleComponent],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(MetadataTitleComponent);
     component = fixture.componentInstance;
@@ -32,7 +32,7 @@ describe('MetadataTitleComponent', () => {
   });
 
   it('should emit openEditTitleDialog event', () => {
-    const emitSpy = jest.spyOn(component.openEditTitleDialog, 'emit');
+    const emitSpy = vi.spyOn(component.openEditTitleDialog, 'emit');
 
     component.openEditTitleDialog.emit();
 

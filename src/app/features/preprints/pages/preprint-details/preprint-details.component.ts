@@ -383,7 +383,7 @@ export class PreprintDetailsComponent implements OnInit, OnDestroy {
       next: () => {
         this.checkAndSetVersionToTheUrl();
 
-        if (this.preprint()!.currentUserPermissions.length > 0 || this.moderationMode()) {
+        if ((this.preprint()?.currentUserPermissions?.length ?? 0) > 0 || this.moderationMode()) {
           this.actions.fetchPreprintReviewActions();
 
           if (this.preprintWithdrawableState() && (this.hasAdminAccess() || this.moderationMode())) {

@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PreprintProviderFooterComponent } from './preprint-provider-footer.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { PreprintProviderFooterComponent } from './preprint-provider-footer.component';
 
 describe('PreprintProviderFooterComponent', () => {
   let fixture: ComponentFixture<PreprintProviderFooterComponent>;

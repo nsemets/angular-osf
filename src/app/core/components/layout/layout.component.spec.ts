@@ -9,6 +9,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IS_MEDIUM, IS_WEB } from '@osf/shared/helpers/breakpoints.tokens';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 import { FooterComponent } from '../footer/footer.component';
 import { HeaderComponent } from '../header/header.component';
@@ -17,8 +19,6 @@ import { SidenavComponent } from '../sidenav/sidenav.component';
 import { TopnavComponent } from '../topnav/topnav.component';
 
 import { LayoutComponent } from './layout.component';
-
-import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('LayoutComponent', () => {
   let component: LayoutComponent;

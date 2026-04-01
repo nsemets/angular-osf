@@ -10,6 +10,14 @@ import { SearchInputComponent } from '@osf/shared/components/search-input/search
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { BrandService } from '@osf/shared/services/brand.service';
 
+import { PREPRINT_PROVIDER_DETAILS_MOCK } from '@testing/mocks/preprint-provider-details';
+import { PREPRINT_PROVIDER_SHORT_INFO_MOCK } from '@testing/mocks/preprint-provider-short-info.mock';
+import { SUBJECTS_MOCK } from '@testing/mocks/subject.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
+import { BrandServiceMock, BrandServiceMockType } from '@testing/providers/brand-service.mock';
+import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
+import { provideMockStore } from '@testing/providers/store-provider.mock';
+
 import { AdvisoryBoardComponent } from '../../components/advisory-board/advisory-board.component';
 import { BrowseBySubjectsComponent } from '../../components/browse-by-subjects/browse-by-subjects.component';
 import { PreprintServicesComponent } from '../../components/preprint-services/preprint-services.component';
@@ -22,14 +30,6 @@ import {
 } from '../../store/preprint-providers';
 
 import { PreprintsLandingComponent } from './preprints-landing.component';
-
-import { PREPRINT_PROVIDER_DETAILS_MOCK } from '@testing/mocks/preprint-provider-details';
-import { PREPRINT_PROVIDER_SHORT_INFO_MOCK } from '@testing/mocks/preprint-provider-short-info.mock';
-import { SUBJECTS_MOCK } from '@testing/mocks/subject.mock';
-import { provideOSFCore } from '@testing/osf.testing.provider';
-import { BrandServiceMock, BrandServiceMockType } from '@testing/providers/brand-service.mock';
-import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
-import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('PreprintsLandingComponent', () => {
   let component: PreprintsLandingComponent;
@@ -44,7 +44,7 @@ describe('PreprintsLandingComponent', () => {
   const mockDefaultProvider = 'osf';
 
   beforeEach(() => {
-    routerMock = RouterMockBuilder.create().withNavigate(jest.fn().mockResolvedValue(true)).build();
+    routerMock = RouterMockBuilder.create().withNavigate(vi.fn().mockResolvedValue(true)).build();
     brandServiceMock = BrandServiceMock.simple();
 
     TestBed.configureTestingModule({

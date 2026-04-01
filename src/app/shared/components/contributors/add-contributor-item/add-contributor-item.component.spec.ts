@@ -2,9 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ContributorAddModel } from '@osf/shared/models/contributors/contributor-add.model';
 
-import { AddContributorItemComponent } from './add-contributor-item.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { AddContributorItemComponent } from './add-contributor-item.component';
 
 describe('AddContributorItemComponent', () => {
   let component: AddContributorItemComponent;
@@ -18,11 +18,11 @@ describe('AddContributorItemComponent', () => {
     email: 'email@gmail.com',
   };
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [AddContributorItemComponent],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(AddContributorItemComponent);
     component = fixture.componentInstance;

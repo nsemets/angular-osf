@@ -4,12 +4,9 @@ import { MockProvider } from 'ng-mocks';
 
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
+import { Mock } from 'vitest';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { Funder, RorFunderOption } from '../../models';
-import { GetFundersList, MetadataSelectors } from '../../store';
-
-import { FundingDialogComponent } from './funding-dialog.component';
 
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideDynamicDialogRefMock } from '@testing/providers/dynamic-dialog-ref.mock';
@@ -19,6 +16,11 @@ import {
   provideMockStore,
   SignalOverride,
 } from '@testing/providers/store-provider.mock';
+
+import { Funder, RorFunderOption } from '../../models';
+import { GetFundersList, MetadataSelectors } from '../../store';
+
+import { FundingDialogComponent } from './funding-dialog.component';
 
 interface SetupOverrides extends BaseSetupOverrides {
   configFunders?: Funder[];
@@ -61,7 +63,7 @@ describe('FundingDialogComponent', () => {
   }
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('should create', () => {
@@ -105,25 +107,25 @@ describe('FundingDialogComponent', () => {
   });
 
   it('should dispatch GetFundersList after debounced search', () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.onFunderSearch('open');
-    jest.advanceTimersByTime(300);
+    vi.advanceTimersByTime(300);
 
     expect(store.dispatch).toHaveBeenCalledWith(new GetFundersList('open'));
   });
 
   it('should not dispatch duplicate consecutive search terms', () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.onFunderSearch('same');
-    jest.advanceTimersByTime(300);
+    vi.advanceTimersByTime(300);
     component.onFunderSearch('same');
-    jest.advanceTimersByTime(300);
+    vi.advanceTimersByTime(300);
 
     expect(store.dispatch).toHaveBeenCalledTimes(1);
     expect(store.dispatch).toHaveBeenCalledWith(new GetFundersList('same'));

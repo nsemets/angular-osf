@@ -81,7 +81,6 @@ export class InstitutionsProjectsComponent implements OnInit, OnDestroy {
   areResourcesLoading = select(GlobalSearchSelectors.getResourcesLoading);
   resourcesCount = select(GlobalSearchSelectors.getResourcesCount);
 
-  selfLink = select(GlobalSearchSelectors.getFirst);
   firstLink = select(GlobalSearchSelectors.getFirst);
   nextLink = select(GlobalSearchSelectors.getNext);
   previousLink = select(GlobalSearchSelectors.getPrevious);
@@ -133,7 +132,7 @@ export class InstitutionsProjectsComponent implements OnInit, OnDestroy {
 
   download(type: DownloadType) {
     downloadResults(
-      this.selfLink(),
+      this.firstLink(),
       type,
       INSTITUTIONS_CSV_TSV_FIELDS[CurrentResourceType.Projects],
       INSTITUTIONS_DOWNLOAD_CSV_TSV_RESOURCE[CurrentResourceType.Projects]

@@ -1,9 +1,9 @@
 import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
-import { WINDOW } from './window.provider';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { WINDOW } from './window.provider';
 
 describe('Provider: WINDOW', () => {
   describe('when running in the browser', () => {

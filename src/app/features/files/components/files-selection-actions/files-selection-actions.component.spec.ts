@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FilesSelectionActionsComponent } from './files-selection-actions.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { FilesSelectionActionsComponent } from './files-selection-actions.component';
 
 describe('FilesSelectionActionsComponent', () => {
   let component: FilesSelectionActionsComponent;
   let fixture: ComponentFixture<FilesSelectionActionsComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [FilesSelectionActionsComponent],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(FilesSelectionActionsComponent);
     component = fixture.componentInstance;
@@ -44,7 +44,7 @@ describe('FilesSelectionActionsComponent', () => {
   });
 
   it('should emit copySelected event', () => {
-    const copySelectedSpy = jest.spyOn(component.copySelected, 'emit');
+    const copySelectedSpy = vi.spyOn(component.copySelected, 'emit');
 
     component.copySelected.emit();
 
@@ -52,7 +52,7 @@ describe('FilesSelectionActionsComponent', () => {
   });
 
   it('should emit moveSelected event', () => {
-    const moveSelectedSpy = jest.spyOn(component.moveSelected, 'emit');
+    const moveSelectedSpy = vi.spyOn(component.moveSelected, 'emit');
 
     component.moveSelected.emit();
 
@@ -60,7 +60,7 @@ describe('FilesSelectionActionsComponent', () => {
   });
 
   it('should emit deleteSelected event', () => {
-    const deleteSelectedSpy = jest.spyOn(component.deleteSelected, 'emit');
+    const deleteSelectedSpy = vi.spyOn(component.deleteSelected, 'emit');
 
     component.deleteSelected.emit();
 
@@ -68,7 +68,7 @@ describe('FilesSelectionActionsComponent', () => {
   });
 
   it('should emit clearSelection event', () => {
-    const clearSelectionSpy = jest.spyOn(component.clearSelection, 'emit');
+    const clearSelectionSpy = vi.spyOn(component.clearSelection, 'emit');
 
     component.clearSelection.emit();
 

@@ -2,10 +2,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { WikiVersion } from '@osf/shared/models/wiki/wiki.model';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 import { CompareSectionComponent } from './compare-section.component';
 
-import { provideOSFCore } from '@testing/osf.testing.provider';
 import * as Diff from 'diff';
+
+vi.mock('diff', () => ({ diffWords: vi.fn() }));
 
 describe('CompareSectionComponent', () => {
   let component: CompareSectionComponent;
@@ -25,6 +28,8 @@ describe('CompareSectionComponent', () => {
   ];
 
   beforeEach(() => {
+    vi.mocked(Diff.diffWords).mockReturnValue([]);
+
     TestBed.configureTestingModule({
       imports: [CompareSectionComponent],
       providers: [provideOSFCore()],
@@ -44,7 +49,7 @@ describe('CompareSectionComponent', () => {
   });
 
   it('should emit first version id on init and set selectedVersion', () => {
-    const emitSpy = jest.spyOn(component.selectVersion, 'emit');
+    const emitSpy = vi.spyOn(component.selectVersion, 'emit');
     const nextVersions: WikiVersion[] = [
       {
         id: 'v9',
@@ -72,7 +77,7 @@ describe('CompareSectionComponent', () => {
   });
 
   it('should update selectedVersion and emit on version change', () => {
-    const emitSpy = jest.spyOn(component.selectVersion, 'emit');
+    const emitSpy = vi.spyOn(component.selectVersion, 'emit');
 
     component.onVersionChange('v2');
 
@@ -81,9 +86,9 @@ describe('CompareSectionComponent', () => {
   });
 
   it('should render diff words with added and removed wrappers', () => {
-    jest.spyOn(Diff, 'diffWords').mockReturnValue([
+    vi.mocked(Diff.diffWords).mockReturnValue([
       { value: 'same ', added: false, removed: false, count: 1 },
-      { value: 'removed ', added: false, removed: true, count: 1 },
+      { value: 'removed', added: false, removed: true, count: 1 },
       { value: 'added', added: true, removed: false, count: 1 },
     ]);
 
@@ -91,7 +96,7 @@ describe('CompareSectionComponent', () => {
     fixture.componentRef.setInput('previewContent', 'same added');
     fixture.detectChanges();
 
-    expect(component.content()).toBe('same <span class="removed">removed </span><span class="added">added</span>');
+    expect(component.content()).toBe('same <span class="removed">removed</span><span class="added">added</span>');
   });
 
   it('should render loading skeletons when isLoading is true', () => {

@@ -3,10 +3,10 @@ import { provideRouter } from '@angular/router';
 
 import { Institution } from '@osf/shared/models/institutions/institutions.model';
 
-import { AffiliatedInstitutionsViewComponent } from './affiliated-institutions-view.component';
-
 import { MOCK_INSTITUTION } from '@testing/mocks/institution.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { AffiliatedInstitutionsViewComponent } from './affiliated-institutions-view.component';
 
 describe('AffiliatedInstitutionsViewComponent', () => {
   let component: AffiliatedInstitutionsViewComponent;

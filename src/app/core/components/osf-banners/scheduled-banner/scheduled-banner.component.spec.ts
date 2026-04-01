@@ -11,10 +11,10 @@ import { BannerModel } from '@core/components/osf-banners/models/banner.model';
 import { IS_XSMALL } from '@osf/shared/helpers/breakpoints.tokens';
 import { BannersSelector, GetCurrentScheduledBanner } from '@osf/shared/stores/banners';
 
-import { ScheduledBannerComponent } from './scheduled-banner.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
+
+import { ScheduledBannerComponent } from './scheduled-banner.component';
 
 describe('Component: Scheduled Banner', () => {
   let fixture: ComponentFixture<ScheduledBannerComponent>;
@@ -50,7 +50,7 @@ describe('Component: Scheduled Banner', () => {
   });
 
   it('should dispatch FetchCurrentScheduledBanner on init', () => {
-    const dispatchSpy = jest.spyOn(store, 'dispatch');
+    const dispatchSpy = vi.spyOn(store, 'dispatch');
     component.ngOnInit();
     expect(dispatchSpy).toHaveBeenCalledWith(new GetCurrentScheduledBanner());
   });

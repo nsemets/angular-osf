@@ -2,6 +2,8 @@ import { Store } from '@ngxs/store';
 
 import { MockComponents, MockProvider } from 'ng-mocks';
 
+import { Mock } from 'vitest';
+
 import { PLATFORM_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
@@ -12,16 +14,17 @@ import { GetEmails, UserEmailsSelectors } from '@core/store/user-emails';
 import { AccountEmailModel } from '@osf/shared/models/emails/account-email.model';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 
-import { ConfirmEmailComponent } from './shared/components/confirm-email/confirm-email.component';
-import { FullScreenLoaderComponent } from './shared/components/full-screen-loader/full-screen-loader.component';
-import { ToastComponent } from './shared/components/toast/toast.component';
-import { AppComponent } from './app.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
 import { LoaderServiceMock, provideLoaderServiceMock } from '@testing/providers/loader-service.mock';
 import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
 import { BaseSetupOverrides, mergeSignalOverrides, provideMockStore } from '@testing/providers/store-provider.mock';
+
+import { ConfirmEmailComponent } from './shared/components/confirm-email/confirm-email.component';
+import { FullScreenLoaderComponent } from './shared/components/full-screen-loader/full-screen-loader.component';
+import { ToastComponent } from './shared/components/toast/toast.component';
+import { AppComponent } from './app.component';
+
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
 
 describe('AppComponent', () => {
@@ -32,7 +35,7 @@ describe('AppComponent', () => {
   let routerMock: RouterMockType;
   let loaderServiceMock: LoaderServiceMock;
   let customDialogServiceMock: ReturnType<CustomDialogServiceMockBuilder['build']>;
-  let gtmServiceMock: { pushTag: jest.Mock };
+  let gtmServiceMock: { pushTag: Mock };
 
   const unverifiedEmail: AccountEmailModel = {
     id: 'email-1',
@@ -54,7 +57,7 @@ describe('AppComponent', () => {
     routerMock = routerBuilder.build();
     loaderServiceMock = new LoaderServiceMock();
     customDialogServiceMock = CustomDialogServiceMockBuilder.create().withDefaultOpen().build();
-    gtmServiceMock = { pushTag: jest.fn() };
+    gtmServiceMock = { pushTag: vi.fn() };
 
     TestBed.configureTestingModule({
       imports: [AppComponent, ...MockComponents(ToastComponent, FullScreenLoaderComponent)],
@@ -122,18 +125,18 @@ describe('AppComponent', () => {
   });
 
   it('should hide loader after navigation end delay in browser', () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     setup();
 
     routerBuilder.emit(new NavigationEnd(2, '/a', '/a'));
 
     expect(loaderServiceMock.hide).not.toHaveBeenCalled();
 
-    jest.advanceTimersByTime(500);
+    vi.advanceTimersByTime(500);
     fixture.detectChanges();
 
     expect(loaderServiceMock.hide).toHaveBeenCalled();
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('should push GTM page event on navigation end when id exists', () => {

@@ -4,14 +4,11 @@ import { MockProvider } from 'ng-mocks';
 
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
+import { Mock } from 'vitest';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ToastService } from '@osf/shared/services/toast.service';
-
-import { ProjectOverviewModel } from '../../models';
-import { DuplicateProject, ProjectOverviewSelectors } from '../../store';
-
-import { DuplicateDialogComponent } from './duplicate-dialog.component';
 
 import { MOCK_PROJECT_OVERVIEW } from '@testing/mocks/project-overview.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
@@ -23,6 +20,11 @@ import {
   SignalOverride,
 } from '@testing/providers/store-provider.mock';
 import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
+
+import { ProjectOverviewModel } from '../../models';
+import { DuplicateProject, ProjectOverviewSelectors } from '../../store';
+
+import { DuplicateDialogComponent } from './duplicate-dialog.component';
 
 describe('DuplicateDialogComponent', () => {
   let component: DuplicateDialogComponent;
@@ -73,7 +75,7 @@ describe('DuplicateDialogComponent', () => {
     setup({
       selectorOverrides: [{ selector: ProjectOverviewSelectors.getProject, value: null }],
     });
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.handleDuplicateConfirm();
 
@@ -84,7 +86,7 @@ describe('DuplicateDialogComponent', () => {
 
   it('should duplicate project, close dialog and show success toast', () => {
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.handleDuplicateConfirm();
 

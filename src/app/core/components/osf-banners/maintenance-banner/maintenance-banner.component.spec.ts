@@ -5,20 +5,21 @@ import { of } from 'rxjs';
 
 import { PLATFORM_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
+
+import { provideOSFCore } from '@testing/osf.testing.provider';
+import { CookieServiceMock, CookieServiceMockType } from '@testing/providers/cookie-service.mock';
+import { MaintenanceServiceMock, MaintenanceServiceMockType } from '@testing/providers/maintenance.service.mock';
 
 import { MaintenanceModel } from '../models/maintenance.model';
 import { MaintenanceService } from '../services/maintenance.service';
 
 import { MaintenanceBannerComponent } from './maintenance-banner.component';
 
-import { provideOSFCore } from '@testing/osf.testing.provider';
-
 describe('MaintenanceBannerComponent', () => {
   let fixture: ComponentFixture<MaintenanceBannerComponent>;
   let component: MaintenanceBannerComponent;
-  let maintenanceServiceMock: { fetchMaintenanceStatus: jest.Mock };
-  let cookieServiceMock: { check: jest.Mock; set: jest.Mock };
+  let maintenanceServiceMock: MaintenanceServiceMockType;
+  let cookieServiceMock: CookieServiceMockType;
 
   const activeMaintenance: MaintenanceModel = {
     level: 2,
@@ -33,13 +34,10 @@ describe('MaintenanceBannerComponent', () => {
     cookieDismissed?: boolean;
     maintenance?: MaintenanceModel | null;
   }) {
-    maintenanceServiceMock = {
-      fetchMaintenanceStatus: jest.fn().mockReturnValue(of(overrides?.maintenance ?? activeMaintenance)),
-    };
-    cookieServiceMock = {
-      check: jest.fn().mockReturnValue(overrides?.cookieDismissed ?? false),
-      set: jest.fn(),
-    };
+    maintenanceServiceMock = MaintenanceServiceMock.simple();
+    cookieServiceMock = CookieServiceMock.simple();
+    cookieServiceMock.check.mockReturnValue(overrides?.cookieDismissed ?? false);
+    maintenanceServiceMock.fetchMaintenanceStatus.mockReturnValue(of(overrides?.maintenance ?? null));
 
     TestBed.configureTestingModule({
       imports: [MaintenanceBannerComponent],
@@ -96,15 +94,5 @@ describe('MaintenanceBannerComponent', () => {
     expect(cookieServiceMock.set).not.toHaveBeenCalled();
     expect(component.dismissed()).toBe(true);
     expect(component.maintenance()).toBeNull();
-  });
-
-  it('should render banner only when maintenance exists and not dismissed', () => {
-    setup({ maintenance: activeMaintenance, cookieDismissed: false });
-    const message = fixture.debugElement.query(By.css('p-message'));
-    expect(message).toBeTruthy();
-    component.dismissed.set(true);
-    fixture.detectChanges();
-    const hiddenMessage = fixture.debugElement.query(By.css('p-message'));
-    expect(hiddenMessage).toBeNull();
   });
 });

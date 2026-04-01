@@ -4,20 +4,21 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { ContributorsTableComponent } from '@osf/shared/components/contributors/contributors-table/contributors-table.component';
 import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { ContributorsSelectors } from '@osf/shared/stores/contributors';
-import { ContributorsTableComponent } from '@shared/components/contributors';
 import { ContributorModel } from '@shared/models/contributors/contributor.model';
-
-import { ContributorsDialogComponent } from './contributors-dialog.component';
 
 import { MOCK_CONTRIBUTOR } from '@testing/mocks/contributors.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
+import { provideDynamicDialogRefMock } from '@testing/providers/dynamic-dialog-ref.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
+
+import { ContributorsDialogComponent } from './contributors-dialog.component';
 
 describe('ContributorsDialogComponent', () => {
   let component: ContributorsDialogComponent;
@@ -28,10 +29,10 @@ describe('ContributorsDialogComponent', () => {
 
   const mockContributors: ContributorModel[] = [MOCK_CONTRIBUTOR];
 
-  beforeEach(async () => {
+  beforeEach(() => {
     mockCustomDialogService = CustomDialogServiceMockBuilder.create().build();
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [ContributorsDialogComponent, ...MockComponents(SearchInputComponent, ContributorsTableComponent)],
       providers: [
         provideOSFCore(),
@@ -51,11 +52,9 @@ describe('ContributorsDialogComponent', () => {
             resourceType: 1,
           },
         }),
-        MockProvider(DynamicDialogRef, {
-          close: jest.fn(),
-        }),
+        provideDynamicDialogRefMock(),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(ContributorsDialogComponent);
     component = fixture.componentInstance;
@@ -73,7 +72,7 @@ describe('ContributorsDialogComponent', () => {
   });
 
   it('should set search subscription on init', () => {
-    const setSearchSubscriptionSpy = jest.spyOn(component as any, 'setSearchSubscription');
+    const setSearchSubscriptionSpy = vi.spyOn(component as any, 'setSearchSubscription');
 
     component.ngOnInit();
 
@@ -90,7 +89,7 @@ describe('ContributorsDialogComponent', () => {
 
   it('should remove contributor with confirmation', () => {
     const contributor = mockContributors[0];
-    const confirmDeleteSpy = jest.spyOn(component['customConfirmationService'], 'confirmDelete');
+    const confirmDeleteSpy = vi.spyOn(component['customConfirmationService'], 'confirmDelete');
 
     component.removeContributor(contributor);
 
@@ -113,11 +112,9 @@ describe('ContributorsDialogComponent', () => {
   });
 
   it('should close dialog', () => {
-    const closeSpy = jest.spyOn(dialogRef, 'close');
-
     component.onClose();
 
-    expect(closeSpy).toHaveBeenCalled();
+    expect(dialogRef.close).toHaveBeenCalled();
   });
 
   it('should compute search placeholder for registration', () => {

@@ -3,21 +3,21 @@ import { MockComponent } from 'ng-mocks';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl } from '@angular/forms';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+
 import { IconComponent } from '../icon/icon.component';
 
 import { SearchInputComponent } from './search-input.component';
-
-import { provideOSFCore } from '@testing/osf.testing.provider';
 
 describe('SearchInputComponent', () => {
   let component: SearchInputComponent;
   let fixture: ComponentFixture<SearchInputComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [SearchInputComponent, MockComponent(IconComponent)],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(SearchInputComponent);
     component = fixture.componentInstance;
@@ -50,7 +50,7 @@ describe('SearchInputComponent', () => {
   });
 
   it('should emit triggerSearch when control has non-empty trimmed value', () => {
-    const spy = jest.fn();
+    const spy = vi.fn();
     component.triggerSearch.subscribe(spy);
 
     component.control().setValue('  query  ');
@@ -61,7 +61,7 @@ describe('SearchInputComponent', () => {
   });
 
   it('should not emit triggerSearch when control value is empty string', () => {
-    const spy = jest.fn();
+    const spy = vi.fn();
     component.triggerSearch.subscribe(spy);
 
     component.control().setValue('');
@@ -71,7 +71,7 @@ describe('SearchInputComponent', () => {
   });
 
   it('should not emit triggerSearch when control value is whitespace only', () => {
-    const spy = jest.fn();
+    const spy = vi.fn();
     component.triggerSearch.subscribe(spy);
 
     component.control().setValue('   ');

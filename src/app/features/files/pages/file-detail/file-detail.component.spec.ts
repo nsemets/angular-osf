@@ -13,6 +13,10 @@ import { CustomConfirmationService } from '@shared/services/custom-confirmation.
 import { DataciteService } from '@shared/services/datacite/datacite.service';
 import { ToastService } from '@shared/services/toast.service';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+import { DataciteServiceMock, DataciteServiceMockType } from '@testing/providers/datacite.service.mock';
+import { provideMockStore } from '@testing/providers/store-provider.mock';
+
 import {
   FileKeywordsComponent,
   FileMetadataComponent,
@@ -23,20 +27,14 @@ import { FilesSelectors } from '../../store';
 
 import { FileDetailComponent } from './file-detail.component';
 
-import { provideOSFCore } from '@testing/osf.testing.provider';
-import { provideMockStore } from '@testing/providers/store-provider.mock';
-
 describe.skip('FileDetailComponent', () => {
   let fixture: ComponentFixture<FileDetailComponent>;
   let component: FileDetailComponent;
-  let dataciteService: jest.Mocked<DataciteService>;
+  let dataciteService: DataciteServiceMockType;
 
   beforeEach(() => {
-    window.open = jest.fn();
-    dataciteService = {
-      logIdentifiableView: jest.fn().mockReturnValue(of(void 0)),
-      logIdentifiableDownload: jest.fn().mockReturnValue(of(void 0)),
-    } as unknown as jest.Mocked<DataciteService>;
+    window.open = vi.fn();
+    dataciteService = DataciteServiceMock.simple();
 
     const mockRoute: Partial<ActivatedRoute> = {
       params: of({ providerId: 'osf', fileGuid: 'file-1' }),
@@ -59,7 +57,7 @@ describe.skip('FileDetailComponent', () => {
       providers: [
         provideOSFCore(),
         { provide: ActivatedRoute, useValue: mockRoute },
-        { provide: DataciteService, useValue: dataciteService },
+        MockProvider(DataciteService, dataciteService),
         MockProvider(Router),
         MockProvider(ToastService),
         MockProvider(CustomConfirmationService),
@@ -87,10 +85,6 @@ describe.skip('FileDetailComponent', () => {
     component = fixture.componentInstance;
     document.head.innerHTML = '';
     fixture.detectChanges();
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
   });
 
   it('should call dataciteService.logIdentifiableDownload when downloadFile is triggered', () => {

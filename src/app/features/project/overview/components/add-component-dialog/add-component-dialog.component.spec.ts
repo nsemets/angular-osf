@@ -4,6 +4,8 @@ import { MockComponents, MockProvider } from 'ng-mocks';
 
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
+import { Mock } from 'vitest';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UserSelectors } from '@core/store/user';
@@ -15,11 +17,6 @@ import { ToastService } from '@osf/shared/services/toast.service';
 import { FetchUserInstitutions, InstitutionsSelectors } from '@osf/shared/stores/institutions';
 import { FetchRegions, RegionsSelectors } from '@osf/shared/stores/regions';
 
-import { ProjectOverviewModel } from '../../models';
-import { CreateComponent, GetComponents, ProjectOverviewSelectors } from '../../store';
-
-import { AddComponentDialogComponent } from './add-component-dialog.component';
-
 import { MOCK_PROJECT_OVERVIEW } from '@testing/mocks/project-overview.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideDynamicDialogRefMock } from '@testing/providers/dynamic-dialog-ref.mock';
@@ -30,6 +27,11 @@ import {
   SignalOverride,
 } from '@testing/providers/store-provider.mock';
 import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
+
+import { ProjectOverviewModel } from '../../models';
+import { CreateComponent, GetComponents, ProjectOverviewSelectors } from '../../store';
+
+import { AddComponentDialogComponent } from './add-component-dialog.component';
 
 describe('AddComponentDialogComponent', () => {
   let component: AddComponentDialogComponent;
@@ -173,7 +175,7 @@ describe('AddComponentDialogComponent', () => {
 
   it('should mark all controls touched and not dispatch create action when form is invalid', () => {
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.submitForm();
 
@@ -185,7 +187,7 @@ describe('AddComponentDialogComponent', () => {
     setup({
       selectorOverrides: [{ selector: ProjectOverviewSelectors.getProject, value: null }],
     });
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
     component.componentForm.patchValue({
       [ComponentFormControls.Title]: 'My Component',
       [ComponentFormControls.StorageLocation]: 'us',
@@ -198,7 +200,7 @@ describe('AddComponentDialogComponent', () => {
 
   it('should dispatch create with empty tags when addTags is false', () => {
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
     component.componentForm.patchValue({
       [ComponentFormControls.Title]: 'My Component',
       [ComponentFormControls.Description]: 'Description',
@@ -220,7 +222,7 @@ describe('AddComponentDialogComponent', () => {
 
   it('should dispatch create with project tags when addTags is true', () => {
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
     component.componentForm.patchValue({
       [ComponentFormControls.Title]: 'My Component',
       [ComponentFormControls.Description]: '',

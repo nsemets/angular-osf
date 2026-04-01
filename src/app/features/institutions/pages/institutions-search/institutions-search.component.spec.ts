@@ -10,8 +10,6 @@ import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/
 import { SetDefaultFilterValue } from '@osf/shared/stores/global-search';
 import { FetchInstitutionById, InstitutionsSearchSelectors } from '@osf/shared/stores/institutions-search';
 
-import { InstitutionsSearchComponent } from './institutions-search.component';
-
 import { MOCK_INSTITUTION } from '@testing/mocks/institution.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
@@ -22,9 +20,7 @@ import {
   SignalOverride,
 } from '@testing/providers/store-provider.mock';
 
-interface SetupOverrides extends BaseSetupOverrides {
-  selectorOverrides?: SignalOverride[];
-}
+import { InstitutionsSearchComponent } from './institutions-search.component';
 
 describe('InstitutionsSearchComponent', () => {
   let component: InstitutionsSearchComponent;
@@ -36,7 +32,7 @@ describe('InstitutionsSearchComponent', () => {
     { selector: InstitutionsSearchSelectors.getInstitutionLoading, value: false },
   ];
 
-  function setup(overrides: SetupOverrides = {}) {
+  function setup(overrides: BaseSetupOverrides = {}) {
     const routeBuilder = ActivatedRouteMockBuilder.create();
     if (overrides.routeParams) {
       routeBuilder.withParams(overrides.routeParams);

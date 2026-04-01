@@ -1,18 +1,23 @@
+import { MockProvider } from 'ng-mocks';
+
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+
+import { Mocked } from 'vitest';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OsfFileCustomMetadata } from '@osf/features/files/models';
 
-import { EditFileMetadataDialogComponent } from './edit-file-metadata-dialog.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+import { provideDynamicDialogRefMock } from '@testing/providers/dynamic-dialog-ref.mock';
+
+import { EditFileMetadataDialogComponent } from './edit-file-metadata-dialog.component';
 
 describe('EditFileMetadataDialogComponent', () => {
   let component: EditFileMetadataDialogComponent;
   let fixture: ComponentFixture<EditFileMetadataDialogComponent>;
-  let dialogRef: jest.Mocked<DynamicDialogRef>;
-  let dialogConfig: jest.Mocked<DynamicDialogConfig>;
+  let dialogRef: DynamicDialogRef;
+  let dialogConfig: Mocked<DynamicDialogConfig>;
 
   const mockFileMetadata: OsfFileCustomMetadata = {
     id: '1',
@@ -22,28 +27,18 @@ describe('EditFileMetadataDialogComponent', () => {
     language: 'en',
   };
 
-  beforeEach(async () => {
-    const dialogRefMock = {
-      close: jest.fn(),
-    };
+  beforeEach(() => {
+    const dialogConfigMock = { data: mockFileMetadata };
 
-    const dialogConfigMock = {
-      data: mockFileMetadata,
-    };
-
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [EditFileMetadataDialogComponent],
-      providers: [
-        provideOSFCore(),
-        { provide: DynamicDialogRef, useValue: dialogRefMock },
-        { provide: DynamicDialogConfig, useValue: dialogConfigMock },
-      ],
-    }).compileComponents();
+      providers: [provideOSFCore(), provideDynamicDialogRefMock(), MockProvider(DynamicDialogConfig, dialogConfigMock)],
+    });
 
     fixture = TestBed.createComponent(EditFileMetadataDialogComponent);
     component = fixture.componentInstance;
-    dialogRef = TestBed.inject(DynamicDialogRef) as jest.Mocked<DynamicDialogRef>;
-    dialogConfig = TestBed.inject(DynamicDialogConfig) as jest.Mocked<DynamicDialogConfig>;
+    dialogRef = TestBed.inject(DynamicDialogRef);
+    dialogConfig = TestBed.inject(DynamicDialogConfig) as Mocked<DynamicDialogConfig>;
     fixture.detectChanges();
   });
 

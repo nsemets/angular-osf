@@ -6,6 +6,8 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { throwError } from 'rxjs';
 
+import { Mock } from 'vitest';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DeleteEmail, UserEmailsSelectors, VerifyEmail } from '@core/store/user-emails';
@@ -92,7 +94,7 @@ describe('ConfirmEmailComponent', () => {
   it('should show error for delete email failure in add flow', () => {
     const email = buildEmail({ isMerge: false });
     setup({ email });
-    (store.dispatch as jest.Mock).mockReturnValueOnce(throwError(() => new Error('delete failed')));
+    (store.dispatch as Mock).mockReturnValueOnce(throwError(() => new Error('delete failed')));
 
     component.closeDialog();
 
@@ -118,7 +120,7 @@ describe('ConfirmEmailComponent', () => {
   it('should show error for delete email failure in merge flow', () => {
     const email = buildEmail({ isMerge: true });
     setup({ email });
-    (store.dispatch as jest.Mock).mockReturnValueOnce(throwError(() => new Error('delete failed')));
+    (store.dispatch as Mock).mockReturnValueOnce(throwError(() => new Error('delete failed')));
 
     component.closeDialog();
 
@@ -144,7 +146,7 @@ describe('ConfirmEmailComponent', () => {
   it('should show error for verify email failure in add flow', () => {
     const email = buildEmail({ isMerge: false });
     setup({ email });
-    (store.dispatch as jest.Mock).mockReturnValueOnce(throwError(() => new Error('verify failed')));
+    (store.dispatch as Mock).mockReturnValueOnce(throwError(() => new Error('verify failed')));
 
     component.verifyEmail();
 
@@ -170,7 +172,7 @@ describe('ConfirmEmailComponent', () => {
   it('should show error for verify email failure in merge flow', () => {
     const email = buildEmail({ isMerge: true });
     setup({ email });
-    (store.dispatch as jest.Mock).mockReturnValueOnce(throwError(() => new Error('verify failed')));
+    (store.dispatch as Mock).mockReturnValueOnce(throwError(() => new Error('verify failed')));
 
     component.verifyEmail();
 

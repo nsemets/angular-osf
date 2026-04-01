@@ -16,7 +16,7 @@ import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.comp
 
 @Component({
   selector: 'osf-metadata-tabs',
-  imports: [LoadingSpinnerComponent, TabsModule, TranslatePipe, CedarTemplateFormComponent],
+  imports: [LoadingSpinnerComponent, CedarTemplateFormComponent, TabsModule, TranslatePipe],
   templateUrl: './metadata-tabs.component.html',
   styleUrl: './metadata-tabs.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

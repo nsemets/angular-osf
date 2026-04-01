@@ -2,6 +2,8 @@ import { Store } from '@ngxs/store';
 
 import { MockComponent, MockProvider } from 'ng-mocks';
 
+import { Mock } from 'vitest';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -10,8 +12,6 @@ import { CreateDraft, GetProjects, GetProviderSchemas, RegistriesSelectors } fro
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { GetRegistryProvider, RegistrationProviderSelectors } from '@shared/stores/registration-provider';
-
-import { NewRegistrationComponent } from './new-registration.component';
 
 import { MOCK_PROVIDER_SCHEMAS } from '@testing/mocks/registries.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
@@ -24,6 +24,8 @@ import {
   SignalOverride,
 } from '@testing/providers/store-provider.mock';
 import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
+
+import { NewRegistrationComponent } from './new-registration.component';
 
 describe('NewRegistrationComponent', () => {
   let component: NewRegistrationComponent;
@@ -75,7 +77,7 @@ describe('NewRegistrationComponent', () => {
   };
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   it('should create', () => {
@@ -153,7 +155,7 @@ describe('NewRegistrationComponent', () => {
     setup();
     component.draftForm.patchValue({ providerSchema: 'schema-1', project: 'proj-1' });
     component.fromProject.set(true);
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.createDraft();
 
@@ -166,7 +168,7 @@ describe('NewRegistrationComponent', () => {
   it('should not dispatch createDraft when form is invalid', () => {
     setup();
     component.draftForm.patchValue({ providerSchema: '' });
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.createDraft();
 
@@ -174,46 +176,50 @@ describe('NewRegistrationComponent', () => {
   });
 
   it('should dispatch getProjects after debounced filter', () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.onProjectFilter('abc');
-    jest.advanceTimersByTime(300);
+    vi.advanceTimersByTime(300);
 
     expect(store.dispatch).toHaveBeenCalledWith(new GetProjects('user-1', 'abc'));
   });
 
   it('should not dispatch duplicate getProjects for same filter value', () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.onProjectFilter('abc');
-    jest.advanceTimersByTime(300);
+    vi.advanceTimersByTime(300);
     component.onProjectFilter('abc');
-    jest.advanceTimersByTime(300);
+    vi.advanceTimersByTime(300);
 
-    const getProjectsCalls = (store.dispatch as jest.Mock).mock.calls.filter(
-      ([action]: [unknown]) => action instanceof GetProjects
-    );
-    expect(getProjectsCalls.length).toBe(1);
+    const getProjectsCalls = (store.dispatch as Mock).mock.calls
+      .map(([action]) => action)
+      .filter((action): action is GetProjects => action instanceof GetProjects);
+
+    expect(getProjectsCalls).toHaveLength(1);
+    expect(getProjectsCalls[0]).toEqual(new GetProjects('user-1', 'abc'));
   });
 
   it('should debounce rapid filter calls and dispatch only the last value', () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.onProjectFilter('a');
     component.onProjectFilter('ab');
     component.onProjectFilter('abc');
-    jest.advanceTimersByTime(300);
+    vi.advanceTimersByTime(300);
 
-    const getProjectsCalls = (store.dispatch as jest.Mock).mock.calls.filter(
-      ([action]: [unknown]) => action instanceof GetProjects
-    );
-    expect(getProjectsCalls.length).toBe(1);
-    expect(getProjectsCalls[0][0]).toEqual(new GetProjects('user-1', 'abc'));
+    const getProjectsCalls = (store.dispatch as Mock).mock.calls
+      .map(([action]) => action)
+      .filter((action): action is GetProjects => action instanceof GetProjects);
+
+    expect(getProjectsCalls).toHaveLength(1);
+    expect(getProjectsCalls[0]).toEqual(new GetProjects('user-1', 'abc'));
+    expect(store.dispatch).not.toHaveBeenCalledWith(new GetProjects('user-1', 'a'));
   });
 });

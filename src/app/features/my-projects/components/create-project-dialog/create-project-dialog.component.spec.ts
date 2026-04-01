@@ -1,5 +1,9 @@
 import { Store } from '@ngxs/store';
 
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
+
+import { Mock } from 'vitest';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UserSelectors } from '@core/store/user';
@@ -10,11 +14,11 @@ import { CreateProject, GetMyProjects, MyResourcesSelectors } from '@osf/shared/
 import { ProjectsSelectors } from '@osf/shared/stores/projects';
 import { RegionsSelectors } from '@osf/shared/stores/regions';
 
-import { CreateProjectDialogComponent } from './create-project-dialog.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideDynamicDialogRefMock } from '@testing/providers/dynamic-dialog-ref.mock';
 import { mergeSignalOverrides, provideMockStore, SignalOverride } from '@testing/providers/store-provider.mock';
+
+import { CreateProjectDialogComponent } from './create-project-dialog.component';
 
 interface SetupOverrides {
   selectorOverrides?: SignalOverride[];
@@ -28,7 +32,7 @@ describe('CreateProjectDialogComponent', () => {
   let component: CreateProjectDialogComponent;
   let fixture: ComponentFixture<CreateProjectDialogComponent>;
   let store: Store;
-  let dialogRef: { close: jest.Mock };
+  let dialogRef: DynamicDialogRef;
 
   const defaultSignals: SignalOverride[] = [
     { selector: MyResourcesSelectors.isProjectSubmitting, value: false },
@@ -58,7 +62,7 @@ describe('CreateProjectDialogComponent', () => {
     store = TestBed.inject(Store);
     fixture = TestBed.createComponent(CreateProjectDialogComponent);
     component = fixture.componentInstance;
-    dialogRef = component.dialogRef as unknown as { close: jest.Mock };
+    dialogRef = component.dialogRef;
     fixture.detectChanges();
   }
 
@@ -81,8 +85,8 @@ describe('CreateProjectDialogComponent', () => {
 
   it('should mark form as touched and not dispatch when form is invalid', () => {
     setup();
-    const markAllAsTouchedSpy = jest.spyOn(component.projectForm, 'markAllAsTouched');
-    (store.dispatch as jest.Mock).mockClear();
+    const markAllAsTouchedSpy = vi.spyOn(component.projectForm, 'markAllAsTouched');
+    (store.dispatch as Mock).mockClear();
 
     component.submitForm();
 
@@ -94,7 +98,7 @@ describe('CreateProjectDialogComponent', () => {
 
   it('should dispatch create project with form values', () => {
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
     component.projectForm.patchValue({
       [ProjectFormControls.Title]: 'My Project',
       [ProjectFormControls.StorageLocation]: 'us',
@@ -116,7 +120,7 @@ describe('CreateProjectDialogComponent', () => {
         { selector: MyResourcesSelectors.getProjects, value: [{ id: 'new-id', title: 'x' }] },
       ],
     });
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
     component.projectForm.patchValue({
       [ProjectFormControls.Title]: 'My Project',
       [ProjectFormControls.StorageLocation]: 'eu',

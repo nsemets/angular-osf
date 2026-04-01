@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { MeetingsComponent } from './meetings.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { MeetingsComponent } from './meetings.component';
 
 describe('MeetingsComponent', () => {
   let component: MeetingsComponent;

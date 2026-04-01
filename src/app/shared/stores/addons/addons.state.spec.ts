@@ -5,6 +5,11 @@ import { inject, TestBed } from '@angular/core/testing';
 
 import { AddonsService } from '@osf/shared/services/addons/addons.service';
 
+import { getAddonsAuthorizedStorageData } from '@testing/data/addons/addons.authorized-storage.data';
+import { getConfiguredAddonsData } from '@testing/data/addons/addons.configured.data';
+import { getAddonsExternalStorageData } from '@testing/data/addons/addons.external-storage.data';
+import { provideOSFCore, provideOSFHttp } from '@testing/osf.testing.provider';
+
 import {
   GetAuthorizedStorageAddons,
   GetAuthorizedStorageOauthToken,
@@ -13,11 +18,6 @@ import {
 } from './addons.actions';
 import { AddonsSelectors } from './addons.selectors';
 import { AddonsState } from './addons.state';
-
-import { getAddonsAuthorizedStorageData } from '@testing/data/addons/addons.authorized-storage.data';
-import { getConfiguredAddonsData } from '@testing/data/addons/addons.configured.data';
-import { getAddonsExternalStorageData } from '@testing/data/addons/addons.external-storage.data';
-import { provideOSFCore, provideOSFHttp } from '@testing/osf.testing.provider';
 
 describe('State: Addons', () => {
   let store: Store;

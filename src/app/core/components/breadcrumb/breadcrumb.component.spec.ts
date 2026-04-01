@@ -7,12 +7,12 @@ import { ProviderSelectors } from '@core/store/provider';
 import { InstitutionsAdminSelectors } from '@osf/features/admin-institutions/store';
 import { InstitutionsSearchSelectors } from '@shared/stores/institutions-search';
 
-import { BreadcrumbComponent } from './breadcrumb.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
+
+import { BreadcrumbComponent } from './breadcrumb.component';
 
 describe('BreadcrumbComponent', () => {
   let component: BreadcrumbComponent;

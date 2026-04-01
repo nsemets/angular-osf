@@ -5,16 +5,16 @@ import { ActivatedRoute } from '@angular/router';
 
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 
+import { MOCK_PREPRINT_PROVIDER_MODERATION_INFO } from '@testing/mocks/preprint-provider-moderation-info.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
+import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
+import { provideMockStore } from '@testing/providers/store-provider.mock';
+
 import { SettingsSectionControl } from '../../enums';
 import { PreprintProviderModerationInfo } from '../../models';
 import { PreprintModerationSelectors } from '../../store/preprint-moderation';
 
 import { PreprintModerationSettingsComponent } from './preprint-moderation-settings.component';
-
-import { MOCK_PREPRINT_PROVIDER_MODERATION_INFO } from '@testing/mocks/preprint-provider-moderation-info.mock';
-import { provideOSFCore } from '@testing/osf.testing.provider';
-import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
-import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('PreprintModerationSettingsComponent', () => {
   let component: PreprintModerationSettingsComponent;
@@ -24,10 +24,10 @@ describe('PreprintModerationSettingsComponent', () => {
   const mockProviderId = 'test-provider-id';
   const mockSettings: PreprintProviderModerationInfo = MOCK_PREPRINT_PROVIDER_MODERATION_INFO;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     mockActivatedRoute = ActivatedRouteMockBuilder.create().withParams({ providerId: mockProviderId }).build();
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [PreprintModerationSettingsComponent, MockComponent(LoadingSpinnerComponent)],
       providers: [
         provideOSFCore(),
@@ -40,7 +40,7 @@ describe('PreprintModerationSettingsComponent', () => {
           ],
         }),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(PreprintModerationSettingsComponent);
     component = fixture.componentInstance;

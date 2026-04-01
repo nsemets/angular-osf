@@ -3,10 +3,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ResourceType } from '@shared/enums/resource-type.enum';
 import { ResourceModel } from '@shared/models/search/resource.model';
 
-import { FileSecondaryMetadataComponent } from './file-secondary-metadata.component';
-
 import { MOCK_RESOURCE } from '@testing/mocks/resource.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { FileSecondaryMetadataComponent } from './file-secondary-metadata.component';
 
 describe('FileSecondaryMetadataComponent', () => {
   let component: FileSecondaryMetadataComponent;
@@ -17,11 +17,11 @@ describe('FileSecondaryMetadataComponent', () => {
     resourceType: ResourceType.File,
   };
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [FileSecondaryMetadataComponent],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(FileSecondaryMetadataComponent);
     component = fixture.componentInstance;

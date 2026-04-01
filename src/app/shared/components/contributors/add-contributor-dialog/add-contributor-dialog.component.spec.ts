@@ -1,10 +1,11 @@
 import { Store } from '@ngxs/store';
 
-import { TranslatePipe } from '@ngx-translate/core';
-import { MockPipe, MockProvider } from 'ng-mocks';
+import { MockProvider } from 'ng-mocks';
 
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { PaginatorState } from 'primeng/paginator';
+
+import { Mock } from 'vitest';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
@@ -71,17 +72,12 @@ describe('AddContributorDialogComponent', () => {
       ],
     });
 
-    TestBed.overrideComponent(AddContributorDialogComponent, {
-      remove: { imports: [TranslatePipe] },
-      add: { imports: [MockPipe(TranslatePipe)] },
-    });
-
     store = TestBed.inject(Store);
     dialogRef = TestBed.inject(DynamicDialogRef);
     fixture = TestBed.createComponent(AddContributorDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
   }
 
   it('should create', () => {
@@ -219,22 +215,22 @@ describe('AddContributorDialogComponent', () => {
   });
 
   it('should debounce and deduplicate search control dispatches', () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     setup();
     component.selectedUsers.set([
       { id: '1', fullName: 'A User', permission: 'write', isBibliographic: true, disabled: false },
     ]);
 
     component.searchControl.setValue('john');
-    jest.advanceTimersByTime(500);
+    vi.advanceTimersByTime(500);
 
     component.searchControl.setValue('john');
-    jest.advanceTimersByTime(500);
+    vi.advanceTimersByTime(500);
 
-    const dispatchMock = store.dispatch as jest.Mock;
+    const dispatchMock = store.dispatch as Mock;
     expect(dispatchMock.mock.calls.filter((call) => call[0] instanceof SearchUsers).length).toBe(1);
     expect(component.isInitialState()).toBe(false);
     expect(component.selectedUsers()).toEqual([]);
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 });

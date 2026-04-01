@@ -4,6 +4,8 @@ import { MockProvider } from 'ng-mocks';
 
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
+import { Mock } from 'vitest';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DeleteProject, SettingsSelectors } from '@osf/features/project/settings/store';
@@ -13,11 +15,6 @@ import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
 import { NodeShortInfoModel } from '@osf/shared/models/nodes/node-with-children.model';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { CurrentResourceSelectors } from '@osf/shared/stores/current-resource';
-
-import { ProjectOverviewModel } from '../../models';
-import { GetComponents, ProjectOverviewSelectors } from '../../store';
-
-import { DeleteComponentDialogComponent } from './delete-component-dialog.component';
 
 import { MOCK_PROJECT_OVERVIEW } from '@testing/mocks/project-overview.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
@@ -29,6 +26,11 @@ import {
   SignalOverride,
 } from '@testing/providers/store-provider.mock';
 import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
+
+import { ProjectOverviewModel } from '../../models';
+import { GetComponents, ProjectOverviewSelectors } from '../../store';
+
+import { DeleteComponentDialogComponent } from './delete-component-dialog.component';
 
 interface SetupOverrides extends BaseSetupOverrides {
   resourceType?: ResourceType;
@@ -138,21 +140,21 @@ describe('DeleteComponentDialogComponent', () => {
   });
 
   it('should update userInput on input change and validate exact match', () => {
-    jest.spyOn(Math, 'random').mockReturnValue(0);
+    vi.spyOn(Math, 'random').mockReturnValue(0);
     setup();
 
     component.onInputChange(component.selectedScientist());
 
     expect(component.userInput()).toBe(component.selectedScientist());
     expect(component.isInputValid()).toBe(true);
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('should not dispatch delete action when there are no components', () => {
     setup({
       selectorOverrides: [{ selector: CurrentResourceSelectors.getResourceWithChildren, value: [] }],
     });
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.handleDeleteComponent();
 
@@ -161,7 +163,7 @@ describe('DeleteComponentDialogComponent', () => {
 
   it('should delete components, refresh list, close dialog and show success when not forks context', () => {
     setup({ isForksContext: false });
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.handleDeleteComponent();
 
@@ -173,7 +175,7 @@ describe('DeleteComponentDialogComponent', () => {
 
   it('should skip components refresh after delete in forks context', () => {
     setup({ isForksContext: true });
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.handleDeleteComponent();
 

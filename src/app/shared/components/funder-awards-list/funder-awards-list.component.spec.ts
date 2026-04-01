@@ -3,9 +3,9 @@ import { provideRouter } from '@angular/router';
 
 import { Funder } from '@osf/features/metadata/models';
 
-import { FunderAwardsListComponent } from './funder-awards-list.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { FunderAwardsListComponent } from './funder-awards-list.component';
 
 describe('FunderAwardsListComponent', () => {
   let component: FunderAwardsListComponent;

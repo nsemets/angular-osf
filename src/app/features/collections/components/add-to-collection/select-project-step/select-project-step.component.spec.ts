@@ -7,13 +7,13 @@ import { ToastService } from '@osf/shared/services/toast.service';
 import { CollectionsSelectors } from '@shared/stores/collections';
 import { ProjectsSelectors } from '@shared/stores/projects/projects.selectors';
 
-import { SelectProjectStepComponent } from './select-project-step.component';
-
 import { MOCK_PROJECT } from '@testing/mocks/project.mock';
 import { MOCK_COLLECTION_SUBMISSION_WITH_GUID } from '@testing/mocks/submission.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 import { ToastServiceMockBuilder } from '@testing/providers/toast-provider.mock';
+
+import { SelectProjectStepComponent } from './select-project-step.component';
 
 describe.skip('SelectProjectStepComponent', () => {
   let component: SelectProjectStepComponent;
@@ -22,10 +22,10 @@ describe.skip('SelectProjectStepComponent', () => {
 
   const mockCollectionSubmissions = [MOCK_COLLECTION_SUBMISSION_WITH_GUID];
 
-  beforeEach(async () => {
+  beforeEach(() => {
     toastServiceMock = ToastServiceMockBuilder.create().build();
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [SelectProjectStepComponent, ...MockComponents(ProjectSelectorComponent)],
       providers: [
         provideOSFCore(),
@@ -37,7 +37,7 @@ describe.skip('SelectProjectStepComponent', () => {
           ],
         }),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(SelectProjectStepComponent);
     component = fixture.componentInstance;
@@ -60,8 +60,8 @@ describe.skip('SelectProjectStepComponent', () => {
   });
 
   it('should handle project change', () => {
-    const projectSelectedSpy = jest.spyOn(component.projectSelected, 'emit');
-    const stepChangeSpy = jest.spyOn(component.stepChange, 'emit');
+    const projectSelectedSpy = vi.spyOn(component.projectSelected, 'emit');
+    const stepChangeSpy = vi.spyOn(component.stepChange, 'emit');
 
     component.handleProjectChange(MOCK_PROJECT);
 
@@ -71,8 +71,8 @@ describe.skip('SelectProjectStepComponent', () => {
   });
 
   it('should handle project change with null project', () => {
-    const projectSelectedSpy = jest.spyOn(component.projectSelected, 'emit');
-    const stepChangeSpy = jest.spyOn(component.stepChange, 'emit');
+    const projectSelectedSpy = vi.spyOn(component.projectSelected, 'emit');
+    const stepChangeSpy = vi.spyOn(component.stepChange, 'emit');
 
     component.handleProjectChange(null);
 
@@ -82,7 +82,7 @@ describe.skip('SelectProjectStepComponent', () => {
   });
 
   it('should handle edit step', () => {
-    const stepChangeSpy = jest.spyOn(component.stepChange, 'emit');
+    const stepChangeSpy = vi.spyOn(component.stepChange, 'emit');
 
     component.handleEditStep();
 

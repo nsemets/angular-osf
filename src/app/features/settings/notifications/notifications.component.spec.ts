@@ -2,6 +2,8 @@ import { Store } from '@ngxs/store';
 
 import { MockComponents, MockProvider } from 'ng-mocks';
 
+import { Mock } from 'vitest';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UserSelectors } from '@core/store/user';
@@ -13,6 +15,12 @@ import { NotificationSubscription } from '@osf/shared/models/notifications/notif
 import { LoaderService } from '@osf/shared/services/loader.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 
+import { MOCK_USER } from '@testing/mocks/data.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
+import { LoaderServiceMock } from '@testing/providers/loader-service.mock';
+import { mergeSignalOverrides, provideMockStore, SignalOverride } from '@testing/providers/store-provider.mock';
+import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
+
 import { AccountSettings } from '../account-settings/models';
 import { AccountSettingsSelectors, GetAccountSettings, UpdateAccountSettings } from '../account-settings/store';
 
@@ -23,12 +31,6 @@ import {
   NotificationSubscriptionSelectors,
   UpdateNotificationSubscription,
 } from './store';
-
-import { MOCK_USER } from '@testing/mocks/data.mock';
-import { provideOSFCore } from '@testing/osf.testing.provider';
-import { LoaderServiceMock } from '@testing/providers/loader-service.mock';
-import { mergeSignalOverrides, provideMockStore, SignalOverride } from '@testing/providers/store-provider.mock';
-import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
 
 interface SetupOverrides {
   selectorOverrides?: SignalOverride[];
@@ -142,7 +144,7 @@ describe('NotificationsComponent', () => {
 
   it('should not dispatch initial fetches on init when data already exists', () => {
     setup({ detectChanges: false });
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.ngOnInit();
 
@@ -154,7 +156,7 @@ describe('NotificationsComponent', () => {
     setup({
       selectorOverrides: [{ selector: UserSelectors.getCurrentUser, value: null }],
     });
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.emailPreferencesFormSubmit();
 
@@ -165,7 +167,7 @@ describe('NotificationsComponent', () => {
 
   it('should submit email preferences and show success toast when current user exists', () => {
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
     component.emailPreferencesForm.patchValue({
       subscribeOsfGeneralEmail: false,
       subscribeOsfHelpEmail: true,
@@ -188,7 +190,7 @@ describe('NotificationsComponent', () => {
     setup({
       selectorOverrides: [{ selector: UserSelectors.getCurrentUser, value: null }],
     });
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.onSubscriptionChange(SubscriptionEvent.GlobalFileUpdated, SubscriptionFrequency.Instant);
 
@@ -199,7 +201,7 @@ describe('NotificationsComponent', () => {
 
   it('should update notification subscription and show success toast', () => {
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.onSubscriptionChange(SubscriptionEvent.GlobalFileUpdated, SubscriptionFrequency.Instant);
 

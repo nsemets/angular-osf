@@ -16,8 +16,6 @@ import { ToastService } from '@osf/shared/services/toast.service';
 import { CollectionsSelectors } from '@shared/stores/collections';
 import { ProjectsSelectors } from '@shared/stores/projects/projects.selectors';
 
-import { AddToCollectionComponent } from './add-to-collection.component';
-
 import { MOCK_USER } from '@testing/mocks/data.mock';
 import { MOCK_PROJECT } from '@testing/mocks/project.mock';
 import { MOCK_PROVIDER } from '@testing/mocks/provider.mock';
@@ -26,6 +24,8 @@ import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
+
+import { AddToCollectionComponent } from './add-to-collection.component';
 
 describe('AddToCollectionComponent', () => {
   let component: AddToCollectionComponent;
@@ -36,12 +36,12 @@ describe('AddToCollectionComponent', () => {
 
   const mockCollectionProvider = MOCK_PROVIDER;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     mockRouter = RouterMockBuilder.create().build();
     mockActivatedRoute = ActivatedRouteMockBuilder.create().withParams({ id: null }).build();
     mockCustomDialogService = CustomDialogServiceMockBuilder.create().build();
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [
         AddToCollectionComponent,
         ...MockComponents(
@@ -67,7 +67,7 @@ describe('AddToCollectionComponent', () => {
           ],
         }),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(AddToCollectionComponent);
     component = fixture.componentInstance;
@@ -127,7 +127,6 @@ describe('AddToCollectionComponent', () => {
     expect(component.actions).toBeDefined();
     expect(component.actions.getCollectionProvider).toBeDefined();
     expect(component.actions.clearAddToCollectionState).toBeDefined();
-    expect(component.actions.createCollectionSubmission).toBeDefined();
   });
 
   it('should handle loading state', () => {

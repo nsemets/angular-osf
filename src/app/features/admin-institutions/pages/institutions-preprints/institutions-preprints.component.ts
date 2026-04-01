@@ -26,7 +26,11 @@ import { AdminTableComponent } from '../../components/admin-table/admin-table.co
 import { FiltersSectionComponent } from '../../components/filters-section/filters-section.component';
 import { preprintsTableColumns } from '../../constants';
 import { DownloadType } from '../../enums';
-import { downloadResults, INSTITUTIONS_CSV_TSV_FIELDS, INSTITUTIONS_DOWNLOAD_CSV_TSV_RESOURCE } from '../../helpers';
+import {
+  downloadResults,
+  INSTITUTIONS_CSV_TSV_FIELDS,
+  INSTITUTIONS_DOWNLOAD_CSV_TSV_RESOURCE,
+} from '../../helpers/download-url.helper';
 import { mapPreprintResourceToTableData } from '../../mappers/institution-preprint-to-table-data.mapper';
 import { TableCellData } from '../../models';
 import { InstitutionsAdminSelectors } from '../../store';
@@ -60,7 +64,6 @@ export class InstitutionsPreprintsComponent implements OnInit, OnDestroy {
   resourcesCount = select(GlobalSearchSelectors.getResourcesCount);
   areResourcesLoading = select(GlobalSearchSelectors.getResourcesLoading);
 
-  selfLink = select(GlobalSearchSelectors.getFirst);
   firstLink = select(GlobalSearchSelectors.getFirst);
   nextLink = select(GlobalSearchSelectors.getNext);
   previousLink = select(GlobalSearchSelectors.getPrevious);
@@ -109,7 +112,7 @@ export class InstitutionsPreprintsComponent implements OnInit, OnDestroy {
 
   download(type: DownloadType) {
     downloadResults(
-      this.selfLink(),
+      this.firstLink(),
       type,
       INSTITUTIONS_CSV_TSV_FIELDS[CurrentResourceType.Preprints],
       INSTITUTIONS_DOWNLOAD_CSV_TSV_RESOURCE[CurrentResourceType.Preprints]

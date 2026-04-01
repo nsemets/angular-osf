@@ -7,11 +7,11 @@ import { provideRouter } from '@angular/router';
 import { AcceptTermsOfServiceByUser, UserSelectors } from '@core/store/user';
 import { UserModel } from '@osf/shared/models/user/user.model';
 
-import { TosConsentBannerComponent } from './tos-consent-banner.component';
-
 import { MOCK_USER } from '@testing/mocks/data.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { BaseSetupOverrides, mergeSignalOverrides, provideMockStore } from '@testing/providers/store-provider.mock';
+
+import { TosConsentBannerComponent } from './tos-consent-banner.component';
 
 describe('TosConsentBannerComponent', () => {
   let component: TosConsentBannerComponent;

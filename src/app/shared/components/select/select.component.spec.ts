@@ -3,9 +3,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Primitive } from '@osf/shared/helpers/types.helper';
 import { SelectOption } from '@shared/models/select-option.model';
 
-import { SelectComponent } from './select.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { SelectComponent } from './select.component';
 
 describe('SelectComponent', () => {
   let component: SelectComponent;
@@ -23,11 +23,11 @@ describe('SelectComponent', () => {
     { label: 'Three', value: 3 },
   ];
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [SelectComponent],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(SelectComponent);
     component = fixture.componentInstance;
@@ -67,7 +67,7 @@ describe('SelectComponent', () => {
   });
 
   it('should emit changeValue when triggered', () => {
-    const changeValueSpy = jest.fn();
+    const changeValueSpy = vi.fn();
     component.changeValue.subscribe(changeValueSpy);
 
     const testValue: Primitive = 'new-value';

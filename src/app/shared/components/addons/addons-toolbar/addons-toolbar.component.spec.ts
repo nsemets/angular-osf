@@ -4,26 +4,26 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
+import { provideOSFCore } from '@testing/osf.testing.provider';
+import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
+
 import { SearchInputComponent } from '../../search-input/search-input.component';
 import { SelectComponent } from '../../select/select.component';
 
 import { AddonsToolbarComponent } from './addons-toolbar.component';
-
-import { provideOSFCore } from '@testing/osf.testing.provider';
-import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 
 describe('AddonsToolbarComponent', () => {
   let component: AddonsToolbarComponent;
   let fixture: ComponentFixture<AddonsToolbarComponent>;
   let activatedRouteMock: ReturnType<ActivatedRouteMockBuilder['build']>;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     activatedRouteMock = ActivatedRouteMockBuilder.create().build();
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [AddonsToolbarComponent, ...MockComponents(SearchInputComponent, SelectComponent)],
       providers: [provideOSFCore(), MockProvider(ActivatedRoute, activatedRouteMock)],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(AddonsToolbarComponent);
     fixture.componentRef.setInput('categoryOptions', []);

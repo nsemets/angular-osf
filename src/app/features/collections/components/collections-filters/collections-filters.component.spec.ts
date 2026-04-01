@@ -2,14 +2,14 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CollectionsSelectors } from '@shared/stores/collections';
 
-import { CollectionsFiltersComponent } from './collections-filters.component';
-
 import {
   MOCK_COLLECTIONS_FILTERS_OPTIONS,
   MOCK_COLLECTIONS_SELECTED_FILTERS,
 } from '@testing/mocks/collections-filters.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
+
+import { CollectionsFiltersComponent } from './collections-filters.component';
 
 describe('CollectionsFiltersComponent', () => {
   let component: CollectionsFiltersComponent;
@@ -18,8 +18,8 @@ describe('CollectionsFiltersComponent', () => {
   const mockFiltersOptions = MOCK_COLLECTIONS_FILTERS_OPTIONS;
   const mockSelectedFilters = MOCK_COLLECTIONS_SELECTED_FILTERS;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [CollectionsFiltersComponent],
       providers: [
         provideOSFCore(),
@@ -30,7 +30,7 @@ describe('CollectionsFiltersComponent', () => {
           ],
         }),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(CollectionsFiltersComponent);
     component = fixture.componentInstance;

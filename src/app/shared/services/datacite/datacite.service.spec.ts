@@ -11,9 +11,9 @@ import { EnvironmentModel } from '@osf/shared/models/environment.model';
 import { IdentifierModel } from '@osf/shared/models/identifiers/identifier.model';
 import { IdentifiersResponseJsonApi } from '@osf/shared/models/identifiers/identifier-json-api.model';
 
-import { DataciteService } from './datacite.service';
-
 import { provideOSFCore, provideOSFHttp } from '@testing/osf.testing.provider';
+
+import { DataciteService } from './datacite.service';
 
 describe('Service: Datacite', () => {
   let service: DataciteService;
@@ -26,7 +26,7 @@ describe('Service: Datacite', () => {
 
   const trackable = (identifiers: IdentifierModel[]) => of<{ identifiers?: IdentifierModel[] } | null>({ identifiers });
   const setSendBeacon = (value: boolean) => {
-    const mock = jest.fn().mockReturnValue(value);
+    const mock = vi.fn().mockReturnValue(value);
     Object.defineProperty(window.navigator, 'sendBeacon', {
       value: mock,
       configurable: true,

@@ -58,11 +58,17 @@ module.exports = defineConfig(
             // RxJS packages (rxjs or @rxjs/...)
             ['^rxjs', '^rxjs/operators'],
 
+            // Vitest (vitest or @vitest/...)
+            ['^vitest$'],
+
             // Angular packages
             ['^@angular'],
 
             // Internal aliases (customize as needed)
             ['^@core/', '^@osf/', '^@shared/'],
+
+            // Testing utilities and mocks
+            ['^@testing/'],
 
             // Side effect imports
             ['^\\u0000'],

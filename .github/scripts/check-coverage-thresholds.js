@@ -1,8 +1,8 @@
 const coverage = require('../../coverage/coverage-summary.json');
-const jestConfig = require('../../jest.config.js');
+const vitestConfig = require('../../vitest.config.ts');
 
 const summary = coverage.total;
-const thresholds = jestConfig.coverageThreshold.global;
+const thresholds = vitestConfig.default.test.coverage.thresholds;
 
 let failed = false;
 const errors = [];
@@ -28,7 +28,7 @@ for (const key of ['branches', 'functions', 'lines', 'statements']) {
     );
     errors.push(
       formatErrorsWithAlignedStars(
-        `Please update the coverageThreshold.global.${key} in the jest.config.js to ---> ${current} <---`,
+        `Please update test.coverage.thresholds.${key} in vitest.config.ts to ---> ${current} <---`,
         true
       )
     );
@@ -40,9 +40,9 @@ for (const key of ['branches', 'functions', 'lines', 'statements']) {
 if (failed) {
   const stars = '*'.repeat(warnMessage.length + 8);
   console.log('\n\nCongratulations! You have successfully run the coverage check and added tests.');
-  console.log('\n\nThe jest.config.js file is not insync with your new test additions.');
-  console.log('Please update the coverage thresholds in jest.config.js.');
-  console.log('You will need to commit again once you have updated the jst.config.ts file.');
+  console.log('\n\nThe vitest.config.ts file is not in sync with your new test additions.');
+  console.log('Please update test.coverage.thresholds in vitest.config.ts.');
+  console.log('You will need to commit again once you have updated the vitest.config.ts file.');
   console.log('This is only necessary until we hit 100% coverage.');
   console.log(`\n\n${stars}`);
   errors.forEach((err) => {
@@ -54,5 +54,4 @@ if (failed) {
   console.log(`${leftBracket}${warnMessage}${rightBracket}`);
   console.log(`${leftBracket}${' '.repeat(warnMessage.length)}${rightBracket}`);
   console.log(`${stars}\n\n`);
-  // process.exit(1);
 }

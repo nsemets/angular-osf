@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MetadataRegistrationDoiComponent } from './metadata-registration-doi.component';
-
 import { MOCK_PROJECT_IDENTIFIERS } from '@testing/mocks/project-overview.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { MetadataRegistrationDoiComponent } from './metadata-registration-doi.component';
 
 describe('MetadataRegistrationDoiComponent', () => {
   let component: MetadataRegistrationDoiComponent;
@@ -11,11 +11,11 @@ describe('MetadataRegistrationDoiComponent', () => {
 
   const mockIdentifiers = [MOCK_PROJECT_IDENTIFIERS];
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [MetadataRegistrationDoiComponent],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(MetadataRegistrationDoiComponent);
     component = fixture.componentInstance;

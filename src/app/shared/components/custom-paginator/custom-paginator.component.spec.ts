@@ -2,19 +2,19 @@ import { PaginatorState } from 'primeng/paginator';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CustomPaginatorComponent } from './custom-paginator.component';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
+
+import { CustomPaginatorComponent } from './custom-paginator.component';
 
 describe('CustomPaginatorComponent', () => {
   let component: CustomPaginatorComponent;
   let fixture: ComponentFixture<CustomPaginatorComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [CustomPaginatorComponent],
       providers: [provideOSFCore()],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(CustomPaginatorComponent);
     component = fixture.componentInstance;
@@ -34,7 +34,7 @@ describe('CustomPaginatorComponent', () => {
   });
 
   it('should emit pageChanged event', () => {
-    const pageChangedSpy = jest.spyOn(component.pageChanged, 'emit');
+    const pageChangedSpy = vi.spyOn(component.pageChanged, 'emit');
     const mockPaginatorState: PaginatorState = {
       first: 10,
       rows: 10,

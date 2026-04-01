@@ -1,12 +1,10 @@
-import { MockProvider } from 'ng-mocks';
+import { MockComponent, MockProvider } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
+import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
-
-import { DeveloperAppAddEditFormComponent } from './components';
-import { DeveloperAppsContainerComponent } from './developer-apps-container.component';
 
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import {
@@ -14,6 +12,9 @@ import {
   CustomDialogServiceMockType,
 } from '@testing/providers/custom-dialog-provider.mock';
 import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
+
+import { DeveloperAppAddEditFormComponent } from './components';
+import { DeveloperAppsContainerComponent } from './developer-apps-container.component';
 
 describe('DeveloperAppsContainerComponent', () => {
   let component: DeveloperAppsContainerComponent;
@@ -26,7 +27,7 @@ describe('DeveloperAppsContainerComponent', () => {
     customDialogServiceMock = CustomDialogServiceMockBuilder.create().withDefaultOpen().build();
 
     TestBed.configureTestingModule({
-      imports: [DeveloperAppsContainerComponent],
+      imports: [DeveloperAppsContainerComponent, MockComponent(SubHeaderComponent)],
       providers: [
         provideOSFCore(),
         MockProvider(Router, routerMock),

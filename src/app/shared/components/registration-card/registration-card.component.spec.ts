@@ -9,16 +9,16 @@ import { RegistrationReviewStates } from '@osf/shared/enums/registration-review-
 import { RevisionReviewStates } from '@osf/shared/enums/revision-review-states.enum';
 import { RegistrationCard } from '@shared/models/registration/registration-card.model';
 
+import { MOCK_REGISTRATION } from '@testing/mocks/registration.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
+import { provideMockStore } from '@testing/providers/store-provider.mock';
+
 import { ContributorsListComponent } from '../contributors-list/contributors-list.component';
 import { DataResourcesComponent } from '../data-resources/data-resources.component';
 import { IconComponent } from '../icon/icon.component';
 import { StatusBadgeComponent } from '../status-badge/status-badge.component';
 
 import { RegistrationCardComponent } from './registration-card.component';
-
-import { MOCK_REGISTRATION } from '@testing/mocks/registration.mock';
-import { provideOSFCore } from '@testing/osf.testing.provider';
-import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 describe('RegistrationCardComponent', () => {
   let component: RegistrationCardComponent;

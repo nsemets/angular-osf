@@ -9,17 +9,17 @@ import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/
 import { SelectComponent } from '@osf/shared/components/select/select.component';
 import { CollectionsSelectors } from '@osf/shared/stores/collections';
 
-import { SubmissionReviewStatus } from '../../enums';
-import { CollectionsModerationSelectors } from '../../store/collections-moderation';
-import { CollectionSubmissionsListComponent } from '../collection-submissions-list/collection-submissions-list.component';
-
-import { CollectionModerationSubmissionsComponent } from './collection-moderation-submissions.component';
-
 import { MOCK_PROVIDER } from '@testing/mocks/provider.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
+
+import { SubmissionReviewStatus } from '../../enums';
+import { CollectionsModerationSelectors } from '../../store/collections-moderation';
+import { CollectionSubmissionsListComponent } from '../collection-submissions-list/collection-submissions-list.component';
+
+import { CollectionModerationSubmissionsComponent } from './collection-moderation-submissions.component';
 
 describe('CollectionModerationSubmissionsComponent', () => {
   let component: CollectionModerationSubmissionsComponent;
@@ -36,13 +36,13 @@ describe('CollectionModerationSubmissionsComponent', () => {
     },
   ];
 
-  beforeEach(async () => {
+  beforeEach(() => {
     mockRouter = RouterMockBuilder.create().build();
     mockActivatedRoute = ActivatedRouteMockBuilder.create()
       .withQueryParams({ status: 'pending', sortBy: 'date_created', page: '1' })
       .build();
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [
         CollectionModerationSubmissionsComponent,
         ...MockComponents(
@@ -67,7 +67,7 @@ describe('CollectionModerationSubmissionsComponent', () => {
           ],
         }),
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(CollectionModerationSubmissionsComponent);
     component = fixture.componentInstance;
