@@ -241,19 +241,19 @@
     (onClick)="cancelSubmission()"
   />
   <p-button
-    data-test-submit-button
-    class="w-6 md:w-9rem"
-    styleClass="w-full"
-    [label]="'common.buttons.submit' | translate"
-    [loading]="isPreprintSubmitting()"
-    (onClick)="submitPreprint()"
-  />
-  <p-button
     class="w-6 md:w-6rem"
     styleClass="w-full"
     [label]="'common.buttons.delete' | translate"
     severity="danger"
     [disabled]="isPreprintSubmitting()"
     (onClick)="deletePreprint()"
+  />
+  <p-button
+    data-test-submit-button
+    class="w-6 md:w-9rem"
+    styleClass="w-full"
+    [label]="'common.buttons.submit' | translate"
+    [loading]="isPreprintSubmitting()"
+    (onClick)="submitPreprint()"
   />
 </section>

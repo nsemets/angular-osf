@@ -153,6 +153,13 @@
     (onClick)="backButtonClicked()"
   />
   <p-button
+    class="w-6 md:w-6rem"
+    styleClass="w-full"
+    [label]="'common.buttons.delete' | translate"
+    severity="danger"
+    (onClick)="deletePreprint()"
+  />
+  <p-button
     class="w-6 md:w-9rem"
     styleClass="w-full"
     [label]="'common.buttons.next' | translate"
@@ -162,12 +169,5 @@
     "
     tooltipPosition="top"
     (onClick)="nextButtonClicked()"
-  />
-  <p-button
-    class="w-6 md:w-6rem"
-    styleClass="w-full"
-    [label]="'common.buttons.delete' | translate"
-    severity="danger"
-    (onClick)="deletePreprint()"
   />
 </section>
