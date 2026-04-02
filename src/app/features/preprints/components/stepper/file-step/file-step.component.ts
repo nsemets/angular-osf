@@ -209,18 +209,6 @@ export class FileStepComponent implements OnInit {
     this.actions.copyFileFromProject(file).subscribe(() => this.actions.fetchPreprintFile());
   }
 
-  versionFile() {
-    this.customConfirmationService.confirmContinue({
-      headerKey: 'preprints.preprintStepper.file.versionFile.header',
-      messageKey: 'preprints.preprintStepper.file.versionFile.message',
-      onConfirm: () => {
-        this.versionFileMode.set(true);
-        this.actions.setSelectedFileSource(PreprintFileSource.None);
-      },
-      onReject: () => null,
-    });
-  }
-
   cancelButtonClicked() {
     if (this.preprintFile()) {
       return;

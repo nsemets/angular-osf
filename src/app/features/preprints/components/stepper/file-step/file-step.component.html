@@ -130,15 +130,6 @@
           <osf-icon [iconClass]="'fas fa-file'" />
           <p data-test-file-name>{{ preprintFile()!.name }}</p>
         </div>
-
-        <p-button
-          class="danger-icon-btn"
-          icon="fas fa-trash"
-          severity="danger"
-          text
-          [ariaLabel]="'common.buttons.delete' | translate"
-          (onClick)="versionFile()"
-        />
       </section>
     }
   </section>

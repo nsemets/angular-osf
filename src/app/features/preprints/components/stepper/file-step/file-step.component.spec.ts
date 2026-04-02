@@ -312,29 +312,6 @@ describe('FileStepComponent', () => {
     expect(store.dispatch).toHaveBeenCalledWith(new FetchPreprintPrimaryFile());
   });
 
-  it('should set version mode and reset selected source on version file confirmation', () => {
-    setup({ detectChanges: false });
-
-    component.versionFile();
-    const options = confirmationServiceMock.confirmContinue.mock.calls[0][0];
-    options.onConfirm();
-
-    expect(component.versionFileMode()).toBe(true);
-    expect(store.dispatch).toHaveBeenCalledWith(new SetSelectedPreprintFileSource(PreprintFileSource.None));
-  });
-
-  it('should not change mode or selected source on version file reject', () => {
-    setup({ detectChanges: false });
-
-    component.versionFile();
-    const options = confirmationServiceMock.confirmContinue.mock.calls[0][0];
-    (store.dispatch as jest.Mock).mockClear();
-    options.onReject();
-
-    expect(component.versionFileMode()).toBe(false);
-    expect(store.dispatch).not.toHaveBeenCalledWith(new SetSelectedPreprintFileSource(PreprintFileSource.None));
-  });
-
   it('should handle cancelButtonClicked for file present and file missing states', () => {
     setup({ detectChanges: false });
 
