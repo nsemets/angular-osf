@@ -126,6 +126,7 @@ export class AuthorAssertionsStepComponent {
 
   nextClicked = output<void>();
   backClicked = output<void>();
+  deleteClicked = output<void>();
 
   constructor() {
     effect(() => {
@@ -257,6 +258,10 @@ export class AuthorAssertionsStepComponent {
       },
       onReject: () => null,
     });
+  }
+
+  deletePreprint() {
+    this.deleteClicked.emit();
   }
 
   private disableAndClearValidators(control: AbstractControl): void {

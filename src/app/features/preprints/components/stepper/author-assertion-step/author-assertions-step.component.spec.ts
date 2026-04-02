@@ -284,6 +284,15 @@ describe('AuthorAssertionsStepComponent', () => {
     expect(emitSpy).toHaveBeenCalled();
   });
 
+  it('should emit deleteClicked when deletePreprint is called', () => {
+    setup({ detectChanges: false });
+    const emitSpy = jest.spyOn(component.deleteClicked, 'emit');
+
+    component.deletePreprint();
+
+    expect(emitSpy).toHaveBeenCalled();
+  });
+
   it('should handle discard confirmation callbacks when there are unsaved changes', () => {
     setup();
     const emitSpy = jest.spyOn(component.backClicked, 'emit');

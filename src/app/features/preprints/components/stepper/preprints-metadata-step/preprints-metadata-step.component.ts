@@ -65,6 +65,7 @@ export class PreprintsMetadataStepComponent implements OnInit {
   provider = input.required<PreprintProviderDetails>();
   nextClicked = output<void>();
   backClicked = output<void>();
+  deleteClicked = output<void>();
 
   private actions = createDispatchMap({
     updatePreprint: UpdatePreprint,
@@ -152,6 +153,10 @@ export class PreprintsMetadataStepComponent implements OnInit {
         this.nextClicked.emit();
       },
     });
+  }
+
+  deletePreprint() {
+    this.deleteClicked.emit();
   }
 
   createLicense(licenseDetails: { id: string; licenseOptions: LicenseOptions }) {

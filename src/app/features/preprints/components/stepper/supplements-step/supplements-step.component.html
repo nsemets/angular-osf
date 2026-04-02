@@ -98,4 +98,11 @@
     [loading]="isPreprintSubmitting()"
     (onClick)="nextButtonClicked()"
   />
+  <p-button
+    class="w-6 md:w-6rem"
+    styleClass="w-full"
+    [label]="'common.buttons.delete' | translate"
+    severity="danger"
+    (onClick)="deletePreprint()"
+  />
 </section>

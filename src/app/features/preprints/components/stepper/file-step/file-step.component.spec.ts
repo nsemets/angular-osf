@@ -199,6 +199,15 @@ describe('FileStepComponent', () => {
     expect(emitSpy).toHaveBeenCalled();
   });
 
+  it('should emit deleteClicked when deletePreprint is called', () => {
+    setup({ detectChanges: false });
+    const emitSpy = jest.spyOn(component.deleteClicked, 'emit');
+
+    component.deletePreprint();
+
+    expect(emitSpy).toHaveBeenCalled();
+  });
+
   it('should handle nextButtonClicked for allowed and blocked states', () => {
     setup({ detectChanges: false });
     const emitSpy = jest.spyOn(component.nextClicked, 'emit');

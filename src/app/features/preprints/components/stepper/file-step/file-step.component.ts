@@ -120,6 +120,7 @@ export class FileStepComponent implements OnInit {
 
   nextClicked = output<void>();
   backClicked = output<void>();
+  deleteClicked = output<void>();
 
   isFileSourceSelected = computed(() => this.selectedFileSource() !== PreprintFileSource.None);
   canProceedToNext = computed(() => !!this.preprintFile() && !this.versionFileMode());
@@ -161,6 +162,10 @@ export class FileStepComponent implements OnInit {
 
     this.toastService.showSuccess('preprints.preprintStepper.common.successMessages.preprintSaved');
     this.nextClicked.emit();
+  }
+
+  deletePreprint() {
+    this.deleteClicked.emit();
   }
 
   onFileSelected(event: Event): void {

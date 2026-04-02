@@ -85,6 +85,7 @@ export class SupplementsStepComponent implements OnInit {
 
   nextClicked = output<void>();
   backClicked = output<void>();
+  deleteClicked = output<void>();
 
   readonly SupplementOptions = SupplementOptions;
 
@@ -243,5 +244,9 @@ export class SupplementsStepComponent implements OnInit {
     }
 
     this.backClicked.emit();
+  }
+
+  deletePreprint() {
+    this.deleteClicked.emit();
   }
 }

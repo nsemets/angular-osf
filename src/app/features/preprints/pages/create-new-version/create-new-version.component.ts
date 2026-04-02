@@ -25,13 +25,20 @@ import { CanDeactivateComponent } from '@osf/shared/models/can-deactivate.interf
 import { StepOption } from '@osf/shared/models/step-option.model';
 import { BrandService } from '@osf/shared/services/brand.service';
 import { BrowserTabService } from '@osf/shared/services/browser-tab.service';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { HeaderStyleService } from '@osf/shared/services/header-style.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 
 import { FileStepComponent, ReviewStepComponent } from '../../components';
 import { createNewVersionStepsConst } from '../../constants';
 import { PreprintSteps } from '../../enums';
 import { GetPreprintProviderById, PreprintProvidersSelectors } from '../../store/preprint-providers';
-import { FetchPreprintById, PreprintStepperSelectors, ResetPreprintStepperState } from '../../store/preprint-stepper';
+import {
+  DeletePreprint,
+  FetchPreprintById,
+  PreprintStepperSelectors,
+  ResetPreprintStepperState,
+} from '../../store/preprint-stepper';
 
 @Component({
   selector: 'osf-create-new-version',
@@ -48,6 +55,8 @@ export class CreateNewVersionComponent implements OnDestroy, CanDeactivateCompon
   private readonly brandService = inject(BrandService);
   private readonly headerStyleHelper = inject(HeaderStyleService);
   private readonly browserTabHelper = inject(BrowserTabService);
+  private readonly customConfirmationService = inject(CustomConfirmationService);
+  private readonly toastService = inject(ToastService);
 
   private readonly providerId = toSignal(this.route.params.pipe(map((params) => params['providerId'])));
   private readonly preprintId = toSignal(this.route.params.pipe(map((params) => params['preprintId'])));
@@ -56,6 +65,7 @@ export class CreateNewVersionComponent implements OnDestroy, CanDeactivateCompon
     getPreprintProviderById: GetPreprintProviderById,
     fetchPreprint: FetchPreprintById,
     resetState: ResetPreprintStepperState,
+    deletePreprint: DeletePreprint,
   });
 
   readonly preprintProvider = select(PreprintProvidersSelectors.getPreprintProviderDetails(this.providerId()));
@@ -67,6 +77,8 @@ export class CreateNewVersionComponent implements OnDestroy, CanDeactivateCompon
 
   readonly PreprintSteps = PreprintSteps;
   readonly newVersionSteps = createNewVersionStepsConst;
+
+  private preprintDeleted = false;
 
   constructor() {
     this.actions.getPreprintProviderById(this.providerId());
@@ -98,11 +110,16 @@ export class CreateNewVersionComponent implements OnDestroy, CanDeactivateCompon
     this.headerStyleHelper.resetToDefaults();
     this.brandService.resetBranding();
     this.browserTabHelper.resetToDefaults();
+
+    if (!this.preprintDeleted) {
+      this.actions.deletePreprint();
+    }
+
     this.actions.resetState();
   }
 
   canDeactivate(): boolean {
-    return this.hasBeenSubmitted();
+    return this.hasBeenSubmitted() || this.preprintDeleted;
   }
 
   stepChange(step: StepOption): void {
@@ -127,5 +144,19 @@ export class CreateNewVersionComponent implements OnDestroy, CanDeactivateCompon
     if (id) {
       this.router.navigate([id]);
     }
+  }
+
+  requestDeletePreprint(): void {
+    this.customConfirmationService.confirmDelete({
+      headerKey: 'preprints.preprintStepper.deleteDraft.header',
+      messageKey: 'preprints.preprintStepper.deleteDraft.message',
+      onConfirm: () => {
+        this.preprintDeleted = true;
+        this.actions.deletePreprint();
+        this.actions.resetState();
+        this.toastService.showSuccess('preprints.preprintStepper.deleteDraft.success');
+        this.router.navigateByUrl('/my-preprints');
+      },
+    });
   }
 }

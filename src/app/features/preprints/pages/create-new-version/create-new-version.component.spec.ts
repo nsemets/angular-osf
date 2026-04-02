@@ -11,14 +11,21 @@ import { StepperComponent } from '@osf/shared/components/stepper/stepper.compone
 import { IS_WEB } from '@osf/shared/helpers/breakpoints.tokens';
 import { BrandService } from '@osf/shared/services/brand.service';
 import { BrowserTabService } from '@osf/shared/services/browser-tab.service';
+import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { HeaderStyleService } from '@osf/shared/services/header-style.service';
+import { ToastService } from '@osf/shared/services/toast.service';
 
 import { FileStepComponent, ReviewStepComponent } from '../../components';
 import { createNewVersionStepsConst } from '../../constants';
 import { PreprintSteps } from '../../enums';
 import { PreprintProviderDetails } from '../../models';
 import { GetPreprintProviderById, PreprintProvidersSelectors } from '../../store/preprint-providers';
-import { FetchPreprintById, PreprintStepperSelectors, ResetPreprintStepperState } from '../../store/preprint-stepper';
+import {
+  DeletePreprint,
+  FetchPreprintById,
+  PreprintStepperSelectors,
+  ResetPreprintStepperState,
+} from '../../store/preprint-stepper';
 
 import { CreateNewVersionComponent } from './create-new-version.component';
 
@@ -26,10 +33,15 @@ import { PREPRINT_PROVIDER_DETAILS_MOCK } from '@testing/mocks/preprint-provider
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { BrandServiceMock, BrandServiceMockType } from '@testing/providers/brand-service.mock';
 import { BrowserTabServiceMock, BrowserTabServiceMockType } from '@testing/providers/browser-tab-service.mock';
+import {
+  CustomConfirmationServiceMock,
+  CustomConfirmationServiceMockType,
+} from '@testing/providers/custom-confirmation-provider.mock';
 import { HeaderStyleServiceMock, HeaderStyleServiceMockType } from '@testing/providers/header-style-service.mock';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
 import { mergeSignalOverrides, provideMockStore, SignalOverride } from '@testing/providers/store-provider.mock';
+import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
 
 describe('CreateNewVersionComponent', () => {
   let component: CreateNewVersionComponent;
@@ -39,6 +51,8 @@ describe('CreateNewVersionComponent', () => {
   let brandServiceMock: BrandServiceMockType;
   let headerStyleMock: HeaderStyleServiceMockType;
   let browserTabMock: BrowserTabServiceMockType;
+  let customConfirmationServiceMock: CustomConfirmationServiceMockType;
+  let toastServiceMock: ToastServiceMockType;
 
   const mockProvider: PreprintProviderDetails = PREPRINT_PROVIDER_DETAILS_MOCK;
   const mockProviderId = 'osf';
@@ -62,6 +76,8 @@ describe('CreateNewVersionComponent', () => {
     brandServiceMock = BrandServiceMock.simple();
     headerStyleMock = HeaderStyleServiceMock.simple();
     browserTabMock = BrowserTabServiceMock.simple();
+    customConfirmationServiceMock = CustomConfirmationServiceMock.simple();
+    toastServiceMock = ToastServiceMock.simple();
 
     TestBed.configureTestingModule({
       imports: [CreateNewVersionComponent, ...MockComponents(StepperComponent, FileStepComponent, ReviewStepComponent)],
@@ -72,6 +88,8 @@ describe('CreateNewVersionComponent', () => {
         MockProvider(BrandService, brandServiceMock),
         MockProvider(HeaderStyleService, headerStyleMock),
         MockProvider(BrowserTabService, browserTabMock),
+        MockProvider(CustomConfirmationService, customConfirmationServiceMock),
+        MockProvider(ToastService, toastServiceMock),
         MockProvider(IS_WEB, of(true)),
         provideMockStore({ signals }),
       ],
@@ -119,6 +137,7 @@ describe('CreateNewVersionComponent', () => {
     expect(headerStyleMock.resetToDefaults).toHaveBeenCalled();
     expect(brandServiceMock.resetBranding).toHaveBeenCalled();
     expect(browserTabMock.resetToDefaults).toHaveBeenCalled();
+    expect(store.dispatch).toHaveBeenCalledWith(new DeletePreprint());
     expect(store.dispatch).toHaveBeenCalledWith(new ResetPreprintStepperState());
   });
 
@@ -192,5 +211,54 @@ describe('CreateNewVersionComponent', () => {
     component.navigateBack();
 
     expect(routerMock.navigate).toHaveBeenCalledWith([mockPreprintId.split('_')[0]]);
+  });
+
+  it('should confirm preprint deletion request', () => {
+    setup();
+
+    component.requestDeletePreprint();
+
+    expect(customConfirmationServiceMock.confirmDelete).toHaveBeenCalledWith({
+      headerKey: 'preprints.preprintStepper.deleteDraft.header',
+      messageKey: 'preprints.preprintStepper.deleteDraft.message',
+      onConfirm: expect.any(Function),
+    });
+  });
+
+  it('should delete preprint, reset state, show toast and navigate on delete confirm', () => {
+    setup();
+
+    component.requestDeletePreprint();
+    const confirmDeleteCall = customConfirmationServiceMock.confirmDelete.mock.calls[0][0];
+    confirmDeleteCall.onConfirm();
+
+    expect(store.dispatch).toHaveBeenCalledWith(new DeletePreprint());
+    expect(store.dispatch).toHaveBeenCalledWith(new ResetPreprintStepperState());
+    expect(toastServiceMock.showSuccess).toHaveBeenCalledWith('preprints.preprintStepper.deleteDraft.success');
+    expect(routerMock.navigateByUrl).toHaveBeenCalledWith('/my-preprints');
+  });
+
+  it('should allow deactivation after preprint is deleted', () => {
+    setup();
+
+    component.requestDeletePreprint();
+    const confirmDeleteCall = customConfirmationServiceMock.confirmDelete.mock.calls[0][0];
+    confirmDeleteCall.onConfirm();
+
+    expect(component.canDeactivate()).toBe(true);
+  });
+
+  it('should not delete preprint again on destroy after successful deletion', () => {
+    setup();
+
+    component.requestDeletePreprint();
+    const confirmDeleteCall = customConfirmationServiceMock.confirmDelete.mock.calls[0][0];
+    confirmDeleteCall.onConfirm();
+    (store.dispatch as jest.Mock).mockClear();
+
+    component.ngOnDestroy();
+
+    expect(store.dispatch).toHaveBeenCalledWith(new ResetPreprintStepperState());
+    expect(store.dispatch).toHaveBeenCalledTimes(1);
   });
 });
