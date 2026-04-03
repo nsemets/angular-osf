@@ -5,15 +5,13 @@ import { MockComponents, MockProvider } from 'ng-mocks';
 import { of } from 'rxjs';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 import { StepperComponent } from '@osf/shared/components/stepper/stepper.component';
 import { IS_WEB } from '@osf/shared/helpers/breakpoints.tokens';
 import { BrandService } from '@osf/shared/services/brand.service';
 import { BrowserTabService } from '@osf/shared/services/browser-tab.service';
-import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { HeaderStyleService } from '@osf/shared/services/header-style.service';
-import { ToastService } from '@osf/shared/services/toast.service';
 
 import {
   AuthorAssertionsStepComponent,
@@ -26,6 +24,7 @@ import {
 import { submitPreprintSteps } from '../../constants';
 import { PreprintSteps } from '../../enums';
 import { PreprintProviderDetails } from '../../models';
+import { PreprintDraftDeletionService } from '../../services/preprint-draft-deletion.service';
 import { GetPreprintProviderById, PreprintProvidersSelectors } from '../../store/preprint-providers';
 import { DeletePreprint, PreprintStepperSelectors, ResetPreprintStepperState } from '../../store/preprint-stepper';
 
@@ -35,15 +34,13 @@ import { PREPRINT_PROVIDER_DETAILS_MOCK } from '@testing/mocks/preprint-provider
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { BrandServiceMock, BrandServiceMockType } from '@testing/providers/brand-service.mock';
 import { BrowserTabServiceMock, BrowserTabServiceMockType } from '@testing/providers/browser-tab-service.mock';
-import {
-  CustomConfirmationServiceMock,
-  CustomConfirmationServiceMockType,
-} from '@testing/providers/custom-confirmation-provider.mock';
 import { HeaderStyleServiceMock, HeaderStyleServiceMockType } from '@testing/providers/header-style-service.mock';
+import {
+  PreprintDraftDeletionServiceMock,
+  PreprintDraftDeletionServiceMockType,
+} from '@testing/providers/preprint-draft-deletion-provider.mock';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
-import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
 import { mergeSignalOverrides, provideMockStore, SignalOverride } from '@testing/providers/store-provider.mock';
-import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
 
 describe('SubmitPreprintStepperComponent', () => {
   let component: SubmitPreprintStepperComponent;
@@ -52,9 +49,7 @@ describe('SubmitPreprintStepperComponent', () => {
   let brandServiceMock: BrandServiceMockType;
   let headerStyleMock: HeaderStyleServiceMockType;
   let browserTabMock: BrowserTabServiceMockType;
-  let customConfirmationServiceMock: CustomConfirmationServiceMockType;
-  let toastServiceMock: ToastServiceMockType;
-  let routerMock: RouterMockType;
+  let draftDeletionMock: PreprintDraftDeletionServiceMockType;
 
   const mockProvider: PreprintProviderDetails = PREPRINT_PROVIDER_DETAILS_MOCK;
   const mockProviderId = 'osf';
@@ -73,9 +68,7 @@ describe('SubmitPreprintStepperComponent', () => {
     brandServiceMock = BrandServiceMock.simple();
     headerStyleMock = HeaderStyleServiceMock.simple();
     browserTabMock = BrowserTabServiceMock.simple();
-    customConfirmationServiceMock = CustomConfirmationServiceMock.simple();
-    toastServiceMock = ToastServiceMock.simple();
-    routerMock = RouterMockBuilder.create().build();
+    draftDeletionMock = PreprintDraftDeletionServiceMock.simple();
 
     TestBed.configureTestingModule({
       imports: [
@@ -96,12 +89,15 @@ describe('SubmitPreprintStepperComponent', () => {
         MockProvider(BrandService, brandServiceMock),
         MockProvider(HeaderStyleService, headerStyleMock),
         MockProvider(BrowserTabService, browserTabMock),
-        MockProvider(CustomConfirmationService, customConfirmationServiceMock),
-        MockProvider(ToastService, toastServiceMock),
-        MockProvider(Router, routerMock),
         MockProvider(IS_WEB, of(true)),
         provideMockStore({ signals }),
       ],
+    });
+
+    TestBed.overrideComponent(SubmitPreprintStepperComponent, {
+      set: {
+        providers: [{ provide: PreprintDraftDeletionService, useValue: draftDeletionMock }],
+      },
     });
 
     store = TestBed.inject(Store);
@@ -136,7 +132,7 @@ describe('SubmitPreprintStepperComponent', () => {
     expect(browserTabMock.updateTabStyles).toHaveBeenCalledWith(mockProvider.faviconUrl, mockProvider.name);
   });
 
-  it('should reset services and delete preprint on destroy', () => {
+  it('should reset services, delegate destroy delete, and reset stepper state', () => {
     setup();
 
     component.ngOnDestroy();
@@ -144,6 +140,7 @@ describe('SubmitPreprintStepperComponent', () => {
     expect(headerStyleMock.resetToDefaults).toHaveBeenCalled();
     expect(brandServiceMock.resetBranding).toHaveBeenCalled();
     expect(browserTabMock.resetToDefaults).toHaveBeenCalled();
+    expect(draftDeletionMock.deleteOnDestroyIfNeeded).toHaveBeenCalledWith(expect.any(Function));
     expect(store.dispatch).toHaveBeenCalledWith(new DeletePreprint());
     expect(store.dispatch).toHaveBeenCalledWith(new ResetPreprintStepperState());
   });
@@ -211,16 +208,20 @@ describe('SubmitPreprintStepperComponent', () => {
     expect(event.preventDefault).not.toHaveBeenCalled();
   });
 
-  it('should prevent deactivation when not submitted', () => {
+  it('should delegate canDeactivate to PreprintDraftDeletionService', () => {
     setup();
 
-    expect(component.canDeactivate()).toBe(false);
+    component.canDeactivate();
+
+    expect(draftDeletionMock.canDeactivate).toHaveBeenCalledWith(false);
   });
 
-  it('should allow deactivation when submitted', () => {
+  it('should allow deactivation when submitted via PreprintDraftDeletionService', () => {
     setup({ selectorOverrides: [{ selector: PreprintStepperSelectors.hasBeenSubmitted, value: true }] });
 
-    expect(component.canDeactivate()).toBe(true);
+    component.canDeactivate();
+
+    expect(draftDeletionMock.canDeactivate).toHaveBeenCalledWith(true);
   });
 
   it('should ignore stepping forward via stepper', () => {
@@ -280,53 +281,36 @@ describe('SubmitPreprintStepperComponent', () => {
     expect(component.currentStep()).toEqual(firstStep);
   });
 
-  it('should confirm preprint deletion request', () => {
+  it('should call confirmDeleteDraft on PreprintDraftDeletionService with preprints redirect', () => {
     setup();
 
     component.requestDeletePreprint();
 
-    expect(customConfirmationServiceMock.confirmDelete).toHaveBeenCalledWith({
-      headerKey: 'preprints.preprintStepper.deleteDraft.header',
-      messageKey: 'preprints.preprintStepper.deleteDraft.message',
-      onConfirm: expect.any(Function),
-    });
+    expect(draftDeletionMock.confirmDeleteDraft).toHaveBeenCalledWith(
+      expect.objectContaining({
+        redirectUrl: '/preprints',
+        onDelete: expect.any(Function),
+        onReset: expect.any(Function),
+      })
+    );
   });
 
-  it('should delete preprint, reset state, show toast and navigate on delete confirm', () => {
+  it('should allow deactivation when draft deletion service reports deleted', () => {
     setup();
-
-    component.requestDeletePreprint();
-
-    const confirmDeleteCall = customConfirmationServiceMock.confirmDelete.mock.calls[0][0];
-    confirmDeleteCall.onConfirm();
-
-    expect(store.dispatch).toHaveBeenCalledWith(new DeletePreprint());
-    expect(store.dispatch).toHaveBeenCalledWith(new ResetPreprintStepperState());
-    expect(toastServiceMock.showSuccess).toHaveBeenCalledWith('preprints.preprintStepper.deleteDraft.success');
-    expect(routerMock.navigateByUrl).toHaveBeenCalledWith('/preprints');
-  });
-
-  it('should allow deactivation after preprint is deleted', () => {
-    setup();
-
-    component.requestDeletePreprint();
-    const confirmDeleteCall = customConfirmationServiceMock.confirmDelete.mock.calls[0][0];
-    confirmDeleteCall.onConfirm();
+    draftDeletionMock.deleted = true;
 
     expect(component.canDeactivate()).toBe(true);
   });
 
-  it('should not delete preprint again on destroy after successful deletion', () => {
+  it('should skip destroy delete when draft already deleted', () => {
     setup();
-
-    component.requestDeletePreprint();
-    const confirmDeleteCall = customConfirmationServiceMock.confirmDelete.mock.calls[0][0];
-    confirmDeleteCall.onConfirm();
+    draftDeletionMock.deleted = true;
     (store.dispatch as jest.Mock).mockClear();
 
     component.ngOnDestroy();
 
+    expect(draftDeletionMock.deleteOnDestroyIfNeeded).toHaveBeenCalledWith(expect.any(Function));
+    expect((store.dispatch as jest.Mock).mock.calls.some(([action]) => action instanceof DeletePreprint)).toBe(false);
     expect(store.dispatch).toHaveBeenCalledWith(new ResetPreprintStepperState());
-    expect(store.dispatch).toHaveBeenCalledTimes(1);
   });
 });

@@ -19,7 +19,7 @@ import {
   signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 import { StepperComponent } from '@osf/shared/components/stepper/stepper.component';
 import { IS_WEB } from '@osf/shared/helpers/breakpoints.tokens';
@@ -27,9 +27,7 @@ import { CanDeactivateComponent } from '@osf/shared/models/can-deactivate.interf
 import { StepOption } from '@osf/shared/models/step-option.model';
 import { BrandService } from '@osf/shared/services/brand.service';
 import { BrowserTabService } from '@osf/shared/services/browser-tab.service';
-import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { HeaderStyleService } from '@osf/shared/services/header-style.service';
-import { ToastService } from '@osf/shared/services/toast.service';
 
 import {
   AuthorAssertionsStepComponent,
@@ -41,6 +39,7 @@ import {
 } from '../../components';
 import { submitPreprintSteps } from '../../constants';
 import { PreprintSteps } from '../../enums';
+import { PreprintDraftDeletionService } from '../../services/preprint-draft-deletion.service';
 import { GetPreprintProviderById, PreprintProvidersSelectors } from '../../store/preprint-providers';
 import { DeletePreprint, PreprintStepperSelectors, ResetPreprintStepperState } from '../../store/preprint-stepper';
 
@@ -60,18 +59,17 @@ import { DeletePreprint, PreprintStepperSelectors, ResetPreprintStepperState } f
   templateUrl: './submit-preprint-stepper.component.html',
   styleUrl: './submit-preprint-stepper.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [PreprintDraftDeletionService],
 })
 export class SubmitPreprintStepperComponent implements OnDestroy, CanDeactivateComponent {
   @HostBinding('class') classes = 'flex-1 flex flex-column w-full';
 
   private readonly document = inject(DOCUMENT);
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
   private readonly brandService = inject(BrandService);
   private readonly headerStyleHelper = inject(HeaderStyleService);
   private readonly browserTabHelper = inject(BrowserTabService);
-  private readonly customConfirmationService = inject(CustomConfirmationService);
-  private readonly toastService = inject(ToastService);
+  private readonly draftDeletionService = inject(PreprintDraftDeletionService);
 
   private providerId = toSignal(this.route.params.pipe(map((params) => params['providerId'])));
 
@@ -90,8 +88,6 @@ export class SubmitPreprintStepperComponent implements OnDestroy, CanDeactivateC
   isWeb = toSignal(inject(IS_WEB));
 
   readonly PreprintSteps = PreprintSteps;
-
-  private preprintDeleted = false;
 
   readonly steps = computed(() => {
     const provider = this.preprintProvider();
@@ -131,7 +127,7 @@ export class SubmitPreprintStepperComponent implements OnDestroy, CanDeactivateC
   }
 
   canDeactivate(): boolean {
-    return this.hasBeenSubmitted() || this.preprintDeleted;
+    return this.draftDeletionService.canDeactivate(this.hasBeenSubmitted());
   }
 
   ngOnDestroy() {
@@ -139,24 +135,16 @@ export class SubmitPreprintStepperComponent implements OnDestroy, CanDeactivateC
     this.brandService.resetBranding();
     this.browserTabHelper.resetToDefaults();
 
-    if (!this.preprintDeleted) {
-      this.actions.deletePreprint();
-    }
+    this.draftDeletionService.deleteOnDestroyIfNeeded(() => this.actions.deletePreprint());
 
     this.actions.resetState();
   }
 
   requestDeletePreprint(): void {
-    this.customConfirmationService.confirmDelete({
-      headerKey: 'preprints.preprintStepper.deleteDraft.header',
-      messageKey: 'preprints.preprintStepper.deleteDraft.message',
-      onConfirm: () => {
-        this.preprintDeleted = true;
-        this.actions.deletePreprint();
-        this.actions.resetState();
-        this.toastService.showSuccess('preprints.preprintStepper.deleteDraft.success');
-        this.router.navigateByUrl('/preprints');
-      },
+    this.draftDeletionService.confirmDeleteDraft({
+      onDelete: () => this.actions.deletePreprint(),
+      onReset: () => this.actions.resetState(),
+      redirectUrl: '/preprints',
     });
   }
 
