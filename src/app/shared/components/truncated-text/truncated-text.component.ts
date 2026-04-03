@@ -7,6 +7,7 @@ import { timer } from 'rxjs';
 import {
   AfterViewInit,
   Component,
+  computed,
   DestroyRef,
   effect,
   ElementRef,
@@ -26,6 +27,7 @@ import { Router } from '@angular/router';
 })
 export class TruncatedTextComponent implements AfterViewInit {
   readonly text = input('');
+  readonly expanded = input(false);
   readonly maxVisibleLines = input(3);
   readonly navigateOnReadMore = input(false);
   readonly link = input<string[]>([]);
@@ -40,13 +42,15 @@ export class TruncatedTextComponent implements AfterViewInit {
   isTextExpanded = signal(false);
   hasOverflowingText = signal(false);
 
-  buttonLabel = () => {
+  isExpanded = computed(() => this.expanded() || this.isTextExpanded());
+
+  buttonLabel = computed(() => {
     if (this.navigateOnReadMore()) {
       return this.readMoreLabel();
     }
 
     return this.isTextExpanded() ? this.hideLabel() : this.readMoreLabel();
-  };
+  });
 
   constructor() {
     effect(() => {
