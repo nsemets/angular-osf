@@ -1,81 +1,121 @@
+import { MockProvider } from 'ng-mocks';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
 
 import { TruncatedTextComponent } from './truncated-text.component';
 
-import { TranslateServiceMock } from '@testing/mocks/translate.service.mock';
+import { provideOSFCore } from '@testing/osf.testing.provider';
+import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
 
 describe('TruncatedTextComponent', () => {
   let component: TruncatedTextComponent;
   let fixture: ComponentFixture<TruncatedTextComponent>;
+  let mockRouter: RouterMockType;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    mockRouter = RouterMockBuilder.create().build();
+
+    TestBed.configureTestingModule({
       imports: [TruncatedTextComponent],
-      providers: [TranslateServiceMock],
-    }).compileComponents();
+      providers: [provideOSFCore(), MockProvider(Router, mockRouter)],
+    });
 
     fixture = TestBed.createComponent(TruncatedTextComponent);
     component = fixture.componentInstance;
   });
 
   it('should create', () => {
+    fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 
-  it('should set text input correctly', () => {
-    fixture.componentRef.setInput('text', 'Test text content');
-    expect(component.text()).toBe('Test text content');
-  });
-
-  it('should set maxVisibleLines input correctly', () => {
+  it('should reflect text, maxVisibleLines, and expanded inputs', () => {
+    fixture.componentRef.setInput('text', 'hello');
     fixture.componentRef.setInput('maxVisibleLines', 5);
+    fixture.componentRef.setInput('expanded', true);
+
+    expect(component.text()).toBe('hello');
     expect(component.maxVisibleLines()).toBe(5);
+    expect(component.expanded()).toBe(true);
   });
 
-  it('should call checkTextOverflow in ngAfterViewInit', () => {
-    const checkTextOverflowSpy = jest.spyOn(component as any, 'checkTextOverflow');
+  it('should derive isExpanded from expanded input or user expansion', () => {
+    expect(component.isExpanded()).toBe(false);
+
+    fixture.componentRef.setInput('expanded', true);
+    expect(component.isExpanded()).toBe(true);
+
+    fixture.componentRef.setInput('expanded', false);
+    component.isTextExpanded.set(true);
+    expect(component.isExpanded()).toBe(true);
+  });
+
+  it('should compute buttonLabel for read-more vs hide when not navigating', () => {
+    fixture.componentRef.setInput('navigateOnReadMore', false);
+    fixture.componentRef.setInput('readMoreLabel', 'read');
+    fixture.componentRef.setInput('hideLabel', 'hide');
+
+    expect(component.buttonLabel()).toBe('read');
+
+    component.isTextExpanded.set(true);
+    expect(component.buttonLabel()).toBe('hide');
+  });
+
+  it('should use readMoreLabel for buttonLabel when navigateOnReadMore is true', () => {
+    fixture.componentRef.setInput('navigateOnReadMore', true);
+    fixture.componentRef.setInput('readMoreLabel', 'go');
+
+    expect(component.buttonLabel()).toBe('go');
+
+    component.isTextExpanded.set(true);
+    expect(component.buttonLabel()).toBe('go');
+  });
+
+  it('should call checkTextOverflow from ngAfterViewInit', () => {
+    const checkTextOverflowSpy = jest.spyOn(component, 'checkTextOverflow');
 
     component.ngAfterViewInit();
 
     expect(checkTextOverflowSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('should handle empty text input', () => {
-    fixture.componentRef.setInput('text', '');
-    expect(component.text()).toBe('');
+  it('should reset user expansion when text changes to a new non-empty value', () => {
+    jest.useFakeTimers();
+    try {
+      fixture.componentRef.setInput('text', 'first');
+      fixture.detectChanges();
+      jest.advanceTimersByTime(0);
+
+      component.isTextExpanded.set(true);
+      fixture.componentRef.setInput('text', 'second');
+      fixture.detectChanges();
+      jest.advanceTimersByTime(0);
+
+      expect(component.isTextExpanded()).toBe(false);
+    } finally {
+      jest.useRealTimers();
+    }
   });
 
-  it('should handle different maxVisibleLines values', () => {
-    const values = [1, 2, 3, 5, 10, 100];
+  it('should toggle isTextExpanded on handleButtonClick when not navigateOnReadMore', () => {
+    fixture.componentRef.setInput('navigateOnReadMore', false);
 
-    values.forEach((value) => {
-      fixture.componentRef.setInput('maxVisibleLines', value);
-      expect(component.maxVisibleLines()).toBe(value);
-    });
+    expect(component.isTextExpanded()).toBe(false);
+
+    component.handleButtonClick();
+    expect(component.isTextExpanded()).toBe(true);
+
+    component.handleButtonClick();
+    expect(component.isTextExpanded()).toBe(false);
   });
 
-  it('should handle negative maxVisibleLines', () => {
-    fixture.componentRef.setInput('maxVisibleLines', -1);
-    expect(component.maxVisibleLines()).toBe(-1);
-  });
+  it('should navigate when navigateOnReadMore is true', () => {
+    fixture.componentRef.setInput('navigateOnReadMore', true);
+    fixture.componentRef.setInput('link', ['/preprints', '123']);
 
-  it('should properly update isTextExpanded signal', () => {
-    expect(component['isTextExpanded']()).toBe(false);
+    component.handleButtonClick();
 
-    component['isTextExpanded'].set(true);
-    expect(component['isTextExpanded']()).toBe(true);
-
-    component['isTextExpanded'].set(false);
-    expect(component['isTextExpanded']()).toBe(false);
-  });
-
-  it('should properly update hasOverflowingText signal', () => {
-    expect(component['hasOverflowingText']()).toBe(false);
-
-    component['hasOverflowingText'].set(true);
-    expect(component['hasOverflowingText']()).toBe(true);
-
-    component['hasOverflowingText'].set(false);
-    expect(component['hasOverflowingText']()).toBe(false);
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/preprints', '123']);
   });
 });
