@@ -120,6 +120,7 @@ export class FileStepComponent implements OnInit {
 
   nextClicked = output<void>();
   backClicked = output<void>();
+  deleteClicked = output<void>();
 
   isFileSourceSelected = computed(() => this.selectedFileSource() !== PreprintFileSource.None);
   canProceedToNext = computed(() => !!this.preprintFile() && !this.versionFileMode());
@@ -163,6 +164,10 @@ export class FileStepComponent implements OnInit {
     this.nextClicked.emit();
   }
 
+  deletePreprint() {
+    this.deleteClicked.emit();
+  }
+
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
@@ -202,18 +207,6 @@ export class FileStepComponent implements OnInit {
 
   selectProjectFile(file: FileModel) {
     this.actions.copyFileFromProject(file).subscribe(() => this.actions.fetchPreprintFile());
-  }
-
-  versionFile() {
-    this.customConfirmationService.confirmContinue({
-      headerKey: 'preprints.preprintStepper.file.versionFile.header',
-      messageKey: 'preprints.preprintStepper.file.versionFile.message',
-      onConfirm: () => {
-        this.versionFileMode.set(true);
-        this.actions.setSelectedFileSource(PreprintFileSource.None);
-      },
-      onReject: () => null,
-    });
   }
 
   cancelButtonClicked() {

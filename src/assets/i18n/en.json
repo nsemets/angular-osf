@@ -2293,6 +2293,11 @@
         "description": "This will make your project public, if it is not already",
         "subDescription": "The projects and components for which you have admin access are listed below."
       },
+      "deleteDraft": {
+        "header": "Delete Preprint Draft",
+        "message": "Are you sure you want to delete this preprint draft?",
+        "success": "Preprint draft successfully deleted."
+      },
       "common": {
         "validation": {
           "fillRequiredFields": "Fill in “Required” fields to continue"

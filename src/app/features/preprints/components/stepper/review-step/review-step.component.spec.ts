@@ -244,4 +244,13 @@ describe('ReviewStepComponent', () => {
       new LoadMoreBibliographicContributors(undefined, ResourceType.Preprint)
     );
   });
+
+  it('should emit deleteClicked when deletePreprint is called', () => {
+    setup({ detectChanges: false });
+    const emitSpy = jest.spyOn(component.deleteClicked, 'emit');
+
+    component.deletePreprint();
+
+    expect(emitSpy).toHaveBeenCalled();
+  });
 });

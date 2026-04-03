@@ -6,7 +6,14 @@ import { Subject } from 'rxjs';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NavigationEnd, Router } from '@angular/router';
+import {
+  NavigationCancel,
+  NavigationEnd,
+  NavigationError,
+  NavigationStart,
+  ResolveStart,
+  Router,
+} from '@angular/router';
 
 import { CookieConsentBannerComponent } from '@core/components/osf-banners/cookie-consent-banner/cookie-consent-banner.component';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
@@ -18,10 +25,12 @@ import { TranslateServiceMock } from '../testing/mocks/translate.service.mock';
 import { FullScreenLoaderComponent } from './shared/components/full-screen-loader/full-screen-loader.component';
 import { ToastComponent } from './shared/components/toast/toast.component';
 import { CustomDialogService } from './shared/services/custom-dialog.service';
+import { LoaderService } from './shared/services/loader.service';
 import { AppComponent } from './app.component';
 
 import { OSFTestingModule } from '@testing/osf.testing.module';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
+import { LoaderServiceMock } from '@testing/providers/loader-service.mock';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
 
 describe('Component: App', () => {
@@ -29,6 +38,7 @@ describe('Component: App', () => {
   let gtmServiceMock: jest.Mocked<GoogleTagManagerService>;
   let fixture: ComponentFixture<AppComponent>;
   let mockCustomDialogService: ReturnType<CustomDialogServiceMockBuilder['build']>;
+  let loaderServiceMock: LoaderServiceMock;
 
   beforeEach(async () => {
     mockCustomDialogService = CustomDialogServiceMockBuilder.create().build();
@@ -37,6 +47,7 @@ describe('Component: App', () => {
     gtmServiceMock = {
       pushTag: jest.fn(),
     } as any;
+    loaderServiceMock = new LoaderServiceMock();
 
     await TestBed.configureTestingModule({
       imports: [
@@ -47,6 +58,7 @@ describe('Component: App', () => {
       providers: [
         provideStore([UserState, UserEmailsState]),
         MockProvider(CustomDialogService, mockCustomDialogService),
+        MockProvider(LoaderService, loaderServiceMock),
         TranslateServiceMock,
         { provide: GoogleTagManagerService, useValue: gtmServiceMock },
         {
@@ -101,6 +113,57 @@ describe('Component: App', () => {
       routerEvents$.next(event);
 
       expect(gtmServiceMock.pushTag).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Loader routing behavior', () => {
+    it('should not show loader on NavigationStart', () => {
+      fixture.detectChanges();
+
+      routerEvents$.next(new NavigationStart(1, '/next'));
+
+      expect(loaderServiceMock.show).not.toHaveBeenCalled();
+    });
+
+    it('should show loader on ResolveStart', () => {
+      fixture.detectChanges();
+
+      routerEvents$.next(new ResolveStart(1, '/next', '/next', {} as any));
+
+      expect(loaderServiceMock.show).toHaveBeenCalled();
+    });
+
+    it('should hide loader on NavigationEnd after delay', () => {
+      jest.useFakeTimers();
+      fixture.detectChanges();
+
+      routerEvents$.next(new NavigationEnd(1, '/previous', '/current'));
+      jest.advanceTimersByTime(500);
+
+      expect(loaderServiceMock.hide).toHaveBeenCalled();
+      jest.useRealTimers();
+    });
+
+    it('should hide loader on NavigationCancel after delay', () => {
+      jest.useFakeTimers();
+      fixture.detectChanges();
+
+      routerEvents$.next(new NavigationCancel(1, '/current', 'cancelled'));
+      jest.advanceTimersByTime(500);
+
+      expect(loaderServiceMock.hide).toHaveBeenCalled();
+      jest.useRealTimers();
+    });
+
+    it('should hide loader on NavigationError after delay', () => {
+      jest.useFakeTimers();
+      fixture.detectChanges();
+
+      routerEvents$.next(new NavigationError(1, '/current', new Error('test')));
+      jest.advanceTimersByTime(500);
+
+      expect(loaderServiceMock.hide).toHaveBeenCalled();
+      jest.useRealTimers();
     });
   });
 });

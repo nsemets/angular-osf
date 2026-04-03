@@ -236,6 +236,15 @@ describe('PreprintsMetadataStepComponent', () => {
     expect(customConfirmationServiceMock.confirmContinue).not.toHaveBeenCalled();
   });
 
+  it('should emit deleteClicked when deletePreprint is called', () => {
+    setup({ detectChanges: false });
+    const emitSpy = jest.spyOn(component.deleteClicked, 'emit');
+
+    component.deletePreprint();
+
+    expect(emitSpy).toHaveBeenCalled();
+  });
+
   it('should request confirmation and emit on confirm when there are changes in backButtonClicked', () => {
     setup();
     const backClickedSpy = jest.spyOn(component.backClicked, 'emit');
