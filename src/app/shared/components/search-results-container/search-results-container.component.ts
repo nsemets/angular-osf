@@ -69,9 +69,7 @@ export class SearchResultsContainerComponent {
   readonly searchSortingOptions = searchSortingOptions;
   readonly ResourceType = ResourceType;
 
-  readonly hasSelectedOptions = computed(() => {
-    return Object.values(this.selectedOptions()).length > 0;
-  });
+  readonly hasSelectedOptions = computed(() => Object.values(this.selectedOptions()).length > 0);
 
   readonly hasFilters = computed(() => this.filters().length > 0);
   filtersComponent = contentChild<TemplateRef<unknown>>('filtersComponent');
