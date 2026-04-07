@@ -17,6 +17,7 @@ import {
   DestroyRef,
   effect,
   inject,
+  input,
   OnInit,
   output,
   signal,
@@ -83,6 +84,7 @@ export class SupplementsStepComponent implements OnInit {
   selectedSupplementOption = signal<SupplementOptions>(SupplementOptions.None);
   selectedProjectId = signal<StringOrNull>(null);
 
+  showDeleteButton = input(false);
   nextClicked = output<void>();
   backClicked = output<void>();
   deleteClicked = output<void>();

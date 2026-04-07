@@ -240,14 +240,16 @@
     [disabled]="isPreprintSubmitting()"
     (onClick)="cancelSubmission()"
   />
-  <p-button
-    class="w-6 md:w-6rem"
-    styleClass="w-full"
-    [label]="'common.buttons.delete' | translate"
-    severity="danger"
-    [disabled]="isPreprintSubmitting()"
-    (onClick)="deletePreprint()"
-  />
+  @if (showDeleteButton()) {
+    <p-button
+      class="w-6 md:w-6rem"
+      styleClass="w-full"
+      [label]="'common.buttons.delete' | translate"
+      severity="danger"
+      [disabled]="isPreprintSubmitting()"
+      (onClick)="deletePreprint()"
+    />
+  }
   <p-button
     data-test-submit-button
     class="w-6 md:w-9rem"

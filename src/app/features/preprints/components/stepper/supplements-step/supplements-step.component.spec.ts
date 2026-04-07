@@ -120,6 +120,21 @@ describe('SupplementsStepComponent', () => {
     expect(store.dispatch).not.toHaveBeenCalledWith(expect.any(FetchPreprintProject));
   });
 
+  it('should default showDeleteButton to false', () => {
+    setup();
+
+    expect(component.showDeleteButton()).toBe(false);
+  });
+
+  it('should update showDeleteButton when input changes', () => {
+    setup();
+
+    fixture.componentRef.setInput('showDeleteButton', true);
+    fixture.detectChanges();
+
+    expect(component.showDeleteButton()).toBe(true);
+  });
+
   it('should dispatch available projects from debounced project search', fakeAsync(() => {
     setup();
     (store.dispatch as jest.Mock).mockClear();

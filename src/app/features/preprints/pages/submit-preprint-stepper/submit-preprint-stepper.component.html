@@ -41,6 +41,7 @@
       @case (PreprintSteps.File) {
         <osf-file-step
           [provider]="provider"
+          [showDeleteButton]="true"
           (nextClicked)="moveToNextStep()"
           (backClicked)="moveToPreviousStep()"
           (deleteClicked)="requestDeletePreprint()"
@@ -49,6 +50,7 @@
       @case (PreprintSteps.Metadata) {
         <osf-preprints-metadata
           [provider]="provider"
+          [showDeleteButton]="true"
           (nextClicked)="moveToNextStep()"
           (backClicked)="moveToPreviousStep()"
           (deleteClicked)="requestDeletePreprint()"
@@ -56,6 +58,7 @@
       }
       @case (PreprintSteps.AuthorAssertions) {
         <osf-author-assertions-step
+          [showDeleteButton]="true"
           (nextClicked)="moveToNextStep()"
           (backClicked)="moveToPreviousStep()"
           (deleteClicked)="requestDeletePreprint()"
@@ -63,13 +66,14 @@
       }
       @case (PreprintSteps.Supplements) {
         <osf-supplements-step
+          [showDeleteButton]="true"
           (nextClicked)="moveToNextStep()"
           (backClicked)="moveToPreviousStep()"
           (deleteClicked)="requestDeletePreprint()"
         />
       }
       @case (PreprintSteps.Review) {
-        <osf-review-step [provider]="provider" (deleteClicked)="requestDeletePreprint()" />
+        <osf-review-step [provider]="provider" [showDeleteButton]="true" (deleteClicked)="requestDeletePreprint()" />
       }
     }
   </section>

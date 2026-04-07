@@ -59,6 +59,7 @@ export class ReviewStepComponent implements OnInit {
   private readonly toastService = inject(ToastService);
 
   readonly provider = input.required<PreprintProviderDetails>();
+  readonly showDeleteButton = input(false);
   readonly deleteClicked = output<void>();
 
   private readonly actions = createDispatchMap({
