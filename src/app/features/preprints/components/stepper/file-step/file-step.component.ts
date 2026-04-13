@@ -46,7 +46,6 @@ import { ClearFileDirective } from '@osf/shared/directives/clear-file.directive'
 import { StringOrNull } from '@osf/shared/helpers/types.helper';
 import { FileModel } from '@osf/shared/models/files/file.model';
 import { FileFolderModel } from '@osf/shared/models/files/file-folder.model';
-import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 
 @Component({
@@ -71,7 +70,6 @@ import { ToastService } from '@osf/shared/services/toast.service';
 })
 export class FileStepComponent implements OnInit {
   private toastService = inject(ToastService);
-  private customConfirmationService = inject(CustomConfirmationService);
   private destroyRef = inject(DestroyRef);
 
   private actions = createDispatchMap({
@@ -90,6 +88,7 @@ export class FileStepComponent implements OnInit {
   readonly PreprintFileSource = PreprintFileSource;
 
   provider = input.required<PreprintProviderDetails>();
+  showDeleteButton = input(false);
   preprint = select(PreprintStepperSelectors.getPreprint);
   selectedFileSource = select(PreprintStepperSelectors.getSelectedFileSource);
   fileUploadLink = select(PreprintStepperSelectors.getUploadLink);

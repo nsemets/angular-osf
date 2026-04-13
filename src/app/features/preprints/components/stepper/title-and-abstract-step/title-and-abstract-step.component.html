@@ -53,6 +53,15 @@
     severity="info"
     [routerLink]="['/preprints', providerId(), 'discover']"
   />
+  @if (showDeleteButton()) {
+    <p-button
+      class="w-6 md:w-6rem"
+      styleClass="w-full"
+      [label]="'common.buttons.delete' | translate"
+      severity="danger"
+      (onClick)="deletePreprint()"
+    />
+  }
   <p-button
     data-test-next-button
     class="w-6 md:w-9rem"

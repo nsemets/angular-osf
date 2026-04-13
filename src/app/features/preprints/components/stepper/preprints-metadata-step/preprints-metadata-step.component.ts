@@ -63,6 +63,7 @@ export class PreprintsMetadataStepComponent implements OnInit {
   private toastService = inject(ToastService);
 
   provider = input.required<PreprintProviderDetails>();
+  showDeleteButton = input(false);
   nextClicked = output<void>();
   backClicked = output<void>();
   deleteClicked = output<void>();

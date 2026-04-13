@@ -38,13 +38,14 @@
       @case (PreprintSteps.File) {
         <osf-file-step
           [provider]="provider"
+          [showDeleteButton]="true"
           (nextClicked)="moveToNextStep()"
           (backClicked)="navigateBack()"
           (deleteClicked)="requestDeletePreprint()"
         />
       }
       @case (PreprintSteps.Review) {
-        <osf-review-step [provider]="provider" (deleteClicked)="requestDeletePreprint()" />
+        <osf-review-step [provider]="provider" [showDeleteButton]="true" (deleteClicked)="requestDeletePreprint()" />
       }
     }
   </section>
