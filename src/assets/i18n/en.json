@@ -1898,8 +1898,8 @@
         },
         "duplicate": {
           "header": "Duplicate Template",
-          "templateConfirmation": "Are you sure you want to create a new project using this project as a template?",
-          "templateAddonsWarning": "Any add-ons configured for this project will not be authenticated in the new project."
+          "templateAddonsWarning": "Any add-ons configured for this project will not be authenticated in the new project.",
+          "templateConfirmation": "Are you sure you want to create a new project using this project as a template?"
         },
         "fork": {
           "confirmButton": "Duplicate",
@@ -1924,8 +1924,8 @@
           "header": "Make Project Private",
           "messageItems": {
             "publicDuplicatesRemainPublic": "Public duplicates and registrations of this project will remain public.",
-            "searchEnginesMayHaveAccessed": "Search engines (including Google's cache) or others may have accessed files, wiki pages, or analytics while this project was public.",
-            "removedFromCollections": "The project will automatically be removed from any collections. Any pending requests will be cancelled."
+            "removedFromCollections": "The project will automatically be removed from any collections. Any pending requests will be cancelled.",
+            "searchEnginesMayHaveAccessed": "Search engines (including Google's cache) or others may have accessed files, wiki pages, or analytics while this project was public."
           }
         },
         "makePublic": {
@@ -2004,9 +2004,9 @@
         "resourceInformation": "Resource Information",
         "resourceLanguage": "Resource language",
         "resourceType": "Resource type",
-        "supplements": "Supplements",
         "supplementalMaterialsPrefix": "Has supplemental materials for",
-        "supplementalMaterialsSuffix": "on OSF Preprints"
+        "supplementalMaterialsSuffix": "on OSF Preprints",
+        "supplements": "Supplements"
       },
       "parentProject": "Parent Project",
       "recentActivity": {
@@ -2134,31 +2134,31 @@
       "addNewRegistry": "Add New Registration",
       "createDraft": "Create draft",
       "createdSuccessfully": "Draft created successfully",
-      "registrySubmissionInfo": "You are submitting to OSF Registries.",
       "hostedRegistriesLink": "Learn more about other hosted registries.",
       "registryClosedForSubmissions": "This registry is closed for new submissions. Please start a new registration with a different registry.",
+      "registrySubmissionInfo": "You are submitting to OSF Registries.",
       "selectProject": "Select your project",
       "steps": {
         "existingProjectQuestion": "Do you have content for registration in an existing OSF project?",
-        "selectProjectQuestion": "Which project do you want to register?",
-        "selectProjectHint": "If your project includes components, you can select which components to include or exclude at the end of the registration.",
         "registrationTypeQuestion": "Which type of registration would you like to create?",
+        "selectProjectHint": "If your project includes components, you can select which components to include or exclude at the end of the registration.",
+        "selectProjectQuestion": "Which project do you want to register?",
         "title": "Step"
       }
     },
     "noRegistrations": "You don't have any registrations. Create one with the button below.",
     "review": {
       "confirmation": {
+        "blindPeerReviewLink": "blind peer review",
+        "deletionWarning": "Registrations can't be deleted, but you can withdraw.",
+        "embargoHint": "Embargo your registration if you plan to submit to a journal that requires",
         "embargoPlaceholder": "Choose embargo end date",
+        "noEditWarning": "Do not edit any files until the registration archives.",
         "options": {
           "embargo": "Enter registration into embargo",
           "public": "Make registration public immediately"
         },
         "successMessage": "Registration successfully created.",
-        "embargoHint": "Embargo your registration if you plan to submit to a journal that requires",
-        "blindPeerReviewLink": "blind peer review",
-        "noEditWarning": "Do not edit any files until the registration archives.",
-        "deletionWarning": "Registrations can't be deleted, but you can withdraw.",
         "title": "Almost done..."
       },
       "register": "Register",
@@ -2672,6 +2672,7 @@
         }
       },
       "details": {
+        "back": "Back to list of developer apps",
         "clientId": {
           "description": "The client ID is the developer app's unique identifier and is safe to share publicly.",
           "title": "Client ID"
@@ -2683,8 +2684,7 @@
           "resetSecret": "Reset Secret",
           "show": "Show client secret",
           "title": "Client Secret"
-        },
-        "back": "Back to list of developer apps"
+        }
       },
       "form": {
         "appName": "App Name",
