@@ -210,7 +210,7 @@ describe('AddResourceDialogComponent', () => {
       selectorOverrides: [{ selector: RegistryResourcesSelectors.getCurrentResource, value: MOCK_RESOURCE }],
     });
 
-    expect(component.resourceTypeTranslationKey()).toBe('resources.typeOptions.data');
+    expect(component.resourceTypeTranslationKey()).toBe('resourceCard.resources.data');
   });
 
   it('should return empty string for resourceTypeTranslationKey when type is unknown', () => {

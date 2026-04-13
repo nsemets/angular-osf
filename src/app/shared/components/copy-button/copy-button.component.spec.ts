@@ -67,7 +67,7 @@ describe('CopyButtonComponent', () => {
     component.copy();
 
     expect(copySpy).toHaveBeenCalledWith(testText);
-    expect(showSuccessSpy).toHaveBeenCalledWith('settings.developerApps.messages.copied');
+    expect(showSuccessSpy).toHaveBeenCalledWith('common.labels.copied');
   });
 
   it('should copy long text', () => {
@@ -81,7 +81,7 @@ describe('CopyButtonComponent', () => {
     component.copy();
 
     expect(copySpy).toHaveBeenCalledWith(longText);
-    expect(showSuccessSpy).toHaveBeenCalledWith('settings.developerApps.messages.copied');
+    expect(showSuccessSpy).toHaveBeenCalledWith('common.labels.copied');
   });
 
   it('should copy special characters', () => {
@@ -95,6 +95,6 @@ describe('CopyButtonComponent', () => {
     component.copy();
 
     expect(copySpy).toHaveBeenCalledWith(specialText);
-    expect(showSuccessSpy).toHaveBeenCalledWith('settings.developerApps.messages.copied');
+    expect(showSuccessSpy).toHaveBeenCalledWith('common.labels.copied');
   });
 });
