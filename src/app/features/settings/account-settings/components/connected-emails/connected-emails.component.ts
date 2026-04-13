@@ -65,7 +65,7 @@ export class ConnectedEmailsComponent {
   addEmail() {
     this.customDialogService
       .open(AddEmailComponent, {
-        header: 'settings.accountSettings.connectedEmails.dialog.title',
+        header: 'settings.accountSettings.addEmail.title',
         width: '448px',
       })
       .onClose.pipe(filter((email: string) => !!email))

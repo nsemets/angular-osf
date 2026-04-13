@@ -28,6 +28,6 @@ export class CopyButtonComponent {
 
   copy(): void {
     this.clipboard.copy(this.copyItem());
-    this.toastService.showSuccess('settings.developerApps.messages.copied');
+    this.toastService.showSuccess('common.labels.copied');
   }
 }

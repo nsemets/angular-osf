@@ -70,7 +70,7 @@ export class FileMetadataComponent {
   openEditFileMetadataDialog() {
     this.customDialogService
       .open(EditFileMetadataDialogComponent, {
-        header: 'files.detail.fileMetadata.edit',
+        header: 'common.labels.edit',
         width: '448px',
         data: this.fileMetadata(),
       })

@@ -15,7 +15,7 @@
       "coi_statement_updated": "{{user}} changed the conflict of interest statement for {{preprint}}.",
       "comment_added": "{{user}} added a comment {{commentLocation}} in {{node}}",
       "comment_removed": "{{user}} deleted a comment {{commentLocation}} in {{node}}",
-      "comment_restored": "{{user}} restored a comment {{commentLocation}}  in {{node}}",
+      "comment_restored": "{{user}} restored a comment {{commentLocation}} in {{node}}",
       "comment_updated": "{{user}} updated a comment {{commentLocation}} in {{node}}",
       "contributor_added": "{{user}} added {{contributors}} as contributor(s) to {{node}}",
       "contributor_removed": "{{user}} removed {{contributors}} as contributor(s) from {{node}}",
@@ -154,7 +154,6 @@
       "allDepartments": "All departments",
       "allowReplyToSenderAddress": "Allow reply to sender address",
       "ccSender": "CC sender",
-      "contacts": "Contacts",
       "customize": "Customize",
       "filesOnOsf": "Files on OSF",
       "hasOrcid": "Has ORCID",
@@ -175,29 +174,22 @@
     },
     "preprints": {
       "downloadsLastDays": "Downloads (last 30 days)",
-      "noData": "No preprints found",
       "totalPreprints": "Total Preprints"
     },
     "projects": {
       "addOns": "Add-ons",
       "contributorName": "Contributor Name",
-      "dateCreated": "Created Date",
-      "dateModified": "Modified Date",
       "doi": "DOI",
       "funderName": "Funder Name",
-      "license": "License",
       "link": "Link",
-      "noData": "No projects found",
       "resourceType": "Resource Type",
       "storageLocation": "Storage Location",
-      "title": "Title",
       "totalDataStored": "Total Data Stored on OSF",
       "totalProjects": "Total Projects",
       "views": "Views (last 30 days)"
     },
     "registrations": {
       "funderName": "Funder Name",
-      "noData": "No registrations found",
       "registrationSchema": "Registration Schema",
       "totalRegistrations": "Total Registrations"
     },
@@ -232,8 +224,6 @@
   "auth": {
     "common": {
       "confirmEmail": "Confirm email",
-      "email": "Email",
-      "emailPlaceholder": "email@example.com",
       "password": {
         "confirm": "Confirm New Password",
         "mismatch": "Passwords must match.",
@@ -245,19 +235,17 @@
           "pattern": "Password must include lowercase, uppercase, and at least one number and special character.",
           "required": "Password is required."
         }
-      }
+      },
+      "resetPassword": "Reset password"
     },
     "forgotPassword": {
       "description": "Enter your email address and we'll send a link to reset your password",
       "messages": {
-        "error": "Email not found.",
         "success": "Thanks. Check your email to reset your password."
       },
-      "submit": "Reset Password",
       "title": "Forgot Your Password?"
     },
     "resetPassword": {
-      "submit": "Reset Password",
       "success": {
         "backToSignin": "Back to Sign In",
         "message": "You have successfully reset your password",
@@ -300,19 +288,12 @@
       "contributorsTooltip": "Projects must have at least one registered administrator and one author showing in the citation at all times. A registered administrator is a user who has both confirmed their account and has administrator privileges.",
       "form": {
         "chooseLicense": "Choose License",
-        "description": "Description",
         "fieldRequired": "This field can't be empty",
-        "licensePlaceholder": "Select license",
         "loadingPlaceholder": "Loading projects...",
-        "noProjectsFound": "No projects found",
-        "tags": "Tags",
-        "tagsPlaceholder": "Add tags here",
-        "title": "Title"
+        "noProjectsFound": "No projects found"
       },
-      "noDescription": "No description",
       "noLicense": "No license",
       "noTags": "No tags",
-      "project": "Project",
       "projectContributors": "Project Contributors",
       "projectMetadataMessage": "Updates made in this section will update the project.",
       "projectMetadataUpdateSuccess": "Project Metadata successfully updated.",
@@ -405,9 +386,7 @@
       "placeholder": "Enter search term(s) here"
     },
     "searchResults": {
-      "10000Results": "10,000+ results",
       "noResults": "0 results",
-      "noResultsFound": "No results found",
       "noResultsFoundMessage": "Try broadening your search terms",
       "results": "results"
     }
@@ -442,9 +421,9 @@
       "cancel": "Cancel",
       "clickToEdit": "Click to edit",
       "close": "Close",
+      "configure": "Configure",
       "confirm": "Confirm",
       "continue": "Continue",
-      "continue update": "Continue update",
       "continueUpdate": "Continue Update",
       "copy": "Copy",
       "copyTo": "Copy to",
@@ -454,6 +433,7 @@
       "customize": "Customize",
       "delete": "Delete",
       "deselect": "Deselect",
+      "disable": "Disable",
       "discardChanges": "Discard Changes",
       "disconnect": "Disconnect",
       "done": "Done",
@@ -495,10 +475,6 @@
       "withdraw": "Withdraw",
       "yes": "Yes"
     },
-    "deleteConfirmation": {
-      "header": "Delete",
-      "message": "Are you sure you want to proceed?"
-    },
     "discardChanges": {
       "header": "You Might Lose Unsaved Changes",
       "message": "Are you sure you want to proceed?"
@@ -519,27 +495,39 @@
       "and": "and",
       "available": "Available",
       "contributors": "Contributors",
+      "copied": "Copied!",
       "data": "Data",
-      "dateCreated": "Date Created",
+      "dateCreated": "Date created",
+      "dateModified": "Date modified",
+      "dateRegistered": "Date registered",
       "dateUpdated": "Date Updated",
+      "delete": "Delete",
       "description": "Description",
+      "descriptionOptional": "Description (Optional)",
       "downloads": "Downloads",
       "drafts": "Drafts",
+      "edit": "Edit",
+      "email": "Email",
+      "emailPlaceholder": "email@example.com",
       "forked": "Forked",
       "lastUpdated": "Last Updated",
       "learnMore": "Learn More",
       "license": "License",
       "makePublic": "Make Public",
+      "metadata": "Metadata",
+      "modified": "Modified",
       "more": "more",
       "no": "No",
       "noAffiliatedInstitutions": "No affiliated institutions",
       "noData": "No data",
+      "noDescription": "No description",
       "noDoi": "No DOI",
       "noFiles": "No files selected",
       "noLicense": "No License",
       "none": "None",
       "notApplicable": "Not Applicable",
       "optional": "Optional",
+      "project": "Project",
       "public": "Public",
       "subjects": "Subjects",
       "submitted": "Submitted",
@@ -582,6 +570,24 @@
       },
       "title": "Search"
     },
+    "socials": {
+      "academia": "Academia",
+      "academiaProfileId": "Academia Profile Id",
+      "baiduScholar": "Baidu Scholar",
+      "bluesky": "Bluesky",
+      "facebook": "Facebook",
+      "github": "GitHub",
+      "impactStory": "ImpactStory",
+      "linkedIn": "LinkedIn",
+      "mastodon": "Mastodon",
+      "orcid": "ORCID",
+      "profileWebsites": "Your website",
+      "researcherId": "ResearcherID",
+      "researchGate": "ResearchGate",
+      "scholar": "Google Scholar",
+      "ssrn": "SSRN",
+      "x": "X"
+    },
     "sort": {
       "createdNewest": "Date created (newest)",
       "createdOldest": "Date created (oldest)",
@@ -601,21 +607,13 @@
       "actions": {
         "addCommunityMetadata": "Add community Metadata",
         "copyDynamicIframe": "Copy dynamic JS iFrame",
-        "copyStaticIframe": "Copy static HTML iFrame",
-        "share": {
-          "email": "Email",
-          "facebook": "Facebook",
-          "x": "X"
-        }
+        "copyStaticIframe": "Copy static HTML iFrame"
       },
       "backToList": "Back to list of files",
       "fileMetadata": {
-        "edit": "Edit",
         "fields": {
-          "description": "Description",
           "resourceLanguage": "Resource Language",
-          "resourceType": "Resource Type",
-          "title": "Title"
+          "resourceType": "Resource Type"
         },
         "title": "File Metadata"
       },
@@ -623,19 +621,13 @@
         "title": "Keywords"
       },
       "resourceMetadata": {
-        "edit": "Edit",
         "fields": {
           "awardNumber": "Award number",
           "awardTitle": "Award title",
           "awardUri": "Award URI",
-          "contributors": "Contributors",
-          "dateCreated": "Date created",
-          "dateModified": "Date modified",
-          "description": "Description",
           "funder": "Funder",
           "resourceLanguage": "Resource language",
-          "resourceType": "Resource type",
-          "title": "Title"
+          "resourceType": "Resource type"
         },
         "title": {
           "nodes": "Project Metadata",
@@ -645,8 +637,7 @@
       "revisions": {
         "actions": {
           "copyMd5": "Copy MD5",
-          "copySha2": "Copy SHA-2",
-          "download": "Download"
+          "copySha2": "Copy SHA-2"
         },
         "title": "Revisions",
         "tooltips": {
@@ -681,12 +672,10 @@
       },
       "deleteFolder": {
         "message": "Are you sure you want to delete the folder <span class=\"font-bold\">{{name}}</span> and all its contents?",
-        "success": "Folder successfully deleted.",
         "title": "Delete Folder"
       },
       "deleteMultipleItems": {
         "message": "Are you sure you want to delete <span class=\"font-bold\">{{name}}</span>?",
-        "success": "Successfully deleted.",
         "title": "Delete items"
       },
       "moveFile": {
@@ -707,7 +696,6 @@
       "renameFile": {
         "enterNewName": "Enter new name",
         "newName": "New name",
-        "renameLabel": "Please rename the file",
         "success": "Successfully renamed.",
         "title": "Rename file"
       },
@@ -773,20 +761,9 @@
       "api": "API",
       "centerForOpenScience": "Center for Open Science",
       "privacyPolicy": "Privacy Policy",
-      "reproducibilityProjectCancerBiology": "Reproducibility Project: Cancer Biology",
-      "reproducibilityProjectPsychology": "Reproducibility Project: Psychology",
       "status": "Status",
       "termsOfUse": "Terms of Use",
       "topGuidelines": "TOP Guidelines"
-    },
-    "socials": {
-      "bluesky": "Bluesky",
-      "facebook": "Facebook",
-      "github": "GitHub",
-      "group": "Group",
-      "linkedin": "Linkedin",
-      "mastodon": "Mastodon",
-      "x": "X (formerly Twitter)"
     }
   },
   "forbiddenPage": {
@@ -797,8 +774,8 @@
     "confirmEmail": {
       "add": {
         "denyError": "There was a problem canceling the request to add {{name}} to your account.",
-        "description": "Do you want to add ",
-        "description2": "to your profile ?",
+        "descriptionPrefix": "Do you want to add ",
+        "descriptionSuffix": "to your profile ?",
         "emailNotAdded": "{{name}} has not been added to your account.",
         "emailVerified": "{{name}} has been added to your account.",
         "goToEmails": "Add email",
@@ -807,8 +784,8 @@
       },
       "merge": {
         "denyError": "There was a problem canceling the request to merge {{name}} into your account.",
-        "description": "Would you like to merge ",
-        "description2": "into your account? This action is irreversible.",
+        "descriptionPrefix": "Would you like to merge ",
+        "descriptionSuffix": "into your account? This action is irreversible.",
         "emailNotAdded": "{{name}} has not been merged into your account.",
         "emailVerified": "{{name}} has been merged into your account.",
         "goToEmails": "Merge account",
@@ -869,7 +846,6 @@
         "title": "OSF <span class='highlight'>integrations</span> make your workflow more efficient"
       },
       "support": {
-        "learnMore": "Learn More",
         "sections": {
           "collect": {
             "description": "Store data, code, and other materials in OSF Storage, or connect your Dropbox or other third-party account. Every file gets a unique, persistent URL for citing and sharing",
@@ -911,22 +887,17 @@
   },
   "institutions": {
     "description": "OSF Institutions enhances transparency and increases the visibility of research outputs, accelerating discovery and reuse. Institutional members focus on generating and sharing research, and let OSF Institutions handle the infrastructure. <br /> <a class='dark-blue-two-link font-bold' href='https://www.cos.io/products/osf-institutions' target='_blank'>Read more</a>",
-    "learnMore": "Learn more about OSF Institutions.",
     "searchInstitutions": "Search institutions",
-    "searchInstitutionsDesctiption": "Please select an institution to apply to your search. Only OSF Institutions member affiliations are discoverable. ",
     "title": "Institutions"
   },
   "meetings": {
     "details": {
-      "downloadButton": "Download",
       "searchPlaceholder": "Search",
       "table": {
         "columns": {
           "author": "Author",
           "category": "Category",
-          "dateCreated": "Date Created",
-          "downloads": "Downloads",
-          "title": "Title"
+          "dateCreated": "Date Created"
         }
       }
     },
@@ -952,8 +923,7 @@
         "columns": {
           "date": "Date",
           "location": "Location",
-          "submissions": "Submissions",
-          "title": "Title"
+          "submissions": "Submissions"
         }
       },
       "title": "Meetings",
@@ -994,7 +964,6 @@
       "rejectWithdrawalMessage": "Submission will remain fully public",
       "remarksPlaceholder": "Add remarks to registration admins",
       "removeSuccess": "Submission has been withdrawn successfully",
-      "requestSubmitted": "Request submitted",
       "submitDecision": "Submit decision",
       "withdrawRequest": "Withdraw Request",
       "withdrawRequestMessage": "Submission will be withdrawn from the collection and will no longer appear in search results."
@@ -1046,7 +1015,7 @@
         "namedDescription": "All comments will be visible to the contributors of the submission and the moderator's osf profile name will be displayed.",
         "title": "Moderator Comments"
       },
-      "warning": "Notice: Moderation settings can only be  changed by an OSF administrator. Contact",
+      "warning": "Notice: Moderation settings can only be changed by an OSF administrator. Contact",
       "warningForAssistance": "for assistance."
     },
     "registryAccepted": "Registration submission accepted",
@@ -1111,28 +1080,18 @@
     "memberSince": "Member since"
   },
   "myProjects": {
-    "bookmarks": {
-      "emptyState": "You don't have any bookmarks. Click the bookmark icon on projects or registrations to add them here."
-    },
     "createProject": {
       "actions": {
-        "cancel": "Cancel",
         "create": "Create Project"
       },
       "affiliation": {
-        "removeAll": "Remove All",
-        "selectAll": "Select All",
         "title": "Affiliation"
-      },
-      "description": {
-        "label": "Description (Optional)"
       },
       "storageLocation": "Storage Location",
       "template": {
         "label": "Template (Optional)",
         "placeholder": "Select template or start typing to find one"
-      },
-      "title": "Title"
+      }
     },
     "header": {
       "createProject": "Create Project",
@@ -1165,18 +1124,13 @@
           "none": "You won't receive file update notifications."
         }
       },
-      "disabledForWiki": "This feature is disabled for wikis of private projects.",
       "emailNotifications": "Email Notifications",
       "emailNotificationsText": "These notification settings only apply to you. They do NOT affect any other contributor on this project.",
-      "enabledForWiki": "This feature is enabled for wikis of private projects.",
       "ensureNoInformation": "Ensure the wiki pages, files, registration forms and add-ons do not contain identifying information.",
       "faq": "FAQ",
       "institutionalLogos": "institutional logos to be displayed on public projects",
-      "invalidUrl": "Please enter a valid URL, such as: https://example.com",
-      "label": "Label",
       "linkName": "Link name",
       "parentsNeedToBeChecked": "Parents need to be checked",
-      "project": "Project",
       "projectAffiliation": "Project Affiliation / Branding",
       "projectsCanBeAffiliated": "Projects can be affiliated with institutions that have created OSF for Institutions accounts. This allows:",
       "publicProjectsToBeDiscoverable": "public projects to be discoverable on specific institutional landing pages",
@@ -1186,7 +1140,6 @@
       "typeLinkName": "Type link name",
       "updateProjectDetailsMessage": "Successfully updated project details.",
       "updateProjectSettingsMessage": "Successfully updated project settings.",
-      "url": "URL",
       "viewOnlyLinkCreated": "View only link successfully created.",
       "viewOnlyLinkDeleted": "View only link successfully deleted.",
       "viewOnlyLinks": "View-only Links",
@@ -1206,11 +1159,6 @@
       "wikiText": "Enable the wiki in {{projectName}}"
     },
     "table": {
-      "columns": {
-        "contributors": "Contributors",
-        "modified": "Modified",
-        "title": "Title"
-      },
       "searchPlaceholder": "Filter by title, description, and tags"
     },
     "tabOptions": {
@@ -1268,7 +1216,6 @@
       "myRegistrations": "My Registrations",
       "registryDetails": "Registry Details"
     },
-    "registryDetails": "Registry details",
     "resources": "Resources",
     "searchOsf": "Search OSF",
     "settings": "Settings",
@@ -1406,7 +1353,6 @@
       "reasonForWithdrawal": "Reason for withdrawal",
       "share": {
         "downloadPreprint": "Download {{documentType}}",
-        "downloads": "Downloads",
         "views": "Views"
       },
       "statusBanner": {
@@ -1485,11 +1431,6 @@
     },
     "myPreprints": {
       "searchPlaceholder": "Filter by title, description, and tags",
-      "table": {
-        "contributorsLabel": "Contributors",
-        "modifiedLabel": "Modified",
-        "titleLabel": "Title"
-      },
       "title": "My Preprints"
     },
     "poweredBy": "Powered by OSF Preprints",
@@ -1521,8 +1462,7 @@
             "analysis": "Analysis Plan",
             "both": "Both",
             "designs": "Study Design"
-          },
-          "title": "Title"
+          }
         },
         "placeholders": {
           "describe": "Describe",
@@ -1551,23 +1491,17 @@
         },
         "uploadDescription": "Please Upload your {{preprintWord}}",
         "uploadFileButton": "Upload file",
-        "uploadFromComputer": "Upload From Your Computer",
-        "versionFile": {
-          "header": "Add a new preprint file",
-          "message": "This will allow a new version of the preprint file to be uploaded to the preprint. The existing file will be retained as a version of the preprint."
-        }
+        "uploadFromComputer": "Upload From Your Computer"
       },
       "metadata": {
         "affiliatedInstitutionsDescription": "You can affiliate your {{preprintWord}} with your institution if it is an <a class='font-bold' href='https://www.cos.io/products/osf-institutions' target='_blank'>OSF institutional member</a> and has worked with the Center for Open Science to create a dedicated <a class='font-bold' href='https://help.osf.io/article/191-view-institutional-landing-pages' target='_blank'>institutional OSF landing page</a>.",
-        "affiliatedInstitutionsTitle": "Affiliated Institutions",
         "publicationCitationTitle": "Publication Citation (optional)",
         "publicationDateTitle": "Publication Date (optional)",
         "publicationDoi": {
           "patternError": "Please use a valid DOI format (10.xxxx/xxxxx)",
           "title": "Publication DOI (optional)"
         },
-        "tagsTitle": "Tags (optional)",
-        "title": "Metadata"
+        "tagsTitle": "Tags (optional)"
       },
       "projectSelection": {
         "description": "This will make your project public, if it is not already",
@@ -1589,15 +1523,10 @@
             "title": "Author Assertions"
           },
           "metadata": {
-            "affiliatedInstitutions": "Affiliated Institutions",
             "authors": "Authors",
-            "contributors": "Contributors",
             "publicationCitation": "Publication Citation",
             "publicationDate": "Publication Date",
-            "publicationDoi": "Publication DOI",
-            "subjects": "Subjects",
-            "tags": "Tags",
-            "title": "Metadata"
+            "publicationDoi": "Publication DOI"
           },
           "supplements": {
             "noSupplements": "Author did not add any supplements for this preprint",
@@ -1645,8 +1574,7 @@
         "abstractLabel": "Abstract",
         "abstractMaxLengthError": "Abstract can not exceed {{length}} characters.",
         "abstractMinLengthError": "Abstract must be at least {{length}} characters.",
-        "title": "Title and Abstract",
-        "titleLabel": "Title"
+        "title": "Title and Abstract"
       }
     },
     "providers": "Providers",
@@ -1716,8 +1644,6 @@
         "addRegisteredContributor": "Add Registered Contributor",
         "addUnregisteredContributor": "Add Unregistered Contributor",
         "bibliographicContributor": "Bibliographic Contributor",
-        "cancel": "Cancel",
-        "next": "Next",
         "placeholder": "Search by name or user information",
         "selectPermissions": "Please select which permissions you want to give to contributor",
         "unregisteredContributorNotification": "We will notify the user that they have been added to your project"
@@ -1732,7 +1658,6 @@
         "nonBibliographic": "Non-Bibliographic"
       },
       "bibliographyFilter": "Bibliography",
-      "createButton": "Create",
       "createLink": "Create a link to share this project so those who have the link can view—but not edit—the project.",
       "createLinkDialog": {
         "dialogTitle": "Create a new link to share your project"
@@ -1824,7 +1749,6 @@
         "displayName": "Display Name",
         "link": "Link",
         "linkedService": "Linked Service",
-        "noLink": "No link available",
         "resourceType": "Resource Type"
       },
       "title": "Linked Services"
@@ -1838,41 +1762,30 @@
         "changeTemplate": "Change template",
         "copyRecordMetadataUrl": "Copy url to clipboard to share.",
         "downloadRecordMetadata": "Download Metadata Record",
-        "editRecord": "Edit",
         "loadingCedar": "Loading CEDAR record...",
         "notPublishedText": "This metadata has a status of 'Draft' and is not publicly viewable. To 'Publish' this metadata please fill in all required fields and resubmit the data.",
         "publish": "Publish",
         "publishedText": "This metadata has a status of 'Published' and is publicly viewable.",
         "recordCreatedSuccessfully": "Record created successfully",
         "recordUpdatedSuccessfully": "Record updated successfully",
-        "saveDraft": "Save Draft",
         "select": "Select",
-        "selected": "Selected",
         "selectTemplate": "Select a Metadata Template",
         "title": "Add community metadata record",
         "youAlreadyAdded": "Already Added",
         "youAlreadyAddedText": "You have already added a record for this template"
       },
-      "addSubjects": "Add subjects...",
       "affiliatedInstitutions": {
         "dialog": {
-          "header": "Edit Affiliated Institutions",
-          "noInstitutions": "No institutions available"
+          "header": "Edit Affiliated Institutions"
         },
-        "loadingInstitutions": "Loading institutions...",
         "updated": "Affiliated institutions updated successfully"
       },
       "contributors": {
-        "editContributors": "Edit contributors",
-        "updateSucceed": "Contributors successfully updated."
+        "editContributors": "Edit contributors"
       },
       "description": {
         "dialog": {
-          "clickToRemove": "Click to remove",
-          "expandOrCollapse": "Expand or collapse ",
-          "header": "Edit Description",
-          "label": "Description",
-          "placeholder": "Enter description here"
+          "header": "Edit Description"
         },
         "updated": "Description updated successfully"
       },
@@ -1892,12 +1805,9 @@
       "editTitlePlaceholder": "Edit title here",
       "funding": {
         "dialog": {
-          "autoPopulated": "Auto-populated from selection",
           "awardNumber": "Award Number",
           "awardTitle": "Award Title",
           "awardUri": "Award URI",
-          "description": "Add funding and support information for this project.",
-          "funderIdentifier": "Funder Identifier",
           "funderName": "Funder Name",
           "header": "Edit Funding/Support Information",
           "loadingFunders": "Loading funders...",
@@ -1909,46 +1819,18 @@
       "license": {
         "dialog": {
           "chooseLicense": {
-            "label": "Choose License",
-            "placeholder": "Select license"
+            "label": "Choose License"
           },
-          "copyrightHolders": {
-            // "label": "Copyright Holders",
-            "placeholder": "Enter copyright holders"
-          },
-          "header": "Edit License",
-          "licenseTextPlaceholder": "License text will appear here when you select a license",
-          "statementOfPurpose": {
-            "label": "Statement of Purpose",
-            "placeholder": "Enter statement of purpose"
-          },
-          "year": {
-            "label": "Year",
-            "placeholder": "Enter year"
-          }
+          "header": "Edit License"
         },
-        "updated": "License updated successfully",
-        "updateFailed": "Failed to update license"
+        "updated": "License updated successfully"
       },
       "publicationDoi": {
-        "dialog": {
-          "header": "Edit Publication DOI",
-          "label": "Publication DOI",
-          "placeholder": "Enter publication DOI"
-        },
         "updated": "Publication DOI updated successfully"
       },
       "resourceInformation": {
         "dialog": {
-          "header": "Edit Resource Information",
-          "resourceLanguage": {
-            "label": "Resource Language",
-            "placeholder": "Select resource language"
-          },
-          "resourceType": {
-            "label": "Resource Type",
-            "placeholder": "Select resource type"
-          }
+          "header": "Edit Resource Information"
         },
         "tooltipDialog": {
           "dataTypeLink": "Datacite Resource Types",
@@ -1961,27 +1843,15 @@
         },
         "updated": "Resource information updated successfully"
       },
-      "title": "Title",
       "titleUpdated": "Description updated successfully"
     },
     "overview": {
       "actions": {
-        "delete": "Delete",
         "duplicateProject": "Duplicate project (structure only)",
         "forkProject": "Duplicate project (with files)",
         "forkProjectLabel": "Duplicate project",
-        "forkRegistry": "Duplicate this registration",
-        "forkResource": "Fork this resource",
         "manageContributors": "Manage Contributors",
         "settings": "Settings",
-        "socials": {
-          "bluesky": "Bluesky",
-          "email": "Email",
-          "facebook": "Facebook",
-          "linkedIn": "LinkedIn",
-          "mastodon": "Mastodon",
-          "x": "X"
-        },
         "viewDuplication": "View duplicates"
       },
       "citations": {
@@ -1997,38 +1867,25 @@
       "components": {
         "addComponentButton": "Add Component",
         "linkProjectsButton": "Link Projects",
-        "noComponentsMessage": "<em>Add components to organize your project.</em>",
+        "noComponentsMessage": "Add components to organize your project.",
         "title": "Components"
       },
       "dialog": {
         "addComponent": {
           "addContributors": "Add Contributors from",
           "addTags": "Add Tags from",
-          "affiliation": {
-            "removeAll": "Remove All",
-            "selectAll": "Select All",
-            "title": "Affiliation"
-          },
-          "cancelButton": "Cancel",
-          "confirmButton": "Create",
           "contributorsMessage": "admins will have read access to this component.",
-          "description": "Description (Optional)",
           "header": "Create New Component",
           "license": {
-            "description": "This component will inherit the same license as",
-            "learnMore": "Learn More",
-            "title": "License"
+            "description": "This component will inherit the same license as"
           },
-          "storageLocation": "Storage Location",
-          "title": "Title"
+          "storageLocation": "Storage Location"
         },
         "adjustPrivacySetting": "Adjust your privacy settings by checking the boxes below.",
         "changePrivacySettings": "Change privacy settings",
         "checkedProjects": "Checked projects and components will be public.",
         "deleteComponent": {
-          "cancelButton": "Cancel",
           "confirmation": "Type the following to continue:",
-          "confirmButton": "Delete",
           "header": "Delete component",
           "listMessage": "You are about to delete the following:",
           "message": "It will no longer be available to other contributors on the project.",
@@ -2040,20 +1897,15 @@
           "message": "Are you sure you want to delete this link? This will not remove the project or registration this link refers to."
         },
         "duplicate": {
-          "cancelButton": "Cancel",
-          "confirmButton": "Create",
           "header": "Duplicate Template",
-          "message1": "Are you sure you want to create a new project using this project as a template?",
-          "message2": "Any add-ons configured for this project will not be authenticated in the new project."
+          "templateConfirmation": "Are you sure you want to create a new project using this project as a template?",
+          "templateAddonsWarning": "Any add-ons configured for this project will not be authenticated in the new project."
         },
         "fork": {
-          "cancelButton": "Cancel",
           "confirmButton": "Duplicate",
           "forksMessage": "Duplicates you have permission to view are shown here.",
           "headerProject": "Duplicate This Project",
-          "headerRegistry": "Duplicate This Registry",
           "messageProject": "Are you sure you want to duplicate this project (with files)?",
-          "messageRegistry": "Are you sure you want to duplicate this registry (with files)?",
           "noForksMessage": "No duplicates found"
         },
         "linkProject": {
@@ -2064,23 +1916,22 @@
           "searchMyObjects": "Search My Objects",
           "searchObjectsPlaceholder": "Search objects",
           "table": {
-            "contributors": "Contributors",
-            "created": "Created",
-            "modified": "Modified",
-            "title": "Title"
+            "created": "Created"
           }
         },
         "makePrivate": {
-          "cancelButton": "Cancel",
           "confirmButton": "Make Private",
           "header": "Make Project Private",
-          "message": "<ul><li>&#8226; Public duplicates and registrations of this project will remain public.</li><li>&#8226; Search engines (including Google's cache) or others may have accessed files, wiki pages, or analytics while this project was public.</li><li>&#8226; The project will automatically be removed from any collections. Any pending requests will be cancelled.</li></ul><br/>"
+          "messageItems": {
+            "publicDuplicatesRemainPublic": "Public duplicates and registrations of this project will remain public.",
+            "searchEnginesMayHaveAccessed": "Search engines (including Google's cache) or others may have accessed files, wiki pages, or analytics while this project was public.",
+            "removedFromCollections": "The project will automatically be removed from any collections. Any pending requests will be cancelled."
+          }
         },
         "makePublic": {
-          "cancelButton": "Cancel",
           "confirmButton": "Make Public",
           "header": "Make Project Public",
-          "message": "Please review your projects, components, and add-ons for sensitive or restricted information before making them public. <br/> <br/> Once they are made public, you should assume they will always be public. You can return them to private later, but search engines (including Google's cache) or others may access files, wiki pages, or analytics before you do. <br/> <br/>"
+          "message": "Please review your projects, components, and add-ons for sensitive or restricted information before making them public. <br/> <br/> Once they are made public, you should assume they will always be public. You can return them to private later, but search engines (including Google's cache) or others may access files, wiki pages, or analytics before you do."
         },
         "privacySettingsPermissionTooltip": "You must have admin permission on this component to be able to change privacy settings",
         "toast": {
@@ -2113,53 +1964,38 @@
         "uncheckedComponents": "Unchecked components will be private."
       },
       "files": {
-        "filesPreview": "Files Preview",
-        "title": "Files"
+        "filesPreview": "Files Preview"
       },
       "header": {
         "privateProject": "Private Project",
         "publicProject": "Public Project"
       },
       "linkedProjects": {
-        "noLinkedProjectsMessage": "<em>Link your project.</em>",
+        "noLinkedProjectsMessage": "Link your project.",
         "title": "Linked Projects"
       },
       "metadata": {
-        "affiliatedInstitutions": "Affiliated Institutions",
-        "affiliatedInstitutionsDescription": "This is a service provided by the OSF and is automatically applied to your registration. If you are not sure if your institution has signed up for this service, you can look for their name in this list.",
         "anonymousContributors": "Anonymous Contributors",
-        "cedarRecordCreatedSuccessfully": "CEDAR record created successfully",
         "citation": "Citation",
         "citationInputPlaceholder": "Select citation style or start typing",
         "citationLoadingPlaceholder": "Loading options...",
         "citeAs": "Cite as:",
         "collection": "Collection",
-        "contributors": "Contributors",
         "customCitationPlaceholder": "Enter custom citation",
         "dateCreated": "Date Created",
         "dateUpdated": "Date Updated",
-        "description": "Description",
-        "failedToCreateCedarRecord": "Failed to create CEDAR record",
         "fundingSupport": "Funding/Support Information",
         "getMoreCitations": "Get More Citations",
         "internetArchiveLink": "internet archive link",
-        "loading": "Loading metadata...",
-        "noAffiliatedInstitutions": "No affiliated institutions",
         "noCitations": "No citations",
-        "noCitationStylesFound": "No results found",
         "noCollections": "No collections",
-        "noDescription": "No description",
         "noInformation": "No information",
-        "noLicense": "No License",
         "noProjectDoi": "No Project DOI",
         "noPublicationDoi": "No Publication DOI",
         "noResourceInformation": "No resource information available",
-        "noSubjects": "No subjects",
         "noSupplements": "No supplements",
         "noTags": "No tags",
-        "notSpecified": "Not specified",
         "placeholders": {
-          "add": "Add description here",
           "edit": "Edit description here"
         },
         "projectDOI": "Project DOI",
@@ -2168,12 +2004,9 @@
         "resourceInformation": "Resource Information",
         "resourceLanguage": "Resource language",
         "resourceType": "Resource type",
-        "subjects": "Subjects",
         "supplements": "Supplements",
-        "supplementsText1": "Has supplemental materials for",
-        "supplementsText2": "on OSF Preprints",
-        "tags": "Tags",
-        "title": "Metadata"
+        "supplementalMaterialsPrefix": "Has supplemental materials for",
+        "supplementalMaterialsSuffix": "on OSF Preprints"
       },
       "parentProject": "Parent Project",
       "recentActivity": {
@@ -2197,9 +2030,7 @@
         "description": "Description:",
         "embargoed": "Embargoed",
         "lastUpdated": "Last Updated:",
-        "noDescription": "No description",
         "noTitle": "(Untitled)",
-        "openResources": "Open Resources",
         "registered": "Registered:",
         "registrationSupplement": "Registration Supplement",
         "registrationTemplate": "Registration template:",
@@ -2230,7 +2061,6 @@
       "compare": "Compare",
       "deleteWiki": "Delete wiki page",
       "deleteWikiMessage": "Are you sure you want to delete this wiki page?",
-      "edit": "Edit",
       "horizontalRule": "Horizontal rule",
       "list": {
         "componentsHeader": "Components Wiki Pages",
@@ -2298,21 +2128,21 @@
     "metadata": {
       "addContributors": "Add Contributor By Search",
       "description": "This metadata applies only to the registration you are creating, and will not be applied to your project.",
-      "title": "Registration  Metadata"
+      "title": "Registration Metadata"
     },
     "new": {
       "addNewRegistry": "Add New Registration",
       "createDraft": "Create draft",
       "createdSuccessfully": "Draft created successfully",
-      "infoText1": "You are submitting to OSF Registries.",
-      "infoText2": "to learn more about other hosted registries.",
+      "registrySubmissionInfo": "You are submitting to OSF Registries.",
+      "hostedRegistriesLink": "Learn more about other hosted registries.",
       "registryClosedForSubmissions": "This registry is closed for new submissions. Please start a new registration with a different registry.",
       "selectProject": "Select your project",
       "steps": {
-        "step1": "Do you have content for registration in an existing OSF project?",
-        "step2": "Which project do you want to register?",
-        "step2InfoText": "If your project includes components, you can select which components to include or exclude at the end of the registration.",
-        "step3": "Which type of registration would you like to create?",
+        "existingProjectQuestion": "Do you have content for registration in an existing OSF project?",
+        "selectProjectQuestion": "Which project do you want to register?",
+        "selectProjectHint": "If your project includes components, you can select which components to include or exclude at the end of the registration.",
+        "registrationTypeQuestion": "Which type of registration would you like to create?",
         "title": "Step"
       }
     },
@@ -2325,10 +2155,10 @@
           "public": "Make registration public immediately"
         },
         "successMessage": "Registration successfully created.",
-        "text1": "Embargo your registration if you plan to submit to a journal that requires",
-        "text2": "blind peer review",
-        "text3": "Do not edit any files until the registration archives.",
-        "text4": "Registrations can't be deleted, but you can withdraw.",
+        "embargoHint": "Embargo your registration if you plan to submit to a journal that requires",
+        "blindPeerReviewLink": "blind peer review",
+        "noEditWarning": "Do not edit any files until the registration archives.",
+        "deletionWarning": "Registrations can't be deleted, but you can withdraw.",
         "title": "Almost done..."
       },
       "register": "Register",
@@ -2336,11 +2166,9 @@
         "description": "Contributor changes for included components must be done on the component contributor page before submitting this registration.",
         "title": "Select Components"
       },
-      "step": "Review",
-      "title": "Review Registration"
+      "step": "Review"
     },
     "searchPlaceholder": "Search Registrations",
-    "seeMore": "See more",
     "services": {
       "contactUs": "Contact Us",
       "description": "Leading registry service providers use this open source infrastructure to support their communities.",
@@ -2351,15 +2179,13 @@
   },
   "registry": {
     "archiving": {
-      "createdDate": "Date created",
       "description": "Changes to any files (1) in the projects or components being registered, (2) uploaded or selected as prompt responses, including those connected through add-ons during archiving will result in archiving failure and loss of your registration timestamp. Please do not modify your files until after you have received email confirmation of archiving completion. If this registration has been archiving for more than 72 hours, please email ",
       "descriptionEnd": " for assistance.",
       "pleaseNote": "Please note",
       "title": "This registration is currently archiving, and no changes can be made at this time."
     },
     "components": {
-      "noComponentsFound": "No components found",
-      "title": "Components"
+      "noComponentsFound": "No components found"
     },
     "links": {
       "linkedRegistrations": "Linked registrations",
@@ -2476,9 +2302,6 @@
       "collection": "Collection:",
       "conflictOfInterestResponse": "Conflict of Interest response:",
       "context": "Context",
-      "dateCreated": "Date created",
-      "dateModified": "Date modified",
-      "dateRegistered": "Date registered",
       "description": "Description:",
       "descriptionBold": "<span class=\"font-bold\">Description: </span>",
       "doi": "DOI:",
@@ -2522,7 +2345,6 @@
     "delete": "Delete Resource",
     "deleteText": "Are you sure you want to delete resource? This cannot be undone.",
     "description": " Contributors affirmed to adhere to the criteria for each badge.",
-    "descriptionLabel": "Description (Optional)",
     "edit": "Edit Resource",
     "errors": {
       "doiValidation": "Please enter a valid DOI in the format: 10.xxxx/xxxxx",
@@ -2538,13 +2360,6 @@
       "deletedResourceSuccess": "Resource is deleted successfully.",
       "updatedResourceSuccess": "Updated resource.",
       "updateResourceError": "Error occurred while updating new resource."
-    },
-    "typeOptions": {
-      "code": "Analytic Code",
-      "data": "Data",
-      "materials": "Materials",
-      "papers": "Papers",
-      "supplements": "Supplements"
     }
   },
   "resourceSpammed": {
@@ -2571,14 +2386,7 @@
   "settings": {
     "accountSettings": {
       "addEmail": {
-        "buttons": {
-          "cancel": "Cancel"
-        },
         "description": "Add an alternative email address to your account.",
-        "form": {
-          "email": "Email",
-          "emailPlaceholder": "email@example.com"
-        },
         "messages": {
           "error": "Failed to add alternative email",
           "success": "Alternative email added successfully"
@@ -2592,13 +2400,9 @@
         },
         "description": "Connect your account to institutions to access institutional features and services.",
         "noInstitutions": "You have no affiliations.",
-        "successDelete": "Successfully deleted affiliated institution.",
-        "title": "Affiliated Institutions"
+        "successDelete": "Successfully deleted affiliated institution."
       },
       "changePassword": {
-        "buttons": {
-          "update": "Update"
-        },
         "form": {
           "confirmPassword": "Confirm password",
           "confirmPasswordPlaceholder": "Confirm your new password",
@@ -2621,10 +2425,7 @@
       },
       "common": {
         "buttons": {
-          "cancel": "Cancel",
-          "configure": "Configure",
           "deactivate": "Deactivate",
-          "disable": "Disable",
           "enable": "Enable",
           "request": "Request",
           "undo": "Undo"
@@ -2647,9 +2448,6 @@
           "message": "Are you sure you want to delete <b>{{name}}</b> email?"
         },
         "description": "To merge an existing account with this one or to log in with multiple email addresses, add an alternate email address below. All projects and components will be displayed under the email address listed as primary.",
-        "dialog": {
-          "title": "Add alternative email"
-        },
         "makePrimaryDialog": {
           "header": "Make email primary",
           "message": "Are you sure you want to make <b>{{email}}</b> email primary?"
@@ -2762,11 +2560,10 @@
         "disconnect": "Disconnect {{addonName}}",
         "disconnectMessage": "You are about to disconnect the following addon from the project:",
         "folderName": "Folder name:",
-        "google-file-picker": {
-          "file-folder-title": "Select a file or folder to add",
-          "root-folder-title": "Select a root folder",
-          "select-root-folder": "Select Root Folder",
-          "selected-folder": "Selected Folder"
+        "googleFilePicker": {
+          "fileFolderTitle": "Select a file or folder to add",
+          "rootFolderTitle": "Select a root folder",
+          "selectRootFolder": "Select Root Folder"
         },
         "home": "Home",
         "linkedItem": "Linked item:",
@@ -2815,14 +2612,9 @@
         "buttons": {
           "acceptingTerms": "Accepting...",
           "authorize": "Authorize",
-          "back": "Back",
-          "cancel": "Cancel",
-          "configure": "Configure",
           "connect": "Connect",
-          "disable": "Disable",
           "existingAccount": "Choose Existing Account",
           "newAccount": "Setup New Account",
-          "next": "Next",
           "reconnect": "Reconnect",
           "startOauth": "Start OAuth"
         },
@@ -2840,9 +2632,7 @@
           "username": "Username"
         }
       },
-      "header": {
-        "title": "Add-ons"
-      },
+      "header": "Add-ons",
       "messages": {
         "connectError": "Failed to connect to {{serviceName}}",
         "connectSuccess": "Successfully connected to {{serviceName}}",
@@ -2852,7 +2642,6 @@
         },
         "deleteError": "Failed to disconnect from {{serviceName}}",
         "deleteSuccess": "Successfully disconnected from {{serviceName}}",
-        "noAddons": "No results found.",
         "updateError": "Failed to update {{serviceName}} configuration",
         "updateSuccess": "Successfully updated {{serviceName}} configuration"
       },
@@ -2867,6 +2656,9 @@
       }
     },
     "developerApps": {
+      "buttons": {
+        "create": "Create Developer App"
+      },
       "confirmation": {
         "delete": {
           "message": "Are you sure you want to delete this developer app? All users' access tokens will be revoked. This cannot be reversed.",
@@ -2892,17 +2684,10 @@
           "show": "Show client secret",
           "title": "Client Secret"
         },
-        "navigation": {
-          "back": "Back to list of developer apps"
-        }
+        "back": "Back to list of developer apps"
       },
       "form": {
         "appName": "App Name",
-        "buttons": {
-          "cancel": "Cancel",
-          "create": "Create Developer App",
-          "save": "Save"
-        },
         "callbackUrl": "Authorization callback URL",
         "createSuccess": "Developer app successfully created.",
         "createTitle": "Create Developer App",
@@ -2911,16 +2696,9 @@
         "homepageUrl": "Project homepage URL",
         "updateSuccess": "Developer app successfully updated."
       },
-      "header": {
-        "createButton": "Create Developer App",
-        "title": "Developer apps"
-      },
+      "header": "Developer apps",
       "list": {
-        "deleteButton": "Delete",
         "description": "Third-party web applications can connect to the OSF on behalf of users via the OAuth 2.0 web application flow."
-      },
-      "messages": {
-        "copied": "Copied!"
       }
     },
     "notifications": {
@@ -2946,7 +2724,6 @@
       "notificationPreferences": {
         "items": {
           "files": "Files updated",
-          "mentions": "Mentions added",
           "preprints": "Preprint submissions updated"
         },
         "note": "Note: Transactional and administrative service emails will still be sent.",
@@ -2980,7 +2757,6 @@
       },
       "endDateError": "End date must be greater than start date.",
       "name": {
-        "autoFill": "Auto-Fill",
         "citationPreview": {
           "apa": "APA",
           "citationFormat": "Citation format:",
@@ -2997,21 +2773,6 @@
         "suffix": "Suffix (Optional)"
       },
       "social": {
-        "labels": {
-          "academia": "Academia",
-          "academiaProfileId": "Academia Profile Id",
-          "baiduScholar": "Baidu Scholar",
-          "github": "GitHub",
-          "impactStory": "ImpactStory",
-          "linkedIn": "LinkedIn",
-          "orcid": "ORCID",
-          "profileWebsites": "Your website",
-          "researcherId": "ResearcherID",
-          "researchGate": "ResearchGate",
-          "scholar": "Google Scholar",
-          "ssrn": "SSRN",
-          "twitter": "X"
-        },
         "successUpdate": "Social successfully updated.",
         "title": "Social Link {{index}}"
       },
@@ -3024,6 +2785,9 @@
       "title": "Profile Settings"
     },
     "tokens": {
+      "buttons": {
+        "create": "Create Token"
+      },
       "confirmation": {
         "delete": {
           "message": "Are you sure you want to delete this token? This action cannot be reversed.",
@@ -3031,26 +2795,15 @@
         }
       },
       "createdDialog": {
-        "closeButton": "Close",
-        "copyNotification": "Copied!",
         "successMessage": "Token <strong>{{tokenName}}</strong> successfully created.",
         "title": "Token Successfully Created",
         "tokenWarning": "This is the only time your token will be displayed.",
         "warningMessage": "This token will never expire. This token should never be shared with others. If it is accidentally revealed publicly, it should be deactivated immediately."
       },
       "details": {
-        "deleteButton": "Delete",
-        "navigation": {
-          "back": "Back to list of personal tokens"
-        },
-        "title": "Edit Token"
+        "back": "Back to list of personal tokens"
       },
       "form": {
-        "buttons": {
-          "cancel": "Cancel",
-          "create": "Create Token",
-          "save": "Save"
-        },
         "createTitle": "Create Personal Access Token",
         "editTitle": "Edit token",
         "scopes": {
@@ -3059,12 +2812,8 @@
         },
         "tokenName": "Token Name"
       },
-      "header": {
-        "createButton": "Create Token",
-        "title": "Personal Access Tokens"
-      },
+      "header": "Personal Access Tokens",
       "list": {
-        "deleteButton": "Delete",
         "description": "Personal access tokens function like ordinary OAuth access tokens. They can be used to authenticate to the API."
       },
       "toastMessage": {
@@ -3089,8 +2838,7 @@
       "copyrightHolders": "Copyright Holders",
       "description": "A license tells others how they can use your work in the future and only applies to the information and files submitted with the registration.",
       "helpText": "For more information, see this ",
-      "selectLicense": "Select license",
-      "title": "License"
+      "selectLicense": "Select license"
     },
     "resources": {
       "title": "Open resources"
@@ -3115,8 +2863,7 @@
       "description": "Identify the main subject areas that your research pertains to. This helps categorize your work and makes it easier for others in your field to find and reference it.",
       "noSelected": "No subjects selected",
       "noSubject": "No subjects found",
-      "searchSubjects": "Search subjects",
-      "title": "Subjects"
+      "searchSubjects": "Search subjects"
     },
     "tags": {
       "description": "Enter specific keywords that describe the key elements and concepts of your research. These keywords will improve the discoverability of your registration in search results and databases.",
@@ -3127,13 +2874,12 @@
     }
   },
   "toast": {
-    "cookie-consent": {
+    "cookieConsent": {
       "accept": "Accept cookies",
       "message": "Notice: This website relies on cookies to help provide a better user experience. By clicking accept or continuing to use the site, you consent to our use of cookies. See our Privacy Policy and Cookie Use for more information."
     },
-    "tos-consent": {
+    "tosConsent": {
       "and": " and ",
-      "continue": "Continue",
       "haveReadAndAgree": "I've read and agree to the terms and conditions",
       "message": "Notice: We've updated our",
       "privacyPolicy": " privacy policy.",

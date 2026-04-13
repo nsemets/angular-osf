@@ -151,7 +151,7 @@ describe('Component: Google File Picker', () => {
       expect(setDeveloperKey).toHaveBeenCalledWith('test-api-key');
       expect(setAppId).toHaveBeenCalledWith('test-app-id');
       expect(addView).toHaveBeenCalled();
-      expect(setTitle).toHaveBeenCalledWith('settings.addons.configureAddon.google-file-picker.root-folder-title');
+      expect(setTitle).toHaveBeenCalledWith('settings.addons.configureAddon.googleFilePicker.rootFolderTitle');
       expect(setOAuthToken).toHaveBeenCalledWith('mock-token');
       expect(setCallback).toHaveBeenCalled();
       expect(enableFeature).not.toHaveBeenCalled();
@@ -290,7 +290,7 @@ describe('Component: Google File Picker', () => {
       expect(setDeveloperKey).toHaveBeenCalledWith('test-api-key');
       expect(setAppId).toHaveBeenCalledWith('test-app-id');
       expect(addView).toHaveBeenCalled();
-      expect(setTitle).toHaveBeenCalledWith('settings.addons.configureAddon.google-file-picker.file-folder-title');
+      expect(setTitle).toHaveBeenCalledWith('settings.addons.configureAddon.googleFilePicker.fileFolderTitle');
       expect(setOAuthToken).toHaveBeenCalledWith(null);
       expect(setCallback).toHaveBeenCalled();
       expect(enableFeature).toHaveBeenCalledWith('multiselect');

@@ -94,7 +94,7 @@ export class ViewDuplicatesComponent {
       resourceId,
     },
     {
-      label: 'project.overview.actions.delete',
+      label: 'common.labels.delete',
       action: 'delete',
       resourceId,
     },
