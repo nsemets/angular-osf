@@ -75,7 +75,9 @@ export class ContributorsDialogComponent implements OnInit {
   hasAdminAccess = select(MetadataSelectors.hasAdminAccess);
   contributors = signal<ContributorModel[]>([]);
   isLoadingMore = select(ContributorsSelectors.isContributorsLoadingMore);
+  hasMoreContributors = select(ContributorsSelectors.hasMoreContributors);
   pageSize = select(ContributorsSelectors.getContributorsPageSize);
+
   changesMade = signal<boolean>(false);
 
   currentUser = select(UserSelectors.getCurrentUser);
