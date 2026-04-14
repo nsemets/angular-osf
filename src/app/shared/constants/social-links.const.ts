@@ -39,7 +39,7 @@ export const SOCIAL_LINKS: SocialLinksModel[] = [
     address: 'https://impactstory.org/u/',
     placeholder: 'profileID',
     key: 'impactStory',
-    icon: 'impactStory.png',
+    icon: 'impactstory.png',
   },
   {
     id: 6,
