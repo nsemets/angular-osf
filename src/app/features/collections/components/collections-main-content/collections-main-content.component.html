@@ -73,11 +73,13 @@
 
 <div class="flex column-gap-4 filters-resources-web">
   @if (isWeb()) {
-    @if (!isCollectionLoading()) {
-      <osf-collections-filters />
-    } @else {
-      <p-skeleton width="22rem" height="30rem" />
-    }
+    <div class="filters-column">
+      @if (!isCollectionLoading()) {
+        <osf-collections-filters />
+      } @else {
+        <p-skeleton width="22rem" height="30rem" />
+      }
+    </div>
   }
 
   <osf-collections-search-results />
