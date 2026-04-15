@@ -57,16 +57,43 @@ describe('PreprintRecentActivityListComponent', () => {
 
     component.onPageChange(mockEvent);
 
-    expect(component.pageChanged.emit).toHaveBeenCalledWith(2);
+    expect(component.first()).toBe(10);
+    expect(component.rows()).toBe(10);
+    expect(component.pageChanged.emit).toHaveBeenCalledWith(3);
   });
 
-  it('should emit page 1 when page is undefined', () => {
+  it('should not emit page change when page is undefined', () => {
     vi.spyOn(component.pageChanged, 'emit');
     const mockEvent = { page: undefined, first: 0, rows: 10 };
 
     component.onPageChange(mockEvent);
 
+    expect(component.first()).toBe(0);
+    expect(component.rows()).toBe(10);
+    expect(component.pageChanged.emit).not.toHaveBeenCalled();
+  });
+
+  it('should fallback first to 0 when event.first is undefined', () => {
+    vi.spyOn(component.pageChanged, 'emit');
+    const mockEvent = { page: 0, first: undefined, rows: 10 };
+
+    component.onPageChange(mockEvent);
+
+    expect(component.first()).toBe(0);
+    expect(component.rows()).toBe(10);
     expect(component.pageChanged.emit).toHaveBeenCalledWith(1);
+  });
+
+  it('should keep current rows when event.rows is undefined', () => {
+    vi.spyOn(component.pageChanged, 'emit');
+    component.rows.set(25);
+    const mockEvent = { page: 1, first: 25, rows: undefined };
+
+    component.onPageChange(mockEvent);
+
+    expect(component.first()).toBe(25);
+    expect(component.rows()).toBe(25);
+    expect(component.pageChanged.emit).toHaveBeenCalledWith(2);
   });
 
   it('should accept custom input values', () => {
