@@ -6,8 +6,6 @@ import { Router } from '@angular/router';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 
-import { PreprintDraftDeletionService } from './preprint-draft-deletion.service';
-
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import {
   CustomConfirmationServiceMock,
@@ -15,6 +13,8 @@ import {
 } from '@testing/providers/custom-confirmation-provider.mock';
 import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
 import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
+
+import { PreprintDraftDeletionService } from './preprint-draft-deletion.service';
 
 describe('PreprintDraftDeletionService', () => {
   let service: PreprintDraftDeletionService;
@@ -45,8 +45,8 @@ describe('PreprintDraftDeletionService', () => {
   });
 
   it('should open confirm delete and run delete, reset, toast, navigate on confirm', () => {
-    const onDelete = jest.fn();
-    const onReset = jest.fn();
+    const onDelete = vi.fn();
+    const onReset = vi.fn();
 
     service.confirmDeleteDraft({
       onDelete,
@@ -70,8 +70,8 @@ describe('PreprintDraftDeletionService', () => {
   });
 
   it('should allow canDeactivate and skip deleteOnDestroy after confirmed delete', () => {
-    const onDelete = jest.fn();
-    const onReset = jest.fn();
+    const onDelete = vi.fn();
+    const onReset = vi.fn();
 
     service.confirmDeleteDraft({ onDelete, onReset, redirectUrl: '/x' });
     const { onConfirm } = confirmationMock.confirmDelete.mock.calls[0][0];
@@ -79,7 +79,7 @@ describe('PreprintDraftDeletionService', () => {
 
     expect(service.canDeactivate(false)).toBe(true);
 
-    const destroyDelete = jest.fn();
+    const destroyDelete = vi.fn();
     service.deleteOnDestroyIfNeeded(destroyDelete);
     expect(destroyDelete).not.toHaveBeenCalled();
   });
@@ -89,7 +89,7 @@ describe('PreprintDraftDeletionService', () => {
   });
 
   it('should call deleteOnDestroy when not yet deleted', () => {
-    const destroyDelete = jest.fn();
+    const destroyDelete = vi.fn();
     service.deleteOnDestroyIfNeeded(destroyDelete);
     expect(destroyDelete).toHaveBeenCalled();
   });
