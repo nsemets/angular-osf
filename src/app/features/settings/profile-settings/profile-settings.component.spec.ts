@@ -1,14 +1,17 @@
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { MockComponents, MockPipe, MockProvider } from 'ng-mocks';
+import { MockComponents, MockProvider } from 'ng-mocks';
 
 import { BehaviorSubject } from 'rxjs';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
 
 import { SelectComponent } from '@osf/shared/components/select/select.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { IS_MEDIUM } from '@osf/shared/helpers/breakpoints.tokens';
+
+import { provideOSFCore } from '@testing/osf.testing.provider';
+import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 
 import { EducationComponent, EmploymentComponent, NameComponent, SocialComponent } from './components';
 import { ProfileSettingsComponent } from './profile-settings.component';
@@ -18,13 +21,12 @@ describe('ProfileSettingsComponent', () => {
   let fixture: ComponentFixture<ProfileSettingsComponent>;
   let isMedium: BehaviorSubject<boolean>;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     isMedium = new BehaviorSubject<boolean>(false);
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [
         ProfileSettingsComponent,
-        MockPipe(TranslatePipe),
         ...MockComponents(
           SubHeaderComponent,
           EducationComponent,
@@ -34,8 +36,12 @@ describe('ProfileSettingsComponent', () => {
           SelectComponent
         ),
       ],
-      providers: [MockProvider(IS_MEDIUM, isMedium), MockProvider(TranslateService)],
-    }).compileComponents();
+      providers: [
+        provideOSFCore(),
+        MockProvider(IS_MEDIUM, isMedium),
+        MockProvider(ActivatedRoute, ActivatedRouteMockBuilder.create().withQueryParams({}).build()),
+      ],
+    });
 
     fixture = TestBed.createComponent(ProfileSettingsComponent);
     component = fixture.componentInstance;
@@ -44,6 +50,14 @@ describe('ProfileSettingsComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should update selected tab on init based on query param', () => {
+    const testTabValue = 2;
+    component['route'] = { snapshot: { queryParams: { tab: testTabValue } } } as any;
+
+    component.ngOnInit();
+    expect(component['selectedTab']).toBe(testTabValue);
   });
 
   it('should update selected tab when onTabChange is called', () => {

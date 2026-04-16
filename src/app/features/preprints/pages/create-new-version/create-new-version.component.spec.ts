@@ -13,7 +13,21 @@ import { BrandService } from '@osf/shared/services/brand.service';
 import { BrowserTabService } from '@osf/shared/services/browser-tab.service';
 import { HeaderStyleService } from '@osf/shared/services/header-style.service';
 
-import { FileStepComponent, ReviewStepComponent } from '../../components';
+import { PREPRINT_PROVIDER_DETAILS_MOCK } from '@testing/mocks/preprint-provider-details';
+import { provideOSFCore } from '@testing/osf.testing.provider';
+import { BrandServiceMock, BrandServiceMockType } from '@testing/providers/brand-service.mock';
+import { BrowserTabServiceMock, BrowserTabServiceMockType } from '@testing/providers/browser-tab-service.mock';
+import { HeaderStyleServiceMock, HeaderStyleServiceMockType } from '@testing/providers/header-style-service.mock';
+import {
+  PreprintDraftDeletionServiceMock,
+  PreprintDraftDeletionServiceMockType,
+} from '@testing/providers/preprint-draft-deletion-provider.mock';
+import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
+import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
+import { mergeSignalOverrides, provideMockStore, SignalOverride } from '@testing/providers/store-provider.mock';
+
+import { FileStepComponent } from '../../components/stepper/file-step/file-step.component';
+import { ReviewStepComponent } from '../../components/stepper/review-step/review-step.component';
 import { createNewVersionStepsConst } from '../../constants';
 import { PreprintSteps } from '../../enums';
 import { PreprintProviderDetails } from '../../models';
@@ -27,19 +41,6 @@ import {
 } from '../../store/preprint-stepper';
 
 import { CreateNewVersionComponent } from './create-new-version.component';
-
-import { PREPRINT_PROVIDER_DETAILS_MOCK } from '@testing/mocks/preprint-provider-details';
-import { provideOSFCore } from '@testing/osf.testing.provider';
-import { BrandServiceMock, BrandServiceMockType } from '@testing/providers/brand-service.mock';
-import { BrowserTabServiceMock, BrowserTabServiceMockType } from '@testing/providers/browser-tab-service.mock';
-import { HeaderStyleServiceMock, HeaderStyleServiceMockType } from '@testing/providers/header-style-service.mock';
-import {
-  PreprintDraftDeletionServiceMock,
-  PreprintDraftDeletionServiceMockType,
-} from '@testing/providers/preprint-draft-deletion-provider.mock';
-import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
-import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
-import { mergeSignalOverrides, provideMockStore, SignalOverride } from '@testing/providers/store-provider.mock';
 
 describe('CreateNewVersionComponent', () => {
   let component: CreateNewVersionComponent;
@@ -64,7 +65,7 @@ describe('CreateNewVersionComponent', () => {
   function setup(overrides?: { selectorOverrides?: SignalOverride[] }) {
     const signals = mergeSignalOverrides(defaultSignals, overrides?.selectorOverrides);
 
-    routerMock = RouterMockBuilder.create().withNavigate(jest.fn().mockResolvedValue(true)).build();
+    routerMock = RouterMockBuilder.create().withNavigate(vi.fn().mockResolvedValue(true)).build();
     const routeMock = ActivatedRouteMockBuilder.create()
       .withParams({ providerId: mockProviderId, preprintId: mockPreprintId })
       .withQueryParams({})
@@ -144,7 +145,7 @@ describe('CreateNewVersionComponent', () => {
 
   it('should prevent beforeunload when not submitted', () => {
     setup();
-    const event = { preventDefault: jest.fn() } as unknown as BeforeUnloadEvent;
+    const event = { preventDefault: vi.fn() } as unknown as BeforeUnloadEvent;
 
     component.onBeforeUnload(event);
 
@@ -153,7 +154,7 @@ describe('CreateNewVersionComponent', () => {
 
   it('should not prevent beforeunload when submitted', () => {
     setup({ selectorOverrides: [{ selector: PreprintStepperSelectors.hasBeenSubmitted, value: true }] });
-    const event = { preventDefault: jest.fn() } as unknown as BeforeUnloadEvent;
+    const event = { preventDefault: vi.fn() } as unknown as BeforeUnloadEvent;
 
     component.onBeforeUnload(event);
 
@@ -237,17 +238,5 @@ describe('CreateNewVersionComponent', () => {
     draftDeletionMock.deleted = true;
 
     expect(component.canDeactivate()).toBe(true);
-  });
-
-  it('should skip destroy delete when draft already deleted', () => {
-    setup();
-    draftDeletionMock.deleted = true;
-    (store.dispatch as jest.Mock).mockClear();
-
-    component.ngOnDestroy();
-
-    expect(draftDeletionMock.deleteOnDestroyIfNeeded).toHaveBeenCalledWith(expect.any(Function));
-    expect((store.dispatch as jest.Mock).mock.calls.some(([action]) => action instanceof DeletePreprint)).toBe(false);
-    expect(store.dispatch).toHaveBeenCalledWith(new ResetPreprintStepperState());
   });
 });

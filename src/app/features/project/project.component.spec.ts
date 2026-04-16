@@ -2,7 +2,9 @@ import { Store } from '@ngxs/store';
 
 import { MockProvider } from 'ng-mocks';
 
-import { fakeAsync, TestBed } from '@angular/core/testing';
+import { Mock } from 'vitest';
+
+import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 import { HelpScoutService } from '@core/services/help-scout.service';
@@ -17,13 +19,10 @@ import { MetaTagsBuilderService } from '@osf/shared/services/meta-tags-builder.s
 import { ContributorsSelectors } from '@osf/shared/stores/contributors';
 import { CurrentResourceSelectors } from '@osf/shared/stores/current-resource';
 
-import { GetProjectById, GetProjectIdentifiers, GetProjectLicense, ProjectOverviewSelectors } from './overview/store';
-import { ProjectComponent } from './project.component';
-
-import { DataciteMockFactory } from '@testing/mocks/datacite.service.mock';
 import { MOCK_PROJECT_OVERVIEW } from '@testing/mocks/project-overview.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { AnalyticsServiceMockFactory } from '@testing/providers/analytics.service.mock';
+import { DataciteServiceMock } from '@testing/providers/datacite.service.mock';
 import { HelpScoutServiceMockFactory } from '@testing/providers/help-scout.service.mock';
 import { MetaTagsServiceMockFactory } from '@testing/providers/meta-tags.service.mock';
 import { MetaTagsBuilderServiceMockFactory } from '@testing/providers/meta-tags-builder.service.mock';
@@ -36,6 +35,9 @@ import {
   provideMockStore,
   SignalOverride,
 } from '@testing/providers/store-provider.mock';
+
+import { GetProjectById, GetProjectIdentifiers, GetProjectLicense, ProjectOverviewSelectors } from './overview/store';
+import { ProjectComponent } from './project.component';
 
 interface SetupOverrides extends BaseSetupOverrides {
   projectId?: string;
@@ -51,7 +53,7 @@ function setup(overrides: SetupOverrides = {}) {
   const analyticsService = AnalyticsServiceMockFactory();
   const metaTagsService = MetaTagsServiceMockFactory();
   const metaTagsBuilderService = MetaTagsBuilderServiceMockFactory();
-  const dataciteService = DataciteMockFactory();
+  const dataciteService = DataciteServiceMock.simple();
   const prerenderReadyService = PrerenderReadyServiceMockFactory();
   const routerBuilder = RouterMockBuilder.create();
   const routerMock = routerBuilder.build();
@@ -168,7 +170,7 @@ describe('Component: Project', () => {
 
   it('should map identifiers to null when identifiers are empty', () => {
     const { dataciteService } = setup();
-    const identifiers$ = (dataciteService.logIdentifiableView as jest.Mock).mock.calls[0][0];
+    const identifiers$ = (dataciteService.logIdentifiableView as Mock).mock.calls[0][0];
     let emitted: unknown;
 
     identifiers$.subscribe((value: unknown) => {
@@ -190,7 +192,7 @@ describe('Component: Project', () => {
     const { dataciteService } = setup({
       selectorOverrides: [{ selector: ProjectOverviewSelectors.getIdentifiers, value: identifiers }],
     });
-    const identifiers$ = (dataciteService.logIdentifiableView as jest.Mock).mock.calls[0][0];
+    const identifiers$ = (dataciteService.logIdentifiableView as Mock).mock.calls[0][0];
     let emitted: unknown;
 
     identifiers$.subscribe((value: unknown) => {
@@ -228,7 +230,7 @@ describe('Component: Project', () => {
     expect(metaTagsService.updateMetaTags).not.toHaveBeenCalled();
   });
 
-  it('should send analytics on NavigationEnd', fakeAsync(() => {
+  it('should send analytics on NavigationEnd', () => {
     const mockResource = { id: 'project-1' };
     const { routerBuilder, analyticsService } = setup({
       selectorOverrides: [
@@ -241,7 +243,7 @@ describe('Component: Project', () => {
       '/project-1/overview',
       mockResource
     );
-  }));
+  });
 
   it('should call unsetResourceType on destroy', () => {
     const { component, helpScoutService } = setup();

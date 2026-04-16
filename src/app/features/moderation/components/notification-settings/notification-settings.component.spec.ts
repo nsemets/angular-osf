@@ -2,15 +2,25 @@ import { Store } from '@ngxs/store';
 
 import { MockProvider } from 'ng-mocks';
 
+import { signal, WritableSignal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
-import { SUBSCRIPTION_FREQUENCY_OPTIONS } from '@osf/shared/constants/subscription-options.const';
 import { CurrentResourceType } from '@osf/shared/enums/resource-type.enum';
 import { SubscriptionEvent } from '@osf/shared/enums/subscriptions/subscription-event.enum';
 import { SubscriptionFrequency } from '@osf/shared/enums/subscriptions/subscription-frequency.enum';
 import { NotificationSubscription } from '@osf/shared/models/notifications/notification-subscription.model';
 import { ToastService } from '@osf/shared/services/toast.service';
+
+import { provideOSFCore } from '@testing/osf.testing.provider';
+import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
+import {
+  BaseSetupOverrides,
+  mergeSignalOverrides,
+  provideMockStore,
+  SignalOverride,
+} from '@testing/providers/store-provider.mock';
+import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
 
 import {
   GetProviderSubscriptions,
@@ -20,118 +30,148 @@ import {
 
 import { NotificationSettingsComponent } from './notification-settings.component';
 
-import { ToastServiceMock } from '@testing/mocks/toast.service.mock';
-import { OSFTestingModule } from '@testing/osf.testing.module';
-import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
-import { provideMockStore } from '@testing/providers/store-provider.mock';
-
-const MOCK_PROVIDER_SUBSCRIPTIONS: NotificationSubscription[] = [
-  {
-    id: 'sub-1',
-    event: SubscriptionEvent.ProviderNewPendingSubmissions,
-    frequency: SubscriptionFrequency.Instant,
-  },
-  {
-    id: 'sub-2',
-    event: SubscriptionEvent.ProviderNewPendingWithdrawRequests,
-    frequency: SubscriptionFrequency.Never,
-  },
-];
-
-async function createComponent(resourceType: CurrentResourceType, providerId = 'test-provider-123') {
-  const mockActivatedRoute = ActivatedRouteMockBuilder.create()
-    .withParams({ providerId })
-    .withData({ resourceType })
-    .build();
-
-  await TestBed.configureTestingModule({
-    imports: [NotificationSettingsComponent, OSFTestingModule],
-    providers: [
-      MockProvider(ActivatedRoute, mockActivatedRoute),
-      ToastServiceMock,
-      provideMockStore({
-        signals: [
-          { selector: ProviderSubscriptionsSelectors.getSubscriptions, value: MOCK_PROVIDER_SUBSCRIPTIONS },
-          { selector: ProviderSubscriptionsSelectors.isLoading, value: false },
-        ],
-      }),
-    ],
-  }).compileComponents();
-
-  const fixture = TestBed.createComponent(NotificationSettingsComponent);
-  const component = fixture.componentInstance;
-  const toastService = TestBed.inject(ToastService) as jest.Mocked<ToastService>;
-  const store = TestBed.inject(Store);
-
-  return { fixture, component, toastService, store };
+interface SetupOverrides extends BaseSetupOverrides {
+  resourceType?: CurrentResourceType;
+  withResourceType?: boolean;
 }
 
 describe('NotificationSettingsComponent', () => {
-  let component: NotificationSettingsComponent;
   let fixture: ComponentFixture<NotificationSettingsComponent>;
-  let toastService: jest.Mocked<ToastService>;
+  let component: NotificationSettingsComponent;
   let store: Store;
+  let toastService: ToastServiceMockType;
+  let subscriptionsSignal: WritableSignal<NotificationSubscription[]>;
 
-  const mockProviderId = 'test-provider-123';
+  const providerId = 'provider-123';
+  const defaultSubscriptions: NotificationSubscription[] = [
+    {
+      id: 'sub-1',
+      event: SubscriptionEvent.ProviderNewPendingSubmissions,
+      frequency: SubscriptionFrequency.Daily,
+    },
+    {
+      id: 'sub-2',
+      event: SubscriptionEvent.ProviderNewPendingWithdrawRequests,
+      frequency: SubscriptionFrequency.Instant,
+    },
+  ];
 
-  beforeEach(async () => {
-    ({ fixture, component, toastService, store } = await createComponent(
-      CurrentResourceType.Preprints,
-      mockProviderId
-    ));
-  });
+  const setup = (overrides: SetupOverrides = {}) => {
+    subscriptionsSignal = signal(defaultSubscriptions);
+    const defaultSignals: SignalOverride[] = [
+      { selector: ProviderSubscriptionsSelectors.getSubscriptions, value: subscriptionsSignal },
+      { selector: ProviderSubscriptionsSelectors.isLoading, value: false },
+    ];
+
+    const mergedSignals = mergeSignalOverrides(defaultSignals, overrides.selectorOverrides);
+    const withResourceType = overrides.withResourceType ?? true;
+    const routeBuilder = ActivatedRouteMockBuilder.create();
+    if (withResourceType) {
+      routeBuilder.withData({
+        resourceType: overrides.resourceType ?? CurrentResourceType.Preprints,
+      });
+    }
+
+    if (overrides.hasParent === false) {
+      routeBuilder.withNoParent();
+    } else {
+      routeBuilder.withParams(overrides.routeParams ?? { providerId });
+    }
+
+    toastService = ToastServiceMock.simple();
+
+    TestBed.configureTestingModule({
+      imports: [NotificationSettingsComponent],
+      providers: [
+        provideOSFCore(),
+        MockProvider(ActivatedRoute, routeBuilder.build()),
+        MockProvider(ToastService, toastService),
+        provideMockStore({ signals: mergedSignals }),
+      ],
+    });
+
+    store = TestBed.inject(Store);
+    fixture = TestBed.createComponent(NotificationSettingsComponent);
+    component = fixture.componentInstance;
+  };
 
   it('should create', () => {
-    fixture.detectChanges();
+    setup();
+
     expect(component).toBeTruthy();
   });
 
-  it('should read providerId and resourceType from route', () => {
-    fixture.detectChanges();
-    expect(component.providerId()).toBe(mockProviderId);
-    expect(component.resourceType()).toBe(CurrentResourceType.Preprints);
-  });
+  it('should dispatch GetProviderSubscriptions on init when provider data exists', () => {
+    setup();
 
-  it('should dispatch GetProviderSubscriptions on init', () => {
-    fixture.detectChanges();
-    expect(store.dispatch as jest.Mock).toHaveBeenCalledWith(
-      new GetProviderSubscriptions(CurrentResourceType.Preprints, mockProviderId)
+    component.ngOnInit();
+
+    expect(store.dispatch).toHaveBeenCalledWith(
+      new GetProviderSubscriptions(CurrentResourceType.Preprints, providerId)
     );
   });
 
-  it('should dispatch UpdateProviderSubscription and show toast on frequency change', () => {
+  it('should not dispatch GetProviderSubscriptions on init when providerId is missing', () => {
+    setup({ hasParent: false });
+
+    component.ngOnInit();
+
+    expect(store.dispatch).not.toHaveBeenCalled();
+  });
+
+  it('should sync subscription values into form controls', async () => {
+    setup();
+
     fixture.detectChanges();
 
-    component.onFrequencyChange(MOCK_PROVIDER_SUBSCRIPTIONS[0], SubscriptionFrequency.Daily);
+    expect(component.form.controls['sub-1']?.value).toBe(SubscriptionFrequency.Daily);
+    subscriptionsSignal.set([
+      {
+        ...defaultSubscriptions[0],
+        frequency: SubscriptionFrequency.Never,
+      },
+      defaultSubscriptions[1],
+    ]);
 
-    expect(store.dispatch as jest.Mock).toHaveBeenCalledWith(
+    await fixture.whenStable();
+
+    expect(component.form.controls['sub-1']?.value).toBe(SubscriptionFrequency.Never);
+  });
+
+  it('should dispatch UpdateProviderSubscription and show success toast on frequency change', () => {
+    setup();
+    const sub = defaultSubscriptions[0];
+
+    component.onFrequencyChange(sub, SubscriptionFrequency.Instant);
+
+    expect(store.dispatch).toHaveBeenCalledWith(
       new UpdateProviderSubscription({
         providerType: CurrentResourceType.Preprints,
-        providerId: mockProviderId,
-        subscriptionId: 'sub-1',
-        frequency: SubscriptionFrequency.Daily,
+        providerId,
+        subscriptionId: sub.id,
+        frequency: SubscriptionFrequency.Instant,
       })
     );
     expect(toastService.showSuccess).toHaveBeenCalledWith('moderation.notificationPreferences.successUpdate');
   });
 
-  it('should not dispatch UpdateProviderSubscription if frequency is unchanged', () => {
-    fixture.detectChanges();
+  it('should not dispatch UpdateProviderSubscription when frequency does not change', () => {
+    setup();
+    const sub = defaultSubscriptions[0];
 
-    component.onFrequencyChange(MOCK_PROVIDER_SUBSCRIPTIONS[0], SubscriptionFrequency.Instant);
+    component.onFrequencyChange(sub, sub.frequency);
 
-    expect(store.dispatch as jest.Mock).not.toHaveBeenCalledWith(expect.any(UpdateProviderSubscription));
+    expect(store.dispatch).not.toHaveBeenCalled();
+    expect(toastService.showSuccess).not.toHaveBeenCalled();
   });
 
-  it('should expose frequencyOptions from SUBSCRIPTION_FREQUENCY_OPTIONS', () => {
-    expect(component.frequencyOptions).toEqual(SUBSCRIPTION_FREQUENCY_OPTIONS);
-  });
+  it('should not dispatch UpdateProviderSubscription when route data is missing', () => {
+    setup({ withResourceType: false });
+    const sub = defaultSubscriptions[0];
 
-  it('should populate form controls when subscriptions load', () => {
-    fixture.detectChanges();
-    expect(component.form.contains('sub-1')).toBe(true);
-    expect(component.form.contains('sub-2')).toBe(true);
-    expect(component.form.get('sub-1')?.value).toBe(SubscriptionFrequency.Instant);
-    expect(component.form.get('sub-2')?.value).toBe(SubscriptionFrequency.Never);
+    component.onFrequencyChange(sub, SubscriptionFrequency.Never);
+
+    expect(store.dispatch).not.toHaveBeenCalled();
+    expect(toastService.showSuccess).not.toHaveBeenCalled();
   });
 });

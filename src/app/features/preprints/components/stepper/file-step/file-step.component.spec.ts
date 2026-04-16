@@ -4,7 +4,9 @@ import { MockComponents, MockProvider } from 'ng-mocks';
 
 import { SelectChangeEvent } from 'primeng/select';
 
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { Mock } from 'vitest';
+
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PreprintFileSource } from '@osf/features/preprints/enums';
 import { PreprintModel, PreprintProviderDetails } from '@osf/features/preprints/models';
@@ -27,14 +29,14 @@ import { FileModel } from '@osf/shared/models/files/file.model';
 import { FileFolderModel } from '@osf/shared/models/files/file-folder.model';
 import { ToastService } from '@osf/shared/services/toast.service';
 
-import { FileStepComponent } from './file-step.component';
-
 import { OSF_FILE_MOCK } from '@testing/mocks/osf-file.mock';
 import { PREPRINT_MOCK } from '@testing/mocks/preprint.mock';
 import { PREPRINT_PROVIDER_DETAILS_MOCK } from '@testing/mocks/preprint-provider-details';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { mergeSignalOverrides, provideMockStore, SignalOverride } from '@testing/providers/store-provider.mock';
 import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
+
+import { FileStepComponent } from './file-step.component';
 
 describe('FileStepComponent', () => {
   let component: FileStepComponent;
@@ -104,6 +106,10 @@ describe('FileStepComponent', () => {
     }
   });
 
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it('should create', () => {
     setup();
     expect(component).toBeTruthy();
@@ -143,26 +149,28 @@ describe('FileStepComponent', () => {
     expect(store.dispatch).not.toHaveBeenCalledWith(expect.any(FetchPreprintPrimaryFile));
   });
 
-  it('should dispatch available projects from debounced projectNameControl value', fakeAsync(() => {
+  it('should dispatch available projects from debounced projectNameControl value', () => {
+    vi.useFakeTimers();
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
 
     component.projectNameControl.setValue('project-search');
-    tick(500);
+    vi.advanceTimersByTime(500);
 
     expect(store.dispatch).toHaveBeenCalledWith(new FetchAvailableProjects('project-search'));
-  }));
+  });
 
-  it('should skip available projects dispatch when value equals selectedProjectId', fakeAsync(() => {
+  it('should skip available projects dispatch when value equals selectedProjectId', () => {
+    vi.useFakeTimers();
     setup();
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
     component.selectedProjectId.set('project-1');
 
     component.projectNameControl.setValue('project-1');
-    tick(500);
+    vi.advanceTimersByTime(500);
 
     expect(store.dispatch).not.toHaveBeenCalledWith(new FetchAvailableProjects('project-1'));
-  }));
+  });
 
   it('should handle selectFileSource for project and computer source', () => {
     setup({ detectChanges: false });
@@ -171,7 +179,7 @@ describe('FileStepComponent', () => {
     expect(store.dispatch).toHaveBeenCalledWith(new SetSelectedPreprintFileSource(PreprintFileSource.Project));
     expect(store.dispatch).toHaveBeenCalledWith(new FetchAvailableProjects(null));
 
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
     component.selectFileSource(PreprintFileSource.Computer);
 
     expect(store.dispatch).toHaveBeenCalledWith(new SetSelectedPreprintFileSource(PreprintFileSource.Computer));
@@ -180,7 +188,7 @@ describe('FileStepComponent', () => {
 
   it('should emit backClicked', () => {
     setup({ detectChanges: false });
-    const emitSpy = jest.spyOn(component.backClicked, 'emit');
+    const emitSpy = vi.spyOn(component.backClicked, 'emit');
 
     component.backButtonClicked();
 
@@ -189,7 +197,7 @@ describe('FileStepComponent', () => {
 
   it('should emit deleteClicked when deletePreprint is called', () => {
     setup({ detectChanges: false });
-    const emitSpy = jest.spyOn(component.deleteClicked, 'emit');
+    const emitSpy = vi.spyOn(component.deleteClicked, 'emit');
 
     component.deletePreprint();
 
@@ -198,7 +206,7 @@ describe('FileStepComponent', () => {
 
   it('should handle nextButtonClicked for allowed and blocked states', () => {
     setup({ detectChanges: false });
-    const emitSpy = jest.spyOn(component.nextClicked, 'emit');
+    const emitSpy = vi.spyOn(component.nextClicked, 'emit');
 
     component.nextButtonClicked();
 
@@ -215,7 +223,7 @@ describe('FileStepComponent', () => {
     expect(toastServiceMock.showSuccess).not.toHaveBeenCalled();
     expect(emitSpy).toHaveBeenCalledTimes(1);
 
-    jest.spyOn(component, 'preprint').mockReturnValue({ ...mockPreprint, primaryFileId: null } as PreprintModel);
+    vi.spyOn(component, 'preprint').mockReturnValue({ ...mockPreprint, primaryFileId: null } as PreprintModel);
     component.versionFileMode.set(false);
 
     component.nextButtonClicked();
@@ -245,7 +253,7 @@ describe('FileStepComponent', () => {
     expect(store.dispatch).toHaveBeenCalledWith(new UploadFile(file));
     expect(store.dispatch).toHaveBeenCalledWith(new FetchPreprintPrimaryFile());
 
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
     component.versionFileMode.set(true);
 
     component.onFileSelected({ target: input } as unknown as Event);
@@ -267,8 +275,8 @@ describe('FileStepComponent', () => {
     expect(store.dispatch).toHaveBeenCalledWith(new FetchProjectFilesByLink(mockCurrentFolder.links.filesLink, 1));
     expect(component.selectedProjectId()).toBe('project-1');
 
-    jest.spyOn(component, 'currentFolder').mockReturnValue(null);
-    (store.dispatch as jest.Mock).mockClear();
+    vi.spyOn(component, 'currentFolder').mockReturnValue(null);
+    (store.dispatch as Mock).mockClear();
 
     component.selectProject({
       value: 'project-1',
@@ -306,8 +314,8 @@ describe('FileStepComponent', () => {
     component.cancelButtonClicked();
     expect(store.dispatch).not.toHaveBeenCalledWith(new SetSelectedPreprintFileSource(PreprintFileSource.None));
 
-    jest.spyOn(component, 'preprintFile').mockReturnValue(null);
-    (store.dispatch as jest.Mock).mockClear();
+    vi.spyOn(component, 'preprintFile').mockReturnValue(null);
+    (store.dispatch as Mock).mockClear();
 
     component.cancelButtonClicked();
     expect(store.dispatch).toHaveBeenCalledWith(new SetSelectedPreprintFileSource(PreprintFileSource.None));
@@ -320,7 +328,7 @@ describe('FileStepComponent', () => {
     expect(store.dispatch).not.toHaveBeenCalledWith(new SetPreprintStepperCurrentFolder(mockCurrentFolder));
     expect(store.dispatch).not.toHaveBeenCalledWith(new FetchProjectFilesByLink(mockCurrentFolder.links.filesLink, 1));
 
-    (store.dispatch as jest.Mock).mockClear();
+    (store.dispatch as Mock).mockClear();
     const nextFolder = { ...mockCurrentFolder, id: 'folder-2' } as FileFolderModel;
 
     component.setCurrentFolder(nextFolder);
