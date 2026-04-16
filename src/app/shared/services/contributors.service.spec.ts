@@ -11,8 +11,6 @@ import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { ContributorModel } from '@osf/shared/models/contributors/contributor.model';
 import { ContributorAddModel } from '@osf/shared/models/contributors/contributor-add.model';
 
-import { ContributorsService } from './contributors.service';
-
 import {
   getContributorsListData,
   getContributorsSearchData,
@@ -20,6 +18,8 @@ import {
   getContributorsSearchDataWithPagination,
 } from '@testing/data/contributors/contributors.data';
 import { provideOSFCore, provideOSFHttp } from '@testing/osf.testing.provider';
+
+import { ContributorsService } from './contributors.service';
 
 const SHARE_TROVE_URL = 'https://share.osf.io/trove';
 const API_URL = 'http://localhost:8000/v2';
