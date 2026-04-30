@@ -1,5 +1,3 @@
-import { select } from '@ngxs/store';
-
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
@@ -11,7 +9,6 @@ import { catchError } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { FilesSelectors } from '@osf/features/files/store';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { FilesService } from '@osf/shared/services/files.service';
 import { ToastService } from '@osf/shared/services/toast.service';
@@ -34,8 +31,6 @@ export class ConfirmMoveFileDialogComponent {
   private readonly translateService = inject(TranslateService);
   private readonly toastService = inject(ToastService);
   private readonly customConfirmationService = inject(CustomConfirmationService);
-
-  readonly files = select(FilesSelectors.getMoveDialogFiles);
 
   readonly provider = this.config.data.storageProvider;
 
@@ -112,9 +107,7 @@ export class ConfirmMoveFileDialogComponent {
     this.customConfirmationService.confirmDelete({
       headerKey: conflictFiles.length > 1 ? 'files.dialogs.replaceFile.multiple' : 'files.dialogs.replaceFile.single',
       messageKey: 'files.dialogs.replaceFile.message',
-      messageParams: {
-        name: conflictFiles.map((c) => c.file.name).join(', '),
-      },
+      messageParams: { name: conflictFiles.map((c) => c.file.name).join(', ') },
       acceptLabelKey: 'common.buttons.replace',
       onConfirm: () => {
         const replaceRequests$ = conflictFiles.map(({ link }) =>

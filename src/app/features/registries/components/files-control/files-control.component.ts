@@ -17,6 +17,7 @@ import { FilesTreeComponent } from '@osf/shared/components/files-tree/files-tree
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { FILE_SIZE_LIMIT } from '@osf/shared/constants/files-limits.const';
 import { ClearFileDirective } from '@osf/shared/directives/clear-file.directive';
+import { FilePageLinkModel } from '@osf/shared/models/files/file-page-link.model';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { FilesService } from '@osf/shared/services/files.service';
 import { ToastService } from '@osf/shared/services/toast.service';
@@ -163,7 +164,7 @@ export class FilesControlComponent {
     this.filesSelection = [...new Set(this.filesSelection)];
   }
 
-  onLoadFiles(event: { link: string; page: number }) {
+  onLoadFiles(event: FilePageLinkModel) {
     this.actions.getFiles(event.link, event.page);
   }
 

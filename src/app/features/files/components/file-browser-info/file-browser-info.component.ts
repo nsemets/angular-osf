@@ -24,7 +24,7 @@ export class FileBrowserInfoComponent {
 
   readonly infoItems = FILE_BROWSER_INFO_ITEMS;
 
-  readonly filteredInfoItems = computed(() => {
-    return this.infoItems.filter((item) => item.showForResourceTypes.includes(this.resourceType()));
-  });
+  readonly filteredInfoItems = computed(() =>
+    this.infoItems.filter((item) => item.showForResourceTypes.includes(this.resourceType()))
+  );
 }

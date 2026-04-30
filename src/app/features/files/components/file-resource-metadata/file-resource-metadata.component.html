@@ -9,7 +9,7 @@
     <p-skeleton width="100%" height="4rem" />
     <p-skeleton width="100%" height="4rem" />
   } @else {
-    @for (funder of resourceMetadata()?.funders; track $index) {
+    @for (funder of resourceMetadata()?.funders; track funder.funderIdentifier) {
       <div class="flex flex-column gap-2">
         @if (funder.funderName) {
           <div class="flex flex-column gap-1">
@@ -23,10 +23,10 @@
             <span>{{ funder.awardTitle }}</span>
           </div>
         }
-        @if (funder.awardTitle) {
+        @if (funder.awardNumber) {
           <div class="flex flex-column gap-1">
             <h4>{{ 'files.detail.resourceMetadata.fields.awardNumber' | translate }}</h4>
-            <span>{{ funder.awardTitle }}</span>
+            <span>{{ funder.awardNumber }}</span>
           </div>
         }
         @if (funder.awardUri) {
@@ -98,7 +98,7 @@
   @if (isResourceContributorsLoading()) {
     <p-skeleton width="100%" height="4rem" />
   } @else {
-    @if (hasViewOnly() || contributors().length) {
+    @if (contributors().length) {
       <div class="flex flex-column gap-2">
         <h4>{{ 'common.labels.contributors' | translate }}</h4>
 

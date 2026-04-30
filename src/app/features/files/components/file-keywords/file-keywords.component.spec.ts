@@ -1,4 +1,3 @@
-import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { provideOSFCore } from '@testing/osf.testing.provider';
@@ -26,10 +25,10 @@ describe('FileKeywordsComponent', () => {
         provideOSFCore(),
         provideMockStore({
           signals: [
-            { selector: FilesSelectors.getFileTags, value: signal(mockTags) },
-            { selector: FilesSelectors.isFileTagsLoading, value: signal(false) },
-            { selector: FilesSelectors.getOpenedFile, value: signal(mockFile) },
-            { selector: FilesSelectors.hasWriteAccess, value: signal(true) },
+            { selector: FilesSelectors.getFileTags, value: mockTags },
+            { selector: FilesSelectors.isFileTagsLoading, value: false },
+            { selector: FilesSelectors.getOpenedFile, value: mockFile },
+            { selector: FilesSelectors.hasWriteAccess, value: true },
           ],
         }),
       ],

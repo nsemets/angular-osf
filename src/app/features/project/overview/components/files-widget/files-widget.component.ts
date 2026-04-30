@@ -20,7 +20,6 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { FileProvider } from '@osf/features/files/constants';
 import {
   FilesSelectors,
@@ -32,11 +31,13 @@ import {
 } from '@osf/features/files/store';
 import { FilesTreeComponent } from '@osf/shared/components/files-tree/files-tree.component';
 import { SelectComponent } from '@osf/shared/components/select/select.component';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { Primitive } from '@osf/shared/helpers/types.helper';
 import { ConfiguredAddonModel } from '@osf/shared/models/addons/configured-addon.model';
 import { FileModel } from '@osf/shared/models/files/file.model';
 import { FileFolderModel } from '@osf/shared/models/files/file-folder.model';
 import { FileLabelModel } from '@osf/shared/models/files/file-label.model';
+import { FilePageLinkModel } from '@osf/shared/models/files/file-page-link.model';
 import { NodeShortInfoModel } from '@osf/shared/models/nodes/node-with-children.model';
 import { ProjectModel } from '@osf/shared/models/projects/projects.model';
 import { SelectOption } from '@osf/shared/models/select-option.model';
@@ -56,7 +57,6 @@ export class FilesWidgetComponent {
   router = inject(Router);
   activeRoute = inject(ActivatedRoute);
 
-  private readonly environment = inject(ENVIRONMENT);
   private readonly destroyRef = inject(DestroyRef);
   private readonly viewOnlyService = inject(ViewOnlyLinkHelperService);
   private readonly platformId = inject(PLATFORM_ID);
@@ -160,11 +160,8 @@ export class FilesWidgetComponent {
   }
 
   private getStorageAddons(projectId: string) {
-    const resourcePath = 'nodes';
-    const folderLink = `${this.environment.apiDomainUrl}/v2/${resourcePath}/${projectId}/files/`;
-    const iriLink = `${this.environment.webUrl}/${projectId}`;
-    this.actions.getRootFolders(folderLink);
-    this.actions.getConfiguredStorageAddons(iriLink);
+    this.actions.getRootFolders(projectId, ResourceType.Project);
+    this.actions.getConfiguredStorageAddons(projectId);
   }
 
   private flatComponents(
@@ -234,7 +231,7 @@ export class FilesWidgetComponent {
     window.open(url, '_blank');
   }
 
-  onLoadFiles(event: { link: string; page: number }) {
+  onLoadFiles(event: FilePageLinkModel) {
     this.actions.getFiles(event.link, event.page);
   }
 

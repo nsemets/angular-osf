@@ -23,7 +23,6 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { FileProvider } from '@osf/features/files/constants';
 import {
   FilesSelectors,
@@ -34,6 +33,7 @@ import {
   SetMoveDialogCurrentFolder,
 } from '@osf/features/files/store';
 import { SupportedFeature } from '@osf/shared/enums/addon-supported-features.enum';
+import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
 import { Primitive } from '@osf/shared/helpers/types.helper';
 import { ConfiguredAddonModel } from '@osf/shared/models/addons/configured-addon.model';
@@ -58,7 +58,6 @@ export class FileSelectDestinationComponent implements OnInit {
   selectProject = output<string>();
   selectStorage = output();
 
-  private readonly environment = inject(ENVIRONMENT);
   private readonly destroyRef = inject(DestroyRef);
 
   readonly rootFolders = select(FilesSelectors.getMoveDialogRootFolders);
@@ -149,13 +148,9 @@ export class FileSelectDestinationComponent implements OnInit {
   }
 
   private getStorageAddons(projectId: string) {
-    const resourcePath = 'nodes';
-    const folderLink = `${this.environment.apiDomainUrl}/v2/${resourcePath}/${projectId}/files/`;
-    const iriLink = `${this.environment.webUrl}/${projectId}`;
-
     forkJoin({
-      rootFolders: this.actions.getRootFolders(folderLink),
-      addons: this.actions.getConfiguredStorageAddons(iriLink),
+      rootFolders: this.actions.getRootFolders(projectId, ResourceType.Project),
+      addons: this.actions.getConfiguredStorageAddons(projectId),
     })
       .pipe(
         takeUntilDestroyed(this.destroyRef),
