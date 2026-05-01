@@ -51,6 +51,7 @@ import { MetaTagsBuilderService } from '@osf/shared/services/meta-tags-builder.s
 import { SignpostingService } from '@osf/shared/services/signposting.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { ViewOnlyLinkHelperService } from '@osf/shared/services/view-only-link-helper.service';
+import { embedDynamicJs, embedStaticHtml } from '@shared/constants/file-embed.constants';
 import { FileDetailsModel } from '@shared/models/files/file.model';
 import { MetadataTabsModel } from '@shared/models/metadata-tabs.model';
 
@@ -60,7 +61,6 @@ import {
   FileResourceMetadataComponent,
   FileRevisionsComponent,
 } from '../../components';
-import { embedDynamicJs, embedStaticHtml } from '../../constants';
 import { FileDetailTab } from '../../enums';
 import {
   DeleteEntry,
