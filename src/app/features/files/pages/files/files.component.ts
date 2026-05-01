@@ -39,22 +39,6 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { ENVIRONMENT } from '@core/provider/environment.provider';
-import {
-  CreateFolder,
-  DeleteEntry,
-  GetConfiguredStorageAddons,
-  GetFiles,
-  GetRootFolders,
-  GetStorageSupportedFeatures,
-  RenameEntry,
-  ResetFilesState,
-  SetCurrentProvider,
-  SetFilesCurrentFolder,
-  SetMoveDialogCurrentFolder,
-  SetSearch,
-  SetSort,
-} from '@osf/features/files/store';
 import { FileUploadDialogComponent } from '@osf/shared/components/file-upload-dialog/file-upload-dialog.component';
 import { FilesTreeComponent } from '@osf/shared/components/files-tree/files-tree.component';
 import { FormSelectComponent } from '@osf/shared/components/form-select/form-select.component';
@@ -68,7 +52,8 @@ import { ALL_SORT_OPTIONS } from '@osf/shared/constants/sort-options.const';
 import { SupportedFeature } from '@osf/shared/enums/addon-supported-features.enum';
 import { FileMenuType } from '@osf/shared/enums/file-menu-type.enum';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
-import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
+import { FilePageLinkModel } from '@osf/shared/models/files/file-page-link.model';
+import { RenamedFileLinkModel } from '@osf/shared/models/files/renamed-file-link.model';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { FilesService } from '@osf/shared/services/files.service';
@@ -82,14 +67,28 @@ import { FileFolderModel } from '@shared/models/files/file-folder.model';
 import { FileLabelModel } from '@shared/models/files/file-label.model';
 import { DataciteService } from '@shared/services/datacite/datacite.service';
 
-import {
-  CreateFolderDialogComponent,
-  FileBrowserInfoComponent,
-  FilesSelectionActionsComponent,
-  MoveFileDialogComponent,
-} from '../../components';
+import { CreateFolderDialogComponent } from '../../components/create-folder-dialog/create-folder-dialog.component';
+import { FileBrowserInfoComponent } from '../../components/file-browser-info/file-browser-info.component';
+import { FilesSelectionActionsComponent } from '../../components/files-selection-actions/files-selection-actions.component';
+import { MoveFileDialogComponent } from '../../components/move-file-dialog/move-file-dialog.component';
 import { FileProvider } from '../../constants';
-import { FilesSelectors } from '../../store';
+import { mapMenuActions } from '../../mappers/file-menu-actions.mapper';
+import {
+  CreateFolder,
+  DeleteEntry,
+  FilesSelectors,
+  GetConfiguredStorageAddons,
+  GetFiles,
+  GetRootFolders,
+  GetStorageSupportedFeatures,
+  RenameEntry,
+  ResetFilesState,
+  SetCurrentProvider,
+  SetFilesCurrentFolder,
+  SetMoveDialogCurrentFolder,
+  SetSearch,
+  SetSort,
+} from '../../store';
 
 @Component({
   selector: 'osf-files',
@@ -107,7 +106,6 @@ import { FilesSelectors } from '../../store';
     SubHeaderComponent,
     FileUploadDialogComponent,
     ViewOnlyLinkMessageComponent,
-    GoogleFilePickerComponent,
     FilesSelectionActionsComponent,
     TranslatePipe,
   ],
@@ -128,15 +126,10 @@ export class FilesComponent {
   private readonly translateService = inject(TranslateService);
   private readonly router = inject(Router);
   private readonly dataciteService = inject(DataciteService);
-  private readonly environment = inject(ENVIRONMENT);
   private readonly customConfirmationService = inject(CustomConfirmationService);
   private readonly toastService = inject(ToastService);
   private readonly viewOnlyService = inject(ViewOnlyLinkHelperService);
-  private readonly platformId = inject(PLATFORM_ID);
-  private readonly isBrowser = isPlatformBrowser(this.platformId);
-
-  private readonly webUrl = this.environment.webUrl;
-  private readonly apiDomainUrl = this.environment.apiDomainUrl;
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   private readonly actions = createDispatchMap({
     createFolder: CreateFolder,
@@ -167,6 +160,8 @@ export class FilesComponent {
   readonly configuredStorageAddons = select(FilesSelectors.getConfiguredStorageAddons);
   readonly isConfiguredStorageAddonsLoading = select(FilesSelectors.isConfiguredStorageAddonsLoading);
   readonly supportedFeatures = select(FilesSelectors.getStorageSupportedFeatures);
+  readonly hasWriteAccess = select(CurrentResourceSelectors.hasResourceWriteAccess);
+  readonly hasAdminAccess = select(CurrentResourceSelectors.hasResourceAdminAccess);
 
   readonly isGoogleDrive = signal<boolean>(false);
   readonly accountId = signal<string>('');
@@ -193,17 +188,12 @@ export class FilesComponent {
   allowRevisions = false;
   filesSelection: FileModel[] = [];
 
-  private readonly urlMap = new Map<ResourceType, string>([
-    [ResourceType.Project, 'nodes'],
-    [ResourceType.Registration, 'registrations'],
-  ]);
-
   readonly allowedMenuActions = computed(() => {
     const provider = this.provider();
     const supportedFeatures = this.supportedFeatures()[provider] || [];
     const hasViewOnly = this.hasViewOnly();
     const isRegistration = this.resourceType() === ResourceType.Registration;
-    const menuMap = this.mapMenuActions(supportedFeatures);
+    const menuMap = mapMenuActions(supportedFeatures);
 
     const result: Record<FileMenuType, boolean> = { ...menuMap };
 
@@ -235,16 +225,7 @@ export class FilesComponent {
   );
 
   readonly hasViewOnly = computed(() => this.viewOnlyService.hasViewOnlyParam(this.router));
-
-  readonly canEdit = computed(() => {
-    const details = this.resourceDetails();
-    const hasAdminOrWrite = details.currentUserPermissions?.some(
-      (permission) => permission === UserPermissions.Admin || permission === UserPermissions.Write
-    );
-
-    return hasAdminOrWrite;
-  });
-
+  readonly canEdit = computed(() => this.hasWriteAccess() || this.hasAdminAccess());
   readonly isRegistration = computed(() => this.resourceType() === ResourceType.Registration);
 
   canUploadFiles = computed(
@@ -260,9 +241,8 @@ export class FilesComponent {
     () => this.isButtonDisabled() || (this.googleFilePickerComponent()?.isGFPDisabled() ?? false)
   );
 
-  private route = inject(ActivatedRoute);
   readonly providerName = toSignal(
-    this.route?.params?.pipe(map((params) => params['fileProvider'])) ?? of('osfstorage')
+    this.activeRoute?.params?.pipe(map((params) => params['fileProvider'])) ?? of('osfstorage')
   );
 
   constructor() {
@@ -274,14 +254,11 @@ export class FilesComponent {
 
     effect(() => {
       const resourceId = this.resourceId();
+      if (!resourceId) return;
 
-      const resourcePath = this.urlMap.get(this.resourceType()!);
-      const folderLink = `${this.apiDomainUrl}/v2/${resourcePath}/${resourceId}/files/`;
-      const iriLink = `${this.webUrl}/${resourceId}`;
-
-      this.actions.getResourceDetails(resourceId, this.resourceType()!);
-      this.actions.getRootFolders(folderLink);
-      this.actions.getConfiguredStorageAddons(iriLink);
+      this.actions.getResourceDetails(resourceId, this.resourceType());
+      this.actions.getRootFolders(resourceId, this.resourceType());
+      this.actions.getConfiguredStorageAddons(resourceId);
     });
 
     effect(() => {
@@ -358,7 +335,7 @@ export class FilesComponent {
     });
   }
 
-  onLoadFiles(event: { link: string; page: number }) {
+  onLoadFiles(event: FilePageLinkModel) {
     this.actions.getFiles(event.link, event.page);
   }
 
@@ -427,9 +404,7 @@ export class FilesComponent {
     this.customConfirmationService.confirmDelete({
       headerKey: conflictFiles.length > 1 ? 'files.dialogs.replaceFile.multiple' : 'files.dialogs.replaceFile.single',
       messageKey: 'files.dialogs.replaceFile.message',
-      messageParams: {
-        name: conflictFiles.map((c) => c.file.name).join(', '),
-      },
+      messageParams: { name: conflictFiles.map((c) => c.file.name).join(', ') },
       acceptLabelKey: 'common.buttons.replace',
       onConfirm: () => {
         const replaceRequests$ = conflictFiles.map(({ file, link }) =>
@@ -626,7 +601,7 @@ export class FilesComponent {
     });
   }
 
-  renameEntry(event: { newName: string; link: string }) {
+  renameEntry(event: RenamedFileLinkModel) {
     const { newName, link } = event;
     this.actions.renameEntry(link, newName).subscribe(() => {
       this.toastService.showSuccess('files.dialogs.renameFile.success');
@@ -661,21 +636,6 @@ export class FilesComponent {
         itemId: googleDrive.selectedStorageItemId,
       });
     }
-  }
-
-  private mapMenuActions(supportedFeatures: SupportedFeature[]): Record<FileMenuType, boolean> {
-    return {
-      [FileMenuType.Download]: supportedFeatures.includes(SupportedFeature.DownloadAsZip),
-      [FileMenuType.Rename]: supportedFeatures.includes(SupportedFeature.AddUpdateFiles),
-      [FileMenuType.Delete]: supportedFeatures.includes(SupportedFeature.DeleteFiles),
-      [FileMenuType.Move]:
-        supportedFeatures.includes(SupportedFeature.CopyInto) &&
-        supportedFeatures.includes(SupportedFeature.DeleteFiles) &&
-        supportedFeatures.includes(SupportedFeature.AddUpdateFiles),
-      [FileMenuType.Embed]: true,
-      [FileMenuType.Share]: true,
-      [FileMenuType.Copy]: true,
-    };
   }
 
   openGoogleFilePicker(): void {

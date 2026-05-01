@@ -17,14 +17,7 @@
           [(ngModel)]="currentRootFolder"
           (onChange)="handleRootFolderChange($event.value)"
           variant="filled"
-        >
-          <ng-template #selectedItem let-selectedOption>
-            <p class="provider-name">{{ selectedOption.label }}</p>
-          </ng-template>
-          <ng-template #item let-option>
-            <p class="provider-name">{{ option.label }}</p>
-          </ng-template>
-        </p-select>
+        />
       }
     </div>
     @if (filesSelection.length) {

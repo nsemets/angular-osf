@@ -5,19 +5,3 @@
   flex: 1;
   overflow: hidden;
 }
-
-.blue-text {
-  color: var(--pr-blue-1);
-}
-
-.filename {
-  overflow-wrap: anywhere;
-}
-
-.upload-dialog {
-  width: mix.rem(128px);
-}
-
-.provider-name {
-  text-transform: capitalize;
-}
