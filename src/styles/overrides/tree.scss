@@ -2,6 +2,13 @@
   .p-tree {
     padding: 0;
 
+    .files-table-row {
+      .p-button {
+        --p-button-label-font-weight: 400;
+        --p-button-link-color: var(--dark-blue-1);
+      }
+    }
+
     .p-tree-node-toggle-button {
       display: none;
     }
@@ -18,7 +25,7 @@
 
     .p-tree-node-dragover {
       .files-table-row {
-        background: var(--bg-blue-3);
+        background-color: var(--bg-blue-3);
       }
     }
 
@@ -53,7 +60,11 @@
     .p-tree-node-selected {
       .files-table-row {
         color: var(--white);
-        background: var(--pr-blue-1);
+        background-color: var(--pr-blue-1);
+
+        .p-button {
+          --p-button-link-color: var(--white);
+        }
 
         .blue-icon {
           color: var(--white);
