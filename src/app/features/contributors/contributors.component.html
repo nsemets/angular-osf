@@ -67,6 +67,7 @@
     [tableParams]="tableParams()"
     [hasAdminAccess]="hasAdminAccess()"
     [currentUserId]="currentUser()?.id"
+    [showLoadMore]="hasMoreContributors()"
     [showCurator]="true"
     [showInfo]="true"
     [resourceType]="resourceType()"
@@ -113,7 +114,7 @@
 
       <p-button
         class="w-10rem"
-        [label]="'project.contributors.createButton' | translate"
+        [label]="'common.buttons.create' | translate"
         [disabled]="!canCreateViewLink()"
         (onClick)="createViewLink()"
       >

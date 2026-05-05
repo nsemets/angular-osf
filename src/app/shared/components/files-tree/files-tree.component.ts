@@ -82,6 +82,7 @@ export class FilesTreeComponent {
   selectedFiles = input<FileModel[]>([]);
   scrollHeight = input<string>('300px');
   selectionMode = input<'multiple' | null>('multiple');
+  isDraftResource = input<boolean>(false);
 
   entryFileClicked = output<FileModel>();
   uploadFilesConfirmed = output<File[] | File>();

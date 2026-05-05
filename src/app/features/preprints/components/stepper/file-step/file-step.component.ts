@@ -48,7 +48,6 @@ import { StringOrNull } from '@osf/shared/helpers/types.helper';
 import { FileModel } from '@osf/shared/models/files/file.model';
 import { FileFolderModel } from '@osf/shared/models/files/file-folder.model';
 import { FilePageLinkModel } from '@osf/shared/models/files/file-page-link.model';
-import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 
 @Component({
@@ -73,7 +72,6 @@ import { ToastService } from '@osf/shared/services/toast.service';
 })
 export class FileStepComponent implements OnInit {
   private toastService = inject(ToastService);
-  private customConfirmationService = inject(CustomConfirmationService);
   private destroyRef = inject(DestroyRef);
 
   private actions = createDispatchMap({
@@ -93,6 +91,7 @@ export class FileStepComponent implements OnInit {
   readonly resourceType = CurrentResourceType.Preprints;
 
   provider = input.required<PreprintProviderDetails>();
+  showDeleteButton = input(false);
   preprint = select(PreprintStepperSelectors.getPreprint);
   selectedFileSource = select(PreprintStepperSelectors.getSelectedFileSource);
   fileUploadLink = select(PreprintStepperSelectors.getUploadLink);
@@ -123,6 +122,7 @@ export class FileStepComponent implements OnInit {
 
   nextClicked = output<void>();
   backClicked = output<void>();
+  deleteClicked = output<void>();
 
   isFileSourceSelected = computed(() => this.selectedFileSource() !== PreprintFileSource.None);
   canProceedToNext = computed(() => !!this.preprintFile() && !this.versionFileMode());
@@ -166,6 +166,10 @@ export class FileStepComponent implements OnInit {
     this.nextClicked.emit();
   }
 
+  deletePreprint() {
+    this.deleteClicked.emit();
+  }
+
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
@@ -205,18 +209,6 @@ export class FileStepComponent implements OnInit {
 
   selectProjectFile(file: FileModel) {
     this.actions.copyFileFromProject(file).subscribe(() => this.actions.fetchPreprintFile());
-  }
-
-  versionFile() {
-    this.customConfirmationService.confirmContinue({
-      headerKey: 'preprints.preprintStepper.file.versionFile.header',
-      messageKey: 'preprints.preprintStepper.file.versionFile.message',
-      onConfirm: () => {
-        this.versionFileMode.set(true);
-        this.actions.setSelectedFileSource(PreprintFileSource.None);
-      },
-      onReject: () => null,
-    });
   }
 
   cancelButtonClicked() {
