@@ -1,6 +1,8 @@
 @let resource = currentProject();
 
 @if (resource) {
+  @let customMetadata = customItemMetadata();
+
   <div class="metadata flex flex-column gap-5">
     <div class="metadata-header flex align-items-center justify-content-between">
       <h2>{{ 'common.labels.metadata' | translate }}</h2>
@@ -33,8 +35,8 @@
 
       <p data-test-project-overview-metadata-resource-type>
         {{
-          customItemMetadata()?.resourceTypeGeneral
-            ? (customItemMetadata()?.resourceTypeGeneral | resourceTypeGeneralLabel)
+          customMetadata?.resourceTypeGeneral
+            ? (customMetadata?.resourceTypeGeneral | resourceTypeGeneralLabel)
             : ('project.overview.metadata.noResourceType' | translate)
         }}
       </p>
@@ -98,7 +100,7 @@
     <div class="flex flex-column gap-2">
       <h3>{{ 'project.overview.metadata.funderNames' | translate }}</h3>
 
-      <osf-funders-list [funders]="customItemMetadata()?.funders" [isLoading]="isCustomItemMetadataLoading()" />
+      <osf-funders-list [funders]="customMetadata?.funders" [isLoading]="isCustomItemMetadataLoading()" />
     </div>
 
     <div class="flex flex-column gap-2">
@@ -106,8 +108,8 @@
 
       <p data-test-project-overview-metadata-resource-language>
         {{
-          customItemMetadata()?.language
-            ? (customItemMetadata()?.language | languageLabel)
+          customMetadata?.language
+            ? (customMetadata?.language | languageLabel)
             : ('project.overview.metadata.noLanguage' | translate)
         }}
       </p>

@@ -72,14 +72,6 @@ describe('ResourceInformationDialogComponent', () => {
     });
   });
 
-  it('should not close dialog on save when form is invalid', () => {
-    component.resourceForm.setErrors({ invalid: true });
-
-    component.save();
-
-    expect(dialogRef.close).not.toHaveBeenCalled();
-  });
-
   it('should close dialog without payload on cancel', () => {
     component.cancel();
 

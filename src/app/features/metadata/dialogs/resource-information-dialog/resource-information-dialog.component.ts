@@ -42,13 +42,11 @@ export class ResourceInformationDialogComponent implements OnInit {
   }
 
   save(): void {
-    if (this.resourceForm.valid) {
-      const formValue = this.resourceForm.getRawValue();
-      this.dialogRef.close({
-        resourceTypeGeneral: formValue.resourceType,
-        language: formValue.resourceLanguage,
-      });
-    }
+    const formValue = this.resourceForm.getRawValue();
+    this.dialogRef.close({
+      resourceTypeGeneral: formValue.resourceType,
+      language: formValue.resourceLanguage,
+    });
   }
 
   cancel(): void {
