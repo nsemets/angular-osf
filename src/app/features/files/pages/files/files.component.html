@@ -24,7 +24,7 @@
       @if (!isMoveDialogOpened()) {
         <osf-files-selection-actions
           [canUpdateFiles]="canUploadFiles()"
-          [selectedFiles]="filesSelection"
+          [selectedFilesCount]="filesSelection.length"
           [hasViewOnly]="hasViewOnly()"
           (deleteSelected)="onDeleteSelected()"
           (moveSelected)="onMoveSelected()"
@@ -130,10 +130,12 @@
       [viewOnly]="!canEdit()"
       [supportUpload]="canUploadFiles()"
       [resourceId]="resourceId()"
+      [resourceType]="currentResourceType()"
       [provider]="provider()"
       [allowedMenuActions]="allowedMenuActions()"
       [scrollHeight]="'500px'"
       [selectedFiles]="filesSelection"
+      [(foldersStack)]="foldersStack"
       (selectFile)="onFileTreeSelected($event)"
       (unselectFile)="onFileTreeUnselected($event)"
       (clearSelection)="onClearSelection()"
@@ -144,7 +146,6 @@
       (loadFiles)="onLoadFiles($event)"
       (setCurrentFolder)="setCurrentFolder($event)"
       (setMoveDialogCurrentFolder)="setMoveDialogCurrentFolder($event)"
-      (updateFoldersStack)="onUpdateFoldersStack($event)"
       (resetFilesProvider)="resetOnDialogClose()"
     >
     </osf-files-tree>

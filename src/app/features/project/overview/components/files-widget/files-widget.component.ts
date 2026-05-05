@@ -31,7 +31,7 @@ import {
 } from '@osf/features/files/store';
 import { FilesTreeComponent } from '@osf/shared/components/files-tree/files-tree.component';
 import { SelectComponent } from '@osf/shared/components/select/select.component';
-import { ResourceType } from '@osf/shared/enums/resource-type.enum';
+import { CurrentResourceType, ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { Primitive } from '@osf/shared/helpers/types.helper';
 import { ConfiguredAddonModel } from '@osf/shared/models/addons/configured-addon.model';
 import { FileModel } from '@osf/shared/models/files/file.model';
@@ -41,6 +41,7 @@ import { FilePageLinkModel } from '@osf/shared/models/files/file-page-link.model
 import { NodeShortInfoModel } from '@osf/shared/models/nodes/node-with-children.model';
 import { ProjectModel } from '@osf/shared/models/projects/projects.model';
 import { SelectOption } from '@osf/shared/models/select-option.model';
+import { FilesService } from '@osf/shared/services/files.service';
 import { ViewOnlyLinkHelperService } from '@osf/shared/services/view-only-link-helper.service';
 
 @Component({
@@ -59,6 +60,7 @@ export class FilesWidgetComponent {
 
   private readonly destroyRef = inject(DestroyRef);
   private readonly viewOnlyService = inject(ViewOnlyLinkHelperService);
+  private readonly filesService = inject(FilesService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
@@ -76,6 +78,7 @@ export class FilesWidgetComponent {
   pageNumber = signal(1);
 
   readonly osfStorageLabel = 'OSF Storage';
+  readonly resourceType = CurrentResourceType.Projects;
 
   readonly options = computed(() => {
     const components = this.components().filter((component) => this.rootOption().value !== component.id);
@@ -222,13 +225,24 @@ export class FilesWidgetComponent {
   }
 
   navigateToFile(file: FileModel) {
+    if (file.guid) {
+      this.openFile(file.guid);
+      return;
+    }
+
+    this.filesService.getFileGuid(file.id).subscribe((file) => {
+      if (file.guid) {
+        this.openFile(file.guid);
+      }
+    });
+  }
+
+  private openFile(guid: string): void {
     const extras = this.hasViewOnly()
       ? { queryParams: { view_only: this.viewOnlyService.getViewOnlyParamFromUrl(this.router.url) } }
       : undefined;
 
-    const url = this.router.serializeUrl(this.router.createUrlTree(['/', file.guid], extras));
-
-    window.open(url, '_blank');
+    window.open(this.router.serializeUrl(this.router.createUrlTree(['/', guid], extras)), '_blank');
   }
 
   onLoadFiles(event: FilePageLinkModel) {

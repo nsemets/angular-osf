@@ -2,7 +2,6 @@ import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
-import { TreeDragDropService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { Select } from 'primeng/select';
 import { TableModule } from 'primeng/table';
@@ -51,7 +50,7 @@ import { FILE_SIZE_LIMIT } from '@osf/shared/constants/files-limits.const';
 import { ALL_SORT_OPTIONS } from '@osf/shared/constants/sort-options.const';
 import { SupportedFeature } from '@osf/shared/enums/addon-supported-features.enum';
 import { FileMenuType } from '@osf/shared/enums/file-menu-type.enum';
-import { ResourceType } from '@osf/shared/enums/resource-type.enum';
+import { CurrentResourceType, ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { FilePageLinkModel } from '@osf/shared/models/files/file-page-link.model';
 import { RenamedFileLinkModel } from '@osf/shared/models/files/renamed-file-link.model';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
@@ -112,7 +111,6 @@ import {
   templateUrl: './files.component.html',
   styleUrl: './files.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [TreeDragDropService],
 })
 export class FilesComponent {
   googleFilePickerComponent = viewChild(GoogleFilePickerComponent);
@@ -162,6 +160,9 @@ export class FilesComponent {
   readonly supportedFeatures = select(FilesSelectors.getStorageSupportedFeatures);
   readonly hasWriteAccess = select(CurrentResourceSelectors.hasResourceWriteAccess);
   readonly hasAdminAccess = select(CurrentResourceSelectors.hasResourceAdminAccess);
+  readonly currentResourceType = computed<CurrentResourceType>(
+    () => (this.resourceMetadata()?.type as CurrentResourceType) ?? CurrentResourceType.Projects
+  );
 
   readonly isGoogleDrive = signal<boolean>(false);
   readonly accountId = signal<string>('');
@@ -428,8 +429,11 @@ export class FilesComponent {
   }
 
   onFileTreeSelected(file: FileModel): void {
-    this.filesSelection.push(file);
-    this.filesSelection = [...new Set(this.filesSelection)];
+    if (this.filesSelection.some((selectedFile) => selectedFile.id === file.id)) {
+      return;
+    }
+
+    this.filesSelection = [...this.filesSelection, file];
   }
 
   onFileTreeUnselected(file: FileModel): void {
@@ -610,13 +614,24 @@ export class FilesComponent {
   }
 
   navigateToFile(file: FileModel) {
+    if (file.guid) {
+      this.openFile(file.guid);
+      return;
+    }
+
+    this.filesService.getFileGuid(file.id).subscribe((file) => {
+      if (file.guid) {
+        this.openFile(file.guid);
+      }
+    });
+  }
+
+  private openFile(guid: string): void {
     const extras = this.hasViewOnly()
       ? { queryParams: { view_only: this.viewOnlyService.getViewOnlyParamFromUrl(this.router.url) } }
       : undefined;
 
-    const url = this.router.serializeUrl(this.router.createUrlTree(['/', file.guid], extras));
-
-    window.open(url, '_blank');
+    window.open(this.router.serializeUrl(this.router.createUrlTree(['/', guid], extras)), '_blank');
   }
 
   getAddonName(addons: ConfiguredAddonModel[], provider: string): string {
@@ -632,19 +647,13 @@ export class FilesComponent {
     const googleDrive = addons?.find((addon) => addon.externalServiceName === FileProvider.GoogleDrive);
     if (googleDrive) {
       this.accountId.set(googleDrive.baseAccountId);
-      this.selectedRootFolder.set({
-        itemId: googleDrive.selectedStorageItemId,
-      });
+      this.selectedRootFolder.set({ itemId: googleDrive.selectedStorageItemId });
     }
   }
 
   openGoogleFilePicker(): void {
     this.googleFilePickerComponent()?.createPicker();
     this.updateFilesList();
-  }
-
-  onUpdateFoldersStack(newStack: FileFolderModel[]): void {
-    this.foldersStack = [...newStack];
   }
 
   handleRootFolderChange(selectedFolder: FileLabelModel) {

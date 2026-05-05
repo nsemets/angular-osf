@@ -2,8 +2,6 @@ import { Store } from '@ngxs/store';
 
 import { MockComponents, MockProvider } from 'ng-mocks';
 
-import { TreeDragDropService } from 'primeng/api';
-
 import { of, Subject } from 'rxjs';
 
 import { Mock } from 'vitest';
@@ -70,7 +68,6 @@ describe('FilesControlComponent', () => {
         MockProvider(CustomConfirmationService),
         MockProvider(FilesService, mockFilesService),
         MockProvider(CustomDialogService, mockDialogService),
-        MockProvider(TreeDragDropService),
         provideMockStore({
           signals: [
             { selector: RegistriesSelectors.getFiles, value: [] },

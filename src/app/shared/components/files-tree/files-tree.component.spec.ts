@@ -2,7 +2,6 @@ import { MockComponents, MockProvider } from 'ng-mocks';
 
 import { TreeDragDropService } from 'primeng/api';
 
-import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
@@ -12,14 +11,12 @@ import { CustomDialogService } from '@osf/shared/services/custom-dialog.service'
 import { DataciteService } from '@osf/shared/services/datacite/datacite.service';
 import { FilesService } from '@osf/shared/services/files.service';
 import { ToastService } from '@osf/shared/services/toast.service';
-import { CurrentResourceSelectors } from '@osf/shared/stores/current-resource';
 import { FileFolderModel } from '@shared/models/files/file-folder.model';
 import { FileLabelModel } from '@shared/models/files/file-label.model';
 
 import { OSF_FILE_MOCK } from '@testing/mocks/osf-file.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { DataciteServiceMock, DataciteServiceMockType } from '@testing/providers/datacite.service.mock';
-import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 import { FileMenuComponent } from '../file-menu/file-menu.component';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
@@ -50,15 +47,12 @@ describe('FilesTreeComponent', () => {
       providers: [
         provideOSFCore(),
         provideRouter([]),
-        provideMockStore({
-          signals: [{ selector: CurrentResourceSelectors.getCurrentResource, value: signal(null) }],
-        }),
         MockProvider(DataciteService, dataciteMock),
         MockProvider(FilesService),
         MockProvider(ToastService),
         MockProvider(CustomConfirmationService),
         MockProvider(CustomDialogService),
-        TreeDragDropService,
+        MockProvider(TreeDragDropService),
       ],
     });
 

@@ -2,7 +2,6 @@ import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { TreeDragDropService } from 'primeng/api';
 import { Button } from 'primeng/button';
 
 import { filter, finalize, switchMap, take } from 'rxjs';
@@ -17,6 +16,7 @@ import { FilesTreeComponent } from '@osf/shared/components/files-tree/files-tree
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { FILE_SIZE_LIMIT } from '@osf/shared/constants/files-limits.const';
 import { ClearFileDirective } from '@osf/shared/directives/clear-file.directive';
+import { CurrentResourceType } from '@osf/shared/enums/resource-type.enum';
 import { FilePageLinkModel } from '@osf/shared/models/files/file-page-link.model';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { FilesService } from '@osf/shared/services/files.service';
@@ -46,7 +46,6 @@ import {
   templateUrl: './files-control.component.html',
   styleUrl: './files-control.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [TreeDragDropService],
 })
 export class FilesControlComponent {
   attachedFiles = input.required<Partial<FileModel>[]>();
@@ -69,6 +68,7 @@ export class FilesControlComponent {
   readonly progress = signal(0);
   readonly fileName = signal('');
   readonly dataLoaded = signal(false);
+  readonly resourceType = CurrentResourceType.Registrations;
 
   fileIsUploading = signal(false);
   filesSelection: FileModel[] = [];
