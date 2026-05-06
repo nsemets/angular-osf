@@ -1,6 +1,6 @@
 import { createDispatchMap, select } from '@ngxs/store';
 
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { Skeleton } from 'primeng/skeleton';
 import { TabsModule } from 'primeng/tabs';
@@ -32,8 +32,8 @@ import {
 import { FilesTreeComponent } from '@osf/shared/components/files-tree/files-tree.component';
 import { SelectComponent } from '@osf/shared/components/select/select.component';
 import { CurrentResourceType, ResourceType } from '@osf/shared/enums/resource-type.enum';
+import { mapRootFoldersToStorageLabels } from '@osf/shared/helpers/storage-addon-options.helper';
 import { Primitive } from '@osf/shared/helpers/types.helper';
-import { ConfiguredAddonModel } from '@osf/shared/models/addons/configured-addon.model';
 import { FileModel } from '@osf/shared/models/files/file.model';
 import { FileFolderModel } from '@osf/shared/models/files/file-folder.model';
 import { FileLabelModel } from '@osf/shared/models/files/file-label.model';
@@ -61,6 +61,7 @@ export class FilesWidgetComponent {
   private readonly destroyRef = inject(DestroyRef);
   private readonly viewOnlyService = inject(ViewOnlyLinkHelperService);
   private readonly filesService = inject(FilesService);
+  private readonly translateService = inject(TranslateService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
@@ -77,7 +78,6 @@ export class FilesWidgetComponent {
   currentRootFolder = model<FileLabelModel | null>(null);
   pageNumber = signal(1);
 
-  readonly osfStorageLabel = 'OSF Storage';
   readonly resourceType = CurrentResourceType.Projects;
 
   readonly options = computed(() => {
@@ -86,15 +86,8 @@ export class FilesWidgetComponent {
   });
 
   readonly storageAddons = computed(() => {
-    const rootFolders = this.rootFolders();
-    const addons = this.configuredStorageAddons();
-    if (rootFolders && addons) {
-      return rootFolders.map((folder) => ({
-        label: this.getAddonName(addons, folder.provider),
-        folder: folder,
-      }));
-    }
-    return [];
+    const osfLabel = this.translateService.instant('files.storageLocation');
+    return mapRootFoldersToStorageLabels(this.rootFolders(), this.configuredStorageAddons(), osfLabel);
   });
 
   readonly hasViewOnly = computed(() => this.viewOnlyService.hasViewOnlyParam(this.router));
@@ -132,7 +125,7 @@ export class FilesWidgetComponent {
         const osfRootFolder = rootFolders.find((folder) => folder.provider === FileProvider.OsfStorage);
         if (osfRootFolder) {
           this.currentRootFolder.set({
-            label: this.osfStorageLabel,
+            label: this.translateService.instant('files.storageLocation'),
             folder: osfRootFolder,
           });
         }
@@ -203,14 +196,6 @@ export class FilesWidgetComponent {
 
       return acc;
     }, []);
-  }
-
-  private getAddonName(addons: ConfiguredAddonModel[], provider: string): string {
-    if (provider === FileProvider.OsfStorage) {
-      return this.osfStorageLabel;
-    } else {
-      return addons.find((addon) => addon.externalServiceName === provider)?.displayName ?? '';
-    }
   }
 
   onChangeProject(value: Primitive) {
