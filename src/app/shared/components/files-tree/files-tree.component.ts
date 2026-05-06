@@ -37,7 +37,6 @@ import { CustomDialogService } from '@osf/shared/services/custom-dialog.service'
 import { DataciteService } from '@osf/shared/services/datacite/datacite.service';
 import { FilesService } from '@osf/shared/services/files.service';
 import { FilesShareEmbedService } from '@osf/shared/services/files-share-embed.service';
-import { ToastService } from '@osf/shared/services/toast.service';
 import { ViewOnlyLinkHelperService } from '@osf/shared/services/view-only-link-helper.service';
 import { FileModel } from '@shared/models/files/file.model';
 import { FileFolderModel } from '@shared/models/files/file-folder.model';
@@ -60,7 +59,6 @@ export class FilesTreeComponent {
   private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
   private readonly filesService = inject(FilesService);
-  private readonly toastService = inject(ToastService);
   private readonly customConfirmationService = inject(CustomConfirmationService);
   private readonly customDialogService = inject(CustomDialogService);
   private readonly dataciteService = inject(DataciteService);
@@ -88,7 +86,7 @@ export class FilesTreeComponent {
   uploadFilesConfirmed = output<File[] | File>();
   setCurrentFolder = output<FileFolderModel>();
   setMoveDialogCurrentFolder = output<FileFolderModel>();
-  deleteEntryAction = output<string>();
+  deleteEntryAction = output<FileModel>();
   renameEntryAction = output<RenamedFileLinkModel>();
   loadFiles = output<FilePageLinkModel>();
   selectFile = output<FileModel>();
@@ -227,7 +225,7 @@ export class FilesTreeComponent {
       messageKey:
         file.kind === FileKind.Folder ? 'files.dialogs.deleteFolder.message' : 'files.dialogs.deleteFile.message',
       acceptLabelKey: 'common.buttons.remove',
-      onConfirm: () => this.deleteEntryAction.emit(file.links.delete),
+      onConfirm: () => this.deleteEntryAction.emit(file),
     });
   }
 
@@ -390,16 +388,6 @@ export class FilesTreeComponent {
   }
 
   private handleEmbedAction(file: FileModel, embedType?: string): void {
-    const embedHtml = this.filesShareEmbedService.getEmbedHtml(file, embedType);
-
-    if (!embedHtml) {
-      return;
-    }
-
-    const copied = this.filesShareEmbedService.copyToClipboard(embedHtml);
-
-    if (copied) {
-      this.toastService.showSuccess('files.detail.toast.copiedToClipboard');
-    }
+    this.filesShareEmbedService.copyEmbedToClipboard(file.links.render, embedType);
   }
 }
