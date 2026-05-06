@@ -26,6 +26,10 @@ export class FilesTreeRowComponent {
   showMenu = input<boolean>(false);
   allowedMenuActions = input.required<FileMenuFlags>();
 
+  openParentFolder = output<void>();
+  openEntry = output<FileModel>();
+  menuAction = output<FileMenuAction>();
+
   readonly isFolder = computed(() => this.file().kind === FileKind.Folder);
 
   readonly downloadsCount = computed(() => {
@@ -34,10 +38,6 @@ export class FilesTreeRowComponent {
     }
     return this.file().extra.downloads;
   });
-
-  openParentFolder = output<void>();
-  openEntry = output<FileModel>();
-  menuAction = output<FileMenuAction>();
 
   onOpenEntry(): void {
     this.openEntry.emit(this.file());

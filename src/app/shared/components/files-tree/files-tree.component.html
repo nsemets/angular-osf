@@ -33,20 +33,20 @@
             (menuAction)="onFileMenuAction($event, file.data)"
           ></osf-files-tree-row>
         </ng-template>
-      </p-tree>
 
-      @if (!files().length) {
-        <div class="empty-state-container p-4">
-          @if (!canUpload()) {
-            <h3 class="font-normal mb-4 text-no-transform">{{ 'files.emptyState' | translate }}</h3>
-          } @else {
-            <div class="drop-text">
-              <i class="fa-solid fa-cloud-arrow-up text-5xl"></i>
-              <p class="text-xl">{{ 'files.dropText' | translate }}</p>
-            </div>
-          }
-        </div>
-      }
+        <ng-template pTemplate="empty">
+          <div class="flex align-items-center justify-content-center h-full p-4">
+            @if (!canUpload()) {
+              <h3 class="font-normal mb-4 text-no-transform">{{ 'files.emptyState' | translate }}</h3>
+            } @else {
+              <div class="flex flex-column align-items-center justify-content-center">
+                <i class="fa-solid fa-cloud-arrow-up text-5xl"></i>
+                <p class="text-xl">{{ 'files.dropText' | translate }}</p>
+              </div>
+            }
+          </div>
+        </ng-template>
+      </p-tree>
     </div>
   }
 </osf-files-drop-zone>
