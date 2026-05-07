@@ -13,7 +13,7 @@ import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 import { FileMetadataFields } from '../../constants';
-import { PatchFileMetadata } from '../../models';
+import { PatchFileMetadata } from '../../models/patch-file-metadata.model';
 import { FilesSelectors } from '../../store';
 
 import { FileMetadataComponent } from './file-metadata.component';

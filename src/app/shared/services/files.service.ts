@@ -37,6 +37,7 @@ import {
   FileFoldersResponseJsonApi,
 } from '../models/files/file-folder-json-api.model';
 import {
+  FileDetailsDataJsonApi,
   FileDetailsResponseJsonApi,
   FileResponseJsonApi,
   FilesResponseJsonApi,
@@ -264,15 +265,13 @@ export class FilesService {
         id: fileGuid,
         type: 'files',
         relationships: {},
-        attributes: {
-          tags: tags,
-        },
+        attributes: { tags: tags },
       },
     };
 
     return this.jsonApiService
-      .patch<FileDetailsResponseJsonApi>(`${this.apiUrl}/files/${fileGuid}/`, payload)
-      .pipe(map((response) => FilesMapper.getFileDetails(response.data)));
+      .patch<FileDetailsDataJsonApi>(`${this.apiUrl}/files/${fileGuid}/`, payload)
+      .pipe(map((response) => FilesMapper.getFileDetails(response)));
   }
 
   copyFileToAnotherLocation(moveLink: string, provider: string, resourceId: string) {

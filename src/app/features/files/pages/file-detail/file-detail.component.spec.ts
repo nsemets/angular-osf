@@ -88,8 +88,7 @@ describe.skip('FileDetailComponent', () => {
   });
 
   it('should call dataciteService.logIdentifiableDownload when downloadFile is triggered', () => {
-    const link = '123';
-    component.downloadFile(link);
+    component.downloadFile();
     expect(dataciteService.logIdentifiableDownload).toHaveBeenCalledWith(component.fileMetadata$);
   });
 

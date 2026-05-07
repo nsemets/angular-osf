@@ -477,8 +477,8 @@ export class FileDetailComponent implements OnDestroy {
     const file = this.file();
     if (!file) return;
 
-    this.resourceId = file.target.id || '';
-    this.resourceType = file.target.type || '';
+    this.resourceId = file.target?.id || '';
+    this.resourceType = file.target?.type || '';
     if (!this.resourceId || !this.resourceType) return;
 
     this.actions.getFileResourceMetadata(this.resourceId, this.resourceType);
