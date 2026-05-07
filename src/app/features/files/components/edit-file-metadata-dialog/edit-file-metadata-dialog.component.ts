@@ -11,7 +11,8 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { languageCodes } from '@osf/shared/constants/language.const';
 import { resourceTypes } from '@osf/shared/constants/resource-types.const';
 
-import { OsfFileCustomMetadata, PatchFileMetadata } from '../../models';
+import { OsfFileCustomMetadata } from '../../models/file-custom-metadata.model';
+import { PatchFileMetadata } from '../../models/patch-file-metadata.model';
 
 @Component({
   selector: 'osf-edit-file-metadata-dialog',

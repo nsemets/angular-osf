@@ -1,15 +1,13 @@
 import { createDispatchMap, select, Store } from '@ngxs/store';
 
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { Menu } from 'primeng/menu';
-import { TableModule } from 'primeng/table';
 import { Tab, TabList, Tabs } from 'primeng/tabs';
 
 import { switchMap } from 'rxjs';
 
-import { Clipboard } from '@angular/cdk/clipboard';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -19,14 +17,12 @@ import {
   HostBinding,
   inject,
   OnDestroy,
-  OnInit,
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import { ENVIRONMENT } from '@core/provider/environment.provider';
 import {
   CedarMetadataDataTemplateJsonApi,
   CedarMetadataRecordData,
@@ -44,15 +40,16 @@ import { MetadataTabsComponent } from '@osf/shared/components/metadata-tabs/meta
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { MetadataResourceEnum } from '@osf/shared/enums/metadata-resource.enum';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
+import { getMfrUrlWithVersion } from '@osf/shared/helpers/mfr-url.helper';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { DataciteService } from '@osf/shared/services/datacite/datacite.service';
+import { FilesShareEmbedService } from '@osf/shared/services/files-share-embed.service';
 import { MetaTagsService } from '@osf/shared/services/meta-tags.service';
 import { MetaTagsBuilderService } from '@osf/shared/services/meta-tags-builder.service';
 import { SignpostingService } from '@osf/shared/services/signposting.service';
+import { SocialShareService } from '@osf/shared/services/social-share.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { ViewOnlyLinkHelperService } from '@osf/shared/services/view-only-link-helper.service';
-import { embedDynamicJs, embedStaticHtml } from '@shared/constants/file-embed.constants';
-import { FileDetailsModel } from '@shared/models/files/file.model';
 import { MetadataTabsModel } from '@shared/models/metadata-tabs.model';
 
 import {
@@ -89,13 +86,12 @@ import {
     FileMetadataComponent,
     FileResourceMetadataComponent,
     MetadataTabsComponent,
-    TableModule,
   ],
   templateUrl: './file-detail.component.html',
   styleUrl: './file-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FileDetailComponent implements OnInit, OnDestroy {
+export class FileDetailComponent implements OnDestroy {
   @HostBinding('class') classes = 'flex flex-column flex-1 w-full h-full';
 
   readonly store = inject(Store);
@@ -109,11 +105,11 @@ export class FileDetailComponent implements OnInit, OnDestroy {
   private readonly metaTags = inject(MetaTagsService);
   private readonly metaTagsBuilder = inject(MetaTagsBuilderService);
   private readonly viewOnlyService = inject(ViewOnlyLinkHelperService);
-  private readonly environment = inject(ENVIRONMENT);
-  private readonly clipboard = inject(Clipboard);
+  private readonly socialShareService = inject(SocialShareService);
+  private readonly filesShareEmbedService = inject(FilesShareEmbedService);
   private readonly signpostingService = inject(SignpostingService);
-
-  readonly dataciteService = inject(DataciteService);
+  private readonly translateService = inject(TranslateService);
+  private readonly dataciteService = inject(DataciteService);
 
   private readonly actions = createDispatchMap({
     getFile: GetFile,
@@ -137,7 +133,6 @@ export class FileDetailComponent implements OnInit, OnDestroy {
   isAnonymous = select(FilesSelectors.isFilesAnonymous);
   fileCustomMetadata = select(FilesSelectors.getFileCustomMetadata);
   isFileCustomMetadataLoading = select(FilesSelectors.isFileMetadataLoading);
-  resourceMetadata = select(FilesSelectors.getResourceMetadata);
   resourceContributors = select(FilesSelectors.getContributors);
   isResourceContributorsLoading = select(FilesSelectors.isResourceContributorsLoading);
   fileRevisions = select(FilesSelectors.getFileRevisions);
@@ -154,7 +149,7 @@ export class FileDetailComponent implements OnInit, OnDestroy {
 
   readonly FileDetailTab = FileDetailTab;
 
-  selectedTab: FileDetailTab = FileDetailTab.Details;
+  selectedTab = FileDetailTab.Details;
 
   fileGuid = '';
   fileVersion = '';
@@ -187,15 +182,19 @@ export class FileDetailComponent implements OnInit, OnDestroy {
 
   tabs = signal<MetadataTabsModel[]>([]);
 
-  isLoading = computed(() => this.isFileLoading());
-
   selectedMetadataTab = signal('osf');
 
   selectedCedarRecord = signal<CedarMetadataRecordData | null>(null);
   selectedCedarTemplate = signal<CedarMetadataDataTemplateJsonApi | null>(null);
   cedarFormReadonly = signal<boolean>(true);
 
-  showDeleteButton = computed(() => this.hasWriteAccess() && this.file() && !this.isAnonymous() && !this.hasViewOnly());
+  canManageFileActions = computed(() => !this.isAnonymous() && !this.hasViewOnly() && this.hasWriteAccess());
+
+  readonly headerTitle = computed(() => {
+    const fileName = this.file()?.name ?? '';
+    if (!this.fileVersion) return fileName;
+    return `${fileName} (${this.translateService.instant('project.wiki.version.title')} ${this.fileVersion})`;
+  });
 
   private readonly metaTagsData = computed(() => {
     if (this.isFileLoading() || this.isFileCustomMetadataLoading() || this.isResourceContributorsLoading()) {
@@ -214,67 +213,10 @@ export class FileDetailComponent implements OnInit, OnDestroy {
   });
 
   constructor() {
-    this.route.params
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        switchMap((params) => {
-          this.fileGuid = params['fileGuid'];
-          return this.actions.getFile(this.fileGuid);
-        })
-      )
-      .subscribe(() => {
-        this.getIframeLink('');
-        const file = this.file();
-        if (file) {
-          this.resourceId = file.target.id || '';
-          this.resourceType = file.target.type || '';
-          const cedarUrl = file.links.info;
-          if (this.resourceId && this.resourceType) {
-            this.actions.getFileResourceMetadata(this.resourceId, this.resourceType);
-            this.actions.getFileResourceContributors(this.resourceId, this.resourceType);
-
-            const storageLink = file.links.upload || '';
-            this.actions.getFileRevisions(storageLink);
-            this.actions.getCedarTemplates();
-            if (cedarUrl) {
-              this.actions.getCedarRecords(this.resourceId, ResourceType.File, cedarUrl);
-            }
-          }
-        }
-      });
-
-    effect(() => {
-      const records = this.cedarRecords();
-
-      const baseTabs = [{ id: 'osf', label: 'OSF', type: MetadataResourceEnum.PROJECT }];
-
-      const cedarTabs =
-        records?.map((record) => ({
-          id: record.id || '',
-          label: record.embeds?.template?.data?.attributes?.schema_name || `Record ${record.id}`,
-          type: MetadataResourceEnum.CEDAR,
-        })) || [];
-
-      this.tabs.set([...baseTabs, ...cedarTabs]);
-    });
-
-    this.route.params.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
-      this.actions.getFileMetadata(params['fileGuid']);
-    });
-
-    effect(() => {
-      const metaTagsData = this.metaTagsData();
-
-      if (metaTagsData) {
-        this.metaTags.updateMetaTags(metaTagsData, this.destroyRef);
-      }
-    });
-
-    this.dataciteService.logIdentifiableView(this.fileMetadata$).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
-  }
-
-  ngOnInit(): void {
-    this.signpostingService.addSignposting(this.fileGuid);
+    this.initRouteSync();
+    this.initTabsEffect();
+    this.initMetaTagsEffect();
+    this.initIdentifiableViewTracking();
   }
 
   ngOnDestroy(): void {
@@ -284,7 +226,9 @@ export class FileDetailComponent implements OnInit, OnDestroy {
   }
 
   getIframeLink(version: string) {
-    const url = this.getMfrUrlWithVersion(version);
+    const viewOnlyParam = this.hasViewOnly() ? this.viewOnlyService.getViewOnlyParam() : null;
+    const url = getMfrUrlWithVersion(this.file()?.links.render, version, viewOnlyParam);
+
     if (url) {
       this.safeLink = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     }
@@ -313,17 +257,18 @@ export class FileDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  downloadFile(link: string): void {
+  downloadFile(): void {
+    const link = this.file()?.links.download;
+
+    if (link) {
+      return;
+    }
+
     this.dataciteService
       .logIdentifiableDownload(this.fileMetadata$)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe();
     window.open(link)?.focus();
-  }
-
-  copyToClipboard(embedHtml: string): void {
-    this.clipboard.copy(embedHtml);
-    this.toastService.showSuccess('files.detail.toast.copiedToClipboard');
   }
 
   deleteEntry(link: string): void {
@@ -336,7 +281,13 @@ export class FileDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  confirmDelete(file: FileDetailsModel): void {
+  confirmDelete(): void {
+    const file = this.file();
+
+    if (!file) {
+      return;
+    }
+
     this.customConfirmationService.confirmDelete({
       headerKey: 'files.dialogs.deleteFile.title',
       messageParams: { name: file.name },
@@ -354,28 +305,26 @@ export class FileDetailComponent implements OnInit, OnDestroy {
   }
 
   handleEmailShare(): void {
-    const link = `mailto:?subject=${this.file()?.name ?? ''}&body=${this.file()?.links?.html ?? ''}`;
+    const link = this.socialShareService.getEmailLink(this.file()?.name ?? '', this.file()?.links?.html ?? '');
     window.location.href = link;
   }
 
   handleXShare(): void {
-    const link = `https://x.com/intent/tweet?url=${this.file()?.links?.html ?? ''}&text=${this.file()?.name ?? ''}&via=OSFramework`;
+    const link = this.socialShareService.getXLink(this.file()?.name ?? '', this.file()?.links?.html ?? '');
     window.open(link, '_blank', 'noopener,noreferrer');
   }
 
   handleFacebookShare(): void {
-    const link = `https://www.facebook.com/dialog/share?app_id=${this.environment.facebookAppId}&display=popup&href=${this.file()?.links?.html ?? ''}&redirect_uri=${this.file()?.links?.html ?? ''}`;
+    const link = this.socialShareService.getFacebookCustomLink(this.file()?.links?.html ?? '');
     window.open(link, '_blank', 'noopener,noreferrer');
   }
 
   handleCopyDynamicEmbed(): void {
-    const data = embedDynamicJs.replace('ENCODED_URL', this.file()?.links?.render ?? '');
-    this.copyToClipboard(data);
+    this.filesShareEmbedService.copyEmbedToClipboard(this.file()?.links?.render ?? '', 'dynamic');
   }
 
   handleCopyStaticEmbed(): void {
-    const data = embedStaticHtml.replace('ENCODED_URL', this.file()?.links?.render ?? '');
-    this.copyToClipboard(data);
+    this.filesShareEmbedService.copyEmbedToClipboard(this.file()?.links?.render ?? '', 'static');
   }
 
   onMetadataTabChange(tabId: string | number): void {
@@ -405,26 +354,25 @@ export class FileDetailComponent implements OnInit, OnDestroy {
 
   onCedarFormSubmit(data: CedarRecordDataBinding): void {
     const selectedRecord = this.selectedCedarRecord();
-    if (!this.resourceId || !selectedRecord) return;
-    if (selectedRecord.id) {
-      this.actions
-        .updateCedarRecord(data, selectedRecord.id, this.resourceId, ResourceType.File)
-        .pipe(
-          takeUntilDestroyed(this.destroyRef),
-          switchMap(() => {
-            const cedarUrl = this.file()?.links.info;
-            if (cedarUrl) {
-              return this.actions.getCedarRecords(this.resourceId, ResourceType.File, cedarUrl);
-            }
-            return [];
-          })
-        )
-        .subscribe(() => {
-          this.cedarFormReadonly.set(true);
-          this.updateSelectedCedarRecord(selectedRecord.id!);
-          this.toastService.showSuccess('files.detail.toast.cedarUpdated');
-        });
-    }
+    if (!this.resourceId || !selectedRecord?.id) return;
+
+    this.actions
+      .updateCedarRecord(data, selectedRecord.id, this.resourceId, ResourceType.File)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        switchMap(() => {
+          const cedarUrl = this.file()?.links.info;
+          if (cedarUrl) {
+            return this.actions.getCedarRecords(this.resourceId, ResourceType.File, cedarUrl);
+          }
+          return [];
+        })
+      )
+      .subscribe(() => {
+        this.cedarFormReadonly.set(true);
+        this.updateSelectedCedarRecord(selectedRecord.id!);
+        this.toastService.showSuccess('files.detail.toast.cedarUpdated');
+      });
   }
 
   private updateSelectedCedarRecord(recordId: string): void {
@@ -443,13 +391,17 @@ export class FileDetailComponent implements OnInit, OnDestroy {
     if (!records) {
       return;
     }
+
     const record = records.find((r) => r.id === recordId);
     if (!record) {
       return;
     }
+
     this.selectedCedarRecord.set(record);
     this.cedarFormReadonly.set(true);
+
     const templateId = record.relationships?.template?.data?.id;
+
     if (templateId && templates?.data) {
       const template = templates.data.find((t) => t.id === templateId);
       if (template) {
@@ -464,24 +416,79 @@ export class FileDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  private getMfrUrlWithVersion(version?: string): string | null {
-    const mfrUrl = this.file()?.links.render;
-    if (!mfrUrl) return null;
-    const mfrUrlObj = new URL(mfrUrl);
-    const encodedDownloadUrl = mfrUrlObj.searchParams.get('url');
-    if (!encodedDownloadUrl) return mfrUrl;
+  private initTabsEffect(): void {
+    effect(() => {
+      const records = this.cedarRecords();
 
-    const downloadUrlObj = new URL(decodeURIComponent(encodedDownloadUrl));
+      const baseTabs = [{ id: 'osf', label: 'OSF', type: MetadataResourceEnum.PROJECT }];
 
-    if (version) downloadUrlObj.searchParams.set('version', version);
+      const cedarTabs =
+        records?.map((record) => ({
+          id: record.id || '',
+          label: record.embeds?.template?.data?.attributes?.schema_name || `Record ${record.id}`,
+          type: MetadataResourceEnum.CEDAR,
+        })) || [];
 
-    if (this.hasViewOnly()) {
-      const viewOnlyParam = this.viewOnlyService.getViewOnlyParam();
-      if (viewOnlyParam) downloadUrlObj.searchParams.set('view_only', viewOnlyParam);
+      this.tabs.set([...baseTabs, ...cedarTabs]);
+    });
+  }
+
+  private initMetaTagsEffect(): void {
+    effect(() => {
+      const metaTagsData = this.metaTagsData();
+
+      if (metaTagsData) {
+        this.metaTags.updateMetaTags(metaTagsData, this.destroyRef);
+      }
+    });
+  }
+
+  private initIdentifiableViewTracking(): void {
+    this.dataciteService.logIdentifiableView(this.fileMetadata$).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+  }
+
+  private initRouteSync(): void {
+    this.route.params
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        switchMap((params) => {
+          const nextFileGuid = params['fileGuid'];
+          this.syncFileGuid(nextFileGuid);
+          this.actions.getFileMetadata(this.fileGuid);
+          return this.actions.getFile(this.fileGuid);
+        })
+      )
+      .subscribe(() => {
+        this.handleFileLoaded();
+      });
+  }
+
+  private syncFileGuid(nextFileGuid: string): void {
+    if (this.fileGuid && this.fileGuid !== nextFileGuid) {
+      this.signpostingService.removeSignpostingLinkTags();
     }
 
-    mfrUrlObj.searchParams.set('url', downloadUrlObj.toString());
+    this.fileGuid = nextFileGuid;
+    this.signpostingService.addSignposting(this.fileGuid);
+  }
 
-    return mfrUrlObj.toString();
+  private handleFileLoaded(): void {
+    this.getIframeLink('');
+    const file = this.file();
+    if (!file) return;
+
+    this.resourceId = file.target.id || '';
+    this.resourceType = file.target.type || '';
+    if (!this.resourceId || !this.resourceType) return;
+
+    this.actions.getFileResourceMetadata(this.resourceId, this.resourceType);
+    this.actions.getFileResourceContributors(this.resourceId, this.resourceType);
+    this.actions.getFileRevisions(file.links.upload || '');
+    this.actions.getCedarTemplates();
+
+    const cedarUrl = file.links.info;
+    if (cedarUrl) {
+      this.actions.getCedarRecords(this.resourceId, ResourceType.File, cedarUrl);
+    }
   }
 }

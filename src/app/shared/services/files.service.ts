@@ -6,16 +6,16 @@ import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { MapFileCustomMetadata, MapFileRevision } from '@osf/features/files/mappers';
+import { OsfFileCustomMetadata } from '@osf/features/files/models/file-custom-metadata.model';
+import { OsfFileRevision } from '@osf/features/files/models/file-revisions.model';
+import { GetCustomMetadataResponse } from '@osf/features/files/models/get-custom-metadata-response.model';
 import {
   FileCustomMetadata,
-  GetCustomMetadataResponse,
   GetFileMetadataResponse,
-  GetFileRevisionsResponse,
-  GetShortInfoResponse,
-  OsfFileCustomMetadata,
-  OsfFileRevision,
-  PatchFileMetadata,
-} from '@osf/features/files/models';
+} from '@osf/features/files/models/get-file-metadata-response.model';
+import { GetFileRevisionsResponse } from '@osf/features/files/models/get-file-revisions-response.model';
+import { GetShortInfoResponse } from '@osf/features/files/models/get-short-info-response.model';
+import { PatchFileMetadata } from '@osf/features/files/models/patch-file-metadata.model';
 import { PaginatedData } from '@osf/shared/models/paginated-data.model';
 
 import { FileKind } from '../enums/file-kind.enum';

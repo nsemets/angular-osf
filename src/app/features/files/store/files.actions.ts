@@ -1,7 +1,7 @@
 import { FileFolderModel } from '@osf/shared/models/files/file-folder.model';
 import { ResourceType } from '@shared/enums/resource-type.enum';
 
-import { PatchFileMetadata } from '../models';
+import { PatchFileMetadata } from '../models/patch-file-metadata.model';
 
 export class GetFiles {
   static readonly type = '[Files] Get Files';

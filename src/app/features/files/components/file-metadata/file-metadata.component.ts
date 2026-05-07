@@ -18,7 +18,7 @@ import { ViewOnlyLinkHelperService } from '@osf/shared/services/view-only-link-h
 import { LanguageCodeModel } from '@shared/models/language-code.model';
 
 import { FileMetadataFields } from '../../constants';
-import { PatchFileMetadata } from '../../models';
+import { PatchFileMetadata } from '../../models/patch-file-metadata.model';
 import { FilesSelectors, SetFileMetadata } from '../../store';
 import { EditFileMetadataDialogComponent } from '../edit-file-metadata-dialog/edit-file-metadata-dialog.component';
 

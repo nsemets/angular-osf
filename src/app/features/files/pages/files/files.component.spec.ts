@@ -25,6 +25,7 @@ import { FileKind } from '@osf/shared/enums/file-kind.enum';
 import { FileMenuType } from '@osf/shared/enums/file-menu-type.enum';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
+import { getConfiguredStorageAddonDisplayName } from '@osf/shared/helpers/storage-addon-options.helper';
 import { ConfiguredAddonModel } from '@osf/shared/models/addons/configured-addon.model';
 import { CurrentResource } from '@osf/shared/models/current-resource.model';
 import { FileFolderModel } from '@osf/shared/models/files/file-folder.model';
@@ -300,10 +301,10 @@ describe('FilesComponent', () => {
     expect(options[0].folder.id).toBe('folder-1');
   });
 
-  it('should return addon display name for non-osf provider in getAddonName', () => {
+  it('should resolve non-OSF provider display name via storage addon helper', () => {
     setup();
 
-    const name = component.getAddonName(configuredAddons, FileProvider.GoogleDrive);
+    const name = getConfiguredStorageAddonDisplayName(configuredAddons, FileProvider.GoogleDrive, 'OSF Storage');
 
     expect(name).toBe('Google Drive');
   });

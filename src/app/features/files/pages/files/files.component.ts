@@ -6,21 +6,9 @@ import { Button } from 'primeng/button';
 import { Select } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 
-import {
-  catchError,
-  debounceTime,
-  distinctUntilChanged,
-  filter,
-  finalize,
-  forkJoin,
-  map,
-  of,
-  switchMap,
-  take,
-} from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, map, of, tap } from 'rxjs';
 
 import { isPlatformBrowser } from '@angular/common';
-import { HttpEventType, HttpResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -51,27 +39,26 @@ import { ALL_SORT_OPTIONS } from '@osf/shared/constants/sort-options.const';
 import { SupportedFeature } from '@osf/shared/enums/addon-supported-features.enum';
 import { FileMenuType } from '@osf/shared/enums/file-menu-type.enum';
 import { CurrentResourceType, ResourceType } from '@osf/shared/enums/resource-type.enum';
+import { mapRootFoldersToStorageLabels } from '@osf/shared/helpers/storage-addon-options.helper';
 import { FilePageLinkModel } from '@osf/shared/models/files/file-page-link.model';
 import { RenamedFileLinkModel } from '@osf/shared/models/files/renamed-file-link.model';
-import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { FilesService } from '@osf/shared/services/files.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { ViewOnlyLinkHelperService } from '@osf/shared/services/view-only-link-helper.service';
 import { CurrentResourceSelectors, GetResourceDetails } from '@osf/shared/stores/current-resource';
-import { ConfiguredAddonModel } from '@shared/models/addons/configured-addon.model';
 import { StorageItem } from '@shared/models/addons/storage-item.model';
 import { FileModel } from '@shared/models/files/file.model';
 import { FileFolderModel } from '@shared/models/files/file-folder.model';
 import { FileLabelModel } from '@shared/models/files/file-label.model';
 import { DataciteService } from '@shared/services/datacite/datacite.service';
 
-import { CreateFolderDialogComponent } from '../../components/create-folder-dialog/create-folder-dialog.component';
 import { FileBrowserInfoComponent } from '../../components/file-browser-info/file-browser-info.component';
 import { FilesSelectionActionsComponent } from '../../components/files-selection-actions/files-selection-actions.component';
-import { MoveFileDialogComponent } from '../../components/move-file-dialog/move-file-dialog.component';
 import { FileProvider } from '../../constants';
 import { mapMenuActions } from '../../mappers/file-menu-actions.mapper';
+import { FilesActionsService } from '../../services/files-actions.service';
+import { FilesUploadService } from '../../services/files-upload.service';
 import {
   CreateFolder,
   DeleteEntry,
@@ -111,6 +98,7 @@ import {
   templateUrl: './files.component.html',
   styleUrl: './files.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [FilesActionsService, FilesUploadService],
 })
 export class FilesComponent {
   googleFilePickerComponent = viewChild(GoogleFilePickerComponent);
@@ -124,7 +112,8 @@ export class FilesComponent {
   private readonly translateService = inject(TranslateService);
   private readonly router = inject(Router);
   private readonly dataciteService = inject(DataciteService);
-  private readonly customConfirmationService = inject(CustomConfirmationService);
+  private readonly filesActionsService = inject(FilesActionsService);
+  private readonly filesUploadService = inject(FilesUploadService);
   private readonly toastService = inject(ToastService);
   private readonly viewOnlyService = inject(ViewOnlyLinkHelperService);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
@@ -151,7 +140,6 @@ export class FilesComponent {
   readonly isFilesLoading = select(FilesSelectors.isFilesLoading);
   readonly currentFolder = select(FilesSelectors.getCurrentFolder);
   readonly provider = select(FilesSelectors.getProvider);
-  readonly resourceDetails = select(CurrentResourceSelectors.getResourceDetails);
   readonly resourceMetadata = select(CurrentResourceSelectors.getCurrentResource);
   readonly rootFolders = select(FilesSelectors.getRootFolders);
   readonly isRootFoldersLoading = select(FilesSelectors.isRootFoldersLoading);
@@ -210,15 +198,8 @@ export class FilesComponent {
   });
 
   readonly rootFoldersOptions = computed(() => {
-    const rootFolders = this.rootFolders();
-    const addons = this.configuredStorageAddons();
-    if (rootFolders && addons) {
-      return rootFolders.map((folder) => ({
-        label: this.getAddonName(addons, folder.provider),
-        folder: folder,
-      }));
-    }
-    return [];
+    const osfLabel = this.translateService.instant('files.storageLocation');
+    return mapRootFoldersToStorageLabels(this.rootFolders(), this.configuredStorageAddons(), osfLabel);
   });
 
   resourceType = signal<ResourceType>(
@@ -247,12 +228,21 @@ export class FilesComponent {
   );
 
   constructor() {
+    this.initResourceId();
+    this.initEffects();
+    this.initFilters();
+    this.initDestroyHandler();
+  }
+
+  private initResourceId(): void {
     this.activeRoute.parent?.parent?.parent?.params.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       if (params['id']) {
         this.resourceId.set(params['id']);
       }
     });
+  }
 
+  private initEffects(): void {
     effect(() => {
       const resourceId = this.resourceId();
       if (!resourceId) return;
@@ -314,7 +304,9 @@ export class FilesComponent {
         this.updateFilesList();
       }
     });
+  }
 
+  private initFilters(): void {
     this.searchControl.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef), distinctUntilChanged(), debounceTime(500))
       .subscribe((searchText) => {
@@ -328,7 +320,9 @@ export class FilesComponent {
 
       this.updateFilesList();
     });
+  }
 
+  private initDestroyHandler(): void {
     this.destroyRef.onDestroy(() => {
       if (this.isBrowser) {
         this.actions.resetState();
@@ -341,91 +335,27 @@ export class FilesComponent {
   }
 
   uploadFiles(files: File | File[]): void {
-    const currentFolder = this.currentFolder();
-    const uploadLink = currentFolder?.links.upload;
+    const uploadLink = this.currentFolder()?.links.upload;
     if (!uploadLink) return;
 
-    const fileArray = Array.isArray(files) ? files : [files];
-    if (fileArray.length === 0) return;
-
-    this.fileName.set(fileArray.length === 1 ? fileArray[0].name : `${fileArray.length} files`);
-    this.fileIsUploading.set(true);
-    this.progress.set(0);
-
-    let completedUploads = 0;
-    const totalFiles = fileArray.length;
-    const conflictFiles: { file: File; link: string }[] = [];
-
-    fileArray.forEach((file) => {
-      this.filesService
-        .uploadFile(file, uploadLink)
-        .pipe(
-          takeUntilDestroyed(this.destroyRef),
-          catchError((err) => {
-            const conflictLink = err.error?.data?.links?.upload;
-            if (err.status === 409 && conflictLink) {
-              if (this.allowRevisions) {
-                return this.filesService.uploadFile(file, conflictLink, true);
-              } else {
-                conflictFiles.push({ file, link: conflictLink });
-              }
-            }
-            return of(new HttpResponse());
-          })
-        )
-        .subscribe((event) => {
-          if (event.type === HttpEventType.UploadProgress && event.total) {
-            const progressPercentage = Math.round((event.loaded / event.total) * 100);
-            if (totalFiles === 1) {
-              this.progress.set(progressPercentage);
-            }
-          }
-
-          if (event.type === HttpEventType.Response) {
-            completedUploads++;
-
-            if (totalFiles > 1) {
-              const progressPercentage = Math.round((completedUploads / totalFiles) * 100);
-              this.progress.set(progressPercentage);
-            }
-
-            if (completedUploads === totalFiles) {
-              if (conflictFiles.length > 0) {
-                this.openReplaceFileDialog(conflictFiles);
-              } else {
-                this.completeUpload();
-              }
-            }
-          }
-        });
-    });
-  }
-
-  private openReplaceFileDialog(conflictFiles: { file: File; link: string }[]) {
-    this.customConfirmationService.confirmDelete({
-      headerKey: conflictFiles.length > 1 ? 'files.dialogs.replaceFile.multiple' : 'files.dialogs.replaceFile.single',
-      messageKey: 'files.dialogs.replaceFile.message',
-      messageParams: { name: conflictFiles.map((c) => c.file.name).join(', ') },
-      acceptLabelKey: 'common.buttons.replace',
-      onConfirm: () => {
-        const replaceRequests$ = conflictFiles.map(({ file, link }) =>
-          this.filesService.uploadFile(file, link, true).pipe(
-            takeUntilDestroyed(this.destroyRef),
-            catchError(() => of(null))
-          )
-        );
-
-        forkJoin(replaceRequests$).subscribe({
-          next: () => this.completeUpload(),
-        });
+    this.filesUploadService.uploadFiles({
+      files,
+      uploadLink,
+      allowRevisions: this.allowRevisions,
+      onStart: (fileName) => {
+        this.fileName.set(fileName);
+        this.fileIsUploading.set(true);
+        this.progress.set(0);
+      },
+      onProgress: (progress) => {
+        this.progress.set(progress);
+      },
+      onComplete: () => {
+        this.fileIsUploading.set(false);
+        this.fileName.set('');
+        this.updateFilesList();
       },
     });
-  }
-
-  private completeUpload(): void {
-    this.fileIsUploading.set(false);
-    this.fileName.set('');
-    this.updateFilesList();
   }
 
   onFileTreeSelected(file: FileModel): void {
@@ -445,29 +375,12 @@ export class FilesComponent {
   }
 
   onDeleteSelected(): void {
-    if (!this.filesSelection.length) return;
-
-    this.customConfirmationService.confirmDelete({
-      headerKey: 'files.dialogs.deleteMultipleItems.title',
-      messageKey: 'files.dialogs.deleteMultipleItems.message',
-      messageParams: {
-        name: this.filesSelection.map((f) => f.name).join(', '),
-      },
-      acceptLabelKey: 'common.buttons.delete',
-      onConfirm: () => {
-        const deleteRequests$ = this.filesSelection.map((file) =>
-          this.actions.deleteEntry(file.links.delete).pipe(catchError(() => of(null)))
-        );
-
-        forkJoin(deleteRequests$)
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe({
-            next: () => {
-              this.toastService.showSuccess('files.dialogs.deleteFile.success');
-              this.filesSelection = [];
-              this.updateFilesList();
-            },
-          });
+    this.filesActionsService.deleteSelected({
+      files: this.filesSelection,
+      deleteEntry: (link) => this.actions.deleteEntry(link),
+      onSuccess: () => {
+        this.filesSelection = [];
+        this.updateFilesList();
       },
     });
   }
@@ -496,30 +409,31 @@ export class FilesComponent {
     this.uploadFiles(Array.from(files));
   }
 
-  moveFiles(files: FileModel[], action: string): void {
+  moveFiles(files: FileModel[], action: 'move' | 'copy'): void {
     const currentFolder = this.currentFolder();
     this.actions.setMoveDialogCurrentFolder(currentFolder);
     this.isMoveDialogOpened.set(true);
-    this.customDialogService
-      .open(MoveFileDialogComponent, {
-        header: 'files.dialogs.moveFile.title',
-        width: '552px',
-        data: {
-          files: files,
-          resourceId: this.resourceId(),
-          action: action,
-          storageProvider: this.provider(),
-          foldersStack: this.foldersStack,
-          initialFolder: structuredClone(this.currentFolder()),
-        },
+
+    this.filesActionsService
+      .openMoveDialog({
+        files,
+        action,
+        resourceId: this.resourceId(),
+        storageProvider: this.provider(),
+        foldersStack: this.foldersStack,
+        initialFolder: currentFolder,
       })
-      .onClose.subscribe((result) => {
-        if (result) {
-          this.filesSelection = [];
-        }
-        this.isMoveDialogOpened.set(false);
-        this.resetProvider();
-      });
+      .pipe(
+        tap((result) => {
+          if (result) {
+            this.filesSelection = [];
+          }
+          this.isMoveDialogOpened.set(false);
+          this.resetProvider();
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe();
   }
 
   resetProvider() {
@@ -542,20 +456,18 @@ export class FilesComponent {
 
     if (!newFolderLink) return;
 
-    this.customDialogService
-      .open(CreateFolderDialogComponent, {
-        header: 'files.dialogs.createFolder.title',
-        width: '448px',
+    this.filesActionsService
+      .openCreateFolderDialog({
+        newFolderLink,
+        createFolder: (link, folderName) => this.actions.createFolder(link, folderName),
       })
-      .onClose.pipe(
-        filter((folderName: string) => !!folderName),
-        switchMap((folderName: string) => this.actions.createFolder(newFolderLink, folderName)),
-        take(1),
+      .pipe(
+        tap(() => this.toastService.showSuccess('files.dialogs.createFolder.success')),
         finalize(() => {
           this.updateFilesList();
           this.fileIsUploading.set(false);
-          this.toastService.showSuccess('files.dialogs.createFolder.success');
-        })
+        }),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
   }
@@ -626,20 +538,18 @@ export class FilesComponent {
     });
   }
 
+  handleRootFolderChange(selectedFolder: FileLabelModel) {
+    const provider = selectedFolder.folder?.provider;
+    const resourceId = this.resourceId();
+    this.router.navigate([`/${resourceId}/files`, provider], { queryParamsHandling: 'preserve' });
+  }
+
   private openFile(guid: string): void {
     const extras = this.hasViewOnly()
       ? { queryParams: { view_only: this.viewOnlyService.getViewOnlyParamFromUrl(this.router.url) } }
       : undefined;
 
     window.open(this.router.serializeUrl(this.router.createUrlTree(['/', guid], extras)), '_blank');
-  }
-
-  getAddonName(addons: ConfiguredAddonModel[], provider: string): string {
-    if (provider === FileProvider.OsfStorage) {
-      return this.translateService.instant('files.storageLocation');
-    } else {
-      return addons.find((addon) => addon.externalServiceName === provider)?.displayName ?? '';
-    }
   }
 
   private setGoogleAccountId(): void {
@@ -649,16 +559,5 @@ export class FilesComponent {
       this.accountId.set(googleDrive.baseAccountId);
       this.selectedRootFolder.set({ itemId: googleDrive.selectedStorageItemId });
     }
-  }
-
-  openGoogleFilePicker(): void {
-    this.googleFilePickerComponent()?.createPicker();
-    this.updateFilesList();
-  }
-
-  handleRootFolderChange(selectedFolder: FileLabelModel) {
-    const provider = selectedFolder.folder?.provider;
-    const resourceId = this.resourceId();
-    this.router.navigate([`/${resourceId}/files`, provider], { queryParamsHandling: 'preserve' });
   }
 }
