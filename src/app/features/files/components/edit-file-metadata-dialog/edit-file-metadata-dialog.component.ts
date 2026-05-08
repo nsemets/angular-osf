@@ -9,7 +9,7 @@ import { Textarea } from 'primeng/textarea';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
-import { languageCodes } from '@osf/shared/constants/language.const';
+import { LANGUAGE_CODES } from '@osf/shared/constants/language.const';
 import { resourceTypes } from '@osf/shared/constants/resource-types.const';
 
 import { OsfFileCustomMetadata } from '../../models/file-custom-metadata.model';
@@ -24,7 +24,7 @@ import { PatchFileMetadata } from '../../models/patch-file-metadata.model';
 })
 export class EditFileMetadataDialogComponent {
   readonly resourceTypes = resourceTypes;
-  readonly languages = languageCodes;
+  readonly languages = LANGUAGE_CODES;
 
   private readonly dialogRef = inject(DynamicDialogRef);
   readonly config = inject(DynamicDialogConfig);
