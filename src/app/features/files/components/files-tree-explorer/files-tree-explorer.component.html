@@ -1,4 +1,4 @@
-<osf-files-drop-zone class="flex flex-1" [enabled]="!viewOnly()" (filesDropped)="onDropFiles($event)">
+<osf-files-drop-zone class="flex flex-1" [enabled]="canUpload()" (filesDropped)="onDropFiles($event)">
   @if (isLoading() && !isLoadingMore()) {
     <div class="flex flex-1">
       <osf-loading-spinner></osf-loading-spinner>
@@ -7,14 +7,20 @@
     <div class="files-table flex">
       <p-tree
         class="tree-table w-full"
+        [draggableNodes]="canUpload()"
+        [droppableNodes]="canUpload()"
         [lazy]="true"
         [loading]="isLoadingMore()"
+        [selection]="selectedNodes()"
         [selectionMode]="selectionMode()"
         [scrollHeight]="scrollHeight()"
         [value]="nodes()"
         [virtualScroll]="true"
         [virtualScrollItemSize]="virtualScrollItemSize"
         (onLazyLoad)="onLazyLoad($event)"
+        (onNodeSelect)="onNodeSelect($event)"
+        (onNodeUnselect)="onNodeUnselect($event)"
+        (onNodeDrop)="onNodeDrop($event)"
       >
         <ng-template let-file pTemplate="default">
           <osf-files-tree-row
@@ -28,7 +34,7 @@
 
         <ng-template pTemplate="empty">
           <div class="flex align-items-center justify-content-center h-full p-4">
-            @if (viewOnly()) {
+            @if (!canUpload()) {
               <h3 class="font-normal mb-4 text-no-transform">{{ 'files.emptyState' | translate }}</h3>
             } @else {
               <div class="flex flex-column align-items-center justify-content-center">
@@ -44,15 +50,9 @@
 </osf-files-drop-zone>
 
 <ng-template #rowActions let-file let-isFolder="isFolder">
-  @if (allowedMenuActions().delete) {
-    <p-button
-      icon="fas fa-trash"
-      severity="danger"
-      text
-      rounded
-      [pTooltip]="'common.buttons.delete' | translate"
-      tooltipPosition="top"
-      (onClick)="deleteEntry(file)"
-    />
-  }
+  <osf-file-menu
+    (action)="onFileMenuAction($event, file)"
+    [isFolder]="isFolder"
+    [allowedActions]="allowedMenuActions()"
+  />
 </ng-template>

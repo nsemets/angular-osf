@@ -17,12 +17,10 @@ import { provideOSFCore } from '@testing/osf.testing.provider';
 import { DataciteServiceMock, DataciteServiceMockType } from '@testing/providers/datacite.service.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
-import {
-  FileKeywordsComponent,
-  FileMetadataComponent,
-  FileResourceMetadataComponent,
-  FileRevisionsComponent,
-} from '../../components';
+import { FileKeywordsComponent } from '../../components/file-keywords/file-keywords.component';
+import { FileMetadataComponent } from '../../components/file-metadata/file-metadata.component';
+import { FileResourceMetadataComponent } from '../../components/file-resource-metadata/file-resource-metadata.component';
+import { FileRevisionsComponent } from '../../components/file-revisions/file-revisions.component';
 import { FilesSelectors } from '../../store';
 
 import { FileDetailComponent } from './file-detail.component';

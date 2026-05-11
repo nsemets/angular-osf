@@ -10,9 +10,9 @@ import { ChangeDetectionStrategy, Component, input, output, signal } from '@angu
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FilesDropZoneComponent {
-  enabled = input<boolean>(true);
-  filesDropped = output<File[]>();
-  isDragOver = signal(false);
+  readonly enabled = input<boolean>(true);
+  readonly filesDropped = output<File[]>();
+  readonly isDragOver = signal(false);
 
   private dragDepth = 0;
 

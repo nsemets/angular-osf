@@ -1,14 +1,23 @@
-import { catchError, filter, forkJoin, Observable, of, switchMap, take } from 'rxjs';
+import { catchError, EMPTY, filter, forkJoin, map, Observable, of, switchMap, take } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 
+import { FileModel } from '@osf/shared/models/files/file.model';
+import { RenamedFileLinkModel } from '@osf/shared/models/files/renamed-file-link.model';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 
+import { ConfirmMoveFileDialogComponent } from '../components/confirm-move-file-dialog/confirm-move-file-dialog.component';
 import { CreateFolderDialogComponent } from '../components/create-folder-dialog/create-folder-dialog.component';
 import { MoveFileDialogComponent } from '../components/move-file-dialog/move-file-dialog.component';
-import { CreateFolderOptions, DeleteSelectedOptions, MoveFilesOptions } from '../models/files-actions-options.model';
+import { RenameFileDialogComponent } from '../components/rename-file-dialog/rename-file-dialog.component';
+import {
+  ConfirmMoveFilesOptions,
+  CreateFolderOptions,
+  DeleteSelectedOptions,
+  MoveFilesOptions,
+} from '../models/files-actions-options.model';
 
 @Injectable()
 export class FilesActionsService {
@@ -67,6 +76,41 @@ export class FilesActionsService {
       .onClose.pipe(
         filter((folderName: string) => !!folderName),
         switchMap((folderName) => options.createFolder(options.newFolderLink, folderName)),
+        take(1)
+      );
+  }
+
+  openConfirmMoveDialog(options: ConfirmMoveFilesOptions): Observable<boolean> {
+    const isMultiple = options.files.length > 1;
+    return this.customDialogService
+      .open(ConfirmMoveFileDialogComponent, {
+        header: isMultiple ? 'files.dialogs.moveFile.dialogTitleMultiple' : 'files.dialogs.moveFile.dialogTitle',
+        width: '552px',
+        data: {
+          destination: options.destination,
+          files: options.files,
+          resourceId: options.resourceId,
+          storageProvider: options.storageProvider,
+        },
+      })
+      .onClose.pipe(take(1));
+  }
+
+  openRenameFileDialog(file: FileModel): Observable<RenamedFileLinkModel> {
+    const link = file.links.upload;
+    if (!link) {
+      return EMPTY;
+    }
+
+    return this.customDialogService
+      .open(RenameFileDialogComponent, {
+        header: 'files.dialogs.renameFile.title',
+        width: '448px',
+        data: { currentName: file.name },
+      })
+      .onClose.pipe(
+        filter((newName: string) => !!newName?.trim()),
+        map((newName) => ({ newName, link })),
         take(1)
       );
   }

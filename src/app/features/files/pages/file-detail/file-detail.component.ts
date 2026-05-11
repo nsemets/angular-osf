@@ -52,13 +52,11 @@ import { ToastService } from '@osf/shared/services/toast.service';
 import { ViewOnlyLinkHelperService } from '@osf/shared/services/view-only-link-helper.service';
 import { MetadataTabsModel } from '@shared/models/metadata-tabs.model';
 
-import {
-  FileKeywordsComponent,
-  FileMetadataComponent,
-  FileResourceMetadataComponent,
-  FileRevisionsComponent,
-} from '../../components';
-import { FileDetailTab } from '../../enums';
+import { FileKeywordsComponent } from '../../components/file-keywords/file-keywords.component';
+import { FileMetadataComponent } from '../../components/file-metadata/file-metadata.component';
+import { FileResourceMetadataComponent } from '../../components/file-resource-metadata/file-resource-metadata.component';
+import { FileRevisionsComponent } from '../../components/file-revisions/file-revisions.component';
+import { FileDetailTab } from '../../enums/file-detail-tab.enum';
 import {
   DeleteEntry,
   FilesSelectors,

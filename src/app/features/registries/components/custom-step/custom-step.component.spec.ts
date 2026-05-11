@@ -40,7 +40,6 @@ interface SetupOverrides extends BaseSetupOverrides {
   stepsData?: Record<string, unknown>;
   filesLink?: string;
   projectId?: string;
-  provider?: string;
 }
 
 describe('CustomStepComponent', () => {
@@ -83,7 +82,6 @@ describe('CustomStepComponent', () => {
     fixture.componentRef.setInput('stepsData', overrides.stepsData ?? MOCK_STEPS_DATA);
     fixture.componentRef.setInput('filesLink', overrides.filesLink ?? 'files-link');
     fixture.componentRef.setInput('projectId', overrides.projectId ?? 'project');
-    fixture.componentRef.setInput('provider', overrides.provider ?? 'provider');
     fixture.detectChanges();
     return { component, fixture, store, routeBuilder, mockRouter, toastMock };
   }

@@ -5,7 +5,8 @@ import { HttpEvent } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
-import { MapFileCustomMetadata, MapFileRevision } from '@osf/features/files/mappers';
+import { MapFileCustomMetadata } from '@osf/features/files/mappers/file-custom-metadata.mapper';
+import { MapFileRevision } from '@osf/features/files/mappers/file-revision.mapper';
 import { OsfFileCustomMetadata } from '@osf/features/files/models/file-custom-metadata.model';
 import { OsfFileRevision } from '@osf/features/files/models/file-revisions.model';
 import { GetCustomMetadataResponse } from '@osf/features/files/models/get-custom-metadata-response.model';

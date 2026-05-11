@@ -2,33 +2,31 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 
-import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { DatePipe, NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, input, output, TemplateRef } from '@angular/core';
 
 import { StopPropagationDirective } from '@osf/shared/directives/stop-propagation.directive';
 import { FileKind } from '@osf/shared/enums/file-kind.enum';
 import { FileModel } from '@shared/models/files/file.model';
-import { FileMenuAction, FileMenuFlags } from '@shared/models/files/file-menu-action.model';
+import { FileMenuAction } from '@shared/models/files/file-menu-action.model';
 
 import { FileSizePipe } from '../../pipes/file-size.pipe';
-import { FileMenuComponent } from '../file-menu/file-menu.component';
 
 @Component({
   selector: 'osf-files-tree-row',
-  imports: [Button, DatePipe, FileSizePipe, TranslatePipe, FileMenuComponent, StopPropagationDirective],
+  imports: [Button, DatePipe, NgTemplateOutlet, FileSizePipe, TranslatePipe, StopPropagationDirective],
   templateUrl: './files-tree-row.component.html',
   styleUrl: './files-tree-row.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FilesTreeRowComponent {
-  file = input.required<FileModel>();
-  hasFoldersStack = input<boolean>(false);
-  showMenu = input<boolean>(false);
-  allowedMenuActions = input.required<FileMenuFlags>();
+  readonly file = input.required<FileModel>();
+  readonly hasFoldersStack = input<boolean>(false);
+  readonly actionsTemplate = input<TemplateRef<{ $implicit: FileModel; isFolder: boolean }> | null>(null);
 
-  openParentFolder = output<void>();
-  openEntry = output<FileModel>();
-  menuAction = output<FileMenuAction>();
+  readonly openParentFolder = output<void>();
+  readonly openEntry = output<FileModel>();
+  readonly menuAction = output<FileMenuAction>();
 
   readonly isFolder = computed(() => this.file().kind === FileKind.Folder);
 

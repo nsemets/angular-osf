@@ -3,7 +3,7 @@ import { catchError, forkJoin, of } from 'rxjs';
 import { HttpEvent, HttpEventType, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
-import { FileLinkModel } from '@osf/shared/models/files/file-link.model';
+import { FileUploadLinkModel } from '@osf/shared/models/files/file-upload-link.model';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
 import { FilesService } from '@osf/shared/services/files.service';
 
@@ -80,7 +80,7 @@ export class FilesUploadService {
     options.onComplete();
   }
 
-  private openReplaceFileDialog(conflictFiles: FileLinkModel[], onComplete: () => void): void {
+  private openReplaceFileDialog(conflictFiles: FileUploadLinkModel[], onComplete: () => void): void {
     const headerKey =
       conflictFiles.length > 1 ? 'files.dialogs.replaceFile.multiple' : 'files.dialogs.replaceFile.single';
 

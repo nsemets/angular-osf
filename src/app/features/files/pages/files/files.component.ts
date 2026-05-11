@@ -6,7 +6,7 @@ import { Button } from 'primeng/button';
 import { Select } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 
-import { debounceTime, distinctUntilChanged, finalize, map, of, tap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, map, of, switchMap, tap } from 'rxjs';
 
 import { isPlatformBrowser } from '@angular/common';
 import {
@@ -26,8 +26,8 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { FilesTreeExplorerComponent } from '@osf/features/files/components/files-tree-explorer/files-tree-explorer.component';
 import { FileUploadDialogComponent } from '@osf/shared/components/file-upload-dialog/file-upload-dialog.component';
-import { FilesTreeComponent } from '@osf/shared/components/files-tree/files-tree.component';
 import { FormSelectComponent } from '@osf/shared/components/form-select/form-select.component';
 import { GoogleFilePickerComponent } from '@osf/shared/components/google-file-picker/google-file-picker.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
@@ -41,9 +41,9 @@ import { FileMenuType } from '@osf/shared/enums/file-menu-type.enum';
 import { CurrentResourceType, ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { mapRootFoldersToStorageLabels } from '@osf/shared/helpers/storage-addon-options.helper';
 import { FilePageLinkModel } from '@osf/shared/models/files/file-page-link.model';
-import { RenamedFileLinkModel } from '@osf/shared/models/files/renamed-file-link.model';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { FilesService } from '@osf/shared/services/files.service';
+import { FilesTreeActionsService } from '@osf/shared/services/files-tree-actions.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { ViewOnlyLinkHelperService } from '@osf/shared/services/view-only-link-helper.service';
 import { CurrentResourceSelectors, GetResourceDetails } from '@osf/shared/stores/current-resource';
@@ -56,7 +56,10 @@ import { DataciteService } from '@shared/services/datacite/datacite.service';
 import { FileBrowserInfoComponent } from '../../components/file-browser-info/file-browser-info.component';
 import { FilesSelectionActionsComponent } from '../../components/files-selection-actions/files-selection-actions.component';
 import { FileProvider } from '../../constants';
+import { MoveCopyAction } from '../../enums/move-copy-action.enum';
 import { mapMenuActions } from '../../mappers/file-menu-actions.mapper';
+import { ConfirmMoveFilesOptions, DropMovePayload } from '../../models/files-actions-options.model';
+import { MenuMoveCopyPayload } from '../../models/menu-move-copy.model';
 import { FilesActionsService } from '../../services/files-actions.service';
 import { FilesUploadService } from '../../services/files-upload.service';
 import {
@@ -84,7 +87,7 @@ import {
     Select,
     FormsModule,
     ReactiveFormsModule,
-    FilesTreeComponent,
+    FilesTreeExplorerComponent,
     FormSelectComponent,
     GoogleFilePickerComponent,
     LoadingSpinnerComponent,
@@ -113,6 +116,7 @@ export class FilesComponent {
   private readonly router = inject(Router);
   private readonly dataciteService = inject(DataciteService);
   private readonly filesActionsService = inject(FilesActionsService);
+  private readonly filesTreeActionsService = inject(FilesTreeActionsService);
   private readonly filesUploadService = inject(FilesUploadService);
   private readonly toastService = inject(ToastService);
   private readonly viewOnlyService = inject(ViewOnlyLinkHelperService);
@@ -287,7 +291,7 @@ export class FilesComponent {
         }
         this.actions.setCurrentProvider(provider ?? FileProvider.OsfStorage);
         this.actions.setCurrentFolder(currentRootFolder.folder);
-        this.filesSelection = [];
+        this.clearFilesSelection();
       }
     });
 
@@ -334,6 +338,11 @@ export class FilesComponent {
     this.actions.getFiles(event.link, event.page);
   }
 
+  confirmTreeUpload(files: File | File[]): void {
+    const fileArray = Array.isArray(files) ? files : [files];
+    this.filesTreeActionsService.confirmDropFiles(fileArray, () => this.uploadFiles(files));
+  }
+
   uploadFiles(files: File | File[]): void {
     const uploadLink = this.currentFolder()?.links.upload;
     if (!uploadLink) return;
@@ -370,7 +379,7 @@ export class FilesComponent {
     this.filesSelection = this.filesSelection.filter((f) => f.id !== file.id);
   }
 
-  onClearSelection(): void {
+  clearFilesSelection(): void {
     this.filesSelection = [];
   }
 
@@ -379,18 +388,47 @@ export class FilesComponent {
       files: this.filesSelection,
       deleteEntry: (link) => this.actions.deleteEntry(link),
       onSuccess: () => {
-        this.filesSelection = [];
+        this.clearFilesSelection();
         this.updateFilesList();
       },
     });
   }
 
   onMoveSelected(): void {
-    this.moveFiles(this.filesSelection, 'move');
+    this.moveFiles(this.filesSelection, MoveCopyAction.Move);
   }
 
   onCopySelected(): void {
-    this.moveFiles(this.filesSelection, 'copy');
+    this.moveFiles(this.filesSelection, MoveCopyAction.Copy);
+  }
+
+  onMenuMoveCopy(payload: MenuMoveCopyPayload): void {
+    this.moveFiles([payload.file], payload.action);
+  }
+
+  onDropMove(payload: DropMovePayload): void {
+    const storageProvider = this.provider();
+    if (!storageProvider) {
+      return;
+    }
+
+    const options: ConfirmMoveFilesOptions = {
+      ...payload,
+      resourceId: this.resourceId(),
+      storageProvider,
+    };
+
+    this.filesActionsService
+      .openConfirmMoveDialog(options)
+      .pipe(
+        tap((result) => {
+          if (result) {
+            this.resetOnDialogClose();
+          }
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe();
   }
 
   onFileSelected(event: Event): void {
@@ -409,7 +447,7 @@ export class FilesComponent {
     this.uploadFiles(Array.from(files));
   }
 
-  moveFiles(files: FileModel[], action: 'move' | 'copy'): void {
+  moveFiles(files: FileModel[], action: MoveCopyAction): void {
     const currentFolder = this.currentFolder();
     this.actions.setMoveDialogCurrentFolder(currentFolder);
     this.isMoveDialogOpened.set(true);
@@ -426,7 +464,7 @@ export class FilesComponent {
       .pipe(
         tap((result) => {
           if (result) {
-            this.filesSelection = [];
+            this.clearFilesSelection();
           }
           this.isMoveDialogOpened.set(false);
           this.resetProvider();
@@ -445,7 +483,7 @@ export class FilesComponent {
   }
 
   resetOnDialogClose(): void {
-    this.onClearSelection();
+    this.clearFilesSelection();
     this.resetProvider();
     this.updateFilesList();
   }
@@ -503,26 +541,31 @@ export class FilesComponent {
   };
 
   setCurrentFolder(folder: FileFolderModel) {
+    this.clearFilesSelection();
     this.actions.setCurrentFolder(folder);
   }
 
-  setMoveDialogCurrentFolder(folder: FileFolderModel) {
-    this.actions.setMoveDialogCurrentFolder(folder);
-  }
-
   deleteEntry(file: FileModel): void {
-    this.actions.deleteEntry(file?.links.delete).subscribe(() => {
-      this.toastService.showSuccess('files.dialogs.deleteFile.success');
-      this.updateFilesList();
+    this.filesTreeActionsService.confirmDeleteEntry(file, () => {
+      this.actions.deleteEntry(file?.links.delete).subscribe(() => {
+        this.toastService.showSuccess('files.dialogs.deleteFile.success');
+        this.updateFilesList();
+      });
     });
   }
 
-  renameEntry(event: RenamedFileLinkModel) {
-    const { newName, link } = event;
-    this.actions.renameEntry(link, newName).subscribe(() => {
-      this.toastService.showSuccess('files.dialogs.renameFile.success');
-      this.updateFilesList();
-    });
+  onRenameFile(file: FileModel): void {
+    this.filesActionsService
+      .openRenameFileDialog(file)
+      .pipe(
+        switchMap(({ link, newName }) => this.actions.renameEntry(link, newName)),
+        tap(() => {
+          this.toastService.showSuccess('files.dialogs.renameFile.success');
+          this.updateFilesList();
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe();
   }
 
   navigateToFile(file: FileModel) {

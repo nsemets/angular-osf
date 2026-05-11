@@ -1,4 +1,6 @@
-@if (file().previousFolder) {
+@let rowFile = file();
+
+@if (rowFile.previousFolder) {
   <div class="files-table-row previous-folder">
     <p-button
       class="link-btn-no-padding w-full h-full"
@@ -9,7 +11,7 @@
     >
       <i class="fas fa-sm fa-angle-left"></i>
       <i class="fas fa-folder"></i>
-      {{ file().name }}
+      {{ rowFile.name }}
     </p-button>
   </div>
 } @else {
@@ -18,7 +20,7 @@
       <p-button
         class="link-btn-no-padding"
         link
-        [label]="file().name"
+        [label]="rowFile.name"
         [icon]="isFolder() ? 'fas fa-folder' : 'fas fa-file blue-icon'"
         (onClick)="onOpenEntry()"
         osfStopPropagation
@@ -32,22 +34,19 @@
     </div>
 
     <div class="files-table-cell">
-      {{ file().size | fileSize }}
+      {{ rowFile.size | fileSize }}
     </div>
 
     <div class="files-table-cell">
-      {{ file().dateModified | date: 'MMM d, y hh:mm a' }}
+      {{ rowFile.dateModified | date: 'MMM d, y hh:mm a' }}
     </div>
 
-    @if (showMenu()) {
-      <div class="ml-auto">
-        <osf-file-menu
-          (action)="menuAction.emit($event)"
-          [isFolder]="isFolder()"
-          [allowedActions]="allowedMenuActions()"
-          osfStopPropagation
-        >
-        </osf-file-menu>
+    @if (actionsTemplate()) {
+      <div class="ml-auto" osfStopPropagation>
+        <ng-container
+          [ngTemplateOutlet]="actionsTemplate()"
+          [ngTemplateOutletContext]="{ $implicit: rowFile, isFolder: isFolder() }"
+        />
       </div>
     }
   </div>

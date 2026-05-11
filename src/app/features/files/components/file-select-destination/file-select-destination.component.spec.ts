@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { provideOSFCore } from '@testing/osf.testing.provider';
 
-import { SelectComponent } from '../select/select.component';
+import { SelectComponent } from '../../../../shared/components/select/select.component';
 
 import { FileSelectDestinationComponent } from './file-select-destination.component';
 

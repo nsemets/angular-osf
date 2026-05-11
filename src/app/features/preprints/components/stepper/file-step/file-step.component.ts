@@ -43,7 +43,6 @@ import {
 import { FilesTreeComponent } from '@osf/shared/components/files-tree/files-tree.component';
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { ClearFileDirective } from '@osf/shared/directives/clear-file.directive';
-import { CurrentResourceType } from '@osf/shared/enums/resource-type.enum';
 import { StringOrNull } from '@osf/shared/helpers/types.helper';
 import { FileModel } from '@osf/shared/models/files/file.model';
 import { FileFolderModel } from '@osf/shared/models/files/file-folder.model';
@@ -88,7 +87,6 @@ export class FileStepComponent implements OnInit {
   });
 
   readonly PreprintFileSource = PreprintFileSource;
-  readonly resourceType = CurrentResourceType.Preprints;
 
   provider = input.required<PreprintProviderDetails>();
   showDeleteButton = input(false);

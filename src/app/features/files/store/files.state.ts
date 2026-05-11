@@ -8,7 +8,7 @@ import { SupportedFeature } from '@osf/shared/enums/addon-supported-features.enu
 import { handleSectionError } from '@osf/shared/helpers/state-error.handler';
 import { FilesService } from '@osf/shared/services/files.service';
 
-import { MapResourceMetadata } from '../mappers';
+import { MapResourceMetadata } from '../mappers/resource-metadata.mapper';
 
 import {
   CreateFolder,

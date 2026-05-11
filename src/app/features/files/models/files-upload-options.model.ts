@@ -1,4 +1,4 @@
-import { FileLinkModel } from '@osf/shared/models/files/file-link.model';
+import { FileUploadLinkModel } from '@osf/shared/models/files/file-upload-link.model';
 
 export interface UploadFilesOptions {
   files: File | File[];
@@ -12,5 +12,5 @@ export interface UploadFilesOptions {
 export interface UploadState {
   completedUploads: number;
   totalFiles: number;
-  conflictFiles: FileLinkModel[];
+  conflictFiles: FileUploadLinkModel[];
 }
