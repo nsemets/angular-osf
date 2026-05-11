@@ -126,4 +126,26 @@ describe('FileKeywordsComponent', () => {
 
     expect(store.dispatch).not.toHaveBeenCalled();
   });
+
+  it('should not dispatch update when cannot edit tags', () => {
+    setup({
+      selectorOverrides: [{ selector: FilesSelectors.hasWriteAccess, value: false }],
+    });
+    (store.dispatch as Mock).mockClear();
+
+    component.deleteTag('tag1');
+
+    expect(store.dispatch).not.toHaveBeenCalled();
+  });
+
+  it('should not dispatch update when file guid is missing', () => {
+    setup({
+      selectorOverrides: [{ selector: FilesSelectors.getOpenedFile, value: null }],
+    });
+    (store.dispatch as Mock).mockClear();
+
+    component.deleteTag('tag1');
+
+    expect(store.dispatch).not.toHaveBeenCalled();
+  });
 });

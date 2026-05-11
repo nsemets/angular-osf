@@ -218,6 +218,29 @@ describe('CustomStepComponent', () => {
     expect(emitSpy).toHaveBeenCalled();
   });
 
+  it('should open file preview in new tab when draftId and file guid exist', () => {
+    const { component, mockRouter } = setup({ routeParams: { step: '1', id: 'draft-1' } });
+    const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
+    const urlTree = {} as ReturnType<typeof mockRouter.createUrlTree>;
+    (mockRouter.createUrlTree as Mock).mockReturnValue(urlTree);
+    (mockRouter.serializeUrl as Mock).mockReturnValue('/draft-1/files/file-guid/preview');
+
+    component.onOpenFile({ guid: 'file-guid' } as FileModel);
+
+    expect(mockRouter.createUrlTree).toHaveBeenCalledWith(['draft-1', 'files', 'file-guid', 'preview']);
+    expect(mockRouter.serializeUrl).toHaveBeenCalledWith(urlTree);
+    expect(openSpy).toHaveBeenCalledWith('/draft-1/files/file-guid/preview', '_blank');
+  });
+
+  it('should not open file preview when file guid is missing', () => {
+    const { component } = setup({ routeParams: { step: '1', id: 'draft-1' } });
+    const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
+
+    component.onOpenFile({ guid: null } as FileModel);
+
+    expect(openSpy).not.toHaveBeenCalled();
+  });
+
   it('should skip non-existent questionKey', () => {
     const { component } = setup();
     const emitSpy = vi.spyOn(component.updateAction, 'emit');

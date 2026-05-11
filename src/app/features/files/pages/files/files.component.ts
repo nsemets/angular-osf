@@ -26,7 +26,6 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { FilesTreeExplorerComponent } from '@osf/features/files/components/files-tree-explorer/files-tree-explorer.component';
 import { FileUploadDialogComponent } from '@osf/shared/components/file-upload-dialog/file-upload-dialog.component';
 import { FormSelectComponent } from '@osf/shared/components/form-select/form-select.component';
 import { GoogleFilePickerComponent } from '@osf/shared/components/google-file-picker/google-file-picker.component';
@@ -55,6 +54,7 @@ import { DataciteService } from '@shared/services/datacite/datacite.service';
 
 import { FileBrowserInfoComponent } from '../../components/file-browser-info/file-browser-info.component';
 import { FilesSelectionActionsComponent } from '../../components/files-selection-actions/files-selection-actions.component';
+import { FilesTreeExplorerComponent } from '../../components/files-tree-explorer/files-tree-explorer.component';
 import { FileProvider } from '../../constants';
 import { MoveCopyAction } from '../../enums/move-copy-action.enum';
 import { mapMenuActions } from '../../mappers/file-menu-actions.mapper';

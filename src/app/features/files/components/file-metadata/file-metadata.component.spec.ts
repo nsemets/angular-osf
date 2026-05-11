@@ -2,6 +2,8 @@ import { Store } from '@ngxs/store';
 
 import { MockProvider } from 'ng-mocks';
 
+import { Subject } from 'rxjs';
+
 import { Mock } from 'vitest';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -38,10 +40,11 @@ describe('FileMetadataComponent', () => {
 
   interface SetupOverrides extends BaseSetupOverrides {
     url?: string;
+    dialogServiceMock?: CustomDialogServiceMockType;
   }
 
   function setup(options: SetupOverrides = {}) {
-    customDialogService = CustomDialogServiceMock.simple();
+    customDialogService = options.dialogServiceMock ?? CustomDialogServiceMock.simple();
     const defaultSignals = [
       { selector: FilesSelectors.getFileCustomMetadata, value: mockFileMetadata },
       { selector: FilesSelectors.isFileMetadataLoading, value: false },
@@ -126,5 +129,69 @@ describe('FileMetadataComponent', () => {
   it('should set hasViewOnly from url', () => {
     setup({ url: '/test?view_only=abc' });
     expect(component.hasViewOnly).toBe(true);
+  });
+
+  it('should open metadata url when file guid exists', () => {
+    setup({ routeParams: { fileGuid: 'guid-123' } });
+    const focus = vi.fn();
+    const openSpy = vi.spyOn(window, 'open').mockReturnValue({ focus } as unknown as Window);
+
+    component.downloadFileMetadata();
+
+    expect(openSpy).toHaveBeenCalledWith(expect.stringMatching(/\/metadata\/guid-123$/));
+    expect(focus).toHaveBeenCalled();
+  });
+
+  it('should not open metadata url when file guid is missing', () => {
+    setup({ routeParams: {} });
+    const openSpy = vi.spyOn(window, 'open').mockReturnValue(null);
+
+    component.downloadFileMetadata();
+
+    expect(openSpy).not.toHaveBeenCalled();
+  });
+
+  it('should call setFileMetadata when edit dialog closes with metadata', () => {
+    const metadataChange$ = new Subject<PatchFileMetadata>();
+    customDialogService = CustomDialogServiceMock.create()
+      .withOpen(
+        vi.fn().mockReturnValue({
+          onClose: metadataChange$,
+          close: vi.fn(),
+        })
+      )
+      .build();
+    setup({ dialogServiceMock: customDialogService });
+    const setFileMetadataSpy = vi.spyOn(component, 'setFileMetadata');
+    const formValues: PatchFileMetadata = {
+      title: 'Edited',
+      description: 'Edited desc',
+      resource_type_general: 'Dataset',
+      language: 'en',
+    };
+
+    component.openEditFileMetadataDialog();
+    metadataChange$.next(formValues);
+
+    expect(setFileMetadataSpy).toHaveBeenCalledWith(formValues);
+  });
+
+  it('should not call setFileMetadata when edit dialog closes with empty value', () => {
+    const metadataChange$ = new Subject<PatchFileMetadata | null>();
+    customDialogService = CustomDialogServiceMock.create()
+      .withOpen(
+        vi.fn().mockReturnValue({
+          onClose: metadataChange$,
+          close: vi.fn(),
+        })
+      )
+      .build();
+    setup({ dialogServiceMock: customDialogService });
+    const setFileMetadataSpy = vi.spyOn(component, 'setFileMetadata');
+
+    component.openEditFileMetadataDialog();
+    metadataChange$.next(null);
+
+    expect(setFileMetadataSpy).not.toHaveBeenCalled();
   });
 });

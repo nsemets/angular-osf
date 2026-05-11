@@ -77,7 +77,6 @@ export class FileSelectDestinationComponent implements OnInit {
   });
 
   initialSetup = true;
-  private storageRequestId = 0;
   currentRootFolder = model<FileLabelModel | null>(null);
 
   readonly selectedProject = computed(() => this.options().find((c) => c.value === this.projectId()) || null);
@@ -131,7 +130,6 @@ export class FileSelectDestinationComponent implements OnInit {
   }
 
   private getStorageAddons(projectId: string) {
-    const requestId = ++this.storageRequestId;
     forkJoin({
       rootFolders: this.actions.getRootFolders(projectId, ResourceType.Project),
       addons: this.actions.getConfiguredStorageAddons(projectId),
@@ -150,10 +148,6 @@ export class FileSelectDestinationComponent implements OnInit {
         })
       )
       .subscribe(() => {
-        if (requestId !== this.storageRequestId) {
-          return;
-        }
-
         const storages = this.storageAddons();
         const currentStorage = storages.find((s) => s.folder.provider === this.storageProvider()) || storages[0];
 
