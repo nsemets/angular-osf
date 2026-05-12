@@ -4,7 +4,6 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { Select } from 'primeng/select';
-import { TableModule } from 'primeng/table';
 
 import { debounceTime, distinctUntilChanged, finalize, map, of, switchMap, tap } from 'rxjs';
 
@@ -15,7 +14,6 @@ import {
   computed,
   DestroyRef,
   effect,
-  HostBinding,
   inject,
   model,
   PLATFORM_ID,
@@ -83,7 +81,6 @@ import {
   selector: 'osf-files',
   imports: [
     Button,
-    TableModule,
     Select,
     FormsModule,
     ReactiveFormsModule,
@@ -104,10 +101,6 @@ import {
   providers: [FilesActionsService, FilesUploadService],
 })
 export class FilesComponent {
-  googleFilePickerComponent = viewChild(GoogleFilePickerComponent);
-
-  @HostBinding('class') classes = 'flex flex-column flex-1 w-full h-full';
-
   private readonly filesService = inject(FilesService);
   private readonly activeRoute = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
@@ -121,6 +114,8 @@ export class FilesComponent {
   private readonly toastService = inject(ToastService);
   private readonly viewOnlyService = inject(ViewOnlyLinkHelperService);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+
+  googleFilePickerComponent = viewChild(GoogleFilePickerComponent);
 
   private readonly actions = createDispatchMap({
     createFolder: CreateFolder,
@@ -574,11 +569,14 @@ export class FilesComponent {
       return;
     }
 
-    this.filesService.getFileGuid(file.id).subscribe((file) => {
-      if (file.guid) {
-        this.openFile(file.guid);
-      }
-    });
+    this.filesService
+      .getFileGuid(file.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((file) => {
+        if (file.guid) {
+          this.openFile(file.guid);
+        }
+      });
   }
 
   handleRootFolderChange(selectedFolder: FileLabelModel) {

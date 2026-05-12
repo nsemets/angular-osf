@@ -8,6 +8,10 @@ import { TestBed } from '@angular/core/testing';
 import { ToastService } from '@osf/shared/services/toast.service';
 
 import { FileModelMock } from '@testing/mocks/file.model.mock';
+import {
+  SocialShareServiceMockBuilder,
+  SocialShareServiceMockType,
+} from '@testing/providers/social-share-provider.mock';
 import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
 
 import { embedDynamicJs, embedStaticHtml } from '../constants/file-embed.constants';
@@ -19,17 +23,17 @@ describe('FilesShareEmbedService', () => {
   let service: FilesShareEmbedService;
   let clipboardMock: Pick<Clipboard, 'copy'>;
   let copyMock: Mock<(text: string) => boolean>;
-  let socialShareServiceMock: Pick<SocialShareService, 'getEmailLink' | 'getXLink' | 'getFacebookLink'>;
+  let socialShareServiceMock: SocialShareServiceMockType;
   let toastService: ToastServiceMockType;
 
   function setup() {
     copyMock = vi.fn((_: string) => true);
     clipboardMock = { copy: copyMock };
-    socialShareServiceMock = {
-      getEmailLink: vi.fn((_: string, __: string) => 'mailto:test'),
-      getXLink: vi.fn((_: string, __: string) => 'https://x.test'),
-      getFacebookLink: vi.fn((_: string) => 'https://facebook.test'),
-    };
+    socialShareServiceMock = SocialShareServiceMockBuilder.create()
+      .withGetEmailLink(vi.fn((_: string, __: string) => 'mailto:test'))
+      .withGetXLink(vi.fn((_: string, __: string) => 'https://x.test'))
+      .withGetFacebookLink(vi.fn((_: string) => 'https://facebook.test'))
+      .build();
     toastService = ToastServiceMock.simple();
 
     TestBed.configureTestingModule({

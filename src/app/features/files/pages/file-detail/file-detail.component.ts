@@ -258,7 +258,7 @@ export class FileDetailComponent implements OnDestroy {
   downloadFile(): void {
     const link = this.file()?.links.download;
 
-    if (link) {
+    if (!link) {
       return;
     }
 
@@ -333,15 +333,11 @@ export class FileDetailComponent implements OnDestroy {
     }
 
     this.selectedMetadataTab.set(tab.id as MetadataResourceEnum);
-    if (tab.type === 'cedar') {
-      this.selectedCedarRecord.set(null);
-      this.selectedCedarTemplate.set(null);
-      if (tab.id) {
-        this.loadCedarRecord(tab.id);
-      }
-    } else {
-      this.selectedCedarRecord.set(null);
-      this.selectedCedarTemplate.set(null);
+    this.selectedCedarRecord.set(null);
+    this.selectedCedarTemplate.set(null);
+
+    if (tab.type === MetadataResourceEnum.CEDAR && tab.id) {
+      this.loadCedarRecord(tab.id);
     }
   }
 

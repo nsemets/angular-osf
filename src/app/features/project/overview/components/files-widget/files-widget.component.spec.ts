@@ -7,7 +7,7 @@ import { of } from 'rxjs';
 import { Mock } from 'vitest';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { Router, UrlTree } from '@angular/router';
 
 import { FileProvider } from '@osf/features/files/constants';
 import {
@@ -72,9 +72,11 @@ describe('FilesWidgetComponent', () => {
   ];
 
   function setup(overrides: SetupOverrides = {}) {
-    routerMock = RouterMockBuilder.create().withUrl('/abc?view_only=token').build();
-    (routerMock.createUrlTree as Mock).mockReturnValue({} as never);
-    (routerMock.serializeUrl as Mock).mockReturnValue('/serialized');
+    routerMock = RouterMockBuilder.create()
+      .withUrl('/abc?view_only=token')
+      .withCreateUrlTree(vi.fn().mockReturnValue({} as UrlTree))
+      .withSerializeUrl(vi.fn().mockReturnValue('/serialized'))
+      .build();
     filesService = FilesServiceMock.simple();
     viewOnlyHelper = ViewOnlyLinkHelperMock.simple(overrides.hasViewOnly ?? false);
     viewOnlyHelper.getViewOnlyParamFromUrl.mockReturnValue('token');

@@ -1,8 +1,12 @@
+import { MockComponent } from 'ng-mocks';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { FileKind } from '@osf/shared/enums/file-kind.enum';
 import { FileModel } from '@osf/shared/models/files/file.model';
 
+import { FileModelMock } from '@testing/mocks/file.model.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 
 import { MoveFileRowComponent } from './move-file-row.component';
@@ -11,37 +15,18 @@ describe('MoveFileRowComponent', () => {
   let component: MoveFileRowComponent;
   let fixture: ComponentFixture<MoveFileRowComponent>;
 
-  const createFile = (kind: FileKind, name: string): FileModel => ({
-    id: `${kind}-id`,
-    guid: null,
-    name,
-    kind,
-    path: `/${name}`,
-    size: 1,
-    materializedPath: `/${name}`,
-    dateModified: '2026-01-01',
-    extra: {
-      hashes: { md5: 'md5', sha256: 'sha256' },
-      downloads: 0,
-    },
-    links: {
-      info: '/info',
-      move: '/move',
-      upload: '/upload',
-      delete: '/delete',
-      download: '/download',
-      render: '/render',
-      html: '/html',
-      self: '/self',
-    },
-    filesLink: null,
-    previousFolder: false,
-    provider: 'osfstorage',
-  });
+  const createFile = (kind: FileKind, name: string): FileModel =>
+    FileModelMock.simple({
+      id: `${kind}-id`,
+      name,
+      kind,
+      path: `/${name}`,
+      materializedPath: `/${name}`,
+    });
 
-  const setup = (item: FileModel, isBlocked = false, isIndented = false) => {
+  function setup(item: FileModel, isBlocked = false, isIndented = false) {
     TestBed.configureTestingModule({
-      imports: [MoveFileRowComponent],
+      imports: [MoveFileRowComponent, MockComponent(IconComponent)],
       providers: [provideOSFCore()],
     });
 
@@ -51,14 +36,14 @@ describe('MoveFileRowComponent', () => {
     fixture.componentRef.setInput('isBlocked', isBlocked);
     fixture.componentRef.setInput('isIndented', isIndented);
     fixture.detectChanges();
-  };
+  }
 
   it('should render file row as disabled', () => {
     setup(createFile(FileKind.File, 'paper.pdf'));
 
     expect(component.isFile()).toBe(true);
     expect(fixture.nativeElement.textContent).toContain('paper.pdf');
-    expect(fixture.nativeElement.querySelector('.fa-file')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('.filename-link.disabled')?.textContent?.trim()).toBe('paper.pdf');
     expect(fixture.nativeElement.querySelector('button')).toBeNull();
   });
 
@@ -67,7 +52,8 @@ describe('MoveFileRowComponent', () => {
 
     expect(component.isFile()).toBe(false);
     expect(fixture.nativeElement.textContent).toContain('docs');
-    expect(fixture.nativeElement.querySelector('.fa-folder')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('.filename-link.disabled')).toBeNull();
+    expect(fixture.nativeElement.querySelector('p-button')).toBeNull();
     expect(fixture.nativeElement.querySelector('button')).toBeNull();
   });
 

@@ -18,7 +18,8 @@
   <div class="files-table-row" tabindex="0">
     <div class="table-cell flex align-items-center" [class.pl-6]="hasFoldersStack()">
       <p-button
-        class="link-btn-no-padding"
+        class="link-btn-no-padding file-link-btn"
+        styleClass="max-w-full"
         link
         [label]="rowFile.name"
         [icon]="isFolder() ? 'fas fa-folder' : 'fas fa-file blue-icon'"

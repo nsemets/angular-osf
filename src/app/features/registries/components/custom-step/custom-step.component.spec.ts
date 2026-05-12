@@ -6,7 +6,7 @@ import { Mock } from 'vitest';
 
 import { TestBed } from '@angular/core/testing';
 import { FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlTree } from '@angular/router';
 
 import { InfoIconComponent } from '@osf/shared/components/info-icon/info-icon.component';
 import { FieldType } from '@osf/shared/enums/field-type.enum';
@@ -40,6 +40,8 @@ interface SetupOverrides extends BaseSetupOverrides {
   stepsData?: Record<string, unknown>;
   filesLink?: string;
   projectId?: string;
+  serializedUrl?: string;
+  urlTree?: UrlTree;
 }
 
 describe('CustomStepComponent', () => {
@@ -56,7 +58,11 @@ describe('CustomStepComponent', () => {
       routeBuilder.withNoParent();
     }
 
-    const mockRouter = RouterMockBuilder.create().withUrl('/registries/drafts/id/1').build();
+    const mockRouter = RouterMockBuilder.create()
+      .withUrl('/registries/drafts/id/1')
+      .withCreateUrlTree(vi.fn().mockReturnValue(overrides.urlTree ?? ({} as UrlTree)))
+      .withSerializeUrl(vi.fn().mockReturnValue(overrides.serializedUrl ?? '/'))
+      .build();
     const toastMock = ToastServiceMock.simple();
 
     const defaultSignals: SignalOverride[] = [
@@ -219,11 +225,13 @@ describe('CustomStepComponent', () => {
   });
 
   it('should open file preview in new tab when draftId and file guid exist', () => {
-    const { component, mockRouter } = setup({ routeParams: { step: '1', id: 'draft-1' } });
+    const urlTree = {} as UrlTree;
+    const { component, mockRouter } = setup({
+      routeParams: { step: '1', id: 'draft-1' },
+      urlTree,
+      serializedUrl: '/draft-1/files/file-guid/preview',
+    });
     const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
-    const urlTree = {} as ReturnType<typeof mockRouter.createUrlTree>;
-    (mockRouter.createUrlTree as Mock).mockReturnValue(urlTree);
-    (mockRouter.serializeUrl as Mock).mockReturnValue('/draft-1/files/file-guid/preview');
 
     component.onOpenFile({ guid: 'file-guid' } as FileModel);
 

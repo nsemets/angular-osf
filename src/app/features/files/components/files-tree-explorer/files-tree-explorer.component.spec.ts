@@ -1,7 +1,5 @@
 import { MockComponents, MockProvider } from 'ng-mocks';
 
-import { Mock } from 'vitest';
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
@@ -24,6 +22,10 @@ import { FileModelMock } from '@testing/mocks/file.model.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { DataciteServiceMock, DataciteServiceMockType } from '@testing/providers/datacite.service.mock';
 import { FilesServiceMock, FilesServiceMockType } from '@testing/providers/files-service.mock';
+import {
+  FilesShareEmbedServiceMock,
+  FilesShareEmbedServiceMockType,
+} from '@testing/providers/files-share-embed-provider.mock';
 import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
 import { ViewOnlyLinkHelperMock, ViewOnlyLinkHelperMockType } from '@testing/providers/view-only-link-helper.mock';
 
@@ -37,10 +39,7 @@ describe('FilesTreeExplorerComponent', () => {
   let routerMock: RouterMockType;
   let filesService: FilesServiceMockType;
   let dataciteService: DataciteServiceMockType;
-  let filesShareEmbedService: Pick<FilesShareEmbedService, 'getShareLink' | 'copyEmbedToClipboard'> & {
-    getShareLink: Mock;
-    copyEmbedToClipboard: Mock;
-  };
+  let filesShareEmbedService: FilesShareEmbedServiceMockType;
   let viewOnlyHelper: ViewOnlyLinkHelperMockType;
 
   const currentFolder: FileFolderModel = {
@@ -66,10 +65,7 @@ describe('FilesTreeExplorerComponent', () => {
     filesService = FilesServiceMock.simple();
     dataciteService = DataciteServiceMock.simple();
     viewOnlyHelper = ViewOnlyLinkHelperMock.simple(false);
-    filesShareEmbedService = {
-      getShareLink: vi.fn(),
-      copyEmbedToClipboard: vi.fn(),
-    };
+    filesShareEmbedService = FilesShareEmbedServiceMock.simple();
 
     TestBed.configureTestingModule({
       imports: [

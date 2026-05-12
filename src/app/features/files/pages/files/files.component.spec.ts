@@ -7,7 +7,7 @@ import { of } from 'rxjs';
 import { Mock } from 'vitest';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlTree } from '@angular/router';
 
 import { FileUploadDialogComponent } from '@osf/shared/components/file-upload-dialog/file-upload-dialog.component';
 import { FormSelectComponent } from '@osf/shared/components/form-select/form-select.component';
@@ -17,6 +17,7 @@ import { SearchInputComponent } from '@osf/shared/components/search-input/search
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { ViewOnlyLinkMessageComponent } from '@osf/shared/components/view-only-link-message/view-only-link-message.component';
 import { SupportedFeature } from '@osf/shared/enums/addon-supported-features.enum';
+import { FileKind } from '@osf/shared/enums/file-kind.enum';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { CurrentResource } from '@osf/shared/models/current-resource.model';
 import { FileFolderModel } from '@osf/shared/models/files/file-folder.model';
@@ -47,6 +48,7 @@ import {
 import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
 import { ViewOnlyLinkHelperMock, ViewOnlyLinkHelperMockType } from '@testing/providers/view-only-link-helper.mock';
 
+import { FileBrowserInfoComponent } from '../../components/file-browser-info/file-browser-info.component';
 import { FilesSelectionActionsComponent } from '../../components/files-selection-actions/files-selection-actions.component';
 import { FilesTreeExplorerComponent } from '../../components/files-tree-explorer/files-tree-explorer.component';
 import { FileProvider } from '../../constants/file-provider.constants';
@@ -57,7 +59,11 @@ import {
   DeleteEntry,
   FilesSelectors,
   GetConfiguredStorageAddons,
+  GetFiles,
   GetRootFolders,
+  RenameEntry,
+  SetCurrentProvider,
+  SetFilesCurrentFolder,
   SetMoveDialogCurrentFolder,
 } from '../../store';
 
@@ -101,13 +107,15 @@ describe('FilesComponent', () => {
     links: { ...OSF_FILE_MOCK.links, filesLink: '/files-link', upload: '/upload-link', newFolder: '/new-folder' },
   };
 
-  const currentResource: CurrentResource = { id: 'node-1', type: 'nodes' } as CurrentResource;
+  const currentResource = { id: 'node-1', type: 'nodes' } as CurrentResource;
   const rootFolderOption: FileLabelModel = { label: 'OSF Storage', folder: currentFolder };
 
   function setup(overrides: SetupOverrides = {}) {
-    routerMock = RouterMockBuilder.create().withUrl('/node-1/files/osfstorage').build();
-    (routerMock.createUrlTree as Mock).mockReturnValue({} as never);
-    (routerMock.serializeUrl as Mock).mockReturnValue('/serialized');
+    routerMock = RouterMockBuilder.create()
+      .withUrl('/node-1/files/osfstorage')
+      .withCreateUrlTree(vi.fn().mockReturnValue({} as UrlTree))
+      .withSerializeUrl(vi.fn().mockReturnValue('/serialized'))
+      .build();
 
     filesService = FilesServiceMock.simple();
     toastService = ToastServiceMock.simple();
@@ -284,5 +292,287 @@ describe('FilesComponent', () => {
     expect(routerMock.navigate).toHaveBeenCalledWith(['/node-1/files', FileProvider.OsfStorage], {
       queryParamsHandling: 'preserve',
     });
+  });
+
+  it('should dispatch get files when loading a page', () => {
+    setup();
+    (store.dispatch as Mock).mockClear();
+
+    component.onLoadFiles({ link: '/page-link', page: 3 });
+
+    expect(store.dispatch).toHaveBeenCalledWith(new GetFiles('/page-link', 3));
+  });
+
+  it('should refresh files list from current folder link', () => {
+    setup();
+    (store.dispatch as Mock).mockClear();
+
+    component.updateFilesList();
+
+    expect(store.dispatch).toHaveBeenCalledWith(new GetFiles('/files-link', 1));
+  });
+
+  it('should delegate upload to upload service when upload link exists', () => {
+    setup();
+    const small = new File(['a'], 'a.txt');
+
+    component.uploadFiles(small);
+
+    expect(filesUploadService.uploadFiles).toHaveBeenCalledWith(
+      expect.objectContaining({
+        files: small,
+        uploadLink: '/upload-link',
+        allowRevisions: true,
+      })
+    );
+  });
+
+  it('should skip upload service when upload link is missing', () => {
+    const folderWithoutUpload = { ...currentFolder, links: { ...currentFolder.links, upload: '' } };
+    setup({
+      selectorOverrides: [{ selector: FilesSelectors.getCurrentFolder, value: folderWithoutUpload }],
+    });
+
+    component.uploadFiles(new File(['a'], 'a.txt'));
+
+    expect(filesUploadService.uploadFiles).not.toHaveBeenCalled();
+  });
+
+  it('should start upload for valid file input selection', () => {
+    setup();
+    const small = new File(['a'], 'a.txt');
+    const input = document.createElement('input');
+    Object.defineProperty(input, 'files', { value: [small] });
+
+    component.onFileSelected({ target: input } as unknown as Event);
+
+    expect(filesUploadService.uploadFiles).toHaveBeenCalled();
+  });
+
+  it('should add and remove tree selection entries', () => {
+    setup();
+    const first = FileModelMock.simple({ id: 'a' });
+    const second = FileModelMock.simple({ id: 'b' });
+
+    component.onFileTreeSelected(first);
+    component.onFileTreeSelected(first);
+    component.onFileTreeSelected(second);
+
+    expect(component.filesSelection).toEqual([first, second]);
+
+    component.onFileTreeUnselected(first);
+
+    expect(component.filesSelection).toEqual([second]);
+
+    component.clearFilesSelection();
+
+    expect(component.filesSelection).toEqual([]);
+  });
+
+  it('should delete selected files through actions service', () => {
+    setup();
+    const file = FileModelMock.simple({ id: 'sel-1' });
+    component.filesSelection = [file];
+
+    component.onDeleteSelected();
+
+    expect(filesActionsService.deleteSelected).toHaveBeenCalledWith(
+      expect.objectContaining({
+        files: [file],
+        deleteEntry: expect.any(Function),
+        onSuccess: expect.any(Function),
+      })
+    );
+  });
+
+  it('should open move dialog for move selection action', () => {
+    setup();
+    const file = FileModelMock.simple({ id: 'm1' });
+    component.filesSelection = [file];
+    (store.dispatch as Mock).mockClear();
+
+    component.onMoveSelected();
+
+    expect(filesActionsService.openMoveDialog).toHaveBeenCalledWith(
+      expect.objectContaining({ files: [file], action: MoveCopyAction.Move })
+    );
+  });
+
+  it('should open move dialog for copy selection action', () => {
+    setup();
+    const file = FileModelMock.simple({ id: 'c1' });
+    component.filesSelection = [file];
+    (store.dispatch as Mock).mockClear();
+
+    component.onCopySelected();
+
+    expect(filesActionsService.openMoveDialog).toHaveBeenCalledWith(
+      expect.objectContaining({ files: [file], action: MoveCopyAction.Copy })
+    );
+  });
+
+  it('should open move dialog from menu move copy payload', () => {
+    setup();
+    const file = FileModelMock.simple({ id: 'menu-1' });
+
+    component.onMenuMoveCopy({ file, action: MoveCopyAction.Copy });
+
+    expect(filesActionsService.openMoveDialog).toHaveBeenCalledWith(
+      expect.objectContaining({ files: [file], action: MoveCopyAction.Copy })
+    );
+  });
+
+  it('should open confirm move dialog when provider is set', () => {
+    setup();
+    const file = FileModelMock.simple({ id: 'f1' });
+    const destination = FileModelMock.simple({ id: 'dest', kind: FileKind.Folder });
+    (store.dispatch as Mock).mockClear();
+
+    component.onDropMove({ files: [file], destination });
+
+    expect(filesActionsService.openConfirmMoveDialog).toHaveBeenCalledWith(
+      expect.objectContaining({
+        files: [file],
+        destination,
+        resourceId: 'node-1',
+        storageProvider: FileProvider.OsfStorage,
+      })
+    );
+  });
+
+  it('should skip confirm move dialog when provider is missing', () => {
+    setup({
+      selectorOverrides: [{ selector: FilesSelectors.getProvider, value: null }],
+    });
+    const file = FileModelMock.simple({ id: 'f1' });
+    const destination = FileModelMock.simple({ id: 'dest', kind: FileKind.Folder });
+
+    component.onDropMove({ files: [file], destination });
+
+    expect(filesActionsService.openConfirmMoveDialog).not.toHaveBeenCalled();
+  });
+
+  it('should open create folder dialog and toast on success', () => {
+    setup();
+    (store.dispatch as Mock).mockClear();
+
+    component.createFolder();
+
+    expect(filesActionsService.openCreateFolderDialog).toHaveBeenCalledWith(
+      expect.objectContaining({
+        newFolderLink: '/new-folder',
+        createFolder: expect.any(Function),
+      })
+    );
+    expect(toastService.showSuccess).toHaveBeenCalledWith('files.dialogs.createFolder.success');
+    expect(store.dispatch).toHaveBeenCalledWith(new GetFiles('/files-link', 1));
+  });
+
+  it('should log download and open folder zip link', () => {
+    setup();
+    (store.dispatch as Mock).mockClear();
+    const openSpy = vi.spyOn(window, 'open').mockReturnValue({ focus: vi.fn() } as unknown as Window);
+
+    component.downloadFolder();
+
+    expect(dataciteService.logFileDownload).toHaveBeenCalledWith('node-1', 'nodes');
+    expect(filesService.getFolderDownloadLink).toHaveBeenCalledWith('/v2/files/file-123/download/');
+    expect(openSpy).toHaveBeenCalledWith('/v2/files/file-123/download/?zip=', '_blank');
+    openSpy.mockRestore();
+  });
+
+  it('should skip download when resource id is missing', () => {
+    setup({ resourceId: '' });
+    const openSpy = vi.spyOn(window, 'open');
+
+    component.downloadFolder();
+
+    expect(dataciteService.logFileDownload).not.toHaveBeenCalled();
+    expect(openSpy).not.toHaveBeenCalled();
+    openSpy.mockRestore();
+  });
+
+  it('should open files browser info dialog', () => {
+    setup();
+
+    component.showInfoDialog();
+
+    expect(customDialogService.open).toHaveBeenCalledWith(
+      FileBrowserInfoComponent,
+      expect.objectContaining({
+        header: 'files.filesBrowserDialog.title',
+        width: '850px',
+        data: ResourceType.Project,
+      })
+    );
+  });
+
+  it('should set current folder and clear selection', () => {
+    setup();
+    const file = FileModelMock.simple({ id: 'keep' });
+    component.filesSelection = [file];
+    (store.dispatch as Mock).mockClear();
+    const nextFolder: FileFolderModel = { ...currentFolder, id: 'nested', path: '/nested' };
+
+    component.setCurrentFolder(nextFolder);
+
+    expect(component.filesSelection).toEqual([]);
+    expect(store.dispatch).toHaveBeenCalledWith(new SetFilesCurrentFolder(nextFolder));
+  });
+
+  it('should dispatch rename and toast on rename success', () => {
+    setup();
+    (store.dispatch as Mock).mockClear();
+
+    component.onRenameFile(FileModelMock.simple({ id: 'r1' }));
+
+    expect(store.dispatch).toHaveBeenCalledWith(new RenameEntry('/rename', 'new-name'));
+    expect(toastService.showSuccess).toHaveBeenCalledWith('files.dialogs.renameFile.success');
+  });
+
+  it('should open file detail when file has guid', () => {
+    setup();
+    const openSpy = vi.spyOn(window, 'open').mockReturnValue(null);
+    const file = FileModelMock.simple({ id: 'x', guid: 'guid-99' });
+
+    component.navigateToFile(file);
+
+    expect(openSpy).toHaveBeenCalledWith('/serialized', '_blank');
+    expect(filesService.getFileGuid).not.toHaveBeenCalled();
+    openSpy.mockRestore();
+  });
+
+  it('should resolve guid then open when file guid is missing', () => {
+    setup();
+    const openSpy = vi.spyOn(window, 'open').mockReturnValue(null);
+    const resolved = FileModelMock.simple({ id: 'y', guid: 'resolved-guid' });
+    filesService.getFileGuid.mockReturnValue(of(resolved));
+    const file = FileModelMock.simple({ id: 'y', guid: undefined });
+
+    component.navigateToFile(file);
+
+    expect(filesService.getFileGuid).toHaveBeenCalledWith('y');
+    expect(openSpy).toHaveBeenCalledWith('/serialized', '_blank');
+    openSpy.mockRestore();
+  });
+
+  it('should dispatch current provider on resetProvider', () => {
+    setup();
+    (store.dispatch as Mock).mockClear();
+
+    component.resetProvider();
+
+    expect(store.dispatch).toHaveBeenCalledWith(new SetCurrentProvider(FileProvider.OsfStorage));
+  });
+
+  it('should clear selection and refresh files on reset after dialog', () => {
+    setup();
+    component.filesSelection = [FileModelMock.simple({ id: 'z1' })];
+    (store.dispatch as Mock).mockClear();
+
+    component.resetOnDialogClose();
+
+    expect(component.filesSelection).toEqual([]);
+    expect(store.dispatch).toHaveBeenCalledWith(new GetFiles('/files-link', 1));
   });
 });
