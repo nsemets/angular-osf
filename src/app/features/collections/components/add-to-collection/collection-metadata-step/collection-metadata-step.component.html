@@ -11,17 +11,6 @@
 
         @if (!isDisabled() && stepperActiveValue() !== targetStepValue()) {
           @if (collectionMetadataSaved()) {
-            @if (isCedarMode()) {
-              @if (cedarTemplate()) {
-                <cedar-artifact-viewer
-                  #cedarViewer
-                  [config]="cedarViewerConfig"
-                  [templateObject]="cedarTemplate()!.attributes.template"
-                  [instanceObject]="cedarFormData()"
-                ></cedar-artifact-viewer>
-              }
-            }
-
             @for (filterEntry of availableFilterEntries(); track filterEntry.key) {
               <div>
                 <p class="font-bold">{{ filterEntry.labelKey | translate }}</p>
@@ -61,48 +50,18 @@
         }
       </form>
 
-      @if (isCedarMode()) {
-        @if (cedarTemplate()) {
-          <div class="cedar-editor-container mt-3">
-            <cedar-embeddable-editor
-              #cedarEditor
-              [config]="cedarConfig"
-              [templateObject]="cedarTemplate()!.attributes.template"
-              [metadata]="cedarFormData()"
-              (change)="onCedarChange($event)"
-              (keyup)="onCedarChange($event)"
-            ></cedar-embeddable-editor>
-          </div>
-
-          <div class="flex justify-content-end gap-3 mt-4">
-            <p-button
-              severity="info"
-              [label]="'common.buttons.discardChanges' | translate"
-              (onClick)="handleDiscardChanges()"
-            />
-            <p-button
-              [label]="'common.buttons.saveAndContinue' | translate"
-              [disabled]="!collectionMetadataForm().valid"
-              (onClick)="handleSaveCedarMetadata()"
-            />
-          </div>
-        } @else {
-          <p class="mt-3">{{ 'collections.addToCollection.cedarFormNotAvailable' | translate }}</p>
-        }
-      } @else {
-        <div class="flex justify-content-end gap-3 mt-4">
-          <p-button
-            severity="info"
-            [label]="'common.buttons.discardChanges' | translate"
-            (onClick)="handleDiscardChanges()"
-          />
-          <p-button
-            [label]="'common.buttons.saveAndContinue' | translate"
-            [disabled]="!collectionMetadataForm().valid"
-            (onClick)="handleSaveMetadata()"
-          />
-        </div>
-      }
+      <div class="flex justify-content-end gap-3 mt-4">
+        <p-button
+          severity="info"
+          [label]="'common.buttons.discardChanges' | translate"
+          (onClick)="handleDiscardChanges()"
+        />
+        <p-button
+          [label]="'common.buttons.saveAndContinue' | translate"
+          [disabled]="!collectionMetadataForm().valid"
+          (onClick)="handleSaveMetadata()"
+        />
+      </div>
     </ng-template>
   </p-step-panel>
 </p-step-item>
