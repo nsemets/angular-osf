@@ -18,6 +18,7 @@ import {
   PLATFORM_ID,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 
 import { FileProvider } from '@osf/features/files/constants';
@@ -170,11 +171,14 @@ export class FilesWidgetComponent {
       return;
     }
 
-    this.filesService.getFileGuid(file.id).subscribe((file) => {
-      if (file.guid) {
-        this.openFile(file.guid);
-      }
-    });
+    this.filesService
+      .getFileGuid(file.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((file) => {
+        if (file.guid) {
+          this.openFile(file.guid);
+        }
+      });
   }
 
   onLoadFiles(event: FilePageLinkModel) {

@@ -184,6 +184,7 @@ export class MoveFileDialogComponent {
         tap(() => this.completeMove()),
         finalize(() => {
           this.config.header = this.translateService.instant('files.dialogs.moveFile.title');
+          this.isFilesUpdating.set(false);
         }),
         takeUntilDestroyed(this.destroyRef)
       )
@@ -191,7 +192,6 @@ export class MoveFileDialogComponent {
   }
 
   private completeMove(): void {
-    this.isFilesUpdating.set(false);
     this.actions.setCurrentFolder(this.initialFolder);
     this.actions.setMoveDialogCurrentFolder(null);
     this.dialogRef.close(true);

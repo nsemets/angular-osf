@@ -13,10 +13,11 @@
         <p-select
           class="w-full"
           inputId="in_label"
+          variant="filled"
           [options]="rootFoldersOptions()"
+          [disabled]="isButtonDisabled()"
           [(ngModel)]="currentRootFolder"
           (onChange)="handleRootFolderChange($event.value)"
-          variant="filled"
         />
       }
     </div>

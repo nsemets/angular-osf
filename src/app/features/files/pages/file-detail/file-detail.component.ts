@@ -150,7 +150,7 @@ export class FileDetailComponent implements OnDestroy {
   selectedTab = FileDetailTab.Details;
 
   fileGuid = '';
-  fileVersion = '';
+  fileVersion = signal('');
 
   embedItems = [
     {
@@ -190,8 +190,8 @@ export class FileDetailComponent implements OnDestroy {
 
   readonly headerTitle = computed(() => {
     const fileName = this.file()?.name ?? '';
-    if (!this.fileVersion) return fileName;
-    return `${fileName} (${this.translateService.instant('project.wiki.version.title')} ${this.fileVersion})`;
+    if (!this.fileVersion()) return fileName;
+    return `${fileName} (${this.translateService.instant('project.wiki.version.title')} ${this.fileVersion()})`;
   });
 
   private readonly metaTagsData = computed(() => {
@@ -233,8 +233,8 @@ export class FileDetailComponent implements OnDestroy {
   }
 
   onOpenRevision(version: string): void {
-    if (this.fileVersion !== version) {
-      this.fileVersion = version;
+    if (this.fileVersion() !== version) {
+      this.fileVersion.set(version);
       this.getIframeLink(version);
       this.isIframeLoading = true;
     }

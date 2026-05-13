@@ -73,7 +73,7 @@ export class FilesTreeExplorerComponent {
   readonly storage = input.required<FileLabelModel | null>();
 
   readonly totalCount = input<number>(0);
-  readonly isLoading = input<boolean>();
+  readonly isLoading = input<boolean>(false);
   readonly resourceId = input.required<string>();
   readonly resourceType = input<CurrentResourceType>(CurrentResourceType.Projects);
   readonly viewOnly = input<boolean>(true);
