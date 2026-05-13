@@ -2,6 +2,26 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+26.10.0 (2026-05-07)
+====================
+
+* OSF4I In-progress SSO Project - FE Piece
+
+26.9.2 (2026-05-06)
+===================
+
+* Hotfix to avoid errors on creating preprint versions
+
+26.9.1 (2026-04-28)
+===================
+
+* Hotfix to add alias for ip addresses, redux
+
+26.9.0 (2026-04-28)
+===================
+
+* Misc. improvements and bug fixes
+
 26.8.2 (2026-04-20)
 ===================
 

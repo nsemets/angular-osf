@@ -32,6 +32,7 @@ import { UserSelectors } from '@core/store/user';
 import { ReviewPermissions } from '@osf/shared/enums/review-permissions.enum';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { DataciteService } from '@osf/shared/services/datacite/datacite.service';
+import { LoaderService } from '@osf/shared/services/loader.service';
 import { MetaTagsService } from '@osf/shared/services/meta-tags.service';
 import { MetaTagsBuilderService } from '@osf/shared/services/meta-tags-builder.service';
 import { SignpostingService } from '@osf/shared/services/signposting.service';
@@ -99,6 +100,7 @@ export class PreprintDetailsComponent implements OnInit, OnDestroy {
   private readonly dataciteService = inject(DataciteService);
   private readonly prerenderReady = inject(PrerenderReadyService);
   private readonly signpostingService = inject(SignpostingService);
+  private readonly loaderService = inject(LoaderService);
 
   private readonly environment = inject(ENVIRONMENT);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
@@ -184,7 +186,9 @@ export class PreprintDetailsComponent implements OnInit, OnDestroy {
     const preprint = this.preprint();
     if (!preprint) return false;
 
-    return this.hasAdminAccess() && preprint.datePublished && preprint.isLatestVersion;
+    const preprintIsRejected = preprint.reviewsState === ReviewsState.Rejected;
+
+    return this.hasAdminAccess() && (preprint.datePublished || preprintIsRejected) && preprint.isLatestVersion;
   });
 
   editButtonVisible = computed(() => {
@@ -351,10 +355,14 @@ export class PreprintDetailsComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.loaderService.show();
+
     this.actions
       .createNewVersion(preprintId)
       .pipe(
         catchError((e) => {
+          this.loaderService.hide();
+
           if (e instanceof HttpErrorResponse && e.status === 409) {
             this.toastService.showError(e.error.errors[0].detail);
           }
@@ -364,6 +372,8 @@ export class PreprintDetailsComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         complete: () => {
+          this.loaderService.hide();
+
           const newVersionPreprint = this.store.selectSnapshot(PreprintStepperSelectors.getPreprint);
           if (newVersionPreprint?.id) {
             this.router.navigate(['preprints', this.providerId(), 'new-version', newVersionPreprint.id]);

@@ -1,5 +1,5 @@
 import { CedarTemplate } from '@osf/features/metadata/models';
-import { DiscoverableFilter, FilterOperatorOption } from '@osf/shared/models/search/discaverable-filter.model';
+import { DiscoverableFilter, FilterOperatorOption } from '@osf/shared/models/search/discoverable-filter.model';
 
 export class CedarTemplateFilterMapper {
   static fromTemplate(template: CedarTemplate): DiscoverableFilter[] {
