@@ -274,7 +274,7 @@ describe('FileDetailComponent', () => {
 
     component.onOpenRevision('4');
 
-    expect(component.fileVersion).toBe('4');
+    expect(component.fileVersion()).toBe('4');
     expect(component.isIframeLoading).toBe(true);
     expect(component.safeLink).not.toBeNull();
   });
