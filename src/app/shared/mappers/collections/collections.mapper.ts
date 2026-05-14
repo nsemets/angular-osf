@@ -31,6 +31,7 @@ export class CollectionsMapper {
     return {
       id: response.id,
       type: response.type,
+      iri: response.links.iri,
       name: replaceBadEncodedChars(response.attributes.name),
       description: replaceBadEncodedChars(response.attributes.description),
       advisoryBoard: response.attributes.advisory_board,

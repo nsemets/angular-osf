@@ -276,8 +276,15 @@ export class GlobalSearchState {
 
   private updateResourcesState(ctx: StateContext<GlobalSearchStateModel>, response: ResourcesData) {
     const { extraFilters } = ctx.getState();
-    const apiFilterKeys = new Set(response.filters.map((f) => f.key));
-    const merged = [...response.filters, ...extraFilters.filter((f) => !apiFilterKeys.has(f.key))];
+    const seenKeys = new Set(response.filters.map((f) => f.key));
+    const merged = [
+      ...response.filters,
+      ...extraFilters.filter((f) => {
+        if (seenKeys.has(f.key)) return false;
+        seenKeys.add(f.key);
+        return true;
+      }),
+    ];
 
     ctx.patchState({
       resources: { data: response.resources, isLoading: false, error: null },

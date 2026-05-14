@@ -22,6 +22,7 @@ import {
 } from '@osf/features/metadata/models';
 
 import { ResourceType } from '../enums/resource-type.enum';
+import { JsonApiResponse } from '../models/common/json-api.model';
 import { IdentifierModel } from '../models/identifiers/identifier.model';
 import { LicenseOptions } from '../models/license/license.model';
 import { BaseNodeAttributesJsonApi } from '../models/nodes/base-node-attributes-json-api.model';
@@ -105,7 +106,9 @@ export class MetadataService {
 
   getCedarMetadataTemplateDetail(templateId: string): Observable<CedarMetadataDataTemplateJsonApi> {
     return this.jsonApiService
-      .get<{ data: CedarMetadataDataTemplateJsonApi }>(`${this.apiDomainUrl}/_/cedar_metadata_templates/${templateId}/`)
+      .get<
+        JsonApiResponse<CedarMetadataDataTemplateJsonApi, null>
+      >(`${this.apiDomainUrl}/_/cedar_metadata_templates/${templateId}/`)
       .pipe(map((response) => response.data));
   }
 
