@@ -14,7 +14,7 @@ import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/load
 import { SearchInputComponent } from '@shared/components/search-input/search-input.component';
 import { CollectionDetails, CollectionProvider } from '@shared/models/collections/collections.model';
 import { EnvironmentModel } from '@shared/models/environment.model';
-import { FilterOperatorOption } from '@shared/models/search/discaverable-filter.model';
+import { FilterOperatorOption } from '@shared/models/search/discoverable-filter.model';
 import { BrandService } from '@shared/services/brand.service';
 import { CustomDialogService } from '@shared/services/custom-dialog.service';
 import { HeaderStyleService } from '@shared/services/header-style.service';
