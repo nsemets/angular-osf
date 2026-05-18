@@ -164,12 +164,10 @@ export class CollectionsDiscoverComponent {
   private setupShareTroveSearchEffect(): void {
     effect(() => {
       const provider = this.collectionProvider();
-      const collectionId = this.primaryCollectionId();
 
-      if (!provider || !collectionId || this.defaultSearchFiltersInitialized()) return;
+      if (!provider || !provider.iri || this.defaultSearchFiltersInitialized()) return;
 
-      const collectionIri = `${this.environment.apiDomainUrl}/v2/collections/${collectionId}/`;
-      this.actions.setDefaultFilterValue('isContainedBy', collectionIri);
+      this.actions.setDefaultFilterValue('isContainedBy', provider.iri);
 
       if (provider.requiredMetadataTemplate?.attributes?.template) {
         const extraFilters = CedarTemplateFilterMapper.fromTemplate(

@@ -23,18 +23,9 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { UserSelectors } from '@core/store/user';
-import { CedarMetadataRecordData, CedarRecordDataBinding } from '@osf/features/metadata/models';
-import {
-  CreateCedarMetadataRecord,
-  GetCedarMetadataRecords,
-  MetadataSelectors,
-  UpdateCedarMetadataRecord,
-} from '@osf/features/metadata/store';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { CollectionSubmissionReviewState } from '@osf/shared/enums/collection-submission-review-state.enum';
-import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { CanDeactivateComponent } from '@osf/shared/models/can-deactivate.interface';
 import { BrandService } from '@osf/shared/services/brand.service';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
@@ -90,7 +81,6 @@ export class AddToCollectionComponent implements CanDeactivateComponent {
   private readonly headerStyleHelper = inject(HeaderStyleService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
-  private readonly environment = inject(ENVIRONMENT);
 
   readonly selectedProjectId = toSignal<string | null>(
     this.route.params.pipe(map((params) => params['id'])) ?? of(null)
@@ -102,18 +92,15 @@ export class AddToCollectionComponent implements CanDeactivateComponent {
 
   isProviderLoading = select(CollectionsSelectors.getCollectionProviderLoading);
   collectionProvider = select(CollectionsSelectors.getCollectionProvider);
-  requiredMetadataTemplate = select(CollectionsSelectors.getRequiredMetadataTemplate);
   selectedProject = select(ProjectsSelectors.getSelectedProject);
   currentUser = select(UserSelectors.getCurrentUser);
   currentCollectionSubmission = select(AddToCollectionSelectors.getCurrentCollectionSubmission);
-  cedarRecords = select(MetadataSelectors.getCedarRecords);
 
   providerId = signal<string>('');
   allowNavigation = signal<boolean>(false);
   projectMetadataSaved = signal<boolean>(false);
   projectContributorsSaved = signal<boolean>(false);
   collectionMetadataSaved = signal<boolean>(false);
-  pendingCedarData = signal<CedarRecordDataBinding | null>(null);
   stepperActiveValue = signal<number>(AddToCollectionSteps.SelectProject);
 
   primaryCollectionId = computed(() => this.collectionProvider()?.primaryCollection?.id);
@@ -123,13 +110,6 @@ export class AddToCollectionComponent implements CanDeactivateComponent {
   isCollectionMetadataDisabled = computed(
     () => !this.selectedProject() || !this.projectMetadataSaved() || !this.projectContributorsSaved()
   );
-  isCedarMode = computed(() => this.environment.collectionSubmissionWithCedar && !!this.requiredMetadataTemplate());
-  existingCedarRecord = computed<CedarMetadataRecordData | null>(() => {
-    const records = this.cedarRecords();
-    const templateId = this.requiredMetadataTemplate()?.id;
-    if (!records?.length || !templateId) return null;
-    return records.find((r) => r.relationships?.template?.data?.id === templateId) ?? null;
-  });
 
   readonly actions = createDispatchMap({
     getCollectionProvider: GetCollectionProvider,
@@ -138,9 +118,6 @@ export class AddToCollectionComponent implements CanDeactivateComponent {
     deleteCollectionSubmission: RemoveCollectionSubmission,
     setSelectedProject: SetSelectedProject,
     getCurrentCollectionSubmission: GetCurrentCollectionSubmission,
-    getCedarRecords: GetCedarMetadataRecords,
-    createCedarRecord: CreateCedarMetadataRecord,
-    updateCedarRecord: UpdateCedarMetadataRecord,
   });
 
   showRemoveButton = computed(
@@ -197,29 +174,20 @@ export class AddToCollectionComponent implements CanDeactivateComponent {
     this.stepperActiveValue.set(AddToCollectionSteps.Complete);
   }
 
-  handleCedarDataSaved(data: CedarRecordDataBinding): void {
-    this.pendingCedarData.set(data);
-    this.collectionMetadataSaved.set(true);
-    this.stepperActiveValue.set(AddToCollectionSteps.Complete);
-  }
-
   handleAddToCollection() {
     const payload = {
       collectionId: this.primaryCollectionId() || '',
       projectId: this.selectedProject()?.id || '',
-      collectionMetadata: this.isCedarMode() ? {} : this.collectionMetadataForm.value || {},
+      collectionMetadata: this.collectionMetadataForm.value || {},
       userId: this.currentUser()?.id || '',
     };
 
-    const isEditMode = this.isEditMode();
-
-    if (isEditMode) {
+    if (this.isEditMode()) {
       this.loaderService.show();
 
       this.actions
         .updateCollectionSubmission(payload)
         .pipe(
-          switchMap(() => this.saveCedarRecordIfNeeded()),
           finalize(() => this.loaderService.hide()),
           takeUntilDestroyed(this.destroyRef)
         )
@@ -242,7 +210,6 @@ export class AddToCollectionComponent implements CanDeactivateComponent {
         })
         .onClose.pipe(
           filter((res) => !!res),
-          switchMap(() => this.saveCedarRecordIfNeeded()),
           takeUntilDestroyed(this.destroyRef)
         )
         .subscribe({
@@ -278,33 +245,19 @@ export class AddToCollectionComponent implements CanDeactivateComponent {
             collectionId,
             comment: res?.comment || '',
           };
-
+          this.loaderService.show();
           return this.actions.deleteCollectionSubmission(payload);
         }),
+        finalize(() => this.loaderService.hide()),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe({
         next: () => {
           this.toastService.showSuccess('collections.removeDialog.success');
-          this.loaderService.show();
           this.allowNavigation.set(true);
           this.router.navigate([projectId, 'overview']);
         },
       });
-  }
-
-  private saveCedarRecordIfNeeded(): Observable<unknown> {
-    if (!this.isCedarMode()) return of(null);
-
-    const cedarData = this.pendingCedarData();
-    const projectId = this.selectedProject()?.id;
-    const templateId = this.requiredMetadataTemplate()?.id;
-    if (!cedarData || !projectId || !templateId) return of(null);
-
-    const existingId = this.existingCedarRecord()?.id;
-    return existingId
-      ? this.actions.updateCedarRecord(cedarData, existingId, projectId, ResourceType.Project)
-      : this.actions.createCedarRecord(cedarData, projectId, ResourceType.Project);
   }
 
   private initializeProvider(): void {
@@ -343,14 +296,6 @@ export class AddToCollectionComponent implements CanDeactivateComponent {
 
       if (submission?.project && !this.selectedProject()) {
         this.actions.setSelectedProject(submission.project);
-      }
-    });
-
-    effect(() => {
-      const projectId = this.selectedProjectId();
-      const isCedar = this.isCedarMode();
-      if (isCedar && projectId) {
-        this.actions.getCedarRecords(projectId, ResourceType.Project);
       }
     });
   }
