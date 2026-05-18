@@ -39,9 +39,9 @@ import { TableParameters } from '@shared/models/table-parameters.model';
     MyProjectsTableComponent,
     SearchInputComponent,
     IconComponent,
-    TranslatePipe,
     LoadingSpinnerComponent,
     ScheduledBannerComponent,
+    TranslatePipe,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
@@ -56,7 +56,6 @@ export class DashboardComponent implements OnInit {
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
   readonly searchControl = new FormControl<string>('');
-  readonly activeProject = signal<MyResourcesItem | null>(null);
   readonly sortColumn = signal<string | undefined>(undefined);
   readonly sortOrder = signal<SortOrder>(SortOrder.Asc);
   readonly tableParams = signal<TableParameters>({ ...DEFAULT_TABLE_PARAMS });
@@ -186,7 +185,6 @@ export class DashboardComponent implements OnInit {
   }
 
   navigateToProject(project: MyResourcesItem): void {
-    this.activeProject.set(project);
     this.router.navigate([project.id]);
   }
 

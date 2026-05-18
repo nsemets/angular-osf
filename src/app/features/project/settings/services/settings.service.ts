@@ -45,9 +45,7 @@ export class SettingsService {
   }
 
   getNotificationSubscriptions(nodeId?: string): Observable<NotificationSubscription[]> {
-    const params: Record<string, string> = {
-      'filter[id]': `${nodeId}_file_updated`,
-    };
+    const params: Record<string, string> = { 'filter[id]': `${nodeId}_file_updated` };
 
     return this.jsonApiService
       .get<ResponseJsonApi<NotificationSubscriptionGetResponseJsonApi[]>>(`${this.apiUrl}/subscriptions/`, params)
@@ -65,9 +63,7 @@ export class SettingsService {
   }
 
   getProjectById(projectId: string): Observable<NodeDetailsModel> {
-    const params = {
-      'embed[]': ['affiliated_institutions', 'region'],
-    };
+    const params = { 'embed[]': ['affiliated_institutions', 'region'] };
 
     return this.jsonApiService
       .get<NodeResponseJsonApi>(`${this.apiUrl}/nodes/${projectId}/`, params)
@@ -81,29 +77,14 @@ export class SettingsService {
   }
 
   deleteProject(projects: NodeShortInfoModel[]): Observable<void> {
-    const payload = {
-      data: projects.map((project) => ({
-        type: 'nodes',
-        id: project.id,
-      })),
-    };
-
-    const headers = {
-      'Content-Type': 'application/vnd.api+json; ext=bulk',
-    };
+    const payload = { data: projects.map((project) => ({ id: project.id, type: 'nodes' })) };
+    const headers = { 'Content-Type': 'application/vnd.api+json; ext=bulk' };
 
     return this.jsonApiService.delete(`${this.apiUrl}/nodes/`, payload, headers);
   }
 
   deleteInstitution(institutionId: string, projectId: string): Observable<void> {
-    const data = {
-      data: [
-        {
-          type: 'nodes',
-          id: projectId,
-        },
-      ],
-    };
+    const data = { data: [{ id: projectId, type: 'nodes' }] };
 
     return this.jsonApiService.delete(`${this.apiUrl}/institutions/${institutionId}/relationships/nodes/`, data);
   }
