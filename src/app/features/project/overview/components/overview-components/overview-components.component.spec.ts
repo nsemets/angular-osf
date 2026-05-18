@@ -11,14 +11,16 @@ import { Router } from '@angular/router';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { NodeModel } from '@osf/shared/models/nodes/base-node.model';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
-import { LoaderService } from '@osf/shared/services/loader.service';
+import { DeleteResourceService } from '@osf/shared/services/delete-resource.service';
 import { ToastService } from '@osf/shared/services/toast.service';
-import { GetResourceWithChildren } from '@osf/shared/stores/current-resource';
 
 import { MOCK_PROJECT_OVERVIEW } from '@testing/mocks/project-overview.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
-import { LoaderServiceMock } from '@testing/providers/loader-service.mock';
+import {
+  DeleteResourceServiceMock,
+  DeleteResourceServiceMockType,
+} from '@testing/providers/delete-resource-provider.mock';
 import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
@@ -26,7 +28,6 @@ import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast
 import { LoadMoreComponents, ProjectOverviewSelectors, ReorderComponents } from '../../store';
 import { AddComponentDialogComponent } from '../add-component-dialog/add-component-dialog.component';
 import { ComponentCardComponent } from '../component-card/component-card.component';
-import { DeleteComponentDialogComponent } from '../delete-component-dialog/delete-component-dialog.component';
 
 import { OverviewComponentsComponent } from './overview-components.component';
 
@@ -36,8 +37,8 @@ describe('OverviewComponentsComponent', () => {
   let store: Store;
   let routerMock: RouterMockType;
   let customDialogService: ReturnType<CustomDialogServiceMockBuilder['build']>;
-  let loaderService: LoaderServiceMock;
   let toastService: ToastServiceMockType;
+  let deleteResourceService: DeleteResourceServiceMockType;
 
   const componentA = { id: 'comp-a', title: 'Component A' } as NodeModel;
   const componentB = { id: 'comp-b', title: 'Component B' } as NodeModel;
@@ -51,8 +52,8 @@ describe('OverviewComponentsComponent', () => {
   beforeEach(() => {
     routerMock = RouterMockBuilder.create().build();
     customDialogService = CustomDialogServiceMockBuilder.create().build();
-    loaderService = new LoaderServiceMock();
     toastService = ToastServiceMock.simple();
+    deleteResourceService = DeleteResourceServiceMock.simple();
 
     TestBed.configureTestingModule({
       imports: [OverviewComponentsComponent, MockComponent(ComponentCardComponent)],
@@ -60,8 +61,8 @@ describe('OverviewComponentsComponent', () => {
         provideOSFCore(),
         MockProvider(Router, routerMock),
         MockProvider(CustomDialogService, customDialogService),
-        MockProvider(LoaderService, loaderService),
         MockProvider(ToastService, toastService),
+        MockProvider(DeleteResourceService, deleteResourceService),
         provideMockStore({
           signals: [
             { selector: ProjectOverviewSelectors.getComponents, value: components },
@@ -110,17 +111,16 @@ describe('OverviewComponentsComponent', () => {
     expect(routerMock.navigate).toHaveBeenCalledWith(['comp-a', 'settings']);
   });
 
-  it('should open delete component dialog through delete menu action', () => {
+  it('should run delete resource flow through delete menu action', () => {
     component.handleMenuAction('delete', 'comp-a');
 
-    expect(loaderService.show).toHaveBeenCalled();
-    expect(store.dispatch).toHaveBeenCalledWith(new GetResourceWithChildren('root-1', 'comp-a', ResourceType.Project));
-    expect(customDialogService.open).toHaveBeenCalledWith(DeleteComponentDialogComponent, {
-      header: 'project.overview.dialog.deleteComponent.header',
-      width: '650px',
-      data: { componentId: 'comp-a', resourceType: ResourceType.Project },
-    });
-    expect(loaderService.hide).toHaveBeenCalled();
+    expect(deleteResourceService.deleteComponent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        rootParentId: 'root-1',
+        resourceId: 'comp-a',
+        resourceType: ResourceType.Project,
+      })
+    );
   });
 
   it('should open component url in same tab on navigate', () => {

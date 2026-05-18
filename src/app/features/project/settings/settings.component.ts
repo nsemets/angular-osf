@@ -4,10 +4,10 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { map, of } from 'rxjs';
 
-import { ChangeDetectionStrategy, Component, effect, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { UserSelectors } from '@core/store/user';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
@@ -19,14 +19,13 @@ import { Institution } from '@osf/shared/models/institutions/institutions.model'
 import { UpdateNodeRequestModel } from '@osf/shared/models/nodes/nodes-json-api.model';
 import { ViewOnlyLinkModel } from '@osf/shared/models/view-only-links/view-only-link.model';
 import { CustomConfirmationService } from '@osf/shared/services/custom-confirmation.service';
-import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
+import { DeleteResourceService } from '@osf/shared/services/delete-resource.service';
 import { LoaderService } from '@osf/shared/services/loader.service';
 import { ToastService } from '@osf/shared/services/toast.service';
-import { GetResource, GetResourceWithChildren } from '@osf/shared/stores/current-resource';
+import { GetResource } from '@osf/shared/stores/current-resource';
 import { DeleteViewOnlyLink, FetchViewOnlyLinks, ViewOnlyLinkSelectors } from '@osf/shared/stores/view-only-links';
 
 import {
-  DeleteProjectDialogComponent,
   ProjectSettingNotificationsComponent,
   SettingsAccessRequestsCardComponent,
   SettingsProjectAffiliationComponent,
@@ -38,7 +37,6 @@ import {
 import { ProjectDetailsModel, ProjectSettingsAttributesJsonApi, ProjectSettingsDataJsonApi } from './models';
 import {
   DeleteInstitution,
-  DeleteProject,
   GetProjectDetails,
   GetProjectNotificationSubscriptions,
   GetProjectSettings,
@@ -70,8 +68,10 @@ import {
 })
 export class SettingsComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly customConfirmationService = inject(CustomConfirmationService);
-  private readonly customDialogService = inject(CustomDialogService);
+  private readonly deleteResourceService = inject(DeleteResourceService);
   private readonly toastService = inject(ToastService);
   private readonly loaderService = inject(LoaderService);
 
@@ -97,10 +97,8 @@ export class SettingsComponent implements OnInit {
     updateProjectSettings: UpdateProjectSettings,
     updateNotificationSubscription: UpdateProjectNotificationSubscription,
     deleteViewOnlyLink: DeleteViewOnlyLink,
-    deleteProject: DeleteProject,
     deleteInstitution: DeleteInstitution,
     refreshCurrentResource: GetResource,
-    getComponentsTree: GetResourceWithChildren,
   });
 
   accessRequest = signal(false);
@@ -184,19 +182,18 @@ export class SettingsComponent implements OnInit {
   }
 
   deleteProject(): void {
-    this.loaderService.show();
+    const projectId = this.projectId();
+    const projectDetails = this.projectDetails();
 
-    this.actions
-      .getComponentsTree(this.projectDetails()?.rootId || this.projectId(), this.projectId(), ResourceType.Project)
-      .subscribe({
-        next: () => {
-          this.loaderService.hide();
-          this.customDialogService.open(DeleteProjectDialogComponent, {
-            header: 'project.deleteProject.dialog.deleteProject',
-            width: '500px',
-          });
-        },
-      });
+    if (!projectId) return;
+
+    this.deleteResourceService.deleteProject({
+      rootParentId: projectDetails?.rootId || projectId,
+      resourceId: projectId,
+      resourceType: ResourceType.Project,
+      destroyRef: this.destroyRef,
+      onSuccess: () => this.router.navigate(['/']),
+    });
   }
 
   removeAffiliation(affiliation: Institution): void {

@@ -152,7 +152,6 @@ describe.skip('SettingsComponent', () => {
 
   it('should handle delete project', () => {
     expect(() => component.deleteProject()).not.toThrow();
-    expect(customConfirmationServiceMock.confirmDelete).toHaveBeenCalled();
   });
 
   it('should submit form when project details change', () => {

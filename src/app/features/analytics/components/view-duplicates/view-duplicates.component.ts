@@ -24,7 +24,6 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { UserSelectors } from '@core/store/user';
-import { DeleteComponentDialogComponent } from '@osf/features/project/overview/components/delete-component-dialog/delete-component-dialog.component';
 import { ForkDialogComponent } from '@osf/features/project/overview/components/fork-dialog/fork-dialog.component';
 import { ClearProjectOverview, GetProjectById, ProjectOverviewSelectors } from '@osf/features/project/overview/store';
 import { ClearRegistry, GetRegistryById, RegistrySelectors } from '@osf/features/registry/store/registry';
@@ -37,8 +36,7 @@ import { TruncatedTextComponent } from '@osf/shared/components/truncated-text/tr
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
-import { LoaderService } from '@osf/shared/services/loader.service';
-import { GetResourceWithChildren } from '@osf/shared/stores/current-resource';
+import { DeleteResourceService } from '@osf/shared/services/delete-resource.service';
 import { ClearDuplicates, DuplicatesSelectors, GetAllDuplicates } from '@osf/shared/stores/duplicates';
 import { BaseNodeModel } from '@shared/models/nodes/base-node.model';
 
@@ -62,26 +60,35 @@ import { BaseNodeModel } from '@shared/models/nodes/base-node.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewDuplicatesComponent {
-  private customDialogService = inject(CustomDialogService);
-  private loaderService = inject(LoaderService);
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
-  private destroyRef = inject(DestroyRef);
-  private platformId = inject(PLATFORM_ID);
-  private isBrowser = isPlatformBrowser(this.platformId);
+  private readonly customDialogService = inject(CustomDialogService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
+  private readonly deleteResourceService = inject(DeleteResourceService);
 
-  private project = select(ProjectOverviewSelectors.getProject);
-  private registration = select(RegistrySelectors.getRegistry);
+  private readonly actions = createDispatchMap({
+    getProject: GetProjectById,
+    getRegistration: GetRegistryById,
+    getDuplicates: GetAllDuplicates,
+    clearDuplicates: ClearDuplicates,
+    clearProject: ClearProjectOverview,
+    clearRegistration: ClearRegistry,
+  });
 
-  duplicates = select(DuplicatesSelectors.getDuplicates);
-  isDuplicatesLoading = select(DuplicatesSelectors.getDuplicatesLoading);
-  totalDuplicates = select(DuplicatesSelectors.getDuplicatesTotalCount);
-  isAuthenticated = select(UserSelectors.isAuthenticated);
+  private readonly project = select(ProjectOverviewSelectors.getProject);
+  private readonly registration = select(RegistrySelectors.getRegistry);
+
+  readonly duplicates = select(DuplicatesSelectors.getDuplicates);
+  readonly isDuplicatesLoading = select(DuplicatesSelectors.getDuplicatesLoading);
+  readonly totalDuplicates = select(DuplicatesSelectors.getDuplicatesTotalCount);
+  readonly isAuthenticated = select(UserSelectors.isAuthenticated);
 
   readonly pageSize = 10;
 
-  currentPage = signal<number>(1);
-  firstIndex = computed(() => (this.currentPage() - 1) * this.pageSize);
+  readonly currentPage = signal<number>(1);
+  readonly firstIndex = computed(() => (this.currentPage() - 1) * this.pageSize);
 
   readonly forkActionItems = (resourceId: string) => [
     {
@@ -115,16 +122,6 @@ export class ViewDuplicatesComponent {
     }
 
     return null;
-  });
-
-  actions = createDispatchMap({
-    getProject: GetProjectById,
-    getRegistration: GetRegistryById,
-    getDuplicates: GetAllDuplicates,
-    clearDuplicates: ClearDuplicates,
-    clearProject: ClearProjectOverview,
-    clearRegistration: ClearRegistry,
-    getComponentsTree: GetResourceWithChildren,
   });
 
   constructor() {
@@ -213,35 +210,16 @@ export class ViewDuplicatesComponent {
     const resourceType = this.resourceType();
     if (!resourceType) return;
 
-    this.loaderService.show();
-
-    this.actions.getComponentsTree(id, id, resourceType).subscribe({
-      next: () => {
-        this.loaderService.hide();
-        this.customDialogService
-          .open(DeleteComponentDialogComponent, {
-            header: 'project.overview.dialog.deleteComponent.header',
-            width: '650px',
-            data: {
-              componentId: id,
-              resourceType: resourceType,
-              isForksContext: true,
-              currentPage: this.currentPage(),
-              pageSize: this.pageSize,
-            },
-          })
-          .onClose.pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe((result) => {
-            if (result?.success) {
-              const resource = this.currentResource();
-              if (resource) {
-                this.actions.getDuplicates(resource.id, resource.type, this.currentPage(), this.pageSize);
-              }
-            }
-          });
-      },
-      error: () => {
-        this.loaderService.hide();
+    this.deleteResourceService.deleteComponent({
+      rootParentId: id,
+      resourceId: id,
+      resourceType,
+      destroyRef: this.destroyRef,
+      onSuccess: () => {
+        const resource = this.currentResource();
+        if (resource) {
+          this.actions.getDuplicates(resource.id, resource.type, this.currentPage(), this.pageSize);
+        }
       },
     });
   }

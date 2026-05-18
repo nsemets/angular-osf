@@ -2,6 +2,8 @@ import { BehaviorSubject } from 'rxjs';
 
 import { ActivatedRoute } from '@angular/router';
 
+export type ActivatedRouteMockType = ReturnType<ActivatedRouteMockBuilder['build']>;
+
 export class ActivatedRouteMockBuilder {
   private paramsObj: Record<string, any> = {};
   private queryParamsObj: Record<string, any> = {};

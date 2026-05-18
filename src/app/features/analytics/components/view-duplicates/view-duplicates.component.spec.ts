@@ -1,3 +1,5 @@
+import { Store } from '@ngxs/store';
+
 import { MockComponents, MockProvider } from 'ng-mocks';
 
 import { PaginatorState } from 'primeng/paginator';
@@ -17,11 +19,16 @@ import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header
 import { TruncatedTextComponent } from '@osf/shared/components/truncated-text/truncated-text.component';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
-import { DuplicatesSelectors } from '@osf/shared/stores/duplicates';
+import { DeleteResourceService } from '@osf/shared/services/delete-resource.service';
+import { DuplicatesSelectors, GetAllDuplicates } from '@osf/shared/stores/duplicates';
 
 import { MOCK_PROJECT_OVERVIEW } from '@testing/mocks/project-overview.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
+import {
+  DeleteResourceServiceMock,
+  DeleteResourceServiceMockType,
+} from '@testing/providers/delete-resource-provider.mock';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
@@ -34,9 +41,12 @@ describe('Component: View Duplicates', () => {
   let routerMock: ReturnType<RouterMockBuilder['build']>;
   let activatedRouteMock: ReturnType<ActivatedRouteMockBuilder['build']>;
   let mockCustomDialogService: ReturnType<CustomDialogServiceMockBuilder['build']>;
+  let store: Store;
+  let deleteResourceService: DeleteResourceServiceMockType;
 
   beforeEach(() => {
     mockCustomDialogService = CustomDialogServiceMockBuilder.create().build();
+    deleteResourceService = DeleteResourceServiceMock.simple();
     routerMock = RouterMockBuilder.create().build();
     activatedRouteMock = ActivatedRouteMockBuilder.create()
       .withParams({ id: 'rid' })
@@ -57,6 +67,10 @@ describe('Component: View Duplicates', () => {
       ],
       providers: [
         provideOSFCore(),
+        MockProvider(CustomDialogService, mockCustomDialogService),
+        MockProvider(DeleteResourceService, deleteResourceService),
+        MockProvider(Router, routerMock),
+        MockProvider(ActivatedRoute, activatedRouteMock),
         provideMockStore({
           signals: [
             { selector: DuplicatesSelectors.getDuplicates, value: [] },
@@ -68,12 +82,10 @@ describe('Component: View Duplicates', () => {
             { selector: RegistrySelectors.isRegistryAnonymous, value: false },
           ],
         }),
-        MockProvider(CustomDialogService, mockCustomDialogService),
-        MockProvider(Router, routerMock),
-        MockProvider(ActivatedRoute, activatedRouteMock),
       ],
     });
 
+    store = TestBed.inject(Store);
     fixture = TestBed.createComponent(ViewDuplicatesComponent);
     component = fixture.componentInstance;
 
@@ -85,16 +97,15 @@ describe('Component: View Duplicates', () => {
   });
 
   it('should open ForkDialog with width 450px when small and not refresh on failure', () => {
-    (component as any).actions = { ...component.actions, getDuplicates: vi.fn() };
-
     const openSpy = vi
       .spyOn(mockCustomDialogService, 'open')
       .mockReturnValue({ onClose: of({ success: false }) } as any);
 
+    vi.mocked(store.dispatch).mockClear();
     component.handleForkResource();
 
     expect(openSpy).toHaveBeenCalledWith(expect.any(Function), expect.objectContaining({ width: '450px' }));
-    expect((component as any).actions.getDuplicates).not.toHaveBeenCalled();
+    expect(store.dispatch).not.toHaveBeenCalledWith(expect.any(GetAllDuplicates));
   });
 
   it('should update currentPage when page is defined', () => {
