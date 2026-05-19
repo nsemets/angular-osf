@@ -1,0 +1,63 @@
+@let itemNode = node();
+
+<div class="related-node-card flex flex-column gap-3 p-3 sm:p-4">
+  <div class="flex justify-content-between align-items-center">
+    <h2 class="flex align-items-center gap-2">
+      <osf-icon [iconClass]="itemNode.isPublic ? 'fas fa-lock-open' : 'fas fa-lock'"></osf-icon>
+      {{ itemNode.title }}
+    </h2>
+
+    @let menuActionItems = menuItems();
+
+    @if (menuActionItems?.length) {
+      <div>
+        <p-button
+          severity="contrast"
+          icon="fas fa-ellipsis-vertical"
+          raised
+          variant="outlined"
+          [ariaLabel]="'common.buttons.more' | translate"
+          (onClick)="menu.toggle($event)"
+        >
+        </p-button>
+
+        <p-menu appendTo="body" [model]="menuActionItems" popup #menu>
+          <ng-template #item let-item>
+            <a
+              class="p-menu-item-link"
+              (mousedown)="onMenuAction(item.action)"
+              (keydown.enter)="onMenuAction(item.action)"
+              tabindex="0"
+            >
+              {{ item.label | translate }}
+            </a>
+          </ng-template>
+        </p-menu>
+      </div>
+    }
+  </div>
+
+  <div class="flex flex-column gap-2">
+    <div class="flex flex-wrap align-items-center gap-1">
+      <span class="font-bold">{{ 'common.labels.forked' | translate }}:</span>
+      <p>{{ itemNode.dateCreated | date: dateFormat }}</p>
+    </div>
+
+    <div class="flex flex-wrap align-items-center gap-1">
+      <span class="font-bold">{{ 'common.labels.lastUpdated' | translate }}:</span>
+      <p>{{ itemNode.dateModified | date: dateFormat }}</p>
+    </div>
+
+    <div class="flex align-items-start gap-1">
+      <span class="font-bold">{{ 'common.labels.contributors' | translate }}:</span>
+
+      <osf-contributors-list [contributors]="itemNode.bibliographicContributors"></osf-contributors-list>
+    </div>
+
+    @if (itemNode.description) {
+      <osf-truncated-text [text]="('resourceCard.labels.descriptionBold' | translate) + itemNode.description" />
+    }
+  </div>
+
+  <p-button [label]="'common.buttons.view' | translate" severity="secondary" [routerLink]="['/', itemNode.id]" />
+</div>
