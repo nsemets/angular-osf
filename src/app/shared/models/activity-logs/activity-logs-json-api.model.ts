@@ -1,3 +1,6 @@
+import { BaseNodeDataJsonApi } from '../nodes/base-node-data-json-api.model';
+import { UserDataJsonApi } from '../user/user-json-api.model';
+
 export interface ActivityLogJsonApi {
   id: string;
   type: string;
@@ -78,13 +81,13 @@ export interface ActivityLogJsonApi {
   };
   embeds?: {
     original_node?: {
-      data: OriginalNodeEmbedsData;
+      data: BaseNodeDataJsonApi;
     };
     user?: {
-      data: UserEmbedsData;
+      data: UserDataJsonApi;
     };
     linked_node?: {
-      data: LinkedNodeEmbedsData;
+      data: BaseNodeDataJsonApi;
     };
   };
   meta: {
@@ -98,85 +101,6 @@ interface PointerJsonApi {
   id: string;
   title: string;
   url: string;
-}
-
-interface OriginalNodeEmbedsData {
-  id: string;
-  type: string;
-  attributes: {
-    title: string;
-    description: string;
-    category: string;
-    custom_citation: string | null;
-    date_created: string;
-    date_modified: string;
-    registration: boolean;
-    preprint: boolean;
-    fork: boolean;
-    collection: boolean;
-    tags: string[];
-    access_requests_enabled: boolean;
-    node_license: {
-      copyright_holders: string[];
-      year: string | null;
-    } | null;
-    current_user_can_comment: boolean;
-    current_user_permissions: string[];
-    current_user_is_contributor: boolean;
-    current_user_is_contributor_or_group_member: boolean;
-    wiki_enabled: boolean;
-    public: boolean;
-    subjects: { id: string; text: string }[][];
-  };
-}
-
-interface UserEmbedsData {
-  id: string;
-  type: string;
-  attributes: {
-    full_name: string;
-    given_name: string;
-    middle_names: string;
-    family_name: string;
-    suffix: string;
-    date_registered: string;
-    active: boolean;
-    timezone: string;
-    locale: string;
-  };
-}
-
-interface LinkedNodeEmbedsData {
-  id: string;
-  type: string;
-  attributes: {
-    title: string;
-    description: string;
-    category: string;
-    custom_citation: string | null;
-    date_created: string;
-    date_modified: string;
-    registration: boolean;
-    preprint: boolean;
-    fork: boolean;
-    collection: boolean;
-    tags: string[];
-    access_requests_enabled: boolean;
-    node_license: {
-      copyright_holders: string[];
-      year: string | null;
-    } | null;
-    current_user_can_comment: boolean;
-    current_user_permissions: string[];
-    current_user_is_contributor: boolean;
-    current_user_is_contributor_or_group_member: boolean;
-    wiki_enabled: boolean;
-    public: boolean;
-    subjects: {
-      id: string;
-      text: string;
-    }[][];
-  };
 }
 
 export interface LogContributorJsonApi {

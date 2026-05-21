@@ -6,6 +6,9 @@ import { ActivityLogJsonApi, LogContributorJsonApi } from '../models/activity-lo
 import { ResponseJsonApi } from '../models/common/json-api.model';
 import { PaginatedData } from '../models/paginated-data.model';
 
+import { BaseNodeMapper } from './nodes';
+import { UserMapper } from './user';
+
 export class ActivityLogsMapper {
   static fromActivityLogJsonApi(log: ActivityLogJsonApi, isAnonymous?: boolean): ActivityLog {
     const params = log.attributes.params ?? {};
@@ -71,83 +74,11 @@ export class ActivityLogsMapper {
       embeds: log.embeds
         ? {
             originalNode: log.embeds.original_node?.data
-              ? {
-                  id: log.embeds.original_node.data.id,
-                  type: log.embeds.original_node.data.type,
-                  title: replaceBadEncodedChars(log.embeds.original_node.data.attributes.title),
-                  description: replaceBadEncodedChars(log.embeds.original_node.data.attributes.description),
-                  category: log.embeds.original_node.data.attributes.category,
-                  customCitation: log.embeds.original_node.data.attributes.custom_citation,
-                  dateCreated: log.embeds.original_node.data.attributes.date_created,
-                  dateModified: log.embeds.original_node.data.attributes.date_modified,
-                  registration: log.embeds.original_node.data.attributes.registration,
-                  preprint: log.embeds.original_node.data.attributes.preprint,
-                  fork: log.embeds.original_node.data.attributes.fork,
-                  collection: log.embeds.original_node.data.attributes.collection,
-                  tags: log.embeds.original_node.data.attributes.tags,
-                  accessRequestsEnabled: log.embeds.original_node.data.attributes.access_requests_enabled,
-                  nodeLicense: log.embeds.original_node.data.attributes.node_license
-                    ? {
-                        copyrightHolders: log.embeds.original_node.data.attributes.node_license.copyright_holders,
-                        year: log.embeds.original_node.data.attributes.node_license.year,
-                      }
-                    : { copyrightHolders: [], year: null },
-                  currentUserCanComment: log.embeds.original_node.data.attributes.current_user_can_comment,
-                  currentUserPermissions: log.embeds.original_node.data.attributes.current_user_permissions,
-                  currentUserIsContributor: log.embeds.original_node.data.attributes.current_user_is_contributor,
-                  currentUserIsContributorOrGroupMember:
-                    log.embeds.original_node.data.attributes.current_user_is_contributor_or_group_member,
-                  wikiEnabled: log.embeds.original_node.data.attributes.wiki_enabled,
-                  public: log.embeds.original_node.data.attributes.public,
-                  subjects: log.embeds.original_node.data.attributes.subjects,
-                }
+              ? BaseNodeMapper.getNodeData(log.embeds.original_node.data)
               : undefined,
-            user: log.embeds.user?.data
-              ? {
-                  id: log.embeds.user.data.id,
-                  type: log.embeds.user.data.type,
-                  fullName: log.embeds.user.data.attributes.full_name,
-                  givenName: log.embeds.user.data.attributes.given_name,
-                  middleNames: log.embeds.user.data.attributes.middle_names,
-                  familyName: log.embeds.user.data.attributes.family_name,
-                  suffix: log.embeds.user.data.attributes.suffix,
-                  dateRegistered: log.embeds.user.data.attributes.date_registered,
-                  active: log.embeds.user.data.attributes.active,
-                  timezone: log.embeds.user.data.attributes.timezone,
-                  locale: log.embeds.user.data.attributes.locale,
-                }
-              : undefined,
+            user: log.embeds.user?.data ? UserMapper.fromUserGetResponse(log.embeds.user.data) : undefined,
             linkedNode: log.embeds.linked_node?.data
-              ? {
-                  id: log.embeds.linked_node.data.id,
-                  type: log.embeds.linked_node.data.type,
-                  title: replaceBadEncodedChars(log.embeds.linked_node.data.attributes.title),
-                  description: replaceBadEncodedChars(log.embeds.linked_node.data.attributes.description),
-                  category: log.embeds.linked_node.data.attributes.category,
-                  customCitation: log.embeds.linked_node.data.attributes.custom_citation,
-                  dateCreated: log.embeds.linked_node.data.attributes.date_created,
-                  dateModified: log.embeds.linked_node.data.attributes.date_modified,
-                  registration: log.embeds.linked_node.data.attributes.registration,
-                  preprint: log.embeds.linked_node.data.attributes.preprint,
-                  fork: log.embeds.linked_node.data.attributes.fork,
-                  collection: log.embeds.linked_node.data.attributes.collection,
-                  tags: log.embeds.linked_node.data.attributes.tags,
-                  accessRequestsEnabled: log.embeds.linked_node.data.attributes.access_requests_enabled,
-                  nodeLicense: log.embeds.linked_node.data.attributes.node_license
-                    ? {
-                        copyrightHolders: log.embeds.linked_node.data.attributes.node_license.copyright_holders,
-                        year: log.embeds.linked_node.data.attributes.node_license.year,
-                      }
-                    : { copyrightHolders: [], year: null },
-                  currentUserCanComment: log.embeds.linked_node.data.attributes.current_user_can_comment,
-                  currentUserPermissions: log.embeds.linked_node.data.attributes.current_user_permissions,
-                  currentUserIsContributor: log.embeds.linked_node.data.attributes.current_user_is_contributor,
-                  currentUserIsContributorOrGroupMember:
-                    log.embeds.linked_node.data.attributes.current_user_is_contributor_or_group_member,
-                  wikiEnabled: log.embeds.linked_node.data.attributes.wiki_enabled,
-                  public: log.embeds.linked_node.data.attributes.public,
-                  subjects: log.embeds.linked_node.data.attributes.subjects,
-                }
+              ? BaseNodeMapper.getNodeData(log.embeds.linked_node.data)
               : undefined,
           }
         : undefined,

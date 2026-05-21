@@ -1,5 +1,6 @@
 import { IdNameModel } from '../common/id-name.model';
-import { LicensesOption } from '../license/license.model';
+import { BaseNodeModel } from '../nodes/base-node.model';
+import { UserModel } from '../user/user.model';
 
 export interface ActivityLog {
   id: string;
@@ -38,9 +39,9 @@ export interface ActivityLog {
     githubUser?: string;
   };
   embeds?: {
-    originalNode?: OriginalNode;
-    user?: User;
-    linkedNode?: LinkedNode;
+    originalNode?: BaseNodeModel;
+    user?: UserModel;
+    linkedNode?: BaseNodeModel;
   };
   isAnonymous?: boolean;
 }
@@ -50,70 +51,6 @@ interface Pointer {
   id: string;
   title: string;
   url: string;
-}
-
-interface OriginalNode {
-  id: string;
-  type: string;
-  title: string;
-  description: string;
-  category: string;
-  customCitation: string | null;
-  dateCreated: string;
-  dateModified: string;
-  registration: boolean;
-  preprint: boolean;
-  fork: boolean;
-  collection: boolean;
-  tags: string[];
-  accessRequestsEnabled: boolean;
-  nodeLicense: LicensesOption;
-  currentUserCanComment: boolean;
-  currentUserPermissions: string[];
-  currentUserIsContributor: boolean;
-  currentUserIsContributorOrGroupMember: boolean;
-  wikiEnabled: boolean;
-  public: boolean;
-  subjects: { id: string; text: string }[][];
-}
-
-interface User {
-  id: string;
-  type: string;
-  fullName: string;
-  givenName: string;
-  middleNames: string;
-  familyName: string;
-  suffix: string;
-  dateRegistered: string;
-  active: boolean;
-  timezone: string;
-  locale: string;
-}
-
-interface LinkedNode {
-  id: string;
-  type: string;
-  title: string;
-  description: string;
-  category: string;
-  customCitation: string | null;
-  dateCreated: string;
-  dateModified: string;
-  registration: boolean;
-  preprint: boolean;
-  fork: boolean;
-  collection: boolean;
-  tags: string[];
-  accessRequestsEnabled: boolean;
-  nodeLicense: LicensesOption;
-  currentUserCanComment: boolean;
-  currentUserPermissions: string[];
-  currentUserIsContributor: boolean;
-  currentUserIsContributorOrGroupMember: boolean;
-  wikiEnabled: boolean;
-  public: boolean;
-  subjects: { id: string; text: string }[][];
 }
 
 export interface LogContributor {
