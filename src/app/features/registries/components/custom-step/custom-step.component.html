@@ -177,10 +177,9 @@
                   [attachedFiles]="attachedFiles[q.responseKey!]"
                   [filesLink]="filesLink()"
                   [projectId]="projectId()"
-                  [provider]="provider()"
+                  [filesViewOnly]="filesViewOnly()"
                   (attachFile)="onAttachFile($event, q.responseKey!)"
                   (openFile)="onOpenFile($event)"
-                  [filesViewOnly]="filesViewOnly()"
                   (removeFromAttachedFiles)="removeFromAttachedFiles($event, q.responseKey!)"
                 ></osf-files-control>
               </div>
