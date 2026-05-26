@@ -29,7 +29,7 @@ import { CedarMetadataHelper } from '../../helpers';
 import {
   CedarEditorElement,
   CedarMetadataDataTemplateJsonApi,
-  CedarMetadataRecordData,
+  CedarMetadataRecordDataJsonApi,
   CedarRecordDataBinding,
 } from '../../models';
 
@@ -48,7 +48,7 @@ export class CedarTemplateFormComponent {
   toggleEditMode = output<void>();
 
   template = input.required<CedarMetadataDataTemplateJsonApi>();
-  existingRecord = input<CedarMetadataRecordData | null>(null);
+  existingRecord = input<CedarMetadataRecordDataJsonApi | null>(null);
   readonly = input<boolean>(false);
   showEditButton = input<boolean>(false);
 

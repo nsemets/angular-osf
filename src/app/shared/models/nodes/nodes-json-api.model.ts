@@ -1,12 +1,16 @@
-import { ResponseJsonApi } from '../common/json-api.model';
+import { ItemResponse, ListResponse } from '../common/json-api/responses.model';
 
 import { BaseNodeDataJsonApi } from './base-node-data-json-api.model';
 
-export type NodesResponseJsonApi = ResponseJsonApi<BaseNodeDataJsonApi[]>;
-export type NodeResponseJsonApi = ResponseJsonApi<BaseNodeDataJsonApi>;
+export type NodesResponseJsonApi = ListResponse<BaseNodeDataJsonApi>;
+export type NodeResponseJsonApi = ItemResponse<BaseNodeDataJsonApi>;
 
 export interface UpdateNodeRequestModel {
-  data: UpdateNodeDataJsonApi;
+  data: {
+    id: string;
+    type: 'nodes';
+    attributes?: UpdateNodeAttributesJsonApi;
+  };
 }
 
 export interface CreateProjectPayloadJsoApi {
@@ -20,26 +24,10 @@ export interface CreateProjectPayloadJsoApi {
       public: boolean;
     };
     relationships: {
-      region: {
-        data: {
-          type: 'regions';
-          id: string;
-        };
-      };
-      affiliated_institutions?: {
-        data: {
-          type: 'institutions';
-          id: string;
-        }[];
-      };
+      region: { data: { type: 'regions'; id: string } };
+      affiliated_institutions?: { data: { type: 'institutions'; id: string }[] };
     };
   };
-}
-
-interface UpdateNodeDataJsonApi {
-  id: string;
-  type: 'nodes';
-  attributes: UpdateNodeAttributesJsonApi;
 }
 
 interface UpdateNodeAttributesJsonApi {

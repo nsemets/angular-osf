@@ -3,7 +3,7 @@ import { MockComponents } from 'ng-mocks';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SortOrder } from '@osf/shared/enums/sort-order.enum';
-import { MyResourcesItem } from '@osf/shared/models/my-resources/my-resources.model';
+import { MyResourcesItem } from '@osf/shared/models/my-resources/my-resources-item.model';
 import { TableParameters } from '@osf/shared/models/table-parameters.model';
 
 import { MOCK_CONTRIBUTOR } from '@testing/mocks/contributors.mock';

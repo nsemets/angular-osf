@@ -5,19 +5,19 @@ import { inject, Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 
+import { DEFAULT_TABLE_PARAMS } from '../constants/default-table-params.constants';
 import { ResourceSearchMode } from '../enums/resource-search-mode.enum';
 import { SortOrder } from '../enums/sort-order.enum';
 import { MyResourcesMapper } from '../mappers/my-resources.mapper';
-import { JsonApiResponse } from '../models/common/json-api.model';
+import { EndpointType } from '../models/my-resources/my-resources-endpoint.type';
+import { MyResourcesItem } from '../models/my-resources/my-resources-item.model';
 import {
-  MyResourcesItem,
-  MyResourcesItemGetResponseJsonApi,
   MyResourcesItemResponseJsonApi,
   MyResourcesResponseJsonApi,
-} from '../models/my-resources/my-resources.model';
-import { EndpointType } from '../models/my-resources/my-resources-endpoint.type';
+} from '../models/my-resources/my-resources-json-api.model';
 import { MyResourcesSearchFilters } from '../models/my-resources/my-resources-search-filters.model';
 import { CreateProjectPayloadJsoApi } from '../models/nodes/nodes-json-api.model';
+import { PaginatedData } from '../models/paginated-data.model';
 
 import { JsonApiService } from './json-api.service';
 
@@ -75,7 +75,7 @@ export class MyResourcesService {
     resourceType?: string,
     searchMode?: ResourceSearchMode,
     rootProjectId?: string
-  ): Observable<MyResourcesItemResponseJsonApi> {
+  ): Observable<PaginatedData<MyResourcesItem[]>> {
     const params = this.buildCommonParams(filters, pageNumber, pageSize, resourceType);
 
     if (searchMode !== ResourceSearchMode.All) {
@@ -105,9 +105,9 @@ export class MyResourcesService {
 
     return this.jsonApiService.get<MyResourcesResponseJsonApi>(url, params).pipe(
       map((response: MyResourcesResponseJsonApi) => ({
-        data: response.data.map((item: MyResourcesItemGetResponseJsonApi) => MyResourcesMapper.fromResponse(item)),
-        links: response.links,
-        meta: response.meta,
+        data: response.data.map((item) => MyResourcesMapper.fromResponse(item)),
+        totalCount: response.meta.total,
+        pageSize: response.meta.per_page ?? DEFAULT_TABLE_PARAMS.rows,
       }))
     );
   }
@@ -118,7 +118,7 @@ export class MyResourcesService {
     pageSize?: number,
     searchMode?: ResourceSearchMode,
     rootProjectId?: string
-  ): Observable<MyResourcesItemResponseJsonApi> {
+  ): Observable<PaginatedData<MyResourcesItem[]>> {
     return this.getResources('nodes/', filters, pageNumber, pageSize, 'nodes', searchMode, rootProjectId);
   }
 
@@ -128,7 +128,7 @@ export class MyResourcesService {
     pageSize?: number,
     searchMode?: ResourceSearchMode,
     rootProjectId?: string
-  ): Observable<MyResourcesItemResponseJsonApi> {
+  ): Observable<PaginatedData<MyResourcesItem[]>> {
     return this.getResources(
       'registrations/',
       filters,
@@ -144,7 +144,7 @@ export class MyResourcesService {
     filters?: MyResourcesSearchFilters,
     pageNumber?: number,
     pageSize?: number
-  ): Observable<MyResourcesItemResponseJsonApi> {
+  ): Observable<PaginatedData<MyResourcesItem[]>> {
     return this.getResources('preprints/', filters, pageNumber, pageSize, 'preprints');
   }
 
@@ -191,7 +191,7 @@ export class MyResourcesService {
     };
 
     return this.jsonApiService
-      .post<JsonApiResponse<MyResourcesItemGetResponseJsonApi, null>>(`${this.apiUrl}/nodes/`, payload, params)
+      .post<MyResourcesItemResponseJsonApi>(`${this.apiUrl}/nodes/`, payload, params)
       .pipe(map((response) => MyResourcesMapper.fromResponse(response.data)));
   }
 }

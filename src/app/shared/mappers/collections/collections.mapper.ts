@@ -2,6 +2,7 @@ import {
   CollectionSubmissionReviewAction,
   CollectionSubmissionReviewActionJsonApi,
 } from '@osf/features/moderation/models';
+import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants/default-table-params.constants';
 import { convertToSnakeCase } from '@osf/shared/helpers/convert-to-snake-case.helper';
 import { CollectionSubmissionPayload } from '@osf/shared/models/collections/collection-submission-payload.model';
 import { CollectionSubmissionPayloadJsonApi } from '@osf/shared/models/collections/collection-submission-payload-json-api.model';
@@ -13,12 +14,12 @@ import {
   CollectionSubmissionWithGuid,
 } from '@osf/shared/models/collections/collections.model';
 import {
-  CollectionDetailsResponseJsonApi,
-  CollectionProviderResponseJsonApi,
-  CollectionSubmissionJsonApi,
-  CollectionSubmissionWithGuidJsonApi,
+  CollectionDetailsDataJsonApi,
+  CollectionProviderDataJsonApi,
+  CollectionSubmissionDataJsonApi,
+  CollectionSubmissionWithGuidDataJsonApi,
+  CollectionSubmissionWithGuidListResponseJsonApi,
 } from '@osf/shared/models/collections/collections-json-api.model';
-import { ResponseJsonApi } from '@osf/shared/models/common/json-api.model';
 import { ContributorModel } from '@osf/shared/models/contributors/contributor.model';
 import { PaginatedData } from '@osf/shared/models/paginated-data.model';
 import { replaceBadEncodedChars } from '@shared/helpers/format-bad-encoding.helper';
@@ -27,7 +28,7 @@ import { ProjectsMapper } from '../projects';
 import { UserMapper } from '../user';
 
 export class CollectionsMapper {
-  static fromGetCollectionProviderResponse(response: CollectionProviderResponseJsonApi): CollectionProvider {
+  static fromGetCollectionProviderResponse(response: CollectionProviderDataJsonApi): CollectionProvider {
     return {
       id: response.id,
       type: response.type,
@@ -55,8 +56,8 @@ export class CollectionsMapper {
       permissions: response.attributes.permissions,
       reviewsWorkflow: response.attributes.reviews_workflow,
       primaryCollection: {
-        id: response.relationships.primary_collection.data.id,
-        type: response.relationships.primary_collection.data.type,
+        id: response.relationships.primary_collection.data!.id,
+        type: response.relationships.primary_collection.data!.type,
       },
       defaultLicenseId: response.attributes?.default_license_id,
       brand: response.embeds.brand.data
@@ -74,7 +75,7 @@ export class CollectionsMapper {
     };
   }
 
-  static fromGetCollectionDetailsResponse(response: CollectionDetailsResponseJsonApi): CollectionDetails {
+  static fromGetCollectionDetailsResponse(response: CollectionDetailsDataJsonApi): CollectionDetails {
     return {
       id: response.id,
       type: response.type,
@@ -99,7 +100,7 @@ export class CollectionsMapper {
     };
   }
 
-  static fromCurrentSubmissionResponse(submission: CollectionSubmissionJsonApi): CollectionSubmission {
+  static fromCurrentSubmissionResponse(submission: CollectionSubmissionDataJsonApi): CollectionSubmission {
     return {
       id: submission.id,
       type: submission.type,
@@ -120,7 +121,7 @@ export class CollectionsMapper {
   }
 
   static fromGetCollectionSubmissionsResponse(
-    response: ResponseJsonApi<CollectionSubmissionWithGuidJsonApi[]>
+    response: CollectionSubmissionWithGuidListResponseJsonApi
   ): PaginatedData<CollectionSubmissionWithGuid[]> {
     return {
       data: response.data.map((submission) => {
@@ -157,7 +158,7 @@ export class CollectionsMapper {
         } as CollectionSubmissionWithGuid;
       }),
       totalCount: response.meta.total,
-      pageSize: response.meta.per_page,
+      pageSize: response.meta.per_page ?? DEFAULT_TABLE_PARAMS.rows,
     };
   }
 
@@ -180,7 +181,7 @@ export class CollectionsMapper {
   }
 
   static fromPostCollectionSubmissionsResponse(
-    response: CollectionSubmissionWithGuidJsonApi[]
+    response: CollectionSubmissionWithGuidDataJsonApi[]
   ): CollectionSubmissionWithGuid[] {
     return response.map((submission) => ({
       id: submission.id,
@@ -208,7 +209,7 @@ export class CollectionsMapper {
     }));
   }
 
-  static getProjectSubmission(data: CollectionSubmissionWithGuidJsonApi): CollectionProjectSubmission {
+  static getProjectSubmission(data: CollectionSubmissionWithGuidDataJsonApi): CollectionProjectSubmission {
     const project = ProjectsMapper.fromProjectResponse(data.embeds.guid.data);
     const submission: CollectionSubmissionWithGuid = {
       id: data.id,

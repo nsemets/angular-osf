@@ -1,6 +1,8 @@
-import { ActivityLogWithDisplay } from '@osf/shared/models/activity-logs/activity-log-with-display.model';
+import { ActivityLogWithDisplayModel } from '@osf/shared/models/activity-logs/activity-log-with-display.model';
 
-export function makeActivityLogWithDisplay(overrides: Partial<ActivityLogWithDisplay> = {}): ActivityLogWithDisplay {
+export function makeActivityLogWithDisplay(
+  overrides: Partial<ActivityLogWithDisplayModel> = {}
+): ActivityLogWithDisplayModel {
   return structuredClone({
     id: 'log1',
     type: 'logs',
@@ -17,7 +19,7 @@ export function makeActivityLogWithDisplay(overrides: Partial<ActivityLogWithDis
   });
 }
 
-export const MOCK_ACTIVITY_LOGS_WITH_DISPLAY: ActivityLogWithDisplay[] = [
+export const MOCK_ACTIVITY_LOGS_WITH_DISPLAY: ActivityLogWithDisplayModel[] = [
   makeActivityLogWithDisplay({
     id: 'log1',
     action: 'update',

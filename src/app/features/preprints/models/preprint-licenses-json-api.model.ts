@@ -1,10 +1,5 @@
 import { LicenseRecordJsonApi } from '@osf/shared/models/license/licenses-json-api.model';
 
-export interface PreprintLicenseRelationshipJsonApi {
-  id: string;
-  type: 'licenses';
-}
-
 export interface PreprintLicensePayloadJsonApi {
   data: {
     type: 'preprints';
@@ -18,4 +13,9 @@ export interface PreprintLicensePayloadJsonApi {
       license_record?: LicenseRecordJsonApi;
     };
   };
+}
+
+interface PreprintLicenseRelationshipJsonApi {
+  id: string;
+  type: 'licenses';
 }

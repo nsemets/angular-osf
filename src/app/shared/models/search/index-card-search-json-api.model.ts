@@ -1,23 +1,32 @@
-import { ApiData, JsonApiResponse } from '../common/json-api.model';
+export interface IndexCardSearchResponseJsonApi {
+  data: IndexCardSearchDataJsonApi;
+  included?: (IndexCardDataJsonApi | RelatedPropertyPathDataJsonApi | SearchResultDataJsonApi)[];
+}
 
-export type IndexCardSearchResponseJsonApi = JsonApiResponse<
-  {
-    attributes: {
-      totalResultCount: number | { '@id': string };
-    };
-    relationships: {
-      searchResultPage: SearchResultPageJsonApi;
-      relatedProperties: RelatedPropertiesJsonApi;
-    };
-    links: {
-      self: string;
-    };
-  },
-  (IndexCardDataJsonApi | RelatedPropertyPathDataJsonApi | SearchResultDataJsonApi)[]
->;
+interface IndexCardSearchDataJsonApi {
+  attributes: {
+    totalResultCount: number | { '@id': string };
+  };
+  links: {
+    self: string;
+  };
+  relationships: {
+    relatedProperties: RelatedPropertiesJsonApi;
+    searchResultPage: SearchResultPageJsonApi;
+  };
+}
 
-export type RelatedPropertyPathDataJsonApi = ApiData<RelatedPropertyPathAttributesJsonApi, null, null, null>;
-export type IndexCardDataJsonApi = ApiData<IndexCardAttributesJsonApi, null, null, null>;
+export interface RelatedPropertyPathDataJsonApi {
+  id: string;
+  type: string;
+  attributes: RelatedPropertyPathAttributesJsonApi;
+}
+
+export interface IndexCardDataJsonApi {
+  id: string;
+  type: string;
+  attributes: IndexCardAttributesJsonApi;
+}
 
 interface SearchResultPageJsonApi {
   data: { id: string }[];

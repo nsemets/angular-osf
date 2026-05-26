@@ -7,15 +7,16 @@ import { inject, Injectable } from '@angular/core';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { MapFileCustomMetadata, MapFileRevision } from '@osf/features/files/mappers';
 import {
-  FileCustomMetadata,
-  GetCustomMetadataResponse,
-  GetFileMetadataResponse,
-  GetFileRevisionsResponse,
-  GetShortInfoResponse,
+  FileCustomMetadataDataJsonApi,
+  FileMetadataResponse,
+  FileRevisionsResponse,
+  NodeShortInfoResponse,
   OsfFileCustomMetadata,
   OsfFileRevision,
   PatchFileMetadata,
 } from '@osf/features/files/models';
+import { ResourceCustomMetadataResponse } from '@osf/features/files/models/resource-custom-metadata-response.model';
+import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants/default-table-params.constants';
 import { PaginatedData } from '@osf/shared/models/paginated-data.model';
 
 import { FileKind } from '../enums/file-kind.enum';
@@ -23,9 +24,14 @@ import { AddonMapper } from '../mappers/addon.mapper';
 import { ContributorsMapper } from '../mappers/contributors';
 import { FilesMapper } from '../mappers/files/files.mapper';
 import { AddonModel } from '../models/addons/addon.model';
-import { AddonGetResponseJsonApi, ConfiguredAddonGetResponseJsonApi } from '../models/addons/addon-json-api.model';
+import {
+  AddonGetResponseJsonApi,
+  ConfiguredAddonGetResponseJsonApi,
+  ResourceReferenceResponseJsonApi,
+} from '../models/addons/addon-json-api.model';
 import { ConfiguredAddonModel } from '../models/addons/configured-addon.model';
-import { ApiData, JsonApiResponse, MetaJsonApi } from '../models/common/json-api.model';
+import { ListMetaJsonApi } from '../models/common/json-api/meta.model';
+import { JsonApiResponse } from '../models/common/json-api/responses.model';
 import { ContributorModel } from '../models/contributors/contributor.model';
 import { ContributorsResponseJsonApi } from '../models/contributors/contributor-response-json-api.model';
 import { FileDetailsModel, FileModel } from '../models/files/file.model';
@@ -67,7 +73,7 @@ export class FilesService {
     search: string,
     sort: string,
     page = 1
-  ): Observable<{ files: FileModel[]; meta?: MetaJsonApi }> {
+  ): Observable<{ files: FileModel[]; meta?: ListMetaJsonApi }> {
     const params: Record<string, string> = {
       sort: sort,
       page: page.toString(),
@@ -80,7 +86,7 @@ export class FilesService {
       .pipe(map((response) => ({ files: FilesMapper.getFiles(response.data), meta: response.meta })));
   }
 
-  getFolders(folderLink: string): Observable<{ files: FileFolderModel[]; meta?: MetaJsonApi }> {
+  getFolders(folderLink: string): Observable<{ files: FileFolderModel[]; meta?: ListMetaJsonApi }> {
     return this.jsonApiService
       .get<FileFoldersResponseJsonApi>(`${folderLink}`)
       .pipe(map((response) => ({ files: FilesMapper.getFileFolders(response.data), meta: response.meta })));
@@ -94,7 +100,7 @@ export class FilesService {
       map((response) => ({
         data: FilesMapper.getFiles(response.data),
         totalCount: response.meta.total,
-        pageSize: response.meta.per_page,
+        pageSize: response.meta.per_page ?? DEFAULT_TABLE_PARAMS.rows,
       }))
     );
   }
@@ -197,20 +203,20 @@ export class FilesService {
 
   getFileMetadata(fileGuid: string): Observable<OsfFileCustomMetadata> {
     return this.jsonApiService
-      .get<GetFileMetadataResponse>(`${this.apiUrl}/custom_file_metadata_records/${fileGuid}/`)
+      .get<FileMetadataResponse>(`${this.apiUrl}/custom_file_metadata_records/${fileGuid}/`)
       .pipe(map((response) => MapFileCustomMetadata(response.data)));
   }
 
-  getResourceShortInfo(resourceId: string, resourceType: string): Observable<GetShortInfoResponse> {
+  getResourceShortInfo(resourceId: string, resourceType: string): Observable<NodeShortInfoResponse> {
     const params = {
       'fields[nodes]': 'title,description,date_created,date_modified,identifiers',
       embed: 'identifiers',
     };
-    return this.jsonApiService.get<GetShortInfoResponse>(`${this.apiUrl}/${resourceType}/${resourceId}/`, params);
+    return this.jsonApiService.get<NodeShortInfoResponse>(`${this.apiUrl}/${resourceType}/${resourceId}/`, params);
   }
 
-  getCustomMetadata(resourceId: string): Observable<GetCustomMetadataResponse> {
-    return this.jsonApiService.get<GetCustomMetadataResponse>(
+  getCustomMetadata(resourceId: string): Observable<ResourceCustomMetadataResponse> {
+    return this.jsonApiService.get<ResourceCustomMetadataResponse>(
       `${this.apiUrl}/guids/${resourceId}/?embed=custom_metadata&resolve=false`
     );
   }
@@ -231,9 +237,7 @@ export class FilesService {
     };
 
     return this.jsonApiService
-      .patch<
-        ApiData<FileCustomMetadata, null, null, null>
-      >(`${this.apiUrl}/custom_file_metadata_records/${fileGuid}/`, payload)
+      .patch<FileCustomMetadataDataJsonApi>(`${this.apiUrl}/custom_file_metadata_records/${fileGuid}/`, payload)
       .pipe(map((response) => MapFileCustomMetadata(response)));
   }
 
@@ -242,7 +246,7 @@ export class FilesService {
     const urlWithRevisions = `${link}${separator}revisions=`;
 
     return this.jsonApiService
-      .get<GetFileRevisionsResponse>(urlWithRevisions)
+      .get<FileRevisionsResponse>(urlWithRevisions)
       .pipe(map((response) => MapFileRevision(response.data)));
   }
 
@@ -278,14 +282,10 @@ export class FilesService {
   }
 
   getResourceReferences(resourceUri: string): Observable<string> {
-    const params = {
-      'filter[resource_uri]': resourceUri,
-    };
+    const params = { 'filter[resource_uri]': resourceUri };
 
     return this.jsonApiService
-      .get<
-        JsonApiResponse<ApiData<null, null, null, { self: string }>[], null>
-      >(`${this.addonsApiUrl}/resource-references`, params)
+      .get<ResourceReferenceResponseJsonApi>(`${this.addonsApiUrl}/resource-references`, params)
       .pipe(map((response) => response.data?.[0]?.links?.self ?? ''));
   }
 

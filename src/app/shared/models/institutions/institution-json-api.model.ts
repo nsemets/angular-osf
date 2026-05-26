@@ -1,67 +1,30 @@
-import { ApiData, JsonApiResponse, ResponseJsonApi } from '../common/json-api.model';
+import { ResourceLinksJsonApi } from '../common/json-api/links.model';
+import { RelatedCountRel } from '../common/json-api/relationships.model';
+import { JsonApiResource } from '../common/json-api/resource.model';
+import { ItemResponse, ListResponse } from '../common/json-api/responses.model';
 
 import { InstitutionAssets } from './institutions.model';
 
-export type InstitutionsJsonApiResponse = JsonApiResponse<InstitutionDataJsonApi[], null>;
-export type InstitutionsWithMetaJsonApiResponse = ResponseJsonApi<InstitutionDataJsonApi[]>;
-export type InstitutionJsonApiResponse = JsonApiResponse<InstitutionDataJsonApi, null>;
+export type InstitutionsJsonApiResponse = ListResponse<InstitutionDataJsonApi>;
+export type InstitutionJsonApiResponse = ItemResponse<InstitutionDataJsonApi>;
 
-export type InstitutionDataJsonApi = ApiData<
-  InstitutionAttributesJsonApi,
-  null,
-  InstitutionRelationshipsJsonApi,
-  InstitutionLinksJsonApi
->;
-
-interface InstitutionAttributesJsonApi {
-  name: string;
-  description: string;
-  iri: string;
-  ror_iri: string | null;
-  iris: string[];
-  assets: InstitutionAssets;
-  institutional_request_access_enabled: boolean;
-  logo_path: string;
-  link_to_external_reports_archive: string;
+export interface InstitutionDataJsonApi extends JsonApiResource<'institutions', InstitutionAttributesJsonApi> {
+  relationships: InstitutionRelationshipsJsonApi;
+  links: ResourceLinksJsonApi;
 }
 
-interface InstitutionLinksJsonApi {
-  self: string;
-  html: string;
+interface InstitutionAttributesJsonApi {
+  assets: InstitutionAssets;
+  description: string;
+  institutional_request_access_enabled: boolean;
   iri: string;
+  iris: string[];
+  link_to_external_reports_archive: string;
+  logo_path: string;
+  name: string;
+  ror_iri: string | null;
 }
 
 interface InstitutionRelationshipsJsonApi {
-  nodes: {
-    links: {
-      related: {
-        href: string;
-        meta: Record<string, unknown>;
-      };
-    };
-  };
-  registrations: {
-    links: {
-      related: {
-        href: string;
-        meta: Record<string, unknown>;
-      };
-    };
-  };
-  users: {
-    links: {
-      related: {
-        href: string;
-        meta: Record<string, unknown>;
-      };
-    };
-  };
-  user_metrics: {
-    links: {
-      related: {
-        href: string;
-        meta: Record<string, unknown>;
-      };
-    };
-  };
+  user_metrics: RelatedCountRel;
 }

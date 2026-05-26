@@ -1,41 +1,31 @@
-import { ResponseJsonApi } from '@shared/models/common/json-api.model';
+import { JsonApiResource, JsonApiResourceRef } from '@osf/shared/models/common/json-api/resource.model';
+import { RelationshipLinks } from '@shared/models/common/json-api/links.model';
+import { ItemResponse } from '@shared/models/common/json-api/responses.model';
 import { RegistrationNodeAttributesJsonApi } from '@shared/models/registration/registration-node-json-api.model';
 
-export type RegistrationOverviewResponse = ResponseJsonApi<RegistrationOverviewDataJsonApi>;
+export type RegistrationOverviewResponse = ItemResponse<RegistrationOverviewDataJsonApi>;
 
-export interface RegistrationOverviewDataJsonApi {
-  id: string;
-  attributes: RegistrationNodeAttributesJsonApi;
-  relationships: RegistryOverviewJsonApiRelationships;
+export interface RegistrationOverviewDataJsonApi extends JsonApiResource<
+  'registrations',
+  RegistrationNodeAttributesJsonApi
+> {
+  relationships: RegistryOverviewRelationshipsJsonApi;
 }
 
-export interface RegistryOverviewJsonApiRelationships {
-  registered_from: {
-    data: {
-      id: string;
-    };
-  };
-  registration_schema: {
-    links: {
-      related: {
-        href: string;
-      };
-    };
-  };
-  root: {
-    data: {
-      id: string;
-      type: string;
-    };
-  };
+interface RegistryOverviewRelationshipsJsonApi {
   license: {
-    data: {
-      id: string;
-    };
+    data: JsonApiResourceRef<'licenses'>;
   };
   provider: {
-    data: {
-      id: string;
-    };
+    data: JsonApiResourceRef<'registration-providers'>;
+  };
+  registered_from: {
+    data: JsonApiResourceRef<'nodes'>;
+  };
+  registration_schema: {
+    links: RelationshipLinks;
+  };
+  root: {
+    data: JsonApiResourceRef<'registrations'>;
   };
 }

@@ -1,9 +1,8 @@
-import { ApiData } from '@osf/shared/models/common/json-api.model';
 import { replaceBadEncodedChars } from '@shared/helpers/format-bad-encoding.helper';
 
-import { FileCustomMetadata, OsfFileCustomMetadata } from '../models';
+import { FileCustomMetadataDataJsonApi, OsfFileCustomMetadata } from '../models';
 
-export function MapFileCustomMetadata(data: ApiData<FileCustomMetadata, null, null, null>): OsfFileCustomMetadata {
+export function MapFileCustomMetadata(data: FileCustomMetadataDataJsonApi): OsfFileCustomMetadata {
   return {
     id: data.id,
     description: replaceBadEncodedChars(data.attributes.description),

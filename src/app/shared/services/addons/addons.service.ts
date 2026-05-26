@@ -29,7 +29,7 @@ import {
 import { AuthorizedAccountModel } from '@osf/shared/models/addons/authorized-account.model';
 import { ConfiguredAddonModel } from '@osf/shared/models/addons/configured-addon.model';
 import { OperationInvocation } from '@osf/shared/models/addons/operation-invocation.model';
-import { JsonApiResponse } from '@osf/shared/models/common/json-api.model';
+import { JsonApiResponse } from '@osf/shared/models/common/json-api/responses.model';
 
 import { JsonApiService } from '../json-api.service';
 

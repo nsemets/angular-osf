@@ -1,3 +1,8 @@
+import { ResourceLinksJsonApi } from '../common/json-api/links.model';
+import { ListResponse } from '../common/json-api/responses.model';
+
+export type ResourceReferenceResponseJsonApi = ListResponse<ResourceReferenceJsonApi>;
+
 export interface AddonGetResponseJsonApi {
   type: string;
   id: string;
@@ -136,6 +141,7 @@ export interface ResourceReferenceJsonApi {
   attributes: {
     resource_uri: string;
   };
+  links: Pick<ResourceLinksJsonApi, 'self'>;
 }
 
 export interface AuthorizedAddonRequestJsonApi {
