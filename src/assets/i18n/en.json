@@ -511,6 +511,7 @@
       "emailPlaceholder": "email@example.com",
       "forked": "Forked",
       "lastUpdated": "Last Updated",
+      "language": "Language",
       "learnMore": "Learn More",
       "license": "License",
       "makePublic": "Make Public",
@@ -615,7 +616,8 @@
           "resourceLanguage": "Resource Language",
           "resourceType": "Resource Type"
         },
-        "title": "File Metadata"
+        "title": "File Metadata",
+        "previewNotAvailable": "File or Registration metadata not available in preview mode."
       },
       "keywords": {
         "title": "Keywords"
@@ -1119,6 +1121,7 @@
       "deleteProject": "Delete Project",
       "descriptions": {
         "file_updated": {
+          "instant": "You'll be notified immediately when files are updated.",
           "daily": "You'll receive a daily summary of file updates.",
           "instant": "You'll be notified immediately when files are updated.",
           "none": "You won't receive file update notifications."
@@ -1984,6 +1987,7 @@
         "customCitationPlaceholder": "Enter custom citation",
         "dateCreated": "Date Created",
         "dateUpdated": "Date Updated",
+        "funderNames": "Funder Names",
         "fundingSupport": "Funding/Support Information",
         "getMoreCitations": "Get More Citations",
         "internetArchiveLink": "internet archive link",
@@ -1992,7 +1996,9 @@
         "noInformation": "No information",
         "noProjectDoi": "No Project DOI",
         "noPublicationDoi": "No Publication DOI",
+        "noLanguage": "No language",
         "noResourceInformation": "No resource information available",
+        "noResourceType": "No resource type",
         "noSupplements": "No supplements",
         "noTags": "No tags",
         "placeholders": {
@@ -2822,6 +2828,10 @@
         "successEdit": "Token successfully updated."
       }
     }
+  },
+  "maintenance": {
+    "message": "Please come back later.",
+    "title": "The OSF is currently down for scheduled maintenance."
   },
   "shared": {
     "affiliatedInstitutions": {
