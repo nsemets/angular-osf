@@ -14,15 +14,16 @@ export interface InstitutionDataJsonApi extends JsonApiResource<'institutions', 
 }
 
 interface InstitutionAttributesJsonApi {
-  assets: InstitutionAssets;
-  description: string;
-  institutional_request_access_enabled: boolean;
-  iri: string;
-  iris: string[];
-  link_to_external_reports_archive: string;
-  logo_path: string;
   name: string;
+  description: string;
+  iri: string;
   ror_iri: string | null;
+  iris: string[];
+  assets: InstitutionAssets;
+  institutional_request_access_enabled: boolean;
+  logo_path: string;
+  link_to_external_reports_archive: string;
+  sso_availability: string;
 }
 
 interface InstitutionRelationshipsJsonApi {

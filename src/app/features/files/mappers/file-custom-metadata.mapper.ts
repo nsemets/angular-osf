@@ -1,6 +1,7 @@
 import { replaceBadEncodedChars } from '@shared/helpers/format-bad-encoding.helper';
 
-import { FileCustomMetadataDataJsonApi, OsfFileCustomMetadata } from '../models';
+import { OsfFileCustomMetadata } from '../models/file-custom-metadata.model';
+import { FileCustomMetadataDataJsonApi } from '../models/file-metadata-response.model';
 
 export function MapFileCustomMetadata(data: FileCustomMetadataDataJsonApi): OsfFileCustomMetadata {
   return {
