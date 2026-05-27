@@ -6,7 +6,7 @@ import { Mock } from 'vitest';
 
 import { TestBed } from '@angular/core/testing';
 import { FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlTree } from '@angular/router';
 
 import { InfoIconComponent } from '@osf/shared/components/info-icon/info-icon.component';
 import { FieldType } from '@osf/shared/enums/field-type.enum';
@@ -40,7 +40,8 @@ interface SetupOverrides extends BaseSetupOverrides {
   stepsData?: Record<string, unknown>;
   filesLink?: string;
   projectId?: string;
-  provider?: string;
+  serializedUrl?: string;
+  urlTree?: UrlTree;
 }
 
 describe('CustomStepComponent', () => {
@@ -57,7 +58,11 @@ describe('CustomStepComponent', () => {
       routeBuilder.withNoParent();
     }
 
-    const mockRouter = RouterMockBuilder.create().withUrl('/registries/drafts/id/1').build();
+    const mockRouter = RouterMockBuilder.create()
+      .withUrl('/registries/drafts/id/1')
+      .withCreateUrlTree(vi.fn().mockReturnValue(overrides.urlTree ?? ({} as UrlTree)))
+      .withSerializeUrl(vi.fn().mockReturnValue(overrides.serializedUrl ?? '/'))
+      .build();
     const toastMock = ToastServiceMock.simple();
 
     const defaultSignals: SignalOverride[] = [
@@ -83,7 +88,6 @@ describe('CustomStepComponent', () => {
     fixture.componentRef.setInput('stepsData', overrides.stepsData ?? MOCK_STEPS_DATA);
     fixture.componentRef.setInput('filesLink', overrides.filesLink ?? 'files-link');
     fixture.componentRef.setInput('projectId', overrides.projectId ?? 'project');
-    fixture.componentRef.setInput('provider', overrides.provider ?? 'provider');
     fixture.detectChanges();
     return { component, fixture, store, routeBuilder, mockRouter, toastMock };
   }
@@ -218,6 +222,31 @@ describe('CustomStepComponent', () => {
     expect(component.attachedFiles['field1'].length).toBe(1);
     expect(component.attachedFiles['field1'][0].file_id).toBe('f2');
     expect(emitSpy).toHaveBeenCalled();
+  });
+
+  it('should open file preview in new tab when draftId and file guid exist', () => {
+    const urlTree = {} as UrlTree;
+    const { component, mockRouter } = setup({
+      routeParams: { step: '1', id: 'draft-1' },
+      urlTree,
+      serializedUrl: '/draft-1/files/file-guid/preview',
+    });
+    const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
+
+    component.onOpenFile({ guid: 'file-guid' } as FileModel);
+
+    expect(mockRouter.createUrlTree).toHaveBeenCalledWith(['draft-1', 'files', 'file-guid', 'preview']);
+    expect(mockRouter.serializeUrl).toHaveBeenCalledWith(urlTree);
+    expect(openSpy).toHaveBeenCalledWith('/draft-1/files/file-guid/preview', '_blank');
+  });
+
+  it('should not open file preview when file guid is missing', () => {
+    const { component } = setup({ routeParams: { step: '1', id: 'draft-1' } });
+    const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
+
+    component.onOpenFile({ guid: null } as FileModel);
+
+    expect(openSpy).not.toHaveBeenCalled();
   });
 
   it('should skip non-existent questionKey', () => {

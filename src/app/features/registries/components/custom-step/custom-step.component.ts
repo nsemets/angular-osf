@@ -72,7 +72,6 @@ export class CustomStepComponent implements OnDestroy {
   stepsData = input.required<Record<string, any>>();
   filesLink = input.required<string>();
   projectId = input.required<string>();
-  provider = input.required<string>();
   filesViewOnly = input<boolean>(false);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
