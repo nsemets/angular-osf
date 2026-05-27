@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
 import { collectionFilterNames } from '@osf/features/collections/constants';
-import { CollectionSubmission } from '@osf/shared/models/collections/collections.model';
+import { CollectionSubmission } from '@osf/shared/models/collections/collection-submissions.model';
 
 import {
   MOCK_COLLECTION_SUBMISSION_EMPTY_FILTERS,
@@ -44,7 +44,7 @@ describe('OverviewCollectionsComponent', () => {
       ...s,
       collectionTitle: s.title,
       collectionId: `col-${s.id}`,
-    })) as CollectionSubmission[];
+    }));
     fixture.componentRef.setInput('projectSubmissions', submissions);
     fixture.componentRef.setInput('isProjectSubmissionsLoading', true);
     fixture.detectChanges();

@@ -4,7 +4,7 @@ import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ContributorsListComponent } from '@osf/shared/components/contributors-list/contributors-list.component';
-import { CollectionSubmissionWithGuid } from '@osf/shared/models/collections/collections.model';
+import { CollectionSubmissionWithGuid } from '@osf/shared/models/collections/collection-submissions.model';
 
 import { MOCK_COLLECTION_SUBMISSION_WITH_GUID } from '@testing/mocks/submission.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
@@ -16,7 +16,7 @@ describe('CollectionsSearchResultCardComponent', () => {
   let componentRef: ComponentRef<CollectionsSearchResultCardComponent>;
   let fixture: ComponentFixture<CollectionsSearchResultCardComponent>;
 
-  const mockCardItem: CollectionSubmissionWithGuid = MOCK_COLLECTION_SUBMISSION_WITH_GUID;
+  const mockCardItem = MOCK_COLLECTION_SUBMISSION_WITH_GUID;
 
   beforeEach(() => {
     TestBed.configureTestingModule({

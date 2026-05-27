@@ -13,13 +13,14 @@ export type NotificationSubscriptionDataJsonApi = JsonApiResource<
 export type NotificationSubscriptionGetResponseJsonApi = NotificationSubscriptionDataJsonApi;
 
 export interface NotificationSubscriptionUpdateRequestJsonApi {
-  data: {
-    id?: string;
-    type: NotificationSubscriptionTypeJsonApi;
-    attributes: {
-      frequency: SubscriptionFrequency;
-    };
-  };
+  data: NotificationSubscriptionUpdateDataJsonApi;
+}
+
+interface NotificationSubscriptionUpdateDataJsonApi extends Omit<
+  JsonApiResource<NotificationSubscriptionTypeJsonApi, NotificationSubscriptionUpdateAttributesJsonApi>,
+  'id'
+> {
+  id?: string;
 }
 
 type NotificationSubscriptionTypeJsonApi = 'subscription' | 'user-provider-subscription';
@@ -27,4 +28,8 @@ type NotificationSubscriptionTypeJsonApi = 'subscription' | 'user-provider-subsc
 interface NotificationSubscriptionAttributesJsonApi {
   event_name: string;
   frequency: string;
+}
+
+interface NotificationSubscriptionUpdateAttributesJsonApi {
+  frequency: SubscriptionFrequency;
 }

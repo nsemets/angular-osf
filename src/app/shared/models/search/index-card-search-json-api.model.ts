@@ -1,3 +1,5 @@
+import { ToOneRelData } from '../common/json-api/relationships.model';
+
 export interface IndexCardSearchResponseJsonApi {
   data: IndexCardSearchDataJsonApi;
   included?: (IndexCardDataJsonApi | RelatedPropertyPathDataJsonApi | SearchResultDataJsonApi)[];
@@ -84,12 +86,7 @@ export interface SearchResultDataJsonApi {
   id: string;
   type: 'search-result';
   relationships: {
-    indexCard: {
-      data: {
-        id: string;
-        type: 'index-card';
-      };
-    };
+    indexCard: ToOneRelData<'index-card'>;
   };
   attributes?: {
     matchEvidence: (IriMatchEvidence | TextMatchEvidence)[];

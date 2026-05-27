@@ -5,7 +5,7 @@ import { Skeleton } from 'primeng/skeleton';
 
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-import { CollectionSubmission } from '@osf/shared/models/collections/collections.model';
+import { CollectionSubmission } from '@osf/shared/models/collections/collection-submissions.model';
 
 import { MetadataCollectionItemComponent } from '../metadata-collection-item/metadata-collection-item.component';
 

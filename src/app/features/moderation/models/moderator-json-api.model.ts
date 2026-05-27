@@ -11,13 +11,15 @@ export interface ModeratorDataJsonApi extends JsonApiResource<'moderators', Mode
 }
 
 export interface ModeratorAddRequestModel {
-  attributes: {
-    email?: string;
-    full_name?: string;
-    id?: string;
-    permission_group: string;
-  };
+  attributes: ModeratorAddAttributesJsonApi;
   type: 'moderators';
+}
+
+interface ModeratorAddAttributesJsonApi {
+  email?: string;
+  full_name?: string;
+  id?: string;
+  permission_group: string;
 }
 
 interface ModeratorAttributesJsonApi {

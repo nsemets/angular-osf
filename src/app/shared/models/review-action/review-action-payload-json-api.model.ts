@@ -1,6 +1,6 @@
 import { ReviewActionTrigger } from '@osf/shared/enums/trigger-action.enum';
 
-import { JsonApiResourceRef } from '../common/json-api/resource.model';
+import { ToOneRelData } from '../common/json-api/relationships.model';
 
 export interface ReviewActionPayloadJsonApi<TActionType extends string, TTargetType extends string> {
   data: {
@@ -16,7 +16,5 @@ interface ReviewActionPayloadAttributesJsonApi {
 }
 
 interface ReviewActionPayloadRelationshipsJsonApi<TTargetType extends string> {
-  target: {
-    data: JsonApiResourceRef<TTargetType>;
-  };
+  target: ToOneRelData<TTargetType>;
 }

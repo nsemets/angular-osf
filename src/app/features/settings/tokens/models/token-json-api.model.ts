@@ -1,5 +1,5 @@
 import { JsonApiResource } from '@osf/shared/models/common/json-api/resource.model';
-import { ItemResponse, ListResponse } from '@osf/shared/models/common/json-api/responses.model';
+import { DataResponse, ItemResponse, ListResponse } from '@osf/shared/models/common/json-api/responses.model';
 
 import { ScopeJsonApiResponse } from './scope-json-api.model';
 
@@ -10,14 +10,16 @@ export interface TokenDataJsonApi extends JsonApiResource<'tokens', TokenAttribu
   embeds: TokenEmbedsJsonApi;
 }
 
-export interface TokenCreateRequestJsonApi {
-  data: {
-    attributes: {
-      name: string;
-      scopes: string;
-    };
-    type: 'tokens';
-  };
+export type TokenCreateRequestJsonApi = DataResponse<TokenCreateDataJsonApi>;
+
+interface TokenCreateDataJsonApi {
+  attributes: TokenCreateAttributesJsonApi;
+  type: 'tokens';
+}
+
+interface TokenCreateAttributesJsonApi {
+  name: string;
+  scopes: string;
 }
 
 interface TokenAttributesJsonApi {

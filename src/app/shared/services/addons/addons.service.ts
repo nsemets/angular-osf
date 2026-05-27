@@ -31,7 +31,7 @@ import { ConfiguredAddonModel } from '@osf/shared/models/addons/configured-addon
 import {
   ConfiguredAddonDataJsonApi,
   ConfiguredAddonItemResponseJsonApi,
-  ConfiguredAddonListResponseJsonApi,
+  ConfiguredAddonListResponseWithIncludeJsonApi,
   ConfiguredAddonRequestJsonApi,
 } from '@osf/shared/models/addons/configured-addon-json-api.model';
 import { AddonGetListResponseJsonApi } from '@osf/shared/models/addons/external-addon-json-api.model';
@@ -123,7 +123,7 @@ export class AddonsService {
       [`fields[external-${addonType}-services]`]: 'external_service_name,credentials_format,icon_url',
     };
     return this.jsonApiService
-      .get<ConfiguredAddonListResponseJsonApi>(
+      .get<ConfiguredAddonListResponseWithIncludeJsonApi>(
         `${this.apiUrl}/resource-references/${referenceId}/configured_${addonType}_addons/?include=external-${addonType}-service`,
         params
       )

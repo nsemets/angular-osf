@@ -1,6 +1,6 @@
-import { ToOneRel } from '../common/json-api/relationships.model';
-import { JsonApiResource, JsonApiResourceRef } from '../common/json-api/resource.model';
-import { JsonApiResponse } from '../common/json-api/responses.model';
+import { ToOneRelData } from '../common/json-api/relationships.model';
+import { JsonApiResource } from '../common/json-api/resource.model';
+import { DataResponse, JsonApiResponse } from '../common/json-api/responses.model';
 
 import { IncludedAddonData } from './addon-included-json-api.model';
 
@@ -11,21 +11,23 @@ export interface AuthorizedAddonDataJsonApi extends JsonApiResource<string, Auth
   relationships: AuthorizedAddonRelationshipsJsonApi;
 }
 
-export interface AuthorizedAddonRequestJsonApi {
-  data: {
-    id?: string;
-    type: string;
-    attributes: {
-      api_base_url: string;
-      auth_url: string | null;
-      authorized_capabilities: string[];
-      credentials: Record<string, unknown>;
-      credentials_available: boolean;
-      display_name: string;
-      initiate_oauth: boolean;
-    };
-    relationships: AuthorizedAddonRequestRelationshipsJsonApi;
-  };
+export type AuthorizedAddonRequestJsonApi = DataResponse<AuthorizedAddonRequestDataJsonApi>;
+
+interface AuthorizedAddonRequestDataJsonApi {
+  id?: string;
+  type: string;
+  attributes: AuthorizedAddonRequestAttributesJsonApi;
+  relationships: AuthorizedAddonRelationshipsJsonApi;
+}
+
+interface AuthorizedAddonRequestAttributesJsonApi {
+  api_base_url: string;
+  auth_url: string | null;
+  authorized_capabilities: string[];
+  credentials: Record<string, unknown>;
+  credentials_available: boolean;
+  display_name: string;
+  initiate_oauth: boolean;
 }
 
 interface AuthorizedAddonAttributesJsonApi {
@@ -40,25 +42,8 @@ interface AuthorizedAddonAttributesJsonApi {
 }
 
 interface AuthorizedAddonRelationshipsJsonApi {
-  account_owner: {
-    data: JsonApiResourceRef<'user-references'>;
-  };
-  external_citation_service?: ToOneRel<'external-citation-services'>;
-  external_link_service?: ToOneRel<'external-link-services'>;
-  external_storage_service?: ToOneRel<'external-storage-services'>;
-}
-
-interface AuthorizedAddonRequestRelationshipsJsonApi {
-  account_owner: {
-    data: JsonApiResourceRef<'user-references'>;
-  };
-  external_citation_service?: {
-    data: JsonApiResourceRef<'external-citation-services'>;
-  };
-  external_link_service?: {
-    data: JsonApiResourceRef<'external-link-services'>;
-  };
-  external_storage_service?: {
-    data: JsonApiResourceRef<'external-storage-services'>;
-  };
+  account_owner: ToOneRelData<'user-references'>;
+  external_citation_service?: ToOneRelData<'external-citation-services'>;
+  external_link_service?: ToOneRelData<'external-link-services'>;
+  external_storage_service?: ToOneRelData<'external-storage-services'>;
 }

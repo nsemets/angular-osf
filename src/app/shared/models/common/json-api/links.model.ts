@@ -1,8 +1,3 @@
-export interface RelationshipLinks {
-  related: RelationshipLink;
-  self?: RelationshipLink;
-}
-
 export interface ResourceDataLinksJsonApi {
   html?: string;
   self: string;
@@ -23,9 +18,4 @@ export interface PaginationLinks {
   last?: string | null;
   prev?: string | null;
   next?: string | null;
-}
-
-interface RelationshipLink {
-  href: string;
-  meta?: Record<string, unknown>;
 }

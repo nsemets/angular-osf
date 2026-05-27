@@ -15,24 +15,26 @@ import {
 import { CollectionsMapper } from '../mappers/collections';
 import { ContributorsMapper } from '../mappers/contributors';
 import { ReviewActionsMapper } from '../mappers/review-actions.mapper';
+import { CollectionDetails } from '../models/collections/collection-details.model';
 import {
-  CollectionDetails,
+  CollectionDetailsItemResponseJsonApi,
+  CollectionDetailsListResponseJsonApi,
+} from '../models/collections/collection-details-json-api.model';
+import { CollectionProvider } from '../models/collections/collection-provider.model';
+import { CollectionProviderGetResponseJsonApi } from '../models/collections/collection-provider-json-api.model';
+import {
   CollectionProjectSubmission,
-  CollectionProvider,
   CollectionSubmission,
   CollectionSubmissionActionType,
   CollectionSubmissionTargetType,
   CollectionSubmissionWithGuid,
-} from '../models/collections/collections.model';
+} from '../models/collections/collection-submissions.model';
 import {
-  CollectionDetailsItemResponseJsonApi,
-  CollectionDetailsListResponseJsonApi,
-  CollectionProviderGetResponseJsonApi,
   CollectionSubmissionJsonApi,
   CollectionSubmissionsSearchPayloadJsonApi,
   CollectionSubmissionWithGuidListResponseJsonApi,
   CollectionSubmissionWithGuidResponseJsonApi,
-} from '../models/collections/collections-json-api.model';
+} from '../models/collections/collection-submissions-json-api.model';
 import { ContributorModel } from '../models/contributors/contributor.model';
 import { ContributorsResponseJsonApi } from '../models/contributors/contributor-response-json-api.model';
 import { PaginatedData } from '../models/paginated-data.model';

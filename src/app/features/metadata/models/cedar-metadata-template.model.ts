@@ -1,5 +1,6 @@
 import { Embed } from '@osf/shared/models/common/json-api/embeds.model';
-import { JsonApiResource, JsonApiResourceRef } from '@osf/shared/models/common/json-api/resource.model';
+import { ToOneRelData } from '@osf/shared/models/common/json-api/relationships.model';
+import { JsonApiResource } from '@osf/shared/models/common/json-api/resource.model';
 import { DataResponse, ListResponse } from '@osf/shared/models/common/json-api/responses.model';
 
 export type CedarMetadataTemplateJsonApi = ListResponse<CedarMetadataDataTemplateJsonApi>;
@@ -147,12 +148,8 @@ export interface CedarMetadataRecordDataJsonApi {
     template: Embed<CedarMetadataDataTemplateJsonApi>;
   };
   relationships: {
-    template: {
-      data: JsonApiResourceRef;
-    };
-    target: {
-      data: JsonApiResourceRef;
-    };
+    template: ToOneRelData;
+    target: ToOneRelData;
   };
 }
 

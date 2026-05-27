@@ -1,5 +1,5 @@
-import { JsonApiResource, JsonApiResourceRef } from '@osf/shared/models/common/json-api/resource.model';
-import { RelationshipLinks } from '@shared/models/common/json-api/links.model';
+import { RelationshipLinks, ToOneRelData } from '@osf/shared/models/common/json-api/relationships.model';
+import { JsonApiResource } from '@osf/shared/models/common/json-api/resource.model';
 import { ItemResponse } from '@shared/models/common/json-api/responses.model';
 import { RegistrationNodeAttributesJsonApi } from '@shared/models/registration/registration-node-json-api.model';
 
@@ -13,19 +13,11 @@ export interface RegistrationOverviewDataJsonApi extends JsonApiResource<
 }
 
 interface RegistryOverviewRelationshipsJsonApi {
-  license: {
-    data: JsonApiResourceRef<'licenses'>;
-  };
-  provider: {
-    data: JsonApiResourceRef<'registration-providers'>;
-  };
-  registered_from: {
-    data: JsonApiResourceRef<'nodes'>;
-  };
+  license: ToOneRelData<'licenses'>;
+  provider: ToOneRelData<'registration-providers'>;
+  registered_from: ToOneRelData<'nodes'>;
   registration_schema: {
     links: RelationshipLinks;
   };
-  root: {
-    data: JsonApiResourceRef<'registrations'>;
-  };
+  root: ToOneRelData<'registrations'>;
 }

@@ -1,3 +1,5 @@
+import { JsonApiResource } from '../common/json-api/resource.model';
+
 import { SearchResultDataJsonApi } from './index-card-search-json-api.model';
 
 export interface FilterOptionsResponseJsonApi {
@@ -12,11 +14,7 @@ interface FilterOptionsResponseData {
   type: string;
 }
 
-export interface FilterOptionItem {
-  id: string;
-  type: string;
-  attributes: FilterOptionAttributes;
-}
+export type FilterOptionItem = JsonApiResource<string, FilterOptionAttributes>;
 
 export interface FilterOptionAttributes {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

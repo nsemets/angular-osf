@@ -1,9 +1,9 @@
+import { CollectionDetails } from '@osf/shared/models/collections/collection-details.model';
+import { CollectionProvider } from '@osf/shared/models/collections/collection-provider.model';
 import {
-  CollectionDetails,
-  CollectionProvider,
   CollectionSubmission,
   CollectionSubmissionWithGuid,
-} from '@osf/shared/models/collections/collections.model';
+} from '@osf/shared/models/collections/collection-submissions.model';
 import { CollectionsFilters } from '@osf/shared/models/collections/collections-filters.model';
 import { AsyncStateModel } from '@osf/shared/models/store/async-state.model';
 

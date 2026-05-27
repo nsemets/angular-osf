@@ -8,7 +8,7 @@ import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants/default-table-params
 import { ResourceType } from '../enums/resource-type.enum';
 import { SortOrder } from '../enums/sort-order.enum';
 import { MyResourcesMapper } from '../mappers/my-resources.mapper';
-import { SparseCollectionsResponseJsonApi } from '../models/collections/collections-json-api.model';
+import { SparseCollectionsResponseJsonApi } from '../models/collections/collection-details-json-api.model';
 import { MyResourcesItem } from '../models/my-resources/my-resources-item.model';
 import {
   MyResourcesItemGetResponseJsonApi,

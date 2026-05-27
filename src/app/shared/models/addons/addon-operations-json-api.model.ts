@@ -1,6 +1,6 @@
-import { ToOneRel } from '../common/json-api/relationships.model';
-import { JsonApiResource, JsonApiResourceRef } from '../common/json-api/resource.model';
-import { ItemResponse } from '../common/json-api/responses.model';
+import { ToOneRelData } from '../common/json-api/relationships.model';
+import { JsonApiResource } from '../common/json-api/resource.model';
+import { DataResponse, ItemResponse } from '../common/json-api/responses.model';
 
 export type OperationInvocationResponseJsonApi = ItemResponse<OperationInvocationDataJsonApi>;
 
@@ -18,30 +18,24 @@ interface OperationInvocationAttributesJsonApi {
 }
 
 interface OperationInvocationRelationshipsJsonApi {
-  thru_account?: ToOneRel;
-  thru_addon?: ToOneRel;
+  thru_account?: ToOneRelData;
+  thru_addon?: ToOneRelData;
 }
 
-export interface OperationInvocationRequestJsonApi {
-  data: {
-    type: string;
-    attributes: {
-      invocation_status: string | null;
-      operation_name: string;
-      operation_kwargs: Record<string, unknown>;
-      operation_result: Record<string, unknown>;
-      created: string | null;
-      modified: string | null;
-    };
-    relationships: {
-      thru_account?: {
-        data: JsonApiResourceRef;
-      };
-      thru_addon?: {
-        data: JsonApiResourceRef;
-      };
-    };
-  };
+export type OperationInvocationRequestJsonApi = DataResponse<OperationInvocationRequestDataJsonApi>;
+interface OperationInvocationRequestDataJsonApi {
+  type: string;
+  attributes: OperationInvocationRequestAttributesJsonApi;
+  relationships: OperationInvocationRelationshipsJsonApi;
+}
+
+interface OperationInvocationRequestAttributesJsonApi {
+  invocation_status: string | null;
+  operation_name: string;
+  operation_kwargs: Record<string, unknown>;
+  operation_result: Record<string, unknown>;
+  created: string | null;
+  modified: string | null;
 }
 
 export interface StorageItemResponseJsonApi {

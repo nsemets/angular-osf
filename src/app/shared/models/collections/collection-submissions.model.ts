@@ -1,50 +1,12 @@
 import { CollectionSubmissionReviewAction } from '@osf/features/moderation/models';
 import { CollectionSubmissionReviewState } from '@osf/shared/enums/collection-submission-review-state.enum';
 
-import { BrandModel } from '../brand/brand.model';
 import { ContributorModel } from '../contributors/contributor.model';
 import { ProjectModel } from '../projects/projects.model';
-import { BaseProviderModel } from '../provider/provider.model';
+import { CreatorModel } from '../user/creator.model';
 
-export interface CollectionProvider extends BaseProviderModel {
-  assets: {
-    style?: string;
-    squareColorTransparent?: string;
-    squareColorNoTransparent?: string;
-    favicon?: string;
-  };
-  primaryCollection: {
-    id: string;
-    type: string;
-  };
-  brand: BrandModel | null;
-  defaultLicenseId?: string | null;
-}
-
-export interface CollectionFilters {
-  collectedType: string[];
-  disease: string[];
-  dataType: string[];
-  gradeLevels: string[];
-  issue: string[];
-  programArea: string[];
-  schoolType: string[];
-  status: string[];
-  studyDesign: string[];
-  volume: string[];
-}
-
-export interface CollectionDetails {
-  id: string;
-  type: string;
-  title: string;
-  dateCreated: string;
-  dateModified: string;
-  bookmarks: boolean;
-  isPromoted: boolean;
-  isPublic: boolean;
-  filters: CollectionFilters;
-}
+export type CollectionSubmissionActionType = 'collection_submission_actions';
+export type CollectionSubmissionTargetType = 'collection-submissions';
 
 export interface CollectionSubmission {
   id: string;
@@ -87,10 +49,7 @@ export interface CollectionSubmissionWithGuid {
   disease: string;
   gradeLevels: string;
   contributors?: ContributorModel[];
-  creator?: {
-    id: string;
-    fullName: string;
-  };
+  creator?: CreatorModel;
   actions?: CollectionSubmissionReviewAction[];
   totalContributors?: number;
   contributorsLoading?: boolean;
@@ -101,7 +60,3 @@ export interface CollectionProjectSubmission {
   submission: CollectionSubmissionWithGuid;
   project: ProjectModel;
 }
-
-export type CollectionSubmissionActionType = 'collection_submission_actions';
-
-export type CollectionSubmissionTargetType = 'collection-submissions';

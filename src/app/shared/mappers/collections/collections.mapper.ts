@@ -4,22 +4,22 @@ import {
 } from '@osf/features/moderation/models';
 import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants/default-table-params.constants';
 import { convertToSnakeCase } from '@osf/shared/helpers/convert-to-snake-case.helper';
+import { CollectionDetails } from '@osf/shared/models/collections/collection-details.model';
+import { CollectionDetailsDataJsonApi } from '@osf/shared/models/collections/collection-details-json-api.model';
+import { CollectionProvider } from '@osf/shared/models/collections/collection-provider.model';
+import { CollectionProviderDataJsonApi } from '@osf/shared/models/collections/collection-provider-json-api.model';
 import { CollectionSubmissionPayload } from '@osf/shared/models/collections/collection-submission-payload.model';
 import { CollectionSubmissionPayloadJsonApi } from '@osf/shared/models/collections/collection-submission-payload-json-api.model';
 import {
-  CollectionDetails,
   CollectionProjectSubmission,
-  CollectionProvider,
   CollectionSubmission,
   CollectionSubmissionWithGuid,
-} from '@osf/shared/models/collections/collections.model';
+} from '@osf/shared/models/collections/collection-submissions.model';
 import {
-  CollectionDetailsDataJsonApi,
-  CollectionProviderDataJsonApi,
   CollectionSubmissionDataJsonApi,
   CollectionSubmissionWithGuidDataJsonApi,
   CollectionSubmissionWithGuidListResponseJsonApi,
-} from '@osf/shared/models/collections/collections-json-api.model';
+} from '@osf/shared/models/collections/collection-submissions-json-api.model';
 import { ContributorModel } from '@osf/shared/models/contributors/contributor.model';
 import { PaginatedData } from '@osf/shared/models/paginated-data.model';
 import { replaceBadEncodedChars } from '@shared/helpers/format-bad-encoding.helper';

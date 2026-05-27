@@ -1,4 +1,3 @@
-import { RelationshipLinks } from './links.model';
 import { JsonApiResourceRef } from './resource.model';
 
 export interface RelatedCountRel {
@@ -22,4 +21,22 @@ export interface ToOneRel<TType extends string = string> {
 export interface ToManyRel<TType extends string = string> {
   data: JsonApiResourceRef<TType>[] | null;
   links: RelationshipLinks;
+}
+
+export interface ToOneRelData<TType extends string = string> {
+  data: JsonApiResourceRef<TType>;
+}
+
+export interface ToManyRelData<TType extends string = string> {
+  data: JsonApiResourceRef<TType>[];
+}
+
+export interface RelationshipLinks {
+  related: RelationshipLink;
+  self?: RelationshipLink;
+}
+
+interface RelationshipLink {
+  href: string;
+  meta?: Record<string, unknown>;
 }

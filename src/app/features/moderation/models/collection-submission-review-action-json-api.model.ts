@@ -1,4 +1,5 @@
-import { JsonApiResource, JsonApiResourceRef } from '@osf/shared/models/common/json-api/resource.model';
+import { ToOneRelData } from '@osf/shared/models/common/json-api/relationships.model';
+import { JsonApiResource } from '@osf/shared/models/common/json-api/resource.model';
 import { ListResponse } from '@osf/shared/models/common/json-api/responses.model';
 import { UserDataErrorResponseJsonApi } from '@osf/shared/models/user/user-json-api.model';
 
@@ -27,7 +28,5 @@ interface CollectionSubmissionReviewActionEmbedsJsonApi {
 }
 
 interface CollectionSubmissionReviewActionRelationshipsJsonApi {
-  target: {
-    data: JsonApiResourceRef<'collection-submission'>;
-  };
+  target: ToOneRelData<'collection-submission'>;
 }

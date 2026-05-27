@@ -25,11 +25,7 @@ interface PreprintProviderAttributesJsonApi {
   advisory_board: StringOrNull;
   allow_submissions: boolean;
   assertions_enabled: boolean;
-  assets: {
-    favicon: string;
-    square_color_no_transparent: string;
-    wide_white: string;
-  };
+  assets: PreprintProviderAssetsJsonApi;
   description: string;
   domain: string;
   example: string;
@@ -41,6 +37,12 @@ interface PreprintProviderAttributesJsonApi {
   reviews_comments_anonymous: StringOrNull;
   reviews_comments_private: StringOrNull;
   reviews_workflow: ProviderReviewsWorkflow | null;
+}
+
+interface PreprintProviderAssetsJsonApi {
+  favicon: string;
+  square_color_no_transparent: string;
+  wide_white: string;
 }
 
 interface PreprintProviderEmbedsJsonApi {

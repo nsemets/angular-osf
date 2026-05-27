@@ -12,6 +12,10 @@ export interface WikiDataJsonApi extends JsonApiResource<'wikis', WikiAttributes
   links: WikiLinksJsonApi;
 }
 
+export interface WikiVersionJsonApi extends JsonApiResource<'wiki-versions', WikiVersionAttributesJsonApi> {
+  embeds: WikiVersionEmbedsJsonApi;
+}
+
 interface WikiAttributesJsonApi {
   name: string;
   kind: string;
@@ -21,10 +25,6 @@ interface WikiAttributesJsonApi {
 
 interface WikiLinksJsonApi {
   download: string;
-}
-
-export interface WikiVersionJsonApi extends JsonApiResource<'wiki-versions', WikiVersionAttributesJsonApi> {
-  embeds: WikiVersionEmbedsJsonApi;
 }
 
 interface WikiVersionAttributesJsonApi {

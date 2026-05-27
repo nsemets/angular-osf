@@ -2,11 +2,13 @@ import { ApplicabilityStatus, PreregLinkInfo, ReviewsState } from '@osf/features
 import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
 import { BooleanOrNull, StringOrNull } from '@osf/shared/helpers/types.helper';
 import { EmbedList } from '@osf/shared/models/common/json-api/embeds.model';
-import { JsonApiResource, JsonApiResourceRef } from '@osf/shared/models/common/json-api/resource.model';
+import { JsonApiResource } from '@osf/shared/models/common/json-api/resource.model';
 import { ItemResponse, ListResponse } from '@osf/shared/models/common/json-api/responses.model';
 import { ContributorDataJsonApi } from '@shared/models/contributors/contributor-response-json-api.model';
 import { IdentifiersResponseJsonApi } from '@shared/models/identifiers/identifier-json-api.model';
 import { LicenseDataJsonApi, LicenseRecordJsonApi } from '@shared/models/license/licenses-json-api.model';
+
+import { ToOneRelData } from '../common/json-api/relationships.model';
 
 export type PreprintResponseJsonApi = ItemResponse<PreprintDataJsonApi>;
 export type PreprintsListResponseJsonApi = ListResponse<PreprintDataJsonApi>;
@@ -56,18 +58,10 @@ export interface PreprintAttributesJsonApi {
 }
 
 interface PreprintRelationshipsJsonApi {
-  license: {
-    data: JsonApiResourceRef<'licenses'>;
-  };
-  node: {
-    data: JsonApiResourceRef<'nodes'>;
-  };
-  primary_file: {
-    data: JsonApiResourceRef<'files'>;
-  };
-  provider: {
-    data: JsonApiResourceRef<'preprint-providers'>;
-  };
+  license: ToOneRelData<'licenses'>;
+  node: ToOneRelData<'nodes'>;
+  primary_file: ToOneRelData<'files'>;
+  provider: ToOneRelData<'preprint-providers'>;
 }
 
 interface PreprintEmbedsJsonApi {

@@ -3,7 +3,7 @@ import { RevisionReviewStates } from '@osf/shared/enums/revision-review-states.e
 import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
 
 import { EmbedList } from '../common/json-api/embeds.model';
-import { RelatedCountRel, ToOneRel } from '../common/json-api/relationships.model';
+import { RelatedCountRel, ToOneRel, ToOneRelData } from '../common/json-api/relationships.model';
 import { JsonApiResource, JsonApiResourceRef } from '../common/json-api/resource.model';
 import { ItemResponse, ListResponse } from '../common/json-api/responses.model';
 import { ContributorDataJsonApi } from '../contributors/contributor-response-json-api.model';
@@ -32,8 +32,8 @@ export interface RegistrationDataJsonApi extends JsonApiResource<'registrations'
 
 export interface CreateRegistrationPayloadJsonApi {
   data: {
-    type: 'draft_registrations';
     id: string;
+    type: 'draft_registrations';
     relationships?: DraftRegistrationRelationshipPayloadJsonApi;
     attributes?: Partial<DraftRegistrationAttributesJsonApi>;
   };
@@ -96,9 +96,7 @@ export interface RegistrationAttributesJsonApi {
 interface RegistrationRelationshipsJsonApi {
   license?: ToOneRel<'licenses'>;
   registration_schema?: ToOneRel<'registration-schemas'>;
-  root: {
-    data: JsonApiResourceRef;
-  };
+  root: ToOneRelData;
 }
 
 interface RegistrationEmbedsJsonApi {

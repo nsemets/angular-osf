@@ -1,21 +1,21 @@
 import { StringOrNull } from '@osf/shared/helpers/types.helper';
 import { JsonApiResource } from '@osf/shared/models/common/json-api/resource.model';
-import { ItemResponse, ListResponse } from '@osf/shared/models/common/json-api/responses.model';
+import { DataResponse, ItemResponse, ListResponse } from '@osf/shared/models/common/json-api/responses.model';
 
 export type DeveloperAppsListResponseJsonApi = ListResponse<DeveloperAppDataJsonApi>;
 export type DeveloperAppResponseJsonApi = ItemResponse<DeveloperAppDataJsonApi>;
 
 export type DeveloperAppDataJsonApi = JsonApiResource<'applications', DeveloperAppAttributesJsonApi>;
 
-export interface DeveloperAppCreateRequestJsonApi {
-  data: {
-    attributes: DeveloperAppChangeAttributesJsonApi;
-    type: 'applications';
-  };
-}
+export type DeveloperAppCreateRequestJsonApi = DataResponse<DeveloperAppCreateDataJsonApi>;
 
 export interface DeveloperAppUpdateRequestJsonApi {
   data: DeveloperAppCreateRequestJsonApi['data'] & { id: string };
+}
+
+interface DeveloperAppCreateDataJsonApi {
+  attributes: DeveloperAppChangeAttributesJsonApi;
+  type: 'applications';
 }
 
 interface DeveloperAppChangeAttributesJsonApi {

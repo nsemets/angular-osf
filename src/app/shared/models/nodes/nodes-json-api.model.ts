@@ -1,33 +1,19 @@
-import { ItemResponse, ListResponse } from '../common/json-api/responses.model';
+import { ToManyRelData, ToOneRelData } from '../common/json-api/relationships.model';
+import { JsonApiResource } from '../common/json-api/resource.model';
+import { DataResponse, ItemResponse, ListResponse } from '../common/json-api/responses.model';
 
 import { BaseNodeDataJsonApi } from './base-node-data-json-api.model';
 
 export type NodesResponseJsonApi = ListResponse<BaseNodeDataJsonApi>;
 export type NodeResponseJsonApi = ItemResponse<BaseNodeDataJsonApi>;
 
-export interface UpdateNodeRequestModel {
-  data: {
-    id: string;
-    type: 'nodes';
-    attributes?: UpdateNodeAttributesJsonApi;
-  };
-}
+export type UpdateNodeRequestModel = DataResponse<UpdateNodeDataJsonApi>;
+export type CreateProjectPayloadJsoApi = DataResponse<CreateProjectDataJsonApi>;
 
-export interface CreateProjectPayloadJsoApi {
-  data: {
-    type: 'nodes';
-    attributes: {
-      title: string;
-      description?: string;
-      category: 'project';
-      template_from?: string;
-      public: boolean;
-    };
-    relationships: {
-      region: { data: { type: 'regions'; id: string } };
-      affiliated_institutions?: { data: { type: 'institutions'; id: string }[] };
-    };
-  };
+type UpdateNodeDataJsonApi = JsonApiResource<'nodes', UpdateNodeAttributesJsonApi>;
+
+interface CreateProjectDataJsonApi extends Omit<JsonApiResource<'nodes', CreateProjectAttributesJsonApi>, 'id'> {
+  relationships: CreateProjectRelationshipsJsonApi;
 }
 
 interface UpdateNodeAttributesJsonApi {
@@ -35,4 +21,17 @@ interface UpdateNodeAttributesJsonApi {
   tags?: string[];
   public?: boolean;
   title?: string;
+}
+
+interface CreateProjectAttributesJsonApi {
+  title: string;
+  description?: string;
+  category: 'project';
+  template_from?: string;
+  public: boolean;
+}
+
+interface CreateProjectRelationshipsJsonApi {
+  region: ToOneRelData<'regions'>;
+  affiliated_institutions?: ToManyRelData<'institutions'>;
 }

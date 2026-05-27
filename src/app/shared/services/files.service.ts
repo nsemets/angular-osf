@@ -27,7 +27,7 @@ import { FilesMapper } from '../mappers/files/files.mapper';
 import { AddonModel } from '../models/addons/addon.model';
 import { ResourceReferenceResponseJsonApi } from '../models/addons/addon-reference-json-api.model';
 import { ConfiguredAddonModel } from '../models/addons/configured-addon.model';
-import { ConfiguredAddonDataJsonApi } from '../models/addons/configured-addon-json-api.model';
+import { ConfiguredAddonDataListResponseJsonApi } from '../models/addons/configured-addon-json-api.model';
 import { AddonGetItemResponseJsonApi } from '../models/addons/external-addon-json-api.model';
 import { ListMetaJsonApi } from '../models/common/json-api/meta.model';
 import { JsonApiResponse } from '../models/common/json-api/responses.model';
@@ -308,7 +308,7 @@ export class FilesService {
       switchMap((referenceUrl: string) => {
         if (!referenceUrl) return of([]);
         return this.jsonApiService
-          .get<JsonApiResponse<ConfiguredAddonDataJsonApi[], null>>(`${referenceUrl}/configured_storage_addons`)
+          .get<ConfiguredAddonDataListResponseJsonApi>(`${referenceUrl}/configured_storage_addons`)
           .pipe(map((response) => response.data.map((item) => AddonMapper.fromConfiguredAddonResponse(item))));
       })
     );
