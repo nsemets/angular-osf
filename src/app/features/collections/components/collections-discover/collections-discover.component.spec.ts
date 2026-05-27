@@ -8,6 +8,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
+import { UserSelectors } from '@core/store/user';
 import { GlobalSearchComponent } from '@osf/shared/components/global-search/global-search.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
@@ -99,6 +100,10 @@ function setup(options: SetupOptions = {}) {
           { selector: CollectionsSelectors.getSearchText, value: '' },
           { selector: CollectionsSelectors.getPageNumber, value: '1' },
           { selector: CollectionsSelectors.getCollectionProviderLoading, value: false },
+          {
+            selector: UserSelectors.getActiveFlags,
+            value: collectionSubmissionWithCedar ? ['collection_submission_with_cedar'] : [],
+          },
         ],
       }),
     ],
@@ -130,7 +135,7 @@ describe('CollectionsDiscoverComponent', () => {
     });
 
     it('should set useShareTroveSearch to false', () => {
-      expect(component.useShareTroveSearch).toBe(false);
+      expect(component.useShareTroveSearch()).toBe(false);
     });
 
     it('should initialize with default values', () => {
@@ -199,7 +204,7 @@ describe('CollectionsDiscoverComponent', () => {
   describe('shtrove mode (collectionSubmissionWithCedar = true)', () => {
     it('should set useShareTroveSearch to true', () => {
       const { component } = setup({ collectionSubmissionWithCedar: true });
-      expect(component.useShareTroveSearch).toBe(true);
+      expect(component.useShareTroveSearch()).toBe(true);
     });
 
     it('should initialize default search filters', () => {

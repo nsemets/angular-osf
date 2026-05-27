@@ -22,6 +22,7 @@ import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
+import { UserSelectors } from '@core/store/user';
 import { GlobalSearchComponent } from '@osf/shared/components/global-search/global-search.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
@@ -41,6 +42,7 @@ import {
   SetSearchValue,
 } from '@osf/shared/stores/collections';
 import { ResetSearchState, SetDefaultFilterValue, SetExtraFilters } from '@osf/shared/stores/global-search';
+import { COLLECTION_SUBMISSION_WITH_CEDAR } from '@shared/constants/feature-flags.const';
 
 import { CollectionsQuerySyncService } from '../../services';
 import { CollectionsHelpDialogComponent } from '../collections-help-dialog/collections-help-dialog.component';
@@ -78,7 +80,8 @@ export class CollectionsDiscoverComponent {
   providerId = signal<string>('');
   defaultSearchFiltersInitialized = signal(false);
 
-  readonly useShareTroveSearch = this.environment.collectionSubmissionWithCedar;
+  activeFlags = select(UserSelectors.getActiveFlags);
+  readonly useShareTroveSearch = computed(() => this.activeFlags().includes(COLLECTION_SUBMISSION_WITH_CEDAR));
 
   collectionProvider = select(CollectionsSelectors.getCollectionProvider);
   collectionDetails = select(CollectionsSelectors.getCollectionDetails);
@@ -106,20 +109,16 @@ export class CollectionsDiscoverComponent {
   constructor() {
     this.initializeProvider();
     this.setupBrandingEffect();
-
-    if (this.useShareTroveSearch) {
-      this.setupShareTroveSearchEffect();
-    } else {
-      this.setupCollectionDetailsEffect();
-      this.setupUrlSyncEffect();
-      this.setupLegacySearchEffect();
-      this.setupSearchBinding();
-    }
+    this.setupShareTroveSearchEffect();
+    this.setupCollectionDetailsEffect();
+    this.setupUrlSyncEffect();
+    this.setupLegacySearchEffect();
+    this.setupSearchBinding();
 
     this.destroyRef.onDestroy(() => {
       if (this.isBrowser) {
         this.actions.clearCollections();
-        if (this.useShareTroveSearch) {
+        if (this.useShareTroveSearch()) {
           this.actions.resetSearchState();
         }
         this.headerStyleHelper.resetToDefaults();
@@ -133,7 +132,7 @@ export class CollectionsDiscoverComponent {
   }
 
   onSearchTriggered(searchValue: string): void {
-    if (!this.useShareTroveSearch) {
+    if (!this.useShareTroveSearch()) {
       this.actions.setSearchValue(searchValue);
       this.actions.setPageNumber('1');
     }
@@ -166,7 +165,7 @@ export class CollectionsDiscoverComponent {
       const provider = this.collectionProvider();
       const collectionId = this.primaryCollectionId();
 
-      if (!provider || !collectionId || this.defaultSearchFiltersInitialized()) return;
+      if (!this.useShareTroveSearch() || !provider || !collectionId || this.defaultSearchFiltersInitialized()) return;
 
       const collectionIri = `${this.environment.apiDomainUrl}/v2/collections/${collectionId}/`;
       this.actions.setDefaultFilterValue('isContainedBy', collectionIri);
@@ -184,6 +183,8 @@ export class CollectionsDiscoverComponent {
 
   private setupCollectionDetailsEffect(): void {
     effect(() => {
+      if (this.useShareTroveSearch()) return;
+
       const collectionId = this.primaryCollectionId();
       if (collectionId) {
         this.actions.getCollectionDetails(collectionId);
@@ -192,9 +193,10 @@ export class CollectionsDiscoverComponent {
   }
 
   private setupUrlSyncEffect(): void {
-    this.querySyncService.initializeFromUrl();
-
     effect(() => {
+      if (this.useShareTroveSearch()) return;
+      this.querySyncService.initializeFromUrl();
+
       const searchText = this.searchText();
       const sortBy = this.sortBy();
       const selectedFilters = this.selectedFilters();
@@ -208,6 +210,8 @@ export class CollectionsDiscoverComponent {
 
   private setupLegacySearchEffect(): void {
     effect(() => {
+      if (this.useShareTroveSearch()) return;
+
       const searchText = this.searchText();
       const sortBy = this.sortBy();
       const selectedFilters = this.selectedFilters();

@@ -43,6 +43,7 @@ import { LoaderService } from '@osf/shared/services/loader.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { CollectionsSelectors, GetCollectionProvider } from '@osf/shared/stores/collections';
 import { ProjectsSelectors, SetSelectedProject } from '@osf/shared/stores/projects';
+import { COLLECTION_SUBMISSION_WITH_CEDAR } from '@shared/constants/feature-flags.const';
 
 import { AddToCollectionSteps } from '../../enums';
 import { RemoveCollectionSubmissionPayload } from '../../models/remove-collection-submission-payload.model';
@@ -105,6 +106,7 @@ export class AddToCollectionComponent implements CanDeactivateComponent {
   requiredMetadataTemplate = select(CollectionsSelectors.getRequiredMetadataTemplate);
   selectedProject = select(ProjectsSelectors.getSelectedProject);
   currentUser = select(UserSelectors.getCurrentUser);
+  activeFlags = select(UserSelectors.getActiveFlags);
   currentCollectionSubmission = select(AddToCollectionSelectors.getCurrentCollectionSubmission);
   cedarRecords = select(MetadataSelectors.getCedarRecords);
 
@@ -123,7 +125,9 @@ export class AddToCollectionComponent implements CanDeactivateComponent {
   isCollectionMetadataDisabled = computed(
     () => !this.selectedProject() || !this.projectMetadataSaved() || !this.projectContributorsSaved()
   );
-  isCedarMode = computed(() => this.environment.collectionSubmissionWithCedar && !!this.requiredMetadataTemplate());
+  isCedarMode = computed(
+    () => this.activeFlags().includes(COLLECTION_SUBMISSION_WITH_CEDAR) && !!this.requiredMetadataTemplate()
+  );
   existingCedarRecord = computed<CedarMetadataRecordData | null>(() => {
     const records = this.cedarRecords();
     const templateId = this.requiredMetadataTemplate()?.id;
