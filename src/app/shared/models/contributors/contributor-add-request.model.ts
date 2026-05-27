@@ -1,3 +1,5 @@
+import { JsonApiResourceRef } from '../common/json-api/resource.model';
+
 export interface ContributorAddRequestModel {
   attributes: {
     bibliographic: boolean;
@@ -11,13 +13,8 @@ export interface ContributorAddRequestModel {
   id?: string;
   relationships?: {
     users?: {
-      data?: ContributorAddRequestUsersDataJsonApi;
+      data: Partial<JsonApiResourceRef<'users'>>;
     };
   };
   type: 'contributors';
-}
-
-interface ContributorAddRequestUsersDataJsonApi {
-  id?: string;
-  type: 'users';
 }

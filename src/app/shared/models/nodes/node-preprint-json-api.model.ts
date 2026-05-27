@@ -1,12 +1,11 @@
 import { ResourceLinksJsonApi } from '../common/json-api/links.model';
+import { JsonApiResource } from '../common/json-api/resource.model';
 import { ItemResponse, ListResponse } from '../common/json-api/responses.model';
 
 export type NodePreprintResponseJsonApi = ItemResponse<NodePreprintDataJsonApi>;
 export type NodePreprintsResponseJsonApi = ListResponse<NodePreprintDataJsonApi>;
 
-export interface NodePreprintDataJsonApi {
-  id: string;
-  attributes: NodePreprintAttributesJsonApi;
+export interface NodePreprintDataJsonApi extends JsonApiResource<string, NodePreprintAttributesJsonApi> {
   links: ResourceLinksJsonApi;
 }
 

@@ -24,12 +24,10 @@ import { AddonMapper } from '../mappers/addon.mapper';
 import { ContributorsMapper } from '../mappers/contributors';
 import { FilesMapper } from '../mappers/files/files.mapper';
 import { AddonModel } from '../models/addons/addon.model';
-import {
-  AddonGetResponseJsonApi,
-  ConfiguredAddonGetResponseJsonApi,
-  ResourceReferenceResponseJsonApi,
-} from '../models/addons/addon-json-api.model';
+import { ResourceReferenceResponseJsonApi } from '../models/addons/addon-reference-json-api.model';
 import { ConfiguredAddonModel } from '../models/addons/configured-addon.model';
+import { ConfiguredAddonDataJsonApi } from '../models/addons/configured-addon-json-api.model';
+import { AddonGetItemResponseJsonApi } from '../models/addons/external-addon-json-api.model';
 import { ListMetaJsonApi } from '../models/common/json-api/meta.model';
 import { JsonApiResponse } from '../models/common/json-api/responses.model';
 import { ContributorModel } from '../models/contributors/contributor.model';
@@ -294,7 +292,7 @@ export class FilesService {
       switchMap((referenceUrl: string) => {
         if (!referenceUrl) return of([]);
         return this.jsonApiService
-          .get<JsonApiResponse<ConfiguredAddonGetResponseJsonApi[], null>>(`${referenceUrl}/configured_storage_addons`)
+          .get<JsonApiResponse<ConfiguredAddonDataJsonApi[], null>>(`${referenceUrl}/configured_storage_addons`)
           .pipe(map((response) => response.data.map((item) => AddonMapper.fromConfiguredAddonResponse(item))));
       })
     );
@@ -302,9 +300,9 @@ export class FilesService {
 
   getExternalStorageService(serviceId: string): Observable<AddonModel> {
     return this.jsonApiService
-      .get<
-        JsonApiResponse<AddonGetResponseJsonApi, null>
-      >(`${this.addonsApiUrl}/configured-storage-addons/${serviceId}/external_storage_service/`)
+      .get<AddonGetItemResponseJsonApi>(
+        `${this.addonsApiUrl}/configured-storage-addons/${serviceId}/external_storage_service/`
+      )
       .pipe(map((response) => AddonMapper.fromResponse(response.data)));
   }
 }
