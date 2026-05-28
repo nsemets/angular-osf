@@ -9,10 +9,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { FilesSelectors, GetFile } from '@osf/features/files/store';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
+import { getMfrUrlWithVersion } from '@osf/shared/helpers/mfr-url.helper';
 import { ViewOnlyLinkHelperService } from '@osf/shared/services/view-only-link-helper.service';
+
+import { FilesSelectors, GetFile } from '../../store';
 
 @Component({
   selector: 'osf-draft-file-detail',
@@ -46,34 +48,15 @@ export class FilePreviewComponent {
         takeUntilDestroyed(this.destroyRef),
         switchMap((params) => this.actions.getFile(params['fileGuid']))
       )
-      .subscribe(() => this.getIframeLink(''));
+      .subscribe(() => this.getIframeLink());
   }
 
-  getIframeLink(version: string) {
-    const url = this.getMfrUrlWithVersion(version);
+  getIframeLink() {
+    const viewOnlyParam = this.hasViewOnly() ? this.viewOnlyService.getViewOnlyParam() : null;
+    const url = getMfrUrlWithVersion(this.file()?.links.render, '', viewOnlyParam);
+
     if (url) {
       this.safeLink = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     }
-  }
-
-  getMfrUrlWithVersion(version?: string): string | null {
-    const mfrUrl = this.file()?.links.render;
-    if (!mfrUrl) return null;
-    const mfrUrlObj = new URL(mfrUrl);
-    const encodedDownloadUrl = mfrUrlObj.searchParams.get('url');
-    if (!encodedDownloadUrl) return mfrUrl;
-
-    const downloadUrlObj = new URL(decodeURIComponent(encodedDownloadUrl));
-
-    if (version) downloadUrlObj.searchParams.set('version', version);
-
-    if (this.hasViewOnly()) {
-      const viewOnlyParam = this.viewOnlyService.getViewOnlyParam();
-      if (viewOnlyParam) downloadUrlObj.searchParams.set('view_only', viewOnlyParam);
-    }
-
-    mfrUrlObj.searchParams.set('url', downloadUrlObj.toString());
-
-    return mfrUrlObj.toString();
   }
 }
