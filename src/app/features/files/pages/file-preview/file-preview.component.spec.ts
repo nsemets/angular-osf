@@ -7,11 +7,10 @@ import { Mock } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { FileKind } from '@osf/shared/enums/file-kind.enum';
-import { FileDetailsModel } from '@osf/shared/models/files/file.model';
-import { BaseNodeModel } from '@osf/shared/models/nodes/base-node.model';
+import { getMfrUrlWithVersion } from '@osf/shared/helpers/mfr-url.helper';
 import { ViewOnlyLinkHelperService } from '@osf/shared/services/view-only-link-helper.service';
 
+import { FileDetailsMock } from '@testing/mocks/file-details.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
@@ -43,39 +42,15 @@ describe('FilePreviewComponent', () => {
   const encodedDownloadUrl = 'https://files.osf.io/v1/resources/abc/providers/osfstorage/file.txt';
   const defaultRenderLink = `https://mfr.osf.io/render?url=${encodeURIComponent(encodedDownloadUrl)}`;
 
-  function buildFileDetailsModel(renderLink: string): FileDetailsModel {
+  function buildFileDetailsModel(renderLink: string) {
+    const file = FileDetailsMock.simple();
+
     return {
-      id: 'file-1',
-      guid: 'file-guid-1',
-      name: 'file.txt',
-      kind: FileKind.File,
-      path: '/file.txt',
-      size: 128,
-      materializedPath: '/file.txt',
-      dateModified: '2026-01-01T00:00:00.000Z',
-      dateCreated: '2026-01-01T00:00:00.000Z',
-      lastTouched: null,
-      tags: [],
-      currentVersion: 1,
-      showAsUnviewed: false,
-      extra: {
-        hashes: {
-          md5: 'md5',
-          sha256: 'sha256',
-        },
-        downloads: 1,
-      },
+      ...file,
       links: {
-        info: '',
-        move: '',
-        upload: '',
-        delete: '',
-        download: '',
+        ...file.links,
         render: renderLink,
-        html: '',
-        self: '',
       },
-      target: {} as unknown as BaseNodeModel,
     };
   }
 
@@ -133,7 +108,7 @@ describe('FilePreviewComponent', () => {
     setup({ renderLink: 'https://mfr.osf.io/render' });
     (store.dispatch as Mock).mockClear();
 
-    const result = component.getMfrUrlWithVersion('2');
+    const result = getMfrUrlWithVersion(component.file()?.links.render, '2');
 
     expect(result).toBe('https://mfr.osf.io/render');
     expect(store.dispatch).not.toHaveBeenCalled();
@@ -142,7 +117,7 @@ describe('FilePreviewComponent', () => {
   it('should append version param to nested download url', () => {
     setup();
 
-    const result = component.getMfrUrlWithVersion('3');
+    const result = getMfrUrlWithVersion(component.file()?.links.render, '3');
 
     expect(result).toContain('https://mfr.osf.io/render?');
     expect(result).toContain(encodeURIComponent('version=3'));
@@ -151,7 +126,7 @@ describe('FilePreviewComponent', () => {
   it('should append view only param when present', () => {
     setup({ hasViewOnlyParam: true, viewOnlyParam: 'view-token-1' });
 
-    const result = component.getMfrUrlWithVersion();
+    const result = getMfrUrlWithVersion(component.file()?.links.render, '', 'view-token-1');
 
     expect(result).toContain(encodeURIComponent('view_only=view-token-1'));
   });
@@ -159,7 +134,7 @@ describe('FilePreviewComponent', () => {
   it('should return null for empty render link', () => {
     setup({ renderLink: '' });
 
-    const result = component.getMfrUrlWithVersion();
+    const result = getMfrUrlWithVersion('');
 
     expect(result).toBeNull();
   });
