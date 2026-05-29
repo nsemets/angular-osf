@@ -211,8 +211,8 @@ export class AddToCollectionComponent implements CanDeactivateComponent {
     const payload = {
       collectionId: this.primaryCollectionId() || '',
       projectId: this.selectedProject()?.id || '',
-      collectionMetadata: this.isCedarMode() ? {} : this.collectionMetadataForm.value || {},
       userId: this.currentUser()?.id || '',
+      collectionMetadata: this.isCedarMode() ? {} : this.collectionMetadataForm.value || {},
     };
 
     const isEditMode = this.isEditMode();
@@ -220,10 +220,9 @@ export class AddToCollectionComponent implements CanDeactivateComponent {
     if (isEditMode) {
       this.loaderService.show();
 
-      this.actions
-        .updateCollectionSubmission(payload)
+      this.saveCedarRecordIfNeeded()
         .pipe(
-          switchMap(() => this.saveCedarRecordIfNeeded()),
+          switchMap(() => this.actions.updateCollectionSubmission(payload)),
           finalize(() => this.loaderService.hide()),
           takeUntilDestroyed(this.destroyRef)
         )
@@ -242,7 +241,11 @@ export class AddToCollectionComponent implements CanDeactivateComponent {
         .open(AddToCollectionConfirmationDialogComponent, {
           header: 'collections.addToCollection.confirmationDialogHeader',
           width: '500px',
-          data: { payload, project: this.selectedProject() },
+          data: {
+            payload,
+            project: this.selectedProject(),
+            cedarData: this.pendingCedarData(),
+          },
         })
         .onClose.pipe(
           filter((res) => !!res),
@@ -277,13 +280,13 @@ export class AddToCollectionComponent implements CanDeactivateComponent {
       .onClose.pipe(
         filter((res: RemoveFromCollectionDialogResult) => res?.confirmed),
         switchMap((res) => {
-          const payload: RemoveCollectionSubmissionPayload = {
+          const removePayload: RemoveCollectionSubmissionPayload = {
             projectId,
             collectionId,
             comment: res?.comment || '',
           };
-
-          return this.actions.deleteCollectionSubmission(payload);
+          this.loaderService.show();
+          return this.actions.deleteCollectionSubmission(removePayload);
         }),
         takeUntilDestroyed(this.destroyRef)
       )

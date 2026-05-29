@@ -20,7 +20,13 @@ describe('CollectionMetadataStepComponent', () => {
   let component: CollectionMetadataStepComponent;
   let fixture: ComponentFixture<CollectionMetadataStepComponent>;
 
-  function setup(isCedarMode = false, cedarTemplate: CedarMetadataDataTemplateJsonApi | null = null) {
+  function setup(
+    options: {
+      isCedarMode?: boolean;
+      cedarTemplate?: CedarMetadataDataTemplateJsonApi | null;
+      existingCedarRecord?: CedarMetadataRecordData | null;
+    } = {}
+  ) {
     TestBed.configureTestingModule({
       imports: [CollectionMetadataStepComponent, MockComponents(StepPanel, Step, StepItem)],
       providers: [
@@ -43,9 +49,15 @@ describe('CollectionMetadataStepComponent', () => {
     fixture.componentRef.setInput('targetStepValue', 1);
     fixture.componentRef.setInput('isDisabled', false);
     fixture.componentRef.setInput('primaryCollectionId', 'test-collection-id');
-    fixture.componentRef.setInput('isCedarMode', isCedarMode);
-    if (cedarTemplate) {
-      fixture.componentRef.setInput('cedarTemplate', cedarTemplate);
+
+    if (options.isCedarMode !== undefined) {
+      fixture.componentRef.setInput('isCedarMode', options.isCedarMode);
+    }
+    if (options.cedarTemplate !== undefined) {
+      fixture.componentRef.setInput('cedarTemplate', options.cedarTemplate);
+    }
+    if (options.existingCedarRecord !== undefined) {
+      fixture.componentRef.setInput('existingCedarRecord', options.existingCedarRecord);
     }
 
     fixture.detectChanges();
@@ -63,6 +75,10 @@ describe('CollectionMetadataStepComponent', () => {
     expect(component.stepperActiveValue()).toBe(0);
     expect(component.targetStepValue()).toBe(1);
     expect(component.isDisabled()).toBe(false);
+    expect(component.isCedarMode()).toBe(false);
+  });
+
+  it('should default isCedarMode to false', () => {
     expect(component.isCedarMode()).toBe(false);
   });
 
@@ -128,7 +144,7 @@ describe('CollectionMetadataStepComponent', () => {
 
   describe('CEDAR mode', () => {
     beforeEach(() => {
-      setup(true, MOCK_CEDAR_TEMPLATE);
+      setup({ isCedarMode: true, cedarTemplate: MOCK_CEDAR_TEMPLATE });
     });
 
     it('should initialize in CEDAR mode', () => {

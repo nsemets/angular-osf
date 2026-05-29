@@ -149,6 +149,7 @@ export class CollectionMetadataStepComponent {
     };
 
     this.collectionMetadataSaved.set(true);
+    this.metadataSaved.emit(this.collectionMetadataForm());
     this.cedarDataSaved.emit(cedarData);
     this.stepChange.emit(AddToCollectionSteps.Complete);
   }

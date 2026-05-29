@@ -243,7 +243,7 @@ export class CollectionsMapper {
 
   static toCollectionSubmissionRequest(payload: CollectionSubmissionPayload): CollectionSubmissionPayloadJsonApi {
     const collectionId = payload.collectionId;
-    const collectionsMetadata = convertToSnakeCase(payload.collectionMetadata);
+    const collectionsMetadata = payload.collectionMetadata ? convertToSnakeCase(payload.collectionMetadata) : {};
 
     return {
       data: {
@@ -271,7 +271,7 @@ export class CollectionsMapper {
   }
 
   static collectionSubmissionUpdateRequest(payload: CollectionSubmissionPayload) {
-    const collectionsMetadata = convertToSnakeCase(payload.collectionMetadata);
+    const collectionsMetadata = payload.collectionMetadata ? convertToSnakeCase(payload.collectionMetadata) : {};
 
     return {
       data: {
