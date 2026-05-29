@@ -293,7 +293,7 @@ export class AddToCollectionComponent implements CanDeactivateComponent {
       .subscribe({
         next: () => {
           this.toastService.showSuccess('collections.removeDialog.success');
-          this.loaderService.show();
+          this.loaderService.hide();
           this.allowNavigation.set(true);
           this.router.navigate([projectId, 'overview']);
         },

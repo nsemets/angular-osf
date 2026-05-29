@@ -32,6 +32,9 @@ export interface CollectionProviderResponseJsonApi {
 export interface CollectionDetailsResponseJsonApi {
   id: string;
   type: string;
+  links?: {
+    iri?: string;
+  };
   attributes: {
     title: string;
     date_created: string;

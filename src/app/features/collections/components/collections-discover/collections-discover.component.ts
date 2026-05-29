@@ -21,7 +21,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { UserSelectors } from '@core/store/user';
 import { GlobalSearchComponent } from '@osf/shared/components/global-search/global-search.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
@@ -73,7 +72,6 @@ export class CollectionsDiscoverComponent {
   private brandService = inject(BrandService);
   private headerStyleHelper = inject(HeaderStyleService);
   private platformId = inject(PLATFORM_ID);
-  private environment = inject(ENVIRONMENT);
   private isBrowser = isPlatformBrowser(this.platformId);
 
   searchControl = new FormControl('');
@@ -163,11 +161,9 @@ export class CollectionsDiscoverComponent {
   private setupShareTroveSearchEffect(): void {
     effect(() => {
       const provider = this.collectionProvider();
-      const collectionId = this.primaryCollectionId();
+      const collectionIri = this.collectionDetails()?.iri;
+      if (!this.useShareTroveSearch() || !provider || !collectionIri || this.defaultSearchFiltersInitialized()) return;
 
-      if (!this.useShareTroveSearch() || !provider || !collectionId || this.defaultSearchFiltersInitialized()) return;
-
-      const collectionIri = `${this.environment.apiDomainUrl}/v2/collections/${collectionId}/`;
       this.actions.setDefaultFilterValue('isContainedBy', collectionIri);
 
       if (provider.requiredMetadataTemplate?.attributes?.template) {

@@ -79,6 +79,7 @@ export class CollectionsMapper {
     return {
       id: response.id,
       type: response.type,
+      iri: response.links?.iri,
       title: replaceBadEncodedChars(response.attributes.title),
       dateCreated: response.attributes.date_created,
       dateModified: response.attributes.date_modified,

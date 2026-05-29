@@ -29,10 +29,36 @@ import { CollectionsMainContentComponent } from '../collections-main-content/col
 
 import { CollectionsDiscoverComponent } from './collections-discover.component';
 
+const MOCK_COLLECTION_IRI = 'http://localhost:8000/v2/collections/collection-1/';
+
 const MOCK_COLLECTION_PROVIDER = {
   ...MOCK_PROVIDER,
   primaryCollection: { id: 'collection-1', type: 'collections' },
   requiredMetadataTemplate: null,
+};
+
+const MOCK_COLLECTION_DETAILS = {
+  id: 'collection-1',
+  type: 'collections',
+  iri: MOCK_COLLECTION_IRI,
+  title: 'Test Collection',
+  dateCreated: '2024-01-01',
+  dateModified: '2024-01-01',
+  bookmarks: false,
+  isPromoted: false,
+  isPublic: true,
+  filters: {
+    collectedType: [],
+    disease: [],
+    dataType: [],
+    gradeLevels: [],
+    issue: [],
+    programArea: [],
+    schoolType: [],
+    status: [],
+    studyDesign: [],
+    volume: [],
+  },
 };
 
 const MOCK_COLLECTION_PROVIDER_WITH_TEMPLATE = {
@@ -94,7 +120,10 @@ function setup(options: SetupOptions = {}) {
       provideMockStore({
         signals: [
           { selector: CollectionsSelectors.getCollectionProvider, value: provider },
-          { selector: CollectionsSelectors.getCollectionDetails, value: null },
+          {
+            selector: CollectionsSelectors.getCollectionDetails,
+            value: collectionSubmissionWithCedar ? MOCK_COLLECTION_DETAILS : null,
+          },
           { selector: CollectionsSelectors.getAllSelectedFilters, value: {} },
           { selector: CollectionsSelectors.getSortBy, value: 'date' },
           { selector: CollectionsSelectors.getSearchText, value: '' },
@@ -221,7 +250,7 @@ describe('CollectionsDiscoverComponent', () => {
 
       expect(setDefaultFilter).toBeDefined();
       expect(setDefaultFilter.filterKey).toBe('isContainedBy');
-      expect(setDefaultFilter.value).toBe('http://localhost:8000/v2/collections/collection-1/');
+      expect(setDefaultFilter.value).toBe(MOCK_COLLECTION_IRI);
     });
 
     it('should not dispatch SetExtraFilters when provider has no requiredMetadataTemplate', () => {

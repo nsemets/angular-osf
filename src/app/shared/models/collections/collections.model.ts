@@ -39,6 +39,7 @@ export interface CollectionFilters {
 export interface CollectionDetails {
   id: string;
   type: string;
+  iri?: string;
   title: string;
   dateCreated: string;
   dateModified: string;

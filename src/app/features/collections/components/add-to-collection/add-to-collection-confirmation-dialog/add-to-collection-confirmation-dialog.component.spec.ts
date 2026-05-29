@@ -9,9 +9,11 @@ import { of, throwError } from 'rxjs';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CreateCollectionSubmission } from '@osf/features/collections/store/add-to-collection/add-to-collection.actions';
+import { CedarMetadataAttributes, CedarRecordDataBinding } from '@osf/features/metadata/models';
 import { CreateCedarMetadataRecord } from '@osf/features/metadata/store';
 import { UpdateProjectPublicStatus } from '@osf/features/project/overview/store';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
+import { CollectionSubmissionPayload } from '@osf/shared/models/collections/collection-submission-payload.model';
 import { ToastService } from '@osf/shared/services/toast.service';
 
 import { provideOSFCore } from '@testing/osf.testing.provider';
@@ -21,11 +23,11 @@ import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast
 
 import { AddToCollectionConfirmationDialogComponent } from './add-to-collection-confirmation-dialog.component';
 
-const MOCK_CEDAR_DATA = {
-  data: { '@context': {} },
+const MOCK_CEDAR_DATA: CedarRecordDataBinding = {
+  data: { '@context': {} } as CedarMetadataAttributes,
   id: 'template-1',
   isPublished: true,
-} as any;
+};
 
 describe('AddToCollectionConfirmationDialogComponent', () => {
   let component: AddToCollectionConfirmationDialogComponent;
@@ -35,17 +37,23 @@ describe('AddToCollectionConfirmationDialogComponent', () => {
   let toastService: ToastServiceMockType;
   let dialogConfig: {
     data: {
-      payload?: unknown;
+      payload?: CollectionSubmissionPayload;
       project?: { id: string; isPublic: boolean };
-      cedarData?: unknown;
+      cedarData?: CedarRecordDataBinding | null;
     };
+  };
+
+  const MOCK_PAYLOAD: CollectionSubmissionPayload = {
+    collectionId: 'collection-1',
+    projectId: 'project-1',
+    userId: 'user-1',
   };
 
   beforeEach(() => {
     toastService = ToastServiceMock.simple();
     dialogConfig = {
       data: {
-        payload: { title: 'Submission' },
+        payload: MOCK_PAYLOAD,
         project: { id: 'project-1', isPublic: false },
         cedarData: null,
       },
@@ -90,7 +98,7 @@ describe('AddToCollectionConfirmationDialogComponent', () => {
     component.handleAddToCollectionConfirm();
 
     expect(store.dispatch).toHaveBeenCalledWith(new UpdateProjectPublicStatus([{ id: 'project-1', public: true }]));
-    expect(store.dispatch).toHaveBeenCalledWith(new CreateCollectionSubmission({ title: 'Submission' } as any));
+    expect(store.dispatch).toHaveBeenCalledWith(new CreateCollectionSubmission(MOCK_PAYLOAD));
     expect(store.dispatch).not.toHaveBeenCalledWith(expect.any(CreateCedarMetadataRecord));
     expect(dialogRef.close).toHaveBeenCalledWith(true);
     expect(toastService.showSuccess).toHaveBeenCalledWith('collections.addToCollection.confirmationDialogToastMessage');
@@ -103,7 +111,7 @@ describe('AddToCollectionConfirmationDialogComponent', () => {
 
     component.handleAddToCollectionConfirm();
 
-    expect(store.dispatch).toHaveBeenCalledWith(new CreateCollectionSubmission({ title: 'Submission' } as any));
+    expect(store.dispatch).toHaveBeenCalledWith(new CreateCollectionSubmission(MOCK_PAYLOAD));
     expect(store.dispatch).not.toHaveBeenCalledWith(expect.any(UpdateProjectPublicStatus));
     expect(dialogRef.close).toHaveBeenCalledWith(true);
   });
@@ -117,7 +125,7 @@ describe('AddToCollectionConfirmationDialogComponent', () => {
     expect(store.dispatch).toHaveBeenCalledWith(
       new CreateCedarMetadataRecord(MOCK_CEDAR_DATA, 'project-1', ResourceType.Project)
     );
-    expect(store.dispatch).toHaveBeenCalledWith(new CreateCollectionSubmission({ title: 'Submission' } as any));
+    expect(store.dispatch).toHaveBeenCalledWith(new CreateCollectionSubmission(MOCK_PAYLOAD));
     expect(dialogRef.close).toHaveBeenCalledWith(true);
   });
 
@@ -128,7 +136,7 @@ describe('AddToCollectionConfirmationDialogComponent', () => {
     component.handleAddToCollectionConfirm();
 
     expect(store.dispatch).not.toHaveBeenCalledWith(expect.any(CreateCedarMetadataRecord));
-    expect(store.dispatch).toHaveBeenCalledWith(new CreateCollectionSubmission({ title: 'Submission' } as any));
+    expect(store.dispatch).toHaveBeenCalledWith(new CreateCollectionSubmission(MOCK_PAYLOAD));
   });
 
   it('should reset submitting state on error', () => {

@@ -130,7 +130,7 @@ export class MetadataComponent implements OnInit, OnDestroy {
   private readonly environment = inject(ENVIRONMENT);
   private readonly signpostingService = inject(SignpostingService);
 
-  activeFlags = select(UserSelectors.getActiveFlags);
+  private readonly activeFlags = select(UserSelectors.getActiveFlags);
   readonly collectionSubmissionWithCedar = computed(() =>
     this.activeFlags().includes(COLLECTION_SUBMISSION_WITH_CEDAR)
   );
