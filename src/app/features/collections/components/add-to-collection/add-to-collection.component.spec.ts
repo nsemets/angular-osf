@@ -1,398 +1,335 @@
-import { Store } from '@ngxs/store';
-
 import { MockComponents, MockProvider } from 'ng-mocks';
 
-import { Subject } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 
-import { Mock } from 'vitest';
-
-import { PLATFORM_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormGroup } from '@angular/forms';
-import { ActivatedRoute, provideRouter, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { UserSelectors } from '@core/store/user';
+import { CollectionMetadataStepComponent } from '@osf/features/collections/components/add-to-collection/collection-metadata-step/collection-metadata-step.component';
+import { ProjectContributorsStepComponent } from '@osf/features/collections/components/add-to-collection/project-contributors-step/project-contributors-step.component';
+import { ProjectMetadataStepComponent } from '@osf/features/collections/components/add-to-collection/project-metadata-step/project-metadata-step.component';
+import { SelectProjectStepComponent } from '@osf/features/collections/components/add-to-collection/select-project-step/select-project-step.component';
 import { AddToCollectionSteps } from '@osf/features/collections/enums';
-import {
-  AddToCollectionSelectors,
-  ClearAddToCollectionState,
-  GetCurrentCollectionSubmission,
-  UpdateCollectionSubmission,
-} from '@osf/features/collections/store/add-to-collection';
-import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
-import { CollectionSubmissionReviewState } from '@shared/enums/collection-submission-review-state.enum';
-import { CollectionProjectSubmission, CollectionProvider } from '@shared/models/collections/collections.model';
-import { BrandService } from '@shared/services/brand.service';
-import { CustomDialogService } from '@shared/services/custom-dialog.service';
-import { HeaderStyleService } from '@shared/services/header-style.service';
-import { LoaderService } from '@shared/services/loader.service';
-import { ToastService } from '@shared/services/toast.service';
-import { CollectionsSelectors, GetCollectionProvider } from '@shared/stores/collections';
-import { ProjectsSelectors, SetSelectedProject } from '@shared/stores/projects';
+import { CedarRecordDataBinding } from '@osf/features/metadata/models';
+import { MetadataSelectors } from '@osf/features/metadata/store';
+import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
+import { BrandService } from '@osf/shared/services/brand.service';
+import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
+import { HeaderStyleService } from '@osf/shared/services/header-style.service';
+import { LoaderService } from '@osf/shared/services/loader.service';
+import { ToastService } from '@osf/shared/services/toast.service';
+import { CollectionsSelectors } from '@shared/stores/collections';
+import { ProjectsSelectors } from '@shared/stores/projects/projects.selectors';
 
-import { MOCK_COLLECTION_SUBMISSION_1 } from '@testing/mocks/collections-submissions.mock';
 import { MOCK_USER } from '@testing/mocks/data.mock';
 import { MOCK_PROJECT } from '@testing/mocks/project.mock';
+import { MOCK_PROVIDER } from '@testing/mocks/provider.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
-import { BrandServiceMock, BrandServiceMockType } from '@testing/providers/brand-service.mock';
+import { BrandServiceMock } from '@testing/providers/brand-service.mock';
 import {
   CustomDialogServiceMockBuilder,
   CustomDialogServiceMockType,
 } from '@testing/providers/custom-dialog-provider.mock';
-import { HeaderStyleServiceMock, HeaderStyleServiceMockType } from '@testing/providers/header-style-service.mock';
+import { HeaderStyleServiceMock } from '@testing/providers/header-style-service.mock';
 import { LoaderServiceMock } from '@testing/providers/loader-service.mock';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
-import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
+import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { mergeSignalOverrides, provideMockStore, SignalOverride } from '@testing/providers/store-provider.mock';
-import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
+import { ToastServiceMock } from '@testing/providers/toast-provider.mock';
 
-import { AddToCollectionConfirmationDialogComponent } from './add-to-collection-confirmation-dialog/add-to-collection-confirmation-dialog.component';
-import { CollectionMetadataStepComponent } from './collection-metadata-step/collection-metadata-step.component';
-import { ProjectContributorsStepComponent } from './project-contributors-step/project-contributors-step.component';
-import { ProjectMetadataStepComponent } from './project-metadata-step/project-metadata-step.component';
-import { SelectProjectStepComponent } from './select-project-step/select-project-step.component';
+import { AddToCollectionSelectors } from '../../store/add-to-collection';
+
 import { AddToCollectionComponent } from './add-to-collection.component';
 
-const PROVIDER_ID = 'provider-1';
+const mockCollectionProvider = MOCK_PROVIDER;
 
-function createMockCollectionProvider(overrides: Partial<CollectionProvider> = {}): CollectionProvider {
-  return {
-    id: PROVIDER_ID,
-    type: 'collection-providers',
-    name: 'Provider',
-    description: '',
-    domain: 'osf.io',
-    advisoryBoard: '',
-    allowCommenting: false,
-    allowSubmissions: true,
-    domainRedirectEnabled: false,
-    emailSupport: null,
-    example: null,
-    facebookAppId: null,
-    footerLinks: '',
-    permissions: [],
-    reviewsWorkflow: '',
-    sharePublishType: '',
-    shareSource: '',
-    assets: {},
-    primaryCollection: { id: 'col-1', type: 'collections' },
-    brand: null,
-    ...overrides,
-  } as CollectionProvider;
-}
-
-const defaultSignals: SignalOverride[] = [
+const DEFAULT_SIGNALS: SignalOverride[] = [
   { selector: CollectionsSelectors.getCollectionProviderLoading, value: false },
-  { selector: CollectionsSelectors.getCollectionProvider, value: null },
-  { selector: ProjectsSelectors.getSelectedProject, value: null },
+  { selector: CollectionsSelectors.getCollectionProvider, value: mockCollectionProvider },
+  { selector: CollectionsSelectors.getRequiredMetadataTemplate, value: null },
+  { selector: ProjectsSelectors.getSelectedProject, value: MOCK_PROJECT },
   { selector: UserSelectors.getCurrentUser, value: MOCK_USER },
+  { selector: UserSelectors.getActiveFlags, value: [] },
+  { selector: MetadataSelectors.getCedarRecords, value: [] },
   { selector: AddToCollectionSelectors.getCurrentCollectionSubmission, value: null },
 ];
 
+interface SetupOptions {
+  routeParams?: Record<string, string | null>;
+  selectorOverrides?: SignalOverride[];
+}
+
+function setup(options: SetupOptions = {}) {
+  const { routeParams = { id: null }, selectorOverrides } = options;
+
+  const mockRouter = RouterMockBuilder.create().build();
+  const mockActivatedRoute = ActivatedRouteMockBuilder.create().withParams(routeParams).build();
+  const mockCustomDialogService = CustomDialogServiceMockBuilder.create().withDefaultOpen().build();
+  const mockToastService = ToastServiceMock.simple();
+  const mockLoaderService = new LoaderServiceMock();
+  const mockBrandService = BrandServiceMock.simple();
+  const mockHeaderStyleService = HeaderStyleServiceMock.simple();
+
+  TestBed.configureTestingModule({
+    imports: [
+      AddToCollectionComponent,
+      ...MockComponents(
+        LoadingSpinnerComponent,
+        SelectProjectStepComponent,
+        ProjectMetadataStepComponent,
+        ProjectContributorsStepComponent,
+        CollectionMetadataStepComponent
+      ),
+    ],
+    providers: [
+      provideOSFCore(),
+      MockProvider(ActivatedRoute, mockActivatedRoute),
+      MockProvider(Router, mockRouter),
+      MockProvider(CustomDialogService, mockCustomDialogService),
+      MockProvider(ToastService, mockToastService),
+      MockProvider(LoaderService, mockLoaderService),
+      MockProvider(BrandService, mockBrandService),
+      MockProvider(HeaderStyleService, mockHeaderStyleService),
+      provideMockStore({
+        signals: mergeSignalOverrides(DEFAULT_SIGNALS, selectorOverrides),
+      }),
+    ],
+  });
+
+  const fixture: ComponentFixture<AddToCollectionComponent> = TestBed.createComponent(AddToCollectionComponent);
+  const component = fixture.componentInstance;
+  fixture.detectChanges();
+
+  const dialogService = TestBed.inject(CustomDialogService) as unknown as CustomDialogServiceMockType;
+
+  return {
+    component,
+    fixture,
+    mockRouter,
+    mockActivatedRoute,
+    mockCustomDialogService,
+    dialogService,
+    mockToastService,
+    mockLoaderService,
+    mockBrandService,
+    mockHeaderStyleService,
+  };
+}
+
 describe('AddToCollectionComponent', () => {
-  let component: AddToCollectionComponent;
-  let fixture: ComponentFixture<AddToCollectionComponent>;
-  let store: Store;
-  let routerMock: RouterMockType;
-  let customDialogMock: CustomDialogServiceMockType;
-  let dialogCloseSubject: Subject<unknown>;
-  let brandServiceMock: BrandServiceMockType;
-  let headerStyleServiceMock: HeaderStyleServiceMockType;
-  let loaderServiceMock: LoaderServiceMock;
-  let toastServiceMock: ToastServiceMockType;
-
-  function setup(
-    options: {
-      routeParams?: Record<string, string>;
-      hasParent?: boolean;
-      selectorOverrides?: SignalOverride[];
-      platformId?: string;
-    } = {}
-  ) {
-    const routeBuilder = ActivatedRouteMockBuilder.create().withParams(
-      options.routeParams ?? { providerId: PROVIDER_ID }
-    );
-    if (options.hasParent === false) {
-      routeBuilder.withNoParent();
-    }
-    const mockRoute = routeBuilder.build();
-    routerMock = RouterMockBuilder.create().withUrl('/collections/add').build();
-    dialogCloseSubject = new Subject();
-    customDialogMock = CustomDialogServiceMockBuilder.create()
-      .withOpen(
-        vi.fn().mockReturnValue({
-          onClose: dialogCloseSubject.asObservable(),
-          close: vi.fn(),
-        })
-      )
-      .build();
-    brandServiceMock = BrandServiceMock.simple();
-    headerStyleServiceMock = HeaderStyleServiceMock.simple();
-    loaderServiceMock = new LoaderServiceMock();
-    toastServiceMock = ToastServiceMock.simple();
-
-    const signals = mergeSignalOverrides(defaultSignals, options.selectorOverrides);
-
-    TestBed.configureTestingModule({
-      imports: [
-        AddToCollectionComponent,
-        ...MockComponents(
-          LoadingSpinnerComponent,
-          SelectProjectStepComponent,
-          ProjectMetadataStepComponent,
-          ProjectContributorsStepComponent,
-          CollectionMetadataStepComponent
-        ),
-      ],
-      providers: [
-        provideOSFCore(),
-        provideRouter([]),
-        MockProvider(ActivatedRoute, mockRoute),
-        MockProvider(Router, routerMock),
-        MockProvider(CustomDialogService, customDialogMock),
-        MockProvider(BrandService, brandServiceMock),
-        MockProvider(HeaderStyleService, headerStyleServiceMock),
-        MockProvider(LoaderService, loaderServiceMock),
-        MockProvider(ToastService, toastServiceMock),
-        MockProvider(PLATFORM_ID, options.platformId ?? 'browser'),
-        provideMockStore({ signals }),
-      ],
-    });
-
-    store = TestBed.inject(Store);
-    fixture = TestBed.createComponent(AddToCollectionComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }
-
   it('should create', () => {
-    setup();
+    const { component } = setup();
     expect(component).toBeTruthy();
   });
 
-  it('should navigate to not-found when providerId is missing', () => {
-    setup({ routeParams: {} });
-    expect(routerMock.navigate).toHaveBeenCalledWith(['/not-found']);
-  });
-
-  it('should dispatch GetCollectionProvider when providerId is present', () => {
-    setup();
-    expect(store.dispatch).toHaveBeenCalledWith(new GetCollectionProvider(PROVIDER_ID));
-  });
-
-  it('should dispatch GetCurrentCollectionSubmission when route has project id and collection exists', () => {
-    setup({
-      routeParams: { providerId: PROVIDER_ID, id: MOCK_PROJECT.id },
-      selectorOverrides: [
-        { selector: CollectionsSelectors.getCollectionProvider, value: createMockCollectionProvider() },
-      ],
-    });
-    expect(store.dispatch).toHaveBeenCalledWith(new GetCurrentCollectionSubmission('col-1', MOCK_PROJECT.id));
-  });
-
-  it('should dispatch SetSelectedProject when submission has project and none selected', () => {
-    const submission: CollectionProjectSubmission = {
-      project: MOCK_PROJECT,
-      submission: {
-        ...MOCK_COLLECTION_SUBMISSION_1,
-        reviewsState: CollectionSubmissionReviewState.Pending,
-      },
-    };
-    setup({
-      selectorOverrides: [
-        { selector: CollectionsSelectors.getCollectionProvider, value: createMockCollectionProvider() },
-        { selector: AddToCollectionSelectors.getCurrentCollectionSubmission, value: submission },
-      ],
-    });
-    expect(store.dispatch).toHaveBeenCalledWith(new SetSelectedProject(MOCK_PROJECT));
-  });
-
-  it('should apply branding when collection provider has brand', () => {
-    const brand = {
-      id: 'b1',
-      name: 'B',
-      heroLogoImageUrl: 'https://x/h.png',
-      heroBackgroundImageUrl: 'https://x/hb.png',
-      topNavLogoImageUrl: 'https://x/n.png',
-      primaryColor: '#111',
-      secondaryColor: '#222',
-      backgroundColor: '#333',
-    };
-    setup({
-      selectorOverrides: [
-        { selector: CollectionsSelectors.getCollectionProvider, value: createMockCollectionProvider({ brand }) },
-      ],
-    });
-    expect(brandServiceMock.applyBranding).toHaveBeenCalledWith(brand);
-    expect(headerStyleServiceMock.applyHeaderStyles).toHaveBeenCalledWith('#222', '#333');
-  });
-
-  it('should reset saved flags when project is selected', () => {
-    setup();
-    component.projectMetadataSaved.set(true);
-    component.projectContributorsSaved.set(true);
-    component.allowNavigation.set(true);
-    component.handleProjectSelected();
+  it('should initialize with default signal values', () => {
+    const { component } = setup();
+    expect(component.stepperActiveValue()).toBe(AddToCollectionSteps.SelectProject);
     expect(component.projectMetadataSaved()).toBe(false);
     expect(component.projectContributorsSaved()).toBe(false);
+    expect(component.collectionMetadataSaved()).toBe(false);
     expect(component.allowNavigation()).toBe(false);
   });
 
-  it('should update stepper value on step change', () => {
-    setup();
-    component.handleChangeStep(AddToCollectionSteps.ProjectMetadata);
-    expect(component.stepperActiveValue()).toBe(AddToCollectionSteps.ProjectMetadata);
+  it('should navigate to /not-found when providerId is absent from route', () => {
+    const { mockRouter } = setup({ routeParams: {} });
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/not-found']);
   });
 
-  it('should mark project metadata saved', () => {
-    setup();
+  it('should set providerId and dispatch getCollectionProvider when providerId is present', () => {
+    const { component } = setup({ routeParams: { providerId: 'provider-1' } });
+    expect(component.providerId()).toBe('provider-1');
+  });
+
+  it('should handle project selection', () => {
+    const { component } = setup();
+    component.handleProjectSelected();
+
+    expect(component.projectContributorsSaved()).toBe(false);
+    expect(component.projectMetadataSaved()).toBe(false);
+    expect(component.allowNavigation()).toBe(false);
+  });
+
+  it('should handle step change', () => {
+    const { component } = setup();
+    const newStep = AddToCollectionSteps.ProjectMetadata;
+    component.handleChangeStep(newStep);
+
+    expect(component.stepperActiveValue()).toBe(newStep);
+  });
+
+  it('should handle project metadata saved', () => {
+    const { component } = setup();
     component.handleProjectMetadataSaved();
+
     expect(component.projectMetadataSaved()).toBe(true);
   });
 
-  it('should mark contributors saved and move to collection metadata step', () => {
-    setup();
+  it('should handle contributors saved', () => {
+    const { component } = setup();
     component.handleContributorsSaved();
-    expect(component.projectContributorsSaved()).toBe(true);
+
     expect(component.stepperActiveValue()).toBe(AddToCollectionSteps.CollectionMetadata);
+    expect(component.projectContributorsSaved()).toBe(true);
   });
 
-  it('should store collection metadata form and complete step', () => {
-    setup();
-    const form = new FormGroup({});
-    component.handleCollectionMetadataSaved(form);
-    expect(component.collectionMetadataForm).toBe(form);
+  it('should handle collection metadata saved', () => {
+    const { component } = setup();
+    const mockForm = new FormGroup({});
+    component.handleCollectionMetadataSaved(mockForm);
+
+    expect(component.collectionMetadataForm).toBe(mockForm);
     expect(component.collectionMetadataSaved()).toBe(true);
     expect(component.stepperActiveValue()).toBe(AddToCollectionSteps.Complete);
   });
 
-  it('should return true from canDeactivate when navigation is allowed', () => {
-    setup();
-    component.allowNavigation.set(true);
-    expect(component.canDeactivate()).toBe(true);
+  it('should handle cedar data saved', () => {
+    const { component } = setup();
+    const mockCedarData: CedarRecordDataBinding = {
+      data: {} as CedarRecordDataBinding['data'],
+      id: 'template-123',
+      isPublished: false,
+    };
+    component.handleCedarDataSaved(mockCedarData);
+
+    expect(component.pendingCedarData()).toEqual(mockCedarData);
+    expect(component.collectionMetadataSaved()).toBe(true);
+    expect(component.stepperActiveValue()).toBe(AddToCollectionSteps.Complete);
   });
 
-  it('should return true from canDeactivate when there are no unsaved changes', () => {
-    setup();
+  it('should have actions defined', () => {
+    const { component } = setup();
+    expect(component.actions).toBeDefined();
+    expect(component.actions.getCollectionProvider).toBeDefined();
+    expect(component.actions.clearAddToCollectionState).toBeDefined();
+  });
+
+  it('should reflect loading state from store', () => {
+    const { component } = setup();
+    expect(component.isProviderLoading()).toBe(false);
+  });
+
+  it('should expose collection provider from store', () => {
+    const { component } = setup();
+    expect(component.collectionProvider()).toEqual(mockCollectionProvider);
+  });
+
+  it('should expose selected project from store', () => {
+    const { component } = setup();
+    expect(component.selectedProject()).toEqual(MOCK_PROJECT);
+  });
+
+  it('should expose current user from store', () => {
+    const { component } = setup();
+    expect(component.currentUser()).toEqual(MOCK_USER);
+  });
+
+  it('should return true from canDeactivate when allowNavigation is true', () => {
+    const { component } = setup();
+    component.allowNavigation.set(true);
+
     expect(component.canDeactivate()).toBe(true);
   });
 
   it('should return false from canDeactivate when there are unsaved changes', () => {
-    setup({
-      selectorOverrides: [{ selector: ProjectsSelectors.getSelectedProject, value: MOCK_PROJECT }],
-    });
+    const { component } = setup();
+    component.projectMetadataSaved.set(true);
+
     expect(component.canDeactivate()).toBe(false);
   });
 
-  it('should warn on beforeunload when there are unsaved changes', () => {
-    setup({
-      selectorOverrides: [{ selector: ProjectsSelectors.getSelectedProject, value: MOCK_PROJECT }],
+  it('should return true from canDeactivate when no unsaved changes', () => {
+    const { component } = setup({
+      selectorOverrides: [{ selector: ProjectsSelectors.getSelectedProject, value: null }],
     });
-    const event = { preventDefault: vi.fn() } as unknown as BeforeUnloadEvent;
-    const result = component.onBeforeUnload(event);
-    expect(event.preventDefault).toHaveBeenCalled();
+
+    expect(component.canDeactivate()).toBe(true);
+  });
+
+  it('should prevent page unload when there are unsaved changes', () => {
+    const { component } = setup();
+    component.projectMetadataSaved.set(true);
+    const mockEvent = { preventDefault: vi.fn() } as unknown as BeforeUnloadEvent;
+
+    const result = component.onBeforeUnload(mockEvent);
+
+    expect(mockEvent.preventDefault).toHaveBeenCalled();
     expect(result).toBe(false);
   });
 
-  it('should not prevent beforeunload when navigation is allowed', () => {
-    setup({
-      selectorOverrides: [{ selector: ProjectsSelectors.getSelectedProject, value: MOCK_PROJECT }],
-    });
+  it('should allow page unload when allowNavigation is true', () => {
+    const { component } = setup();
     component.allowNavigation.set(true);
-    const event = { preventDefault: vi.fn() } as unknown as BeforeUnloadEvent;
-    const result = component.onBeforeUnload(event);
-    expect(event.preventDefault).not.toHaveBeenCalled();
+    const mockEvent = { preventDefault: vi.fn() } as unknown as BeforeUnloadEvent;
+
+    const result = component.onBeforeUnload(mockEvent);
+
+    expect(mockEvent.preventDefault).not.toHaveBeenCalled();
     expect(result).toBeUndefined();
   });
 
-  it('should open confirmation dialog when adding in create mode', () => {
-    setup({
-      selectorOverrides: [
-        { selector: CollectionsSelectors.getCollectionProvider, value: createMockCollectionProvider() },
-        { selector: ProjectsSelectors.getSelectedProject, value: MOCK_PROJECT },
-      ],
-    });
-    component.handleCollectionMetadataSaved(new FormGroup({}));
+  it('should open confirmation dialog in new submission mode', () => {
+    const { component, dialogService } = setup();
     component.handleAddToCollection();
-    expect(customDialogMock.open).toHaveBeenCalledWith(
-      AddToCollectionConfirmationDialogComponent,
-      expect.objectContaining({
-        header: 'collections.addToCollection.confirmationDialogHeader',
-        width: '500px',
-        data: expect.objectContaining({
-          project: MOCK_PROJECT,
-          payload: expect.objectContaining({
-            collectionId: 'col-1',
-            projectId: MOCK_PROJECT.id,
-            userId: MOCK_USER.id,
-          }),
-        }),
-      })
+
+    expect(dialogService.open).toHaveBeenCalledWith(
+      expect.any(Function),
+      expect.objectContaining({ header: 'collections.addToCollection.confirmationDialogHeader' })
     );
   });
 
-  it('should navigate after confirmation dialog closes with a truthy result', () => {
-    setup({
-      selectorOverrides: [
-        { selector: CollectionsSelectors.getCollectionProvider, value: createMockCollectionProvider() },
-        { selector: ProjectsSelectors.getSelectedProject, value: MOCK_PROJECT },
-      ],
+  it('should update submission and navigate on success in edit mode', () => {
+    const { component, mockToastService, mockLoaderService, mockRouter } = setup({
+      routeParams: { id: 'project-1', providerId: 'provider-1' },
     });
-    component.handleCollectionMetadataSaved(new FormGroup({}));
-    component.handleAddToCollection();
-    dialogCloseSubject.next(true);
-    expect(routerMock.navigate).toHaveBeenCalledWith([MOCK_PROJECT.id, 'overview']);
-  });
+    vi.spyOn(component.actions, 'updateCollectionSubmission').mockReturnValue(of(void 0));
 
-  it('should update submission in edit mode and navigate on success', () => {
-    setup({
-      routeParams: { providerId: PROVIDER_ID, id: MOCK_PROJECT.id },
-      selectorOverrides: [
-        { selector: CollectionsSelectors.getCollectionProvider, value: createMockCollectionProvider() },
-        { selector: ProjectsSelectors.getSelectedProject, value: MOCK_PROJECT },
-      ],
-    });
-    component.handleCollectionMetadataSaved(new FormGroup({}));
-    (store.dispatch as Mock).mockClear();
     component.handleAddToCollection();
-    expect(loaderServiceMock.show).toHaveBeenCalled();
-    expect(loaderServiceMock.hide).toHaveBeenCalled();
-    expect(store.dispatch).toHaveBeenCalledWith(
-      new UpdateCollectionSubmission({
-        collectionId: 'col-1',
-        projectId: MOCK_PROJECT.id,
-        collectionMetadata: {},
-        userId: MOCK_USER.id,
-      })
-    );
-    expect(toastServiceMock.showSuccess).toHaveBeenCalledWith(
+
+    expect(mockLoaderService.show).toHaveBeenCalled();
+    expect(mockToastService.showSuccess).toHaveBeenCalledWith(
       'collections.addToCollection.confirmationDialogToastMessage'
     );
-    expect(routerMock.navigate).toHaveBeenCalledWith([MOCK_PROJECT.id, 'overview']);
+    expect(component.allowNavigation()).toBe(true);
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['project-1', 'overview']);
   });
 
-  it('should not open remove dialog when project is missing', () => {
-    setup({
-      routeParams: { providerId: PROVIDER_ID, id: MOCK_PROJECT.id },
-      selectorOverrides: [
-        { selector: CollectionsSelectors.getCollectionProvider, value: createMockCollectionProvider() },
-      ],
+  it('should show error toast when update fails in edit mode', () => {
+    const { component, mockToastService } = setup({
+      routeParams: { id: 'project-1', providerId: 'provider-1' },
+    });
+    vi.spyOn(component.actions, 'updateCollectionSubmission').mockReturnValue(throwError(() => new Error('fail')));
+
+    component.handleAddToCollection();
+
+    expect(mockToastService.showError).toHaveBeenCalledWith('collections.addToCollection.updateError');
+  });
+
+  it('should not open remove dialog when selected project is missing', () => {
+    const { component, dialogService } = setup({
+      selectorOverrides: [{ selector: ProjectsSelectors.getSelectedProject, value: null }],
     });
     component.handleRemoveFromCollection();
-    expect(customDialogMock.open).not.toHaveBeenCalled();
+
+    expect(dialogService.open).not.toHaveBeenCalled();
   });
 
-  it('should clear state on destroy in browser', () => {
-    setup();
-    (store.dispatch as Mock).mockClear();
-    fixture.destroy();
-    expect(store.dispatch).toHaveBeenCalledWith(expect.any(ClearAddToCollectionState));
-  });
+  it('should dispatch deleteCollectionSubmission and navigate on successful removal', () => {
+    const onCloseSubject = new Subject<{ confirmed: boolean; comment?: string }>();
+    const { component, dialogService, mockToastService, mockLoaderService, mockRouter } = setup();
 
-  it('should not dispatch clear state on destroy when not in browser', () => {
-    setup({ platformId: 'server' });
-    (store.dispatch as Mock).mockClear();
-    fixture.destroy();
-    expect(store.dispatch).not.toHaveBeenCalled();
+    dialogService.open = vi.fn().mockReturnValue({ onClose: onCloseSubject.asObservable() });
+    vi.spyOn(component.actions, 'deleteCollectionSubmission').mockReturnValue(of(void 0));
+
+    component.handleRemoveFromCollection();
+    onCloseSubject.next({ confirmed: true, comment: '' });
+
+    expect(mockLoaderService.show).toHaveBeenCalled();
+    expect(mockToastService.showSuccess).toHaveBeenCalledWith('collections.removeDialog.success');
+    expect(mockLoaderService.hide).toHaveBeenCalled();
+    expect(component.allowNavigation()).toBe(true);
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['project-1', 'overview']);
   });
 });

@@ -31,7 +31,6 @@ export class CollectionsMapper {
     return {
       id: response.id,
       type: response.type,
-      iri: response.links.iri,
       name: replaceBadEncodedChars(response.attributes.name),
       description: replaceBadEncodedChars(response.attributes.description),
       advisoryBoard: response.attributes.advisory_board,
@@ -72,7 +71,7 @@ export class CollectionsMapper {
             backgroundColor: response.embeds.brand.data.attributes.background_color,
           }
         : null,
-      requiredMetadataTemplate: null,
+      requiredMetadataTemplate: response.embeds.required_metadata_template?.data ?? null,
     };
   }
 
@@ -80,6 +79,7 @@ export class CollectionsMapper {
     return {
       id: response.id,
       type: response.type,
+      iri: response.links?.iri,
       title: replaceBadEncodedChars(response.attributes.title),
       dateCreated: response.attributes.date_created,
       dateModified: response.attributes.date_modified,
@@ -244,7 +244,7 @@ export class CollectionsMapper {
 
   static toCollectionSubmissionRequest(payload: CollectionSubmissionPayload): CollectionSubmissionPayloadJsonApi {
     const collectionId = payload.collectionId;
-    const collectionsMetadata = convertToSnakeCase(payload.collectionMetadata);
+    const collectionsMetadata = payload.collectionMetadata ? convertToSnakeCase(payload.collectionMetadata) : {};
 
     return {
       data: {
@@ -272,7 +272,7 @@ export class CollectionsMapper {
   }
 
   static collectionSubmissionUpdateRequest(payload: CollectionSubmissionPayload) {
-    const collectionsMetadata = convertToSnakeCase(payload.collectionMetadata);
+    const collectionsMetadata = payload.collectionMetadata ? convertToSnakeCase(payload.collectionMetadata) : {};
 
     return {
       data: {
