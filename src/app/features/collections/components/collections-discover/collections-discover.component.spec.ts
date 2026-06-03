@@ -33,6 +33,7 @@ const MOCK_COLLECTION_IRI = 'http://localhost:8000/v2/collections/collection-1/'
 
 const MOCK_COLLECTION_PROVIDER = {
   ...MOCK_PROVIDER,
+  iri: MOCK_COLLECTION_IRI,
   primaryCollection: { id: 'collection-1', type: 'collections' },
   requiredMetadataTemplate: null,
 };
@@ -249,7 +250,7 @@ describe('CollectionsDiscoverComponent', () => {
       ) as SetDefaultFilterValue;
 
       expect(setDefaultFilter).toBeDefined();
-      expect(setDefaultFilter.filterKey).toBe('isContainedBy');
+      expect(setDefaultFilter.filterKey).toBe('isPartOfCollection');
       expect(setDefaultFilter.value).toBe(MOCK_COLLECTION_IRI);
     });
 
