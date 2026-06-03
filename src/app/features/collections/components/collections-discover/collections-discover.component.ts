@@ -179,8 +179,6 @@ export class CollectionsDiscoverComponent {
 
   private setupCollectionDetailsEffect(): void {
     effect(() => {
-      if (this.useShareTroveSearch()) return;
-
       const collectionId = this.primaryCollectionId();
       if (collectionId) {
         this.actions.getCollectionDetails(collectionId);
