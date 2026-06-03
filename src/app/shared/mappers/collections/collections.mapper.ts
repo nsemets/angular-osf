@@ -50,6 +50,7 @@ export class CollectionsMapper {
             favicon: response.attributes.assets.favicon,
           }
         : {},
+      iri: response.links?.iri,
       shareSource: response.attributes.share_source,
       sharePublishType: response.attributes.share_publish_type,
       permissions: response.attributes.permissions,

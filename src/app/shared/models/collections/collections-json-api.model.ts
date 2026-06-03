@@ -10,6 +10,9 @@ import { UserDataErrorResponseJsonApi } from '../user/user-json-api.model';
 export interface CollectionProviderResponseJsonApi {
   id: string;
   type: string;
+  links?: {
+    iri?: string;
+  };
   attributes: CollectionsProviderAttributesJsonApi;
   embeds: {
     brand: {
