@@ -75,7 +75,7 @@ export class SearchFiltersComponent {
     return this.filters().filter((filter) => {
       if (!filter || !filter.key) return false;
 
-      return Boolean((filter.resultCount && filter.resultCount > 0) || (filter.options && filter.options.length > 0));
+      return filter.resultCount === undefined || filter.resultCount > 0 || (filter.options?.length ?? 0) > 0;
     });
   });
 

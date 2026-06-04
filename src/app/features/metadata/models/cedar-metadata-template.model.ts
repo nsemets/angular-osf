@@ -10,6 +10,22 @@ export interface CedarMetadataDataTemplateJsonApi {
   };
 }
 
+export const CEDAR_TEMPLATE_FIELD_TYPE = 'https://schema.metadatacenter.org/core/TemplateField';
+export const CEDAR_PROPERTIES_BASE_IRI = 'https://schema.metadatacenter.org/properties/';
+
+export interface CedarTemplateField {
+  '@type': string;
+  _valueConstraints?: {
+    literals?: { label: string }[];
+    multipleChoice?: boolean;
+    requiredValue?: boolean;
+  };
+}
+
+export interface CedarTemplateContextSchema {
+  properties: Record<string, { enum?: string[] }>;
+}
+
 export interface CedarTemplate {
   '@id': string;
   '@type': string;
