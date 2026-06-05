@@ -65,6 +65,9 @@ export class GlobalSearchState {
 
     const filter = state.filters.find((f) => f.key === filterKey);
     if (filter?.cedarPropertyIri) {
+      ctx.patchState({
+        filters: state.filters.map((f) => (f.key === filterKey ? { ...f, isLoaded: true } : f)),
+      });
       return EMPTY;
     }
 
@@ -328,9 +331,9 @@ export class GlobalSearchState {
 
       if (filter?.cedarPropertyIri) {
         hasCedarFilters = true;
-        const value = options[0]?.value;
-        if (value) {
-          filtersParams[`cardSearchText[osf:hasCedarRecord.cedar:${filter.cedarPropertyIri}]`] = `"${value}"`;
+        const values = options.map((o) => `"${o.value}"`);
+        if (values.length) {
+          filtersParams[`cardSearchText[osf:hasCedarRecord.cedar:${filter.cedarPropertyIri}][]`] = values;
         }
       } else {
         const firstOptionValue = options[0]?.value;

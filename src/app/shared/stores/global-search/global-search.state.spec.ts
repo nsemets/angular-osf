@@ -92,6 +92,18 @@ describe('GlobalSearchState', () => {
       expect(mockGetFilterOptions).not.toHaveBeenCalled();
     });
 
+    it('should set isLoaded to true for a CEDAR filter when short-circuiting', () => {
+      const { store } = setup();
+
+      store.dispatch(new SetExtraFilters([CEDAR_FILTER]));
+      store.dispatch(new FetchResources());
+      store.dispatch(new LoadFilterOptions(CEDAR_FILTER.key));
+
+      const filters = store.selectSnapshot(GlobalSearchSelectors.getFilters);
+      const cedarFilterState = filters.find((f) => f.key === CEDAR_FILTER.key);
+      expect(cedarFilterState?.isLoaded).toBe(true);
+    });
+
     it('should call the API for a regular filter', () => {
       const { store, mockGetFilterOptions } = setup();
 
@@ -180,8 +192,33 @@ describe('GlobalSearchState', () => {
       store.dispatch(new FetchResources());
 
       const params = mockGetResources.mock.calls[0][0];
-      expect(params[`cardSearchText[osf:hasCedarRecord.cedar:${CEDAR_FILTER.cedarPropertyIri}]`]).toBe('"High School"');
+      expect(params[`cardSearchText[osf:hasCedarRecord.cedar:${CEDAR_FILTER.cedarPropertyIri}][]`]).toEqual([
+        '"High School"',
+      ]);
       expect(params[`cardSearchFilter[${CEDAR_FILTER.key}][]`]).toBeUndefined();
+    });
+
+    it('should include all selected values for a CEDAR filter', () => {
+      const { store, mockGetResources } = setup();
+      store.dispatch(new SetExtraFilters([CEDAR_FILTER]));
+      store.dispatch(new FetchResources());
+      mockGetResources.mockClear();
+
+      store.dispatch(
+        new LoadFilterOptionsAndSetValues({
+          [CEDAR_FILTER.key]: [
+            { label: 'High School', value: 'High School', cardSearchResultCount: null },
+            { label: 'Middle School', value: 'Middle School', cardSearchResultCount: null },
+          ],
+        })
+      );
+      store.dispatch(new FetchResources());
+
+      const params = mockGetResources.mock.calls[0][0];
+      expect(params[`cardSearchText[osf:hasCedarRecord.cedar:${CEDAR_FILTER.cedarPropertyIri}][]`]).toEqual([
+        '"High School"',
+        '"Middle School"',
+      ]);
     });
 
     it('should use extraFilters as fallback for CEDAR lookup before state.filters is populated', () => {
@@ -197,7 +234,9 @@ describe('GlobalSearchState', () => {
       store.dispatch(new FetchResources());
 
       const params = mockGetResources.mock.calls[0][0];
-      expect(params[`cardSearchText[osf:hasCedarRecord.cedar:${CEDAR_FILTER.cedarPropertyIri}]`]).toBe('"High School"');
+      expect(params[`cardSearchText[osf:hasCedarRecord.cedar:${CEDAR_FILTER.cedarPropertyIri}][]`]).toEqual([
+        '"High School"',
+      ]);
     });
   });
 });
