@@ -79,7 +79,19 @@ const MOCK_COLLECTION_PROVIDER_WITH_TEMPLATE = {
         $schema: 'http://json-schema.org/draft-04/schema',
         '@context': {} as never,
         required: [],
-        properties: {},
+        properties: {
+          '@context': {
+            properties: {
+              field1: { enum: ['https://schema.metadatacenter.org/properties/test-field-uuid'] },
+            },
+          },
+          field1: {
+            '@type': 'https://schema.metadatacenter.org/core/TemplateField',
+            _valueConstraints: {
+              literals: [{ label: 'Option A' }, { label: 'Option B' }],
+            },
+          },
+        },
         _ui: {
           order: ['field1'],
           propertyLabels: { field1: 'Field One' },
@@ -274,6 +286,8 @@ describe('CollectionsDiscoverComponent', () => {
       expect(setExtraFilters.filters).toHaveLength(1);
       expect(setExtraFilters.filters[0].key).toBe('field1');
       expect(setExtraFilters.filters[0].label).toBe('Field One');
+      expect(setExtraFilters.filters[0].cedarPropertyIri).toBe('test-field-uuid');
+      expect(setExtraFilters.filters[0].options).toHaveLength(2);
     });
 
     it('should render GlobalSearchComponent when filters are initialized', () => {

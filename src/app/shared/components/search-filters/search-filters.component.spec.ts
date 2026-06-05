@@ -118,6 +118,40 @@ describe('SearchFiltersComponent', () => {
     expect(visibleFilters.length).toBe(3);
   });
 
+  it('should show CEDAR filters that have options but no resultCount', () => {
+    const cedarFilter: DiscoverableFilter = {
+      key: 'School Type',
+      label: 'School Type',
+      operator: FilterOperatorOption.AnyOf,
+      cedarPropertyIri: 'uuid-school-type',
+      options: [
+        { label: 'High School', value: 'High School', cardSearchResultCount: null },
+        { label: 'Middle School', value: 'Middle School', cardSearchResultCount: null },
+      ],
+    };
+
+    fixture.componentRef.setInput('filters', [cedarFilter]);
+    fixture.detectChanges();
+
+    expect(component.visibleFilters()).toHaveLength(1);
+    expect(component.visibleFilters()[0].key).toBe('School Type');
+  });
+
+  it('should still hide a filter with resultCount 0 and no options', () => {
+    const zeroCountFilter: DiscoverableFilter = {
+      key: 'emptyFilter',
+      label: 'Empty',
+      operator: FilterOperatorOption.AnyOf,
+      resultCount: 0,
+      options: [],
+    };
+
+    fixture.componentRef.setInput('filters', [zeroCountFilter]);
+    fixture.detectChanges();
+
+    expect(component.visibleFilters()).toHaveLength(0);
+  });
+
   it('should compute splitFilters correctly', () => {
     fixture.componentRef.setInput('filters', mockFilters);
     fixture.detectChanges();
