@@ -56,7 +56,7 @@ export class AddMetadataComponent implements OnInit {
   selectedTemplate: CedarMetadataDataTemplateJsonApi | null = null;
   existingRecord: CedarMetadataRecordData | null = null;
 
-  readonly cedarTemplates = select(MetadataSelectors.getCedarTemplates);
+  readonly cedarTemplates = select(MetadataSelectors.getCedarTemplatesExcludingCollections);
   readonly cedarRecords = select(MetadataSelectors.getCedarRecords);
   readonly cedarTemplatesLoading = select(MetadataSelectors.getCedarTemplatesLoading);
   readonly cedarRecord = select(MetadataSelectors.getCedarRecord);
@@ -136,7 +136,7 @@ export class AddMetadataComponent implements OnInit {
     if (!templates?.links?.next) {
       return;
     }
-    this.actions.getCedarTemplates(templates.links.next);
+    this.actions.getCedarTemplates({ url: templates.links.next });
   }
 
   hasNextPage(): boolean {

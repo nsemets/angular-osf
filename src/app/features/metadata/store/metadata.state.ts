@@ -137,7 +137,7 @@ export class MetadataState {
       },
     });
 
-    return this.metadataService.getMetadataCedarTemplates(action.url).pipe(
+    return this.metadataService.getMetadataCedarTemplates(action.options.url).pipe(
       tap({
         next: (response) => {
           ctx.patchState({

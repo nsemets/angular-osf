@@ -7,6 +7,7 @@ export interface CedarMetadataDataTemplateJsonApi {
     schema_name: string;
     cedar_id: string;
     template: CedarTemplate;
+    is_for_collections: boolean;
   };
 }
 

@@ -65,7 +65,7 @@ export class GetFundersList {
 
 export class GetCedarMetadataTemplates {
   static readonly type = '[Metadata] Get Cedar Metadata Templates';
-  constructor(public url?: string) {}
+  constructor(public options: { url?: string } = {}) {}
 }
 
 export class GetCedarMetadataRecords {
