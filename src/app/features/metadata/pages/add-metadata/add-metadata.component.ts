@@ -136,7 +136,7 @@ export class AddMetadataComponent implements OnInit {
     if (!templates?.links?.next) {
       return;
     }
-    this.actions.getCedarTemplates({ url: templates.links.next });
+    this.actions.getCedarTemplates(templates.links.next);
   }
 
   hasNextPage(): boolean {
