@@ -32,6 +32,7 @@ export const MOCK_CEDAR_TEMPLATE: CedarMetadataDataTemplateJsonApi = {
       properties: {},
       _ui: { order: [], propertyLabels: {}, propertyDescriptions: {} },
     },
+    is_for_collections: false,
   },
 };
 
