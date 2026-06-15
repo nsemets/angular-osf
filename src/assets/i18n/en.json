@@ -105,7 +105,8 @@
         "isPartOfCollection": "Select collection",
         "dateCreated": "Select date",
         "creator": "Creator name",
-        "resourceType": "Select resource type"
+        "resourceType": "Select resource type",
+        "generic": "Select {{label}}"
       }
     },
     "sort": {
