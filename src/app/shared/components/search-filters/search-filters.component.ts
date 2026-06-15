@@ -129,7 +129,7 @@ export class SearchFiltersComponent {
   }
 
   getPlaceholderKey(filter: DiscoverableFilter): string {
-    return FILTER_PLACEHOLDERS[filter.key] || 'common.search.filterPlaceholders.generic';
+    return FILTER_PLACEHOLDERS[filter.key] ?? 'common.search.filterPlaceholders.generic';
   }
 
   private scrollPanelIntoView(key: string) {
