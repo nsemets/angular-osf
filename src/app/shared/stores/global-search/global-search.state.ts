@@ -327,6 +327,7 @@ export class GlobalSearchState {
     let hasCedarFilters = state.extraFilters.length > 0;
 
     Object.entries(state.selectedFilterOptions).forEach(([key, options]) => {
+      if (key in state.defaultFilterOptions) return;
       const filter = state.filters.find((f) => f.key === key) ?? state.extraFilters.find((f) => f.key === key);
 
       if (filter?.cedarPropertyIri) {

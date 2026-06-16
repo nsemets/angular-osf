@@ -20,7 +20,9 @@ import {
   FetchResources,
   LoadFilterOptions,
   LoadFilterOptionsAndSetValues,
+  SetDefaultFilterValue,
   SetExtraFilters,
+  UpdateSelectedFilterOption,
 } from './global-search.actions';
 import { GlobalSearchSelectors } from './global-search.selectors';
 import { GlobalSearchState } from './global-search.state';
@@ -237,6 +239,29 @@ describe('GlobalSearchState', () => {
       expect(params[`cardSearchText[osf:hasCedarRecord.cedar:${CEDAR_FILTER.cedarPropertyIri}][]`]).toEqual([
         '"High School"',
       ]);
+    });
+  });
+
+  describe('SetDefaultFilterValue', () => {
+    it('should include the default filter in the API call', () => {
+      const { store, mockGetResources } = setup();
+
+      store.dispatch(new SetDefaultFilterValue('defaultKey', 'default-value'));
+      store.dispatch(new FetchResources());
+
+      const params = mockGetResources.mock.calls[0][0];
+      expect(params['cardSearchFilter[defaultKey][]']).toBe('default-value');
+    });
+
+    it('should not be overridden when a selected filter for the same key is cleared', () => {
+      const { store, mockGetResources } = setup();
+
+      store.dispatch(new SetDefaultFilterValue('defaultKey', 'default-value'));
+      store.dispatch(new UpdateSelectedFilterOption('defaultKey', []));
+      store.dispatch(new FetchResources());
+
+      const params = mockGetResources.mock.calls[0][0];
+      expect(params['cardSearchFilter[defaultKey][]']).toBe('default-value');
     });
   });
 });
