@@ -7,6 +7,8 @@ import { Mock } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
+import { UserSelectors } from '@core/store/user';
+import { GetCedarMetadataRecords, GetCedarMetadataTemplates, MetadataSelectors } from '@osf/features/metadata/store';
 import { AffiliatedInstitutionsViewComponent } from '@osf/shared/components/affiliated-institutions-view/affiliated-institutions-view.component';
 import { ContributorsListComponent } from '@osf/shared/components/contributors-list/contributors-list.component';
 import { ResourceCitationsComponent } from '@osf/shared/components/resource-citations/resource-citations.component';
@@ -94,6 +96,9 @@ describe('ProjectOverviewMetadataComponent', () => {
             { selector: ContributorsSelectors.hasMoreBibliographicContributors, value: false },
             { selector: CollectionsSelectors.getCurrentProjectSubmissions, value: [] },
             { selector: CollectionsSelectors.getCurrentProjectSubmissionsLoading, value: false },
+            { selector: UserSelectors.getActiveFlags, value: [] },
+            { selector: MetadataSelectors.getCedarRecords, value: [] },
+            { selector: MetadataSelectors.getCedarTemplates, value: null },
           ],
         }),
       ],
@@ -122,6 +127,8 @@ describe('ProjectOverviewMetadataComponent', () => {
     expect(dispatchMock).toHaveBeenCalledWith(new FetchSelectedSubjects('project-1', ResourceType.Project));
     expect(dispatchMock).toHaveBeenCalledWith(new GetProjectSubmissions('project-1'));
     expect(dispatchMock).toHaveBeenCalledWith(new GetProjectLicense(MOCK_PROJECT_OVERVIEW.licenseId));
+    expect(dispatchMock).toHaveBeenCalledWith(new GetCedarMetadataRecords('project-1', ResourceType.Project));
+    expect(dispatchMock).toHaveBeenCalledWith(new GetCedarMetadataTemplates());
   });
 
   it('should not dispatch init actions when project is null', () => {
