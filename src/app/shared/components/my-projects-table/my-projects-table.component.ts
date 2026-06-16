@@ -27,6 +27,7 @@ export class MyProjectsTableComponent {
   sortColumn = input<string | undefined>(undefined);
   sortOrder = input<SortOrder>(SortOrder.Asc);
   isLoading = input<boolean>(false);
+  emptyMessageKey = input<string>('common.search.noResultsFound');
 
   pageChange = output<TablePageEvent>();
   sort = output<SortEvent>();

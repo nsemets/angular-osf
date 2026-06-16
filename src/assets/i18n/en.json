@@ -1162,12 +1162,34 @@
       "wikiText": "Enable the wiki in {{projectName}}"
     },
     "table": {
+      "emptyState": {
+        "all": {
+          "both": "You don't have any projects or components.",
+          "private": "You don't have any private projects or components.",
+          "public": "You don't have any public projects or components."
+        },
+        "components": {
+          "both": "You don't have any components.",
+          "private": "You don't have any private components.",
+          "public": "You don't have any public components."
+        },
+        "projects": {
+          "both": "You don't have any projects.",
+          "private": "You don't have any private projects.",
+          "public": "You don't have any public projects."
+        }
+      },
       "searchPlaceholder": "Filter by title, description, and tags"
     },
     "tabOptions": {
       "all": "All",
       "component": "Components",
       "root": "Projects"
+    },
+    "visibilityFilterOptions": {
+      "all": "All",
+      "private": "Private",
+      "public": "Public"
     },
     "tabs": {
       "bookmarks": "Bookmarks",
