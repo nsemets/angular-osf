@@ -128,6 +128,10 @@ export class SearchFiltersComponent {
     this.filterOptionSelected.emit({ filter, filterOption: isChecked ? [option] : [] });
   }
 
+  getPlaceholderKey(filter: DiscoverableFilter): string {
+    return FILTER_PLACEHOLDERS[filter.key] ?? 'common.search.filterPlaceholders.generic';
+  }
+
   private scrollPanelIntoView(key: string) {
     of(key)
       .pipe(delay(this.SCROLL_DELAY_MS), takeUntilDestroyed(this.destroyRef))

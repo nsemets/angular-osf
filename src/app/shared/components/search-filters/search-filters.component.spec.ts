@@ -283,4 +283,18 @@ describe('SearchFiltersComponent', () => {
 
     expect(component.selectedOptionValues()).toEqual({});
   });
+
+  it('should return specific placeholder key for known filter keys', () => {
+    fixture.detectChanges();
+
+    const filter = { key: 'subject', label: 'Subject' } as DiscoverableFilter;
+    expect(component.getPlaceholderKey(filter)).toBe('common.search.filterPlaceholders.subject');
+  });
+
+  it('should return generic placeholder key for CEDAR-derived filters not in FILTER_PLACEHOLDERS', () => {
+    fixture.detectChanges();
+
+    const cedarFilter = { key: 'Collected Type Choices', label: 'Collected Type Choices' } as DiscoverableFilter;
+    expect(component.getPlaceholderKey(cedarFilter)).toBe('common.search.filterPlaceholders.generic');
+  });
 });
