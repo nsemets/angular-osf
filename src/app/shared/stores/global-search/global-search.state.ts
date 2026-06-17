@@ -327,7 +327,7 @@ export class GlobalSearchState {
     let hasCedarFilters = state.extraFilters.length > 0;
 
     Object.entries(state.selectedFilterOptions).forEach(([key, options]) => {
-      if (key in state.defaultFilterOptions) return;
+      if (key in state.defaultFilterOptions && options.length === 0) return;
       const filter = state.filters.find((f) => f.key === key) ?? state.extraFilters.find((f) => f.key === key);
 
       if (filter?.cedarPropertyIri) {
@@ -344,7 +344,10 @@ export class GlobalSearchState {
             filtersParams[`cardSearchFilter[${key}][is-present]`] = firstOptionValue;
           }
         } else {
-          filtersParams[`cardSearchFilter[${key}][]`] = options.map((option) => option.value);
+          const selectedValues = options.map((option) => option.value);
+          if (selectedValues.length) {
+            filtersParams[`cardSearchFilter[${key}][any-of]`] = selectedValues.join(',');
+          }
         }
       }
     });

@@ -262,6 +262,40 @@ describe('GlobalSearchState', () => {
 
       const params = mockGetResources.mock.calls[0][0];
       expect(params['cardSearchFilter[defaultKey][]']).toBe('default-value');
+      expect(params['cardSearchFilter[defaultKey][any-of]']).toBeUndefined();
+    });
+
+    it('should AND the default value with an any-of clause for an explicitly selected value', () => {
+      const { store, mockGetResources } = setup();
+
+      store.dispatch(new SetDefaultFilterValue('defaultKey', 'default-value'));
+      store.dispatch(
+        new UpdateSelectedFilterOption('defaultKey', [
+          { label: 'A', value: 'selected-value', cardSearchResultCount: null },
+        ])
+      );
+      store.dispatch(new FetchResources());
+
+      const params = mockGetResources.mock.calls[0][0];
+      expect(params['cardSearchFilter[defaultKey][]']).toBe('default-value');
+      expect(params['cardSearchFilter[defaultKey][any-of]']).toBe('selected-value');
+    });
+
+    it('should OR multiple selected values together via a single any-of clause', () => {
+      const { store, mockGetResources } = setup();
+
+      store.dispatch(new SetDefaultFilterValue('defaultKey', 'default-value'));
+      store.dispatch(
+        new UpdateSelectedFilterOption('defaultKey', [
+          { label: 'A', value: 'selected-value-1', cardSearchResultCount: null },
+          { label: 'B', value: 'selected-value-2', cardSearchResultCount: null },
+        ])
+      );
+      store.dispatch(new FetchResources());
+
+      const params = mockGetResources.mock.calls[0][0];
+      expect(params['cardSearchFilter[defaultKey][]']).toBe('default-value');
+      expect(params['cardSearchFilter[defaultKey][any-of]']).toBe('selected-value-1,selected-value-2');
     });
   });
 });
