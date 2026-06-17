@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
 import { collectionFilterNames } from '@osf/features/collections/constants';
-import { CedarMetadataDataTemplateJsonApi, CedarMetadataRecordData } from '@osf/features/metadata/models';
+import { CedarMetadataDataTemplateJsonApi } from '@osf/features/metadata/models';
 import { CollectionSubmission } from '@osf/shared/models/collections/collections.model';
 
 import { CEDAR_METADATA_DATA_TEMPLATE_JSON_API_MOCK } from '@testing/mocks/cedar-metadata-data-template-json-api.mock';
@@ -96,47 +96,49 @@ describe('OverviewCollectionsComponent', () => {
     expect(typeof statusAttr?.value).toBe('string');
   });
 
-  it('should render cedar-artifact-viewer when isCedarMode is true with matching record and template', async () => {
+  it('should display cedar attributes as key-value pairs when isCedarMode is true with matching record and template', async () => {
     const cedarSubmission: CollectionSubmission = {
       ...MOCK_COLLECTION_SUBMISSION_EMPTY_FILTERS,
       requiredMetadataTemplateId: 'template-1',
     };
-    const cedarRecord: CedarMetadataRecordData = MOCK_CEDAR_METADATA_RECORD_DATA;
     const cedarTemplate: CedarMetadataDataTemplateJsonApi =
       CEDAR_METADATA_DATA_TEMPLATE_JSON_API_MOCK as CedarMetadataDataTemplateJsonApi;
 
     fixture.componentRef.setInput('projectSubmissions', [cedarSubmission]);
     fixture.componentRef.setInput('isCedarMode', true);
-    fixture.componentRef.setInput('cedarRecords', [cedarRecord]);
+    fixture.componentRef.setInput('cedarRecords', [MOCK_CEDAR_METADATA_RECORD_DATA]);
     fixture.componentRef.setInput('cedarTemplates', [cedarTemplate]);
     fixture.detectChanges();
     await fixture.whenStable();
 
-    const viewer = fixture.nativeElement.querySelector('cedar-artifact-viewer');
-    expect(viewer).toBeTruthy();
+    const paragraphs = fixture.nativeElement.querySelectorAll('p.font-normal');
+    expect(paragraphs.length).toBeGreaterThan(0);
+    expect(fixture.nativeElement.textContent).toContain('Project Name');
+    expect(fixture.nativeElement.textContent).toContain('Test Project Name');
   });
 
-  it('should not render cedar-artifact-viewer when isCedarMode is false', async () => {
+  it('should display submission attributes when isCedarMode is false', async () => {
     const cedarSubmission: CollectionSubmission = {
       ...MOCK_COLLECTION_SUBMISSION_WITH_FILTERS,
       requiredMetadataTemplateId: 'template-1',
     };
-    const cedarRecord: CedarMetadataRecordData = MOCK_CEDAR_METADATA_RECORD_DATA;
     const cedarTemplate: CedarMetadataDataTemplateJsonApi =
       CEDAR_METADATA_DATA_TEMPLATE_JSON_API_MOCK as CedarMetadataDataTemplateJsonApi;
 
     fixture.componentRef.setInput('projectSubmissions', [cedarSubmission]);
     fixture.componentRef.setInput('isCedarMode', false);
-    fixture.componentRef.setInput('cedarRecords', [cedarRecord]);
+    fixture.componentRef.setInput('cedarRecords', [MOCK_CEDAR_METADATA_RECORD_DATA]);
     fixture.componentRef.setInput('cedarTemplates', [cedarTemplate]);
     fixture.detectChanges();
     await fixture.whenStable();
 
-    const viewer = fixture.nativeElement.querySelector('cedar-artifact-viewer');
-    expect(viewer).toBeNull();
+    const attributes = component.getSubmissionAttributes(cedarSubmission);
+    expect(attributes.length).toBeGreaterThan(0);
+    const paragraphs = fixture.nativeElement.querySelectorAll('p.font-normal');
+    expect(paragraphs.length).toBe(attributes.length);
   });
 
-  it('should show traditional attributes when isCedarMode is true but no matching record', async () => {
+  it('should fall back to submission attributes when isCedarMode is true but no matching record', async () => {
     const cedarSubmission: CollectionSubmission = {
       ...MOCK_COLLECTION_SUBMISSION_WITH_FILTERS,
       requiredMetadataTemplateId: 'non-existent-template',
@@ -149,9 +151,19 @@ describe('OverviewCollectionsComponent', () => {
     fixture.detectChanges();
     await fixture.whenStable();
 
-    const viewer = fixture.nativeElement.querySelector('cedar-artifact-viewer');
-    expect(viewer).toBeNull();
-    expect(component.getSubmissionAttributes(cedarSubmission).length).toBeGreaterThan(0);
+    const attributes = component.getSubmissionAttributes(cedarSubmission);
+    expect(attributes.length).toBeGreaterThan(0);
+    const paragraphs = fixture.nativeElement.querySelectorAll('p.font-normal');
+    expect(paragraphs.length).toBe(attributes.length);
+  });
+
+  it('should extract key-value pairs from a cedar record using template field order and labels', () => {
+    const cedarTemplate: CedarMetadataDataTemplateJsonApi =
+      CEDAR_METADATA_DATA_TEMPLATE_JSON_API_MOCK as CedarMetadataDataTemplateJsonApi;
+
+    const result = component.getCedarAttributes(MOCK_CEDAR_METADATA_RECORD_DATA, cedarTemplate);
+
+    expect(result).toContainEqual({ key: 'Project Name', label: 'Project Name', value: 'Test Project Name' });
   });
 
   it('should compute empty cedarRecordByTemplateId map when cedarRecords is null', () => {
