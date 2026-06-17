@@ -1182,12 +1182,12 @@
       "searchPlaceholder": "Filter by title, description, and tags"
     },
     "tabOptions": {
-      "all": "All",
+      "all": "Projects and Components",
       "component": "Components",
       "root": "Projects"
     },
     "visibilityFilterOptions": {
-      "all": "All",
+      "all": "Public and Private",
       "private": "Private",
       "public": "Public"
     },
