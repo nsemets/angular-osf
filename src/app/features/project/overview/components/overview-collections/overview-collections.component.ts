@@ -5,18 +5,10 @@ import { Button } from 'primeng/button';
 import { Skeleton } from 'primeng/skeleton';
 import { Tag } from 'primeng/tag';
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  CUSTOM_ELEMENTS_SCHEMA,
-  input,
-  ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { collectionFilterNames } from '@osf/features/collections/constants';
-import { CEDAR_VIEWER_CONFIG } from '@osf/features/metadata/constants';
 import { CedarMetadataDataTemplateJsonApi, CedarMetadataRecordData } from '@osf/features/metadata/models';
 import { StopPropagationDirective } from '@osf/shared/directives/stop-propagation.directive';
 import { CollectionSubmission } from '@osf/shared/models/collections/collections.model';
@@ -41,8 +33,6 @@ import { CollectionStatusSeverityPipe } from '@osf/shared/pipes/collection-statu
   templateUrl: './overview-collections.component.html',
   styleUrl: './overview-collections.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  encapsulation: ViewEncapsulation.None,
 })
 export class OverviewCollectionsComponent {
   projectSubmissions = input<CollectionSubmission[] | null>(null);
@@ -50,8 +40,6 @@ export class OverviewCollectionsComponent {
   isCedarMode = input<boolean>(false);
   cedarRecords = input<CedarMetadataRecordData[] | null>(null);
   cedarTemplates = input<CedarMetadataDataTemplateJsonApi[] | null>(null);
-
-  cedarViewerConfig = CEDAR_VIEWER_CONFIG;
 
   cedarRecordByTemplateId = computed(() => {
     const records = this.cedarRecords();
@@ -84,5 +72,41 @@ export class OverviewCollectionsComponent {
     }
 
     return attributes;
+  }
+
+  getCedarAttributes(record: CedarMetadataRecordData, template: CedarMetadataDataTemplateJsonApi): KeyValueModel[] {
+    const { order, propertyLabels } = template.attributes.template._ui;
+    const metadata = record.attributes.metadata as Record<string, unknown>;
+    const attributes: KeyValueModel[] = [];
+
+    for (const key of order) {
+      const label = propertyLabels[key];
+      const value = this.formatCedarValue(metadata[key]);
+      if (label && value) {
+        attributes.push({ key, label, value });
+      }
+    }
+
+    return attributes;
+  }
+
+  private formatCedarValue(value: unknown): string {
+    if (value == null) return '';
+
+    if (Array.isArray(value)) {
+      return value
+        .map((item) => this.formatCedarValue(item))
+        .filter(Boolean)
+        .join(', ');
+    }
+
+    if (typeof value === 'object') {
+      const obj = value as Record<string, unknown>;
+      if ('@value' in obj && obj['@value'] != null) return String(obj['@value']);
+      if ('rdfs:label' in obj && obj['rdfs:label'] != null) return String(obj['rdfs:label']);
+      return '';
+    }
+
+    return String(value);
   }
 }
