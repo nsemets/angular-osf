@@ -33,26 +33,19 @@
                 @let cedarRecord = cedarRecordByTemplateId().get(templateId) ?? null;
                 @let cedarTemplate = cedarTemplateById().get(templateId) ?? null;
 
-                @if (isCedarMode() && cedarRecord && cedarTemplate?.attributes?.template) {
-                  <div class="mt-2">
-                    <cedar-artifact-viewer
-                      [config]="cedarViewerConfig"
-                      [templateObject]="cedarTemplate!.attributes.template"
-                      [instanceObject]="cedarRecord.attributes.metadata"
-                    ></cedar-artifact-viewer>
-                  </div>
-                } @else {
-                  @let attributes = getSubmissionAttributes(submission);
+                @let attributes =
+                  isCedarMode() && cedarRecord && cedarTemplate?.attributes?.template
+                    ? getCedarAttributes(cedarRecord, cedarTemplate!)
+                    : getSubmissionAttributes(submission);
 
-                  @if (attributes.length) {
-                    <div class="flex flex-column gap-2 mt-2">
-                      @for (attribute of attributes; track attribute.key) {
-                        <p class="font-normal">
-                          <span class="font-bold">{{ attribute.label }}:</span> {{ attribute.value }}
-                        </p>
-                      }
-                    </div>
-                  }
+                @if (attributes.length) {
+                  <div class="flex flex-column gap-2 mt-2">
+                    @for (attribute of attributes; track attribute.key) {
+                      <p class="font-normal">
+                        <span class="font-bold">{{ attribute.label }}:</span> {{ attribute.value }}
+                      </p>
+                    }
+                  </div>
                 }
               </p-accordion-content>
             </p-accordion-panel>
