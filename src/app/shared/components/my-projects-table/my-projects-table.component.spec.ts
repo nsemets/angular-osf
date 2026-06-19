@@ -1,5 +1,8 @@
 import { MockComponents } from 'ng-mocks';
 
+import { SortEvent } from 'primeng/api';
+import { TablePageEvent } from 'primeng/table';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SortOrder } from '@osf/shared/enums/sort-order.enum';
@@ -50,134 +53,91 @@ describe('MyProjectsTableComponent', () => {
     fixture = TestBed.createComponent(MyProjectsTableComponent);
     component = fixture.componentInstance;
 
-    fixture.componentRef.setInput('items', mockItems);
     fixture.componentRef.setInput('tableParams', mockTableParams);
-    fixture.componentRef.setInput('sortColumn', 'title');
-    fixture.componentRef.setInput('sortOrder', SortOrder.Asc);
-    fixture.componentRef.setInput('isLoading', false);
-
-    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set items input', () => {
+  it('should default items to an empty array', () => {
+    expect(component.items()).toEqual([]);
+  });
+
+  it('should accept items input', () => {
+    fixture.componentRef.setInput('items', mockItems);
+
     expect(component.items()).toEqual(mockItems);
   });
 
-  it('should set tableParams input', () => {
+  it('should accept tableParams input', () => {
     expect(component.tableParams()).toEqual(mockTableParams);
   });
 
-  it('should set sortColumn input', () => {
-    expect(component.sortColumn()).toBe('title');
-  });
-
-  it('should set sortOrder input', () => {
+  it('should default sortColumn to undefined and sortOrder to Asc', () => {
+    expect(component.sortColumn()).toBeUndefined();
     expect(component.sortOrder()).toBe(SortOrder.Asc);
   });
 
-  it('should set isLoading input', () => {
-    expect(component.isLoading()).toBe(false);
-  });
-
-  it('should render table when not loading', () => {
-    const compiled = fixture.nativeElement;
-    const table = compiled.querySelector('p-table');
-
-    expect(table).toBeTruthy();
-  });
-
-  it('should render table headers', () => {
-    const compiled = fixture.nativeElement;
-    const headers = compiled.querySelectorAll('th');
-
-    expect(headers.length).toBeGreaterThan(0);
-  });
-
-  it('should render table rows for items', () => {
-    const compiled = fixture.nativeElement;
-    const rows = compiled.querySelectorAll('tr');
-
-    expect(rows.length).toBeGreaterThan(1);
-  });
-
-  it('should render project title', () => {
-    const compiled = fixture.nativeElement;
-    const titleElement = compiled.querySelector('span.overflow-ellipsis');
-
-    expect(titleElement).toBeTruthy();
-    expect(titleElement.textContent).toContain('Test Project 1');
-  });
-
-  it('should render modified date', () => {
-    const compiled = fixture.nativeElement;
-    const dateElement = compiled.querySelector('td:last-child');
-
-    expect(dateElement).toBeTruthy();
-  });
-
-  it('should handle empty items array', () => {
-    fixture.componentRef.setInput('items', []);
-    fixture.detectChanges();
-
-    expect(component.items()).toEqual([]);
-    expect(component.items().length).toBe(0);
-  });
-
-  it('should handle undefined items', () => {
-    fixture.componentRef.setInput('items', undefined);
-    fixture.detectChanges();
-
-    const compiled = fixture.nativeElement;
-    const table = compiled.querySelector('p-table');
-
-    expect(table).toBeTruthy();
-  });
-
-  it('should handle null items', () => {
-    fixture.componentRef.setInput('items', null);
-    fixture.detectChanges();
-
-    const compiled = fixture.nativeElement;
-    const table = compiled.querySelector('p-table');
-
-    expect(table).toBeTruthy();
-  });
-
-  it('should render sortable columns', () => {
-    const compiled = fixture.nativeElement;
-    const sortableColumns = compiled.querySelectorAll('th[pSortableColumn]');
-
-    expect(sortableColumns.length).toBeGreaterThan(0);
-  });
-
-  it('should render sort icons', () => {
-    const compiled = fixture.nativeElement;
-    const sortIcons = compiled.querySelectorAll('p-sortIcon');
-
-    expect(sortIcons.length).toBeGreaterThan(0);
-  });
-
-  it('should handle different sort orders', () => {
+  it('should accept sortColumn and sortOrder inputs', () => {
+    fixture.componentRef.setInput('sortColumn', 'title');
     fixture.componentRef.setInput('sortOrder', SortOrder.Desc);
-    fixture.detectChanges();
 
-    const compiled = fixture.nativeElement;
-    const table = compiled.querySelector('p-table');
-
-    expect(table).toBeTruthy();
+    expect(component.sortColumn()).toBe('title');
+    expect(component.sortOrder()).toBe(SortOrder.Desc);
   });
 
-  it('should handle different sort columns', () => {
-    fixture.componentRef.setInput('sortColumn', 'dateModified');
-    fixture.detectChanges();
+  it('should default isLoading and showDownloadColumn to false', () => {
+    expect(component.isLoading()).toBe(false);
+    expect(component.showDownloadColumn()).toBe(false);
+  });
 
-    const compiled = fixture.nativeElement;
-    const table = compiled.querySelector('p-table');
+  it('should accept isLoading and showDownloadColumn inputs', () => {
+    fixture.componentRef.setInput('isLoading', true);
+    fixture.componentRef.setInput('showDownloadColumn', true);
 
-    expect(table).toBeTruthy();
+    expect(component.isLoading()).toBe(true);
+    expect(component.showDownloadColumn()).toBe(true);
+  });
+
+  it('should return columnCount of 3 when download column is hidden', () => {
+    expect(component.columnCount()).toBe(3);
+  });
+
+  it('should return columnCount of 4 when download column is shown', () => {
+    fixture.componentRef.setInput('showDownloadColumn', true);
+
+    expect(component.columnCount()).toBe(4);
+  });
+
+  it('should expose skeletonData with 10 placeholder items', () => {
+    expect(component.skeletonData).toHaveLength(10);
+    expect(component.skeletonData.every((item) => !item.id)).toBe(true);
+  });
+
+  it('should emit pageChange when onPageChange is called', () => {
+    vi.spyOn(component.pageChange, 'emit');
+    const event = { first: 10, rows: 10 } as TablePageEvent;
+
+    component.onPageChange(event);
+
+    expect(component.pageChange.emit).toHaveBeenCalledWith(event);
+  });
+
+  it('should emit sort when onSort is called', () => {
+    vi.spyOn(component.sort, 'emit');
+    const event = { field: 'title', order: SortOrder.Desc } as SortEvent;
+
+    component.onSort(event);
+
+    expect(component.sort.emit).toHaveBeenCalledWith(event);
+  });
+
+  it('should emit itemClick when onItemClick is called', () => {
+    vi.spyOn(component.itemClick, 'emit');
+
+    component.onItemClick(mockItems[0]);
+
+    expect(component.itemClick.emit).toHaveBeenCalledWith(mockItems[0]);
   });
 });

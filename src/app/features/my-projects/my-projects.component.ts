@@ -47,11 +47,13 @@ import {
 import { QueryParams } from '@shared/models/query-params.model';
 import { TableParameters } from '@shared/models/table-parameters.model';
 
+import { CreateProjectDialogComponent } from './components/create-project-dialog/create-project-dialog.component';
+import { ProjectDownloadMenuComponent } from './components/project-download-menu/project-download-menu.component';
+import { MY_PROJECTS_TABS } from './constants/my-projects-tabs.const';
 import { PROJECT_FILTER_OPTIONS } from './constants/project-filter-options.const';
 import { MyProjectsQueryService } from './services/my-projects-query.service';
 import { MyProjectsTableParamsService } from './services/my-projects-table-params.service';
-import { CreateProjectDialogComponent } from './components';
-import { MY_PROJECTS_TABS } from './constants';
+import { ProjectDownloadOptionsService } from './services/project-download-options.service';
 import { MyProjectsTab } from './enums';
 
 @Component({
@@ -65,6 +67,7 @@ import { MyProjectsTab } from './enums';
     Tabs,
     SubHeaderComponent,
     MyProjectsTableComponent,
+    ProjectDownloadMenuComponent,
     SearchInputComponent,
     SelectComponent,
     TranslatePipe,
@@ -81,6 +84,7 @@ export class MyProjectsComponent implements OnInit {
   readonly projectRedirectDialogService = inject(ProjectRedirectDialogService);
   readonly queryService = inject(MyProjectsQueryService);
   readonly tableParamsService = inject(MyProjectsTableParamsService);
+  readonly downloadOptionsService = inject(ProjectDownloadOptionsService);
   readonly platformId = inject(PLATFORM_ID);
   readonly isBrowser = isPlatformBrowser(this.platformId);
 
@@ -196,6 +200,7 @@ export class MyProjectsComponent implements OnInit {
     this.destroyRef.onDestroy(() => {
       if (this.isBrowser) {
         this.actions.clearMyProjects();
+        this.downloadOptionsService.clearCache();
       }
     });
   }

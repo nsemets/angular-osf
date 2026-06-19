@@ -30,6 +30,10 @@
         {{ 'common.labels.modified' | translate }}
         <p-sortIcon field="dateModified" />
       </th>
+
+      @if (showDownloadColumn()) {
+        <th aria-hidden="true"></th>
+      }
     </tr>
   </ng-template>
 
@@ -48,10 +52,16 @@
         </td>
 
         <td>{{ item.dateModified | date: 'MMM d, y, h:mm a' }}</td>
+
+        @if (showDownloadColumn()) {
+          <td class="text-center">
+            <ng-container *ngTemplateOutlet="downloadCellTemplate(); context: { $implicit: item }" />
+          </td>
+        }
       </tr>
     } @else {
       <tr class="loading-row">
-        <td colspan="3">
+        <td [attr.colspan]="columnCount()">
           <p-skeleton width="100%" height="3.3rem" borderRadius="0" />
         </td>
       </tr>
