@@ -850,19 +850,19 @@
       "support": {
         "sections": {
           "collect": {
-            "description": "Store data, code, and other materials in OSF Storage, or connect your Dropbox or other third-party account. Every file gets a unique, persistent URL for citing and sharing",
+            "description": "Store your datasets, code, and research materials in a trusted generalist repository then link them to your registration to keep them findable, citable, and preserved for the long term.",
             "title": "Collect and Analyze Data"
           },
           "design": {
-            "description": "Start a project and add collaborators, giving them access to protocols and other research materials. Built-in version control tracks the evolution of your study",
+            "description": "Register your study design and invite collaborators to review your protocols and research materials before data collection begins.",
             "title": "Design Your Study"
           },
           "publish": {
-            "description": "Share papers in OSF Preprints or a community-based preprint provider, so others can find and cite your work. Track impact with metrics like downloads and view counts",
+            "description": "Share papers in OSF Preprints or a community-based preprint provider, so others can find and cite your work. Track impact with metrics like downloads and view counts.",
             "title": "Publish Your Reports"
           },
           "search": {
-            "description": "Find papers, data, and materials to inspire your next research project. Search public projects to build on the work of others and find new collaborators",
+            "description": "Find papers, data, and materials to inspire your next research project. Search public registrations and preprints to build on the work of others and find new collaborators.",
             "title": "Search And Discover"
           }
         },
