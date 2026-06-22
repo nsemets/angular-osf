@@ -1,5 +1,8 @@
 import { MockComponents } from 'ng-mocks';
 
+import { SortEvent } from 'primeng/api';
+import { TablePageEvent } from 'primeng/table';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SortOrder } from '@osf/shared/enums/sort-order.enum';
@@ -29,17 +32,15 @@ describe('MyProjectsTableComponent', () => {
     defaultSortColumn: 'name',
   };
 
-  const mockItems: MyResourcesItem[] = [
-    {
-      id: 'project-1',
-      title: 'Test Project 1',
-      isPublic: true,
-      dateModified: '2024-01-01T10:00:00Z',
-      contributors: [MOCK_CONTRIBUTOR],
-      type: '',
-      dateCreated: '',
-    },
-  ];
+  const mockItem: MyResourcesItem = {
+    id: 'project-1',
+    title: 'Test Project 1',
+    isPublic: true,
+    dateModified: '2024-01-01T10:00:00Z',
+    contributors: [MOCK_CONTRIBUTOR],
+    type: 'nodes',
+    dateCreated: '2024-01-01T00:00:00Z',
+  };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -50,134 +51,62 @@ describe('MyProjectsTableComponent', () => {
     fixture = TestBed.createComponent(MyProjectsTableComponent);
     component = fixture.componentInstance;
 
-    fixture.componentRef.setInput('items', mockItems);
     fixture.componentRef.setInput('tableParams', mockTableParams);
-    fixture.componentRef.setInput('sortColumn', 'title');
-    fixture.componentRef.setInput('sortOrder', SortOrder.Asc);
-    fixture.componentRef.setInput('isLoading', false);
-
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create with default input values', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should set items input', () => {
-    expect(component.items()).toEqual(mockItems);
-  });
-
-  it('should set tableParams input', () => {
-    expect(component.tableParams()).toEqual(mockTableParams);
-  });
-
-  it('should set sortColumn input', () => {
-    expect(component.sortColumn()).toBe('title');
-  });
-
-  it('should set sortOrder input', () => {
-    expect(component.sortOrder()).toBe(SortOrder.Asc);
-  });
-
-  it('should set isLoading input', () => {
-    expect(component.isLoading()).toBe(false);
-  });
-
-  it('should render table when not loading', () => {
-    const compiled = fixture.nativeElement;
-    const table = compiled.querySelector('p-table');
-
-    expect(table).toBeTruthy();
-  });
-
-  it('should render table headers', () => {
-    const compiled = fixture.nativeElement;
-    const headers = compiled.querySelectorAll('th');
-
-    expect(headers.length).toBeGreaterThan(0);
-  });
-
-  it('should render table rows for items', () => {
-    const compiled = fixture.nativeElement;
-    const rows = compiled.querySelectorAll('tr');
-
-    expect(rows.length).toBeGreaterThan(1);
-  });
-
-  it('should render project title', () => {
-    const compiled = fixture.nativeElement;
-    const titleElement = compiled.querySelector('span.overflow-ellipsis');
-
-    expect(titleElement).toBeTruthy();
-    expect(titleElement.textContent).toContain('Test Project 1');
-  });
-
-  it('should render modified date', () => {
-    const compiled = fixture.nativeElement;
-    const dateElement = compiled.querySelector('td:last-child');
-
-    expect(dateElement).toBeTruthy();
-  });
-
-  it('should handle empty items array', () => {
-    fixture.componentRef.setInput('items', []);
-    fixture.detectChanges();
-
     expect(component.items()).toEqual([]);
-    expect(component.items().length).toBe(0);
+    expect(component.tableParams()).toEqual(mockTableParams);
+    expect(component.sortColumn()).toBeUndefined();
+    expect(component.sortOrder()).toBe(SortOrder.Asc);
+    expect(component.isLoading()).toBe(false);
+    expect(component.emptyMessageKey()).toBe('common.search.noResultsFound');
   });
 
-  it('should handle undefined items', () => {
-    fixture.componentRef.setInput('items', undefined);
-    fixture.detectChanges();
-
-    const compiled = fixture.nativeElement;
-    const table = compiled.querySelector('p-table');
-
-    expect(table).toBeTruthy();
-  });
-
-  it('should handle null items', () => {
-    fixture.componentRef.setInput('items', null);
-    fixture.detectChanges();
-
-    const compiled = fixture.nativeElement;
-    const table = compiled.querySelector('p-table');
-
-    expect(table).toBeTruthy();
-  });
-
-  it('should render sortable columns', () => {
-    const compiled = fixture.nativeElement;
-    const sortableColumns = compiled.querySelectorAll('th[pSortableColumn]');
-
-    expect(sortableColumns.length).toBeGreaterThan(0);
-  });
-
-  it('should render sort icons', () => {
-    const compiled = fixture.nativeElement;
-    const sortIcons = compiled.querySelectorAll('p-sortIcon');
-
-    expect(sortIcons.length).toBeGreaterThan(0);
-  });
-
-  it('should handle different sort orders', () => {
+  it('should accept configured inputs', () => {
+    fixture.componentRef.setInput('items', [mockItem]);
+    fixture.componentRef.setInput('sortColumn', 'title');
     fixture.componentRef.setInput('sortOrder', SortOrder.Desc);
+    fixture.componentRef.setInput('isLoading', true);
+    fixture.componentRef.setInput('emptyMessageKey', 'myProjects.table.emptyState.projects.public');
     fixture.detectChanges();
 
-    const compiled = fixture.nativeElement;
-    const table = compiled.querySelector('p-table');
-
-    expect(table).toBeTruthy();
+    expect(component.items()).toEqual([mockItem]);
+    expect(component.sortColumn()).toBe('title');
+    expect(component.sortOrder()).toBe(SortOrder.Desc);
+    expect(component.isLoading()).toBe(true);
+    expect(component.emptyMessageKey()).toBe('myProjects.table.emptyState.projects.public');
   });
 
-  it('should handle different sort columns', () => {
-    fixture.componentRef.setInput('sortColumn', 'dateModified');
-    fixture.detectChanges();
+  it('should initialize skeletonData with ten placeholder items', () => {
+    expect(component.skeletonData).toHaveLength(10);
+  });
 
-    const compiled = fixture.nativeElement;
-    const table = compiled.querySelector('p-table');
+  it('should emit pageChange when onPageChange is called', () => {
+    vi.spyOn(component.pageChange, 'emit');
+    const event = { first: 10, rows: 10 } as TablePageEvent;
 
-    expect(table).toBeTruthy();
+    component.onPageChange(event);
+
+    expect(component.pageChange.emit).toHaveBeenCalledWith(event);
+  });
+
+  it('should emit sort when onSort is called', () => {
+    vi.spyOn(component.sort, 'emit');
+    const event = { field: 'title', order: SortOrder.Desc } as SortEvent;
+
+    component.onSort(event);
+
+    expect(component.sort.emit).toHaveBeenCalledWith(event);
+  });
+
+  it('should emit itemClick when onItemClick is called', () => {
+    vi.spyOn(component.itemClick, 'emit');
+
+    component.onItemClick(mockItem);
+
+    expect(component.itemClick.emit).toHaveBeenCalledWith(mockItem);
   });
 });

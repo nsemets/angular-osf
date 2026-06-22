@@ -43,6 +43,14 @@
                 [fullWidth]="true"
                 (changeValue)="onProjectFilterChange()"
               ></osf-select>
+
+              <osf-select
+                class="flex-1"
+                [options]="visibilityFilterOption"
+                [(selectedValue)]="selectedVisibilityFilterOption"
+                [fullWidth]="true"
+                (changeValue)="onVisibilityFilterChange()"
+              ></osf-select>
             </div>
 
             <osf-my-projects-table
@@ -51,6 +59,7 @@
               [sortColumn]="sortColumn()"
               [sortOrder]="sortOrder()"
               [isLoading]="isLoading()"
+              [emptyMessageKey]="projectsEmptyMessageKey()"
               (pageChange)="onPageChange($event)"
               (sort)="onSort($event)"
               (itemClick)="navigateToProject($event)"
