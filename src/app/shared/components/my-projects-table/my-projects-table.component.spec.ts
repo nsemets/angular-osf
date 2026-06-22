@@ -32,17 +32,17 @@ describe('MyProjectsTableComponent', () => {
     defaultSortColumn: 'name',
   };
 
-  const mockItems: MyResourcesItem[] = [
-    {
-      id: 'project-1',
-      title: 'Test Project 1',
-      isPublic: true,
-      dateModified: '2024-01-01T10:00:00Z',
-      contributors: [MOCK_CONTRIBUTOR],
-      type: '',
-      dateCreated: '',
-    },
-  ];
+  const mockItem: MyResourcesItem = {
+    id: 'project-1',
+    title: 'Test Project 1',
+    isPublic: true,
+    dateModified: '2024-01-01T10:00:00Z',
+    contributors: [MOCK_CONTRIBUTOR],
+    type: 'nodes',
+    dateCreated: '2024-01-01T00:00:00Z',
+  };
+
+  const mockItems = [mockItem];
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -56,7 +56,7 @@ describe('MyProjectsTableComponent', () => {
     fixture.componentRef.setInput('tableParams', mockTableParams);
   });
 
-  it('should create', () => {
+  it('should create with default input values', () => {
     expect(component).toBeTruthy();
   });
 
@@ -98,6 +98,20 @@ describe('MyProjectsTableComponent', () => {
 
     expect(component.isLoading()).toBe(true);
     expect(component.showDownloadColumn()).toBe(true);
+  });
+
+  it('should default emptyMessageKey to common.search.noResultsFound', () => {
+    expect(component.emptyMessageKey()).toBe('common.search.noResultsFound');
+  });
+
+  it('should accept emptyMessageKey input', () => {
+    fixture.componentRef.setInput('emptyMessageKey', 'myProjects.empty.noProjects');
+
+    expect(component.emptyMessageKey()).toBe('myProjects.empty.noProjects');
+  });
+
+  it('should default downloadCellTemplate to undefined', () => {
+    expect(component.downloadCellTemplate()).toBeUndefined();
   });
 
   it('should return columnCount of 3 when download column is hidden', () => {

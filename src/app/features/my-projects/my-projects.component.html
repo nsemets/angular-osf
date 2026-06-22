@@ -43,6 +43,14 @@
                 [fullWidth]="true"
                 (changeValue)="onProjectFilterChange()"
               ></osf-select>
+
+              <osf-select
+                class="flex-1"
+                [options]="visibilityFilterOption"
+                [(selectedValue)]="selectedVisibilityFilterOption"
+                [fullWidth]="true"
+                (changeValue)="onVisibilityFilterChange()"
+              ></osf-select>
             </div>
 
             <ng-template #projectDownloadCell let-item>
@@ -57,6 +65,7 @@
               [isLoading]="isLoading()"
               [showDownloadColumn]="true"
               [downloadCellTemplate]="projectDownloadCell"
+              [emptyMessageKey]="projectsEmptyMessageKey()"
               (pageChange)="onPageChange($event)"
               (sort)="onSort($event)"
               (itemClick)="navigateToProject($event)"

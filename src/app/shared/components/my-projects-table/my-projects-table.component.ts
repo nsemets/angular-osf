@@ -36,6 +36,7 @@ export class MyProjectsTableComponent {
   readonly sortOrder = input<SortOrder>(SortOrder.Asc);
   readonly isLoading = input<boolean>(false);
   readonly showDownloadColumn = input<boolean>(false);
+  readonly emptyMessageKey = input<string>('common.search.noResultsFound');
   readonly downloadCellTemplate = input<TemplateRef<{ $implicit: MyResourcesItem }>>();
 
   readonly pageChange = output<TablePageEvent>();

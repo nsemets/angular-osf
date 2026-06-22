@@ -1163,19 +1163,19 @@
     "table": {
       "emptyState": {
         "all": {
-          "both": "You don't have any projects or components",
-          "private": "You don't have any private projects or components",
-          "public": "You don't have any public projects or components"
+          "both": "You don't have any projects or components.",
+          "private": "You don't have any private projects or components.",
+          "public": "You don't have any public projects or components."
         },
         "components": {
-          "both": "You don't have any components",
-          "private": "You don't have any private components",
-          "public": "You don't have any public components"
+          "both": "You don't have any components.",
+          "private": "You don't have any private components.",
+          "public": "You don't have any public components."
         },
         "projects": {
-          "both": "You don't have any projects",
-          "private": "You don't have any private projects",
-          "public": "You don't have any public projects"
+          "both": "You don't have any projects.",
+          "private": "You don't have any private projects.",
+          "public": "You don't have any public projects."
         }
       },
       "searchPlaceholder": "Filter by title, description, and tags",
@@ -1186,9 +1186,14 @@
       }
     },
     "tabOptions": {
-      "all": "All",
+      "all": "Projects and Components",
       "component": "Components",
       "root": "Projects"
+    },
+    "visibilityFilterOptions": {
+      "all": "Public and Private",
+      "private": "Private",
+      "public": "Public"
     },
     "tabs": {
       "bookmarks": "Bookmarks",
