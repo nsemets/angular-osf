@@ -75,19 +75,6 @@
       <osf-tags-list [tags]="resource.tags" (tagClick)="tagClicked($event)"></osf-tags-list>
     </div>
 
-    @if (!isAnonymous()) {
-      <div class="flex flex-column gap-2">
-        <h3>{{ 'common.labels.affiliatedInstitutions' | translate }}</h3>
-
-        <osf-affiliated-institutions-view [institutions]="institutions()" [isLoading]="isInstitutionsLoading()" />
-      </div>
-    }
-
-    <osf-overview-collections
-      [projectSubmissions]="projectSubmissions()"
-      [isProjectSubmissionsLoading]="isProjectSubmissionsLoading()"
-    ></osf-overview-collections>
-
     <div class="flex flex-column gap-2">
       <h3>{{ 'project.overview.metadata.supplements' | translate }}</h3>
 
