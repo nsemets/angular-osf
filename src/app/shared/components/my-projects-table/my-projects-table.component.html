@@ -31,8 +31,8 @@
         <p-sortIcon field="dateModified" />
       </th>
 
-      @if (showDownloadColumn()) {
-        <th aria-hidden="true"></th>
+      @if (downloadCellTemplate()) {
+        <th [attr.aria-label]="'common.buttons.download' | translate"></th>
       }
     </tr>
   </ng-template>
@@ -53,9 +53,9 @@
 
         <td>{{ item.dateModified | date: 'MMM d, y, h:mm a' }}</td>
 
-        @if (showDownloadColumn()) {
+        @if (downloadCellTemplate(); as downloadTemplate) {
           <td class="text-center">
-            <ng-container *ngTemplateOutlet="downloadCellTemplate(); context: { $implicit: item }" />
+            <ng-container *ngTemplateOutlet="downloadTemplate; context: { $implicit: item }" />
           </td>
         }
       </tr>

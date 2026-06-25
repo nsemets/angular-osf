@@ -3,6 +3,7 @@ import { MockComponents } from 'ng-mocks';
 import { SortEvent } from 'primeng/api';
 import { TablePageEvent } from 'primeng/table';
 
+import { TemplateRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SortOrder } from '@osf/shared/enums/sort-order.enum';
@@ -87,17 +88,14 @@ describe('MyProjectsTableComponent', () => {
     expect(component.sortOrder()).toBe(SortOrder.Desc);
   });
 
-  it('should default isLoading and showDownloadColumn to false', () => {
+  it('should default isLoading to false', () => {
     expect(component.isLoading()).toBe(false);
-    expect(component.showDownloadColumn()).toBe(false);
   });
 
-  it('should accept isLoading and showDownloadColumn inputs', () => {
+  it('should accept isLoading input', () => {
     fixture.componentRef.setInput('isLoading', true);
-    fixture.componentRef.setInput('showDownloadColumn', true);
 
     expect(component.isLoading()).toBe(true);
-    expect(component.showDownloadColumn()).toBe(true);
   });
 
   it('should default emptyMessageKey to common.search.noResultsFound', () => {
@@ -118,8 +116,8 @@ describe('MyProjectsTableComponent', () => {
     expect(component.columnCount()).toBe(3);
   });
 
-  it('should return columnCount of 4 when download column is shown', () => {
-    fixture.componentRef.setInput('showDownloadColumn', true);
+  it('should return columnCount of 4 when downloadCellTemplate is provided', () => {
+    fixture.componentRef.setInput('downloadCellTemplate', {} as TemplateRef<{ $implicit: MyResourcesItem }>);
 
     expect(component.columnCount()).toBe(4);
   });

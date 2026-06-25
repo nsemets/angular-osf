@@ -30,12 +30,13 @@ import { IconComponent } from '../icon/icon.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyProjectsTableComponent {
+  private readonly BASE_COLUMN_COUNT = 3;
+
   readonly items = input<MyResourcesItem[]>([]);
   readonly tableParams = input.required<TableParameters>();
   readonly sortColumn = input<string | undefined>(undefined);
   readonly sortOrder = input<SortOrder>(SortOrder.Asc);
   readonly isLoading = input<boolean>(false);
-  readonly showDownloadColumn = input<boolean>(false);
   readonly emptyMessageKey = input<string>('common.search.noResultsFound');
   readonly downloadCellTemplate = input<TemplateRef<{ $implicit: MyResourcesItem }>>();
 
@@ -45,7 +46,7 @@ export class MyProjectsTableComponent {
 
   readonly skeletonData = Array.from({ length: 10 }, () => ({}) as MyResourcesItem);
 
-  readonly columnCount = computed(() => (this.showDownloadColumn() ? 4 : 3));
+  readonly columnCount = computed(() => this.BASE_COLUMN_COUNT + Number(!!this.downloadCellTemplate()));
 
   onPageChange(event: TablePageEvent): void {
     this.pageChange.emit(event);
