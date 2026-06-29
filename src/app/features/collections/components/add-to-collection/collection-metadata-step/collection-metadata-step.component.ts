@@ -135,7 +135,7 @@ export class CollectionMetadataStepComponent {
     const template = this.cedarTemplate();
     if (!editor || !template) return;
 
-    const currentMetadata = editor.currentMetadata;
+    const currentMetadata = editor.currentMetadata ?? this.cedarFormData();
     const isValid = !!editor.dataQualityReport?.isValid;
 
     if (currentMetadata) {
