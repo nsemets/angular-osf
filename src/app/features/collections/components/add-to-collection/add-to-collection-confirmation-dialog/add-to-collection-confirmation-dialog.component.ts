@@ -15,6 +15,7 @@ import { CedarMetadataRecordData, CedarRecordDataBinding } from '@osf/features/m
 import { CreateCedarMetadataRecord, UpdateCedarMetadataRecord } from '@osf/features/metadata/store';
 import { UpdateProjectPublicStatus } from '@osf/features/project/overview/store';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
+import { ProjectModel } from '@osf/shared/models/projects/projects.model';
 import { ToastService } from '@osf/shared/services/toast.service';
 
 @Component({
@@ -39,14 +40,14 @@ export class AddToCollectionConfirmationDialogComponent {
 
   handleAddToCollectionConfirm(): void {
     const payload = this.config.data.payload;
-    const project = this.config.data.project;
+    const project = this.config.data.project as ProjectModel | null | undefined;
     const cedarData = this.config.data.cedarData as CedarRecordDataBinding | null | undefined;
     const existingCedarRecord = this.config.data.existingCedarRecord as CedarMetadataRecordData | null | undefined;
 
     if (!payload || !project) return;
 
     this.isSubmitting.set(true);
-    const projectPayload = [{ id: project.id as string, public: true }];
+    const projectPayload = [{ id: project.id, public: true }];
 
     const updatePublicStatus$: Observable<unknown> = project.isPublic
       ? of(null)
@@ -54,8 +55,8 @@ export class AddToCollectionConfirmationDialogComponent {
 
     const saveCedar$: Observable<unknown> = cedarData
       ? existingCedarRecord
-        ? this.actions.updateCedarRecord(cedarData, existingCedarRecord.id!, project.id as string, ResourceType.Project)
-        : this.actions.createCedarRecord(cedarData, project.id as string, ResourceType.Project)
+        ? this.actions.updateCedarRecord(cedarData, existingCedarRecord.id!, project.id, ResourceType.Project)
+        : this.actions.createCedarRecord(cedarData, project.id, ResourceType.Project)
       : of(null);
 
     updatePublicStatus$
