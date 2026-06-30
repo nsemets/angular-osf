@@ -15,7 +15,7 @@ export const WORKFLOW_LAUNCHER_CARDS: WorkflowLauncherCard[] = [
     descriptionKey: 'home.loggedIn.dashboard.workflowLauncher.cards.researchMaterials.description',
     buttonLabelKey: 'home.loggedIn.dashboard.workflowLauncher.cards.researchMaterials.button',
     theme: WorkflowLauncherCardTheme.Teal,
-    routerLink: '/privacy-policy',
+    routerLink: '/choose-repository',
   },
   {
     iconClass: 'custom-icon-preprints',

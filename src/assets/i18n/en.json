@@ -391,6 +391,43 @@
       "results": "results"
     }
   },
+  "chooseRepository": {
+    "title": "Choose a Repository for Your Research Materials",
+    "intro": "For the data, code, and materials that come out of your work, a dedicated repository is the right home. The repositories below are all free to use, publicly trusted, and built to make your research outputs findable and citable for the long term.",
+    "learnMore": "Learn more",
+    "repositories": {
+      "dryad": {
+        "title": "Dryad",
+        "description": "Focused on research data underlying published findings. Best suited for datasets that accompany a journal article. Includes built-in curation support to help meet sharing standards.",
+        "linkText": "Go to Dryad"
+      },
+      "figshare": {
+        "title": "Figshare",
+        "description": "Supports a wide range of output types including datasets, figures, code, and posters. Good for researchers who want to share multiple types of outputs from a single project.",
+        "linkText": "Go to Figshare"
+      },
+      "harvardDataverse": {
+        "title": "Harvard Dataverse",
+        "description": "A robust repository for research data across all disciplines, hosted by Harvard University. Widely recognized by journals and funders.",
+        "linkText": "Go to Dataverse"
+      },
+      "mendeleyData": {
+        "title": "Mendeley Data",
+        "description": "A straightforward platform for uploading and sharing research datasets. A good option for researchers already using Mendeley or working within the Elsevier ecosystem.",
+        "linkText": "Go to Mendeley"
+      },
+      "vivli": {
+        "title": "Vivli",
+        "description": "Specialized for clinical and biomedical research, particularly individual participant-level data from clinical trials. Best suited for health sciences researchers with funder or journal data sharing requirements.",
+        "linkText": "Go to Vivli"
+      },
+      "zenodo": {
+        "title": "Zenodo",
+        "description": "A free, general-purpose repository hosted by CERN. Accepts any file type and assigns a permanent DOI to every object.",
+        "linkText": "Go to Zenodo"
+      }
+    }
+  },
   "common": {
     "accessibility": {
       "confirmation": "Confirmation",
