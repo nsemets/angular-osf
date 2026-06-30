@@ -805,6 +805,33 @@
           "osfPreprintsImageAltTest": "OSF Preprints",
           "osfRegistriesImageAltTest": "OSF Registries"
         },
+        "workflowLauncher": {
+          "title": "Plan and Document the Lifecycle of Your Research Projects",
+          "description1": "OSF is designed to support your research process — planning your study, registering your methods, and sharing your findings as preprints.",
+          "description2": "Clarify your plan, connect all of the data and materials that result from the study, and then post your preprint. Open scholarship enables more discoverability, and increased transparency ensures research rigor.",
+          "cards": {
+            "studyPlans": {
+              "title": "Study Plans",
+              "description": "Document your research questions, methods, and analysis plans before you analyze data.",
+              "button": "Add Study Plan"
+            },
+            "researchMaterials": {
+              "title": "Research Materials",
+              "description": "Store and share datasets, code, materials, and other outputs from your research in a trusted public repository.",
+              "button": "Store Research Materials"
+            },
+            "preprints": {
+              "title": "Preprints",
+              "description": "Publish the outcomes of your research with an open access preprint, and connect the preprint to your study plan.",
+              "button": "Add Preprint"
+            },
+            "search": {
+              "title": "Search",
+              "description": "Search across study plans and preprints with enhanced metadata and filters.",
+              "button": "Go to Search"
+            }
+          }
+        },
         "noCreatedProject": "You haven’t created a project yet. Click the \"Create New Project\" button above to get started.",
         "quickSearch": {
           "goTo": "Go to",
