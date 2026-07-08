@@ -2,6 +2,14 @@ import { RepositoryOption } from '../models/choose-repository.model';
 
 export const REPOSITORY_OPTIONS: RepositoryOption[] = [
   {
+    id: 'zenodo',
+    titleKey: 'chooseRepository.repositories.zenodo.title',
+    logoUrl: 'assets/images/repositories/zenodo_logo.png',
+    descriptionKey: 'chooseRepository.repositories.zenodo.description',
+    linkTextKey: 'chooseRepository.repositories.zenodo.linkText',
+    linkUrl: 'https://zenodo.org/',
+  },
+  {
     id: 'dryad',
     titleKey: 'chooseRepository.repositories.dryad.title',
     logoUrl: 'assets/images/repositories/dryad_logo.png',
@@ -40,13 +48,5 @@ export const REPOSITORY_OPTIONS: RepositoryOption[] = [
     descriptionKey: 'chooseRepository.repositories.vivli.description',
     linkTextKey: 'chooseRepository.repositories.vivli.linkText',
     linkUrl: 'https://vivli.org/',
-  },
-  {
-    id: 'zenodo',
-    titleKey: 'chooseRepository.repositories.zenodo.title',
-    logoUrl: 'assets/images/repositories/zenodo_logo.png',
-    descriptionKey: 'chooseRepository.repositories.zenodo.description',
-    linkTextKey: 'chooseRepository.repositories.zenodo.linkText',
-    linkUrl: 'https://zenodo.org/',
   },
 ];

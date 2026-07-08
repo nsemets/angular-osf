@@ -2,13 +2,7 @@
   @if (areProjectsLoading()) {
     <osf-loading-spinner />
   } @else {
-    <osf-sub-header
-      [showButton]="true"
-      [title]="subHeaderTitle() | translate"
-      [icon]="subHeaderIcon()"
-      [buttonLabel]="'home.loggedIn.dashboard.createProject' | translate"
-      (buttonClick)="createProject()"
-    />
+    <osf-sub-header [title]="subHeaderTitle() | translate" [icon]="subHeaderIcon()" />
 
     <osf-workflow-launcher-section />
 
