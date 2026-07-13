@@ -163,6 +163,8 @@ export class UserState {
 
   @Action(ClearCurrentUser)
   clearCurrentUser(ctx: StateContext<UserStateModel>) {
+    this.userService.resetCurrentUserCache();
+
     ctx.patchState({
       currentUser: this.toUserState(null, false),
       activeFlags: [],
