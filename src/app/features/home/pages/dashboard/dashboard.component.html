@@ -4,7 +4,9 @@
   } @else {
     <osf-sub-header [title]="subHeaderTitle() | translate" [icon]="subHeaderIcon()" />
 
-    <osf-workflow-launcher-section />
+    @if (isWorkflowLauncherEnabled()) {
+      <osf-workflow-launcher-section />
+    }
 
     @if (existsProjects()) {
       <osf-scheduled-banner />
@@ -78,7 +80,7 @@
             ></iframe>
           </div>
 
-          <div class="flex justify-content-center mt-4 mb-4">
+          <div class="flex justify-content-center my-4">
             <p-button
               [label]="'home.loggedIn.dashboard.getStartedHelp' | translate"
               severity="secondary"

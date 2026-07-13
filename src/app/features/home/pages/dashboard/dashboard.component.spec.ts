@@ -11,6 +11,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ScheduledBannerComponent } from '@core/components/osf-banners/scheduled-banner/scheduled-banner.component';
+import { UserSelectors } from '@core/store/user';
 import { CreateProjectDialogComponent } from '@osf/features/my-projects/components';
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
@@ -71,6 +72,7 @@ describe('DashboardComponent', () => {
     { selector: MyResourcesSelectors.getProjects, value: [] },
     { selector: MyResourcesSelectors.getTotalProjects, value: 0 },
     { selector: MyResourcesSelectors.getProjectsLoading, value: false },
+    { selector: UserSelectors.getActiveFlags, value: [] },
   ];
 
   interface SetupOverrides extends BaseSetupOverrides {

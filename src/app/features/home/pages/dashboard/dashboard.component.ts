@@ -15,6 +15,7 @@ import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { ScheduledBannerComponent } from '@osf/core/components/osf-banners/scheduled-banner/scheduled-banner.component';
+import { UserSelectors } from '@osf/core/store/user';
 import { CreateProjectDialogComponent } from '@osf/features/my-projects/components';
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
@@ -22,6 +23,7 @@ import { MyProjectsTableComponent } from '@osf/shared/components/my-projects-tab
 import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants/default-table-params.constants';
+import { WORKFLOW_LAUNCHER } from '@osf/shared/constants/feature-flags.const';
 import { SortOrder } from '@osf/shared/enums/sort-order.enum';
 import { MyResourcesItem } from '@osf/shared/models/my-resources/my-resources.model';
 import { MyResourcesSearchFilters } from '@osf/shared/models/my-resources/my-resources-search-filters.model';
@@ -68,8 +70,11 @@ export class DashboardComponent implements OnInit {
   readonly projects = select(MyResourcesSelectors.getProjects);
   readonly totalProjectsCount = select(MyResourcesSelectors.getTotalProjects);
   readonly areProjectsLoading = select(MyResourcesSelectors.getProjectsLoading);
+  readonly activeFlags = select(UserSelectors.getActiveFlags);
 
   readonly actions = createDispatchMap({ getMyProjects: GetMyProjects, clearMyResources: ClearMyResources });
+
+  readonly isWorkflowLauncherEnabled = computed(() => this.activeFlags().includes(WORKFLOW_LAUNCHER));
 
   readonly filteredProjects = computed(() => {
     const search = this.searchControl.value?.toLowerCase() ?? '';
