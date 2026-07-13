@@ -18,6 +18,7 @@ import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/
 import { MyProjectsTableComponent } from '@osf/shared/components/my-projects-table/my-projects-table.component';
 import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
+import { FEATURE_FLAGS } from '@osf/shared/constants/feature-flags.const';
 import { SortOrder } from '@osf/shared/enums/sort-order.enum';
 import { MyResourcesItem } from '@osf/shared/models/my-resources/my-resources.model';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
@@ -117,10 +118,6 @@ describe('DashboardComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   }
-
-  afterEach(() => {
-    vi.useRealTimers();
-  });
 
   it('should create and fetch projects with default params on init', () => {
     setup();
@@ -313,6 +310,7 @@ describe('DashboardComponent', () => {
       },
       queryParamsHandling: 'merge',
     });
+    vi.useRealTimers();
   });
 
   it('should navigate to project and set active project', () => {
@@ -375,5 +373,105 @@ describe('DashboardComponent', () => {
     fixture.destroy();
 
     expect(store.dispatch).not.toHaveBeenCalledWith(new ClearMyResources());
+  });
+
+  it('should show loading spinner while projects are loading', () => {
+    setup({ selectorOverrides: [{ selector: MyResourcesSelectors.getProjectsLoading, value: true }] });
+
+    expect(fixture.nativeElement.querySelector('osf-loading-spinner')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('osf-sub-header')).toBeFalsy();
+  });
+
+  it('should enable workflow launcher when feature flag is active', () => {
+    setup({
+      selectorOverrides: [{ selector: UserSelectors.getActiveFlags, value: [FEATURE_FLAGS.WORKFLOW_LAUNCHER] }],
+    });
+
+    expect(component.isWorkflowLauncherEnabled()).toBe(true);
+    expect(fixture.nativeElement.querySelector('osf-workflow-launcher-section')).toBeTruthy();
+  });
+
+  it('should hide workflow launcher when feature flag is inactive', () => {
+    setup();
+
+    expect(component.isWorkflowLauncherEnabled()).toBe(false);
+    expect(fixture.nativeElement.querySelector('osf-workflow-launcher-section')).toBeFalsy();
+  });
+
+  it('should return all projects when search is empty', () => {
+    setup({
+      selectorOverrides: [{ selector: MyResourcesSelectors.getProjects, value: [projectItem, secondProjectItem] }],
+    });
+
+    expect(component.filteredProjects()).toEqual([projectItem, secondProjectItem]);
+  });
+
+  it('should filter projects case insensitively', () => {
+    setup({
+      routeQueryParams: { search: 'ALPHA' },
+      selectorOverrides: [{ selector: MyResourcesSelectors.getProjects, value: [projectItem, secondProjectItem] }],
+    });
+
+    expect(component.filteredProjects()).toEqual([projectItem]);
+  });
+
+  it('should omit empty search from query params', () => {
+    setup();
+    (routerMock.navigate as Mock).mockClear();
+
+    component.searchControl.setValue('');
+    component.updateQueryParams();
+
+    expect(routerMock.navigate).toHaveBeenCalledWith([], {
+      relativeTo: TestBed.inject(ActivatedRoute),
+      queryParams: {
+        page: 1,
+        rows: 10,
+        search: undefined,
+        sortField: undefined,
+        sortOrder: 1,
+      },
+      queryParamsHandling: 'merge',
+    });
+  });
+
+  it('should not update query params when debounced search value is unchanged', () => {
+    vi.useFakeTimers();
+    setup();
+    component.searchControl.setValue('alpha');
+    vi.advanceTimersByTime(300);
+    (routerMock.navigate as Mock).mockClear();
+
+    component.searchControl.setValue('alpha');
+    vi.advanceTimersByTime(300);
+
+    expect(routerMock.navigate).not.toHaveBeenCalled();
+    vi.useRealTimers();
+  });
+
+  it('should render dashboard product links', () => {
+    setup();
+
+    expect(fixture.nativeElement.querySelectorAll('img').length).toBe(DASHBOARD_PRODUCT_LINKS.length);
+  });
+
+  it('should render external product link with blank target', () => {
+    setup();
+
+    const externalLink = fixture.nativeElement.querySelector('[data-test-products-collections]');
+
+    expect(externalLink?.getAttribute('target')).toBe('_blank');
+    expect(externalLink?.getAttribute('rel')).toBe('noopener noreferrer');
+  });
+
+  it('should not redirect when create project dialog closes with missing project id', () => {
+    setup();
+    const onClose$ = new Subject<{ project: { id?: string } }>();
+    customDialogService.open.mockReturnValue(CustomDialogServiceMock.dialogRefWithClose(onClose$.asObservable()));
+
+    component.createProject();
+    onClose$.next({ project: {} });
+
+    expect(projectRedirectDialogService.showProjectRedirectDialog).not.toHaveBeenCalled();
   });
 });
