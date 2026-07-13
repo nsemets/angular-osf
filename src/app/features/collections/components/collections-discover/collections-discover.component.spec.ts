@@ -14,6 +14,7 @@ import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/
 import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { ToastService } from '@osf/shared/services/toast.service';
+import { FEATURE_FLAGS } from '@shared/constants/feature-flags.const';
 import { CollectionsSelectors } from '@shared/stores/collections';
 import { SetDefaultFilterValue, SetExtraFilters } from '@shared/stores/global-search';
 
@@ -144,7 +145,7 @@ function setup(options: SetupOptions = {}) {
           { selector: CollectionsSelectors.getCollectionProviderLoading, value: false },
           {
             selector: UserSelectors.getActiveFlags,
-            value: collectionSubmissionWithCedar ? ['collection_submission_with_cedar'] : [],
+            value: collectionSubmissionWithCedar ? [FEATURE_FLAGS.COLLECTION_SUBMISSION_WITH_CEDAR] : [],
           },
         ],
       }),

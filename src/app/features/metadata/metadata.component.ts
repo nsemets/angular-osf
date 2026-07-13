@@ -48,7 +48,7 @@ import {
   SubjectsSelectors,
   UpdateResourceSubjects,
 } from '@osf/shared/stores/subjects';
-import { COLLECTION_SUBMISSION_WITH_CEDAR } from '@shared/constants/feature-flags.const';
+import { FEATURE_FLAGS } from '@shared/constants/feature-flags.const';
 import { MetadataTabsModel } from '@shared/models/metadata-tabs.model';
 import { SubjectModel } from '@shared/models/subject/subject.model';
 
@@ -132,7 +132,7 @@ export class MetadataComponent implements OnInit, OnDestroy {
 
   private readonly activeFlags = select(UserSelectors.getActiveFlags);
   readonly collectionSubmissionWithCedar = computed(() =>
-    this.activeFlags().includes(COLLECTION_SUBMISSION_WITH_CEDAR)
+    this.activeFlags().includes(FEATURE_FLAGS.COLLECTION_SUBMISSION_WITH_CEDAR)
   );
 
   private resourceId = '';

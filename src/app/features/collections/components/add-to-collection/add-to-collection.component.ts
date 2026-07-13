@@ -43,7 +43,7 @@ import { LoaderService } from '@osf/shared/services/loader.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { CollectionsSelectors, GetCollectionProvider } from '@osf/shared/stores/collections';
 import { ProjectsSelectors, SetSelectedProject } from '@osf/shared/stores/projects';
-import { COLLECTION_SUBMISSION_WITH_CEDAR } from '@shared/constants/feature-flags.const';
+import { FEATURE_FLAGS } from '@shared/constants/feature-flags.const';
 
 import { AddToCollectionSteps } from '../../enums';
 import { RemoveCollectionSubmissionPayload } from '../../models/remove-collection-submission-payload.model';
@@ -126,7 +126,8 @@ export class AddToCollectionComponent implements CanDeactivateComponent {
     () => !this.selectedProject() || !this.projectMetadataSaved() || !this.projectContributorsSaved()
   );
   isCedarMode = computed(
-    () => this.activeFlags().includes(COLLECTION_SUBMISSION_WITH_CEDAR) && !!this.requiredMetadataTemplate()
+    () =>
+      this.activeFlags().includes(FEATURE_FLAGS.COLLECTION_SUBMISSION_WITH_CEDAR) && !!this.requiredMetadataTemplate()
   );
   existingCedarRecord = computed<CedarMetadataRecordData | null>(() => {
     const records = this.cedarRecords();

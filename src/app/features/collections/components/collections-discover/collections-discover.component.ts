@@ -41,7 +41,7 @@ import {
   SetSearchValue,
 } from '@osf/shared/stores/collections';
 import { ResetSearchState, SetDefaultFilterValue, SetExtraFilters } from '@osf/shared/stores/global-search';
-import { COLLECTION_SUBMISSION_WITH_CEDAR } from '@shared/constants/feature-flags.const';
+import { FEATURE_FLAGS } from '@shared/constants/feature-flags.const';
 
 import { CollectionsQuerySyncService } from '../../services';
 import { CollectionsHelpDialogComponent } from '../collections-help-dialog/collections-help-dialog.component';
@@ -79,7 +79,9 @@ export class CollectionsDiscoverComponent {
   defaultSearchFiltersInitialized = signal(false);
 
   activeFlags = select(UserSelectors.getActiveFlags);
-  readonly useShareTroveSearch = computed(() => this.activeFlags().includes(COLLECTION_SUBMISSION_WITH_CEDAR));
+  readonly useShareTroveSearch = computed(() =>
+    this.activeFlags().includes(FEATURE_FLAGS.COLLECTION_SUBMISSION_WITH_CEDAR)
+  );
 
   collectionProvider = select(CollectionsSelectors.getCollectionProvider);
   collectionDetails = select(CollectionsSelectors.getCollectionDetails);

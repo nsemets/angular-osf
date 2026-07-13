@@ -23,7 +23,7 @@ import { MyProjectsTableComponent } from '@osf/shared/components/my-projects-tab
 import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants/default-table-params.constants';
-import { WORKFLOW_LAUNCHER } from '@osf/shared/constants/feature-flags.const';
+import { FEATURE_FLAGS } from '@osf/shared/constants/feature-flags.const';
 import { SortOrder } from '@osf/shared/enums/sort-order.enum';
 import { MyResourcesItem } from '@osf/shared/models/my-resources/my-resources.model';
 import { MyResourcesSearchFilters } from '@osf/shared/models/my-resources/my-resources-search-filters.model';
@@ -74,7 +74,7 @@ export class DashboardComponent implements OnInit {
 
   readonly actions = createDispatchMap({ getMyProjects: GetMyProjects, clearMyResources: ClearMyResources });
 
-  readonly isWorkflowLauncherEnabled = computed(() => this.activeFlags().includes(WORKFLOW_LAUNCHER));
+  readonly isWorkflowLauncherEnabled = computed(() => this.activeFlags().includes(FEATURE_FLAGS.WORKFLOW_LAUNCHER));
 
   readonly filteredProjects = computed(() => {
     const search = this.searchControl.value?.toLowerCase() ?? '';

@@ -34,7 +34,7 @@ import {
   LoadMoreBibliographicContributors,
 } from '@osf/shared/stores/contributors';
 import { FetchSelectedSubjects, SubjectsSelectors } from '@osf/shared/stores/subjects';
-import { COLLECTION_SUBMISSION_WITH_CEDAR } from '@shared/constants/feature-flags.const';
+import { FEATURE_FLAGS } from '@shared/constants/feature-flags.const';
 
 import {
   GetProjectIdentifiers,
@@ -99,7 +99,7 @@ export class ProjectOverviewMetadataComponent {
   readonly cedarRecords = select(MetadataSelectors.getCedarRecords);
   private readonly cedarTemplatesResponse = select(MetadataSelectors.getCedarTemplates);
   readonly cedarTemplates = computed(() => this.cedarTemplatesResponse()?.data ?? null);
-  readonly isCedarMode = computed(() => this.activeFlags().includes(COLLECTION_SUBMISSION_WITH_CEDAR));
+  readonly isCedarMode = computed(() => this.activeFlags().includes(FEATURE_FLAGS.COLLECTION_SUBMISSION_WITH_CEDAR));
 
   readonly resourceType = CurrentResourceType.Projects;
   readonly dateFormat = 'MMM d, y, h:mm a';
