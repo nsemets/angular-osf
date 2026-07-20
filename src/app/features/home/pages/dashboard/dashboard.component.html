@@ -2,7 +2,14 @@
   @if (areProjectsLoading()) {
     <osf-loading-spinner />
   } @else {
-    <osf-sub-header [title]="subHeaderTitle() | translate" [icon]="subHeaderIcon()" />
+    <osf-sub-header
+      [showButton]="!isWorkflowLauncherEnabled()"
+      [title]="subHeaderTitle() | translate"
+      [icon]="'fas fa-home'"
+      [title]="'home.loggedIn.dashboard.title' | translate"
+      [buttonLabel]="'home.loggedIn.dashboard.createProject' | translate"
+      (buttonClick)="createProject()"
+    />
 
     @if (isWorkflowLauncherEnabled()) {
       <osf-workflow-launcher-section />

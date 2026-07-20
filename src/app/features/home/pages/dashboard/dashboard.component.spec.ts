@@ -183,7 +183,6 @@ describe('DashboardComponent', () => {
 
     expect(component.existsProjects()).toBeTruthy();
     expect(component.subHeaderTitle()).toBe('home.loggedIn.dashboard.title');
-    expect(component.subHeaderIcon()).toBe('fas fa-home');
   });
 
   it('should update query params on page change', () => {
@@ -274,7 +273,6 @@ describe('DashboardComponent', () => {
 
     expect(component.existsProjects()).toBeTruthy();
     expect(component.subHeaderTitle()).toBe('home.loggedIn.dashboard.title');
-    expect(component.subHeaderIcon()).toBe('fas fa-home');
   });
 
   it('should use welcome sub header when no projects and no search', () => {
@@ -282,7 +280,6 @@ describe('DashboardComponent', () => {
 
     expect(component.existsProjects()).toBe(false);
     expect(component.subHeaderTitle()).toBe('home.loggedIn.dashboard.welcome');
-    expect(component.subHeaderIcon()).toBe('home');
   });
 
   it('should expose dashboard product links', () => {

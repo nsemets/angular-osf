@@ -74,6 +74,8 @@ export class DashboardComponent implements OnInit {
 
   readonly actions = createDispatchMap({ getMyProjects: GetMyProjects, clearMyResources: ClearMyResources });
 
+  readonly dashboardProducts = DASHBOARD_PRODUCT_LINKS;
+
   readonly isWorkflowLauncherEnabled = computed(() => this.activeFlags().includes(FEATURE_FLAGS.WORKFLOW_LAUNCHER));
 
   readonly filteredProjects = computed(() => {
@@ -82,11 +84,9 @@ export class DashboardComponent implements OnInit {
   });
 
   readonly existsProjects = computed(() => this.projects().length || !!this.searchControl.value?.length);
-  readonly dashboardProducts = DASHBOARD_PRODUCT_LINKS;
   readonly subHeaderTitle = computed(() =>
     this.existsProjects() ? 'home.loggedIn.dashboard.title' : 'home.loggedIn.dashboard.welcome'
   );
-  readonly subHeaderIcon = computed(() => (this.existsProjects() ? 'fas fa-home' : 'home'));
 
   constructor() {
     this.setupSearchSubscription();
