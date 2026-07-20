@@ -11,8 +11,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ScheduledBannerComponent } from '@core/components/osf-banners/scheduled-banner/scheduled-banner.component';
-import { UserSelectors } from '@core/store/user';
-import { CreateProjectDialogComponent } from '@osf/features/my-projects/components';
+import { UserSelectors } from '@osf/core/store/user';
+import { CreateProjectDialogComponent } from '@osf/features/my-projects/components/create-project-dialog/create-project-dialog.component';
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { MyProjectsTableComponent } from '@osf/shared/components/my-projects-table/my-projects-table.component';
