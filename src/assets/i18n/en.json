@@ -344,37 +344,37 @@
   },
   "chooseRepository": {
     "title": "Choose a Repository for Your Research Materials",
-    "intro": "For the data, code, and materials that come out of your work, a dedicated repository is the right home. The repositories below are publicly trusted, and built to make your research outputs findable and citable for the long term. Discover more repository options at https://www.re3data.org/.",
+    "intro": "For the data, code, and materials that come out of your work, a dedicated repository is the right home. The repositories below are publicly trusted, and built to make your research outputs findable and citable for the long term. Discover more repository options at <a href=\"https://www.re3data.org/\" target=\"_blank\" rel=\"noopener\">https://www.re3data.org/</a>.",
     "learnMore": "Learn more",
     "repositories": {
       "dryad": {
         "title": "Dryad",
-        "description": "Focused on research data underlying published findings. Best suited for datasets that accompany a journal article. Includes built-in curation support to help meet sharing standards.",
+        "description": "Focused on research data underlying published findings. Best suited for <b>datasets</b> that accompany a journal article. Includes built-in curation support to help meet sharing standards.",
         "linkText": "Go to Dryad"
       },
       "figshare": {
         "title": "Figshare",
-        "description": "Supports a wide range of output types including datasets, figures, code, and posters. Good for researchers who want to share multiple types of outputs from a single project.",
+        "description": "Supports a wide range of output types including <b>datasets, figures, code, and posters</b>. Good for researchers who want to share multiple types of outputs from a single project.",
         "linkText": "Go to Figshare"
       },
       "harvardDataverse": {
         "title": "Harvard Dataverse",
-        "description": "A robust repository for research data across all disciplines, hosted across multiple institutions globally. Widely recognized by journals and funders.",
+        "description": "A robust repository for research <b>data</b> across all disciplines, hosted across multiple institutions globally. Widely recognized by journals and funders.",
         "linkText": "Go to Dataverse"
       },
       "mendeleyData": {
         "title": "Mendeley Data",
-        "description": "A straightforward platform for uploading and sharing research datasets. A good option for researchers already using Mendeley or working within the Elsevier ecosystem.",
+        "description": "A straightforward platform for uploading and sharing research <b>datasets</b>. A good option for researchers already using Mendeley or working within the Elsevier ecosystem.",
         "linkText": "Go to Mendeley"
       },
       "vivli": {
         "title": "Vivli",
-        "description": "Specialized for clinical and biomedical research, particularly individual participant-level data from clinical trials. Best suited for health sciences researchers with funder or journal data sharing requirements.",
+        "description": "Specialized for clinical and biomedical research, particularly <b>individual participant-level data from clinical trials</b>. Best suited for health sciences researchers with funder or journal data sharing requirements.",
         "linkText": "Go to Vivli"
       },
       "zenodo": {
         "title": "Zenodo (recommended)",
-        "description": "A free, general-purpose repository hosted by CERN. Accepts any file type and assigns a permanent DOI to every object.",
+        "description": "A free, general-purpose repository hosted by CERN for researchers. Accepts <b>any research output type</b> and assigns a permanent DOI to every object.",
         "linkText": "Go to Zenodo"
       }
     }
@@ -795,7 +795,7 @@
           "osfRegistriesImageAltTest": "OSF Registries"
         },
         "workflowLauncher": {
-          "title": "Plan and Document the Lifecycle of Your Research Projects",
+          "title": "Plan and document the lifecycle of your research",
           "description1": "OSF is designed to support your research process — planning your study, registering your methods, and sharing your findings as preprints. ",
           "description2": "Clarify your plan, connect all data and materials that resulted from the study, and then post your preprint. Open scholarship enables more discoverability, increased transparency, and ensures research rigor. (Learn more about the <a href=\"https://help.osf.io/article/727-osf-projects-transition\" target=\"_blank\" rel=\"noopener\">OSF Project transition</a>).",
           "cards": {

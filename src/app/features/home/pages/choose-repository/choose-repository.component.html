@@ -2,7 +2,7 @@
   <osf-sub-header [title]="'chooseRepository.title' | translate"></osf-sub-header>
 
   <div class="py-4 px-3 md:p-5 xl:px-4">
-    <p>{{ 'chooseRepository.intro' | translate }}</p>
+    <p class="rich-text" [innerHTML]="'chooseRepository.intro' | translate"></p>
 
     <div class="grid mt-5">
       @for (repository of repositories; track repository.id) {
@@ -12,7 +12,7 @@
 
             <h3>{{ repository.titleKey | translate }}</h3>
 
-            <p>{{ repository.descriptionKey | translate }}</p>
+            <p [innerHTML]="repository.descriptionKey | translate"></p>
 
             <a
               class="repository-card-link p-button p-button-outlined no-underline mt-auto"

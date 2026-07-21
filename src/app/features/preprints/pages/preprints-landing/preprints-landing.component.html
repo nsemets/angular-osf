@@ -25,7 +25,7 @@
         <p-skeleton width="70%" height="1.5rem" />
       </div>
     } @else {
-      <div [innerHTML]="providerDetails?.descriptionHtml"></div>
+      <div class="rich-text" [innerHTML]="providerDetails?.descriptionHtml"></div>
     }
     <a class="dark-blue-two-link font-bold" routerLink="/preprints">{{ 'preprints.poweredBy' | translate }}</a>
   </div>
