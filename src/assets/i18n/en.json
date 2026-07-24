@@ -354,7 +354,7 @@
       },
       "figshare": {
         "title": "Figshare",
-        "description": "Supports a wide range of output types including <b>datasets, figures, code, and posters</b>. Good for researchers who want to share multiple types of outputs from a single project.",
+        "description": "Accepts <b>datasets, code, images, presentations, and more</b> from any discipline, and supports sharing multiple output types from a single project.",
         "linkText": "Go to Figshare"
       },
       "harvardDataverse": {
