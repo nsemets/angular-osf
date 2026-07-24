@@ -4,9 +4,10 @@ import { Step, StepItem, StepPanel } from 'primeng/stepper';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CedarMetadataDataTemplateJsonApi, CedarMetadataRecordDataJsonApi } from '@osf/features/metadata/models';
+import { CedarMetadataRecordModel, CedarMetadataTemplateModel } from '@osf/features/metadata/models';
 
-import { MOCK_CEDAR_RECORD, MOCK_CEDAR_TEMPLATE } from '@testing/data/collections/cedar-metadata.mock';
+import { MOCK_CEDAR_RECORD } from '@testing/data/collections/cedar-metadata.mock';
+import { MOCK_CEDAR_METADATA_TEMPLATE } from '@testing/mocks/cedar-metadata-domain.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
@@ -16,10 +17,12 @@ describe('CollectionMetadataStepComponent', () => {
   let component: CollectionMetadataStepComponent;
   let fixture: ComponentFixture<CollectionMetadataStepComponent>;
 
+  const mockCedarTemplate = MOCK_CEDAR_METADATA_TEMPLATE;
+
   function setup(
     options: {
-      cedarTemplate?: CedarMetadataDataTemplateJsonApi | null;
-      existingCedarRecord?: CedarMetadataRecordDataJsonApi | null;
+      cedarTemplate?: CedarMetadataTemplateModel | null;
+      existingCedarRecord?: CedarMetadataRecordModel | null;
       stepperActiveValue?: number;
       targetStepValue?: number;
       isDisabled?: boolean;
@@ -86,13 +89,13 @@ describe('CollectionMetadataStepComponent', () => {
   });
 
   it('should accept cedar template', () => {
-    setup({ cedarTemplate: MOCK_CEDAR_TEMPLATE });
+    setup({ cedarTemplate: mockCedarTemplate });
 
-    expect(component.cedarTemplate()).toEqual(MOCK_CEDAR_TEMPLATE);
+    expect(component.cedarTemplate()).toEqual(mockCedarTemplate);
   });
 
   it('should handle discard changes without existing record', () => {
-    setup({ cedarTemplate: MOCK_CEDAR_TEMPLATE });
+    setup({ cedarTemplate: mockCedarTemplate });
 
     component.cedarFormData.set({ field: 'value' });
     component.collectionMetadataSaved.set(true);
@@ -105,7 +108,7 @@ describe('CollectionMetadataStepComponent', () => {
 
   it('should discard cedar changes to existing record metadata', () => {
     setup({
-      cedarTemplate: MOCK_CEDAR_TEMPLATE,
+      cedarTemplate: mockCedarTemplate,
       existingCedarRecord: MOCK_CEDAR_RECORD,
     });
 
@@ -120,7 +123,7 @@ describe('CollectionMetadataStepComponent', () => {
 
   it('should populate cedarFormData from existingCedarRecord', () => {
     setup({
-      cedarTemplate: MOCK_CEDAR_TEMPLATE,
+      cedarTemplate: mockCedarTemplate,
       existingCedarRecord: MOCK_CEDAR_RECORD,
     });
 
@@ -129,7 +132,7 @@ describe('CollectionMetadataStepComponent', () => {
 
   it('should not overwrite cedarFormData from API when metadata is already saved locally', () => {
     setup({
-      cedarTemplate: MOCK_CEDAR_TEMPLATE,
+      cedarTemplate: mockCedarTemplate,
       existingCedarRecord: MOCK_CEDAR_RECORD,
     });
 
@@ -138,10 +141,7 @@ describe('CollectionMetadataStepComponent', () => {
 
     fixture.componentRef.setInput('existingCedarRecord', {
       ...MOCK_CEDAR_RECORD,
-      attributes: {
-        ...MOCK_CEDAR_RECORD.attributes,
-        metadata: { field: 'api' } as unknown as CedarMetadataRecordDataJsonApi['attributes']['metadata'],
-      },
+      metadata: { field: 'api' } as unknown as CedarMetadataRecordModel['metadata'],
     });
     fixture.detectChanges();
 
@@ -149,7 +149,7 @@ describe('CollectionMetadataStepComponent', () => {
   });
 
   it('should not emit cedarDataSaved when handleSaveCedarMetadata is called without editor', () => {
-    setup({ cedarTemplate: MOCK_CEDAR_TEMPLATE });
+    setup({ cedarTemplate: mockCedarTemplate });
 
     const cedarDataSavedSpy = vi.spyOn(component.cedarDataSaved, 'emit');
     const stepChangeSpy = vi.spyOn(component.stepChange, 'emit');
@@ -161,7 +161,7 @@ describe('CollectionMetadataStepComponent', () => {
   });
 
   it('should handle onCedarChange event', () => {
-    setup({ cedarTemplate: MOCK_CEDAR_TEMPLATE });
+    setup({ cedarTemplate: mockCedarTemplate });
 
     const mockMetadata = { field: 'changed' };
     const mockEditor = { currentMetadata: mockMetadata };
@@ -175,7 +175,7 @@ describe('CollectionMetadataStepComponent', () => {
   });
 
   it('should not update cedarFormData when onCedarChange has no currentMetadata', () => {
-    setup({ cedarTemplate: MOCK_CEDAR_TEMPLATE });
+    setup({ cedarTemplate: mockCedarTemplate });
 
     const mockEvent = new CustomEvent('change', {});
     const mockEditor = {};
@@ -190,7 +190,7 @@ describe('CollectionMetadataStepComponent', () => {
   });
 
   it('should not emit cedarDataSaved without template', () => {
-    setup({ cedarTemplate: MOCK_CEDAR_TEMPLATE });
+    setup({ cedarTemplate: mockCedarTemplate });
 
     fixture.componentRef.setInput('cedarTemplate', null);
     fixture.detectChanges();

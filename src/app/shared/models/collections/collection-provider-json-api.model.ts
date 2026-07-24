@@ -1,4 +1,4 @@
-import { CedarMetadataDataTemplateJsonApi } from '@osf/features/metadata/models/cedar-metadata-template.model';
+import { CedarMetadataDataTemplateJsonApi } from '@osf/features/metadata/models/cedar-metadata-template-json-api.model';
 
 import { BrandDataJsonApi } from '../brand/brand-json-api.model';
 import { Embed } from '../common/json-api/embeds.model';

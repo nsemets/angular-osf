@@ -1,4 +1,4 @@
-import { CedarMetadataDataTemplateJsonApi } from '@osf/features/metadata/models/cedar-metadata-template.model';
+import { CedarMetadataDataTemplateJsonApi } from '@osf/features/metadata/models/cedar-metadata-template-json-api.model';
 
 export const CEDAR_METADATA_DATA_TEMPLATE_JSON_API_MOCK: CedarMetadataDataTemplateJsonApi = {
   id: 'template-1',

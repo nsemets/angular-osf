@@ -1,8 +1,15 @@
-import { CedarMetadataDataTemplateJsonApi, CedarMetadataRecordDataJsonApi } from '@osf/features/metadata/models';
+import { CedarMetadataMapper } from '@osf/features/metadata/mappers';
+import {
+  CedarMetadataAttributes,
+  CedarMetadataDataTemplateJsonApi,
+  CedarMetadataRecordDataJsonApi,
+  CedarMetadataRecordModel,
+  CedarMetadataTemplateModel,
+} from '@osf/features/metadata/models';
 import { CollectionSubmissionReviewState } from '@osf/shared/enums/collection-submission-review-state.enum';
 import { CollectionSubmission } from '@osf/shared/models/collections/collection-submissions.model';
 
-export const MOCK_CEDAR_TEMPLATE: CedarMetadataDataTemplateJsonApi = {
+const MOCK_CEDAR_TEMPLATE_JSON_API: CedarMetadataDataTemplateJsonApi = {
   id: 'template-1',
   type: 'cedar-metadata-templates',
   attributes: {
@@ -37,17 +44,27 @@ export const MOCK_CEDAR_TEMPLATE: CedarMetadataDataTemplateJsonApi = {
   },
 };
 
-export const MOCK_CEDAR_RECORD: CedarMetadataRecordDataJsonApi = {
+const MOCK_CEDAR_RECORD_JSON_API: CedarMetadataRecordDataJsonApi = {
   id: 'record-1',
   attributes: {
-    metadata: { field: 'value' } as unknown as CedarMetadataRecordDataJsonApi['attributes']['metadata'],
+    metadata: { field: 'value' } as unknown as CedarMetadataAttributes,
     is_published: true,
   },
   relationships: {
     template: { data: { type: 'cedar-metadata-templates', id: 'template-1' } },
     target: { data: { type: 'nodes', id: 'node-1' } },
   },
+  embeds: {
+    template: {
+      data: MOCK_CEDAR_TEMPLATE_JSON_API,
+    },
+  },
 };
+
+export const MOCK_CEDAR_TEMPLATE: CedarMetadataTemplateModel =
+  CedarMetadataMapper.fromTemplate(MOCK_CEDAR_TEMPLATE_JSON_API);
+
+export const MOCK_CEDAR_RECORD: CedarMetadataRecordModel = CedarMetadataMapper.fromRecord(MOCK_CEDAR_RECORD_JSON_API);
 
 export const MOCK_CEDAR_SUBMISSION: CollectionSubmission = {
   id: '1',

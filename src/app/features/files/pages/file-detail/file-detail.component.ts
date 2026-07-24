@@ -24,8 +24,8 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import {
-  CedarMetadataDataTemplateJsonApi,
-  CedarMetadataRecordDataJsonApi,
+  CedarMetadataRecordModel,
+  CedarMetadataTemplateModel,
   CedarRecordDataBinding,
 } from '@osf/features/metadata/models';
 import {
@@ -182,8 +182,8 @@ export class FileDetailComponent implements OnDestroy {
 
   selectedMetadataTab = signal('osf');
 
-  selectedCedarRecord = signal<CedarMetadataRecordDataJsonApi | null>(null);
-  selectedCedarTemplate = signal<CedarMetadataDataTemplateJsonApi | null>(null);
+  selectedCedarRecord = signal<CedarMetadataRecordModel | null>(null);
+  selectedCedarTemplate = signal<CedarMetadataTemplateModel | null>(null);
   cedarFormReadonly = signal<boolean>(true);
 
   canManageFileActions = computed(() => !this.isAnonymous() && !this.hasViewOnly() && this.hasWriteAccess());
@@ -394,7 +394,7 @@ export class FileDetailComponent implements OnDestroy {
     this.selectedCedarRecord.set(record);
     this.cedarFormReadonly.set(true);
 
-    const templateId = record.relationships?.template?.data?.id;
+    const templateId = record.templateId;
 
     if (templateId && templates?.data) {
       const template = templates.data.find((t) => t.id === templateId);
@@ -419,7 +419,7 @@ export class FileDetailComponent implements OnDestroy {
       const cedarTabs =
         records?.map((record) => ({
           id: record.id || '',
-          label: record.embeds?.template?.data?.attributes?.schema_name || `Record ${record.id}`,
+          label: record.schemaName || `Record ${record.id}`,
           type: MetadataResourceEnum.CEDAR,
         })) || [];
 

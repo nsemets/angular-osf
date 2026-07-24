@@ -46,9 +46,12 @@ export class RegistryOverviewService {
   }
 
   getRegistrationById(id: string): Observable<RegistryOverviewWithMeta> {
-    return this.jsonApiService
-      .get<RegistrationOverviewResponse>(`${this.apiUrl}/registrations/${id}/`)
-      .pipe(map((response) => ({ registry: MapRegistrationOverview(response.data), meta: response.meta })));
+    return this.jsonApiService.get<RegistrationOverviewResponse>(`${this.apiUrl}/registrations/${id}/`).pipe(
+      map((response) => ({
+        registry: MapRegistrationOverview(response.data),
+        isAnonymous: response.meta?.anonymous ?? false,
+      }))
+    );
   }
 
   getInstitutions(registryId: string): Observable<Institution[]> {

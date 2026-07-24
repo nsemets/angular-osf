@@ -18,7 +18,7 @@ import { CollectionSubmission } from '@osf/shared/models/collections/collection-
 import { CollectionStatusSeverityPipe } from '@osf/shared/pipes/collection-status-severity.pipe';
 
 import { CEDAR_VIEWER_CONFIG } from '../../constants';
-import { CedarMetadataDataTemplateJsonApi, CedarMetadataRecordDataJsonApi } from '../../models';
+import { CedarMetadataRecordModel, CedarMetadataTemplateModel } from '../../models';
 
 @Component({
   selector: 'osf-metadata-collection-item',
@@ -33,8 +33,8 @@ export class MetadataCollectionItemComponent {
   readonly CollectionSubmissionReviewState = CollectionSubmissionReviewState;
 
   submission = input.required<CollectionSubmission>();
-  cedarRecord = input<CedarMetadataRecordDataJsonApi | null>(null);
-  cedarTemplate = input<CedarMetadataDataTemplateJsonApi | null>(null);
+  cedarRecord = input<CedarMetadataRecordModel | null>(null);
+  cedarTemplate = input<CedarMetadataTemplateModel | null>(null);
 
   cedarViewerConfig = CEDAR_VIEWER_CONFIG;
 
@@ -49,12 +49,12 @@ export class MetadataCollectionItemComponent {
   showCedarViewer = computed(
     () =>
       !!this.cedarRecord() &&
-      !!this.cedarTemplate()?.attributes?.template &&
+      !!this.cedarTemplate()?.template &&
       this.submission().reviewsState !== CollectionSubmissionReviewState.Removed
   );
 
   cedarMetadata = computed(() => {
     const record = this.cedarRecord();
-    return record?.attributes?.metadata ? (record.attributes.metadata as Record<string, unknown>) : {};
+    return record?.metadata ? (record.metadata as Record<string, unknown>) : {};
   });
 }
