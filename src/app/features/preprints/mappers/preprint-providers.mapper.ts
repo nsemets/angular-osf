@@ -1,6 +1,6 @@
 import { replaceBadEncodedChars } from '@osf/shared/helpers/format-bad-encoding.helper';
-import { BrandDataJsonApi } from '@osf/shared/models/brand/brand.json-api.model';
 import { BrandModel } from '@osf/shared/models/brand/brand.model';
+import { BrandDataJsonApi } from '@osf/shared/models/brand/brand-json-api.model';
 import { SubjectModel } from '@osf/shared/models/subject/subject.model';
 import { SubjectDataJsonApi } from '@osf/shared/models/subject/subjects-json-api.model';
 

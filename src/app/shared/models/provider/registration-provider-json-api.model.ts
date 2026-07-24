@@ -1,4 +1,4 @@
-import { BrandDataJsonApi } from '../brand/brand.json-api.model';
+import { BrandDataJsonApi } from '../brand/brand-json-api.model';
 import { Embed } from '../common/json-api/embeds.model';
 import { ResourceLinksJsonApi } from '../common/json-api/links.model';
 import { JsonApiResource } from '../common/json-api/resource.model';

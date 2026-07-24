@@ -1,4 +1,4 @@
-import { GoogleFileDataModel } from './google-file.data.model';
+import { GoogleFileDataModel } from './google-file-data.model';
 
 /**
  * Represents the data returned by the Google File Picker integration.

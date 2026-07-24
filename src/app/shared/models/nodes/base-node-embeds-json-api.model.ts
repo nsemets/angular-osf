@@ -3,7 +3,7 @@ import { ContributorDataJsonApi } from '../contributors/contributor-response-jso
 import { IdentifiersJsonApiData } from '../identifiers/identifier-json-api.model';
 import { InstitutionDataJsonApi } from '../institutions/institution-json-api.model';
 import { LicenseDataJsonApi } from '../license/licenses-json-api.model';
-import { RegionDataJsonApi } from '../regions/regions.json-api.model';
+import { RegionDataJsonApi } from '../regions/regions-json-api.model';
 import { WikiDataJsonApi } from '../wiki/wiki-json-api.model';
 
 import { BaseNodeDataJsonApi } from './base-node-data-json-api.model';
