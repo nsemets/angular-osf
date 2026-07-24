@@ -10,24 +10,24 @@ Models are TypeScript interfaces and types that describe data shapes. They are n
 JSON:API (*-json-api.model.ts) → mapper → domain model → store (*StateModel) → UI
 ```
 
-| Layer | Role | Naming |
-| --- | --- | --- |
-| JSON:API | Wire/DTO shapes from the backend (`snake_case` fields) | `*JsonApi`, `*DataJsonApi`, `*ResponseJsonApi` |
-| Domain | App-facing shapes (`camelCase` fields) | Prefer descriptive names; `*Model` suffix is optional |
-| State | NGXS slice shape | Always `*StateModel` |
-| Form | Reactive form value shapes | `*Form`, `*FormGroup` |
+| Layer    | Role                                                   | Naming                                                |
+| -------- | ------------------------------------------------------ | ----------------------------------------------------- |
+| JSON:API | Wire/DTO shapes from the backend (`snake_case` fields) | `*JsonApi`, `*DataJsonApi`, `*ResponseJsonApi`        |
+| Domain   | App-facing shapes (`camelCase` fields)                 | Prefer descriptive names; `*Model` suffix is optional |
+| State    | NGXS slice shape                                       | Always `*StateModel`                                  |
+| Form     | Reactive form value shapes                             | `*Form`, `*FormGroup`                                 |
 
 Keep JSON:API types in services and mappers. Prefer domain models in stores, selectors, and components.
 
 ## Locations
 
-| Location | Use for |
-| --- | --- |
-| `src/app/shared/models/<domain>/` | Cross-feature domain + JSON:API types |
+| Location                                 | Use for                                                                                     |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `src/app/shared/models/<domain>/`        | Cross-feature domain + JSON:API types                                                       |
 | `src/app/shared/models/common/json-api/` | Shared JSON:API primitives (`JsonApiResource`, `ItemResponse`, `ListResponse`, links, meta) |
-| `src/app/features/<feature>/models/` | Feature-local UI, form, and API types |
-| `src/app/**/store*/**/*.model.ts` | Colocated NGXS state models |
-| `src/app/core/models/` | App-wide config and core types |
+| `src/app/features/<feature>/models/`     | Feature-local UI, form, and API types                                                       |
+| `src/app/**/store*/**/*.model.ts`        | Colocated NGXS state models                                                                 |
+| `src/app/core/models/`                   | App-wide config and core types                                                              |
 
 ## File naming
 
