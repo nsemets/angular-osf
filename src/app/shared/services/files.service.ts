@@ -33,7 +33,7 @@ import { ListMetaJsonApi } from '../models/common/json-api/meta.model';
 import { JsonApiResponse } from '../models/common/json-api/responses.model';
 import { ContributorModel } from '../models/contributors/contributor.model';
 import { ContributorsResponseJsonApi } from '../models/contributors/contributor-response-json-api.model';
-import { FileDetailsModel, FileDetailsWithMeta, FileModel } from '../models/files/file.model';
+import { FileDetailsModel, FileDetailsResult, FileModel } from '../models/files/file.model';
 import { FileFolderModel } from '../models/files/file-folder.model';
 import {
   FileFolderDataJsonApi,
@@ -184,10 +184,13 @@ export class FilesService {
     return `${link}${separator}zip=`;
   }
 
-  getFileTarget(fileGuid: string): Observable<FileDetailsWithMeta> {
-    return this.jsonApiService
-      .get<FileDetailsResponseJsonApi>(`${this.apiUrl}/files/${fileGuid}/?embed=target`)
-      .pipe(map((response) => ({ file: FilesMapper.getFileDetails(response.data), meta: response.meta })));
+  getFileTarget(fileGuid: string): Observable<FileDetailsResult> {
+    return this.jsonApiService.get<FileDetailsResponseJsonApi>(`${this.apiUrl}/files/${fileGuid}/?embed=target`).pipe(
+      map((response) => ({
+        file: FilesMapper.getFileDetails(response.data),
+        isAnonymous: response.meta?.anonymous ?? false,
+      }))
+    );
   }
 
   getFileGuid(id: string): Observable<FileModel> {

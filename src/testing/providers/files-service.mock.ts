@@ -6,7 +6,7 @@ import { HttpEvent } from '@angular/common/http';
 
 import { ConfiguredAddonModel } from '@osf/shared/models/addons/configured-addon.model';
 import { ListMetaJsonApi } from '@osf/shared/models/common/json-api/meta.model';
-import { FileDetailsModel, FileDetailsWithMeta, FileModel } from '@osf/shared/models/files/file.model';
+import { FileDetailsModel, FileDetailsResult, FileModel } from '@osf/shared/models/files/file.model';
 import { FileFolderModel } from '@osf/shared/models/files/file-folder.model';
 import { FileVersionModel } from '@osf/shared/models/files/file-version.model';
 import { PaginatedData } from '@osf/shared/models/paginated-data.model';
@@ -38,7 +38,7 @@ type MoveFileFn = (
   replace?: boolean
 ) => Observable<unknown>;
 type GetFolderDownloadLinkFn = (link: string) => string;
-type GetFileTargetFn = (fileGuid: string) => Observable<FileDetailsWithMeta>;
+type GetFileTargetFn = (fileGuid: string) => Observable<FileDetailsResult>;
 type GetFileGuidFn = (id: string) => Observable<FileModel>;
 type GetFileByIdFn = (fileGuid: string) => Observable<FileModel>;
 type GetFileVersionsFn = (fileGuid: string) => Observable<FileVersionModel[]>;
@@ -119,7 +119,7 @@ export const FilesServiceMock = {
       renameEntry: vi.fn().mockReturnValue(of(file)),
       moveFile: vi.fn().mockReturnValue(of({})),
       getFolderDownloadLink: vi.fn().mockImplementation((link: string) => `${link}?zip=`),
-      getFileTarget: vi.fn().mockReturnValue(of({ file: fileDetails })),
+      getFileTarget: vi.fn().mockReturnValue(of({ file: fileDetails, isAnonymous: false })),
       getFileGuid: vi.fn().mockReturnValue(of(file)),
       getFileById: vi.fn().mockReturnValue(of(file)),
       getFileVersions: vi.fn().mockReturnValue(of([])),

@@ -159,11 +159,11 @@ export class FilesState {
     ctx.patchState({ tags: { ...state.tags, isLoading: true, error: null } });
 
     return this.filesService.getFileTarget(action.fileGuid).pipe(
-      tap(({ file, meta }) => {
+      tap(({ file, isAnonymous }) => {
         ctx.patchState({
           openedFile: { data: file, isLoading: false, error: null },
           tags: { data: file.tags, isLoading: false, error: null },
-          isAnonymous: meta?.anonymous ?? false,
+          isAnonymous,
         });
       }),
       catchError((error) => handleSectionError(ctx, 'openedFile', error))
