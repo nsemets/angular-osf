@@ -156,7 +156,7 @@ export class ConnectConfiguredAddonComponent {
     }
     const openURL = new URL(addon.redirectUrl);
     openURL.searchParams.set('nodeIri', this.resourceUri());
-    openURL.searchParams.set('userIri', this.addonsUserReference()[0]?.attributes.user_uri);
+    openURL.searchParams.set('userIri', this.addonsUserReference()[0]?.userUri);
     return openURL.toString();
   });
 

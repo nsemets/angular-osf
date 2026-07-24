@@ -6,14 +6,31 @@ import {
   OperationInvocationDataJsonApi,
   StorageItemResponseJsonApi,
 } from '../models/addons/addon-operations-json-api.model';
+import { ResourceReferenceJsonApi, UserReferenceJsonApi } from '../models/addons/addon-reference-json-api.model';
 import { AuthorizedAccountModel } from '../models/addons/authorized-account.model';
 import { AuthorizedAddonDataJsonApi } from '../models/addons/authorized-addon-json-api.model';
 import { ConfiguredAddonModel } from '../models/addons/configured-addon.model';
 import { ConfiguredAddonDataJsonApi } from '../models/addons/configured-addon-json-api.model';
 import { AddonGetDataJsonApi } from '../models/addons/external-addon-json-api.model';
 import { OperationInvocation } from '../models/addons/operation-invocation.model';
+import { ResourceReferenceModel } from '../models/addons/resource-reference.model';
+import { UserReferenceModel } from '../models/addons/user-reference.model';
 
 export class AddonMapper {
+  static fromUserReferenceResponse(response: UserReferenceJsonApi): UserReferenceModel {
+    return {
+      id: response.id,
+      userUri: response.attributes.user_uri,
+    };
+  }
+
+  static fromResourceReferenceResponse(response: ResourceReferenceJsonApi): ResourceReferenceModel {
+    return {
+      id: response.id,
+      resourceUri: response.attributes.resource_uri,
+    };
+  }
+
   static fromResponse(response: AddonGetDataJsonApi): AddonModel {
     return {
       type: response.type,

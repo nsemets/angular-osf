@@ -15,9 +15,7 @@ import {
   OperationInvocationResponseJsonApi,
 } from '@osf/shared/models/addons/addon-operations-json-api.model';
 import {
-  ResourceReferenceJsonApi,
   ResourceReferenceResponseJsonApi,
-  UserReferenceJsonApi,
   UserReferenceResponseJsonApi,
 } from '@osf/shared/models/addons/addon-reference-json-api.model';
 import { AuthorizedAccountModel } from '@osf/shared/models/addons/authorized-account.model';
@@ -36,6 +34,8 @@ import {
 } from '@osf/shared/models/addons/configured-addon-json-api.model';
 import { AddonGetListResponseJsonApi } from '@osf/shared/models/addons/external-addon-json-api.model';
 import { OperationInvocation } from '@osf/shared/models/addons/operation-invocation.model';
+import { ResourceReferenceModel } from '@osf/shared/models/addons/resource-reference.model';
+import { UserReferenceModel } from '@osf/shared/models/addons/user-reference.model';
 
 import { JsonApiService } from '../json-api.service';
 
@@ -62,7 +62,7 @@ export class AddonsService {
       .pipe(map((response) => response.data.map((item) => AddonMapper.fromResponse(item))));
   }
 
-  getAddonsUserReference(): Observable<UserReferenceJsonApi[]> {
+  getAddonsUserReference(): Observable<UserReferenceModel[]> {
     const currentUser = this.currentUser();
     if (!currentUser) throw new Error('Current user not found');
 
@@ -71,16 +71,16 @@ export class AddonsService {
 
     return this.jsonApiService
       .get<UserReferenceResponseJsonApi>(this.apiUrl + '/user-references/', params)
-      .pipe(map((response) => response.data));
+      .pipe(map((response) => response.data.map((item) => AddonMapper.fromUserReferenceResponse(item))));
   }
 
-  getAddonsResourceReference(resourceId: string): Observable<ResourceReferenceJsonApi[]> {
+  getAddonsResourceReference(resourceId: string): Observable<ResourceReferenceModel[]> {
     const resourceUri = `${this.webUrl}/${resourceId}`;
     const params = { 'filter[resource_uri]': resourceUri };
 
     return this.jsonApiService
       .get<ResourceReferenceResponseJsonApi>(this.apiUrl + '/resource-references/', params)
-      .pipe(map((response) => response.data));
+      .pipe(map((response) => response.data.map((item) => AddonMapper.fromResourceReferenceResponse(item))));
   }
 
   getAuthorizedAddons(addonType: string, referenceId: string): Observable<AuthorizedAccountModel[]> {
@@ -160,21 +160,23 @@ export class AddonsService {
   createConfiguredAddon(
     addonRequestPayload: ConfiguredAddonRequestJsonApi,
     addonType: string
-  ): Observable<ConfiguredAddonDataJsonApi> {
+  ): Observable<ConfiguredAddonModel> {
     return this.jsonApiService
       .post<ConfiguredAddonItemResponseJsonApi>(`${this.apiUrl}/configured-${addonType}-addons/`, addonRequestPayload)
-      .pipe(map((response) => response.data));
+      .pipe(map((response) => AddonMapper.fromConfiguredAddonResponse(response.data)));
   }
 
   updateConfiguredAddon(
     addonRequestPayload: ConfiguredAddonRequestJsonApi,
     addonType: string,
     addonId: string
-  ): Observable<ConfiguredAddonDataJsonApi> {
-    return this.jsonApiService.patch<ConfiguredAddonDataJsonApi>(
-      `${this.apiUrl}/configured-${addonType}-addons/${addonId}/`,
-      addonRequestPayload
-    );
+  ): Observable<ConfiguredAddonModel> {
+    return this.jsonApiService
+      .patch<ConfiguredAddonDataJsonApi>(
+        `${this.apiUrl}/configured-${addonType}-addons/${addonId}/`,
+        addonRequestPayload
+      )
+      .pipe(map((response) => AddonMapper.fromConfiguredAddonResponse(response)));
   }
 
   createAddonOperationInvocation(

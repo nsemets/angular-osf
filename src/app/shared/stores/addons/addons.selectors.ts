@@ -1,15 +1,12 @@
 import { createSelector, Selector } from '@ngxs/store';
 
 import { AddonModel } from '@osf/shared/models/addons/addon.model';
-import {
-  ResourceReferenceJsonApi,
-  UserReferenceJsonApi,
-} from '@osf/shared/models/addons/addon-reference-json-api.model';
 import { AuthorizedAccountModel } from '@osf/shared/models/addons/authorized-account.model';
 import { ConfiguredAddonModel } from '@osf/shared/models/addons/configured-addon.model';
-import { ConfiguredAddonDataJsonApi } from '@osf/shared/models/addons/configured-addon-json-api.model';
 import { OperationInvocation } from '@osf/shared/models/addons/operation-invocation.model';
+import { ResourceReferenceModel } from '@osf/shared/models/addons/resource-reference.model';
 import { StorageItem } from '@osf/shared/models/addons/storage-item.model';
+import { UserReferenceModel } from '@osf/shared/models/addons/user-reference.model';
 
 import { AddonsStateModel } from './addons.model';
 import { AddonsState } from './addons.state';
@@ -130,7 +127,7 @@ export class AddonsSelectors {
   }
 
   @Selector([AddonsState])
-  static getAddonsUserReference(state: AddonsStateModel): UserReferenceJsonApi[] {
+  static getAddonsUserReference(state: AddonsStateModel): UserReferenceModel[] {
     return state.addonsUserReference.data;
   }
 
@@ -140,7 +137,7 @@ export class AddonsSelectors {
   }
 
   @Selector([AddonsState])
-  static getAddonsResourceReference(state: AddonsStateModel): ResourceReferenceJsonApi[] {
+  static getAddonsResourceReference(state: AddonsStateModel): ResourceReferenceModel[] {
     return state.addonsResourceReference.data;
   }
 
@@ -160,7 +157,7 @@ export class AddonsSelectors {
   }
 
   @Selector([AddonsState])
-  static getCreatedOrUpdatedConfiguredAddon(state: AddonsStateModel): ConfiguredAddonDataJsonApi | null {
+  static getCreatedOrUpdatedConfiguredAddon(state: AddonsStateModel): ConfiguredAddonModel | null {
     return state.createdUpdatedConfiguredAddon.data;
   }
 
