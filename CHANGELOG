@@ -2,6 +2,11 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+26.15.0 (2026-08-03)
+====================
+
+* Improve tracking for download dashboard.
+
 26.14.0 (2026-07-20)
 ====================
 
