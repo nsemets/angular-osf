@@ -444,10 +444,30 @@ describe('DashboardComponent', () => {
     vi.useRealTimers();
   });
 
+  it('should render empty state when no projects exist', () => {
+    setup();
+
+    expect(fixture.nativeElement.querySelector('.connected-record-image')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('osf-my-projects-table')).toBeFalsy();
+    expect(fixture.nativeElement.querySelector('.latest-research-container')).toBeFalsy();
+  });
+
+  it('should render projects table and latest research when projects exist', () => {
+    setup({
+      selectorOverrides: [{ selector: MyResourcesSelectors.getProjects, value: [projectItem] }],
+    });
+
+    expect(fixture.nativeElement.querySelector('osf-my-projects-table')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('.latest-research-container')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('.connected-record-image')).toBeFalsy();
+  });
+
   it('should render dashboard product links', () => {
     setup();
 
-    expect(fixture.nativeElement.querySelectorAll('img').length).toBe(DASHBOARD_PRODUCT_LINKS.length);
+    const productImages = fixture.nativeElement.querySelectorAll('.flex.flex-column.p-4 img');
+
+    expect(productImages.length).toBe(DASHBOARD_PRODUCT_LINKS.length);
   });
 
   it('should render external product link with blank target', () => {
