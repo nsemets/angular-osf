@@ -2,6 +2,11 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+26.16.0 (2026-08-10)
+====================
+
+* Workflow Launcher
+
 26.15.0 (2026-08-03)
 ====================
 
