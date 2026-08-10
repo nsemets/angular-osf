@@ -342,6 +342,43 @@
       "results": "results"
     }
   },
+  "chooseRepository": {
+    "title": "Choose a Repository for Your Research Materials",
+    "intro": "For the data, code, and materials that come out of your work, a dedicated repository is the right home. The repositories below are publicly trusted, and built to make your research outputs findable and citable for the long term. Discover more repository options at <a href=\"https://www.re3data.org/\" target=\"_blank\" rel=\"noopener\">https://www.re3data.org/</a>.",
+    "learnMore": "Learn more",
+    "repositories": {
+      "dryad": {
+        "title": "Dryad",
+        "description": "Focused on research data underlying published findings. Best suited for <b>datasets</b> that accompany a journal article. Includes built-in curation support to help meet sharing standards.",
+        "linkText": "Go to Dryad"
+      },
+      "figshare": {
+        "title": "Figshare",
+        "description": "Accepts <b>datasets, code, images, presentations, and more</b> from any discipline, and supports sharing multiple output types from a single project.",
+        "linkText": "Go to Figshare"
+      },
+      "harvardDataverse": {
+        "title": "Harvard Dataverse",
+        "description": "A robust repository for research <b>data</b> across all disciplines, hosted across multiple institutions globally. Widely recognized by journals and funders.",
+        "linkText": "Go to Dataverse"
+      },
+      "mendeleyData": {
+        "title": "Mendeley Data",
+        "description": "Mendeley Data is a free cloud-based collaborative repository for <b>data storage</b>. A good option for researchers already using Mendeley or working within the Elsevier ecosystem.",
+        "linkText": "Go to Mendeley"
+      },
+      "vivli": {
+        "title": "Vivli",
+        "description": "Specialized for clinical and biomedical research, particularly <b>individual participant-level data from clinical trials</b>. Best suited for health sciences researchers with funder or journal data sharing requirements.",
+        "linkText": "Go to Vivli"
+      },
+      "zenodo": {
+        "title": "Zenodo (recommended)",
+        "description": "A free, general-purpose repository hosted by CERN for researchers. Accepts <b>any research output type</b> and assigns a permanent DOI to every object.",
+        "linkText": "Go to Zenodo"
+      }
+    }
+  },
   "common": {
     "accessibility": {
       "confirmation": "Confirmation",
@@ -757,6 +794,33 @@
           "osfPreprintsImageAltTest": "OSF Preprints",
           "osfRegistriesImageAltTest": "OSF Registries"
         },
+        "workflowLauncher": {
+          "title": "Plan and document the lifecycle of your research",
+          "description1": "OSF is designed to support your research process — planning your study, registering your methods, and sharing your findings as preprints. ",
+          "description2": "Clarify your plan, connect all data and materials that resulted from the study, and then post your preprint. Open scholarship enables more discoverability, increased transparency, and ensures research rigor. (Learn more about the <a href=\"https://help.osf.io/article/727-osf-projects-transition\" target=\"_blank\" rel=\"noopener\">OSF Project transition</a>).",
+          "cards": {
+            "studyPlans": {
+              "title": "Study Plans",
+              "description": "Document your research questions, methods, and analysis plans before you analyze data.",
+              "button": "Add Study Plan"
+            },
+            "researchMaterials": {
+              "title": "Research Materials",
+              "description": "Store and share datasets, code, materials, and other outputs from your research in a trusted public repository.",
+              "button": "Store Research Materials"
+            },
+            "preprints": {
+              "title": "Preprints",
+              "description": "Publish the outcomes of your research with an open access preprint, and connect the preprint to your study plan.",
+              "button": "Add Preprint"
+            },
+            "search": {
+              "title": "Search",
+              "description": "Search across study plans and preprints with enhanced metadata and filters.",
+              "button": "Go to Search"
+            }
+          }
+        },
         "noCreatedProject": "You haven’t created a project yet. Click the \"Create New Project\" button above to get started.",
         "quickSearch": {
           "goTo": "Go to",
@@ -802,19 +866,19 @@
       "support": {
         "sections": {
           "collect": {
-            "description": "Store data, code, and other materials in OSF Storage, or connect your Dropbox or other third-party account. Every file gets a unique, persistent URL for citing and sharing",
+            "description": "Store your datasets, code, and research materials in trusted repositories then link them to your registration to keep them findable, citable, and preserved for the long term.",
             "title": "Collect and Analyze Data"
           },
           "design": {
-            "description": "Start a project and add collaborators, giving them access to protocols and other research materials. Built-in version control tracks the evolution of your study",
+            "description": "Register your study design and invite collaborators to review your protocols and research materials before data collection begins.",
             "title": "Design Your Study"
           },
           "publish": {
-            "description": "Share papers in OSF Preprints or a community-based preprint provider, so others can find and cite your work. Track impact with metrics like downloads and view counts",
+            "description": "Share papers in OSF Preprints or a community-based preprint provider, so others can find and cite your work. Track impact with metrics like downloads and view counts.",
             "title": "Publish Your Reports"
           },
           "search": {
-            "description": "Find papers, data, and materials to inspire your next research project. Search public projects to build on the work of others and find new collaborators",
+            "description": "Find papers, data, and materials to inspire your next research project. Search public registrations and preprints to build on the work of others and find new collaborators.",
             "title": "Search And Discover"
           }
         },
