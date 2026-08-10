@@ -44,7 +44,7 @@ describe('FileDownloadService', () => {
     });
 
     expect(dataciteService.logFileDownload).toHaveBeenCalledWith('node-1', 'nodes');
-    expect(filesService.getFolderDownloadLink).toHaveBeenCalledWith('/folder/download/');
+    expect(filesService.getFolderDownloadLink).toHaveBeenCalledWith('/folder/download/', 'files');
     expect(openSpy).toHaveBeenCalledWith('/folder/download/?zip=', '_blank');
   });
 
@@ -63,6 +63,7 @@ describe('FileDownloadService', () => {
 
   it('logs datacite and opens file download link', () => {
     const openSpy = vi.spyOn(window, 'open').mockReturnValue({ focus: vi.fn() } as unknown as Window);
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
     service.downloadFile({
       resourceId: 'node-1',
@@ -71,11 +72,12 @@ describe('FileDownloadService', () => {
     });
 
     expect(dataciteService.logFileDownload).toHaveBeenCalledWith('node-1', 'nodes');
-    expect(openSpy).toHaveBeenCalledWith('/file/download/', '_blank');
+    expect(openSpy).toHaveBeenCalledWith(`/file/download/?source=files&tz=${encodeURIComponent(timeZone)}`, '_blank');
   });
 
   it('downloads file from file model', () => {
     const openSpy = vi.spyOn(window, 'open').mockReturnValue({ focus: vi.fn() } as unknown as Window);
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const file = FileModelMock.simple({
       kind: FileKind.File,
       links: { ...FileModelMock.simple().links, download: '/file/download/' },
@@ -88,7 +90,7 @@ describe('FileDownloadService', () => {
     });
 
     expect(dataciteService.logFileDownload).toHaveBeenCalledWith('node-1', 'nodes');
-    expect(openSpy).toHaveBeenCalledWith('/file/download/', '_blank');
+    expect(openSpy).toHaveBeenCalledWith(`/file/download/?source=files&tz=${encodeURIComponent(timeZone)}`, '_blank');
   });
 
   it('downloads folder zip from file model', () => {
@@ -106,7 +108,7 @@ describe('FileDownloadService', () => {
     });
 
     expect(dataciteService.logFileDownload).toHaveBeenCalledWith('node-1', 'nodes');
-    expect(filesService.getFolderDownloadLink).toHaveBeenCalledWith('/folder/upload/');
+    expect(filesService.getFolderDownloadLink).toHaveBeenCalledWith('/folder/upload/', 'files');
     expect(openSpy).toHaveBeenCalledWith('/folder/upload/?zip=', '_blank');
   });
 });
