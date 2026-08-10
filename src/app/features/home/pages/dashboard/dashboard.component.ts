@@ -14,7 +14,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import { ScheduledBannerComponent } from '@core/components/osf-banners/scheduled-banner/scheduled-banner.component';
+import { ScheduledBannerComponent } from '@osf/core/components/osf-banners/scheduled-banner/scheduled-banner.component';
+import { UserSelectors } from '@osf/core/store/user';
 import { CreateProjectDialogComponent } from '@osf/features/my-projects/components/create-project-dialog/create-project-dialog.component';
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
@@ -22,13 +23,17 @@ import { MyProjectsTableComponent } from '@osf/shared/components/my-projects-tab
 import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { DEFAULT_TABLE_PARAMS } from '@osf/shared/constants/default-table-params.constants';
+import { FEATURE_FLAGS } from '@osf/shared/constants/feature-flags.const';
 import { SortOrder } from '@osf/shared/enums/sort-order.enum';
 import { MyResourcesItem } from '@osf/shared/models/my-resources/my-resources.model';
 import { MyResourcesSearchFilters } from '@osf/shared/models/my-resources/my-resources-search-filters.model';
+import { TableParameters } from '@osf/shared/models/table-parameters.model';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { ProjectRedirectDialogService } from '@osf/shared/services/project-redirect-dialog.service';
 import { ClearMyResources, GetMyProjects, MyResourcesSelectors } from '@osf/shared/stores/my-resources';
-import { TableParameters } from '@shared/models/table-parameters.model';
+
+import { WorkflowLauncherSectionComponent } from '../../components/workflow-launcher-section/workflow-launcher-section.component';
+import { DASHBOARD_PRODUCT_LINKS } from '../../constants/dashboard-products.constants';
 
 @Component({
   selector: 'osf-dashboard',
@@ -42,6 +47,7 @@ import { TableParameters } from '@shared/models/table-parameters.model';
     TranslatePipe,
     LoadingSpinnerComponent,
     ScheduledBannerComponent,
+    WorkflowLauncherSectionComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
@@ -64,8 +70,13 @@ export class DashboardComponent implements OnInit {
   readonly projects = select(MyResourcesSelectors.getProjects);
   readonly totalProjectsCount = select(MyResourcesSelectors.getTotalProjects);
   readonly areProjectsLoading = select(MyResourcesSelectors.getProjectsLoading);
+  readonly activeFlags = select(UserSelectors.getActiveFlags);
 
   readonly actions = createDispatchMap({ getMyProjects: GetMyProjects, clearMyResources: ClearMyResources });
+
+  readonly dashboardProducts = DASHBOARD_PRODUCT_LINKS;
+
+  readonly isWorkflowLauncherEnabled = computed(() => this.activeFlags().includes(FEATURE_FLAGS.WORKFLOW_LAUNCHER));
 
   readonly filteredProjects = computed(() => {
     const search = this.searchControl.value?.toLowerCase() ?? '';
@@ -73,6 +84,9 @@ export class DashboardComponent implements OnInit {
   });
 
   readonly existsProjects = computed(() => this.projects().length || !!this.searchControl.value?.length);
+  readonly subHeaderTitle = computed(() =>
+    this.existsProjects() ? 'home.loggedIn.dashboard.title' : 'home.loggedIn.dashboard.welcome'
+  );
 
   constructor() {
     this.setupSearchSubscription();
@@ -136,18 +150,15 @@ export class DashboardComponent implements OnInit {
   }
 
   fetchProjects(): void {
-    const filters = this.createFilters();
-    const page = Math.floor(this.tableParams().firstRowIndex / this.tableParams().rows) + 1;
-    this.actions.getMyProjects(page, this.tableParams().rows, filters);
-  }
-
-  createFilters(): MyResourcesSearchFilters {
-    return {
+    const filters: MyResourcesSearchFilters = {
       searchValue: this.searchControl.value ?? '',
       searchFields: ['title'],
       sortColumn: this.sortColumn(),
       sortOrder: this.sortOrder(),
     };
+
+    const page = Math.floor(this.tableParams().firstRowIndex / this.tableParams().rows) + 1;
+    this.actions.getMyProjects(page, this.tableParams().rows, filters);
   }
 
   updateQueryParams(isPageReset = false): void {
