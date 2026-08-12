@@ -21,6 +21,7 @@ import { ResourceCustomMetadataResponse } from '@osf/features/files/models/resou
 import { DEFAULT_TABLE_PARAMS } from '../constants/default-table-params.constants';
 import { FileKind } from '../enums/file-kind.enum';
 import { ResourceType } from '../enums/resource-type.enum';
+import { appendDownloadTrackingParams } from '../helpers/download-link.helper';
 import { AddonMapper } from '../mappers/addon.mapper';
 import { ContributorsMapper } from '../mappers/contributors';
 import { FilesMapper } from '../mappers/files/files.mapper';
@@ -179,9 +180,9 @@ export class FilesService {
     return this.jsonApiService.post<FileResponseJsonApi>(link, body);
   }
 
-  getFolderDownloadLink(link: string): string {
+  getFolderDownloadLink(link: string, source = ''): string {
     const separator = link.includes('?') ? '&' : '?';
-    return `${link}${separator}zip=`;
+    return appendDownloadTrackingParams(`${link}${separator}zip=`, source);
   }
 
   getFileTarget(fileGuid: string): Observable<FileDetailsResult> {

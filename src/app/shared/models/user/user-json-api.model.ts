@@ -1,4 +1,5 @@
 import { ResourceLinksJsonApi } from '../common/json-api/links.model';
+import { ToOneRelData } from '../common/json-api/relationships.model';
 import { JsonApiResource } from '../common/json-api/resource.model';
 import { ItemResponse } from '../common/json-api/responses.model';
 
@@ -72,9 +73,5 @@ interface UserLinksJsonApi extends ResourceLinksJsonApi {
 }
 
 interface UserRelationshipsJsonApi {
-  default_region: DefaultRegionJsonApi;
-}
-
-interface DefaultRegionJsonApi {
-  data: JsonApiResource<'regions'>;
+  default_region: ToOneRelData<'regions'>;
 }
