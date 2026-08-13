@@ -1,4 +1,5 @@
 import { RegistryStatus } from '@osf/shared/enums/registry-status.enum';
+import { SchemaResponseDataJsonApi } from '@osf/shared/models/registration/schema-response-json-api.model';
 import { replaceBadEncodedChars } from '@shared/helpers/format-bad-encoding.helper';
 import { DraftRegistrationModel } from '@shared/models/registration/draft-registration.model';
 import { RegistrationModel } from '@shared/models/registration/registration.model';
@@ -6,7 +7,6 @@ import { RegistrationCard } from '@shared/models/registration/registration-card.
 import {
   DraftRegistrationDataJsonApi,
   RegistrationDataJsonApi,
-  SchemaResponseDataJsonApi,
 } from '@shared/models/registration/registration-json-api.model';
 import { SchemaResponse } from '@shared/models/registration/schema-response.model';
 
@@ -73,6 +73,7 @@ export class RegistrationMapper {
       public: registration.attributes.public,
       contributors: ContributorsMapper.getContributors(registration.embeds?.bibliographic_contributors?.data),
       currentUserPermissions: registration.attributes.current_user_permissions,
+      allowUpdates: registration.embeds?.provider?.data?.attributes?.allow_updates ?? false,
     };
   }
 
@@ -97,6 +98,7 @@ export class RegistrationMapper {
       contributors: ContributorsMapper.getContributors(registration?.embeds?.bibliographic_contributors?.data),
       rootParentId: registration.relationships.root?.data?.id,
       currentUserPermissions: registration.attributes.current_user_permissions,
+      allowUpdates: registration.embeds?.provider?.data?.attributes?.allow_updates ?? false,
     };
   }
 

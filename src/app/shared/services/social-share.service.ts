@@ -4,6 +4,7 @@ import { ENVIRONMENT } from '@core/provider/environment.provider';
 
 import { SOCIAL_PLATFORMS } from '../constants/social-platforms.const';
 import { SOCIAL_SHARE_URLS } from '../constants/social-share.config';
+import { appendDownloadTrackingParams } from '../helpers/download-link.helper';
 import { SocialShareContentModel } from '../models/socials/social-share-content.model';
 import { SocialShareLinksModel } from '../models/socials/social-share-links.model';
 import { SocialsShareActionItem } from '../models/socials/socials-share-action-item.model';
@@ -18,10 +19,29 @@ export class SocialShareService {
     return this.environment.webUrl;
   }
 
+  getEmailLink(title: string, url: string): string {
+    return this.generateEmailLink({ title, url });
+  }
+
+  getXLink(title: string, url: string): string {
+    return this.generateXLink({ title, url });
+  }
+
+  getFacebookLink(url: string): string {
+    return this.generateFacebookLink({ title: '', url });
+  }
+
+  getFacebookCustomLink(url: string): string {
+    const encodedUrl = encodeURIComponent(url);
+    const appId = this.environment.facebookAppId;
+
+    return `${SOCIAL_SHARE_URLS.facebookShare}?app_id=${appId}&display=popup&href=${encodedUrl}&redirect_uri=${encodedUrl}`;
+  }
+
   generateAllSharingLinks(content: SocialShareContentModel): SocialShareLinksModel {
     return {
       email: this.generateEmailLink(content),
-      twitter: this.generateTwitterLink(content),
+      twitter: this.generateXLink(content),
       facebook: this.generateFacebookLink(content),
       linkedIn: this.generateLinkedInLink(content),
       mastodon: this.generateMastodonLink(content),
@@ -37,8 +57,8 @@ export class SocialShareService {
     return `${this.webUrl}/${guid}`;
   }
 
-  createDownloadUrl(resourceId: string): string {
-    return `${this.webUrl}/download/${resourceId}`;
+  createDownloadUrl(resourceId: string, source = ''): string {
+    return appendDownloadTrackingParams(`${this.webUrl}/download/${resourceId}`, source);
   }
 
   generateSocialActionItems(content: SocialShareContentModel): SocialsShareActionItem[] {
@@ -58,11 +78,11 @@ export class SocialShareService {
     return `${SOCIAL_SHARE_URLS.email}?subject=${subject}&body=${body}`;
   }
 
-  private generateTwitterLink(content: SocialShareContentModel): string {
+  private generateXLink(content: SocialShareContentModel): string {
     const url = encodeURIComponent(content.url);
     const text = encodeURIComponent(content.title);
 
-    return `${SOCIAL_SHARE_URLS.twitter.preview_url}?url=${url}&text=${text}&via=${SOCIAL_SHARE_URLS.twitter.viaHandle}`;
+    return `${SOCIAL_SHARE_URLS.x.preview_url}?url=${url}&text=${text}&via=${SOCIAL_SHARE_URLS.x.viaHandle}`;
   }
 
   private generateFacebookLink(content: SocialShareContentModel): string {

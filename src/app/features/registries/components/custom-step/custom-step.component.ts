@@ -72,7 +72,6 @@ export class CustomStepComponent implements OnDestroy {
   stepsData = input.required<Record<string, any>>();
   filesLink = input.required<string>();
   projectId = input.required<string>();
-  provider = input.required<string>();
   filesViewOnly = input<boolean>(false);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -143,12 +142,12 @@ export class CustomStepComponent implements OnDestroy {
     }
   }
 
-  removeFromAttachedFiles(file: AttachedFile, questionKey: string): void {
+  removeFromAttachedFiles(fileId: string | undefined, questionKey: string): void {
     if (!this.attachedFiles[questionKey]) {
       return;
     }
 
-    this.attachedFiles[questionKey] = this.attachedFiles[questionKey].filter((f) => f.file_id !== file.file_id);
+    this.attachedFiles[questionKey] = this.attachedFiles[questionKey].filter((f) => f.file_id !== fileId);
     this.stepForm.patchValue({ [questionKey]: this.attachedFiles[questionKey] });
     this.updateAction.emit({
       [questionKey]: this.mapFilesToPayload(this.attachedFiles[questionKey]),

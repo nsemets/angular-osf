@@ -7,9 +7,8 @@ import { inject, Injectable } from '@angular/core';
 import { SupportedFeature } from '@osf/shared/enums/addon-supported-features.enum';
 import { handleSectionError } from '@osf/shared/helpers/state-error.handler';
 import { FilesService } from '@osf/shared/services/files.service';
-import { ToastService } from '@osf/shared/services/toast.service';
 
-import { MapResourceMetadata } from '../mappers';
+import { MapResourceMetadata } from '../mappers/resource-metadata.mapper';
 
 import {
   CreateFolder,
@@ -45,7 +44,6 @@ import { FILES_STATE_DEFAULTS, FilesStateModel } from './files.model';
 })
 export class FilesState {
   filesService = inject(FilesService);
-  toastService = inject(ToastService);
 
   @Action(GetFiles)
   getFiles(ctx: StateContext<FilesStateModel>, action: GetFiles) {
@@ -161,9 +159,12 @@ export class FilesState {
     ctx.patchState({ tags: { ...state.tags, isLoading: true, error: null } });
 
     return this.filesService.getFileTarget(action.fileGuid).pipe(
-      tap((file) => {
-        ctx.patchState({ openedFile: { data: file, isLoading: false, error: null } });
-        ctx.patchState({ tags: { data: file.tags, isLoading: false, error: null } });
+      tap(({ file, isAnonymous }) => {
+        ctx.patchState({
+          openedFile: { data: file, isLoading: false, error: null },
+          tags: { data: file.tags, isLoading: false, error: null },
+          isAnonymous,
+        });
       }),
       catchError((error) => handleSectionError(ctx, 'openedFile', error))
     );
@@ -262,15 +263,15 @@ export class FilesState {
   getRootFolders(ctx: StateContext<FilesStateModel>, action: GetRootFolders) {
     const state = ctx.getState();
     ctx.patchState({ rootFolders: { ...state.rootFolders, isLoading: true } });
-    return this.filesService.getFolders(action.folderLink).pipe(
+    return this.filesService.getRootFolders(action.resourceId, action.resourceType).pipe(
       tap((response) =>
         ctx.patchState({
           rootFolders: {
-            data: response.files,
+            data: response.data,
             isLoading: false,
             error: null,
           },
-          isAnonymous: response.meta?.anonymous ?? false,
+          isAnonymous: response.isAnonymous,
         })
       ),
       catchError((error) => handleSectionError(ctx, 'rootFolders', error))
@@ -282,15 +283,15 @@ export class FilesState {
     const state = ctx.getState();
     ctx.patchState({ moveDialogRootFolders: { ...state.moveDialogRootFolders, isLoading: true } });
 
-    return this.filesService.getFolders(action.folderLink).pipe(
+    return this.filesService.getRootFolders(action.resourceId, action.resourceType).pipe(
       tap((response) =>
         ctx.patchState({
           moveDialogRootFolders: {
-            data: response.files,
+            data: response.data,
             isLoading: false,
             error: null,
           },
-          isAnonymous: response.meta?.anonymous ?? false,
+          isAnonymous: response.isAnonymous,
         })
       ),
       catchError((error) => handleSectionError(ctx, 'moveDialogRootFolders', error))
@@ -302,7 +303,7 @@ export class FilesState {
     const state = ctx.getState();
     ctx.patchState({ configuredStorageAddons: { ...state.configuredStorageAddons, isLoading: true } });
 
-    return this.filesService.getConfiguredStorageAddons(action.resourceUri).pipe(
+    return this.filesService.getConfiguredStorageAddons(action.resourceId).pipe(
       tap((addons) =>
         ctx.patchState({
           configuredStorageAddons: {
@@ -326,7 +327,7 @@ export class FilesState {
       moveDialogConfiguredStorageAddons: { ...state.moveDialogConfiguredStorageAddons, isLoading: true },
     });
 
-    return this.filesService.getConfiguredStorageAddons(action.resourceUri).pipe(
+    return this.filesService.getConfiguredStorageAddons(action.resourceId).pipe(
       tap((addons) =>
         ctx.patchState({
           moveDialogConfiguredStorageAddons: {

@@ -3,14 +3,22 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
 import { Tag } from 'primeng/tag';
 
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  CUSTOM_ELEMENTS_SCHEMA,
+  input,
+  ViewEncapsulation,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { collectionFilterNames } from '@osf/features/collections/constants';
 import { CollectionSubmissionReviewState } from '@osf/shared/enums/collection-submission-review-state.enum';
-import { CollectionSubmission } from '@osf/shared/models/collections/collections.model';
-import { KeyValueModel } from '@osf/shared/models/common/key-value.model';
+import { CollectionSubmission } from '@osf/shared/models/collections/collection-submissions.model';
 import { CollectionStatusSeverityPipe } from '@osf/shared/pipes/collection-status-severity.pipe';
+
+import { CEDAR_VIEWER_CONFIG } from '../../constants';
+import { CedarMetadataRecordModel, CedarMetadataTemplateModel } from '../../models';
 
 @Component({
   selector: 'osf-metadata-collection-item',
@@ -18,39 +26,35 @@ import { CollectionStatusSeverityPipe } from '@osf/shared/pipes/collection-statu
   templateUrl: './metadata-collection-item.component.html',
   styleUrl: './metadata-collection-item.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  encapsulation: ViewEncapsulation.None,
 })
 export class MetadataCollectionItemComponent {
   readonly CollectionSubmissionReviewState = CollectionSubmissionReviewState;
 
   submission = input.required<CollectionSubmission>();
+  cedarRecord = input<CedarMetadataRecordModel | null>(null);
+  cedarTemplate = input<CedarMetadataTemplateModel | null>(null);
+
+  cedarViewerConfig = CEDAR_VIEWER_CONFIG;
 
   showSubmissionButton = computed(() => this.submission().reviewsState === CollectionSubmissionReviewState.Accepted);
 
-  submissionButtonLabel = computed(() => {
-    const status = this.submission().status;
-    return status === CollectionSubmissionReviewState.Removed ? 'common.buttons.resubmit' : 'common.buttons.edit';
-  });
-
-  showAttributes = computed(
-    () => this.submission().reviewsState !== CollectionSubmissionReviewState.Removed && !!this.attributes().length
+  submissionButtonLabel = computed(() =>
+    this.submission().reviewsState === CollectionSubmissionReviewState.Removed
+      ? 'common.buttons.resubmit'
+      : 'common.buttons.edit'
   );
 
-  attributes = computed(() => {
-    const submission = this.submission();
-    const attributes: KeyValueModel[] = [];
+  showCedarViewer = computed(
+    () =>
+      !!this.cedarRecord() &&
+      !!this.cedarTemplate()?.template &&
+      this.submission().reviewsState !== CollectionSubmissionReviewState.Removed
+  );
 
-    for (const filter of collectionFilterNames) {
-      const value = submission[filter.key as keyof CollectionSubmission];
-
-      if (value) {
-        attributes.push({
-          key: filter.key,
-          label: filter.label,
-          value: String(value),
-        });
-      }
-    }
-
-    return attributes;
+  cedarMetadata = computed(() => {
+    const record = this.cedarRecord();
+    return record?.metadata ? (record.metadata as Record<string, unknown>) : {};
   });
 }

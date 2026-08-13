@@ -23,13 +23,15 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 
 import { ENVIRONMENT } from '@core/provider/environment.provider';
+import { MetadataRecordsService } from '@osf/shared/services/metadata-records.service';
+import { SocialShareService } from '@osf/shared/services/social-share.service';
 
 import { CEDAR_CONFIG, CEDAR_VIEWER_CONFIG } from '../../constants';
 import { CedarMetadataHelper } from '../../helpers';
 import {
   CedarEditorElement,
-  CedarMetadataDataTemplateJsonApi,
-  CedarMetadataRecordData,
+  CedarMetadataRecordModel,
+  CedarMetadataTemplateModel,
   CedarRecordDataBinding,
 } from '../../models';
 
@@ -47,8 +49,8 @@ export class CedarTemplateFormComponent {
   changeTemplate = output<void>();
   toggleEditMode = output<void>();
 
-  template = input.required<CedarMetadataDataTemplateJsonApi>();
-  existingRecord = input<CedarMetadataRecordData | null>(null);
+  template = input.required<CedarMetadataTemplateModel>();
+  existingRecord = input<CedarMetadataRecordModel | null>(null);
   readonly = input<boolean>(false);
   showEditButton = input<boolean>(false);
 
@@ -62,6 +64,8 @@ export class CedarTemplateFormComponent {
 
   private route = inject(ActivatedRoute);
   readonly environment = inject(ENVIRONMENT);
+  private readonly metadataRecordsService = inject(MetadataRecordsService);
+  private readonly socialShareService = inject(SocialShareService);
 
   readonly recordId = signal<string>('');
   readonly downloadUrl = signal<string>('');
@@ -87,14 +91,14 @@ export class CedarTemplateFormComponent {
   constructor() {
     effect(() => {
       const tpl = this.template();
-      if (tpl?.attributes?.template) {
+      if (tpl?.template) {
         this.initializeCedar();
       }
     });
 
     effect(() => {
       const record = this.existingRecord();
-      this.schemaName.set(record?.embeds?.template.data.attributes.schema_name || '');
+      this.schemaName.set(record?.schemaName || '');
       if (record) {
         this.initializeCedar();
       }
@@ -102,7 +106,7 @@ export class CedarTemplateFormComponent {
   }
 
   private initializeCedar(): void {
-    const metadata = this.existingRecord()?.attributes?.metadata;
+    const metadata = this.existingRecord()?.metadata;
     const editor = this.cedarEditor()?.nativeElement;
     const viewer = this.cedarViewer()?.nativeElement;
 
@@ -122,9 +126,9 @@ export class CedarTemplateFormComponent {
   }
 
   private initializeFormData(): void {
-    const template = this.template()?.attributes?.template;
+    const template = this.template()?.template;
     if (!template) return;
-    const metadata = this.existingRecord()?.attributes?.metadata;
+    const metadata = this.existingRecord()?.metadata;
     if (this.existingRecord()) {
       const structuredMetadata = CedarMetadataHelper.buildStructuredMetadata(metadata);
       this.formData.set(structuredMetadata);
@@ -134,8 +138,10 @@ export class CedarTemplateFormComponent {
   }
 
   downloadMetadadaRecord() {
-    if (this.fileGuid()) {
-      window.open(`${this.environment.webUrl}/metadata/${this.fileGuid()}`)?.focus();
+    const fileGuid = this.fileGuid();
+
+    if (fileGuid) {
+      this.metadataRecordsService.downloadMetadata(fileGuid);
     } else {
       window.open(this.downloadUrl(), '_blank');
     }
@@ -184,18 +190,18 @@ export class CedarTemplateFormComponent {
 
   handleEmailShare(): void {
     const url = window.location.href;
-    window.location.href = `mailto:?subject=${this.schemaName()}&body=${url}`;
+    window.location.href = this.socialShareService.getEmailLink(this.schemaName(), url);
   }
 
   handleXShare(): void {
     const url = window.location.href;
-    const link = `https://x.com/intent/tweet?url=${url}&text=${this.schemaName()}&via=OSFramework`;
+    const link = this.socialShareService.getXLink(this.schemaName(), url);
     window.open(link, '_blank', 'noopener,noreferrer');
   }
 
   handleFacebookShare(): void {
     const url = window.location.href;
-    const link = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+    const link = this.socialShareService.getFacebookLink(url);
     window.open(link, '_blank', 'noopener,noreferrer');
   }
 }

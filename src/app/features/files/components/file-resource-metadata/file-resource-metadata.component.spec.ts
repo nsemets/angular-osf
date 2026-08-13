@@ -1,13 +1,13 @@
-import { MockComponent, MockProvider } from 'ng-mocks';
+import { MockComponent } from 'ng-mocks';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
 
 import { ContributorsListComponent } from '@osf/shared/components/contributors-list/contributors-list.component';
+import { ResourceMetadata } from '@osf/shared/models/resource-metadata.model';
 
+import { MOCK_CONTRIBUTOR, MOCK_CONTRIBUTOR_WITHOUT_HISTORY } from '@testing/mocks/contributors.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
-import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
-import { provideMockStore } from '@testing/providers/store-provider.mock';
+import { BaseSetupOverrides, mergeSignalOverrides, provideMockStore } from '@testing/providers/store-provider.mock';
 
 import { FilesSelectors } from '../../store';
 
@@ -16,100 +16,104 @@ import { FileResourceMetadataComponent } from './file-resource-metadata.componen
 describe('FileResourceMetadataComponent', () => {
   let component: FileResourceMetadataComponent;
   let fixture: ComponentFixture<FileResourceMetadataComponent>;
-  let mockRouter: ReturnType<RouterMockBuilder['build']>;
 
-  const mockResourceMetadata = {
-    id: 'resource-123',
+  const mockResourceMetadata: ResourceMetadata = {
     title: 'Test Resource',
     description: 'Test Description',
-    dateCreated: '2023-01-01',
-    dateModified: '2023-01-02',
+    dateCreated: new Date('2023-01-01'),
+    dateModified: new Date('2023-01-02'),
+    language: 'en',
+    resourceTypeGeneral: 'Dataset',
+    identifiers: [],
+    funders: [],
   };
 
-  const mockContributors = [
-    { id: 'contrib-1', name: 'John Doe', role: 'Author' },
-    { id: 'contrib-2', name: 'Jane Smith', role: 'Contributor' },
+  const mockContributors = [MOCK_CONTRIBUTOR, MOCK_CONTRIBUTOR_WITHOUT_HISTORY];
+
+  const defaultSignals = [
+    { selector: FilesSelectors.getResourceMetadata, value: mockResourceMetadata },
+    { selector: FilesSelectors.getContributors, value: mockContributors },
+    { selector: FilesSelectors.isResourceMetadataLoading, value: false },
+    { selector: FilesSelectors.isResourceContributorsLoading, value: false },
+    { selector: FilesSelectors.isFilesAnonymous, value: false },
   ];
 
-  beforeEach(() => {
-    mockRouter = RouterMockBuilder.create().withUrl('/test').build();
-
+  function setup(overrides: BaseSetupOverrides = {}): void {
     TestBed.configureTestingModule({
       imports: [FileResourceMetadataComponent, MockComponent(ContributorsListComponent)],
       providers: [
         provideOSFCore(),
-        MockProvider(Router, mockRouter),
-        provideMockStore({
-          signals: [
-            { selector: FilesSelectors.getResourceMetadata, value: mockResourceMetadata },
-            { selector: FilesSelectors.getContributors, value: mockContributors },
-            { selector: FilesSelectors.isResourceMetadataLoading, value: false },
-            { selector: FilesSelectors.isResourceContributorsLoading, value: false },
-          ],
-        }),
+        provideMockStore({ signals: mergeSignalOverrides(defaultSignals, overrides.selectorOverrides) }),
       ],
     });
 
     fixture = TestBed.createComponent(FileResourceMetadataComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+  }
 
   it('should create', () => {
+    setup();
+
     expect(component).toBeTruthy();
   });
 
-  it('should initialize with correct properties', () => {
-    expect(component.resourceType).toBeDefined();
-    expect(component.resourceMetadata).toBeDefined();
-    expect(component.contributors).toBeDefined();
-    expect(component.isResourceMetadataLoading).toBeDefined();
-    expect(component.isResourceContributorsLoading).toBeDefined();
-    expect(component.hasViewOnly).toBeDefined();
-  });
-
   it('should have default resource type', () => {
+    setup();
+
     expect(component.resourceType()).toBe('nodes');
   });
 
   it('should get resource metadata from store', () => {
+    setup();
+
     expect(component.resourceMetadata()).toEqual(mockResourceMetadata);
   });
 
   it('should get contributors from store', () => {
+    setup();
+
     expect(component.contributors()).toEqual(mockContributors);
   });
 
-  it('should get resource metadata loading state from store', () => {
-    expect(component.isResourceMetadataLoading()).toBe(false);
+  it('should expose loading states from store selectors', () => {
+    setup({
+      selectorOverrides: [
+        { selector: FilesSelectors.isResourceMetadataLoading, value: true },
+        { selector: FilesSelectors.isResourceContributorsLoading, value: true },
+      ],
+    });
+
+    expect(component.isResourceMetadataLoading()).toBe(true);
+    expect(component.isResourceContributorsLoading()).toBe(true);
   });
 
-  it('should get contributors loading state from store', () => {
-    expect(component.isResourceContributorsLoading()).toBe(false);
-  });
+  it('should expose isAnonymous from store', () => {
+    setup({
+      selectorOverrides: [{ selector: FilesSelectors.isFilesAnonymous, value: true }],
+    });
 
-  it('should have hasViewOnly computed property', () => {
-    expect(component.hasViewOnly).toBeDefined();
-    expect(typeof component.hasViewOnly()).toBe('boolean');
+    expect(component.isAnonymous()).toBe(true);
   });
 
   it('should handle input changes', () => {
+    setup();
+
     fixture.componentRef.setInput('resourceType', 'preprints');
     fixture.detectChanges();
 
     expect(component.resourceType()).toBe('preprints');
   });
 
-  it('should handle null resource metadata', () => {
-    expect(component.resourceMetadata).toBeDefined();
-  });
+  it('should support missing metadata and empty contributors', () => {
+    setup({
+      selectorOverrides: [
+        { selector: FilesSelectors.getResourceMetadata, value: null },
+        { selector: FilesSelectors.getContributors, value: [] },
+      ],
+    });
 
-  it('should handle empty contributors array', () => {
-    expect(component.contributors).toBeDefined();
-  });
-
-  it('should handle loading states', () => {
-    expect(component.isResourceMetadataLoading).toBeDefined();
-    expect(component.isResourceContributorsLoading).toBeDefined();
+    expect(component.resourceMetadata()).toBeNull();
+    expect(component.contributors()).toEqual([]);
   });
 });

@@ -35,7 +35,14 @@ export class MyResourcesState {
     });
 
     return this.myResourcesService
-      .getMyProjects(action.filters, action.pageNumber, action.pageSize, action.searchMode, action.rootProjectId)
+      .getMyProjects(
+        action.filters,
+        action.pageNumber,
+        action.pageSize,
+        action.searchMode,
+        action.rootProjectId,
+        action.visibilityFilter
+      )
       .pipe(
         tap((res) => {
           ctx.patchState({
@@ -43,7 +50,7 @@ export class MyResourcesState {
               data: res.data,
               isLoading: false,
               error: null,
-              totalCount: res.meta.total,
+              totalCount: res.totalCount,
             },
           });
         }),
@@ -76,7 +83,7 @@ export class MyResourcesState {
               data: res.data,
               isLoading: false,
               error: null,
-              totalCount: res.meta.total,
+              totalCount: res.totalCount,
             },
           });
         }),
@@ -101,7 +108,7 @@ export class MyResourcesState {
             data: res.data,
             isLoading: false,
             error: null,
-            totalCount: res.meta.total,
+            totalCount: res.totalCount,
           },
         });
       }),

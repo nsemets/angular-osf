@@ -1,6 +1,6 @@
 import { PreprintSubmissionModel } from '@osf/features/moderation/models';
 import { CollectionSubmissionReviewState } from '@osf/shared/enums/collection-submission-review-state.enum';
-import { CollectionSubmissionWithGuid } from '@osf/shared/models/collections/collections.model';
+import { CollectionSubmissionWithGuid } from '@osf/shared/models/collections/collection-submissions.model';
 
 import { MOCK_CONTRIBUTOR } from './contributors.mock';
 
@@ -39,16 +39,6 @@ export const MOCK_COLLECTION_SUBMISSION_WITH_GUID: CollectionSubmissionWithGuid 
   dateModified: '2024-01-02T00:00:00Z',
   public: false,
   reviewsState: CollectionSubmissionReviewState.Pending,
-  collectedType: 'preprint',
-  status: 'pending',
-  volume: '1',
-  issue: '1',
-  programArea: 'Science',
-  schoolType: 'University',
-  studyDesign: 'Experimental',
-  dataType: 'Quantitative',
-  disease: 'None',
-  gradeLevels: 'Graduate',
   creator: {
     id: 'user-123',
     fullName: 'John Doe',

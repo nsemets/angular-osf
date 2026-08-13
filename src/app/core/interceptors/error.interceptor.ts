@@ -1,3 +1,5 @@
+import { Store } from '@ngxs/store';
+
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -11,6 +13,7 @@ import { MaintenanceResponse } from '@core/models/maintenance-response.model';
 import { SENTRY_TOKEN } from '@core/provider/sentry.provider';
 import { AuthService } from '@core/services/auth.service';
 import { MaintenanceModeService } from '@core/services/maintenance-mode.service';
+import { UserSelectors } from '@core/store/user';
 import { LoaderService } from '@osf/shared/services/loader.service';
 import { ToastService } from '@osf/shared/services/toast.service';
 import { ViewOnlyLinkHelperService } from '@osf/shared/services/view-only-link-helper.service';
@@ -26,6 +29,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const sentry = inject(SENTRY_TOKEN);
   const platformId = inject(PLATFORM_ID);
   const viewOnlyHelper = inject(ViewOnlyLinkHelperService);
+  const store = inject(Store);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
@@ -69,7 +73,11 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       if (error.status === 401) {
         if (!viewOnlyHelper.hasViewOnlyParam(router)) {
           if (isPlatformBrowser(platformId)) {
-            authService.logout();
+            if (store.selectSnapshot(UserSelectors.isAuthenticated)) {
+              authService.logout(window.location.href);
+            } else {
+              authService.navigateToSignIn();
+            }
           }
         }
         return throwError(() => error);

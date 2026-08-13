@@ -5,11 +5,18 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
 
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
+import {
+  GetCedarMetadataRecords,
+  GetCedarMetadataTemplates,
+  GetCustomItemMetadata,
+  MetadataSelectors,
+} from '@osf/features/metadata/store';
 import { AffiliatedInstitutionsViewComponent } from '@osf/shared/components/affiliated-institutions-view/affiliated-institutions-view.component';
 import { ContributorsListComponent } from '@osf/shared/components/contributors-list/contributors-list.component';
+import { FundersListComponent } from '@osf/shared/components/funders-list/funders-list.component';
 import { ResourceCitationsComponent } from '@osf/shared/components/resource-citations/resource-citations.component';
 import { ResourceDoiComponent } from '@osf/shared/components/resource-doi/resource-doi.component';
 import { ResourceLicenseComponent } from '@osf/shared/components/resource-license/resource-license.component';
@@ -17,6 +24,9 @@ import { SubjectsListComponent } from '@osf/shared/components/subjects-list/subj
 import { TagsListComponent } from '@osf/shared/components/tags-list/tags-list.component';
 import { TruncatedTextComponent } from '@osf/shared/components/truncated-text/truncated-text.component';
 import { CurrentResourceType, ResourceType } from '@osf/shared/enums/resource-type.enum';
+import { LanguageLabelPipe } from '@osf/shared/pipes/language-label.pipe';
+import { ResourceTypeGeneralLabelPipe } from '@osf/shared/pipes/resource-type-general-label.pipe';
+import { MetadataRecordsService } from '@osf/shared/services/metadata-records.service';
 import { CollectionsSelectors, GetProjectSubmissions } from '@osf/shared/stores/collections';
 import {
   ContributorsSelectors,
@@ -48,11 +58,14 @@ import { OverviewSupplementsComponent } from '../overview-supplements/overview-s
     OverviewCollectionsComponent,
     AffiliatedInstitutionsViewComponent,
     ContributorsListComponent,
+    FundersListComponent,
     ResourceDoiComponent,
     ResourceLicenseComponent,
     SubjectsListComponent,
     TagsListComponent,
     OverviewSupplementsComponent,
+    LanguageLabelPipe,
+    ResourceTypeGeneralLabelPipe,
   ],
   templateUrl: './project-overview-metadata.component.html',
   styleUrl: './project-overview-metadata.component.scss',
@@ -60,10 +73,13 @@ import { OverviewSupplementsComponent } from '../overview-supplements/overview-s
 })
 export class ProjectOverviewMetadataComponent {
   private readonly router = inject(Router);
+  private readonly metadataRecordsService = inject(MetadataRecordsService);
 
   readonly currentProject = select(ProjectOverviewSelectors.getProject);
   readonly isAnonymous = select(ProjectOverviewSelectors.isProjectAnonymous);
   readonly canEdit = select(ProjectOverviewSelectors.hasWriteAccess);
+  readonly customItemMetadata = select(MetadataSelectors.getCustomItemMetadata);
+  readonly isCustomItemMetadataLoading = select(MetadataSelectors.isCustomItemMetadataLoading);
   readonly institutions = select(ProjectOverviewSelectors.getInstitutions);
   readonly isInstitutionsLoading = select(ProjectOverviewSelectors.isInstitutionsLoading);
   readonly identifiers = select(ProjectOverviewSelectors.getIdentifiers);
@@ -79,6 +95,9 @@ export class ProjectOverviewMetadataComponent {
   readonly hasMoreBibliographicContributors = select(ContributorsSelectors.hasMoreBibliographicContributors);
   readonly projectSubmissions = select(CollectionsSelectors.getCurrentProjectSubmissions);
   readonly isProjectSubmissionsLoading = select(CollectionsSelectors.getCurrentProjectSubmissionsLoading);
+  readonly cedarRecords = select(MetadataSelectors.getCedarRecords);
+  private readonly cedarTemplatesResponse = select(MetadataSelectors.getCedarTemplates);
+  readonly cedarTemplates = computed(() => this.cedarTemplatesResponse()?.data ?? null);
 
   readonly resourceType = CurrentResourceType.Projects;
   readonly dateFormat = 'MMM d, y, h:mm a';
@@ -91,8 +110,11 @@ export class ProjectOverviewMetadataComponent {
     setCustomCitation: SetProjectCustomCitation,
     getSubjects: FetchSelectedSubjects,
     getProjectSubmissions: GetProjectSubmissions,
+    getCustomItemMetadata: GetCustomItemMetadata,
     getBibliographicContributors: GetBibliographicContributors,
     loadMoreBibliographicContributors: LoadMoreBibliographicContributors,
+    getCedarRecords: GetCedarMetadataRecords,
+    getCedarTemplates: GetCedarMetadataTemplates,
   });
 
   constructor() {
@@ -107,8 +129,19 @@ export class ProjectOverviewMetadataComponent {
         this.actions.getSubjects(project.id, ResourceType.Project);
         this.actions.getProjectSubmissions(project.id);
         this.actions.getLicense(project.licenseId);
+        this.actions.getCedarRecords(project.id, ResourceType.Project);
+        this.actions.getCedarTemplates();
+        this.actions.getCustomItemMetadata(project.id);
       }
     });
+  }
+
+  downloadMetadata(): void {
+    const projectId = this.currentProject()?.id;
+
+    if (projectId) {
+      this.metadataRecordsService.downloadMetadata(projectId);
+    }
   }
 
   onCustomCitationUpdated(citation: string): void {

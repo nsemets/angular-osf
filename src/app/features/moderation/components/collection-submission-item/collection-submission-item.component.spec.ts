@@ -4,7 +4,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
-import { CollectionSubmissionWithGuid } from '@osf/shared/models/collections/collections.model';
 import { CollectionsSelectors } from '@osf/shared/stores/collections';
 import { DateAgoPipe } from '@shared/pipes/date-ago.pipe';
 
@@ -24,7 +23,7 @@ describe('CollectionSubmissionItemComponent', () => {
   let mockRouter: ReturnType<RouterMockBuilder['build']>;
   let mockActivatedRoute: ReturnType<ActivatedRouteMockBuilder['build']>;
 
-  const mockSubmission: CollectionSubmissionWithGuid = MOCK_COLLECTION_SUBMISSION_WITH_GUID;
+  const mockSubmission = MOCK_COLLECTION_SUBMISSION_WITH_GUID;
 
   const mockCollectionProvider = {
     id: 'provider-123',
@@ -88,39 +87,6 @@ describe('CollectionSubmissionItemComponent', () => {
 
     const currentAction = component.currentReviewAction();
     expect(currentAction).toBeNull();
-  });
-
-  it('should compute current submission attributes correctly', () => {
-    fixture.componentRef.setInput('submission', mockSubmission);
-    fixture.detectChanges();
-
-    const attributes = component.currentSubmissionAttributes();
-    expect(attributes).toBeDefined();
-    expect(Array.isArray(attributes)).toBe(true);
-  });
-
-  it('should return attributes even when submission has no actions', () => {
-    const submissionWithoutActions = { ...mockSubmission, actions: [] };
-    fixture.componentRef.setInput('submission', submissionWithoutActions);
-    fixture.detectChanges();
-
-    const attributes = component.currentSubmissionAttributes();
-    expect(attributes).toBeDefined();
-    expect(attributes).not.toBeNull();
-    expect(Array.isArray(attributes)).toBe(true);
-    expect(attributes!.length).toBeGreaterThan(0);
-  });
-
-  it('should return attributes with filtered null values', () => {
-    const submissionWithNullFields = { ...mockSubmission, programArea: null, collectedType: null, dataType: null };
-    fixture.componentRef.setInput('submission', submissionWithNullFields);
-    fixture.detectChanges();
-
-    const attributes = component.currentSubmissionAttributes();
-    expect(attributes).toBeDefined();
-    expect(attributes).not.toBeNull();
-    expect(Array.isArray(attributes)).toBe(true);
-    expect(attributes!.length).toBeGreaterThan(0);
   });
 
   it('should have SubmissionReviewStatus enum available', () => {
