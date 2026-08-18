@@ -141,18 +141,6 @@
       [cedarTemplates]="cedarTemplates()"
     ></osf-overview-collections>
 
-    <div class="flex flex-column gap-2">
-      <h3>{{ 'common.labels.subjects' | translate }}</h3>
-
-      <osf-subjects-list [subjects]="subjects()" [isLoading]="areSelectedSubjectsLoading()"></osf-subjects-list>
-    </div>
-
-    <div class="flex flex-column gap-2">
-      <h3>{{ 'shared.tags.title' | translate }}</h3>
-
-      <osf-tags-list [tags]="resource.tags" (tagClick)="tagClicked($event)"></osf-tags-list>
-    </div>
-
     @if (!isAnonymous()) {
       <osf-resource-citations
         [resourceId]="resource.id"
