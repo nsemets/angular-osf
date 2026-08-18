@@ -7,6 +7,7 @@ import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 
 import { SignUpModel } from '@core/models/sign-up.model';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
+import { WINDOW } from '@core/provider/window.provider';
 import { ClearCurrentUser } from '@osf/core/store/user';
 import { urlParam } from '@osf/shared/helpers/url-param.helper';
 import { JsonApiService } from '@osf/shared/services/json-api.service';
@@ -20,6 +21,7 @@ export class AuthService {
   private readonly cookieService = inject(CookieService);
   private readonly loaderService = inject(LoaderService);
   private readonly environment = inject(ENVIRONMENT);
+  private readonly window = inject(WINDOW);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly actions = createDispatchMap({ clearCurrentUser: ClearCurrentUser });
 
@@ -43,12 +45,12 @@ export class AuthService {
     this.loaderService.show();
 
     const serviceUrl = new URL(`${this.webUrl}/login`);
-    serviceUrl.searchParams.set('next', window.location.href);
+    serviceUrl.searchParams.set('next', this.getPostLoginRedirectUrl());
 
     const loginUrl = new URL(`${this.casUrl}/login`);
     loginUrl.searchParams.set('service', serviceUrl.toString());
 
-    window.location.href = loginUrl.toString();
+    this.window.location.href = loginUrl.toString();
   }
 
   navigateToOrcidSignIn(): void {
@@ -59,10 +61,10 @@ export class AuthService {
     const loginUrl = `${this.casUrl}/login?${urlParam({
       redirectOrcid: 'true',
       service: `${this.webUrl}/login`,
-      next: window.location.href,
+      next: this.getPostLoginRedirectUrl(),
     })}`;
 
-    window.location.href = loginUrl;
+    this.window.location.href = loginUrl;
   }
 
   navigateToInstitutionSignIn(): void {
@@ -73,10 +75,10 @@ export class AuthService {
     const loginUrl = `${this.casUrl}/login?${urlParam({
       campaign: 'institution',
       service: `${this.webUrl}/login`,
-      next: window.location.href,
+      next: this.getPostLoginRedirectUrl(),
     })}`;
 
-    window.location.href = loginUrl;
+    this.window.location.href = loginUrl;
   }
 
   logout(nextUrl?: string): void {
@@ -85,7 +87,7 @@ export class AuthService {
 
     if (isPlatformBrowser(this.platformId)) {
       this.cookieService.deleteAll();
-      window.location.href = `${this.webUrl}/logout/?next=${encodeURIComponent(nextUrl || `${window.location.origin}/`)}`;
+      this.window.location.href = `${this.webUrl}/logout/?next=${encodeURIComponent(nextUrl || `${this.window.location.origin}/`)}`;
     }
   }
 
@@ -116,5 +118,16 @@ export class AuthService {
     };
 
     return this.jsonApiService.post(baseUrl, body);
+  }
+
+  private getPostLoginRedirectUrl(): string {
+    const pathname = this.window.location.pathname;
+    const excludedPaths = ['/resetpassword', '/forgotpassword', '/register'];
+
+    if (excludedPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`))) {
+      return `${this.webUrl}/`;
+    }
+
+    return this.window.location.href;
   }
 }

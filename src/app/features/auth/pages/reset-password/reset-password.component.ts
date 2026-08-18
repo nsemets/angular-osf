@@ -4,6 +4,8 @@ import { Button } from 'primeng/button';
 import { Message } from 'primeng/message';
 import { Password } from 'primeng/password';
 
+import { finalize } from 'rxjs';
+
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -12,6 +14,7 @@ import { AuthService } from '@core/services/auth.service';
 import { PasswordInputHintComponent } from '@osf/shared/components/password-input-hint/password-input-hint.component';
 import { CustomValidators } from '@osf/shared/helpers/custom-form-validators.helper';
 import { PASSWORD_REGEX } from '@osf/shared/helpers/password.helper';
+import { LoaderService } from '@osf/shared/services/loader.service';
 
 import { ResetPasswordFormGroupType } from '../../models';
 
@@ -25,6 +28,7 @@ export class ResetPasswordComponent {
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
   private readonly authService = inject(AuthService);
+  private readonly loaderService = inject(LoaderService);
 
   isFormSubmitted = signal(false);
   passwordRegex = PASSWORD_REGEX;
@@ -59,9 +63,11 @@ export class ResetPasswordComponent {
     const token = this.route.snapshot.params['token'];
     const newPassword = this.resetPasswordForm.getRawValue().newPassword;
 
-    this.authService.resetPassword(userId, token, newPassword).subscribe(() => {
-      this.isFormSubmitted.set(true);
-    });
+    this.loaderService.show();
+    this.authService
+      .resetPassword(userId, token, newPassword)
+      .pipe(finalize(() => this.loaderService.hide()))
+      .subscribe(() => this.isFormSubmitted.set(true));
   }
 
   backToSignIn() {
