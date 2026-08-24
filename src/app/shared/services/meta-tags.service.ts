@@ -158,6 +158,7 @@ export class MetaTagsService {
       citation_description: metaTagsData.description,
       citation_public_url: metaTagsData.url,
       citation_publication_date: metaTagsData.publishedDate,
+      'osf:type': metaTagsData.osfType,
 
       // Dublin Core
       'dct.title': metaTagsData.title,

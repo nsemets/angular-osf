@@ -19,6 +19,14 @@ const angularApp = new AngularNodeAppEngine({
 
 const isBot = (ua: string) => /bot|googlebot|crawler|spider|robot|crawling/i.test(ua);
 
+const getContentTypeFromHtml = (html: string): string | null => {
+  const byNameFirst = html.match(/<meta[^>]*name=["']osf:type["'][^>]*content=["']([^"']+)["'][^>]*>/i);
+  if (byNameFirst?.[1]) return byNameFirst[1];
+
+  const byContentFirst = html.match(/<meta[^>]*content=["']([^"']+)["'][^>]*name=["']osf:type["'][^>]*>/i);
+  return byContentFirst?.[1] ?? null;
+};
+
 app.use(
   express.static(browserDistFolder, {
     maxAge: '1y',
@@ -56,6 +64,7 @@ app.use((req, res, next) => {
       setImmediate(async () => {
         try {
           let isComplete = true;
+          let contentType: string | null = null;
 
           const shouldSample = isSearchBot || Math.random() < 0.05;
 
@@ -66,10 +75,12 @@ app.use((req, res, next) => {
             const hasAppRootClosed = html.includes('</osf-root>');
             const isEmptyApp = html.includes('<osf-root></osf-root>');
             isComplete = hasTitle && hasAppRootClosed && !isEmptyApp;
+            contentType = getContentTypeFromHtml(html);
           }
 
           const body = {
             url: req.originalUrl,
+            contentType,
             status: response.status,
             ttfb: Math.round(ttfb),
             isBot: isSearchBot,
