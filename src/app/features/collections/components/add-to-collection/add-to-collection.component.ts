@@ -23,7 +23,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { UserSelectors } from '@core/store/user';
-import { CedarMetadataRecordData, CedarRecordDataBinding } from '@osf/features/metadata/models';
+import { CedarMetadataRecordModel, CedarRecordDataBinding } from '@osf/features/metadata/models';
 import {
   CreateCedarMetadataRecord,
   GetCedarMetadataRecords,
@@ -117,11 +117,11 @@ export class AddToCollectionComponent implements CanDeactivateComponent {
   isCollectionMetadataDisabled = computed(
     () => !this.selectedProject() || !this.projectMetadataSaved() || !this.projectContributorsSaved()
   );
-  existingCedarRecord = computed<CedarMetadataRecordData | null>(() => {
+  existingCedarRecord = computed<CedarMetadataRecordModel | null>(() => {
     const records = this.cedarRecords();
     const templateId = this.requiredMetadataTemplate()?.id;
     if (!records?.length || !templateId) return null;
-    return records.find((r) => r.relationships?.template?.data?.id === templateId) ?? null;
+    return records.find((r) => r.templateId === templateId) ?? null;
   });
 
   readonly actions = createDispatchMap({
