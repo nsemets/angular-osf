@@ -25,15 +25,15 @@ In production, the SSR Node process receives **bot traffic only**. Metrics are e
 
 ## What we track
 
-| Goal                | Field          | Notes                                                                                                                        |
-| ------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| Render success rate | `status`       | Derive success as HTTP 2xx. Failures use `0` (no Angular response) or `500` (render exception).                              |
-| Render speed        | `ttfb`         | Milliseconds from request start until Angular returns a response. Server-side render time, not browser network TTFB.         |
-| Page completeness   | `is_complete`  | Checked from rendered HTML. See [is_complete rules](#is_complete-rules).                                                     |
-| Content type        | `content_type` | API resource type from `osf:type` meta (`nodes`, `registrations`, `preprints`, `files`). Null when not set or not inspected. |
-| Bot vs other        | `is_bot`       | From User-Agent regex in middleware.                                                                                         |
-| Crawler identity    | `user_agent`   | Truncated to 512 characters.                                                                                                 |
-| Page                | `url`          | Full public URL (`webUrl` + path). **Query string is stripped** (no `view_only` or other params).                            |
+| Goal                | Field          | Notes                                                                                                                                 |
+| ------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Render success rate | `status`       | Derive success as HTTP 2xx. Failures use `0` (no Angular response) or `500` (render exception).                                       |
+| Render speed        | `ttfb`         | Milliseconds from request start until Angular returns a response. Server-side render time, not browser network TTFB.                  |
+| Page completeness   | `is_complete`  | Checked from rendered HTML. See [is_complete rules](#is_complete-rules).                                                              |
+| Content type        | `content_type` | API resource type from `osf:type` meta (`nodes`, `registrations`, `preprints`, `files`, `users`). Null when not set or not inspected. |
+| Bot vs other        | `is_bot`       | From User-Agent regex in middleware.                                                                                                  |
+| Crawler identity    | `user_agent`   | Truncated to 512 characters.                                                                                                          |
+| Page                | `url`          | Full public URL (`webUrl` + path). **Query string is stripped** (no `view_only` or other params).                                     |
 
 We do **not** track Search Console index status. “Pages by content type” in SSR means **successful bot responses grouped by `content_type`**, not confirmed Google indexing.
 
@@ -94,11 +94,11 @@ Read from rendered HTML:
 <meta name="osf:type" content="nodes" />
 ```
 
-Set by `MetaTagsService` when features build meta tags via `MetaTagsBuilderService`.
+Set by `MetaTagsService` (`osfType`). Project, registration, preprint, and file pages go through `MetaTagsBuilderService`. Profile pages set `osfType: users` only.
 
-**Populated for:** projects, registrations, preprints, files.
+**Populated for:** projects, registrations, preprints, files, users (`/user/:id` and `/profile`).
 
-**Often null for:** users, institutions, meetings, collections, search, discover, and any page without `osf:type`. That is expected if those types are out of scope for the metric.
+**Often null for:** institutions, meetings, collections, search, discover, and any page without `osf:type`. That is expected if those types are out of scope for the metric.
 
 ---
 

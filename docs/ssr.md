@@ -125,9 +125,9 @@ Translations on SSR are loaded from `browser/assets/i18n/en.json` (cached at mod
 
 ### Meta tags
 
-`MetaTagsService` writes dynamic tags with class `osf-dynamic-meta`. Resource pages also emit `osf:type` (API type: `nodes`, `registrations`, `preprints`, `files`). Metrics read `osf:type` from the rendered HTML for `content_type`.
+`MetaTagsService` writes dynamic tags with class `osf-dynamic-meta`. Pages also emit `osf:type` (API type: `nodes`, `registrations`, `preprints`, `files`, `users`). Metrics read `osf:type` from the rendered HTML for `content_type`.
 
-Built in `MetaTagsBuilderService` for project, registration, preprint, and file pages.
+Built in `MetaTagsBuilderService` for project, registration, preprint, and file pages. Profile pages call `updateMetaTags` with only `osfType: users` and `mergeDefaults: false`, so they emit a single `osf:type` tag.
 
 ---
 
