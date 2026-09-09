@@ -92,9 +92,9 @@ export class SocialShareService {
   }
 
   private generateLinkedInLink(content: SocialShareContentModel): string {
-    const url = encodeURIComponent(content.url);
+    const text = encodeURIComponent(content.url);
 
-    return `${SOCIAL_SHARE_URLS.linkedIn}?url=${url}`;
+    return `${SOCIAL_SHARE_URLS.linkedIn}?shareActive=true&text=${text}`;
   }
 
   private generateMastodonLink(content: SocialShareContentModel): string {
