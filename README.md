@@ -28,6 +28,7 @@ take up to 60 seconds once the docker build finishes.
 - [i18n](docs/i18n.md).
 - [NGXS Conventions](docs/ngxs.md).
 - [Testing Strategy](docs/testing.md).
+- [Sentry error filtering](docs/sentry.md).
 
 ### Optional
 
