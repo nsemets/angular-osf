@@ -31,7 +31,6 @@ Sentry treats each string as a **substring**. `Failed to fetch` also matches `Fa
 | NetworkError when attempting to fetch resource                                                                                                                       | Firefox equivalent of failed fetch                                                    |
 | Failed to fetch dynamically imported module / error loading dynamically imported module / Importing a module script failed / ChunkLoadError / Loading chunk … failed | User has an old tab open after a frontend deploy                                      |
 | AbortError / The operation was aborted / The user aborted a request                                                                                                  | Request cancelled (navigation, timeout, user abort)                                   |
-| Beacon is not defined                                                                                                                                                | Extension or third-party script; not OSF (`navigator.sendBeacon` is a different API)  |
 
 ### 2. Script URL (`denyUrls`)
 
