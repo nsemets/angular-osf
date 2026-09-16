@@ -91,9 +91,8 @@ export class RegistryState {
         if (registryOverview.providerId) {
           ctx.dispatch(new GetRegistryProvider(registryOverview.providerId));
         }
-        if (registryOverview.licenseId) {
-          ctx.dispatch(new GetRegistryLicense(registryOverview.licenseId));
-        }
+
+        ctx.dispatch(new GetRegistryLicense(registryOverview.licenseId));
       }),
       catchError((error) => handleSectionError(ctx, 'registry', error))
     );
@@ -149,6 +148,10 @@ export class RegistryState {
 
   @Action(GetRegistryLicense)
   getRegistryLicense(ctx: StateContext<RegistryStateModel>, action: GetRegistryLicense) {
+    if (!action.licenseId) {
+      return;
+    }
+
     const state = ctx.getState();
     ctx.patchState({
       license: {
