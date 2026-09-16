@@ -17,6 +17,7 @@ export const SENTRY_IGNORE_ERRORS: (string | RegExp)[] = [
   'The user aborted a request',
   'ChunkLoadError',
   /Loading chunk [\w.-]+ failed/,
+  'Beacon is not defined',
 ];
 
 export const SENTRY_DENY_URLS: (string | RegExp)[] = [
