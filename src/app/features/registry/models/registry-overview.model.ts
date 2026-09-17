@@ -4,7 +4,7 @@ import { RegistrationNodeModel } from '@shared/models/registration/registration-
 export interface RegistrationOverviewModel extends RegistrationNodeModel {
   associatedProjectId?: string;
   forksCount: number;
-  licenseId: string;
+  licenseId?: string;
   providerId: string;
   registrationSchemaLink: string;
   rootParentId?: string;
