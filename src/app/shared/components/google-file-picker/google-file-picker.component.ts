@@ -50,6 +50,14 @@ export class GoogleFilePickerComponent implements OnInit {
 
   constructor() {
     effect(() => {
+      if (!this.isPickerConfigured || !this.accountId()) {
+        return;
+      }
+
+      this.loadOauthToken();
+    });
+
+    effect(() => {
       const isReady = !this.isGFPDisabled();
       const hasRootFolder = !!this.rootFolder();
       const isFilePicker = !this.isFolderPicker();
@@ -77,7 +85,6 @@ export class GoogleFilePickerComponent implements OnInit {
         this.googlePicker.loadGapiModules().subscribe({
           next: () => {
             this.initializePicker();
-            this.loadOauthToken();
           },
           error: (err) => this.Sentry.captureException(err, { tags: { feature: 'google-picker auth' } }),
         });
@@ -146,16 +153,18 @@ export class GoogleFilePickerComponent implements OnInit {
   }
 
   private loadOauthToken(): void {
-    if (this.accountId()) {
-      this.store.dispatch(new GetAuthorizedStorageOauthToken(this.accountId(), this.currentAddonType())).subscribe({
-        complete: () => {
-          this.accessToken.set(
-            this.store.selectSnapshot(AddonsSelectors.getAuthorizedStorageAddonOauthToken(this.accountId()))
-          );
-          this.isGFPDisabled.set(!this.accessToken());
-        },
-      });
+    const accountId = this.accountId();
+
+    if (!accountId) {
+      return;
     }
+
+    this.store.dispatch(new GetAuthorizedStorageOauthToken(accountId, this.currentAddonType())).subscribe({
+      complete: () => {
+        this.accessToken.set(this.store.selectSnapshot(AddonsSelectors.getAuthorizedStorageAddonOauthToken(accountId)));
+        this.isGFPDisabled.set(!this.accessToken());
+      },
+    });
   }
 
   private filePickerCallback(data: GoogleFileDataModel) {

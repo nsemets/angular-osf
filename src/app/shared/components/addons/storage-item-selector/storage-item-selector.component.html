@@ -1,7 +1,7 @@
 <section class="flex flex-column gap-4">
   <div>
     <p-breadcrumb
-      class="max-w-full folders-breadcrumbs"
+      class="max-w-full folders-breadcrumbs rich-text"
       [model]="breadcrumbItems()"
       [home]="homeBreadcrumb"
       (onItemClick)="handleCreateOperationInvocation($event.item.state?.['operationName']!, $event.item.id!)"
