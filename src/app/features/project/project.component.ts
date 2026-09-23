@@ -100,11 +100,7 @@ export class ProjectComponent implements OnDestroy {
     });
 
     effect(() => {
-      const licenseId = this.currentProject()?.licenseId;
-
-      if (licenseId) {
-        this.actions.getLicense(licenseId);
-      }
+      this.actions.getLicense(this.currentProject()?.licenseId);
     });
 
     effect(() => {
