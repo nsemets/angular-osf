@@ -1,6 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { inject, PLATFORM_ID, provideAppInitializer } from '@angular/core';
 
+import { SENTRY_DENY_URLS, SENTRY_IGNORE_ERRORS, sentryBeforeSend } from '@core/helpers/sentry-filter.helper';
 import { OSFConfigService } from '@core/services/osf-config.service';
 
 import { ENVIRONMENT } from './environment.provider';
@@ -43,7 +44,9 @@ export function initializeApplication() {
           environment: environment.production ? 'production' : 'development',
           maxBreadcrumbs: 50,
           sampleRate: 1.0,
-          integrations: [],
+          ignoreErrors: SENTRY_IGNORE_ERRORS,
+          denyUrls: SENTRY_DENY_URLS,
+          beforeSend: sentryBeforeSend,
         });
       }
     }
