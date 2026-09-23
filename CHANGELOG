@@ -1,6 +1,20 @@
 # Changelog
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
+
+26.19.0 (2026-09-23)
+====================
+* Remove leave this view from top of registration VOLs
+* OSF links do not include any content previews when shared
+* Registrations resources page UI is limited to only ten items
+* Registration without license returns 'Not Found'
+* Project Overview page displays subjects and tags twice
+* Social settings page displays translation keys instead of localized text
+* Show Homepage Banner to Logged-Out Users
+* Terms of Use Shown on View-Only Links
+* Filter Sentry client-side errors in Angular-OSF
+* Banner Incorrectly Displaying on Registries Discover Page
+
 26.18.1 (2026-09-14)
 ====================
 
