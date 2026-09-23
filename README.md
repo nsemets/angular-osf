@@ -32,6 +32,7 @@ take up to 60 seconds once the docker build finishes.
 - [SSR](docs/ssr.md).
 - [SSR metrics](docs/ssr-metrics.md).
 - [Testing Strategy](docs/testing.md).
+- [Sentry error filtering](docs/sentry.md).
 
 ### Optional
 

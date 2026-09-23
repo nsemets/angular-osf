@@ -4,6 +4,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { Message } from 'primeng/message';
 
 import {
   ChangeDetectionStrategy,
@@ -17,6 +18,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+import { UserSelectors } from '@osf/core/store/user';
 import { ComponentsSelectionListComponent } from '@osf/shared/components/components-selection-list/components-selection-list.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
@@ -30,7 +32,7 @@ import { ProjectOverviewSelectors, UpdateProjectPublicStatus } from '../../store
 
 @Component({
   selector: 'osf-toggle-publicity-dialog',
-  imports: [Button, TranslatePipe, ComponentsSelectionListComponent, LoadingSpinnerComponent],
+  imports: [Button, Message, TranslatePipe, ComponentsSelectionListComponent, LoadingSpinnerComponent],
   templateUrl: './toggle-publicity-dialog.component.html',
   styleUrl: './toggle-publicity-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,6 +46,7 @@ export class TogglePublicityDialogComponent {
   destroyRef = inject(DestroyRef);
   isSubmitting = select(ProjectOverviewSelectors.getUpdatePublicStatusSubmitting);
   components = select(CurrentResourceSelectors.getResourceWithChildren);
+  isProjectReadOnly = select(UserSelectors.isProjectReadOnly);
 
   actions = createDispatchMap({ updateProjectPublicStatus: UpdateProjectPublicStatus });
 

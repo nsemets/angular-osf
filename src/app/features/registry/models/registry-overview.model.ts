@@ -2,9 +2,9 @@ import { RegistryStatus } from '@osf/shared/enums/registry-status.enum';
 import { RegistrationNodeModel } from '@shared/models/registration/registration-node.model';
 
 export interface RegistrationOverviewModel extends RegistrationNodeModel {
-  associatedProjectId: string;
+  associatedProjectId?: string;
   forksCount: number;
-  licenseId: string;
+  licenseId?: string;
   providerId: string;
   registrationSchemaLink: string;
   rootParentId?: string;
