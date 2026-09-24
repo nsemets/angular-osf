@@ -70,7 +70,7 @@
                 [label]="'common.buttons.back' | translate"
                 severity="info"
                 class="w-7rem btn-full-width"
-                (click)="activateCallback(AddonStepperValue.TERMS)"
+                (onClick)="activateCallback(AddonStepperValue.TERMS)"
                 data-test-addon-back-button
               ></p-button>
             </div>
@@ -78,14 +78,14 @@
             <div class="flex mt-3 gap-4 justify-content-end">
               <p-button
                 [label]="'settings.addons.form.buttons.existingAccount' | translate"
-                (click)="activateCallback(AddonStepperValue.CHOOSE_ACCOUNT)"
+                (onClick)="activateCallback(AddonStepperValue.CHOOSE_ACCOUNT)"
                 data-test-addon-existing-account-button
               ></p-button>
 
               <p-button
                 [label]="'settings.addons.form.buttons.newAccount' | translate"
                 severity="secondary"
-                (click)="activateCallback(AddonStepperValue.SETUP_NEW_ACCOUNT)"
+                (onClick)="activateCallback(AddonStepperValue.SETUP_NEW_ACCOUNT)"
                 data-test-addon-new-account-button
               ></p-button>
             </div>
