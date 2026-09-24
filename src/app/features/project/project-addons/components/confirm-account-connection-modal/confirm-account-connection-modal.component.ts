@@ -25,9 +25,7 @@ export class ConfirmAccountConnectionModalComponent {
   dialogMessage = this.dialogConfig.data.message || '';
   readonly isSubmitting = select(AddonsSelectors.getOperationInvocationSubmitting);
 
-  private readonly actions = createDispatchMap({
-    createAddonOperationInvocation: CreateAddonOperationInvocation,
-  });
+  private readonly actions = createDispatchMap({ createAddonOperationInvocation: CreateAddonOperationInvocation });
 
   handleConnectAddonAccount(): void {
     const selectedAccount = this.dialogConfig.data.selectedAccount;
