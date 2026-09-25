@@ -14,7 +14,13 @@ const configPath = resolve(browserDistFolder, 'assets/config/config.json');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine({
-  trustProxyHeaders: ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-prefix'],
+  trustProxyHeaders: [
+    'x-forwarded-for',
+    'x-forwarded-host',
+    'x-forwarded-proto',
+    'x-forwarded-prefix',
+    'x-forwarded-port',
+  ],
 });
 const serverConfig = loadSsrServerConfig(configPath);
 
