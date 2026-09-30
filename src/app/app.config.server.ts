@@ -18,7 +18,6 @@ import { fileURLToPath } from 'node:url';
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const configPath = resolve(serverDistFolder, '../browser/assets/config/config.json');
-const i18nFolder = resolve(serverDistFolder, '../browser/assets/i18n');
 const ssrConfig = {
   ...readJsonFile(configPath, {} as ConfigModel),
   throttleToken: process.env['THROTTLE_TOKEN'] || '',
@@ -28,7 +27,22 @@ const SSR_LANGUAGES = ['en'] as const;
 const supportedLanguages = new Set<string>(SSR_LANGUAGES);
 const translationCache = new Map<string, TranslationObject>();
 
-translationCache.set(SSR_LANGUAGES[0], readJsonFile(resolve(i18nFolder, `${SSR_LANGUAGES[0]}.json`), {}));
+const readTranslation = (lang: string): TranslationObject => {
+  const candidates = [
+    resolve(serverDistFolder, '../browser/assets/i18n', `${lang}.json`),
+    resolve(process.cwd(), 'src/assets/i18n', `${lang}.json`),
+  ];
+
+  for (const filePath of candidates) {
+    const translation = readJsonFile(filePath, {} as TranslationObject);
+
+    if (Object.keys(translation).length > 0) {
+      return translation;
+    }
+  }
+
+  return {};
+};
 
 class SsrFsTranslateLoader implements TranslateLoader {
   getTranslation(lang: string): Observable<TranslationObject> {
@@ -42,8 +56,12 @@ class SsrFsTranslateLoader implements TranslateLoader {
       return of({});
     }
 
-    const translation = readJsonFile(resolve(i18nFolder, `${lang}.json`), {});
-    translationCache.set(lang, translation);
+    const translation = readTranslation(lang);
+
+    if (Object.keys(translation).length > 0) {
+      translationCache.set(lang, translation);
+    }
+
     return of(translation);
   }
 }
