@@ -8,6 +8,7 @@ import { provideServerRendering, withRoutes } from '@angular/ssr';
 import { SSR_CONFIG } from '@core/constants/ssr-config.token';
 import { ConfigModel } from '@core/models/config.model';
 
+import en from '../assets/i18n/en.json';
 import { readJsonFile } from '../server/ssr-server-config';
 
 import { appConfig } from './app.config';
@@ -23,53 +24,16 @@ const ssrConfig = {
   throttleToken: process.env['THROTTLE_TOKEN'] || '',
 } as ConfigModel;
 
-const SSR_LANGUAGES = ['en'] as const;
-const supportedLanguages = new Set<string>(SSR_LANGUAGES);
-const translationCache = new Map<string, TranslationObject>();
-
-const readTranslation = (lang: string): TranslationObject => {
-  const candidates = [
-    resolve(serverDistFolder, '../browser/assets/i18n', `${lang}.json`),
-    resolve(process.cwd(), 'src/assets/i18n', `${lang}.json`),
-  ];
-
-  for (const filePath of candidates) {
-    const translation = readJsonFile(filePath, {} as TranslationObject);
-
-    if (Object.keys(translation).length > 0) {
-      return translation;
-    }
-  }
-
-  return {};
-};
-
-class SsrFsTranslateLoader implements TranslateLoader {
+class SsrTranslateLoader implements TranslateLoader {
   getTranslation(lang: string): Observable<TranslationObject> {
-    const cached = translationCache.get(lang);
-
-    if (cached) {
-      return of(cached);
-    }
-
-    if (!supportedLanguages.has(lang)) {
-      return of({});
-    }
-
-    const translation = readTranslation(lang);
-
-    if (Object.keys(translation).length > 0) {
-      translationCache.set(lang, translation);
-    }
-
-    return of(translation);
+    return of(lang === 'en' ? en : {});
   }
 }
 
 const serverConfig: ApplicationConfig = {
   providers: [
     provideServerRendering(withRoutes(serverRoutes)),
-    provideTranslateLoader(SsrFsTranslateLoader),
+    provideTranslateLoader(SsrTranslateLoader),
     { provide: SSR_CONFIG, useValue: ssrConfig },
   ],
 };
