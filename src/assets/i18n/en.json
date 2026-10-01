@@ -2194,7 +2194,7 @@
           "notBegun": "Plans for research that has not yet begun",
           "underway": "Plans for research that is underway, with explanation of the current state of the study"
         },
-        "acceptableTitle": "Acceptable submissions to the OSF Registry include:",
+        "acceptableTitle": "Acceptable submissions to the registries on OSF include:",
         "alternative": "Seek alternative paper sharing services and repositories for these uses.",
         "checkbox": "I understand and confirm that I am submitting a research plan, and I am not submitting a paper, preprint, or other research output that is not associated with a research plan.",
         "createDraftTooltip": "Read the information above. Click the checkbox if you understand and acknowledge that you are submitting a research plan.",
@@ -2204,7 +2204,7 @@
           "otherOutputs": "Any other research outputs (e.g., data) that are not a part of the research plan",
           "papers": "Papers or preprints, including those reporting research outcomes, commentaries, proofs, or other theoretical pieces"
         },
-        "unacceptableTitle": "Unacceptable submissions to the OSF Registry include:"
+        "unacceptableTitle": "Unacceptable submissions to the registries on OSF include:"
       },
       "registryClosedForSubmissions": "This registry is closed for new submissions. Please start a new registration with a different registry.",
       "selectProject": "Select your project",
