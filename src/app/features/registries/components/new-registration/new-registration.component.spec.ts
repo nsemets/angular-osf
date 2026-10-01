@@ -159,14 +159,16 @@ describe('NewRegistrationComponent', () => {
     expect(component.draftForm.get('project')?.validator).toBeNull();
   });
 
-  it('should dispatch createDraft and navigate when form is valid', () => {
+  it('should dispatch createDraft and navigate when form is valid and policy is acknowledged', () => {
     setup();
     component.draftForm.patchValue({ providerSchema: 'schema-1', project: 'proj-1' });
     component.fromProject.set(true);
+    component.policyAcknowledged.set(true);
     (store.dispatch as Mock).mockClear();
 
     component.createDraft();
 
+    expect(component.isCreateDraftDisabled()).toBe(false);
     expect(store.dispatch).toHaveBeenCalledWith(
       new CreateDraft({ registrationSchemaId: 'schema-1', provider: 'prov-1', projectId: 'proj-1' })
     );
@@ -176,10 +178,25 @@ describe('NewRegistrationComponent', () => {
   it('should not dispatch createDraft when form is invalid', () => {
     setup();
     component.draftForm.patchValue({ providerSchema: '' });
+    component.policyAcknowledged.set(true);
     (store.dispatch as Mock).mockClear();
 
     component.createDraft();
 
+    expect(component.isCreateDraftDisabled()).toBe(true);
+    expect(store.dispatch).not.toHaveBeenCalledWith(expect.any(CreateDraft));
+  });
+
+  it('should not dispatch createDraft when policy is not acknowledged', () => {
+    setup();
+    component.draftForm.patchValue({ providerSchema: 'schema-1', project: 'proj-1' });
+    component.fromProject.set(true);
+    component.policyAcknowledged.set(false);
+    (store.dispatch as Mock).mockClear();
+
+    component.createDraft();
+
+    expect(component.isCreateDraftDisabled()).toBe(true);
     expect(store.dispatch).not.toHaveBeenCalledWith(expect.any(CreateDraft));
   });
 
