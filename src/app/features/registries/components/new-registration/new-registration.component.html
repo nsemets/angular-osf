@@ -2,15 +2,45 @@
   <section class="h-full" data-test-new-registration-form>
     <osf-sub-header [title]="'registries.new.addNewRegistry' | translate" />
 
-    <section class="flex flex-column lg:flex-row flex-1 p-5 gap-4 bg-white w-full">
-      <p>
-        {{ 'registries.new.registrySubmissionInfo' | translate }}
-        <a class="font-bold" href="https://help.osf.io/"> {{ 'common.links.clickHere' | translate }}</a>
-        {{ 'registries.new.hostedRegistriesLink' | translate }}
-      </p>
-    </section>
+    <section class="flex flex-column flex-1 gap-4 w-full bg-white p-3 md:p-4 lg:p-5">
+      <p-card class="w-full" data-test-registration-policy>
+        <div class="flex flex-column gap-3">
+          <h2>{{ 'registries.new.policy.intro' | translate }}</h2>
+          <p>{{ 'registries.new.policy.preregistration' | translate }}</p>
 
-    <section class="flex flex-column flex-1 p-5 gap-4 w-full bg-white">
+          <div>
+            <p class="mb-2">{{ 'registries.new.policy.acceptableTitle' | translate }}</p>
+            <ul class="flex flex-column gap-1 pl-5">
+              <li class="list-disc">{{ 'registries.new.policy.acceptable.notBegun' | translate }}</li>
+              <li class="list-disc">{{ 'registries.new.policy.acceptable.underway' | translate }}</li>
+              <li class="list-disc">{{ 'registries.new.policy.acceptable.concluded' | translate }}</li>
+            </ul>
+          </div>
+
+          <div>
+            <p class="mb-2">{{ 'registries.new.policy.unacceptableTitle' | translate }}</p>
+            <ul class="flex flex-column gap-1 pl-5">
+              <li class="list-disc">{{ 'registries.new.policy.unacceptable.papers' | translate }}</li>
+              <li class="list-disc">{{ 'registries.new.policy.unacceptable.otherOutputs' | translate }}</li>
+            </ul>
+          </div>
+
+          <p>{{ 'registries.new.policy.alternative' | translate }}</p>
+        </div>
+
+        <div class="flex align-items-center gap-2 mt-4">
+          <p-checkbox
+            data-test-policy-acknowledgment
+            [(ngModel)]="policyAcknowledged"
+            binary="true"
+            inputId="policy-acknowledgment"
+          />
+          <label for="policy-acknowledgment" class="font-bold m-0 cursor-pointer">
+            {{ 'registries.new.policy.checkbox' | translate }}
+          </label>
+        </div>
+      </p-card>
+
       @if (!isProjectReadOnly()) {
         <p-card class="w-full">
           <h2 class="mb-4">{{ 'registries.new.steps.title' | translate }} 1</h2>
@@ -80,9 +110,12 @@
         <div class="flex justify-content-end">
           <p-button
             data-test-start-registration-button
-            [label]="'registries.new.createDraft' | translate"
-            [disabled]="draftForm.invalid"
             type="submit"
+            [pTooltip]="'registries.new.policy.createDraftTooltip' | translate"
+            [tooltipDisabled]="policyAcknowledged()"
+            tooltipPosition="top"
+            [label]="'registries.new.createDraft' | translate"
+            [disabled]="isCreateDraftDisabled()"
             [loading]="isDraftSubmitting()"
           />
         </div>
