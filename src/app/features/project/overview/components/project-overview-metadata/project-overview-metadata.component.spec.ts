@@ -5,7 +5,7 @@ import { MockComponents, MockProvider } from 'ng-mocks';
 import { Mock } from 'vitest';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { UserSelectors } from '@osf/core/store/user';
 import {
@@ -34,6 +34,7 @@ import { FetchSelectedSubjects, SubjectsSelectors } from '@osf/shared/stores/sub
 
 import { MOCK_PROJECT_OVERVIEW } from '@testing/mocks/project-overview.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
+import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
 import { mergeSignalOverrides, provideMockStore } from '@testing/providers/store-provider.mock';
 
@@ -116,6 +117,7 @@ describe('ProjectOverviewMetadataComponent', () => {
         provideOSFCore(),
         MockProvider(MetadataRecordsService, metadataRecordsService),
         MockProvider(Router, mockRouter),
+        MockProvider(ActivatedRoute, ActivatedRouteMockBuilder.create().build()),
         provideMockStore({
           signals: signals,
         }),
