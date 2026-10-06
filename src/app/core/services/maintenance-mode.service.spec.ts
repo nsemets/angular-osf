@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { BYPASS_ERROR_INTERCEPTOR } from '@core/interceptors/error-interceptor.tokens';
 import { MaintenanceResponse } from '@core/models/maintenance-response.model';
+import { ENVIRONMENT } from '@core/provider/environment.provider';
 
 import { provideOSFCore, provideOSFHttp } from '@testing/osf.testing.provider';
 
@@ -115,5 +116,31 @@ describe('MaintenanceModeService', () => {
     service.ngOnDestroy();
     vi.advanceTimersByTime(pollIntervalMs);
     httpMock.expectNone(apiUrl);
+  });
+
+  describe('when maintenance is forced by config', () => {
+    beforeEach(() => {
+      TestBed.inject(ENVIRONMENT).maintenance = true;
+    });
+
+    it('should activate on checkOnce without requesting /v2/', () => {
+      service.checkOnce();
+      httpMock.expectNone(apiUrl);
+      expect(service.isActive()).toBe(true);
+    });
+
+    it('should not start polling on activate', () => {
+      vi.useFakeTimers();
+      service.activate();
+      vi.advanceTimersByTime(pollIntervalMs);
+      httpMock.expectNone(apiUrl);
+      expect(service.isActive()).toBe(true);
+    });
+
+    it('should stay active on deactivate', () => {
+      service.checkOnce();
+      service.deactivate();
+      expect(service.isActive()).toBe(true);
+    });
   });
 });

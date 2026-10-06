@@ -24,11 +24,20 @@ export class MaintenanceModeService implements OnDestroy {
 
   readonly isActive = this._isActive.asReadonly();
 
+  private get isForcedByConfig(): boolean {
+    return this.environment.maintenance === true;
+  }
+
   /**
    * Check for maintenance mode upon application startup.
    * If the application is in maintenance mode, activate the service and start polling for when maintenance mode ends.
    */
   checkOnce(): void {
+    if (this.isForcedByConfig) {
+      this._isActive.set(true);
+      return;
+    }
+
     this.checkMaintenanceStatus().subscribe((status) => {
       if (status === MaintenanceStatus.Active) {
         this.activate();
@@ -38,13 +47,17 @@ export class MaintenanceModeService implements OnDestroy {
 
   activate(): void {
     this._isActive.set(true);
-    if (this.pollingSubscription) {
+    if (this.isForcedByConfig || this.pollingSubscription) {
       return;
     }
     this.startPolling();
   }
 
   deactivate(): void {
+    if (this.isForcedByConfig) {
+      return;
+    }
+
     this._isActive.set(false);
     this.stopPolling();
   }
