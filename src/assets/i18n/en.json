@@ -2901,6 +2901,7 @@
     }
   },
   "maintenance": {
+    "details": "For more details, please visit",
     "message": "Please come back later.",
     "title": "The OSF is currently down for scheduled maintenance."
   },
