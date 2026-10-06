@@ -2,6 +2,10 @@ import { RenderMode, ServerRoute } from '@angular/ssr';
 
 export const serverRoutes: ServerRoute[] = [
   {
+    path: '',
+    renderMode: RenderMode.Prerender,
+  },
+  {
     path: 'terms-of-use',
     renderMode: RenderMode.Prerender,
   },
@@ -62,23 +66,47 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Client,
   },
   {
-    path: 'request-access/:id',
-    renderMode: RenderMode.Server,
-  },
-  {
-    path: 'resetpassword/:userId/:token',
-    renderMode: RenderMode.Server,
-  },
-  {
     path: 'search',
     renderMode: RenderMode.Server,
   },
   {
-    path: 'preprints/discover',
-    renderMode: RenderMode.Server,
+    path: 'spam-content',
+    renderMode: RenderMode.Client,
+  },
+  {
+    path: 'preprints/select',
+    renderMode: RenderMode.Client,
+  },
+  {
+    path: 'preprints/my-reviewing',
+    renderMode: RenderMode.Client,
+  },
+  {
+    path: 'preprints/:providerId/submit',
+    renderMode: RenderMode.Client,
+  },
+  {
+    path: 'preprints/:providerId/edit/**',
+    renderMode: RenderMode.Client,
+  },
+  {
+    path: 'preprints/:providerId/moderation/**',
+    renderMode: RenderMode.Client,
+  },
+  {
+    path: 'preprints/:providerId/new-version/**',
+    renderMode: RenderMode.Client,
   },
   {
     path: 'preprints/:providerId/:id/pending-moderation',
+    renderMode: RenderMode.Client,
+  },
+  {
+    path: 'preprints/:providerId/:id/download',
+    renderMode: RenderMode.Client,
+  },
+  {
+    path: 'preprints/discover',
     renderMode: RenderMode.Server,
   },
   {
@@ -94,7 +122,19 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server,
   },
   {
+    path: 'registries/my-registrations',
+    renderMode: RenderMode.Client,
+  },
+  {
+    path: 'registries/:providerId/moderation/**',
+    renderMode: RenderMode.Client,
+  },
+  {
     path: 'registries/discover',
+    renderMode: RenderMode.Server,
+  },
+  {
+    path: 'registries/:providerId/discover',
     renderMode: RenderMode.Server,
   },
   {
@@ -119,6 +159,10 @@ export const serverRoutes: ServerRoute[] = [
   },
   {
     path: 'user/:id',
+    renderMode: RenderMode.Server,
+  },
+  {
+    path: ':id/files/:fileGuid/preview',
     renderMode: RenderMode.Server,
   },
   {
@@ -151,6 +195,10 @@ export const serverRoutes: ServerRoute[] = [
   },
   {
     path: ':id/registrations',
+    renderMode: RenderMode.Server,
+  },
+  {
+    path: ':id/analytics/**',
     renderMode: RenderMode.Server,
   },
   {
