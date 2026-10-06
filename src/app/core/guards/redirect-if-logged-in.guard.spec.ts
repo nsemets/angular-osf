@@ -4,6 +4,7 @@ import { MockProvider } from 'ng-mocks';
 
 import { firstValueFrom, Observable } from 'rxjs';
 
+import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
@@ -19,7 +20,7 @@ describe('redirectIfLoggedInGuard', () => {
   let store: Store;
   let router: RouterMockType;
 
-  function setup(isAuthenticated: boolean) {
+  function setup(isAuthenticated: boolean, platformId = 'browser') {
     router = RouterMockBuilder.create().withUrl('/login').withNavigate(vi.fn().mockResolvedValue(true)).build();
 
     TestBed.configureTestingModule({
@@ -29,6 +30,7 @@ describe('redirectIfLoggedInGuard', () => {
           selectors: [{ selector: UserSelectors.isAuthenticated, value: isAuthenticated }],
         }),
         MockProvider(Router, router),
+        MockProvider(PLATFORM_ID, platformId),
       ],
     });
 
@@ -70,5 +72,15 @@ describe('redirectIfLoggedInGuard', () => {
 
     expect(store.dispatch).toHaveBeenCalledTimes(1);
     expect(store.dispatch).toHaveBeenCalledWith(GetCurrentUser);
+  });
+
+  it('should return true without dispatching or redirecting on server', async () => {
+    setup(true, 'server');
+
+    const result = await resolveGuard();
+
+    expect(result).toBe(true);
+    expect(store.dispatch).not.toHaveBeenCalled();
+    expect(router.navigate).not.toHaveBeenCalled();
   });
 });
