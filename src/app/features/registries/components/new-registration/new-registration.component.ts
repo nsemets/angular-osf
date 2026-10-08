@@ -4,13 +4,15 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
+import { Checkbox } from 'primeng/checkbox';
 import { Select } from 'primeng/select';
+import { Tooltip } from 'primeng/tooltip';
 
-import { debounceTime, distinctUntilChanged, filter, Subject, take } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, Subject, take } from 'rxjs';
 
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { UserSelectors } from '@core/store/user';
@@ -23,7 +25,18 @@ import { CreateDraft, GetProjects, GetProviderSchemas, RegistriesSelectors } fro
 
 @Component({
   selector: 'osf-new-registration',
-  imports: [Button, Card, Select, ReactiveFormsModule, LoadingSpinnerComponent, SubHeaderComponent, TranslatePipe],
+  imports: [
+    Button,
+    Card,
+    Checkbox,
+    Select,
+    Tooltip,
+    FormsModule,
+    ReactiveFormsModule,
+    LoadingSpinnerComponent,
+    SubHeaderComponent,
+    TranslatePipe,
+  ],
   templateUrl: './new-registration.component.html',
   styleUrl: './new-registration.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -58,10 +71,16 @@ export class NewRegistrationComponent {
   private readonly filter$ = new Subject<string>();
 
   readonly fromProject = signal(this.projectId !== undefined);
+  readonly policyAcknowledged = signal(false);
   readonly draftForm = this.fb.group({
     providerSchema: ['', Validators.required],
     project: [this.projectId || ''],
   });
+
+  readonly isFormValid = toSignal(this.draftForm.statusChanges.pipe(map(() => this.draftForm.valid)), {
+    initialValue: this.draftForm.valid,
+  });
+  readonly isCreateDraftDisabled = computed(() => !this.isFormValid() || !this.policyAcknowledged());
 
   constructor() {
     this.loadInitialData();
@@ -82,7 +101,7 @@ export class NewRegistrationComponent {
   }
 
   createDraft() {
-    if (this.draftForm.invalid) {
+    if (this.isCreateDraftDisabled()) {
       return;
     }
 

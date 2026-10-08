@@ -1,8 +1,9 @@
 import { catchError, map, Observable, of, Subscription, switchMap, timer } from 'rxjs';
 
-import { HttpClient, HttpContext } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable, OnDestroy, signal } from '@angular/core';
 
+import { MaintenanceStatus } from '@core/enums/maintenance-status.enum';
 import { MaintenanceResponse } from '@core/models/maintenance-response.model';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 
@@ -23,13 +24,22 @@ export class MaintenanceModeService implements OnDestroy {
 
   readonly isActive = this._isActive.asReadonly();
 
+  private get isForcedByConfig(): boolean {
+    return this.environment.maintenance === true;
+  }
+
   /**
    * Check for maintenance mode upon application startup.
    * If the application is in maintenance mode, activate the service and start polling for when maintenance mode ends.
    */
   checkOnce(): void {
-    this.checkMaintenanceStatus().subscribe((isMaintenance) => {
-      if (isMaintenance) {
+    if (this.isForcedByConfig) {
+      this._isActive.set(true);
+      return;
+    }
+
+    this.checkMaintenanceStatus().subscribe((status) => {
+      if (status === MaintenanceStatus.Active) {
         this.activate();
       }
     });
@@ -37,13 +47,17 @@ export class MaintenanceModeService implements OnDestroy {
 
   activate(): void {
     this._isActive.set(true);
-    if (this.pollingSubscription) {
+    if (this.isForcedByConfig || this.pollingSubscription) {
       return;
     }
     this.startPolling();
   }
 
   deactivate(): void {
+    if (this.isForcedByConfig) {
+      return;
+    }
+
     this._isActive.set(false);
     this.stopPolling();
   }
@@ -55,8 +69,8 @@ export class MaintenanceModeService implements OnDestroy {
   private startPolling(): void {
     this.pollingSubscription = timer(0, this.POLL_INTERVAL_MS)
       .pipe(switchMap(() => this.checkMaintenanceStatus()))
-      .subscribe((isMaintenance) => {
-        if (!isMaintenance) {
+      .subscribe((status) => {
+        if (status === MaintenanceStatus.Inactive) {
           this.deactivate();
         }
       });
@@ -67,12 +81,21 @@ export class MaintenanceModeService implements OnDestroy {
     this.pollingSubscription = null;
   }
 
-  private checkMaintenanceStatus(): Observable<boolean> {
+  private checkMaintenanceStatus(): Observable<MaintenanceStatus> {
     return this.http
       .get<MaintenanceResponse>(`${this.environment.apiDomainUrl}/v2/`, { context: this.bypassContext })
       .pipe(
-        map((response) => response.meta?.maintenance_mode === true),
-        catchError(() => of(true))
+        map((response) =>
+          response.meta?.maintenance_mode === true ? MaintenanceStatus.Active : MaintenanceStatus.Inactive
+        ),
+        catchError((error: HttpErrorResponse) => of(this.statusFromError(error)))
       );
+  }
+
+  private statusFromError(error: HttpErrorResponse): MaintenanceStatus {
+    const response = error.error as MaintenanceResponse | null;
+    return error.status === 503 && response?.meta?.maintenance_mode === true
+      ? MaintenanceStatus.Active
+      : MaintenanceStatus.Unknown;
   }
 }

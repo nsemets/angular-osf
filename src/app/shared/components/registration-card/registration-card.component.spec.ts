@@ -6,7 +6,7 @@ import { Mock } from 'vitest';
 
 import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { CreateSchemaResponse, FetchAllSchemaResponses, RegistriesSelectors } from '@osf/features/registries/store';
 import { RegistrationReviewStates } from '@osf/shared/enums/registration-review-states.enum';
@@ -16,6 +16,7 @@ import { RegistrationCard } from '@shared/models/registration/registration-card.
 
 import { MOCK_REGISTRATION } from '@testing/mocks/registration.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
+import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
 import {
   BaseSetupOverrides,
@@ -59,6 +60,7 @@ describe('RegistrationCardComponent', () => {
       providers: [
         provideOSFCore(),
         MockProvider(Router, routerMock),
+        MockProvider(ActivatedRoute, ActivatedRouteMockBuilder.create().build()),
         provideMockStore({ signals: mergeSignalOverrides(defaultSignals, overrides.selectorOverrides) }),
       ],
     });

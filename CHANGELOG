@@ -2,12 +2,19 @@
 
 We follow the CalVer (https://calver.org/) versioning scheme: YY.MINOR.MICRO.
 
+26.21.0 (2026-10-08)
+====================
+
+* PB&S Release: PBS-26-19
+
 26.20.0 (2026-10-01)
 ====================
+
 * SSR Metrics
 
 26.19.0 (2026-09-23)
 ====================
+
 * Remove leave this view from top of registration VOLs
 * OSF links do not include any content previews when shared
 * Registrations resources page UI is limited to only ten items

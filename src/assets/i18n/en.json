@@ -240,7 +240,8 @@
           "required": "Password is required."
         }
       },
-      "resetPassword": "Reset password"
+      "resetPassword": "Reset password",
+      "resendConfirmation": "Resend"
     },
     "forgotPassword": {
       "description": "Enter your email address and we'll send a link to reset your password",
@@ -248,6 +249,13 @@
         "success": "Thanks. Check your email to reset your password."
       },
       "title": "Forgot Your Password?"
+    },
+    "resendConfirmation": {
+      "description": "Enter your email address and we'll resend your confirmation link.",
+      "messages": {
+        "success": "Thanks. Check your email for confirmation link."
+      },
+      "title": "Resend Confirmation Email"
     },
     "resetPassword": {
       "success": {
@@ -2180,9 +2188,25 @@
       "addNewRegistry": "Add New Registration",
       "createDraft": "Create draft",
       "createdSuccessfully": "Draft created successfully",
-      "hostedRegistriesLink": "Learn more about other hosted registries.",
+      "policy": {
+        "acceptable": {
+          "concluded": "Plans for research that has concluded, with disclosure that they are submitted retrospectively",
+          "notBegun": "Plans for research that has not yet begun",
+          "underway": "Plans for research that is underway, with explanation of the current state of the study"
+        },
+        "acceptableTitle": "Acceptable submissions to the registries on OSF include:",
+        "alternative": "Seek alternative paper sharing services and repositories for these uses.",
+        "checkbox": "I understand and confirm that I am submitting a research plan, and I am not submitting a paper, preprint, or other research output that is not associated with a research plan.",
+        "createDraftTooltip": "Read the information above. Click the checkbox if you understand and acknowledge that you are submitting a research plan.",
+        "intro": "Registration on OSF is for submitting research plans.",
+        "preregistration": "Ideally, registrations are submitted prior to observing the outcomes of the research, and include a description of what the research is, how it will be done, and how it will be analyzed. These are preregistrations.",
+        "unacceptable": {
+          "otherOutputs": "Any other research outputs (e.g., data) that are not a part of the research plan",
+          "papers": "Papers or preprints, including those reporting research outcomes, commentaries, proofs, or other theoretical pieces"
+        },
+        "unacceptableTitle": "Unacceptable submissions to the registries on OSF include:"
+      },
       "registryClosedForSubmissions": "This registry is closed for new submissions. Please start a new registration with a different registry.",
-      "registrySubmissionInfo": "You are submitting to OSF Registries.",
       "selectProject": "Select your project",
       "steps": {
         "existingProjectQuestion": "Do you have content for registration in an existing OSF project?",
@@ -2877,6 +2901,7 @@
     }
   },
   "maintenance": {
+    "details": "For more details, please visit",
     "message": "Please come back later.",
     "title": "The OSF is currently down for scheduled maintenance."
   },
