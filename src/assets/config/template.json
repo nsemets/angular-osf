@@ -27,5 +27,6 @@
   "newRelicLoaderConfigTrustKey": "",
   "newRelicLoaderConfigAgentID": "",
   "newRelicLoaderConfigLicenseKey": "",
-  "newRelicLoaderConfigApplicationID": ""
+  "newRelicLoaderConfigApplicationID": "",
+  "maintenance": false
 }

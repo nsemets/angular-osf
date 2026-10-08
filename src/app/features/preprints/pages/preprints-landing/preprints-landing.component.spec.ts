@@ -4,7 +4,7 @@ import { MockComponents, MockPipe, MockProvider } from 'ng-mocks';
 
 import { TitleCasePipe } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { SearchInputComponent } from '@osf/shared/components/search-input/search-input.component';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
@@ -15,6 +15,7 @@ import { PREPRINT_PROVIDER_SHORT_INFO_MOCK } from '@testing/mocks/preprint-provi
 import { SUBJECTS_MOCK } from '@testing/mocks/subject.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { BrandServiceMock, BrandServiceMockType } from '@testing/providers/brand-service.mock';
+import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
@@ -62,6 +63,7 @@ describe('PreprintsLandingComponent', () => {
         provideOSFCore(),
         MockProvider(BrandService, brandServiceMock),
         MockProvider(Router, routerMock),
+        MockProvider(ActivatedRoute, ActivatedRouteMockBuilder.create().build()),
         provideMockStore({
           signals: [
             {
