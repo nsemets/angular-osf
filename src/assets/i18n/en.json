@@ -1895,6 +1895,7 @@
     "overview": {
       "actions": {
         "duplicateProject": "Duplicate project (structure only)",
+        "duplicateRegistration": "Duplicate registration",
         "forkProject": "Duplicate project (with files)",
         "forkProjectLabel": "Duplicate project",
         "manageContributors": "Manage Contributors",
@@ -1952,9 +1953,11 @@
         },
         "fork": {
           "confirmButton": "Duplicate",
-          "forksMessage": "Duplicates you have permission to view are shown here.",
+          "forksMessage": "Duplicates that you have permission to view are shown here.",
           "headerProject": "Duplicate This Project",
+          "headerRegistration": "Duplicate This Registration",
           "messageProject": "Are you sure you want to duplicate this project (with files)?",
+          "messageRegistration": "Are you sure you want to duplicate this registration?",
           "noForksMessage": "No duplicates found"
         },
         "linkProject": {
@@ -2006,7 +2009,8 @@
             "success": "Project has been duplicated successfully"
           },
           "fork": {
-            "success": "Project has been duplicated successfully"
+            "success": "Project has been duplicated successfully",
+            "successRegistration": "Registration has been duplicated successfully"
           },
           "reorderComponents": {
             "success": "Components have been reordered successfully."

@@ -6,7 +6,7 @@ import { Button } from 'primeng/button';
 import { Menu } from 'primeng/menu';
 import { PaginatorState } from 'primeng/paginator';
 
-import { map, of } from 'rxjs';
+import { filter, map, of } from 'rxjs';
 
 import { DatePipe, isPlatformBrowser } from '@angular/common';
 import {
@@ -19,24 +19,30 @@ import {
   PLATFORM_ID,
   Signal,
   signal,
+  untracked,
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { UserSelectors } from '@core/store/user';
 import { DeleteComponentDialogComponent } from '@osf/features/project/overview/components/delete-component-dialog/delete-component-dialog.component';
-import { ForkDialogComponent } from '@osf/features/project/overview/components/fork-dialog/fork-dialog.component';
-import { ClearProjectOverview, GetProjectById, ProjectOverviewSelectors } from '@osf/features/project/overview/store';
-import { ClearRegistry, GetRegistryById, RegistrySelectors } from '@osf/features/registry/store/registry';
+import {
+  ClearProjectOverview,
+  ForkProject,
+  GetProjectById,
+  ProjectOverviewSelectors,
+} from '@osf/features/project/overview/store';
+import { ClearRegistry, ForkRegistry, GetRegistryById, RegistrySelectors } from '@osf/features/registry/store/registry';
 import { ContributorsListComponent } from '@osf/shared/components/contributors-list/contributors-list.component';
 import { CustomPaginatorComponent } from '@osf/shared/components/custom-paginator/custom-paginator.component';
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { TruncatedTextComponent } from '@osf/shared/components/truncated-text/truncated-text.component';
-import { ResourceType } from '@osf/shared/enums/resource-type.enum';
+import { CurrentResourceType, ResourceType } from '@osf/shared/enums/resource-type.enum';
 import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
+import { ForkDialogService } from '@osf/shared/services/fork-dialog.service';
 import { LoaderService } from '@osf/shared/services/loader.service';
 import { GetResourceWithChildren } from '@osf/shared/stores/current-resource';
 import { ClearDuplicates, DuplicatesSelectors, GetAllDuplicates } from '@osf/shared/stores/duplicates';
@@ -62,27 +68,44 @@ import { BaseNodeModel } from '@shared/models/nodes/base-node.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewDuplicatesComponent {
-  private customDialogService = inject(CustomDialogService);
-  private loaderService = inject(LoaderService);
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
-  private destroyRef = inject(DestroyRef);
-  private platformId = inject(PLATFORM_ID);
-  private isBrowser = isPlatformBrowser(this.platformId);
+  private readonly customDialogService = inject(CustomDialogService);
+  private readonly forkDialogService = inject(ForkDialogService);
+  private readonly loaderService = inject(LoaderService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
-  private project = select(ProjectOverviewSelectors.getProject);
-  private registration = select(RegistrySelectors.getRegistry);
+  private readonly project = select(ProjectOverviewSelectors.getProject);
+  private readonly registration = select(RegistrySelectors.getRegistry);
 
-  duplicates = select(DuplicatesSelectors.getDuplicates);
-  isDuplicatesLoading = select(DuplicatesSelectors.getDuplicatesLoading);
-  totalDuplicates = select(DuplicatesSelectors.getDuplicatesTotalCount);
-  isAuthenticated = select(UserSelectors.isAuthenticated);
-  preventDuplicateCreation = select(UserSelectors.isProjectCreationDisabled);
+  readonly duplicates = select(DuplicatesSelectors.getDuplicates);
+  readonly isDuplicatesLoading = select(DuplicatesSelectors.getDuplicatesLoading);
+  readonly totalDuplicates = select(DuplicatesSelectors.getDuplicatesTotalCount);
+  readonly isAuthenticated = select(UserSelectors.isAuthenticated);
+  readonly preventDuplicateCreation = select(UserSelectors.isProjectCreationDisabled);
+
+  readonly actions = createDispatchMap({
+    getProject: GetProjectById,
+    getRegistration: GetRegistryById,
+    getDuplicates: GetAllDuplicates,
+    clearDuplicates: ClearDuplicates,
+    clearProject: ClearProjectOverview,
+    clearRegistration: ClearRegistry,
+    getComponentsTree: GetResourceWithChildren,
+    forkProject: ForkProject,
+    forkRegistry: ForkRegistry,
+  });
 
   readonly pageSize = 10;
 
   currentPage = signal<number>(1);
   firstIndex = computed(() => (this.currentPage() - 1) * this.pageSize);
+  duplicateButtonLabel = computed(() =>
+    this.resourceType() === ResourceType.Registration
+      ? 'project.overview.actions.duplicateRegistration'
+      : 'project.overview.actions.forkProjectLabel'
+  );
   duplicateButtonTooltip = computed(() =>
     this.preventDuplicateCreation() ? 'project.overview.actions.duplicatingProjectsNotAllowed' : ''
   );
@@ -110,36 +133,33 @@ export class ViewDuplicatesComponent {
     this.route.data.pipe(map((params) => params['resourceType'])) ?? of(undefined)
   );
   readonly currentResource = computed(() => {
-    const resourceType = this.resourceType();
-
-    if (resourceType) {
-      if (resourceType === ResourceType.Project) return this.project();
-
-      if (resourceType === ResourceType.Registration) return this.registration();
+    switch (this.resourceType()) {
+      case ResourceType.Project:
+        return this.project();
+      case ResourceType.Registration:
+        return this.registration();
+      default:
+        return null;
     }
-
-    return null;
-  });
-
-  actions = createDispatchMap({
-    getProject: GetProjectById,
-    getRegistration: GetRegistryById,
-    getDuplicates: GetAllDuplicates,
-    clearDuplicates: ClearDuplicates,
-    clearProject: ClearProjectOverview,
-    clearRegistration: ClearRegistry,
-    getComponentsTree: GetResourceWithChildren,
   });
 
   constructor() {
     effect(() => {
-      const resourceId = this.resourceId();
-      const resourceType = this.resourceType();
+      const id = this.resourceId();
+      const type = this.resourceType();
 
-      if (resourceId) {
-        if (resourceType === ResourceType.Project) this.actions.getProject(resourceId);
-        if (resourceType === ResourceType.Registration) this.actions.getRegistration(resourceId);
-      }
+      if (!id) return;
+
+      untracked(() => {
+        switch (type) {
+          case ResourceType.Project:
+            this.actions.getProject(id);
+            break;
+          case ResourceType.Registration:
+            this.actions.getRegistration(id);
+            break;
+        }
+      });
     });
 
     effect(() => {
@@ -174,26 +194,23 @@ export class ViewDuplicatesComponent {
     }
   }
 
-  handleForkResource(): void {
+  handleFork(): void {
     const currentResource = this.currentResource();
+    const resourceType = this.resourceType();
 
-    if (currentResource) {
-      this.customDialogService
-        .open(ForkDialogComponent, {
-          header: 'project.overview.dialog.fork.headerProject',
-          width: '450px',
-          data: {
-            resourceId: currentResource.id,
-            resourceType: this.resourceType(),
-          },
-        })
-        .onClose.pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe((result) => {
-          if (result?.success) {
-            this.actions.getDuplicates(currentResource.id, currentResource.type, this.currentPage(), this.pageSize);
-          }
-        });
-    }
+    if (!currentResource || !resourceType) return;
+
+    const isRegistration = resourceType === ResourceType.Registration;
+    const currentResourceType = isRegistration ? CurrentResourceType.Registrations : CurrentResourceType.Projects;
+
+    this.forkDialogService.confirmFork({
+      resourceType: currentResourceType,
+      destroyRef: this.destroyRef,
+      fork: () =>
+        isRegistration ? this.actions.forkRegistry(currentResource.id) : this.actions.forkProject(currentResource.id),
+      onSuccess: () =>
+        this.actions.getDuplicates(currentResource.id, currentResource.type, this.currentPage(), this.pageSize),
+    });
   }
 
   onPageChange(event: PaginatorState): void {
@@ -214,33 +231,25 @@ export class ViewDuplicatesComponent {
   }
 
   private handleDeleteFork(id: string): void {
-    const resourceType = this.resourceType();
-    if (!resourceType) return;
-
     this.loaderService.show();
 
-    this.actions.getComponentsTree(id, id, resourceType).subscribe({
+    this.actions.getComponentsTree(id, id, ResourceType.Project).subscribe({
       next: () => {
         this.loaderService.hide();
         this.customDialogService
           .open(DeleteComponentDialogComponent, {
             header: 'project.overview.dialog.deleteComponent.header',
             width: '650px',
-            data: {
-              componentId: id,
-              resourceType: resourceType,
-              isForksContext: true,
-              currentPage: this.currentPage(),
-              pageSize: this.pageSize,
-            },
+            data: { isForksContext: true },
           })
-          .onClose.pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe((result) => {
-            if (result?.success) {
-              const resource = this.currentResource();
-              if (resource) {
-                this.actions.getDuplicates(resource.id, resource.type, this.currentPage(), this.pageSize);
-              }
+          .onClose.pipe(
+            filter((result) => !!result.success),
+            takeUntilDestroyed(this.destroyRef)
+          )
+          .subscribe(() => {
+            const resource = this.currentResource();
+            if (resource) {
+              this.actions.getDuplicates(resource.id, resource.type, this.currentPage(), this.pageSize);
             }
           });
       },

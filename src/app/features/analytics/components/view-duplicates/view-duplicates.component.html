@@ -1,10 +1,10 @@
 <osf-sub-header
   [title]="'project.analytics.kpi.forks' | translate"
   [showButton]="isAuthenticated()"
-  [buttonLabel]="'project.overview.actions.forkProjectLabel' | translate"
+  [buttonLabel]="duplicateButtonLabel() | translate"
   [isButtonDisabled]="preventDuplicateCreation()"
   [buttonTooltip]="duplicateButtonTooltip() | translate"
-  (buttonClick)="handleForkResource()"
+  (buttonClick)="handleFork()"
 />
 
 <div class="flex flex-column flex-1 bg-white gap-5 p-3 sm:p-4">
