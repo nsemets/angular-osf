@@ -2,13 +2,11 @@ import { createDispatchMap, select } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { Button } from 'primeng/button';
-import { Menu } from 'primeng/menu';
 import { PaginatorState } from 'primeng/paginator';
 
 import { filter, map, of } from 'rxjs';
 
-import { DatePipe, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -19,48 +17,34 @@ import {
   PLATFORM_ID,
   Signal,
   signal,
-  untracked,
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { UserSelectors } from '@core/store/user';
 import { DeleteComponentDialogComponent } from '@osf/features/project/overview/components/delete-component-dialog/delete-component-dialog.component';
-import {
-  ClearProjectOverview,
-  ForkProject,
-  GetProjectById,
-  ProjectOverviewSelectors,
-} from '@osf/features/project/overview/store';
-import { ClearRegistry, ForkRegistry, GetRegistryById, RegistrySelectors } from '@osf/features/registry/store/registry';
-import { ContributorsListComponent } from '@osf/shared/components/contributors-list/contributors-list.component';
+import { ForkProject } from '@osf/features/project/overview/store';
+import { ForkRegistry } from '@osf/features/registry/store/registry';
 import { CustomPaginatorComponent } from '@osf/shared/components/custom-paginator/custom-paginator.component';
-import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
-import { TruncatedTextComponent } from '@osf/shared/components/truncated-text/truncated-text.component';
 import { CurrentResourceType, ResourceType } from '@osf/shared/enums/resource-type.enum';
-import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { ForkDialogService } from '@osf/shared/services/fork-dialog.service';
 import { LoaderService } from '@osf/shared/services/loader.service';
 import { GetResourceWithChildren } from '@osf/shared/stores/current-resource';
 import { ClearDuplicates, DuplicatesSelectors, GetAllDuplicates } from '@osf/shared/stores/duplicates';
-import { BaseNodeModel } from '@shared/models/nodes/base-node.model';
+
+import { DuplicateMenuAction } from '../../enums/duplicate-menu-action.enum';
+import { DuplicateCardComponent } from '../duplicate-card/duplicate-card.component';
 
 @Component({
   selector: 'osf-view-duplicates',
   imports: [
-    Button,
-    Menu,
-    RouterLink,
-    IconComponent,
     SubHeaderComponent,
-    TruncatedTextComponent,
     LoadingSpinnerComponent,
     CustomPaginatorComponent,
-    ContributorsListComponent,
-    DatePipe,
+    DuplicateCardComponent,
     TranslatePipe,
   ],
   templateUrl: './view-duplicates.component.html',
@@ -76,9 +60,6 @@ export class ViewDuplicatesComponent {
   private readonly destroyRef = inject(DestroyRef);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
-  private readonly project = select(ProjectOverviewSelectors.getProject);
-  private readonly registration = select(RegistrySelectors.getRegistry);
-
   readonly duplicates = select(DuplicatesSelectors.getDuplicates);
   readonly isDuplicatesLoading = select(DuplicatesSelectors.getDuplicatesLoading);
   readonly totalDuplicates = select(DuplicatesSelectors.getDuplicatesTotalCount);
@@ -86,12 +67,8 @@ export class ViewDuplicatesComponent {
   readonly preventDuplicateCreation = select(UserSelectors.isProjectCreationDisabled);
 
   readonly actions = createDispatchMap({
-    getProject: GetProjectById,
-    getRegistration: GetRegistryById,
     getDuplicates: GetAllDuplicates,
     clearDuplicates: ClearDuplicates,
-    clearProject: ClearProjectOverview,
-    clearRegistration: ClearRegistry,
     getComponentsTree: GetResourceWithChildren,
     forkProject: ForkProject,
     forkRegistry: ForkRegistry,
@@ -100,116 +77,65 @@ export class ViewDuplicatesComponent {
   readonly pageSize = 10;
 
   currentPage = signal<number>(1);
-  firstIndex = computed(() => (this.currentPage() - 1) * this.pageSize);
-  duplicateButtonLabel = computed(() =>
+  readonly firstIndex = computed(() => (this.currentPage() - 1) * this.pageSize);
+  readonly duplicateButtonLabel = computed(() =>
     this.resourceType() === ResourceType.Registration
       ? 'project.overview.actions.duplicateRegistration'
       : 'project.overview.actions.forkProjectLabel'
   );
-  duplicateButtonTooltip = computed(() =>
+  readonly duplicateButtonTooltip = computed(() =>
     this.preventDuplicateCreation() ? 'project.overview.actions.duplicatingProjectsNotAllowed' : ''
   );
-
-  readonly forkActionItems = (resourceId: string) => [
-    {
-      label: 'project.overview.actions.manageContributors',
-      action: 'manageContributors',
-      resourceId,
-    },
-    {
-      label: 'project.overview.actions.settings',
-      action: 'settings',
-      resourceId,
-    },
-    {
-      label: 'common.labels.delete',
-      action: 'delete',
-      resourceId,
-    },
-  ];
 
   readonly resourceId = toSignal(this.route.parent?.params.pipe(map((params) => params['id'])) ?? of(undefined));
   readonly resourceType: Signal<ResourceType | undefined> = toSignal(
     this.route.data.pipe(map((params) => params['resourceType'])) ?? of(undefined)
   );
-  readonly currentResource = computed(() => {
-    switch (this.resourceType()) {
-      case ResourceType.Project:
-        return this.project();
-      case ResourceType.Registration:
-        return this.registration();
-      default:
-        return null;
-    }
-  });
+  readonly apiResourceType = computed(() =>
+    this.resourceType() === ResourceType.Registration ? CurrentResourceType.Registrations : CurrentResourceType.Projects
+  );
 
   constructor() {
     effect(() => {
       const id = this.resourceId();
-      const type = this.resourceType();
+      const type = this.apiResourceType();
+      const page = this.currentPage();
 
-      if (!id) return;
+      if (!id || !type) return;
 
-      untracked(() => {
-        switch (type) {
-          case ResourceType.Project:
-            this.actions.getProject(id);
-            break;
-          case ResourceType.Registration:
-            this.actions.getRegistration(id);
-            break;
-        }
-      });
-    });
-
-    effect(() => {
-      const resource = this.currentResource();
-
-      if (resource) {
-        this.actions.getDuplicates(resource.id, resource.type, this.currentPage(), this.pageSize);
-      }
+      this.actions.getDuplicates(id, type, page, this.pageSize);
     });
 
     this.setupCleanup();
   }
 
-  showMoreOptions(duplicate: BaseNodeModel) {
-    return (
-      duplicate.currentUserPermissions.includes(UserPermissions.Admin) ||
-      duplicate.currentUserPermissions.includes(UserPermissions.Write)
-    );
-  }
-
-  handleMenuAction(action: string, resourceId: string): void {
+  handleMenuAction(action: DuplicateMenuAction, resourceId: string): void {
     switch (action) {
-      case 'manageContributors':
+      case DuplicateMenuAction.ManageContributors:
         this.router.navigate([resourceId, 'contributors']);
         break;
-      case 'settings':
+      case DuplicateMenuAction.Settings:
         this.router.navigate([resourceId, 'settings']);
         break;
-      case 'delete':
+      case DuplicateMenuAction.Delete:
         this.handleDeleteFork(resourceId);
         break;
     }
   }
 
   handleFork(): void {
-    const currentResource = this.currentResource();
-    const resourceType = this.resourceType();
+    const resourceId = this.resourceId();
+    const apiResourceType = this.apiResourceType();
 
-    if (!currentResource || !resourceType) return;
+    if (!resourceId) return;
 
-    const isRegistration = resourceType === ResourceType.Registration;
-    const currentResourceType = isRegistration ? CurrentResourceType.Registrations : CurrentResourceType.Projects;
+    const isRegistration = apiResourceType === CurrentResourceType.Registrations;
 
     this.forkDialogService.confirmFork({
-      resourceType: currentResourceType,
+      resourceType: apiResourceType,
       destroyRef: this.destroyRef,
-      fork: () =>
-        isRegistration ? this.actions.forkRegistry(currentResource.id) : this.actions.forkProject(currentResource.id),
-      onSuccess: () =>
-        this.actions.getDuplicates(currentResource.id, currentResource.type, this.currentPage(), this.pageSize),
+      fork: () => (isRegistration ? this.actions.forkRegistry(resourceId) : this.actions.forkProject(resourceId)),
+      onSuccess: () => this.actions.getDuplicates(resourceId, apiResourceType, this.currentPage(), this.pageSize),
     });
   }
 
@@ -224,8 +150,6 @@ export class ViewDuplicatesComponent {
     this.destroyRef.onDestroy(() => {
       if (this.isBrowser) {
         this.actions.clearDuplicates();
-        this.actions.clearProject();
-        this.actions.clearRegistration();
       }
     });
   }
@@ -243,13 +167,14 @@ export class ViewDuplicatesComponent {
             data: { isForksContext: true },
           })
           .onClose.pipe(
-            filter((result) => !!result.success),
+            filter((result) => !!result?.success),
             takeUntilDestroyed(this.destroyRef)
           )
           .subscribe(() => {
-            const resource = this.currentResource();
-            if (resource) {
-              this.actions.getDuplicates(resource.id, resource.type, this.currentPage(), this.pageSize);
+            const resourceId = this.resourceId();
+            const apiResourceType = this.apiResourceType();
+            if (resourceId && apiResourceType) {
+              this.actions.getDuplicates(resourceId, apiResourceType, this.currentPage(), this.pageSize);
             }
           });
       },
