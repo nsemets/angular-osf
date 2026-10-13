@@ -101,16 +101,6 @@ export class ProjectOverviewService {
       .pipe(map((res) => BaseNodeMapper.getNodesData(res)));
   }
 
-  forkResource(projectId: string, resourceType: string): Observable<void> {
-    const payload = {
-      data: {
-        type: 'nodes',
-      },
-    };
-
-    return this.jsonApiService.post<void>(`${this.apiUrl}/${resourceType}/${projectId}/forks/`, payload);
-  }
-
   duplicateProject(projectId: string, title: string): Observable<BaseNodeModel> {
     const payload = {
       data: {
