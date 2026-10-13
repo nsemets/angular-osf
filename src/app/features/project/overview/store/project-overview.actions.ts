@@ -87,12 +87,6 @@ export class CreateComponent {
   ) {}
 }
 
-export class DeleteComponent {
-  static readonly type = '[Project Overview] Delete Component';
-
-  constructor(public componentId: string) {}
-}
-
 export class GetComponents {
   static readonly type = '[Project Overview] Get Components';
 

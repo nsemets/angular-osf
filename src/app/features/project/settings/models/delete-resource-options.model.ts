@@ -1,18 +1,22 @@
-import { DestroyRef, Type } from '@angular/core';
+import { DestroyRef } from '@angular/core';
 
-import { ResourceType } from '@osf/shared/enums/resource-type.enum';
+export interface DeleteResourceDialogData {
+  listMessageKey: string;
+  warningMessageKey: string;
+  confirmationKey: string;
+  noPermissionsMessageKey: string;
+  singleMessageKey?: string;
+}
 
 export interface DeleteResourceBaseOptions {
   rootParentId: string;
   resourceId: string;
-  resourceType?: ResourceType;
   destroyRef: DestroyRef;
   onSuccess: () => void;
 }
 
 export interface DeleteResourceRunConfig extends DeleteResourceBaseOptions {
-  dialogComponent: Type<unknown>;
   dialogHeader: string;
-  dialogWidth: string;
   toastKey: string;
+  dialogData: DeleteResourceDialogData;
 }

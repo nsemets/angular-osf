@@ -30,10 +30,7 @@ import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { NodeMenuAction } from '@osf/shared/enums/node-menu-action.enum';
 import { CurrentResourceType, ResourceType } from '@osf/shared/enums/resource-type.enum';
-import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { ForkDialogService } from '@osf/shared/services/fork-dialog.service';
-import { LoaderService } from '@osf/shared/services/loader.service';
-import { GetResourceWithChildren } from '@osf/shared/stores/current-resource';
 import { ClearDuplicates, DuplicatesSelectors, GetAllDuplicates } from '@osf/shared/stores/duplicates';
 
 import { DuplicateCardComponent } from '../duplicate-card/duplicate-card.component';
@@ -52,9 +49,7 @@ import { DuplicateCardComponent } from '../duplicate-card/duplicate-card.compone
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewDuplicatesComponent {
-  private readonly customDialogService = inject(CustomDialogService);
   private readonly forkDialogService = inject(ForkDialogService);
-  private readonly loaderService = inject(LoaderService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
@@ -70,7 +65,6 @@ export class ViewDuplicatesComponent {
   readonly actions = createDispatchMap({
     getDuplicates: GetAllDuplicates,
     clearDuplicates: ClearDuplicates,
-    getComponentsTree: GetResourceWithChildren,
     forkProject: ForkProject,
     forkRegistry: ForkRegistry,
   });

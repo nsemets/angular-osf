@@ -14,7 +14,6 @@ import {
   ClearDuplicatedProject,
   ClearProjectOverview,
   CreateComponent,
-  DeleteComponent,
   DuplicateProject,
   ForkProject,
   GetComponents,
@@ -354,30 +353,6 @@ export class ProjectOverviewState {
         }),
         catchError((error) => handleSectionError(ctx, 'components', error))
       );
-  }
-
-  @Action(DeleteComponent)
-  deleteComponent(ctx: StateContext<ProjectOverviewStateModel>, action: DeleteComponent) {
-    const state = ctx.getState();
-    ctx.patchState({
-      components: {
-        ...state.components,
-        isSubmitting: true,
-      },
-    });
-
-    return this.projectOverviewService.deleteComponent(action.componentId).pipe(
-      tap(() => {
-        ctx.patchState({
-          components: {
-            ...state.components,
-            isSubmitting: false,
-            error: null,
-          },
-        });
-      }),
-      catchError((error) => handleSectionError(ctx, 'components', error))
-    );
   }
 
   @Action(GetComponents)
