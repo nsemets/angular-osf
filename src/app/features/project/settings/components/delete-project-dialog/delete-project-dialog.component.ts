@@ -1,75 +1,37 @@
-import { createDispatchMap, select } from '@ngxs/store';
+import { select } from '@ngxs/store';
 
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { Button } from 'primeng/button';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputText } from 'primeng/inputtext';
-import { Skeleton } from 'primeng/skeleton';
 
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 
 import { ScientistsNames } from '@osf/shared/constants/scientists.const';
-import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
-import { ToastService } from '@osf/shared/services/toast.service';
 import { CurrentResourceSelectors } from '@osf/shared/stores/current-resource';
-
-import { DeleteProject, SettingsSelectors } from '../../store';
 
 @Component({
   selector: 'osf-delete-project-dialog',
-  imports: [TranslatePipe, Button, InputText, FormsModule, Skeleton],
+  imports: [TranslatePipe, Button, InputText, FormsModule],
   templateUrl: './delete-project-dialog.component.html',
   styleUrl: './delete-project-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeleteProjectDialogComponent {
-  private toastService = inject(ToastService);
-  private router = inject(Router);
+  readonly dialogRef = inject(DynamicDialogRef);
 
-  dialogRef = inject(DynamicDialogRef);
-  destroyRef = inject(DestroyRef);
+  readonly projects = select(CurrentResourceSelectors.getResourceWithChildren);
+  readonly hasAdminAccessForAllComponents = select(CurrentResourceSelectors.allResourceChildrenHaveAdminAccess);
 
-  scientistNames = ScientistsNames;
-  userInput = signal('');
+  readonly userInput = signal('');
 
-  isLoading = select(CurrentResourceSelectors.isResourceWithChildrenLoading);
-  isSubmitting = select(SettingsSelectors.isSettingsSubmitting);
-  projects = select(CurrentResourceSelectors.getResourceWithChildren);
+  readonly selectedScientist = ScientistsNames[Math.floor(Math.random() * ScientistsNames.length)];
 
-  hasAdminAccessForAllComponents = computed(() => {
-    const projects = this.projects();
-    if (!projects || !projects.length) return false;
-
-    return projects.every((project) => project.permissions?.includes(UserPermissions.Admin));
-  });
-
-  selectedScientist = computed(() => {
-    const names = Object.values(this.scientistNames);
-    return names[Math.floor(Math.random() * names.length)];
-  });
-
-  actions = createDispatchMap({ deleteProject: DeleteProject });
-
-  isInputValid = computed(() => this.userInput() === this.selectedScientist());
+  readonly isInputValid = computed(() => this.userInput() === this.selectedScientist);
 
   handleDeleteProject(): void {
-    const projects = this.projects();
-
-    if (!projects?.length) return;
-
-    this.actions
-      .deleteProject(projects)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: () => {
-          this.dialogRef.close({ success: true });
-          this.toastService.showSuccess('project.deleteProject.success');
-          this.router.navigate(['/']);
-        },
-      });
+    this.dialogRef.close(true);
   }
 }

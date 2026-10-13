@@ -10,10 +10,9 @@ import { RouterLink } from '@angular/router';
 import { ContributorsListComponent } from '@osf/shared/components/contributors-list/contributors-list.component';
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { TruncatedTextComponent } from '@osf/shared/components/truncated-text/truncated-text.component';
+import { NodeMenuAction } from '@osf/shared/enums/node-menu-action.enum';
 import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
 import { NodeModel } from '@osf/shared/models/nodes/base-node.model';
-
-import { DuplicateMenuAction } from '../../enums/duplicate-menu-action.enum';
 
 @Component({
   selector: 'osf-duplicate-card',
@@ -34,7 +33,7 @@ import { DuplicateMenuAction } from '../../enums/duplicate-menu-action.enum';
 export class DuplicateCardComponent {
   readonly duplicate = input.required<NodeModel>();
 
-  readonly menuAction = output<DuplicateMenuAction>();
+  readonly menuAction = output<NodeMenuAction>();
 
   readonly dateFormat = 'MMM d, y, h:mm a';
 
@@ -46,19 +45,19 @@ export class DuplicateCardComponent {
   readonly menuItems = [
     {
       label: 'project.overview.actions.manageContributors',
-      action: DuplicateMenuAction.ManageContributors,
+      action: NodeMenuAction.ManageContributors,
     },
     {
       label: 'project.overview.actions.settings',
-      action: DuplicateMenuAction.Settings,
+      action: NodeMenuAction.Settings,
     },
     {
       label: 'common.labels.delete',
-      action: DuplicateMenuAction.Delete,
+      action: NodeMenuAction.Delete,
     },
   ];
 
-  handleMenuAction(action: DuplicateMenuAction): void {
+  handleMenuAction(action: NodeMenuAction): void {
     this.menuAction.emit(action);
   }
 }
