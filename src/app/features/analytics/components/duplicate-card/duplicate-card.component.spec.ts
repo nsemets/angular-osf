@@ -6,13 +6,12 @@ import { provideRouter } from '@angular/router';
 import { ContributorsListComponent } from '@osf/shared/components/contributors-list/contributors-list.component';
 import { IconComponent } from '@osf/shared/components/icon/icon.component';
 import { TruncatedTextComponent } from '@osf/shared/components/truncated-text/truncated-text.component';
+import { NodeMenuAction } from '@osf/shared/enums/node-menu-action.enum';
 import { UserPermissions } from '@osf/shared/enums/user-permissions.enum';
 import { NodeModel } from '@osf/shared/models/nodes/base-node.model';
 
 import { MOCK_NODE_WITH_ADMIN, MOCK_NODE_WITHOUT_ADMIN } from '@testing/mocks/node.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
-
-import { DuplicateMenuAction } from '../../enums/duplicate-menu-action.enum';
 
 import { DuplicateCardComponent } from './duplicate-card.component';
 
@@ -50,15 +49,15 @@ describe('DuplicateCardComponent', () => {
     expect(component.menuItems).toEqual([
       {
         label: 'project.overview.actions.manageContributors',
-        action: DuplicateMenuAction.ManageContributors,
+        action: NodeMenuAction.ManageContributors,
       },
       {
         label: 'project.overview.actions.settings',
-        action: DuplicateMenuAction.Settings,
+        action: NodeMenuAction.Settings,
       },
       {
         label: 'common.labels.delete',
-        action: DuplicateMenuAction.Delete,
+        action: NodeMenuAction.Delete,
       },
     ]);
   });
@@ -84,12 +83,12 @@ describe('DuplicateCardComponent', () => {
 
   it('should emit menuAction when handleMenuAction is called', () => {
     setup();
-    const emitted: DuplicateMenuAction[] = [];
+    const emitted: NodeMenuAction[] = [];
     component.menuAction.subscribe((action) => emitted.push(action));
 
-    component.handleMenuAction(DuplicateMenuAction.Settings);
-    component.handleMenuAction(DuplicateMenuAction.Delete);
+    component.handleMenuAction(NodeMenuAction.Settings);
+    component.handleMenuAction(NodeMenuAction.Delete);
 
-    expect(emitted).toEqual([DuplicateMenuAction.Settings, DuplicateMenuAction.Delete]);
+    expect(emitted).toEqual([NodeMenuAction.Settings, NodeMenuAction.Delete]);
   });
 });

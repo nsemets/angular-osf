@@ -2,42 +2,33 @@ import { Store } from '@ngxs/store';
 
 import { MockComponents, MockProvider } from 'ng-mocks';
 
-import { PaginatorState } from 'primeng/paginator';
-
-import { of, Subject, throwError } from 'rxjs';
-
 import { Mock } from 'vitest';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { UserSelectors } from '@osf/core/store/user/user.selectors';
-import { DeleteComponentDialogComponent } from '@osf/features/project/overview/components/delete-component-dialog/delete-component-dialog.component';
 import { ForkProject } from '@osf/features/project/overview/store';
+import { DeleteResourceService } from '@osf/features/project/settings/services/delete-resource.service';
 import { ForkRegistry } from '@osf/features/registry/store/registry';
 import { CustomPaginatorComponent } from '@osf/shared/components/custom-paginator/custom-paginator.component';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
+import { NodeMenuAction } from '@osf/shared/enums/node-menu-action.enum';
 import { CurrentResourceType, ResourceType } from '@osf/shared/enums/resource-type.enum';
-import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
 import { ForkDialogService } from '@osf/shared/services/fork-dialog.service';
-import { LoaderService } from '@osf/shared/services/loader.service';
-import { GetResourceWithChildren } from '@osf/shared/stores/current-resource';
 import { ClearDuplicates, DuplicatesSelectors, GetAllDuplicates } from '@osf/shared/stores/duplicates';
 
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import {
-  CustomDialogServiceMock,
-  CustomDialogServiceMockBuilder,
-  CustomDialogServiceMockType,
-} from '@testing/providers/custom-dialog-provider.mock';
+  DeleteResourceServiceMock,
+  DeleteResourceServiceMockType,
+} from '@testing/providers/delete-resource-provider.mock';
 import { ForkDialogServiceMock, ForkDialogServiceMockType } from '@testing/providers/fork-dialog.service.mock';
-import { LoaderServiceMock } from '@testing/providers/loader-service.mock';
 import { ActivatedRouteMockBuilder } from '@testing/providers/route-provider.mock';
 import { RouterMockBuilder } from '@testing/providers/router-provider.mock';
 import { BaseSetupOverrides, mergeSignalOverrides, provideMockStore } from '@testing/providers/store-provider.mock';
 
-import { DuplicateMenuAction } from '../../enums/duplicate-menu-action.enum';
 import { DuplicateCardComponent } from '../duplicate-card/duplicate-card.component';
 
 import { ViewDuplicatesComponent } from './view-duplicates.component';
@@ -51,14 +42,12 @@ describe('ViewDuplicatesComponent', () => {
   let fixture: ComponentFixture<ViewDuplicatesComponent>;
   let store: Store;
   let routerMock: ReturnType<RouterMockBuilder['build']>;
-  let mockCustomDialogService: CustomDialogServiceMockType;
   let forkDialogService: ForkDialogServiceMockType;
-  let loaderService: LoaderServiceMock;
+  let deleteResourceService: DeleteResourceServiceMockType;
 
   function setup(overrides: SetupOverrides = {}) {
-    mockCustomDialogService = CustomDialogServiceMockBuilder.create().build();
     forkDialogService = ForkDialogServiceMock.simple();
-    loaderService = new LoaderServiceMock();
+    deleteResourceService = DeleteResourceServiceMock.simple();
     routerMock = RouterMockBuilder.create().build();
 
     const routeBuilder = ActivatedRouteMockBuilder.create()
@@ -92,9 +81,8 @@ describe('ViewDuplicatesComponent', () => {
         provideMockStore({
           signals: mergeSignalOverrides(defaultSelectors, overrides.selectorOverrides),
         }),
-        MockProvider(CustomDialogService, mockCustomDialogService),
         MockProvider(ForkDialogService, forkDialogService),
-        MockProvider(LoaderService, loaderService),
+        MockProvider(DeleteResourceService, deleteResourceService),
         MockProvider(Router, routerMock),
         MockProvider(ActivatedRoute, routeBuilder.build()),
       ],
@@ -144,19 +132,17 @@ describe('ViewDuplicatesComponent', () => {
     expect(component.firstIndex()).toBe(20);
   });
 
-  it('should compute apiResourceType for project and registration', () => {
+  it('should use the projects resource type for a project', () => {
     setup();
-    expect(component.apiResourceType()).toBe(CurrentResourceType.Projects);
 
-    setup({ resourceType: ResourceType.Registration });
-    expect(component.apiResourceType()).toBe(CurrentResourceType.Registrations);
+    expect(component.apiResourceType()).toBe(CurrentResourceType.Projects);
+    expect(component.duplicateButtonLabel()).toBe('project.overview.actions.forkProjectLabel');
   });
 
-  it('should compute duplicate button label for project and registration', () => {
-    setup();
-    expect(component.duplicateButtonLabel()).toBe('project.overview.actions.forkProjectLabel');
-
+  it('should use the registrations resource type for a registration', () => {
     setup({ resourceType: ResourceType.Registration });
+
+    expect(component.apiResourceType()).toBe(CurrentResourceType.Registrations);
     expect(component.duplicateButtonLabel()).toBe('project.overview.actions.duplicateRegistration');
   });
 
@@ -174,53 +160,36 @@ describe('ViewDuplicatesComponent', () => {
     expect(component.duplicateButtonTooltip()).toBe('');
   });
 
-  it('should navigate for manageContributors and settings menu actions', () => {
+  it('should navigate to contributors for the manageContributors action', () => {
     setup();
 
-    component.handleMenuAction(DuplicateMenuAction.ManageContributors, 'node-1');
-    component.handleMenuAction(DuplicateMenuAction.Settings, 'node-1');
+    component.handleMenuAction(NodeMenuAction.ManageContributors, 'node-1');
 
     expect(routerMock.navigate).toHaveBeenCalledWith(['node-1', 'contributors']);
+  });
+
+  it('should navigate to settings for the settings action', () => {
+    setup();
+
+    component.handleMenuAction(NodeMenuAction.Settings, 'node-1');
+
     expect(routerMock.navigate).toHaveBeenCalledWith(['node-1', 'settings']);
   });
 
-  it('should open delete dialog and refresh duplicates when delete succeeds', () => {
+  it('should delete the fork and refresh duplicates on success', () => {
     setup();
-    const onClose$ = new Subject<{ success: boolean }>();
-    mockCustomDialogService.open.mockReturnValue(CustomDialogServiceMock.dialogRefWithClose(onClose$));
     (store.dispatch as Mock).mockClear();
 
-    component.handleMenuAction(DuplicateMenuAction.Delete, 'fork-1');
+    component.handleMenuAction(NodeMenuAction.Delete, 'fork-1');
+    deleteResourceService.deleteProject.mock.calls[0][0].onSuccess();
 
-    expect(loaderService.show).toHaveBeenCalled();
-    expect(store.dispatch).toHaveBeenCalledWith(new GetResourceWithChildren('fork-1', 'fork-1', ResourceType.Project));
-    expect(loaderService.hide).toHaveBeenCalled();
-    expect(mockCustomDialogService.open).toHaveBeenCalledWith(DeleteComponentDialogComponent, {
-      header: 'project.overview.dialog.deleteComponent.header',
-      width: '650px',
-      data: { isForksContext: true },
-    });
-
-    (store.dispatch as Mock).mockClear();
-    onClose$.next({ success: true });
-
+    expect(deleteResourceService.deleteProject).toHaveBeenCalledWith(
+      expect.objectContaining({
+        rootParentId: 'fork-1',
+        resourceId: 'fork-1',
+      })
+    );
     expect(store.dispatch).toHaveBeenCalledWith(new GetAllDuplicates('rid', CurrentResourceType.Projects, 1, 10));
-  });
-
-  it('should hide loader when delete components tree fails', () => {
-    setup();
-    (store.dispatch as Mock).mockImplementation((action: unknown) => {
-      if (action instanceof GetResourceWithChildren) {
-        return throwError(() => new Error('failed'));
-      }
-      return of(true);
-    });
-
-    component.handleMenuAction(DuplicateMenuAction.Delete, 'fork-1');
-
-    expect(loaderService.show).toHaveBeenCalled();
-    expect(loaderService.hide).toHaveBeenCalled();
-    expect(mockCustomDialogService.open).not.toHaveBeenCalled();
   });
 
   it('should confirm fork for the current project', () => {
@@ -275,18 +244,12 @@ describe('ViewDuplicatesComponent', () => {
     expect(store.dispatch).toHaveBeenCalledWith(new ForkRegistry('rid'));
   });
 
-  it('should update currentPage when page is defined', () => {
-    setup();
-    const event: PaginatorState = { page: 1 } as PaginatorState;
-    component.onPageChange(event);
-    expect(component.currentPage()).toBe(2);
-  });
-
   it('should not update currentPage when page is undefined', () => {
     setup();
     component.currentPage.set(5);
-    const event: PaginatorState = { page: undefined } as PaginatorState;
-    component.onPageChange(event);
+
+    component.onPageChange({ page: undefined });
+
     expect(component.currentPage()).toBe(5);
   });
 
@@ -294,9 +257,10 @@ describe('ViewDuplicatesComponent', () => {
     setup();
     (store.dispatch as Mock).mockClear();
 
-    component.onPageChange({ page: 2 } as PaginatorState);
+    component.onPageChange({ page: 2 });
     fixture.detectChanges();
 
+    expect(component.currentPage()).toBe(3);
     expect(store.dispatch).toHaveBeenCalledWith(new GetAllDuplicates('rid', CurrentResourceType.Projects, 3, 10));
   });
 });

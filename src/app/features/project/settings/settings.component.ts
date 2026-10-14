@@ -6,10 +6,8 @@ import { map, of } from 'rxjs';
 
 import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { UserSelectors } from '@core/store/user';
 import { LoadingSpinnerComponent } from '@osf/shared/components/loading-spinner/loading-spinner.component';
 import { SubHeaderComponent } from '@osf/shared/components/sub-header/sub-header.component';
 import { ResourceType } from '@osf/shared/enums/resource-type.enum';
@@ -51,8 +49,6 @@ import {
   imports: [
     TranslatePipe,
     SubHeaderComponent,
-    FormsModule,
-    ReactiveFormsModule,
     SettingsProjectFormCardComponent,
     SettingsStorageLocationCardComponent,
     SettingsViewOnlyLinksCardComponent,
@@ -77,7 +73,6 @@ export class SettingsComponent implements OnInit {
 
   readonly projectId = toSignal(this.route.parent?.params.pipe(map((params) => params['id'])) ?? of(undefined));
 
-  currentUser = select(UserSelectors.getCurrentUser);
   settings = select(SettingsSelectors.getSettings);
   notifications = select(SettingsSelectors.getNotificationSubscriptions);
   areNotificationsLoading = select(SettingsSelectors.areNotificationsLoading);
@@ -104,7 +99,6 @@ export class SettingsComponent implements OnInit {
   accessRequest = signal(false);
   wikiEnabled = signal(false);
   anyoneCanEditWiki = signal(false);
-  anyoneCanComment = signal(false);
 
   constructor() {
     this.setupEffects();
@@ -244,7 +238,6 @@ export class SettingsComponent implements OnInit {
         this.accessRequest.set(settings.attributes.accessRequestsEnabled);
         this.wikiEnabled.set(settings.attributes.wikiEnabled);
         this.anyoneCanEditWiki.set(settings.attributes.anyoneCanEditWiki);
-        this.anyoneCanComment.set(settings.attributes.anyoneCanComment);
       }
     });
 

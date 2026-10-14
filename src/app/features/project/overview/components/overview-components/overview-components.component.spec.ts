@@ -8,32 +8,34 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
-import { UserSelectors } from '@osf/core/store/user/user.selectors';
-import { ResourceType } from '@osf/shared/enums/resource-type.enum';
+import { UserSelectors } from '@osf/core/store/user';
+import { DeleteResourceService } from '@osf/features/project/settings/services/delete-resource.service';
+import { NodeMenuAction } from '@osf/shared/enums/node-menu-action.enum';
 import { NodeModel } from '@osf/shared/models/nodes/base-node.model';
 import { CustomDialogService } from '@osf/shared/services/custom-dialog.service';
-import { LoaderService } from '@osf/shared/services/loader.service';
 import { ToastService } from '@osf/shared/services/toast.service';
-import { GetResourceWithChildren } from '@osf/shared/stores/current-resource';
 
 import { MOCK_PROJECT_OVERVIEW } from '@testing/mocks/project-overview.mock';
 import { provideOSFCore } from '@testing/osf.testing.provider';
 import { CustomDialogServiceMockBuilder } from '@testing/providers/custom-dialog-provider.mock';
-import { LoaderServiceMock } from '@testing/providers/loader-service.mock';
+import {
+  DeleteResourceServiceMock,
+  DeleteResourceServiceMockType,
+} from '@testing/providers/delete-resource-provider.mock';
 import { RouterMockBuilder, RouterMockType } from '@testing/providers/router-provider.mock';
-import { BaseSetupOverrides, mergeSignalOverrides, provideMockStore } from '@testing/providers/store-provider.mock';
+import {
+  BaseSetupOverrides,
+  mergeSignalOverrides,
+  provideMockStore,
+  SignalOverride,
+} from '@testing/providers/store-provider.mock';
 import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast-provider.mock';
 
-import { LoadMoreComponents, ProjectOverviewSelectors, ReorderComponents } from '../../store';
+import { GetComponents, LoadMoreComponents, ProjectOverviewSelectors, ReorderComponents } from '../../store';
 import { AddComponentDialogComponent } from '../add-component-dialog/add-component-dialog.component';
 import { ComponentCardComponent } from '../component-card/component-card.component';
-import { DeleteComponentDialogComponent } from '../delete-component-dialog/delete-component-dialog.component';
 
 import { OverviewComponentsComponent } from './overview-components.component';
-
-interface SetupOverrides extends BaseSetupOverrides {
-  selectors?: any[];
-}
 
 describe('OverviewComponentsComponent', () => {
   let component: OverviewComponentsComponent;
@@ -41,8 +43,8 @@ describe('OverviewComponentsComponent', () => {
   let store: Store;
   let routerMock: RouterMockType;
   let customDialogService: ReturnType<CustomDialogServiceMockBuilder['build']>;
-  let loaderService: LoaderServiceMock;
   let toastService: ToastServiceMockType;
+  let deleteResourceService: DeleteResourceServiceMockType;
 
   const componentA = { id: 'comp-a', title: 'Component A' } as NodeModel;
   const componentB = { id: 'comp-b', title: 'Component B' } as NodeModel;
@@ -53,21 +55,20 @@ describe('OverviewComponentsComponent', () => {
     rootParentId: 'root-1',
   };
 
-  function setup(overrides: SetupOverrides = {}) {
+  const defaultSignals: SignalOverride[] = [
+    { selector: ProjectOverviewSelectors.getComponents, value: components },
+    { selector: ProjectOverviewSelectors.getComponentsLoading, value: false },
+    { selector: ProjectOverviewSelectors.getComponentsSubmitting, value: false },
+    { selector: ProjectOverviewSelectors.hasMoreComponents, value: true },
+    { selector: ProjectOverviewSelectors.getProject, value: project },
+    { selector: UserSelectors.isProjectCreationDisabled, value: false },
+  ];
+
+  function setup(overrides: BaseSetupOverrides = {}) {
     routerMock = RouterMockBuilder.create().build();
     customDialogService = CustomDialogServiceMockBuilder.create().build();
-    loaderService = new LoaderServiceMock();
     toastService = ToastServiceMock.simple();
-
-    const defaultSelectors = [
-      { selector: ProjectOverviewSelectors.getComponents, value: components },
-      { selector: ProjectOverviewSelectors.getComponentsLoading, value: false },
-      { selector: ProjectOverviewSelectors.getComponentsSubmitting, value: false },
-      { selector: ProjectOverviewSelectors.hasMoreComponents, value: true },
-      { selector: ProjectOverviewSelectors.getProject, value: project },
-      { selector: UserSelectors.isProjectCreationDisabled, value: false },
-    ];
-    const signals = mergeSignalOverrides(defaultSelectors, overrides.selectors);
+    deleteResourceService = DeleteResourceServiceMock.simple();
 
     TestBed.configureTestingModule({
       imports: [OverviewComponentsComponent, MockComponent(ComponentCardComponent)],
@@ -75,11 +76,9 @@ describe('OverviewComponentsComponent', () => {
         provideOSFCore(),
         MockProvider(Router, routerMock),
         MockProvider(CustomDialogService, customDialogService),
-        MockProvider(LoaderService, loaderService),
         MockProvider(ToastService, toastService),
-        provideMockStore({
-          signals,
-        }),
+        MockProvider(DeleteResourceService, deleteResourceService),
+        provideMockStore({ signals: mergeSignalOverrides(defaultSignals, overrides.selectorOverrides) }),
       ],
     });
 
@@ -92,16 +91,19 @@ describe('OverviewComponentsComponent', () => {
 
   it('should create', () => {
     setup();
+
     expect(component).toBeTruthy();
   });
 
   it('should initialize reorderedComponents from components selector', () => {
     setup();
+
     expect(component.reorderedComponents()).toEqual(components);
   });
 
   it('should open add component dialog', () => {
     setup();
+
     component.handleAddComponent();
 
     expect(customDialogService.open).toHaveBeenCalledWith(AddComponentDialogComponent, {
@@ -110,36 +112,53 @@ describe('OverviewComponentsComponent', () => {
     });
   });
 
+  it('should not open add component dialog when project creation is disabled', () => {
+    setup({
+      selectorOverrides: [{ selector: UserSelectors.isProjectCreationDisabled, value: true }],
+    });
+
+    component.handleAddComponent();
+
+    expect(component.preventComponentCreation()).toBe(true);
+    expect(component.createComponentTooltip()).toBe('project.overview.components.addComponentDisabled');
+    expect(customDialogService.open).not.toHaveBeenCalled();
+  });
+
   it('should navigate for manageContributors action', () => {
     setup();
-    component.handleMenuAction('manageContributors', 'comp-a');
+
+    component.handleMenuAction(NodeMenuAction.ManageContributors, 'comp-a');
 
     expect(routerMock.navigate).toHaveBeenCalledWith(['comp-a', 'contributors']);
   });
 
   it('should navigate for settings action', () => {
     setup();
-    component.handleMenuAction('settings', 'comp-a');
+
+    component.handleMenuAction(NodeMenuAction.Settings, 'comp-a');
 
     expect(routerMock.navigate).toHaveBeenCalledWith(['comp-a', 'settings']);
   });
 
-  it('should open delete component dialog through delete menu action', () => {
+  it('should run delete resource flow through delete menu action', () => {
     setup();
-    component.handleMenuAction('delete', 'comp-a');
+    (store.dispatch as Mock).mockClear();
 
-    expect(loaderService.show).toHaveBeenCalled();
-    expect(store.dispatch).toHaveBeenCalledWith(new GetResourceWithChildren('root-1', 'comp-a', ResourceType.Project));
-    expect(customDialogService.open).toHaveBeenCalledWith(DeleteComponentDialogComponent, {
-      header: 'project.overview.dialog.deleteComponent.header',
-      width: '650px',
-      data: { componentId: 'comp-a', resourceType: ResourceType.Project },
-    });
-    expect(loaderService.hide).toHaveBeenCalled();
+    component.handleMenuAction(NodeMenuAction.Delete, 'comp-a');
+    deleteResourceService.deleteComponent.mock.calls[0][0].onSuccess();
+
+    expect(deleteResourceService.deleteComponent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        rootParentId: 'root-1',
+        resourceId: 'comp-a',
+      })
+    );
+    expect(store.dispatch).toHaveBeenCalledWith(new GetComponents('project-1'));
   });
 
   it('should open component url in same tab on navigate', () => {
     setup();
+
     const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
     vi.spyOn(routerMock, 'createUrlTree').mockReturnValue({} as any);
     vi.spyOn(routerMock, 'serializeUrl').mockReturnValue('/comp-a');
@@ -181,14 +200,5 @@ describe('OverviewComponentsComponent', () => {
     component.onReorder(event);
 
     expect(store.dispatch).not.toHaveBeenCalledWith(expect.any(ReorderComponents));
-  });
-
-  it('should disable add component button and show tooltip when isProjectCreationDisabled flag is true', () => {
-    setup({
-      selectors: [{ selector: UserSelectors.isProjectCreationDisabled, value: true }],
-    });
-
-    expect(component.preventComponentCreation()).toBe(true);
-    expect(component.createComponentTooltip()).toBe('project.overview.components.addComponentDisabled');
   });
 });
