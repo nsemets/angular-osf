@@ -2,11 +2,13 @@ import { Store } from '@ngxs/store';
 
 import { MockComponent, MockProvider } from 'ng-mocks';
 
+import { throwError } from 'rxjs';
+
 import { Mock } from 'vitest';
 
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { Router, UrlTree } from '@angular/router';
 
 import { UserSelectors } from '@osf/core/store/user';
 import { DeleteResourceService } from '@osf/features/project/settings/services/delete-resource.service';
@@ -46,6 +48,7 @@ describe('OverviewComponentsComponent', () => {
   let toastService: ToastServiceMockType;
   let deleteResourceService: DeleteResourceServiceMockType;
 
+  const mockUrlTree = {} as UrlTree;
   const componentA = { id: 'comp-a', title: 'Component A' } as NodeModel;
   const componentB = { id: 'comp-b', title: 'Component B' } as NodeModel;
   const components = [componentA, componentB];
@@ -65,7 +68,10 @@ describe('OverviewComponentsComponent', () => {
   ];
 
   function setup(overrides: BaseSetupOverrides = {}) {
-    routerMock = RouterMockBuilder.create().build();
+    routerMock = RouterMockBuilder.create()
+      .withCreateUrlTree(vi.fn().mockReturnValue(mockUrlTree))
+      .withSerializeUrl(vi.fn().mockReturnValue('/comp-a'))
+      .build();
     customDialogService = CustomDialogServiceMockBuilder.create().build();
     toastService = ToastServiceMock.simple();
     deleteResourceService = DeleteResourceServiceMock.simple();
@@ -99,6 +105,30 @@ describe('OverviewComponentsComponent', () => {
     setup();
 
     expect(component.reorderedComponents()).toEqual(components);
+  });
+
+  it('should disable drag when user cannot edit', () => {
+    setup();
+    fixture.componentRef.setInput('canEdit', false);
+    fixture.detectChanges();
+
+    expect(component.isDragDisabled()).toBe(true);
+  });
+
+  it('should disable drag while components are submitting', () => {
+    setup({
+      selectorOverrides: [{ selector: ProjectOverviewSelectors.getComponentsSubmitting, value: true }],
+    });
+
+    expect(component.isDragDisabled()).toBe(true);
+  });
+
+  it('should disable drag when there is only one component', () => {
+    setup({
+      selectorOverrides: [{ selector: ProjectOverviewSelectors.getComponents, value: [componentA] }],
+    });
+
+    expect(component.isDragDisabled()).toBe(true);
   });
 
   it('should open add component dialog', () => {
@@ -160,11 +190,11 @@ describe('OverviewComponentsComponent', () => {
     setup();
 
     const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
-    vi.spyOn(routerMock, 'createUrlTree').mockReturnValue({} as any);
-    vi.spyOn(routerMock, 'serializeUrl').mockReturnValue('/comp-a');
 
     component.handleComponentNavigate('comp-a');
 
+    expect(routerMock.createUrlTree).toHaveBeenCalledWith(['/', 'comp-a'], { queryParamsHandling: 'preserve' });
+    expect(routerMock.serializeUrl).toHaveBeenCalledWith(mockUrlTree);
     expect(window.open).toHaveBeenCalledWith('/comp-a', '_self');
     openSpy.mockRestore();
   });
@@ -200,5 +230,16 @@ describe('OverviewComponentsComponent', () => {
     component.onReorder(event);
 
     expect(store.dispatch).not.toHaveBeenCalledWith(expect.any(ReorderComponents));
+  });
+
+  it('should restore previous order when reorder fails', () => {
+    setup();
+    (store.dispatch as Mock).mockReturnValueOnce(throwError(() => new Error('reorder failed')));
+    const event = { previousIndex: 0, currentIndex: 1 } as CdkDragDrop<NodeModel[]>;
+
+    component.onReorder(event);
+
+    expect(component.reorderedComponents().map((c) => c.id)).toEqual(['comp-a', 'comp-b']);
+    expect(toastService.showSuccess).not.toHaveBeenCalled();
   });
 });

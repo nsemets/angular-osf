@@ -54,7 +54,7 @@ export class OverviewComponentsComponent {
   readonly reorderedComponents = signal<NodeModel[]>([]);
 
   readonly isDragDisabled = computed(
-    () => this.isComponentsSubmitting() || (!this.canEdit() && this.reorderedComponents().length <= 1)
+    () => this.isComponentsSubmitting() || !this.canEdit() || this.reorderedComponents().length <= 1
   );
 
   readonly createComponentTooltip = computed(() =>
@@ -110,7 +110,8 @@ export class OverviewComponentsComponent {
     const project = this.project();
     if (!project || !this.canEdit()) return;
 
-    const components = [...this.reorderedComponents()];
+    const previousComponents = [...this.reorderedComponents()];
+    const components = [...previousComponents];
     moveItemInArray(components, event.previousIndex, event.currentIndex);
     this.reorderedComponents.set(components);
 
@@ -118,6 +119,9 @@ export class OverviewComponentsComponent {
     this.actions.reorderComponents(project.id, componentIds).subscribe({
       next: () => {
         this.toastService.showSuccess('project.overview.dialog.toast.reorderComponents.success');
+      },
+      error: () => {
+        this.reorderedComponents.set(previousComponents);
       },
     });
   }

@@ -84,7 +84,6 @@ describe('SettingsComponent', () => {
       accessRequestsEnabled: true,
       wikiEnabled: false,
       anyoneCanEditWiki: false,
-      anyoneCanComment: true,
     },
   };
 
