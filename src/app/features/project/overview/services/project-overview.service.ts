@@ -172,10 +172,6 @@ export class ProjectOverviewService {
       );
   }
 
-  deleteComponent(componentId: string): Observable<void> {
-    return this.jsonApiService.delete(`${this.apiUrl}/nodes/${componentId}/`);
-  }
-
   getComponents(projectId: string, page = 1, pageSize = 10): Observable<PaginatedData<NodeModel[]>> {
     const params: Record<string, unknown> = {
       embed: 'bibliographic_contributors',
