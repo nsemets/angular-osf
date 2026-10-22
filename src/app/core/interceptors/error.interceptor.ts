@@ -105,7 +105,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
       loaderService.hide();
 
-      toastService.showError(errorMessage);
+      if (isPlatformBrowser(platformId)) {
+        toastService.showError(errorMessage);
+      }
 
       return throwError(() => error);
     })

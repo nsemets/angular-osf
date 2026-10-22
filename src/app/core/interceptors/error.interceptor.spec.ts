@@ -113,6 +113,18 @@ describe('errorInterceptor', () => {
     expect(toastServiceMock.showError).toHaveBeenCalledWith('server failed');
   });
 
+  it('should hide loader without toast on server platform', async () => {
+    setup('server');
+    const request = createRequest('/api/v2/nodes/abc');
+    const error = new HttpErrorResponse({ status: 500, error: { message: 'server failed' }, url: request.url });
+
+    const caught = await runInterceptor(request, error);
+
+    expect(caught?.status).toBe(500);
+    expect(loaderServiceMock.hide).toHaveBeenCalled();
+    expect(toastServiceMock.showError).not.toHaveBeenCalled();
+  });
+
   it('should rethrow 409 without toast or loader handling', async () => {
     setup();
     const request = createRequest('/api/v2/nodes/abc');
