@@ -18,7 +18,7 @@ import {
 } from '@testing/providers/external-identity-deletion-service.mock';
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
-import { ExternalIdentityDeletionService } from '../../../account-settings/services';
+import { ExternalIdentityDeletionService } from '../../../account-settings/services/external-identity-deletion.service';
 import { GetExternalIdentities } from '../../../account-settings/store';
 
 import { AuthenticatedIdentityComponent } from './authenticated-identity.component';

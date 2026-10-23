@@ -12,7 +12,7 @@ import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { AuthService } from '@core/services/auth.service';
 import { ExternalIdentityStatus } from '@osf/shared/enums/external-identity-status.enum';
 
-import { ExternalIdentityDeletionService } from '../../../account-settings/services';
+import { ExternalIdentityDeletionService } from '../../../account-settings/services/external-identity-deletion.service';
 import { AccountSettingsSelectors, GetExternalIdentities } from '../../../account-settings/store';
 import { ProfileSettingsTabOption } from '../../enums';
 

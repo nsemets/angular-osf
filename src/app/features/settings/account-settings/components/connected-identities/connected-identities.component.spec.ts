@@ -12,7 +12,7 @@ import {
 import { provideMockStore } from '@testing/providers/store-provider.mock';
 
 import { ExternalIdentity } from '../../models';
-import { ExternalIdentityDeletionService } from '../../services';
+import { ExternalIdentityDeletionService } from '../../services/external-identity-deletion.service';
 import { AccountSettingsSelectors } from '../../store';
 
 import { ConnectedIdentitiesComponent } from './connected-identities.component';
