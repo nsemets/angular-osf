@@ -1,6 +1,6 @@
 import { Mock, vi } from 'vitest';
 
-import { ExternalIdentityDeletionService } from '@osf/features/settings/account-settings/services';
+import { ExternalIdentityDeletionService } from '@osf/features/settings/account-settings/services/external-identity-deletion.service';
 
 type ConfirmAndDeleteFn = (identityId: string) => void;
 

@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReadonlyInputComponent } from '@osf/shared/components/readonly-input/readonly-input.component';
 
 import { ExternalIdentity } from '../../models';
-import { ExternalIdentityDeletionService } from '../../services';
+import { ExternalIdentityDeletionService } from '../../services/external-identity-deletion.service';
 import { AccountSettingsSelectors } from '../../store';
 
 @Component({
