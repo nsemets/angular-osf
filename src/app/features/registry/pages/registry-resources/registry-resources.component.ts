@@ -126,7 +126,6 @@ export class RegistryResourcesComponent {
           this.resetPagination();
           this.toastService.showSuccess('resources.toastMessages.addResourceSuccess');
         },
-        error: () => this.toastService.showError('resources.toastMessages.addResourceError'),
       });
   }
 
@@ -146,7 +145,6 @@ export class RegistryResourcesComponent {
       )
       .subscribe({
         next: () => this.toastService.showSuccess('resources.toastMessages.updatedResourceSuccess'),
-        error: () => this.toastService.showError('resources.toastMessages.updateResourceError'),
       });
   }
 

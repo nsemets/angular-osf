@@ -9,7 +9,7 @@ import { JsonApiResponse } from '../models/common/json-api/responses.model';
   providedIn: 'root',
 })
 export class JsonApiService {
-  http: HttpClient = inject(HttpClient);
+  private readonly http = inject(HttpClient);
 
   get<T>(
     url: string,
@@ -59,6 +59,16 @@ export class JsonApiService {
     return this.http
       .patch<JsonApiResponse<T, null>>(url, body, { params: this.buildHttpParams(params), headers, context })
       .pipe(map((response) => response?.data));
+  }
+
+  patchResponse<T>(
+    url: string,
+    body: unknown,
+    params?: Record<string, unknown>,
+    headers?: Record<string, string>,
+    context?: HttpContext
+  ): Observable<T> {
+    return this.http.patch<T>(url, body, { params: this.buildHttpParams(params), headers, context });
   }
 
   put<T>(url: string, body: unknown, params?: Record<string, unknown>): Observable<T> {
