@@ -68,8 +68,6 @@ export class RegistryResourcesComponent {
   readonly resources = select(RegistryResourcesSelectors.getResources);
   readonly resourcesTotalCount = select(RegistryResourcesSelectors.getResourcesTotalCount);
   readonly isResourcesLoading = select(RegistryResourcesSelectors.isResourcesLoading);
-  readonly currentResource = select(RegistryResourcesSelectors.getCurrentResource);
-  readonly registry = select(RegistrySelectors.getRegistry);
   readonly identifiers = select(RegistrySelectors.getIdentifiers);
   readonly canEdit = select(RegistrySelectors.hasWriteAccess);
 

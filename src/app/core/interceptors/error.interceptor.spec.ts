@@ -7,6 +7,8 @@ import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
+import { ERROR_MESSAGES } from '@core/constants/error-messages';
+import { PREPRINT_PENDING_MODERATION_DETAIL } from '@core/constants/http-error-details.const';
 import { SENTRY_TOKEN } from '@core/provider/sentry.provider';
 import { AuthService } from '@core/services/auth.service';
 import { MaintenanceModeService } from '@core/services/maintenance-mode.service';
@@ -28,7 +30,7 @@ import { ToastServiceMock, ToastServiceMockType } from '@testing/providers/toast
 import { ViewOnlyLinkHelperMock, ViewOnlyLinkHelperMockType } from '@testing/providers/view-only-link-helper.mock';
 
 import { errorInterceptor } from './error.interceptor';
-import { BYPASS_ERROR_INTERCEPTOR } from './error-interceptor.tokens';
+import { bypassErrorInterceptorContext } from './error-interceptor.tokens';
 
 describe('errorInterceptor', () => {
   let router: RouterMockType;
@@ -72,7 +74,7 @@ describe('errorInterceptor', () => {
   }
 
   function createRequest(url = '/api/v2/nodes/abc', bypass = false, noAuthRedirect = false) {
-    const context = bypass ? new HttpContext().set(BYPASS_ERROR_INTERCEPTOR, true) : new HttpContext();
+    const context = bypass ? bypassErrorInterceptorContext() : new HttpContext();
     const headers = noAuthRedirect ? new HttpHeaders({ 'X-No-Auth-Redirect': 'true' }) : new HttpHeaders();
     return new HttpRequest('GET', url, { context, headers } as unknown);
   }
@@ -113,7 +115,7 @@ describe('errorInterceptor', () => {
     expect(toastServiceMock.showError).toHaveBeenCalledWith('server failed');
   });
 
-  it('should hide loader without toast on server platform', async () => {
+  it('should rethrow without handling on server platform', async () => {
     setup('server');
     const request = createRequest('/api/v2/nodes/abc');
     const error = new HttpErrorResponse({ status: 500, error: { message: 'server failed' }, url: request.url });
@@ -121,8 +123,9 @@ describe('errorInterceptor', () => {
     const caught = await runInterceptor(request, error);
 
     expect(caught?.status).toBe(500);
-    expect(loaderServiceMock.hide).toHaveBeenCalled();
+    expect(loaderServiceMock.hide).not.toHaveBeenCalled();
     expect(toastServiceMock.showError).not.toHaveBeenCalled();
+    expect(sentryMock.captureException).not.toHaveBeenCalled();
   });
 
   it('should rethrow 409 without toast or loader handling', async () => {
@@ -147,7 +150,7 @@ describe('errorInterceptor', () => {
     expect(caught?.status).toBe(401);
     expect(authServiceMock.navigateToSignIn).toHaveBeenCalled();
     expect(authServiceMock.logout).not.toHaveBeenCalled();
-    expect(loaderServiceMock.hide).not.toHaveBeenCalled();
+    expect(loaderServiceMock.hide).toHaveBeenCalled();
     expect(toastServiceMock.showError).not.toHaveBeenCalled();
   });
 
@@ -161,7 +164,7 @@ describe('errorInterceptor', () => {
     expect(caught?.status).toBe(401);
     expect(authServiceMock.logout).toHaveBeenCalledWith(window.location.href);
     expect(authServiceMock.navigateToSignIn).not.toHaveBeenCalled();
-    expect(loaderServiceMock.hide).not.toHaveBeenCalled();
+    expect(loaderServiceMock.hide).toHaveBeenCalled();
     expect(toastServiceMock.showError).not.toHaveBeenCalled();
   });
 
@@ -174,9 +177,10 @@ describe('errorInterceptor', () => {
 
     expect(caught?.status).toBe(401);
     expect(authServiceMock.logout).not.toHaveBeenCalled();
+    expect(loaderServiceMock.hide).toHaveBeenCalled();
   });
 
-  it('should navigate to request-access for 403 node URL', async () => {
+  it('should navigate to request-access for 403 node URL without toast', async () => {
     setup('browser', false, '/projects/abc');
     const request = createRequest('/api/v2/nodes/abc');
     const error = new HttpErrorResponse({ status: 403, error: {}, url: '/api/v2/nodes/abc' });
@@ -184,15 +188,71 @@ describe('errorInterceptor', () => {
     const caught = await runInterceptor(request, error);
 
     expect(caught?.status).toBe(403);
-    expect(router.navigate).toHaveBeenCalledWith(['/request-access/abc']);
+    expect(router.navigate).toHaveBeenCalledWith(['/request-access', 'abc']);
     expect(loaderServiceMock.hide).toHaveBeenCalled();
-    expect(toastServiceMock.showError).toHaveBeenCalled();
+    expect(toastServiceMock.showError).not.toHaveBeenCalled();
+  });
+
+  it('should navigate to forbidden for 403 without a node URL', async () => {
+    setup();
+    const request = createRequest('/api/v2/users/me/');
+    const error = new HttpErrorResponse({ status: 403, error: {}, url: '/api/v2/users/me/' });
+
+    const caught = await runInterceptor(request, error);
+
+    expect(caught?.status).toBe(403);
+    expect(router.navigate).toHaveBeenCalledWith(['/forbidden']);
+    expect(loaderServiceMock.hide).toHaveBeenCalled();
+    expect(toastServiceMock.showError).not.toHaveBeenCalled();
+  });
+
+  it('should not redirect on 403 when current route is a draft registry', async () => {
+    setup('browser', false, '/registries/drafts/abc');
+    const request = createRequest('/api/v2/nodes/abc');
+    const error = new HttpErrorResponse({ status: 403, error: {}, url: '/api/v2/nodes/abc' });
+
+    const caught = await runInterceptor(request, error);
+
+    expect(caught?.status).toBe(403);
+    expect(router.navigate).not.toHaveBeenCalled();
+    expect(loaderServiceMock.hide).toHaveBeenCalled();
+    expect(toastServiceMock.showError).not.toHaveBeenCalled();
   });
 
   it('should not redirect on 403 when no-auth-redirect header is present', async () => {
     setup();
     const request = createRequest('/api/v2/metadata/abc', false, true);
     const error = new HttpErrorResponse({ status: 403, error: {}, url: '/api/v2/metadata/abc' });
+
+    const caught = await runInterceptor(request, error);
+
+    expect(caught?.status).toBe(403);
+    expect(router.navigate).not.toHaveBeenCalled();
+    expect(loaderServiceMock.hide).toHaveBeenCalled();
+    expect(toastServiceMock.showError).not.toHaveBeenCalled();
+  });
+
+  it('should not redirect on 403 for node request-access URL', async () => {
+    setup();
+    const request = createRequest('/api/v2/nodes/abc/requests/');
+    const error = new HttpErrorResponse({ status: 403, error: {}, url: '/api/v2/nodes/abc/requests/' });
+
+    const caught = await runInterceptor(request, error);
+
+    expect(caught?.status).toBe(403);
+    expect(router.navigate).not.toHaveBeenCalled();
+    expect(loaderServiceMock.hide).toHaveBeenCalled();
+    expect(toastServiceMock.showError).not.toHaveBeenCalled();
+  });
+
+  it('should not redirect on 403 when preprint is pending moderation', async () => {
+    setup();
+    const request = createRequest('/api/v2/preprints/abc');
+    const error = new HttpErrorResponse({
+      status: 403,
+      error: { errors: [{ detail: PREPRINT_PENDING_MODERATION_DETAIL }] },
+      url: request.url,
+    });
 
     const caught = await runInterceptor(request, error);
 
@@ -217,5 +277,59 @@ describe('errorInterceptor', () => {
     expect(maintenanceModeServiceMock.activate).toHaveBeenCalled();
     expect(loaderServiceMock.hide).toHaveBeenCalled();
     expect(toastServiceMock.showError).not.toHaveBeenCalled();
+  });
+
+  it('should navigate to not-found for 404 without toast', async () => {
+    setup();
+    const request = createRequest('/api/v2/nodes/abc');
+    const error = new HttpErrorResponse({ status: 404, error: {}, url: request.url });
+
+    const caught = await runInterceptor(request, error);
+
+    expect(caught?.status).toBe(404);
+    expect(router.navigate).toHaveBeenCalledWith(['/not-found']);
+    expect(loaderServiceMock.hide).toHaveBeenCalled();
+    expect(toastServiceMock.showError).not.toHaveBeenCalled();
+  });
+
+  it('should navigate to content-deleted for 410 without toast', async () => {
+    setup();
+    const request = createRequest('/api/v2/nodes/abc');
+    const error = new HttpErrorResponse({ status: 410, error: {}, url: request.url });
+
+    const caught = await runInterceptor(request, error);
+
+    expect(caught?.status).toBe(410);
+    expect(router.navigate).toHaveBeenCalledWith(['/content-deleted']);
+    expect(loaderServiceMock.hide).toHaveBeenCalled();
+    expect(toastServiceMock.showError).not.toHaveBeenCalled();
+  });
+
+  it('should toast API detail for default status codes', async () => {
+    setup();
+    const request = createRequest('/api/v2/nodes/abc');
+    const error = new HttpErrorResponse({
+      status: 400,
+      error: { errors: [{ detail: 'Invalid title' }] },
+      url: request.url,
+    });
+
+    const caught = await runInterceptor(request, error);
+
+    expect(caught?.status).toBe(400);
+    expect(toastServiceMock.showError).toHaveBeenCalledWith('Invalid title');
+    expect(loaderServiceMock.hide).toHaveBeenCalled();
+  });
+
+  it('should toast mapped i18n key when no API detail is present', async () => {
+    setup();
+    const request = createRequest('/api/v2/nodes/abc');
+    const error = new HttpErrorResponse({ status: 400, error: {}, url: request.url });
+
+    const caught = await runInterceptor(request, error);
+
+    expect(caught?.status).toBe(400);
+    expect(toastServiceMock.showError).toHaveBeenCalledWith(ERROR_MESSAGES[400]);
+    expect(loaderServiceMock.hide).toHaveBeenCalled();
   });
 });

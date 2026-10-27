@@ -11,6 +11,7 @@ import { PLATFORM_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { PREPRINT_PENDING_MODERATION_DETAIL } from '@core/constants/http-error-details.const';
 import { HelpScoutService } from '@core/services/help-scout.service';
 import { PrerenderReadyService } from '@core/services/prerender-ready.service';
 import { ClearCurrentProvider } from '@core/store/provider';
@@ -308,7 +309,7 @@ describe('PreprintDetailsComponent', () => {
     const errorResponse = new HttpErrorResponse({
       status: 403,
       error: {
-        errors: [{ detail: 'This preprint is pending moderation and is not yet publicly available.' }],
+        errors: [{ detail: PREPRINT_PENDING_MODERATION_DETAIL }],
       },
     });
 

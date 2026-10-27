@@ -4,6 +4,7 @@ import { firstValueFrom, of } from 'rxjs';
 
 import { TestBed } from '@angular/core/testing';
 
+import { JSON_API_BULK_HEADERS } from '@osf/shared/constants/json-api-headers.const';
 import { CurrentResourceType } from '@osf/shared/enums/resource-type.enum';
 import { SubscriptionFrequency } from '@osf/shared/enums/subscriptions/subscription-frequency.enum';
 import { NotificationSubscriptionMapper } from '@osf/shared/mappers/notification-subscription.mapper';
@@ -218,7 +219,7 @@ describe('SettingsService', () => {
           { id: 'node-2', type: CurrentResourceType.Projects },
         ],
       },
-      { 'Content-Type': 'application/vnd.api+json; ext=bulk' }
+      JSON_API_BULK_HEADERS
     );
   });
 
