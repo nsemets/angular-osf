@@ -2,10 +2,10 @@
 
 Two complementary layers handle failures from API-backed work:
 
-| Layer | Responsibility | Entry point |
-| ----- | -------------- | ----------- |
-| **HTTP interceptor** | Global UX: toast, navigation, auth, maintenance, loader | `error.interceptor.ts` |
-| **NGXS state** | Section bookkeeping: clear loading flags, store `error`, Sentry tag | `handleSectionError` |
+| Layer                | Responsibility                                                      | Entry point            |
+| -------------------- | ------------------------------------------------------------------- | ---------------------- |
+| **HTTP interceptor** | Global UX: toast, navigation, auth, maintenance, loader             | `error.interceptor.ts` |
+| **NGXS state**       | Section bookkeeping: clear loading flags, store `error`, Sentry tag | `handleSectionError`   |
 
 Both **rethrow**. For a store action that calls HTTP: interceptor runs first → rethrow → state’s `catchError` → `handleSectionError`.
 
@@ -56,14 +56,14 @@ flowchart TD
 
 ### Status handling
 
-| Status | Interceptor behavior |
-| ------ | -------------------- |
-| **401** | Skip auth redirect on view-only (`?view_only=`). Else logout if authenticated, or navigate to sign-in. Hide loader. |
-| **403** | Navigate unless silent / pending-moderation (see below). Node URL → `/request-access/:id` (skipped on draft registry routes). Other → `/forbidden`. Hide loader. No toast. |
-| **404** | Navigate to `/not-found`. Hide loader. No toast. |
-| **409** | Rethrow only (no toast, no loader hide). Caller handles conflict UX. |
-| **410** | Navigate to `/content-deleted`. Hide loader. No toast. |
-| **Other** | Toast via `getErrorMessage`, hide loader. |
+| Status    | Interceptor behavior                                                                                                                                                       |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **401**   | Skip auth redirect on view-only (`?view_only=`). Else logout if authenticated, or navigate to sign-in. Hide loader.                                                        |
+| **403**   | Navigate unless silent / pending-moderation (see below). Node URL → `/request-access/:id` (skipped on draft registry routes). Other → `/forbidden`. Hide loader. No toast. |
+| **404**   | Navigate to `/not-found`. Hide loader. No toast.                                                                                                                           |
+| **409**   | Rethrow only (no toast, no loader hide). Caller handles conflict UX.                                                                                                       |
+| **410**   | Navigate to `/content-deleted`. Hide loader. No toast.                                                                                                                     |
+| **Other** | Toast via `getErrorMessage`, hide loader.                                                                                                                                  |
 
 `/not-found` and `/content-deleted` share `PageNotFoundComponent` with different route data (`PAGE_NOT_FOUND_ROUTE_DATA` / `CONTENT_DELETED_ROUTE_DATA`).
 
@@ -87,11 +87,11 @@ Current examples: maintenance status polling, parent project fetch, Datacite tra
 
 These skip `/forbidden` / request-access navigation (loader still hides; error still rethrows):
 
-| Case | How |
-| ---- | --- |
-| Metadata record fetch | `X-No-Auth-Redirect` on `MetadataRecordsService.getMetadataRecord` (optional schema.org; prefer migrating to `HttpContext` later) |
-| Node access-request API | URL matches `/v2/nodes/:id/requests` |
-| Preprint pending moderation | Detail equals `PREPRINT_PENDING_MODERATION_DETAIL` — component routes to pending-moderation |
+| Case                        | How                                                                                                                               |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Metadata record fetch       | `X-No-Auth-Redirect` on `MetadataRecordsService.getMetadataRecord` (optional schema.org; prefer migrating to `HttpContext` later) |
+| Node access-request API     | URL matches `/v2/nodes/:id/requests`                                                                                              |
+| Preprint pending moderation | Detail equals `PREPRINT_PENDING_MODERATION_DETAIL` — component routes to pending-moderation                                       |
 
 ### Messages
 
@@ -147,16 +147,16 @@ Guidelines:
 
 ## Related files
 
-| File | Role |
-| ---- | ---- |
-| `src/app/core/interceptors/error.interceptor.ts` | HTTP UX handler |
-| `src/app/core/interceptors/error-interceptor.tokens.ts` | Bypass token + factory |
-| `src/app/shared/helpers/state-error.handler.ts` | NGXS section error helper |
-| `src/app/shared/models/store/async-state.model.ts` | Async section shape (`error` field) |
-| `src/app/core/constants/error-messages.ts` | Status → i18n keys |
-| `src/app/core/constants/http-error-details.const.ts` | Shared API detail strings |
-| `src/app/core/constants/page-not-found.constants.ts` | Route data for 404 / 410 pages |
-| `src/app/core/services/maintenance-mode.service.ts` | Maintenance detection + activation |
-| `src/app/core/components/page-not-found/` | Shared not-found / content-deleted UI |
-| `docs/ngxs.md` | Store / `AsyncStateModel` conventions |
-| `docs/sentry.md` | Which HTTP errors are filtered from Sentry |
+| File                                                    | Role                                       |
+| ------------------------------------------------------- | ------------------------------------------ |
+| `src/app/core/interceptors/error.interceptor.ts`        | HTTP UX handler                            |
+| `src/app/core/interceptors/error-interceptor.tokens.ts` | Bypass token + factory                     |
+| `src/app/shared/helpers/state-error.handler.ts`         | NGXS section error helper                  |
+| `src/app/shared/models/store/async-state.model.ts`      | Async section shape (`error` field)        |
+| `src/app/core/constants/error-messages.ts`              | Status → i18n keys                         |
+| `src/app/core/constants/http-error-details.const.ts`    | Shared API detail strings                  |
+| `src/app/core/constants/page-not-found.constants.ts`    | Route data for 404 / 410 pages             |
+| `src/app/core/services/maintenance-mode.service.ts`     | Maintenance detection + activation         |
+| `src/app/core/components/page-not-found/`               | Shared not-found / content-deleted UI      |
+| `docs/ngxs.md`                                          | Store / `AsyncStateModel` conventions      |
+| `docs/sentry.md`                                        | Which HTTP errors are filtered from Sentry |
