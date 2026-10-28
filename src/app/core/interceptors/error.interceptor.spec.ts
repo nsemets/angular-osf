@@ -3,7 +3,7 @@ import { MockProvider } from 'ng-mocks';
 import { firstValueFrom, throwError } from 'rxjs';
 
 import { HttpContext, HttpErrorResponse, HttpHeaders, HttpRequest } from '@angular/common/http';
-import { PLATFORM_ID } from '@angular/core';
+import { PLATFORM_ID, RESPONSE_INIT } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
@@ -40,6 +40,7 @@ describe('errorInterceptor', () => {
   let maintenanceModeServiceMock: MaintenanceModeServiceMockType;
   let viewOnlyHelperMock: ViewOnlyLinkHelperMockType;
   let sentryMock: SentryMockType;
+  let responseInit: ResponseInit;
 
   function setup(
     platformId: 'browser' | 'server' = 'browser',
@@ -54,6 +55,7 @@ describe('errorInterceptor', () => {
     maintenanceModeServiceMock = MaintenanceModeServiceMock.simple();
     viewOnlyHelperMock = ViewOnlyLinkHelperMock.simple(viewOnly);
     sentryMock = SentryMock.simple();
+    responseInit = {};
 
     TestBed.configureTestingModule({
       providers: [
@@ -69,6 +71,7 @@ describe('errorInterceptor', () => {
         MockProvider(ViewOnlyLinkHelperService, viewOnlyHelperMock),
         MockProvider(PLATFORM_ID, platformId),
         { provide: SENTRY_TOKEN, useValue: sentryMock },
+        { provide: RESPONSE_INIT, useValue: responseInit },
       ],
     });
   }
@@ -115,17 +118,116 @@ describe('errorInterceptor', () => {
     expect(toastServiceMock.showError).toHaveBeenCalledWith('server failed');
   });
 
-  it('should rethrow without handling on server platform', async () => {
+  it('should set SSR response status without navigation on server platform', async () => {
     setup('server');
     const request = createRequest('/api/v2/nodes/abc');
-    const error = new HttpErrorResponse({ status: 500, error: { message: 'server failed' }, url: request.url });
+    const error = new HttpErrorResponse({ status: 404, error: {}, url: request.url });
 
     const caught = await runInterceptor(request, error);
 
-    expect(caught?.status).toBe(500);
+    expect(caught?.status).toBe(404);
+    expect(responseInit.status).toBe(404);
+    expect(router.navigate).not.toHaveBeenCalled();
     expect(loaderServiceMock.hide).not.toHaveBeenCalled();
     expect(toastServiceMock.showError).not.toHaveBeenCalled();
     expect(sentryMock.captureException).not.toHaveBeenCalled();
+  });
+
+  it('should set SSR response status for 401 without navigation', async () => {
+    setup('server');
+    const request = createRequest('/api/v2/guids/abc');
+    const error = new HttpErrorResponse({ status: 401, error: {}, url: request.url });
+
+    const caught = await runInterceptor(request, error);
+
+    expect(caught?.status).toBe(401);
+    expect(responseInit.status).toBe(401);
+    expect(router.navigate).not.toHaveBeenCalled();
+  });
+
+  it('should set SSR response status for pending-moderation 403', async () => {
+    setup('server');
+    const request = createRequest('/api/v2/preprints/abc');
+    const error = new HttpErrorResponse({
+      status: 403,
+      error: { errors: [{ detail: PREPRINT_PENDING_MODERATION_DETAIL }] },
+      url: request.url,
+    });
+
+    const caught = await runInterceptor(request, error);
+
+    expect(caught?.status).toBe(403);
+    expect(responseInit.status).toBe(403);
+    expect(router.navigate).not.toHaveBeenCalled();
+  });
+
+  it('should not set SSR response status for silent 403', async () => {
+    setup('server');
+    const request = createRequest('/api/v2/nodes/abc', false, true);
+    const error = new HttpErrorResponse({ status: 403, error: {}, url: request.url });
+
+    const caught = await runInterceptor(request, error);
+
+    expect(caught?.status).toBe(403);
+    expect(responseInit.status).toBeUndefined();
+  });
+
+  it('should not set SSR response status for bypassed requests on server platform', async () => {
+    setup('server');
+    const request = createRequest('/api/v2/nodes/abc', true);
+    const error = new HttpErrorResponse({ status: 404, error: {}, url: request.url });
+
+    const caught = await runInterceptor(request, error);
+
+    expect(caught?.status).toBe(404);
+    expect(responseInit.status).toBeUndefined();
+  });
+
+  it('should keep the first non-OK SSR response status', async () => {
+    setup('server');
+    responseInit.status = 404;
+
+    const request = createRequest('/api/v2/nodes/abc');
+    const error = new HttpErrorResponse({ status: 500, error: {}, url: request.url });
+
+    await runInterceptor(request, error);
+
+    expect(responseInit.status).toBe(404);
+  });
+
+  it('should replace an earlier 5xx SSR response status with a resource status', async () => {
+    setup('server');
+    responseInit.status = 503;
+
+    const request = createRequest('/api/v2/nodes/abc');
+    const error = new HttpErrorResponse({ status: 404, error: {}, url: request.url });
+
+    await runInterceptor(request, error);
+
+    expect(responseInit.status).toBe(404);
+  });
+
+  it('should map network status 0 to 503 on server platform', async () => {
+    setup('server');
+    const request = createRequest('/api/v2/nodes/abc');
+    const error = new HttpErrorResponse({ status: 0, error: {}, url: request.url });
+
+    const caught = await runInterceptor(request, error);
+
+    expect(caught?.status).toBe(0);
+    expect(responseInit.status).toBe(503);
+    expect(router.navigate).not.toHaveBeenCalled();
+  });
+
+  it('should not set SSR response status for silent network errors', async () => {
+    setup('server');
+    const request = createRequest('/api/v2/nodes/abc', false, true);
+    const error = new HttpErrorResponse({ status: 0, error: {}, url: request.url });
+
+    const caught = await runInterceptor(request, error);
+
+    expect(caught?.status).toBe(0);
+    expect(responseInit.status).toBeUndefined();
   });
 
   it('should rethrow 409 without toast or loader handling', async () => {

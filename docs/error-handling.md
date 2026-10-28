@@ -29,7 +29,7 @@ Central HTTP UX lives in `src/app/core/interceptors/error.interceptor.ts`. Prefe
 
 Order before the status `switch` matters:
 
-1. **SSR (`!isBrowser`)** — no toast, navigation, loader, auth, or Sentry; rethrow only.
+1. **SSR (`!isBrowser`)** — no toast, navigation, loader, auth, or Sentry. For non-bypassed `401` / `403` / `404` / `410` / `5xx`, set `RESPONSE_INIT.status` on the requested URL; then rethrow. Network/timeout errors (`status: 0`) map to `503`. First non-OK wins, except a later `401` / `403` / `404` / `410` may replace an earlier `5xx`. Silent requests (`X-No-Auth-Redirect` or request-access URL) do not set status for any code; pending-moderation `403`s do. GUID guards (`isFileGuard`, `isProjectGuard`, `isRegistryGuard`) catch errors and return `false`, so matching falls through to `**` (not-found page HTML with the HTTP status from `RESPONSE_INIT`).
 2. **Bypass** — Sentry capture + rethrow; skip all UX.
 3. **Maintenance** — `503` with `meta.maintenance_mode: true` → hide loader, activate maintenance mode, rethrow.
 4. **Status `switch`** — `401` / `403` / `404` / `409` / `410` / default.
@@ -39,7 +39,7 @@ After the `switch` (except early `409` return), the interceptor hides the loader
 ```mermaid
 flowchart TD
   err[HttpErrorResponse] --> ssr{Browser?}
-  ssr -->|no| rethrow[Rethrow]
+  ssr -->|no| ssrStatus[Set RESPONSE_INIT status + rethrow]
   ssr -->|yes| bypass{BYPASS?}
   bypass -->|yes| sentry[Sentry + rethrow]
   bypass -->|no| maint{Maintenance 503?}
@@ -49,7 +49,7 @@ flowchart TD
   status -->|other| rethrow2[Hide loader + rethrow]
   rethrow2 --> state[NGXS catchError / handleSectionError]
   conflict --> state
-  rethrow --> state
+  ssrStatus --> state
   sentry --> state
   activate --> state
 ```
@@ -65,7 +65,7 @@ flowchart TD
 | **410**   | Navigate to `/content-deleted`. Hide loader. No toast.                                                                                                                     |
 | **Other** | Toast via `getErrorMessage`, hide loader.                                                                                                                                  |
 
-`/not-found` and `/content-deleted` share `PageNotFoundComponent` with different route data (`PAGE_NOT_FOUND_ROUTE_DATA` / `CONTENT_DELETED_ROUTE_DATA`).
+`/not-found` and `/content-deleted` share `PageNotFoundComponent` with different route data (`PAGE_NOT_FOUND_ROUTE_DATA` / `CONTENT_DELETED_ROUTE_DATA`). Browser navigates to those routes (and `/forbidden`) for UX; SSR does not — it only sets `RESPONSE_INIT.status` on the requested URL via `ssr-response-status.helper.ts`.
 
 ### Bypass
 
@@ -151,6 +151,7 @@ Guidelines:
 | ------------------------------------------------------- | ------------------------------------------ |
 | `src/app/core/interceptors/error.interceptor.ts`        | HTTP UX handler                            |
 | `src/app/core/interceptors/error-interceptor.tokens.ts` | Bypass token + factory                     |
+| `src/app/core/helpers/ssr-response-status.helper.ts`    | SSR `RESPONSE_INIT.status` helper          |
 | `src/app/shared/helpers/state-error.handler.ts`         | NGXS section error helper                  |
 | `src/app/shared/models/store/async-state.model.ts`      | Async section shape (`error` field)        |
 | `src/app/core/constants/error-messages.ts`              | Status → i18n keys                         |
