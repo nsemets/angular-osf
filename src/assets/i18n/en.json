@@ -480,7 +480,12 @@
       "message": "Are you sure you want to discard your unsaved changes?"
     },
     "errorMessages": {
+      "badRequest": "Invalid request. Please check your input.",
+      "unauthorized": "You are not authorized to perform this action.",
+      "forbidden": "You don't have permission to access this resource.",
+      "notFound": "The requested resource was not found.",
       "serverError": "An unexpected error occurred. Please try again later.",
+      "unknown": "An unknown error occurred. Please try again.",
       "actionUnavailable": "This action is no longer available. Contact support if you have any questions."
     },
     "hint": {
@@ -1281,8 +1286,13 @@
     "software": "Software",
     "other": "Other"
   },
+  "contentDeleted": {
+    "message": "This page has been removed and is no longer available. Contact support if you have any questions.",
+    "title": "This content has been deleted"
+  },
   "pageNotFound": {
-    "message": "The page you were looking for is either doesn't exist, was deleted, or the URL may be incorrect. If this should not have occurred and the issue persists, please report it to",
+    "contactSupport": "Contact Support",
+    "message": "The page you're looking for doesn't exist or may have been moved. Contact support if you have any questions.",
     "title": "Page not found"
   },
   "preprints": {

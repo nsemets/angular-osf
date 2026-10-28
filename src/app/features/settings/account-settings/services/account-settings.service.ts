@@ -1,9 +1,8 @@
 import { map, Observable } from 'rxjs';
 
-import { HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
-import { BYPASS_ERROR_INTERCEPTOR } from '@core/interceptors/error-interceptor.tokens';
+import { bypassErrorInterceptorContext } from '@core/interceptors/error-interceptor.tokens';
 import { ENVIRONMENT } from '@core/provider/environment.provider';
 import { UserMapper } from '@osf/shared/mappers/user';
 import { UserModel } from '@osf/shared/models/user/user.model';
@@ -115,13 +114,11 @@ export class AccountSettingsService {
   }
 
   deleteExternalIdentity(id: string): Observable<void> {
-    const context = new HttpContext().set(BYPASS_ERROR_INTERCEPTOR, true);
-
     return this.jsonApiService.delete(
       `${this.apiUrl}/users/me/settings/identities/${id}/`,
       undefined,
       undefined,
-      context
+      bypassErrorInterceptorContext()
     );
   }
 }
