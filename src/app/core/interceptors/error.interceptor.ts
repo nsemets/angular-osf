@@ -4,11 +4,16 @@ import { catchError, throwError } from 'rxjs';
 
 import { isPlatformBrowser } from '@angular/common';
 import { HttpErrorResponse, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
-import { inject, PLATFORM_ID } from '@angular/core';
+import { inject, PLATFORM_ID, RESPONSE_INIT } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ERROR_MESSAGES } from '@core/constants/error-messages';
 import { PREPRINT_PENDING_MODERATION_DETAIL } from '@core/constants/http-error-details.const';
+import {
+  isServerError,
+  setSsrResponseStatus,
+  shouldPropagateHttpStatusToSsr,
+} from '@core/helpers/ssr-response-status.helper';
 import { SENTRY_TOKEN } from '@core/provider/sentry.provider';
 import { AuthService } from '@core/services/auth.service';
 import { MaintenanceModeService } from '@core/services/maintenance-mode.service';
@@ -23,8 +28,6 @@ const NO_AUTH_REDIRECT_HEADER = 'X-No-Auth-Redirect';
 const REQUEST_ACCESS_URL_REGEX = /\/v2\/nodes\/[^/]+\/requests\/?$/i;
 const NODE_ID_URL_REGEX = /\/v2\/nodes\/([^/]+)/;
 const DRAFT_REGISTRY_ROUTE_REGEX = /\/registries\/drafts\/.+/i;
-
-const isServerError = (status: number): boolean => status >= 500 && status < 600;
 
 const isSilentForbidden = (req: HttpRequest<unknown>, error: HttpErrorResponse): boolean =>
   req.headers.has(NO_AUTH_REDIRECT_HEADER) || (!!error.url && REQUEST_ACCESS_URL_REGEX.test(error.url));
@@ -57,6 +60,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const sentry = inject(SENTRY_TOKEN);
   const viewOnlyHelper = inject(ViewOnlyLinkHelperService);
   const store = inject(Store);
+  const responseInit = inject(RESPONSE_INIT, { optional: true });
   const isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   const handleUnauthorized = () => {
@@ -81,11 +85,24 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
     }
   };
 
+  const applySsrStatus = (error: HttpErrorResponse) => {
+    if (
+      req.context.get(BYPASS_ERROR_INTERCEPTOR) ||
+      !shouldPropagateHttpStatusToSsr(error.status) ||
+      isSilentForbidden(req, error)
+    ) {
+      return;
+    }
+
+    setSsrResponseStatus(responseInit, error.status);
+  };
+
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       const rethrow = () => throwError(() => error);
 
       if (!isBrowser) {
+        applySsrStatus(error);
         return rethrow();
       }
 
