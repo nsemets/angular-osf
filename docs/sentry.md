@@ -6,9 +6,9 @@ Sentry collects JavaScript errors from the OSF Angular app in the browser. Many 
 
 `Sentry.init` runs in the browser from `src/app/core/provider/application.initialization.provider.ts` after `assets/config/config.json` loads. Set:
 
-| Key | Role |
-| --- | --- |
-| `sentryDsn` | Enables Sentry when non-empty |
+| Key                 | Role                                                                                             |
+| ------------------- | ------------------------------------------------------------------------------------------------ |
+| `sentryDsn`         | Enables Sentry when non-empty                                                                    |
 | `sentryEnvironment` | Passed as Sentry’s `environment` option (use the same name as other services for managed Sentry) |
 
 ## Filtering
